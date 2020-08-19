@@ -42,6 +42,10 @@
           "file_name": "faq.html"
         },
         {
+          "external_name": "Customization",
+          "file_name": "customization.html"
+        },
+        {
           "external_name": "Mixing with other languages",
           "file_name": "data-sharing.html"
         },

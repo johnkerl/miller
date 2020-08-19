@@ -131,9 +131,9 @@ pageTracker._trackPageview();
 <div class="pokipanel">
 <pre>
 $ mlr stats1 -a sum -f x -g a data/small
-{ "a": "pan", "x_sum": 0.346790 }
-{ "a": "eks", "x_sum": 1.140079 }
-{ "a": "wye", "x_sum": 0.777892 }
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
 </pre>
 </div>
 <p/>
@@ -152,9 +152,9 @@ $ mlr stats1 -a sum -f x -g a data/small
 <div class="pokipanel">
 <pre>
 $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-{ "a": "pan", "x_sum": 0.346790 }
-{ "a": "eks", "x_sum": 1.140079 }
-{ "a": "wye", "x_sum": 0.777892 }
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
 </pre>
 </div>
 <p/>
@@ -194,8 +194,8 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <div class="pokipanel">
 <pre>
 $ mlr filter '$a == "eks"' data/small
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 </pre>
 </div>
 <p/>
@@ -206,11 +206,11 @@ $ mlr filter '$a == "eks"' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$ab = $a . "_" . $b ' data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "ab": "pan_pan" }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "ab": "eks_pan" }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "ab": "wye_wye" }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "ab": "eks_wye" }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "ab": "wye_pan" }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,ab=pan_pan
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,ab=eks_pan
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,ab=wye_wye
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,ab=eks_wye
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,ab=wye_pan
 </pre>
 </div>
 <p/>
@@ -314,11 +314,11 @@ x_y_corr
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "xy": 0.805299 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "xy": 0.920998 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "xy": 0.395376 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "xy": 0.404317 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "xy": 1.036584 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 </pre>
 </div>
 <p/>
@@ -326,11 +326,11 @@ $ mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "xy": 0.805299 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "xy": 0.920998 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "xy": 0.395376 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "xy": 0.404317 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "xy": 1.036584 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 </pre>
 </div>
 <p/>
@@ -353,11 +353,11 @@ $xy = f($x, $y)
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small put -f data/fe-example-3.mlr
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "xy": 0.805299 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "xy": 0.920998 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "xy": 0.395376 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "xy": 0.404317 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "xy": 1.036584 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 </pre>
 </div>
 <p/>
@@ -379,11 +379,11 @@ func f(a, b) {
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "xy": 0.805299 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "xy": 0.920998 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "xy": 0.395376 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "xy": 0.404317 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "xy": 1.036584 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 </pre>
 </div>
 <p/>
@@ -424,7 +424,7 @@ mlr put 'x=1;;;;$y=2;'
 <div class="pokipanel">
 <pre>
 $ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}  $foo = "bar"'
-{ "x": 1, "y": 2, "3": "", "4": "", "5": "", "6": "", "7": "", "8": "", "9": "", "10": "", "foo": "bar" }
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 </pre>
 </div>
 <p/>
@@ -432,7 +432,7 @@ $ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}  $foo = "bar"'
 <div class="pokipanel">
 <pre>
 $ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}; $foo = "bar"'
-{ "x": 1, "y": 2, "3": "", "4": "", "5": "", "6": "", "7": "", "8": "", "9": "", "10": "", "foo": "bar" }
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 </pre>
 </div>
 <p/>
@@ -569,9 +569,9 @@ variables, e.g.  <code>ENV["HOME"]</code> or <code>ENV["foo_".$hostname]</code>.
 <div class="pokipanel">
 <pre>
 $ mlr filter 'FNR == 2' data/small*
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "1": "pan", "2": "pan", "3": 1, "4": 0.3467901443380824, "5": 0.7268028627434533 }
-{ "a": "wye", "b": "eks", "i": 10000, "x": 0.734806020620654365, "y": 0.884788571337605134 }
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 </pre>
 </div>
 <p/>
@@ -580,22 +580,22 @@ $ mlr filter 'FNR == 2' data/small*
 <div class="pokipanel">
 <pre>
 $ mlr put '$fnr = FNR' data/small*
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "fnr": 1 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "fnr": 2 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "fnr": 3 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "fnr": 4 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "fnr": 5 }
-{ "1": "a", "2": "b", "3": "i", "4": "x", "5": "y", "fnr": 1 }
-{ "1": "pan", "2": "pan", "3": 1, "4": 0.3467901443380824, "5": 0.7268028627434533, "fnr": 2 }
-{ "1": "eks", "2": "pan", "3": 2, "4": 0.7586799647899636, "5": 0.5221511083334797, "fnr": 3 }
-{ "1": "wye", "2": "wye", "3": 3, "4": 0.20460330576630303, "5": 0.33831852551664776, "fnr": 4 }
-{ "1": "eks", "2": "wye", "3": 4, "4": 0.38139939387114097, "5": 0.13418874328430463, "fnr": 5 }
-{ "1": "wye", "2": "pan", "3": 5, "4": 0.5732889198020006, "5": 0.8636244699032729, "fnr": 6 }
-{ "a": "pan", "b": "eks", "i": 9999, "x": 0.267481232652199086, "y": 0.557077185510228001, "fnr": 1 }
-{ "a": "wye", "b": "eks", "i": 10000, "x": 0.734806020620654365, "y": 0.884788571337605134, "fnr": 2 }
-{ "a": "pan", "b": "wye", "i": 10001, "x": 0.870530722602517626, "y": 0.009854780514656930, "fnr": 3 }
-{ "a": "hat", "b": "wye", "i": 10002, "x": 0.321507044286237609, "y": 0.568893318795083758, "fnr": 4 }
-{ "a": "pan", "b": "zee", "i": 10003, "x": 0.272054845593895200, "y": 0.425789896597056627, "fnr": 5 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,fnr=1
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,fnr=2
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,fnr=3
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,fnr=4
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,fnr=5
+1=a,2=b,3=i,4=x,5=y,fnr=1
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533,fnr=2
+1=eks,2=pan,3=2,4=0.7586799647899636,5=0.5221511083334797,fnr=3
+1=wye,2=wye,3=3,4=0.20460330576630303,5=0.33831852551664776,fnr=4
+1=eks,2=wye,3=4,4=0.38139939387114097,5=0.13418874328430463,fnr=5
+1=wye,2=pan,3=5,4=0.5732889198020006,5=0.8636244699032729,fnr=6
+a=pan,b=eks,i=9999,x=0.267481232652199086,y=0.557077185510228001,fnr=1
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134,fnr=2
+a=pan,b=wye,i=10001,x=0.870530722602517626,y=0.009854780514656930,fnr=3
+a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
+a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
 </pre>
 </div>
 <p/>
@@ -675,7 +675,7 @@ $ echo a=3,b=4 | mlr filter '$["x"] &lt; 0.5'
 <div class="pokipanel">
 <pre>
 $ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
-{ "s": "green", "t": "blue", "a": 3, "b": 4, "green_blue": 12 }
+s=green,t=blue,a=3,b=4,green_blue=12
 </pre>
 </div>
 <p/>
@@ -715,11 +715,11 @@ This has the shorter equivalent notation <code>$[[[3]]]</code>.
 <div class="pokipanel">
 <pre>
 $ mlr cat data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -728,11 +728,11 @@ $ mlr cat data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$[[3]] = "NEW"' data/small
-{ "a": "pan", "b": "pan", "NEW": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "NEW": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "NEW": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "NEW": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "NEW": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=pan,b=pan,NEW=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,NEW=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,NEW=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,NEW=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,NEW=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -740,11 +740,11 @@ $ mlr put '$[[3]] = "NEW"' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$[[[3]]] = "NEW"' data/small
-{ "a": "pan", "b": "pan", "i": "NEW", "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": "NEW", "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": "NEW", "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": "NEW", "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": "NEW", "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=pan,b=pan,i=NEW,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=NEW,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=NEW,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=NEW,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -752,11 +752,11 @@ $ mlr put '$[[[3]]] = "NEW"' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$NEW = $[[NR]]' data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "NEW": "a" }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "NEW": "b" }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "NEW": "i" }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "NEW": "x" }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "NEW": "y" }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=a
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=b
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=i
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=x
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=y
 </pre>
 </div>
 <p/>
@@ -764,11 +764,11 @@ $ mlr put '$NEW = $[[NR]]' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$NEW = $[[[NR]]]' data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533, "NEW": "pan" }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "NEW": "pan" }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776, "NEW": 3 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463, "NEW": 0.381399 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "NEW": 0.863624 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.381399
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.863624
 </pre>
 </div>
 <p/>
@@ -776,11 +776,11 @@ $ mlr put '$NEW = $[[[NR]]]' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$[[[NR]]] = "NEW"' data/small
-{ "a": "NEW", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "NEW", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": "NEW", "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": "NEW", "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": "NEW" }
+a=NEW,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=NEW,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=NEW,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=NEW
 </pre>
 </div>
 <p/>
@@ -795,11 +795,11 @@ field results in a no-op.
 <div class="pokipanel">
 <pre>
 $ mlr put '$[[6]] = "NEW"' data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -807,11 +807,11 @@ $ mlr put '$[[6]] = "NEW"' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$[[[6]]] = "NEW"' data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -839,7 +839,7 @@ with <b>special characters</b> such as <code>.</code> then you can use braces, e
 <div class="pokipanel">
 <pre>
 $ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
-{ "green_blue": 12 }
+green_blue=12
 </pre>
 </div>
 <p/>
@@ -862,10 +862,10 @@ a=4,b=5,c=6
 <div class="pokipanel">
 <pre>
 $ mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
-{ "a": 10, "b": 2, "c": 3 }
-{ "a": 40, "b": 5, "c": 6 }
-{ "sum": 5 }
-{ "sum": 50 }
+a=10,b=2,c=3
+a=40,b=5,c=6
+sum=5
+sum=50
 </pre>
 </div>
 <p/>
@@ -893,16 +893,16 @@ $ mlr put -q '
     emit @x_sum, "a";
   }
 ' ../data/small
-{ "a": "pan", "x_count": 2 }
-{ "a": "eks", "x_count": 3 }
-{ "a": "wye", "x_count": 2 }
-{ "a": "zee", "x_count": 2 }
-{ "a": "hat", "x_count": 1 }
-{ "a": "pan", "x_sum": 0.849416 }
-{ "a": "eks", "x_sum": 1.751863 }
-{ "a": "wye", "x_sum": 0.777892 }
-{ "a": "zee", "x_sum": 1.125680 }
-{ "a": "hat", "x_sum": 0.031442 }
+a=pan,x_count=2
+a=eks,x_count=3
+a=wye,x_count=2
+a=zee,x_count=2
+a=hat,x_count=1
+a=pan,x_sum=0.849416
+a=eks,x_sum=1.751863
+a=wye,x_sum=0.777892
+a=zee,x_sum=1.125680
+a=hat,x_sum=0.031442
 </pre>
 </div>
 <p/>
@@ -910,11 +910,11 @@ $ mlr put -q '
 <div class="pokipanel">
 <pre>
 $ mlr stats1 -a count,sum -f x -g a ../data/small
-{ "a": "pan", "x_count": 2, "x_sum": 0.849416 }
-{ "a": "eks", "x_count": 3, "x_sum": 1.751863 }
-{ "a": "wye", "x_count": 2, "x_sum": 0.777892 }
-{ "a": "zee", "x_count": 2, "x_sum": 1.125680 }
-{ "a": "hat", "x_count": 1, "x_sum": 0.031442 }
+a=pan,x_count=2,x_sum=0.849416
+a=eks,x_count=3,x_sum=1.751863
+a=wye,x_count=2,x_sum=0.777892
+a=zee,x_count=2,x_sum=1.125680
+a=hat,x_count=1,x_sum=0.031442
 </pre>
 </div>
 <p/>
@@ -931,31 +931,31 @@ $ mlr --from data/medium put -q '
     emit (@x_count, @x_sum), "a", "b";
   }
 '
-{ "a": "pan", "b": "pan", "x_count": 427, "x_sum": 219.185129 }
-{ "a": "pan", "b": "wye", "x_count": 395, "x_sum": 198.432931 }
-{ "a": "pan", "b": "eks", "x_count": 429, "x_sum": 216.075228 }
-{ "a": "pan", "b": "hat", "x_count": 417, "x_sum": 205.222776 }
-{ "a": "pan", "b": "zee", "x_count": 413, "x_sum": 205.097518 }
-{ "a": "eks", "b": "pan", "x_count": 371, "x_sum": 179.963030 }
-{ "a": "eks", "b": "wye", "x_count": 407, "x_sum": 196.945286 }
-{ "a": "eks", "b": "zee", "x_count": 357, "x_sum": 176.880365 }
-{ "a": "eks", "b": "eks", "x_count": 413, "x_sum": 215.916097 }
-{ "a": "eks", "b": "hat", "x_count": 417, "x_sum": 208.783171 }
-{ "a": "wye", "b": "wye", "x_count": 377, "x_sum": 185.295850 }
-{ "a": "wye", "b": "pan", "x_count": 392, "x_sum": 195.847900 }
-{ "a": "wye", "b": "hat", "x_count": 426, "x_sum": 212.033183 }
-{ "a": "wye", "b": "zee", "x_count": 385, "x_sum": 194.774048 }
-{ "a": "wye", "b": "eks", "x_count": 386, "x_sum": 204.812961 }
-{ "a": "zee", "b": "pan", "x_count": 389, "x_sum": 202.213804 }
-{ "a": "zee", "b": "wye", "x_count": 455, "x_sum": 233.991394 }
-{ "a": "zee", "b": "eks", "x_count": 391, "x_sum": 190.961778 }
-{ "a": "zee", "b": "zee", "x_count": 403, "x_sum": 206.640635 }
-{ "a": "zee", "b": "hat", "x_count": 409, "x_sum": 191.300006 }
-{ "a": "hat", "b": "wye", "x_count": 423, "x_sum": 208.883010 }
-{ "a": "hat", "b": "zee", "x_count": 385, "x_sum": 196.349450 }
-{ "a": "hat", "b": "eks", "x_count": 389, "x_sum": 189.006793 }
-{ "a": "hat", "b": "hat", "x_count": 381, "x_sum": 182.853532 }
-{ "a": "hat", "b": "pan", "x_count": 363, "x_sum": 168.553807 }
+a=pan,b=pan,x_count=427,x_sum=219.185129
+a=pan,b=wye,x_count=395,x_sum=198.432931
+a=pan,b=eks,x_count=429,x_sum=216.075228
+a=pan,b=hat,x_count=417,x_sum=205.222776
+a=pan,b=zee,x_count=413,x_sum=205.097518
+a=eks,b=pan,x_count=371,x_sum=179.963030
+a=eks,b=wye,x_count=407,x_sum=196.945286
+a=eks,b=zee,x_count=357,x_sum=176.880365
+a=eks,b=eks,x_count=413,x_sum=215.916097
+a=eks,b=hat,x_count=417,x_sum=208.783171
+a=wye,b=wye,x_count=377,x_sum=185.295850
+a=wye,b=pan,x_count=392,x_sum=195.847900
+a=wye,b=hat,x_count=426,x_sum=212.033183
+a=wye,b=zee,x_count=385,x_sum=194.774048
+a=wye,b=eks,x_count=386,x_sum=204.812961
+a=zee,b=pan,x_count=389,x_sum=202.213804
+a=zee,b=wye,x_count=455,x_sum=233.991394
+a=zee,b=eks,x_count=391,x_sum=190.961778
+a=zee,b=zee,x_count=403,x_sum=206.640635
+a=zee,b=hat,x_count=409,x_sum=191.300006
+a=hat,b=wye,x_count=423,x_sum=208.883010
+a=hat,b=zee,x_count=385,x_sum=196.349450
+a=hat,b=eks,x_count=389,x_sum=189.006793
+a=hat,b=hat,x_count=381,x_sum=182.853532
+a=hat,b=pan,x_count=363,x_sum=168.553807
 </pre>
 </div>
 <p/>
@@ -984,12 +984,12 @@ $ mlr put '
     emitf @num_total, @num_positive
   }
 ' data/put-gating-example-1.dkvp
-{ "x": -1 }
-{ "x": 0 }
-{ "x": 1, "y": 0.000000, "z": 0.000000 }
-{ "x": 2, "y": 0.301030, "z": 0.548662 }
-{ "x": 3, "y": 0.477121, "z": 0.690740 }
-{ "num_total": 5, "num_positive": 3 }
+x=-1
+x=0
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+num_total=5,num_positive=3
 </pre>
 </div>
 <p/>
@@ -1027,16 +1027,16 @@ mlr --seed 12345 seqgen --start 1 --stop 10 then put '
   num o = f(10, 20);                      # local to the top-level scope
   $o = o;
 '
-{ "i": 1, "o": 14.662901 }
-{ "i": 2, "o": 17.881983 }
-{ "i": 3, "o": 14.586560 }
-{ "i": 4, "o": 16.402409 }
-{ "i": 5, "o": 16.336598 }
-{ "i": 6, "o": 14.622701 }
-{ "i": 7, "o": 15.983753 }
-{ "i": 8, "o": 13.852177 }
-{ "i": 9, "o": 15.472899 }
-{ "i": 10, "o": 15.643912 }
+i=1,o=14.662901
+i=2,o=17.881983
+i=3,o=14.586560
+i=4,o=16.402409
+i=5,o=16.336598
+i=6,o=14.622701
+i=7,o=15.983753
+i=8,o=13.852177
+i=9,o=15.472899
+i=10,o=15.643912
 </pre>
 </div>
 <p/>
@@ -1276,11 +1276,11 @@ $ mlr --from data/small put '
   }
   $* = f({"a": $a, "x": $x});
 '
-{ "a": "pan", "x": 69.358029 }
-{ "a": "eks", "x": 151.735993 }
-{ "a": "wye", "x": 40.920661 }
-{ "a": "eks", "x": 76.279879 }
-{ "a": "wye", "x": 114.657784 }
+a=pan,x=69.358029
+a=eks,x=151.735993
+a=wye,x=40.920661
+a=eks,x=76.279879
+a=wye,x=114.657784
 </pre>
 </div>
 <p/>
@@ -1552,11 +1552,11 @@ $ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; du
 <div class="pokipanel">
 <pre>
 $ mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -1970,11 +1970,11 @@ domain restrictions, regex-matching, and so on:
 <div class="pokipanel">
 <pre>
 $ mlr cat data/put-gating-example-1.dkvp
-{ "x": -1 }
-{ "x": 0 }
-{ "x": 1 }
-{ "x": 2 }
-{ "x": 3 }
+x=-1
+x=0
+x=1
+x=2
+x=3
 </pre>
 </div>
 <p/>
@@ -1982,11 +1982,11 @@ $ mlr cat data/put-gating-example-1.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
-{ "x": -1 }
-{ "x": 0 }
-{ "x": 1, "y": 0.000000, "z": 0.000000 }
-{ "x": 2, "y": 0.301030, "z": 0.548662 }
-{ "x": 3, "y": 0.477121, "z": 0.690740 }
+x=-1
+x=0
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
 </pre>
 </div>
 <p/>
@@ -1994,9 +1994,9 @@ $ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-exampl
 <div class="pokipanel">
 <pre>
 $ mlr cat data/put-gating-example-2.dkvp
-{ "a": "abc_123" }
-{ "a": "some other name" }
-{ "a": "xyz_789" }
+a=abc_123
+a=some other name
+a=xyz_789
 </pre>
 </div>
 <p/>
@@ -2004,9 +2004,9 @@ $ mlr cat data/put-gating-example-2.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
-{ "a": "abc_123", "b": "left_abc", "c": "right_123" }
-{ "a": "some other name" }
-{ "a": "xyz_789", "b": "left_xyz", "c": "right_789" }
+a=abc_123,b=left_abc,c=right_123
+a=some other name
+a=xyz_789,b=left_xyz,c=right_789
 </pre>
 </div>
 <p/>
@@ -2024,11 +2024,11 @@ subsequent assignments are done unconditionally:
 <div class="pokipanel">
 <pre>
 $ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
-{ "x": -1, "y": nan, "z": nan }
-{ "x": 0, "y": -inf, "z": nan }
-{ "x": 1, "y": 0.000000, "z": 0.000000 }
-{ "x": 2, "y": 0.301030, "z": 0.548662 }
-{ "x": 3, "y": 0.477121, "z": 0.690740 }
+x=-1,y=nan,z=nan
+x=0,y=-inf,z=nan
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
 </pre>
 </div>
 <p/>
@@ -2036,9 +2036,9 @@ $ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1
 <div class="pokipanel">
 <pre>
 $ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
-{ "a": "abc_123", "b": "left_abc", "c": "right_123" }
-{ "a": "some other name", "b": "left_", "c": "right_" }
-{ "a": "xyz_789", "b": "left_xyz", "c": "right_789" }
+a=abc_123,b=left_abc,c=right_123
+a=some other name,b=left_,c=right_
+a=xyz_789,b=left_xyz,c=right_789
 </pre>
 </div>
 <p/>
@@ -2099,7 +2099,7 @@ $ echo x=1,y=2 | mlr put '
   }
   $foo = "bar"
 '
-{ "x": 1, "y": 2, "3": "", "4": "", "5": "", "6": "", "7": "", "8": "", "9": "", "10": "", "foo": "bar" }
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 </pre>
 </div>
 <p/>
@@ -2115,7 +2115,7 @@ $ echo x=1,y=2 | mlr put '
   } while (NF &lt; 10);
   $foo = "bar"
 '
-{ "x": 1, "y": 2, "3": "", "4": "", "5": "", "foo": "bar" }
+x=1,y=2,3=,4=,5=,foo=bar
 </pre>
 </div>
 <p/>
@@ -2171,35 +2171,35 @@ NR = 1
   key:i  value:1
   key:x  value:0.346790
   key:y  value:0.726803
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 NR = 2
   key:a  value:eks
   key:b  value:pan
   key:i  value:2
   key:x  value:0.758680
   key:y  value:0.522151
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 NR = 3
   key:a  value:wye
   key:b  value:wye
   key:i  value:3
   key:x  value:0.204603
   key:y  value:0.338319
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 NR = 4
   key:a  value:eks
   key:b  value:wye
   key:i  value:4
   key:x  value:0.381399
   key:y  value:0.134189
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 NR = 5
   key:a  value:wye
   key:b  value:pan
   key:i  value:5
   key:x  value:0.573289
   key:y  value:0.863624
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -2570,17 +2570,17 @@ $ mlr put '
   @x_sum += $x;
   end { emit @x_sum }
 ' ../data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-{ "x_sum": 4.536294 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+x_sum=4.536294
 </pre>
 </div>
 <p/>
@@ -2597,17 +2597,17 @@ $ mlr put '
   @x_sum += $x;
   end { emit @x_sum }
 ' ../data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-{ "x_sum": 4.536294 }
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+x_sum=4.536294
 </pre>
 </div>
 <p/>
@@ -2623,7 +2623,7 @@ $ mlr put -q '
   @x_sum += $x;
   end { emit @x_sum }
 ' ../data/small
-{ "x_sum": 4.536294 }
+x_sum=4.536294
 </pre>
 </div>
 <p/>
@@ -2641,8 +2641,8 @@ $ mlr put -q '
     emit @x_sum;
   }
 ' ../data/small
-{ "x_count": 10 }
-{ "x_sum": 4.536294 }
+x_count=10
+x_sum=4.536294
 </pre>
 </div>
 <p/>
@@ -2653,7 +2653,7 @@ This is of course not much different than
 <div class="pokipanel">
 <pre>
 $ mlr stats1 -a count,sum -f x ../data/small
-{ "x_count": 10, "x_sum": 4.536294 }
+x_count=10,x_sum=4.536294
 </pre>
 </div>
 <p/>
@@ -3011,7 +3011,7 @@ For <code>emitf</code> these mustn&rsquo;t have indexing using <code>@name[...]<
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
-{ "count": 5, "x_sum": 2.264762, "y_sum": 2.585086 }
+count=5,x_sum=2.264762,y_sum=2.585086
 </pre>
 </div>
 <p/>
@@ -3044,7 +3044,7 @@ $ mlr put -q '@sum += $x; end { dump }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum += $x; end { emit @sum }' data/small
-{ "sum": 2.264762 }
+sum=2.264762
 </pre>
 </div>
 <p/>
@@ -3069,9 +3069,9 @@ $ mlr put -q '@sum[$a] += $x; end { dump }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
-{ "a": "pan", "sum": 0.346790 }
-{ "a": "eks", "sum": 1.140079 }
-{ "a": "wye", "sum": 0.777892 }
+a=pan,sum=0.346790
+a=eks,sum=1.140079
+a=wye,sum=0.777892
 </pre>
 </div>
 <p/>
@@ -3102,11 +3102,11 @@ $ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
-{ "a": "pan", "b": "pan", "sum": 0.346790 }
-{ "a": "eks", "b": "pan", "sum": 0.758680 }
-{ "a": "eks", "b": "wye", "sum": 0.381399 }
-{ "a": "wye", "b": "wye", "sum": 0.204603 }
-{ "a": "wye", "b": "pan", "sum": 0.573289 }
+a=pan,b=pan,sum=0.346790
+a=eks,b=pan,sum=0.758680
+a=eks,b=wye,sum=0.381399
+a=wye,b=wye,sum=0.204603
+a=wye,b=pan,sum=0.573289
 </pre>
 </div>
 <p/>
@@ -3147,11 +3147,11 @@ $ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
-{ "a": "pan", "b": "pan", "i": 1, "sum": 0.346790 }
-{ "a": "eks", "b": "pan", "i": 2, "sum": 0.758680 }
-{ "a": "eks", "b": "wye", "i": 4, "sum": 0.381399 }
-{ "a": "wye", "b": "wye", "i": 3, "sum": 0.204603 }
-{ "a": "wye", "b": "pan", "i": 5, "sum": 0.573289 }
+a=pan,b=pan,i=1,sum=0.346790
+a=eks,b=pan,i=2,sum=0.758680
+a=eks,b=wye,i=4,sum=0.381399
+a=wye,b=wye,i=3,sum=0.204603
+a=wye,b=pan,i=5,sum=0.573289
 </pre>
 </div>
 <p/>
@@ -3189,9 +3189,9 @@ $ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
-{ "a": "pan", "pan": 0.346790 }
-{ "a": "eks", "pan": 0.758680, "wye": 0.381399 }
-{ "a": "wye", "wye": 0.204603, "pan": 0.573289 }
+a=pan,pan=0.346790
+a=eks,pan=0.758680,wye=0.381399
+a=wye,wye=0.204603,pan=0.573289
 </pre>
 </div>
 <p/>
@@ -3199,9 +3199,9 @@ $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
-{ "pan": 0.346790 }
-{ "pan": 0.758680, "wye": 0.381399 }
-{ "wye": 0.204603, "pan": 0.573289 }
+pan=0.346790
+pan=0.758680,wye=0.381399
+wye=0.204603,pan=0.573289
 </pre>
 </div>
 <p/>
@@ -3209,9 +3209,9 @@ $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-{ "a": "pan", "sum": {"pan": 0.346790 } }
-{ "a": "eks", "sum": {"pan": 0.758680, "wye": 0.381399 } }
-{ "a": "wye", "sum": {"wye": 0.204603, "pan": 0.573289 } }
+a=pan,sum:pan=0.346790
+a=eks,sum:pan=0.758680,sum:wye=0.381399
+a=wye,sum:wye=0.204603,sum:pan=0.573289
 </pre>
 </div>
 <p/>
@@ -3219,7 +3219,7 @@ $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-{ "sum": {"pan": {"pan": 0.346790 },"eks": {"pan": 0.758680, "wye": 0.381399 },"wye": {"wye": 0.204603, "pan": 0.573289 } } }
+sum:pan:pan=0.346790,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:wye:wye=0.204603,sum:wye:pan=0.573289
 </pre>
 </div>
 <p/>
@@ -3243,9 +3243,9 @@ keys for <code>emitp</code> (it defaults to a colon):
 <div class="pokipanel">
 <pre>
 $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-{ "a": "pan", "sum/pan": 0.346790 }
-{ "a": "eks", "sum/pan": 0.758680, "sum/wye": 0.381399 }
-{ "a": "wye", "sum/wye": 0.204603, "sum/pan": 0.573289 }
+a=pan,sum/pan=0.346790
+a=eks,sum/pan=0.758680,sum/wye=0.381399
+a=wye,sum/wye=0.204603,sum/pan=0.573289
 </pre>
 </div>
 <p/>
@@ -3253,7 +3253,7 @@ $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/sma
 <div class="pokipanel">
 <pre>
 $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-{ "sum/pan/pan": 0.346790, "sum/eks/pan": 0.758680, "sum/eks/wye": 0.381399, "sum/wye/wye": 0.204603, "sum/wye/pan": 0.573289 }
+sum/pan/pan=0.346790,sum/eks/pan=0.758680,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573289
 </pre>
 </div>
 <p/>
@@ -3405,11 +3405,11 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <div class="pokipanel">
 <pre>
 $ mlr put 'unset $x, $a' data/small
-{ "b": "pan", "i": 1, "y": 0.7268028627434533 }
-{ "b": "pan", "i": 2, "y": 0.5221511083334797 }
-{ "b": "wye", "i": 3, "y": 0.33831852551664776 }
-{ "b": "wye", "i": 4, "y": 0.13418874328430463 }
-{ "b": "pan", "i": 5, "y": 0.8636244699032729 }
+b=pan,i=1,y=0.7268028627434533
+b=pan,i=2,y=0.5221511083334797
+b=wye,i=3,y=0.33831852551664776
+b=wye,i=4,y=0.13418874328430463
+b=pan,i=5,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -3492,8 +3492,8 @@ following two are synonymous:
 <div class="pokipanel">
 <pre>
 $ mlr filter 'NR==2 || NR==3' data/small
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 </pre>
 </div>
 <p/>
@@ -3501,8 +3501,8 @@ $ mlr filter 'NR==2 || NR==3' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put 'filter NR==2 || NR==3' data/small
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 </pre>
 </div>
 <p/>
@@ -3514,9 +3514,9 @@ for the filter, and/or do other things in addition to the filter:
 <div class="pokipanel">
 <pre>
 $ mlr put '@running_sum += $x; filter @running_sum &gt; 1.3' data/small
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -3524,8 +3524,8 @@ $ mlr put '@running_sum += $x; filter @running_sum &gt; 1.3' data/small
 <div class="pokipanel">
 <pre>
 $ mlr put '$z = $x * $y; filter $z &gt; 0.3' data/small
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "z": 0.396146 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "z": 0.495106 }
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.396146
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
 </pre>
 </div>
 <p/>

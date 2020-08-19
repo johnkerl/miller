@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-customization.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <meta name="keywords"
+  content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
+
+  <title> Customization </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+<!-- ================================================================ -->
+
+<body bgcolor="#ffffff">
+
+<!-- ================================================================ -->
+
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<br/>
+<a class="poki-navbar-element" href="index.html">Overview</a>
+&nbsp;
+<a class="poki-navbar-element" href="faq.html"><b>Using</b></a>
+&nbsp;
+<a class="poki-navbar-element" href="reference.html">Reference</a>
+&nbsp;
+<a class="poki-navbar-element" href="why.html">Background</a>
+&nbsp;
+<a class="poki-navbar-element" href="contact.html">Repository</a>
+&nbsp;
+<br/>
+<br/><a href="faq.html">FAQ</a>
+<br/><a href="customization.html"><b>Customization</b></a>
+<br/><a href="data-sharing.html">Mixing with other languages</a>
+<br/><a href="cookbook.html">Cookbook part 1</a>
+<br/><a href="cookbook2.html">Cookbook part 2</a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diving examples</a>
+</div>
+
+<!-- page body -->
+<p/>
+
+<!-- BODY COPIED FROM content-for-customization.html BY poki -->
+<div class="pokitoc">
+<center><titleinbody>Customization</titleinbody></center>
+&bull;&nbsp;<a href="#How_to_use_.mlrrc">How to use .mlrrc</a><br/>
+&bull;&nbsp;<a href="#What_you_can_put_in_your_.mlrrc">What you can put in your .mlrrc</a><br/>
+&bull;&nbsp;<a href="#Where_to_put_your_.mlrrc">Where to put your .mlrrc</a><br/>
+</div>
+<p/>
+
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
+
+<a id="How_to_use_.mlrrc"/><h1>How to use .mlrrc</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_how');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_how" style="display: block">
+
+<p>Suppose you always use CSV files. Then instead of always having to type
+<tt>--csv</tt> as in </p>
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr --csv cut -x -f extra mydata.csv
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr --csv sort -n id mydata.csv
+</pre>
+</div>
+<p/>
+
+<p>and so on, you can instead put the following into your <tt>$HOME/.mlrrc</tt>:</p>
+
+<p/>
+<div class="pokipanel">
+<pre>
+--csv
+</pre>
+</div>
+<p/>
+
+<p>Then you can just type things like</p>
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut -x -f extra mydata.csv
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr sort -n id mydata.csv
+</pre>
+</div>
+<p/>
+
+<p>and the <tt>--csv</tt> part will automatically be understood. (If you do
+want to process, say, a JSON file then <tt>mlr --json ...</tt> at the command
+line will override the default from your <tt>.mlrrc</tt>.)</p>
+
+</div>
+
+
+<a id="What_you_can_put_in_your_.mlrrc"/><h1>What you can put in your .mlrrc</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_what');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_what" style="display: block">
+
+<ul>
+
+  <li>You can include any command-line flags, except the "terminal" ones such
+  as <tt>--help</tt>.  </li>
+
+  <li>The formatting rule is you need to put one flag beginning with
+  <tt>--</tt> per line: for example, <tt>--csv</tt> on one line and
+  <tt>--nr-progress-mod 1000</tt> on a separate line.  </li>
+
+  <li>Since every line starts with a <tt>--</tt> option, you can leave off the
+  initial <tt>--</tt> if you want. For example, <tt>ojson</tt> is the same as
+  <tt>--ojson</tt>, and <tt>nr-progress-mod 1000</tt> is the same as
+  <tt>--nr-progress-mod 1000</tt>.
+
+  <li>Comments are from a <tt>#</tt> to the end of the line.</li>
+
+  <li>Empty lines are ignored -- including lines which are empty after comments are removed.</li>
+
+</ul>
+
+<p>Here is an example <tt>.mlrrc file</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+# These are my preferred default settings for Miller
+
+# Input and output formats are CSV by default (unless otherwise specified
+# on the mlr command line):
+csv
+
+# If a data line has fewer fields than the header line, instead of erroring
+# (which is the default), just insert empty values for the missing ones:
+allow-ragged-csv-input
+
+# These are no-ops for CSV, but when I do use JSON output, I want these
+# pretty-printing options to be used:
+jvstack
+jlistwrap
+
+# Use "@", rather than "#", for comments within data files:
+skip-comments-with @
+</pre>
+</div>
+<p/>
+
+</div>
+
+<a id="Where_to_put_your_.mlrrc"/><h1>Where to put your .mlrrc</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_where');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_where" style="display: block">
+
+<ul>
+
+  <li>If the environment variable <tt>MLRRC</tt> is set:</li>
+
+  <ul>
+    <li>If its value is <tt>__none__</tt> then no <tt>.mlrrc</tt> files are processed.
+      (This is nice for things like regression testing.)</li>
+    <li>Otherwise, its value (as a filename) is loaded and processed. If there
+      are syntax errors, they abort <tt>mlr</tt> with a usage message (as if
+      you had mistyped something on the command line). If the file can't be loaded at
+      all, though, it is silently skipped.</li>
+    <li>Any <tt>.mlrrc</tt> in your home directory or current directory is ignored whenever
+      <tt>MLRRC</tt> is set in the environment.
+  </ul>
+
+  <li>Otherwise:
+
+  <ul>
+    <li>If <tt>$HOME/.mlrrc</tt> exists, it&rsquo;s processed as above.</li>
+    <li>If <tt>./.mlrrc</tt> exists, it&rsquo;s then also processed as above.</li>
+    <li>The idea is you can have all your settings in your <tt>$HOME/.mlrrc</tt>,
+      then override maybe one or two for your current directory if you like.</li>
+  </ul>
+
+</ul>
+
+</div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/miller-doc-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const bodyToggler = new MillerDocToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
+
+</body>
+</html>

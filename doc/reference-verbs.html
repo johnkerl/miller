@@ -148,9 +148,9 @@ More information about them can be found <a href="reference-dsl.html">here</a>.
 <div class="pokipanel">
 <pre>
 $ mlr stats1 -a sum -f x -g a data/small
-{ "a": "pan", "x_sum": 0.346790 }
-{ "a": "eks", "x_sum": 1.140079 }
-{ "a": "wye", "x_sum": 0.777892 }
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
 </pre>
 </div>
 <p/>
@@ -169,9 +169,9 @@ $ mlr stats1 -a sum -f x -g a data/small
 <div class="pokipanel">
 <pre>
 $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-{ "a": "pan", "x_sum": 0.346790 }
-{ "a": "eks", "x_sum": 1.140079 }
-{ "a": "wye", "x_sum": 0.777892 }
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
 </pre>
 </div>
 <p/>
@@ -207,7 +207,7 @@ Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
 <div class="pokipanel">
 <pre>
 $ echo 'a,b,c,d,e,f' | mlr altkv
-{ "a": "b", "c": "d", "e": "f" }
+a=b,c=d,e=f
 </pre>
 </div>
 <p/>
@@ -215,7 +215,7 @@ $ echo 'a,b,c,d,e,f' | mlr altkv
 <div class="pokipanel">
 <pre>
 $ echo 'a,b,c,d,e,f,g' | mlr altkv
-{ "a": "b", "c": "d", "e": "f", "4": "g" }
+a=b,c=d,e=f,4=g
 </pre>
 </div>
 <p/>
@@ -612,7 +612,7 @@ Options:
 <div class="pokipanel">
 <pre>
 $ mlr count data/medium
-{ "count": 10000 }
+count=10000
 </pre>
 </div>
 <p/>
@@ -621,11 +621,11 @@ $ mlr count data/medium
 <div class="pokipanel">
 <pre>
 $ mlr count -g a data/medium
-{ "a": "pan", "count": 2081 }
-{ "a": "eks", "count": 1965 }
-{ "a": "wye", "count": 1966 }
-{ "a": "zee", "count": 2047 }
-{ "a": "hat", "count": 1941 }
+a=pan,count=2081
+a=eks,count=1965
+a=wye,count=1966
+a=zee,count=2047
+a=hat,count=1941
 </pre>
 </div>
 <p/>
@@ -634,31 +634,31 @@ $ mlr count -g a data/medium
 <div class="pokipanel">
 <pre>
 $ mlr count -g a,b data/medium
-{ "a": "pan", "b": "pan", "count": 427 }
-{ "a": "eks", "b": "pan", "count": 371 }
-{ "a": "wye", "b": "wye", "count": 377 }
-{ "a": "eks", "b": "wye", "count": 407 }
-{ "a": "wye", "b": "pan", "count": 392 }
-{ "a": "zee", "b": "pan", "count": 389 }
-{ "a": "eks", "b": "zee", "count": 357 }
-{ "a": "zee", "b": "wye", "count": 455 }
-{ "a": "hat", "b": "wye", "count": 423 }
-{ "a": "pan", "b": "wye", "count": 395 }
-{ "a": "zee", "b": "eks", "count": 391 }
-{ "a": "hat", "b": "zee", "count": 385 }
-{ "a": "hat", "b": "eks", "count": 389 }
-{ "a": "wye", "b": "hat", "count": 426 }
-{ "a": "pan", "b": "eks", "count": 429 }
-{ "a": "eks", "b": "eks", "count": 413 }
-{ "a": "hat", "b": "hat", "count": 381 }
-{ "a": "hat", "b": "pan", "count": 363 }
-{ "a": "zee", "b": "zee", "count": 403 }
-{ "a": "pan", "b": "hat", "count": 417 }
-{ "a": "pan", "b": "zee", "count": 413 }
-{ "a": "zee", "b": "hat", "count": 409 }
-{ "a": "wye", "b": "zee", "count": 385 }
-{ "a": "eks", "b": "hat", "count": 417 }
-{ "a": "wye", "b": "eks", "count": 386 }
+a=pan,b=pan,count=427
+a=eks,b=pan,count=371
+a=wye,b=wye,count=377
+a=eks,b=wye,count=407
+a=wye,b=pan,count=392
+a=zee,b=pan,count=389
+a=eks,b=zee,count=357
+a=zee,b=wye,count=455
+a=hat,b=wye,count=423
+a=pan,b=wye,count=395
+a=zee,b=eks,count=391
+a=hat,b=zee,count=385
+a=hat,b=eks,count=389
+a=wye,b=hat,count=426
+a=pan,b=eks,count=429
+a=eks,b=eks,count=413
+a=hat,b=hat,count=381
+a=hat,b=pan,count=363
+a=zee,b=zee,count=403
+a=pan,b=hat,count=417
+a=pan,b=zee,count=413
+a=zee,b=hat,count=409
+a=wye,b=zee,count=385
+a=eks,b=hat,count=417
+a=wye,b=eks,count=386
 </pre>
 </div>
 <p/>
@@ -695,31 +695,31 @@ Options:
 <div class="pokipanel">
 <pre>
 $ mlr count-distinct -f a,b then sort -nr count data/medium
-{ "a": "zee", "b": "wye", "count": 455 }
-{ "a": "pan", "b": "eks", "count": 429 }
-{ "a": "pan", "b": "pan", "count": 427 }
-{ "a": "wye", "b": "hat", "count": 426 }
-{ "a": "hat", "b": "wye", "count": 423 }
-{ "a": "pan", "b": "hat", "count": 417 }
-{ "a": "eks", "b": "hat", "count": 417 }
-{ "a": "eks", "b": "eks", "count": 413 }
-{ "a": "pan", "b": "zee", "count": 413 }
-{ "a": "zee", "b": "hat", "count": 409 }
-{ "a": "eks", "b": "wye", "count": 407 }
-{ "a": "zee", "b": "zee", "count": 403 }
-{ "a": "pan", "b": "wye", "count": 395 }
-{ "a": "wye", "b": "pan", "count": 392 }
-{ "a": "zee", "b": "eks", "count": 391 }
-{ "a": "zee", "b": "pan", "count": 389 }
-{ "a": "hat", "b": "eks", "count": 389 }
-{ "a": "wye", "b": "eks", "count": 386 }
-{ "a": "hat", "b": "zee", "count": 385 }
-{ "a": "wye", "b": "zee", "count": 385 }
-{ "a": "hat", "b": "hat", "count": 381 }
-{ "a": "wye", "b": "wye", "count": 377 }
-{ "a": "eks", "b": "pan", "count": 371 }
-{ "a": "hat", "b": "pan", "count": 363 }
-{ "a": "eks", "b": "zee", "count": 357 }
+a=zee,b=wye,count=455
+a=pan,b=eks,count=429
+a=pan,b=pan,count=427
+a=wye,b=hat,count=426
+a=hat,b=wye,count=423
+a=pan,b=hat,count=417
+a=eks,b=hat,count=417
+a=eks,b=eks,count=413
+a=pan,b=zee,count=413
+a=zee,b=hat,count=409
+a=eks,b=wye,count=407
+a=zee,b=zee,count=403
+a=pan,b=wye,count=395
+a=wye,b=pan,count=392
+a=zee,b=eks,count=391
+a=zee,b=pan,count=389
+a=hat,b=eks,count=389
+a=wye,b=eks,count=386
+a=hat,b=zee,count=385
+a=wye,b=zee,count=385
+a=hat,b=hat,count=381
+a=wye,b=wye,count=377
+a=eks,b=pan,count=371
+a=hat,b=pan,count=363
+a=eks,b=zee,count=357
 </pre>
 </div>
 <p/>
@@ -728,16 +728,16 @@ $ mlr count-distinct -f a,b then sort -nr count data/medium
 <div class="pokipanel">
 <pre>
 $ mlr count-distinct -u -f a,b data/medium
-{ "field": "a", "value": "pan", "count": 2081 }
-{ "field": "a", "value": "eks", "count": 1965 }
-{ "field": "a", "value": "wye", "count": 1966 }
-{ "field": "a", "value": "zee", "count": 2047 }
-{ "field": "a", "value": "hat", "count": 1941 }
-{ "field": "b", "value": "pan", "count": 1942 }
-{ "field": "b", "value": "wye", "count": 2057 }
-{ "field": "b", "value": "zee", "count": 1943 }
-{ "field": "b", "value": "eks", "count": 2008 }
-{ "field": "b", "value": "hat", "count": 2050 }
+field=a,value=pan,count=2081
+field=a,value=eks,count=1965
+field=a,value=wye,count=1966
+field=a,value=zee,count=2047
+field=a,value=hat,count=1941
+field=b,value=pan,count=1942
+field=b,value=wye,count=2057
+field=b,value=zee,count=1943
+field=b,value=eks,count=2008
+field=b,value=hat,count=2050
 </pre>
 </div>
 <p/>
@@ -746,31 +746,31 @@ $ mlr count-distinct -u -f a,b data/medium
 <div class="pokipanel">
 <pre>
 $ mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
-{ "a": "zee", "b": "wye", "someothername": 455 }
-{ "a": "pan", "b": "eks", "someothername": 429 }
-{ "a": "pan", "b": "pan", "someothername": 427 }
-{ "a": "wye", "b": "hat", "someothername": 426 }
-{ "a": "hat", "b": "wye", "someothername": 423 }
-{ "a": "pan", "b": "hat", "someothername": 417 }
-{ "a": "eks", "b": "hat", "someothername": 417 }
-{ "a": "eks", "b": "eks", "someothername": 413 }
-{ "a": "pan", "b": "zee", "someothername": 413 }
-{ "a": "zee", "b": "hat", "someothername": 409 }
-{ "a": "eks", "b": "wye", "someothername": 407 }
-{ "a": "zee", "b": "zee", "someothername": 403 }
-{ "a": "pan", "b": "wye", "someothername": 395 }
-{ "a": "wye", "b": "pan", "someothername": 392 }
-{ "a": "zee", "b": "eks", "someothername": 391 }
-{ "a": "zee", "b": "pan", "someothername": 389 }
-{ "a": "hat", "b": "eks", "someothername": 389 }
-{ "a": "wye", "b": "eks", "someothername": 386 }
-{ "a": "hat", "b": "zee", "someothername": 385 }
-{ "a": "wye", "b": "zee", "someothername": 385 }
-{ "a": "hat", "b": "hat", "someothername": 381 }
-{ "a": "wye", "b": "wye", "someothername": 377 }
-{ "a": "eks", "b": "pan", "someothername": 371 }
-{ "a": "hat", "b": "pan", "someothername": 363 }
-{ "a": "eks", "b": "zee", "someothername": 357 }
+a=zee,b=wye,someothername=455
+a=pan,b=eks,someothername=429
+a=pan,b=pan,someothername=427
+a=wye,b=hat,someothername=426
+a=hat,b=wye,someothername=423
+a=pan,b=hat,someothername=417
+a=eks,b=hat,someothername=417
+a=eks,b=eks,someothername=413
+a=pan,b=zee,someothername=413
+a=zee,b=hat,someothername=409
+a=eks,b=wye,someothername=407
+a=zee,b=zee,someothername=403
+a=pan,b=wye,someothername=395
+a=wye,b=pan,someothername=392
+a=zee,b=eks,someothername=391
+a=zee,b=pan,someothername=389
+a=hat,b=eks,someothername=389
+a=wye,b=eks,someothername=386
+a=hat,b=zee,someothername=385
+a=wye,b=zee,someothername=385
+a=hat,b=hat,someothername=381
+a=wye,b=wye,someothername=377
+a=eks,b=pan,someothername=371
+a=hat,b=pan,someothername=363
+a=eks,b=zee,someothername=357
 </pre>
 </div>
 <p/>
@@ -779,7 +779,7 @@ $ mlr count-distinct -f a,b -o someothername then sort -nr someothername data/me
 <div class="pokipanel">
 <pre>
 $ mlr count-distinct -n -f a,b data/medium
-{ "count": 25 }
+count=25
 </pre>
 </div>
 <p/>
@@ -954,7 +954,7 @@ i x                   y
 <div class="pokipanel">
 <pre>
 $ echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
-{ "a": 1, "b": 2, "c": 3 }
+a=1,b=2,c=3
 </pre>
 </div>
 <p/>
@@ -963,7 +963,7 @@ $ echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
 <div class="pokipanel">
 <pre>
 $ echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
-{ "b": 2, "c": 3, "a": 1 }
+b=2,c=3,a=1
 </pre>
 </div>
 <p/>
@@ -1560,11 +1560,11 @@ preparation for CSV or pretty-print output.
 <div class="pokipanel">
 <pre>
 $ mlr cat data/het.dkvp
-{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true }
-{ "record_count": 100, "resource": "/path/to/file" }
-{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true }
-{ "record_count": 150, "resource": "/path/to/second/file" }
-{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false }
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 </div>
 <p/>
@@ -1621,11 +1621,11 @@ Examples:
 <div class="pokipanel">
 <pre>
 $ mlr cat data/het.dkvp
-{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true }
-{ "record_count": 100, "resource": "/path/to/file" }
-{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true }
-{ "record_count": 150, "resource": "/path/to/second/file" }
-{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false }
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 </div>
 <p/>
@@ -1634,11 +1634,11 @@ $ mlr cat data/het.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr having-fields --at-least resource data/het.dkvp
-{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true }
-{ "record_count": 100, "resource": "/path/to/file" }
-{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true }
-{ "record_count": 150, "resource": "/path/to/second/file" }
-{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false }
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=150,resource=/path/to/second/file
+resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 </div>
 <p/>
@@ -1647,9 +1647,9 @@ $ mlr having-fields --at-least resource data/het.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
-{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true }
-{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true }
-{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false }
+resource=/path/to/file,loadsec=0.45,ok=true
+resource=/path/to/second/file,loadsec=0.32,ok=true
+resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 </div>
 <p/>
@@ -2697,11 +2697,11 @@ a=wCOLUMN5e,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 <div class="pokipanel">
 <pre>
 $ mlr rename y,COLUMN5 data/small
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "COLUMN5": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "COLUMN5": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "COLUMN5": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "COLUMN5": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "COLUMN5": 0.8636244699032729 }
+a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 </pre>
 </div>
 <p/>
@@ -2835,18 +2835,18 @@ color=green,count=3
 <div class="pokipanel">
 <pre>
 $ mlr repeat -f count then cut -x -f count data/repeat-example.dat
-{ "color": "blue" }
-{ "color": "blue" }
-{ "color": "blue" }
-{ "color": "blue" }
-{ "color": "blue" }
-{ "color": "red" }
-{ "color": "red" }
-{ "color": "red" }
-{ "color": "red" }
-{ "color": "green" }
-{ "color": "green" }
-{ "color": "green" }
+color=blue
+color=blue
+color=blue
+color=blue
+color=blue
+color=red
+color=red
+color=red
+color=red
+color=green
+color=green
+color=green
 </pre>
 </div>
 <p/>
@@ -3076,16 +3076,16 @@ unless start == stop.
 <div class="pokipanel">
 <pre>
 $ mlr seqgen --stop 10
-{ "i": 1 }
-{ "i": 2 }
-{ "i": 3 }
-{ "i": 4 }
-{ "i": 5 }
-{ "i": 6 }
-{ "i": 7 }
-{ "i": 8 }
-{ "i": 9 }
-{ "i": 10 }
+i=1
+i=2
+i=3
+i=4
+i=5
+i=6
+i=7
+i=8
+i=9
+i=10
 </pre>
 </div>
 <p/>
@@ -3093,12 +3093,12 @@ $ mlr seqgen --stop 10
 <div class="pokipanel">
 <pre>
 $ mlr seqgen --start 20 --stop 40 --step 4
-{ "i": 20 }
-{ "i": 24 }
-{ "i": 28 }
-{ "i": 32 }
-{ "i": 36 }
-{ "i": 40 }
+i=20
+i=24
+i=28
+i=32
+i=36
+i=40
 </pre>
 </div>
 <p/>
@@ -3106,12 +3106,12 @@ $ mlr seqgen --start 20 --stop 40 --step 4
 <div class="pokipanel">
 <pre>
 $ mlr seqgen --start 40 --stop 20 --step -4
-{ "i": 40 }
-{ "i": 36 }
-{ "i": 32 }
-{ "i": 28 }
-{ "i": 24 }
-{ "i": 20 }
+i=40
+i=36
+i=32
+i=28
+i=24
+i=20
 </pre>
 </div>
 <p/>
@@ -3283,10 +3283,10 @@ were encountered, regardless of the specified sort order:
 <div class="pokipanel">
 <pre>
 $ mlr sort -n  x data/sort-missing.dkvp
-{ "x": 1 }
-{ "x": 2 }
-{ "x": 4 }
-{ "a": 3 }
+x=1
+x=2
+x=4
+a=3
 </pre>
 </div>
 <p/>
@@ -3294,10 +3294,10 @@ $ mlr sort -n  x data/sort-missing.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr sort -nr x data/sort-missing.dkvp
-{ "x": 4 }
-{ "x": 2 }
-{ "x": 1 }
-{ "a": 3 }
+x=4
+x=2
+x=1
+a=3
 </pre>
 </div>
 <p/>
@@ -4056,24 +4056,24 @@ $ wc -l data/colored-shapes.dkvp
 <div class="pokipanel">
 <pre>
 $ mlr uniq -g color,shape data/colored-shapes.dkvp
-{ "color": "yellow", "shape": "triangle" }
-{ "color": "red", "shape": "square" }
-{ "color": "red", "shape": "circle" }
-{ "color": "purple", "shape": "triangle" }
-{ "color": "yellow", "shape": "circle" }
-{ "color": "purple", "shape": "square" }
-{ "color": "yellow", "shape": "square" }
-{ "color": "red", "shape": "triangle" }
-{ "color": "green", "shape": "triangle" }
-{ "color": "green", "shape": "square" }
-{ "color": "blue", "shape": "circle" }
-{ "color": "blue", "shape": "triangle" }
-{ "color": "purple", "shape": "circle" }
-{ "color": "blue", "shape": "square" }
-{ "color": "green", "shape": "circle" }
-{ "color": "orange", "shape": "triangle" }
-{ "color": "orange", "shape": "square" }
-{ "color": "orange", "shape": "circle" }
+color=yellow,shape=triangle
+color=red,shape=square
+color=red,shape=circle
+color=purple,shape=triangle
+color=yellow,shape=circle
+color=purple,shape=square
+color=yellow,shape=square
+color=red,shape=triangle
+color=green,shape=triangle
+color=green,shape=square
+color=blue,shape=circle
+color=blue,shape=triangle
+color=purple,shape=circle
+color=blue,shape=square
+color=green,shape=circle
+color=orange,shape=triangle
+color=orange,shape=square
+color=orange,shape=circle
 </pre>
 </div>
 <p/>
