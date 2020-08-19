@@ -113,10 +113,12 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 // ----------------------------------------------------------------
 static void cli_load_mlrrc_or_die(cli_opts_t* popts);
 static int cli_try_load_mlrrc(cli_opts_t* popts, char* path);
-static int handle_mlrrc_line_1(cli_opts_t* popts, char* line, char* path, int lineno);
-static int handle_mlrrc_line_2(cli_opts_t* popts, char* line, char* path, int lineno);
-static int handle_mlrrc_line_3(cli_opts_t* popts, char* line, char* path, int lineno);
-static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc, char* path, int lineno);
+static int handle_mlrrc_line_1(cli_opts_t* popts, char* line);
+static int handle_mlrrc_line_2(cli_opts_t* popts, char* line);
+static int handle_mlrrc_line_3(cli_opts_t* popts, char* line);
+static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc);
+
+static int cli_handle_misc_options(char** argv, int argc, int *pargi, cli_opts_t* popts);
 
 static lhmss_t* get_desc_to_chars_map();
 static lhmsll_t* get_default_repeat_ifses();
@@ -178,10 +180,6 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 		cli_load_mlrrc_or_die(popts);
 	}
 
-	int no_input       = FALSE;
-	int have_rand_seed = FALSE;
-	unsigned rand_seed = 0;
-
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
 		if (argv[argi][0] != '-') {
@@ -194,60 +192,10 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 			// handled
 		} else if (cli_handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
 			// handled
-
-		} else if (streq(argv[argi], "-I")) {
-			popts->do_in_place = TRUE;
-			argi += 1;
-
-		} else if (streq(argv[argi], "-n")) {
-			no_input = TRUE;
-			argi += 1;
-
-		} else if (streq(argv[argi], "--from")) {
-			check_arg_count(argv, argi, argc, 2);
-			slls_append(popts->filenames, argv[argi+1], NO_FREE);
-			argi += 2;
-
-		} else if (streq(argv[argi], "--ofmt")) {
-			check_arg_count(argv, argi, argc, 2);
-			popts->ofmt = argv[argi+1];
-			argi += 2;
-
-		} else if (streq(argv[argi], "--nr-progress-mod")) {
-			check_arg_count(argv, argi, argc, 2);
-			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
-				fprintf(stderr,
-					"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-					MLR_GLOBALS.bargv0, argv[argi+1]);
-				main_usage_short(stderr, MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-			if (popts->nr_progress_mod <= 0) {
-				fprintf(stderr,
-					"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-					MLR_GLOBALS.bargv0, argv[argi+1]);
-				main_usage_short(stderr, MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-			argi += 2;
-
-		} else if (streq(argv[argi], "--seed")) {
-			check_arg_count(argv, argi, argc, 2);
-			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
-				have_rand_seed = TRUE;
-			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
-				have_rand_seed = TRUE;
-			} else {
-				fprintf(stderr,
-					"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
-					MLR_GLOBALS.bargv0, argv[argi+1]);
-				main_usage_short(stderr, MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-			argi += 2;
-
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		} else if (cli_handle_misc_options(argv, argc, &argi, popts)) {
+			// handled
 		} else {
+			// unhandled
 			usage_unrecognized_verb(MLR_GLOBALS.bargv0, argv[argi]);
 		}
 	}
@@ -292,13 +240,13 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	popts->original_argv = argv;
 	popts->non_in_place_argv = copy_argv(argv);
 	popts->argc = argc;
-	*ppmapper_list = cli_parse_mappers(popts->non_in_place_argv, &argi, argc, popts, &no_input);
+	*ppmapper_list = cli_parse_mappers(popts->non_in_place_argv, &argi, argc, popts);
 
 	for ( ; argi < argc; argi++) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
 	}
 
-	if (no_input) {
+	if (popts->no_input) {
 		slls_free(popts->filenames);
 		popts->filenames = NULL;
 	}
@@ -308,8 +256,8 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 		exit(1);
 	}
 
-	if (have_rand_seed) {
-		mtrand_init(rand_seed);
+	if (popts->have_rand_seed) {
+		mtrand_init(popts->rand_seed);
 	} else {
 		mtrand_init_default();
 	}
@@ -320,7 +268,7 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 // ----------------------------------------------------------------
 // Returns a list of mappers, from the starting point in argv given by *pargi. Bumps *pargi to
 // point to remaining post-mapper-setup args, i.e. filenames.
-sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, int* pno_input) {
+sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts) {
 	sllv_t* pmapper_list = sllv_alloc();
 	int argi = *pargi;
 
@@ -372,7 +320,7 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 
 		if (pmapper_setup->ignores_input && pmapper_list->length == 0) {
 			// e.g. then-chain starts with seqgen
-			*pno_input = TRUE;
+			popts->no_input = TRUE;
 		}
 
 		sllv_append(pmapper_list, pmapper);
@@ -1112,6 +1060,10 @@ void cli_opts_init(cli_opts_t* popts) {
 	popts->nr_progress_mod = 0LL;
 
 	popts->do_in_place     = FALSE;
+
+	popts->no_input        = FALSE;
+	popts->have_rand_seed  = FALSE;
+	popts->rand_seed       = 0;
 }
 
 // ----------------------------------------------------------------
@@ -1154,7 +1106,7 @@ static int cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
 	while ((rc = getline(&line, &linecap, fp)) != -1) {
 		lineno++;
 		char* line_to_destroy = strdup(line);
-		if (!handle_mlrrc_line_1(popts, line_to_destroy, path, lineno)) {
+		if (!handle_mlrrc_line_1(popts, line_to_destroy)) {
 			fprintf(stderr, "Parse error at file \"%s\" line %d: %s\n",
 				path, lineno, line);
 			exit(1);
@@ -1171,7 +1123,7 @@ static int cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
 }
 
 // Chomps trailing CR, LF, or CR/LF; comment-strips; left-right trims.
-static int handle_mlrrc_line_1(cli_opts_t* popts, char* line, char* path, int lineno) {
+static int handle_mlrrc_line_1(cli_opts_t* popts, char* line) {
 	// chomp
 	size_t len = strlen(line);
 	if (len >= 2 && line[len-2] == '\r' && line[len-1] == '\n') {
@@ -1202,12 +1154,12 @@ static int handle_mlrrc_line_1(cli_opts_t* popts, char* line, char* path, int li
 	if (end < start) { // line was whitespace-only
 		return TRUE;
 	} else {
-		return handle_mlrrc_line_2(popts, start, path, lineno);
+		return handle_mlrrc_line_2(popts, start);
 	}
 }
 
 // Prepends initial "--" if it's not already there
-static int handle_mlrrc_line_2(cli_opts_t* popts, char* line, char* path, int lineno) {
+static int handle_mlrrc_line_2(cli_opts_t* popts, char* line) {
 	size_t len = strlen(line);
 
 	char* dashed_line = NULL;
@@ -1217,14 +1169,14 @@ static int handle_mlrrc_line_2(cli_opts_t* popts, char* line, char* path, int li
 		dashed_line = strdup(line);
 	}
 
-	int rc = handle_mlrrc_line_3(popts, dashed_line, path, lineno);
+	int rc = handle_mlrrc_line_3(popts, dashed_line);
 
 	free(dashed_line);
 	return rc;
 }
 
 // Splits line into argv array
-static int handle_mlrrc_line_3(cli_opts_t* popts, char* line, char* path, int lineno) {
+static int handle_mlrrc_line_3(cli_opts_t* popts, char* line) {
 	char* argv[3];
 	int argc = 0;
 	char* split = strpbrk(line, " \t");
@@ -1243,11 +1195,10 @@ static int handle_mlrrc_line_3(cli_opts_t* popts, char* line, char* path, int li
 		argv[2] = NULL;
 		argc = 2;
 	}
-	return handle_mlrrc_line_4(popts, argv, argc, path, lineno);
+	return handle_mlrrc_line_4(popts, argv, argc);
 }
 
-// xxx rm pass-thru of path & lineno
-static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc, char* path, int lineno) {
+static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc) {
 	int argi = 0;
 	if (cli_handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
 		// handled
@@ -1255,7 +1206,10 @@ static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc, char* p
 		// handled
 	} else if (cli_handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
 		// handled
+	} else if (cli_handle_misc_options(argv, argc, &argi, popts)) {
+		// handled
 	} else {
+		// unhandled
 		return FALSE;
 	}
 
@@ -1280,7 +1234,6 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->comment_handling               = COMMENTS_ARE_DATA;
 	preader_opts->comment_string                 = NULL;
 
-	// xxx temp
 	preader_opts->generator_opts.field_name     = "i";
 	preader_opts->generator_opts.start          = 0LL;
 	preader_opts->generator_opts.stop           = 100LL;
@@ -1672,10 +1625,10 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->ifile_fmt = argv[argi+1];
 		argi += 2;
 
-	} else if (streq(argv[argi], "--igen")) { // xxx temp
+	} else if (streq(argv[argi], "--igen")) {
 		preader_opts->ifile_fmt = "gen";
 		argi += 1;
-	} else if (streq(argv[argi], "--gen-start")) { // xxx temp
+	} else if (streq(argv[argi], "--gen-start")) {
 		preader_opts->ifile_fmt = "gen";
 		check_arg_count(argv, argi, argc, 2);
 		if (sscanf(argv[argi+1], "%lld", &preader_opts->generator_opts.start) != 1) {
@@ -1683,7 +1636,7 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 				MLR_GLOBALS.bargv0, argv[argi+1]);
 		}
 		argi += 2;
-	} else if (streq(argv[argi], "--gen-stop")) { // xxx temp
+	} else if (streq(argv[argi], "--gen-stop")) {
 		preader_opts->ifile_fmt = "gen";
 		check_arg_count(argv, argi, argc, 2);
 		if (sscanf(argv[argi+1], "%lld", &preader_opts->generator_opts.stop) != 1) {
@@ -1691,7 +1644,7 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 				MLR_GLOBALS.bargv0, argv[argi+1]);
 		}
 		argi += 2;
-	} else if (streq(argv[argi], "--gen-step")) { // xxx temp
+	} else if (streq(argv[argi], "--gen-step")) {
 		preader_opts->ifile_fmt = "gen";
 		check_arg_count(argv, argi, argc, 2);
 		if (sscanf(argv[argi+1], "%lld", &preader_opts->generator_opts.step) != 1) {
@@ -2373,6 +2326,67 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		preader_opts->use_implicit_csv_header = TRUE;
 		pwriter_opts->headerless_csv_output = TRUE;
 		argi += 1;
+	}
+	*pargi = argi;
+	return argi != oargi;
+}
+
+// Returns TRUE if the current flag was handled.
+static int cli_handle_misc_options(char** argv, int argc, int *pargi, cli_opts_t* popts) {
+	int argi = *pargi;
+	int oargi = argi;
+
+	if (streq(argv[argi], "-I")) {
+		popts->do_in_place = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "-n")) {
+		popts->no_input = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--from")) {
+		check_arg_count(argv, argi, argc, 2);
+		slls_append(popts->filenames, argv[argi+1], NO_FREE);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--ofmt")) {
+		check_arg_count(argv, argi, argc, 2);
+		popts->ofmt = argv[argi+1];
+		argi += 2;
+
+	} else if (streq(argv[argi], "--nr-progress-mod")) {
+		check_arg_count(argv, argi, argc, 2);
+		if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
+			fprintf(stderr,
+				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+			main_usage_short(stderr, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		if (popts->nr_progress_mod <= 0) {
+			fprintf(stderr,
+				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+			main_usage_short(stderr, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		argi += 2;
+
+	} else if (streq(argv[argi], "--seed")) {
+		check_arg_count(argv, argi, argc, 2);
+		if (sscanf(argv[argi+1], "0x%x", &popts->rand_seed) == 1) {
+			popts->have_rand_seed = TRUE;
+		} else if (sscanf(argv[argi+1], "%u", &popts->rand_seed) == 1) {
+			popts->have_rand_seed = TRUE;
+		} else {
+			fprintf(stderr,
+				"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+			main_usage_short(stderr, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		argi += 2;
+
 	}
 	*pargi = argi;
 	return argi != oargi;

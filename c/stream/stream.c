@@ -68,10 +68,10 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 		// after processing in case mappers have retained pointers into argv.
 
 		int argi = popts->mapper_argb;
-		int unused;
 		char** argv_copy = copy_argv(popts->original_argv);
-		sllv_t* pmapper_list = cli_parse_mappers(argv_copy, &argi, popts->argc, popts, &unused);
-		MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
+		sllv_t* pmapper_list = cli_parse_mappers(argv_copy, &argi, popts->argc, popts);
+		// Should not have been allowed by the CLI parser:
+		MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1);
 
 		char* filename = pe->value;
 		char* tempname = alloc_suffixed_temp_file_name(filename);

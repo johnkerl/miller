@@ -95,6 +95,10 @@ typedef struct _cli_opts_t {
 
 	int do_in_place;
 
+	int no_input;
+	int have_rand_seed;
+	unsigned rand_seed;
+
 } cli_opts_t;
 
 // ----------------------------------------------------------------
@@ -102,7 +106,7 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list);
 
 // See stream.c. The idea is that the mapper-chain is constructed once for normal stream-over-all-files
 // mode, but per-file for in-place mode.
-sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, int* pno_input);
+sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts);
 
 int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
 int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
