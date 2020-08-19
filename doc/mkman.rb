@@ -13,6 +13,8 @@
 
 # ----------------------------------------------------------------
 def main
+  # In case the user running this has a .mlrrc
+  ENV['MLRRC'] = '__none__'
 
   print make_top
 

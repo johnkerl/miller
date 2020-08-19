@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# In case the user running this has a .mlrrc
+export MLRRC=__none__
+
 mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   echo ""
   echo "<a id=\"$funcname\"/>"
