@@ -136,6 +136,7 @@ static void main_usage_examples(FILE* o, char* argv0, char* leader);
 static void list_all_verbs_raw(FILE* o);
 static void list_all_verbs(FILE* o, char* leader);
 static void main_usage_help_options(FILE* o, char* argv0);
+static void main_usage_mlrrc(FILE* o, char* argv0);
 static void main_usage_functions(FILE* o, char* argv0, char* leader);
 static void main_usage_data_format_examples(FILE* o, char* argv0);
 static void main_usage_data_format_options(FILE* o, char* argv0);
@@ -517,6 +518,10 @@ static void main_usage_long(FILE* o, char* argv0) {
 	main_usage_help_options(o, argv0);
 	fprintf(o, "\n");
 
+	fprintf(o, "Customization via .mlrrc:\n");
+	main_usage_mlrrc(o, argv0);
+	fprintf(o, "\n");
+
 	fprintf(o, "Verbs:\n");
 	list_all_verbs(o, "  ");
 	fprintf(o, "\n");
@@ -642,6 +647,40 @@ static void main_usage_help_options(FILE* o, char* argv0) {
 	fprintf(o, "  -F                           Show a bare listing of built-in functions by name.\n");
 	fprintf(o, "  -k or --help-all-keywords    Show help on all keywords.\n");
 	fprintf(o, "  -K                           Show a bare listing of keywords by name.\n");
+}
+
+static void main_usage_mlrrc(FILE* o, char* argv0) {
+	fprintf(o, "You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.\n");
+	fprintf(o, "For example, if you usually process CSV, then you can put \"--csv\" in your .mlrrc file\n");
+	fprintf(o, "and that will be the default input/output format unless otherwise specified on the command line.\n");
+	fprintf(o, "\n");
+	fprintf(o, "The .mlrrc file format is one \"--flag\" or \"--option value\" per line, with the leading \"--\" optional.\n");
+	fprintf(o, "Hash-style comments and blank lines are ignored.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Sample .mlrrc:\n");
+	fprintf(o, "# Input and output formats are CSV by default (unless otherwise specified\n");
+	fprintf(o, "# on the mlr command line):\n");
+	fprintf(o, "csv\n");
+	fprintf(o, "# These are no-ops for CSV, but when I do use JSON output, I want these\n");
+	fprintf(o, "# pretty-printing options to be used:\n");
+	fprintf(o, "jvstack\n");
+	fprintf(o, "jlistwrap\n");
+	fprintf(o, "\n");
+	fprintf(o, "How to specify location of .mlrrc:\n");
+	fprintf(o, "* If $MLRRC is set:\n");
+	fprintf(o, "  o If its value is \"__none__\" then no .mlrrc files are processed.\n");
+	fprintf(o, "  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax\n");
+	fprintf(o, "    errors, they abort mlr with a usage message (as if you had mistyped something on the\n");
+	fprintf(o, "    command line). If the file can't be loaded at all, though, it is silently skipped.\n");
+	fprintf(o, "  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is\n");
+	fprintf(o, "    set in the environment.\n");
+	fprintf(o, "* Otherwise:\n");
+	fprintf(o, "  o If $HOME/.mlrrc exists, it's then processed as above.\n");
+	fprintf(o, "  o If ./.mlrrc exists, it's then also processed as above.\n");
+	fprintf(o, "  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)\n");
+	fprintf(o, "\n");
+	fprintf(o, "See also:\n");
+	fprintf(o, "https://johnkerl.org/miller/doc/customization.html\n");
 }
 
 static void main_usage_functions(FILE* o, char* argv0, char* leader) {
@@ -1531,6 +1570,9 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-help-options")) {
 		main_usage_help_options(stdout, MLR_GLOBALS.bargv0);
+		return TRUE;
+	} else if (streq(argv[argi], "--usage-mlrrc")) {
+		main_usage_mlrrc(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-functions")) {
 		main_usage_functions(stdout, MLR_GLOBALS.bargv0, "");

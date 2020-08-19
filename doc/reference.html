@@ -1323,6 +1323,39 @@ Help options:
   -k or --help-all-keywords    Show help on all keywords.
   -K                           Show a bare listing of keywords by name.
 
+Customization via .mlrrc:
+You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
+For example, if you usually process CSV, then you can put "--csv" in your .mlrrc file
+and that will be the default input/output format unless otherwise specified on the command line.
+
+The .mlrrc file format is one "--flag" or "--option value" per line, with the leading "--" optional.
+Hash-style comments and blank lines are ignored.
+
+Sample .mlrrc:
+# Input and output formats are CSV by default (unless otherwise specified
+# on the mlr command line):
+csv
+# These are no-ops for CSV, but when I do use JSON output, I want these
+# pretty-printing options to be used:
+jvstack
+jlistwrap
+
+How to specify location of .mlrrc:
+* If $MLRRC is set:
+  o If its value is "__none__" then no .mlrrc files are processed.
+  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax
+    errors, they abort mlr with a usage message (as if you had mistyped something on the
+    command line). If the file can't be loaded at all, though, it is silently skipped.
+  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is
+    set in the environment.
+* Otherwise:
+  o If $HOME/.mlrrc exists, it's then processed as above.
+  o If ./.mlrrc exists, it's then also processed as above.
+  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)
+
+See also:
+https://johnkerl.org/miller/doc/customization.html
+
 Verbs:
    altkv bar bootstrap cat check clean-whitespace count count-distinct
    count-similar cut decimate fill-down filter format-values fraction grep

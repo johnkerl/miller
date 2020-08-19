@@ -95,6 +95,10 @@ output separator to the given value."""
 	print make_subsection('AUXILIARY COMMANDS', [])
 	print make_code_block(`mlr --usage-auxents`)
 
+  print make_section('MLRRC', [])
+
+  print make_code_block(`mlr --usage-mlrrc`)
+
   verbs = `mlr --list-all-verbs-raw`
   print make_section('VERBS', [
     ""
