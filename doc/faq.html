@@ -596,7 +596,7 @@ Name=Khavari, Darius^ARole=tester
 <div class="pokipanel">
 <pre>
 $ echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
-x.a=3,y:b=4,z/c=5,product.all=60
+{ "x.a": 3, "y": {"b": 4 },"z/c": 5, "product.all": 60 }
 </pre>
 </div>
 <p/>
@@ -660,7 +660,7 @@ $a = "It's OK, I said, then 'for now'."
 <div class="pokipanel">
 <pre>
 $ echo a=bcd | mlr put -f data/single-quote-example.mlr
-a=It's OK, I said, then 'for now'.
+{ "a": "It's OK, I said, then 'for now'." }
 </pre>
 </div>
 <p/>
@@ -675,7 +675,7 @@ strings, no problem.
 <div class="pokipanel">
 <pre>
 $ echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
-a=It's OK, I said, 'for now'.
+{ "a": "It's OK, I said, 'for now'." }
 </pre>
 </div>
 <p/>
@@ -720,11 +720,11 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <div class="pokipanel">
 <pre>
 $ mlr cut -f x,i,a data/small
-a=pan,i=1,x=0.3467901443380824
-a=eks,i=2,x=0.7586799647899636
-a=wye,i=3,x=0.20460330576630303
-a=eks,i=4,x=0.38139939387114097
-a=wye,i=5,x=0.5732889198020006
+{ "a": "pan", "i": 1, "x": 0.3467901443380824 }
+{ "a": "eks", "i": 2, "x": 0.7586799647899636 }
+{ "a": "wye", "i": 3, "x": 0.20460330576630303 }
+{ "a": "eks", "i": 4, "x": 0.38139939387114097 }
+{ "a": "wye", "i": 5, "x": 0.5732889198020006 }
 </pre>
 </div>
 <p/>
@@ -739,11 +739,11 @@ command, which has the same semantics.
 <div class="pokipanel">
 <pre>
 $ mlr cut -o -f x,i,a data/small
-x=0.3467901443380824,i=1,a=pan
-x=0.7586799647899636,i=2,a=eks
-x=0.20460330576630303,i=3,a=wye
-x=0.38139939387114097,i=4,a=eks
-x=0.5732889198020006,i=5,a=wye
+{ "x": 0.3467901443380824, "i": 1, "a": "pan" }
+{ "x": 0.7586799647899636, "i": 2, "a": "eks" }
+{ "x": 0.20460330576630303, "i": 3, "a": "wye" }
+{ "x": 0.38139939387114097, "i": 4, "a": "eks" }
+{ "x": 0.5732889198020006, "i": 5, "a": "wye" }
 </pre>
 </div>
 <p/>
@@ -773,8 +773,8 @@ why don&rsquo;t I see <code>NR=1</code> and <code>NR=2</code> here??
 <div class="pokipanel">
 <pre>
 $ mlr filter '$x &gt; 0.5' then put '$NR = NR' data/small
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
+{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797, "NR": 2 }
+{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729, "NR": 5 }
 </pre>
 </div>
 <p/>
@@ -787,7 +787,7 @@ current record, and if you add/remove a field, the value of <code>NF</code> will
 <div class="pokipanel">
 <pre>
 $ echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
-nf1=3,u=4,nf2=5,nf3=3
+{ "nf1": 3, "u": 4, "nf2": 5, "nf3": 3 }
 </pre>
 </div>
 <p/>
@@ -823,8 +823,8 @@ wye pan 5 0.5732889198020006 0.8636244699032729 5   2
 <div class="pokipanel">
 <pre>
 $ mlr filter '$x &gt; 0.5' then cat -n data/small
-n=1,a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+{ "n": 1, "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
+{ "n": 2, "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
 </pre>
 </div>
 <p/>

@@ -398,7 +398,7 @@ something else, particularly CSV. I use Miller&rsquo;s pretty-print format
 <div class="pokipanel">
 <pre>
 $ echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
-x=3.1,y=4.3,z=13.330000
+{ "x": 3.1, "y": 4.3, "z": 13.330000 }
 </pre>
 </div>
 <p/>
@@ -406,7 +406,7 @@ x=3.1,y=4.3,z=13.330000
 <div class="pokipanel">
 <pre>
 $ echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
-x=0xffff,y=0xff,z=00feff01
+{ "x": 0xffff, "y": 0xff, "z": "00feff01" }
 </pre>
 </div>
 <p/>
@@ -421,7 +421,7 @@ Example:
 <div class="pokipanel">
 <pre>
 $ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
-x=0xffff,y=0xff,z=0xfeff01
+{ "x": 0xffff, "y": 0xff, "z": 0xfeff01 }
 </pre>
 </div>
 <p/>
@@ -761,11 +761,11 @@ all sort-field values present:
 <div class="pokipanel">
 <pre>
 $ mlr cat data/sort-null.dat
-a=3,b=2
-a=1,b=8
-a=,b=4
-x=9,b=10
-a=5,b=7
+{ "a": 3, "b": 2 }
+{ "a": 1, "b": 8 }
+{ "a": "", "b": 4 }
+{ "x": 9, "b": 10 }
+{ "a": 5, "b": 7 }
 </pre>
 </div>
 <p/>
@@ -773,11 +773,11 @@ a=5,b=7
 <div class="pokipanel">
 <pre>
 $ mlr sort -n  a data/sort-null.dat
-a=1,b=8
-a=3,b=2
-a=5,b=7
-a=,b=4
-x=9,b=10
+{ "a": 1, "b": 8 }
+{ "a": 3, "b": 2 }
+{ "a": 5, "b": 7 }
+{ "a": "", "b": 4 }
+{ "x": 9, "b": 10 }
 </pre>
 </div>
 <p/>
@@ -785,11 +785,11 @@ x=9,b=10
 <div class="pokipanel">
 <pre>
 $ mlr sort -nr a data/sort-null.dat
-a=,b=4
-a=5,b=7
-a=3,b=2
-a=1,b=8
-x=9,b=10
+{ "a": "", "b": 4 }
+{ "a": 5, "b": 7 }
+{ "a": 3, "b": 2 }
+{ "a": 1, "b": 8 }
+{ "x": 9, "b": 10 }
 </pre>
 </div>
 <p/>
@@ -799,7 +799,7 @@ x=9,b=10
 <div class="pokipanel">
 <pre>
 $ echo 'x=2,y=3' | mlr put '$a=$x+$y'
-x=2,y=3,a=5
+{ "x": 2, "y": 3, "a": 5 }
 </pre>
 </div>
 <p/>
@@ -807,7 +807,7 @@ x=2,y=3,a=5
 <div class="pokipanel">
 <pre>
 $ echo 'x=,y=3' | mlr put '$a=$x+$y'
-x=,y=3,a=
+{ "x": "", "y": 3, "a": "" }
 </pre>
 </div>
 <p/>
@@ -815,7 +815,7 @@ x=,y=3,a=
 <div class="pokipanel">
 <pre>
 $ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
-x=,y=3,a=,b=1.098612
+{ "x": "", "y": 3, "a": "", "b": 1.098612 }
 </pre>
 </div>
 <p/>
@@ -826,7 +826,7 @@ special: if one argument is non-null, it wins:
 <div class="pokipanel">
 <pre>
 $ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
-x=,y=3,a=3,b=3
+{ "x": "", "y": 3, "a": 3, "b": 3 }
 </pre>
 </div>
 <p/>
@@ -843,7 +843,7 @@ absent is not stored in the left-hand side of an assignment statement </b>:
 <div class="pokipanel">
 <pre>
 $ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
-x=2,y=3,b=3,c=5
+{ "x": 2, "y": 3, "b": 3, "c": 5 }
 </pre>
 </div>
 <p/>
@@ -851,7 +851,7 @@ x=2,y=3,b=3,c=5
 <div class="pokipanel">
 <pre>
 $ echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
-x=2,y=3,a=2,b=3
+{ "x": 2, "y": 3, "a": 2, "b": 3 }
 </pre>
 </div>
 <p/>
@@ -906,11 +906,11 @@ inputs present &mdash; you can use a pattern-action block with
 <div class="pokipanel">
 <pre>
 $ mlr cat data/het.dkvp
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true
-record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false
+{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true }
+{ "record_count": 100, "resource": "/path/to/file" }
+{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true }
+{ "record_count": 150, "resource": "/path/to/second/file" }
+{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false }
 </pre>
 </div>
 <p/>
@@ -918,11 +918,11 @@ resource=/some/other/path,loadsec=0.97,ok=false
 <div class="pokipanel">
 <pre>
 $ mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
-resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
-record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
-record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
+{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true, "loadmillis": 450.000000 }
+{ "record_count": 100, "resource": "/path/to/file" }
+{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true, "loadmillis": 320.000000 }
+{ "record_count": 150, "resource": "/path/to/second/file" }
+{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false, "loadmillis": 970.000000 }
 </pre>
 </div>
 <p/>
@@ -930,11 +930,11 @@ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
 <div class="pokipanel">
 <pre>
 $ mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
-resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
-record_count=100,resource=/path/to/file,loadmillis=0.000000
-resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
-record_count=150,resource=/path/to/second/file,loadmillis=0.000000
-resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
+{ "resource": "/path/to/file", "loadsec": 0.45, "ok": true, "loadmillis": 450.000000 }
+{ "record_count": 100, "resource": "/path/to/file", "loadmillis": 0.000000 }
+{ "resource": "/path/to/second/file", "loadsec": 0.32, "ok": true, "loadmillis": 320.000000 }
+{ "record_count": 150, "resource": "/path/to/second/file", "loadmillis": 0.000000 }
+{ "resource": "/some/other/path", "loadsec": 0.97, "ok": false, "loadmillis": 970.000000 }
 </pre>
 </div>
 <p/>
@@ -1063,8 +1063,8 @@ name=bull,regex=^b[ou]ll$
 <div class="pokipanel">
 <pre>
 $ mlr filter '$name =~ $regex' data/regex-in-data.dat
-name=jane,regex=^j.*e$
-name=bull,regex=^b[ou]ll$
+{ "name": "jane", "regex": "^j.*e$" }
+{ "name": "bull", "regex": "^b[ou]ll$" }
 </pre>
 </div>
 <p/>

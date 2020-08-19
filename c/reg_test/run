@@ -55,6 +55,9 @@ outfile=$outdir/out
 expfile=$expdir/out
 mkdir -p $outdir
 
+# Don't let the running user's .mlrrc affect the regression test
+export MLRRC="__none__"
+
 rm -rf $outdir
 mkdir -p $outdir
 touch $outfile

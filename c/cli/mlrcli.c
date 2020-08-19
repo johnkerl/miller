@@ -164,19 +164,26 @@ static int lhmsll_get_or_die(lhmsll_t* pmap, char* key);
 cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 
-	// xxx --norc and emph in manpage it MUST come first
+	int argi = 1;
 
+	// Set defaults for options
 	cli_opts_init(popts);
-	cli_load_mlrrc_or_die(popts);
+
+	// Try .mlrrc overrides (then command-line on top of that).
+	// A --norc flag (if provided) must come before all other options.
+	// Or, they can set the environment variable MLRRC="__none__".
+	if (argc >= 2 && streq(argv[1], "--norc")) {
+		argi++;
+	} else {
+		cli_load_mlrrc_or_die(popts);
+	}
 
 	int no_input       = FALSE;
 	int have_rand_seed = FALSE;
 	unsigned rand_seed = 0;
 
-	int argi = 1;
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
-		// xxx factor apart ...
 		if (argv[argi][0] != '-') {
 			break; // No more flag options to process
 		} else if (handle_terminal_usage(argv, argc, argi)) {
@@ -1115,6 +1122,9 @@ void cli_opts_init(cli_opts_t* popts) {
 static void cli_load_mlrrc_or_die(cli_opts_t* popts) {
 	char* env_mlrrc = getenv("MLRRC");
 	if (env_mlrrc != NULL) {
+		if (streq(env_mlrrc, "__none__")) {
+			return;
+		}
 		if (cli_try_load_mlrrc(popts, env_mlrrc)) {
 			return;
 		}
