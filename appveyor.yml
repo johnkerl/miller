@@ -7,7 +7,7 @@ install:
   - bash -lc "pacman-key --init"
   - bash -lc "pacman-key --populate msys2"
   - bash -lc "pacman-key --verify msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig"
-  - bash -lc "pacman -U msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz"
+  - bash -lc "pacman --noconfirm -U msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz"
   - bash -lc "pacman --needed --noconfirm -Syu"
   - bash -lc "pacman --needed --noconfirm -Sy"
   - bash -lc "pacman --noconfirm -S base-devel"
