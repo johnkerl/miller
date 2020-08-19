@@ -14,6 +14,7 @@ install:
   - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-toolchain"
   - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-pcre"
   - bash -lc "pacman --noconfirm -S msys2-runtime"
+  - bash -lc "pacman --noconfirm -S isl"
 
 build_script:
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; pwd"
