@@ -1171,7 +1171,16 @@ static int handle_mlrrc_line_2(cli_opts_t* popts, char* line) {
 
 	int rc = handle_mlrrc_line_3(popts, dashed_line);
 
-	free(dashed_line);
+	// Do not free these. The command-line parsers can retain pointers into argv strings (rather
+	// than copying), resulting in freed-memory reads later in the data-processing verbs.
+	//
+	// It would be possible to be diligent about making sure all current command-line-parsing
+	// callsites copy strings rather than pointing to them -- but it would be easy to miss some, and
+	// also any future codemods might make the same mistake as well.
+	//
+	// It's safer (and no big leak) to simply leave these parsed mlrrc lines unfreed.
+	//
+	// free(dashed_line);
 	return rc;
 }
 
