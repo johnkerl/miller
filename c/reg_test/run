@@ -1308,7 +1308,7 @@ echo 'x='      | run_mlr put '$y = capitalize($x)'
 echo 'x=hello' | run_mlr put '$y = capitalize($z)'
 
 mention LHS value on first record should result in ZYX for process creation
-export indir; run_mlr --from $indir/abixy put 'ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a'
+export indir; run_mlr --from $indir/abixy put -q 'ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a'
 
 # ----------------------------------------------------------------
 announce POSITIONAL INDEXING
