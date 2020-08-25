@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 	"strings"
-
 	// Miller:
 	//"containers"
 )
@@ -18,7 +17,7 @@ import (
 // xxx to do: stdout/stderr w/ ternary on exitrc
 func usage() {
 	fmt.Fprintf(os.Stderr, "Usage: %s [options] {filenames ...}\n", os.Args[0])
-	//fmt.Fprintf(os.Stderr, "If no file name is given, or if filename is \"-\", stdin is used.\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "If no file name is given, or if filename is \"-\", stdin is used.\n")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
