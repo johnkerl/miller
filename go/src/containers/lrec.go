@@ -153,42 +153,6 @@ func (this *Lrec) Copy() *Lrec{
 	return that
 }
 
-//void lrec_put_ext(Lrec* prec, char* key, char* value, char free_flags, char quote_flags) {
-//	lrecEntry* pe = lrec_find_entry(prec, key);
-//
-//	if (pe != NULL) {
-//		if (pe->free_flags & FREE_ENTRY_VALUE) {
-//			free(pe->value);
-//		}
-//		if (free_flags & FREE_ENTRY_KEY)
-//			free(key);
-//		pe->value = value;
-//		if (free_flags & FREE_ENTRY_VALUE)
-//			pe->free_flags |= FREE_ENTRY_VALUE;
-//		else
-//			pe->free_flags &= ~FREE_ENTRY_VALUE;
-//	} else {
-//		pe = mlr_malloc_or_die(sizeof(lrecEntry));
-//		pe->key         = key;
-//		pe->value       = value;
-//		pe->free_flags  = free_flags;
-//		pe->quote_flags = quote_flags;
-//
-//		if (prec->phead == NULL) {
-//			pe->pprev   = NULL;
-//			pe->pnext   = NULL;
-//			prec->phead = pe;
-//			prec->ptail = pe;
-//		} else {
-//			pe->pprev   = prec->ptail;
-//			pe->pnext   = NULL;
-//			prec->ptail->pnext = pe;
-//			prec->ptail = pe;
-//		}
-//		prec->field_count++;
-//	}
-//}
-//
 //void lrec_prepend(Lrec* prec, char* key, char* value, char free_flags) {
 //	lrecEntry* pe = lrec_find_entry(prec, key);
 //
@@ -221,7 +185,7 @@ func (this *Lrec) Copy() *Lrec{
 //		prec->field_count++;
 //	}
 //}
-//
+
 //lrecEntry* lrec_put_after(Lrec* prec, lrecEntry* pd, char* key, char* value, char free_flags) {
 //	lrecEntry* pe = lrec_find_entry(prec, key);
 //
@@ -257,17 +221,6 @@ func (this *Lrec) Copy() *Lrec{
 //		prec->field_count++;
 //	}
 //	return pe;
-//}
-
-//char* lrec_get_pff(Lrec* prec, char* key, char** ppfree_flags) {
-//	lrecEntry* pe = lrec_find_entry(prec, key);
-//	if (pe != NULL) {
-//		*ppfree_flags = &pe->free_flags;
-//		return pe->value;
-//	} else {
-//		*ppfree_flags = NULL;
-//		return NULL;
-//	}
 //}
 
 //char* lrec_get_ext(Lrec* prec, char* key, lrecEntry** ppentry) {
