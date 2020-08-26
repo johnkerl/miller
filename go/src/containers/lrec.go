@@ -47,18 +47,18 @@ package containers
 
 import (
 	"bytes"
-	"fmt"
+	"os"
 )
 
 // ----------------------------------------------------------------
 type Lrec struct {
 	fieldCount int
-	phead *lrecEntry
-	ptail *lrecEntry
+	phead      *lrecEntry
+	ptail      *lrecEntry
 }
 
 type lrecEntry struct {
-	key *string
+	key   *string
 	value *string
 	pprev *lrecEntry
 	pnext *lrecEntry
@@ -66,7 +66,7 @@ type lrecEntry struct {
 
 // ----------------------------------------------------------------
 func LrecAlloc() *Lrec {
-	return &Lrec {
+	return &Lrec{
 		0,
 		nil,
 		nil,
@@ -74,11 +74,8 @@ func LrecAlloc() *Lrec {
 }
 
 // ----------------------------------------------------------------
-// xxx to do: take an ostream arg
-
-// 5x faster than fmt.Print() separately
-func (this *Lrec) Print() {
-	var buffer bytes.Buffer
+func (this *Lrec) Print(file *os.File) {
+	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := this.phead; pe != nil; pe = pe.pnext {
 		buffer.WriteString(*pe.key)
 		buffer.WriteString("=")
@@ -88,12 +85,12 @@ func (this *Lrec) Print() {
 		}
 	}
 	buffer.WriteString("\n")
-	fmt.Print(buffer.String())
+	(*file).WriteString(buffer.String())
 }
 
 // ----------------------------------------------------------------
 func lrecEntryAlloc(key *string, value *string) *lrecEntry {
-	return &lrecEntry {
+	return &lrecEntry{
 		key,
 		value,
 		nil,
@@ -163,7 +160,7 @@ func (this *Lrec) Clear() {
 	this.ptail = nil
 }
 
-func (this *Lrec) Copy() *Lrec{
+func (this *Lrec) Copy() *Lrec {
 	that := LrecAlloc()
 	for pe := this.phead; pe != nil; pe = pe.pnext {
 		that.Put(pe.key, pe.value)

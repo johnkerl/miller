@@ -95,30 +95,12 @@ func stream(sourceName string) error {
 				// xxx temp
 				ifs := ","
 				ips := "="
-
 				lrec := input.LrecFromDKVPLine(&line, &ifs, &ips)
 
-				lrec.Print()
+				lrec.Print(os.Stdout)
 			}
 		}
 	}
 
 	return nil
 }
-
-//func scanFile() {
-//    f, err := os.OpenFile(logfile, os.O_RDONLY, os.ModePerm)
-//    if err != nil {
-//        log.Fatalf("open file error: %v", err)
-//        return
-//    }
-//    defer f.Close()
-//
-//    sc := bufio.NewScanner(f)
-//    for sc.Scan() {
-//        _ = sc.Text()  // GET the line string
-//    }
-//    if err := sc.Err(); err != nil {
-//        log.Fatalf("scan file error: %v", err)
-//        return
-//    }
