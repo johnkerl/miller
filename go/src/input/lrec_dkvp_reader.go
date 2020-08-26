@@ -5,7 +5,6 @@ import (
 	"strings"
 )
 
-// xxx to do: ifs and ips
 func LrecFromDKVPLine(
 	line *string,
 	ifs *string,
@@ -18,8 +17,8 @@ func LrecFromDKVPLine(
 		// xxx range-check
 		key := kv[0]
 		value := kv[1]
+		// to do: avoid re-walk ...
 		lrec.Put(&key, &value)
-		//lrec.PutAtEnd(&key, &value)
 	}
 	return lrec
 }
