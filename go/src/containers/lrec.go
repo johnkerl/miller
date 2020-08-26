@@ -46,7 +46,8 @@
 package containers
 
 import (
-	"fmt"
+	//"fmt"
+	"os"
 )
 
 // ----------------------------------------------------------------
@@ -57,8 +58,8 @@ type Lrec struct {
 }
 
 type lrecEntry struct {
-	key string
-	value string
+	key *string
+	value *string
 	pprev *lrecEntry
 	pnext *lrecEntry
 }
@@ -74,21 +75,80 @@ func LrecAlloc() *Lrec {
 
 // ----------------------------------------------------------------
 // xxx to do: take an ostream arg
+
+//func (this *Lrec) Print() {
+//	os.Stdout.WriteString("{")
+//	for pe := this.phead; pe != nil; pe = pe.pnext {
+//		os.Stdout.WriteString("  \"")
+//		os.Stdout.WriteString(*pe.key)
+//		os.Stdout.WriteString(": ")
+//		os.Stdout.WriteString(*pe.value)
+//		if pe.pnext != nil {
+//			os.Stdout.WriteString(",\n")
+//		} else {
+//			os.Stdout.WriteString("\n")
+//		}
+//	}
+//	os.Stdout.WriteString("}\n")
+//}
+
+//func (this *Lrec) Print() {
+//	fmt.Println("{")
+//	for pe := this.phead; pe != nil; pe = pe.pnext {
+//		fmt.Print("  \"")
+//		fmt.Print(*pe.key)
+//		fmt.Print(": ")
+//		fmt.Print(*pe.value)
+//		if pe.pnext != nil {
+//			fmt.Print(",\n")
+//		} else {
+//			fmt.Print("\n")
+//		}
+//	}
+//	fmt.Print("}\n")
+//}
+
+//func (this *Lrec) Print() {
+//	for pe := this.phead; pe != nil; pe = pe.pnext {
+//		os.Stdout.WriteString(*pe.key)
+//		os.Stdout.WriteString("=")
+//		os.Stdout.WriteString(*pe.value)
+//		if pe.pnext != nil {
+//			os.Stdout.WriteString(",")
+//		}
+//	}
+//	os.Stdout.WriteString("\n")
+//}
+
+//func (this *Lrec) Print() {
+//	for pe := this.phead; pe != nil; pe = pe.pnext {
+//		fmt.Print(*pe.key)
+//		fmt.Print("=")
+//		fmt.Print(*pe.value)
+//		if pe.pnext != nil {
+//			fmt.Print(",")
+//		}
+//	}
+//	fmt.Print("\n")
+//}
+
+// 5x faster, wtw?!?
 func (this *Lrec) Print() {
-	fmt.Println("{")
+	output := ""
 	for pe := this.phead; pe != nil; pe = pe.pnext {
-		fmt.Printf("  \"%s\" : \"%s\"", pe.key, pe.value);
+		output += *pe.key
+		output += "="
+		output += *pe.value
 		if pe.pnext != nil {
-			fmt.Println(",")
-		} else {
-			fmt.Println("")
+			output += ","
 		}
 	}
-	fmt.Println("}")
+	output += "\n"
+	os.Stdout.WriteString(output)
 }
 
 // ----------------------------------------------------------------
-func lrecEntryAlloc(key string, value string) *lrecEntry {
+func lrecEntryAlloc(key *string, value *string) *lrecEntry {
 	return &lrecEntry {
 		key,
 		value,
@@ -98,9 +158,9 @@ func lrecEntryAlloc(key string, value string) *lrecEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) findEntry(key string) *lrecEntry {
+func (this *Lrec) findEntry(key *string) *lrecEntry {
 	for pe := this.phead; pe != nil; pe = pe.pnext {
-		if pe.key == key {
+		if *pe.key == *key {
 			return pe
 		}
 	}
@@ -108,7 +168,7 @@ func (this *Lrec) findEntry(key string) *lrecEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Put(key string, value string) {
+func (this *Lrec) Put(key *string, value *string) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = lrecEntryAlloc(key, value)
@@ -128,12 +188,26 @@ func (this *Lrec) Put(key string, value string) {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Get(key string) *string {
+func (this *Lrec) PutAtEnd(key *string, value *string) {
+	pe := lrecEntryAlloc(key, value)
+	if this.phead == nil {
+		this.phead = pe
+		this.ptail = pe
+	} else {
+		pe.pprev = this.ptail
+		this.ptail.pnext = pe
+		this.ptail = pe
+	}
+	this.fieldCount++
+}
+
+// ----------------------------------------------------------------
+func (this *Lrec) Get(key *string) *string {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return nil
 	} else {
-		return &pe.value
+		return pe.value
 	}
 	return nil
 }

@@ -8,9 +8,11 @@ import (
 	"io"
 	"log"
 	"os"
+	"runtime/pprof"
 	"strings"
 	// Miller:
 	//"containers"
+	"input"
 )
 
 // ----------------------------------------------------------------
@@ -25,12 +27,27 @@ func usage() {
 // ----------------------------------------------------------------
 func main() {
 	// pFoo := flag.Bool("f", false, "Foo")
+	cpuprofile := flag.String("cpuprofile", "", "Write CPU profile to `file`")
 
 	flag.Usage = usage
 	flag.Parse()
 	args := flag.Args()
 
 	// foo := *pFoo
+
+	// go tool pprof mlr foo.prof
+	//   top10
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal("Could not create CPU profile: ", err)
+		}
+		defer f.Close()
+		if err := pprof.StartCPUProfile(f); err != nil {
+			log.Fatal("Could not start CPU profile: ", err)
+		}
+	    defer pprof.StopCPUProfile()
+	}
 
 	if len(args) == 0 {
 		err := stream("-")
@@ -45,7 +62,6 @@ func main() {
 			}
 		}
 	}
-	os.Exit(0)
 }
 
 // ----------------------------------------------------------------
@@ -63,6 +79,7 @@ func stream(sourceName string) error {
 	eof := false
 
 	for !eof {
+
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
 			err = nil
@@ -70,10 +87,39 @@ func stream(sourceName string) error {
 		} else if err != nil {
 			return err
 		} else {
-			// This is how to do a chomp:
-			line = strings.TrimRight(line, "\n")
+			if false {
+				fmt.Print(line)
+			} else {
+				// This is how to do a chomp:
+				line = strings.TrimRight(line, "\n")
+
+				// xxx temp
+				ifs := ","
+				ips := "="
+
+				lrec := input.LrecFromDKVPLine(&line, &ifs, &ips)
+				lrec.Print()
+
+			}
 		}
 	}
 
 	return nil
 }
+
+//func scanFile() {
+//    f, err := os.OpenFile(logfile, os.O_RDONLY, os.ModePerm)
+//    if err != nil {
+//        log.Fatalf("open file error: %v", err)
+//        return
+//    }
+//    defer f.Close()
+//
+//    sc := bufio.NewScanner(f)
+//    for sc.Scan() {
+//        _ = sc.Text()  // GET the line string
+//    }
+//    if err := sc.Err(); err != nil {
+//        log.Fatalf("scan file error: %v", err)
+//        return
+//    }
