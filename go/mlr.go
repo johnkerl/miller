@@ -2,17 +2,13 @@ package main
 
 import (
 	// System:
-	"bufio"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"runtime/pprof"
-	"strings"
 	// Miller:
-	//"containers"
-	"input"
+	"stream"
 )
 
 // ----------------------------------------------------------------
@@ -49,58 +45,8 @@ func main() {
 	    defer pprof.StopCPUProfile()
 	}
 
-	if len(args) == 0 {
-		err := stream("-")
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else {
-		for _, arg := range args {
-			err := stream(arg)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
+	err := stream.Stream(args)
+	if err != nil {
+		log.Fatal(err)
 	}
-}
-
-// ----------------------------------------------------------------
-func stream(sourceName string) error {
-	inputStream := os.Stdin
-	if sourceName != "-" {
-		var err error
-		if inputStream, err = os.Open(sourceName); err != nil {
-			return err
-		}
-	}
-
-	reader := bufio.NewReader(inputStream)
-
-	eof := false
-
-	for !eof {
-		line, err := reader.ReadString('\n')
-		if err == io.EOF {
-			err = nil
-			eof = true
-		} else if err != nil {
-			return err
-		} else {
-			if false {
-				fmt.Print(line)
-			} else {
-				// This is how to do a chomp:
-				line = strings.TrimRight(line, "\n")
-
-				// xxx temp
-				ifs := ","
-				ips := "="
-				lrec := input.LrecFromDKVPLine(&line, &ifs, &ips)
-
-				lrec.Print(os.Stdout)
-			}
-		}
-	}
-
-	return nil
 }

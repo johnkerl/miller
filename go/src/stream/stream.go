@@ -3,48 +3,42 @@ package stream
 import (
 	// System:
 	"bufio"
-	"fmt"
-	"io"
+	"log"
 	"os"
-	"strings"
 	// Miller:
+	"containers"
 	"input"
+	"mapping"
+	"output"
 )
 
-func Stream(sourceName string) error {
-	inputStream := os.Stdin
-	if sourceName != "-" {
-		var err error
-		if inputStream, err = os.Open(sourceName); err != nil {
-			return err
-		}
+// ----------------------------------------------------------------
+func Stream(filenames []string) error {
+	istream, err := Argf(filenames)
+	if err != nil {
+		return err
+		os.Exit(1)
 	}
+	reader := bufio.NewReader(istream)
 
-	reader := bufio.NewReader(inputStream)
+	inrecs := make(chan *containers.Lrec, 10)
+	echan := make(chan error, 1)
+	outrecs := make(chan *containers.Lrec, 1)
+	donechan := make(chan bool, 1)
 
-	eof := false
+	go input.ChannelReader(reader, inrecs, echan)
+	// TODO: needs mappers ...
+	go mapping.ChannelMapper(inrecs, outrecs)
+	go output.ChannelWriter(os.Stdout, outrecs, donechan)
 
-	for !eof {
-		line, err := reader.ReadString('\n')
-		if err == io.EOF {
-			err = nil
-			eof = true
-		} else if err != nil {
-			return err
-		} else {
-			if false {
-				fmt.Print(line)
-			} else {
-				// This is how to do a chomp:
-				line = strings.TrimRight(line, "\n")
-
-				// xxx temp
-				ifs := ","
-				ips := "="
-				lrec := input.LrecFromDKVPLine(&line, &ifs, &ips)
-
-				lrec.Print(os.Stdout)
-			}
+	done := false
+	for !done {
+		select {
+		case err := <-echan:
+			log.Fatal(err)
+		case _ = <-donechan:
+			done = true
+			break
 		}
 	}
 
