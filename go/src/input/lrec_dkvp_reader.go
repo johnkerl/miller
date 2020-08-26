@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// reader class will be trivial since DKVPs are stateless
+
 func LrecFromDKVPLine(
 	line *string,
 	ifs *string,

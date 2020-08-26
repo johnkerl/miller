@@ -1,0 +1,32 @@
+* input.RecordReader interface
+* impls:
+  o dkvp
+  o xtab
+  o csv
+  o streaming json
+  o etc
+* factory
+* remove argf
+* needs fresh start on each new filename
+
+* mapper interface
+* impls:
+  o cat
+  o cut
+  o head
+  o tail
+  o count
+  o ... lots more over time (if ever)
+  o defer DSL for a good long while
+* factory
+* defer then-chaining for the merest of moments
+  o needs []mapchan in the streamer
+
+* output.RecordWriter interface
+* impls:
+  o dkvp
+  o xtab
+  o csv
+  o json
+  o etc
+* factory
