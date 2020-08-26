@@ -14,7 +14,7 @@ import (
 
 // ----------------------------------------------------------------
 func Stream(filenames []string) error {
-	istream, err := Argf(filenames)
+	istream, err := Argf(filenames) // can't stay -- each CSV file has its own header, etc
 	if err != nil {
 		return err
 		os.Exit(1)

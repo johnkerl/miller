@@ -9,6 +9,6 @@ func MapperFoo(lrec *containers.Lrec, dest chan<- *containers.Lrec) {
 	v := "bar"
 	// To-do: put-by-value variant
 	lrec.Put(&k, &v)
-	dest <- lrec
+	//dest <- lrec
 	dest <- lrec
 }
