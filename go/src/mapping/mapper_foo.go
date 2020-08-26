@@ -5,10 +5,15 @@ import (
 )
 
 func MapperFoo(lrec *containers.Lrec, dest chan<- *containers.Lrec) {
-	k := "foo"
-	v := "bar"
-	// To-do: put-by-value variant
-	lrec.Put(&k, &v)
-	//dest <- lrec
+	ka := "a"
+	kb := "b"
+	kab := "ab"
+	va := lrec.Get(&ka)
+	vb := lrec.Get(&kb)
+	if va != nil && vb != nil {
+		vab := *va + ":" + *vb
+		// To-do: put-by-value variant
+		lrec.Put(&kab, &vab)
+	}
 	dest <- lrec
 }
