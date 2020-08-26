@@ -79,7 +79,6 @@ func stream(sourceName string) error {
 	eof := false
 
 	for !eof {
-
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
 			err = nil
@@ -98,8 +97,8 @@ func stream(sourceName string) error {
 				ips := "="
 
 				lrec := input.LrecFromDKVPLine(&line, &ifs, &ips)
-				lrec.Print()
 
+				lrec.Print()
 			}
 		}
 	}

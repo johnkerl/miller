@@ -46,8 +46,8 @@
 package containers
 
 import (
-	//"fmt"
-	"os"
+	"bytes"
+	"fmt"
 )
 
 // ----------------------------------------------------------------
@@ -76,75 +76,19 @@ func LrecAlloc() *Lrec {
 // ----------------------------------------------------------------
 // xxx to do: take an ostream arg
 
-//func (this *Lrec) Print() {
-//	os.Stdout.WriteString("{")
-//	for pe := this.phead; pe != nil; pe = pe.pnext {
-//		os.Stdout.WriteString("  \"")
-//		os.Stdout.WriteString(*pe.key)
-//		os.Stdout.WriteString(": ")
-//		os.Stdout.WriteString(*pe.value)
-//		if pe.pnext != nil {
-//			os.Stdout.WriteString(",\n")
-//		} else {
-//			os.Stdout.WriteString("\n")
-//		}
-//	}
-//	os.Stdout.WriteString("}\n")
-//}
-
-//func (this *Lrec) Print() {
-//	fmt.Println("{")
-//	for pe := this.phead; pe != nil; pe = pe.pnext {
-//		fmt.Print("  \"")
-//		fmt.Print(*pe.key)
-//		fmt.Print(": ")
-//		fmt.Print(*pe.value)
-//		if pe.pnext != nil {
-//			fmt.Print(",\n")
-//		} else {
-//			fmt.Print("\n")
-//		}
-//	}
-//	fmt.Print("}\n")
-//}
-
-//func (this *Lrec) Print() {
-//	for pe := this.phead; pe != nil; pe = pe.pnext {
-//		os.Stdout.WriteString(*pe.key)
-//		os.Stdout.WriteString("=")
-//		os.Stdout.WriteString(*pe.value)
-//		if pe.pnext != nil {
-//			os.Stdout.WriteString(",")
-//		}
-//	}
-//	os.Stdout.WriteString("\n")
-//}
-
-//func (this *Lrec) Print() {
-//	for pe := this.phead; pe != nil; pe = pe.pnext {
-//		fmt.Print(*pe.key)
-//		fmt.Print("=")
-//		fmt.Print(*pe.value)
-//		if pe.pnext != nil {
-//			fmt.Print(",")
-//		}
-//	}
-//	fmt.Print("\n")
-//}
-
-// 5x faster, wtw?!?
+// 5x faster than fmt.Print() separately
 func (this *Lrec) Print() {
-	output := ""
+	var buffer bytes.Buffer
 	for pe := this.phead; pe != nil; pe = pe.pnext {
-		output += *pe.key
-		output += "="
-		output += *pe.value
+		buffer.WriteString(*pe.key)
+		buffer.WriteString("=")
+		buffer.WriteString(*pe.value)
 		if pe.pnext != nil {
-			output += ","
+			buffer.WriteString(",")
 		}
 	}
-	output += "\n"
-	os.Stdout.WriteString(output)
+	buffer.WriteString("\n")
+	fmt.Print(buffer.String())
 }
 
 // ----------------------------------------------------------------

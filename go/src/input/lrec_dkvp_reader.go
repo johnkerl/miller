@@ -18,8 +18,8 @@ func LrecFromDKVPLine(
 		// xxx range-check
 		key := kv[0]
 		value := kv[1]
-		//lrec.Put(&key, &value)
-		lrec.PutAtEnd(&key, &value)
+		lrec.Put(&key, &value)
+		//lrec.PutAtEnd(&key, &value)
 	}
 	return lrec
 }
