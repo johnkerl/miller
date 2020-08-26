@@ -8,9 +8,9 @@ import (
 )
 
 func ChannelWriter(
-	ostream *os.File,
 	outrecs <-chan *containers.Lrec,
 	done chan<- bool,
+	ostream *os.File,
 ) {
 	for {
 		lrec := <-outrecs

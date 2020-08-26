@@ -27,9 +27,8 @@ func Stream(filenames []string) error {
 	donechan := make(chan bool, 1)
 
 	go input.ChannelReader(reader, inrecs, echan)
-	// TODO: needs mappers ...
 	go mapping.ChannelMapper(inrecs, outrecs)
-	go output.ChannelWriter(os.Stdout, outrecs, donechan)
+	go output.ChannelWriter(outrecs, donechan, os.Stdout)
 
 	done := false
 	for !done {
