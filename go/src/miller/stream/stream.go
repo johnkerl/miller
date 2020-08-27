@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 	// Miller:
-	"containers"
-	"input"
-	"mapping"
-	"output"
+	"miller/containers"
+	"miller/input"
+	"miller/mapping"
+	"miller/output"
 )
 
 // ----------------------------------------------------------------

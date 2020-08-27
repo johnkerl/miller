@@ -1,7 +1,7 @@
 package input
 
 import (
-	"containers"
+	"miller/containers"
 )
 
 // reader *bufio.Reader in constructors/factory

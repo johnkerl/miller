@@ -6,8 +6,8 @@ import (
 	"io"
 	"strings"
 	// Miller:
-	"containers"
-	"lib"
+	"miller/containers"
+	"miller/lib"
 )
 
 type RecordReaderDKVP struct {

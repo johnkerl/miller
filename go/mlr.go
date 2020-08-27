@@ -8,7 +8,7 @@ import (
 	"os"
 	"runtime/pprof"
 	// Miller:
-	"stream"
+	"miller/stream"
 )
 
 // ----------------------------------------------------------------

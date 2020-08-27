@@ -1,7 +1,7 @@
 package output
 
 import (
-	"containers"
+	"miller/containers"
 )
 
 // ostream *os.File in constructors/factory
