@@ -6,5 +6,5 @@ import (
 
 // reader *bufio.Reader in constructors/factory
 type RecordReader interface {
-	Read(inrecs chan<- *containers.Lrec, echan chan error)
+	Read(filenames []string, inrecs chan<- *containers.Lrec, echan chan error)
 }

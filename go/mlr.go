@@ -38,9 +38,9 @@ func main() {
 	inputFormatName := args[0]
 	mapperName := args[1]
 	outputFormatName := args[2]
-	args = args[3:]
+	filenames := args[3:]
 
-	err := stream.Stream(inputFormatName, mapperName, outputFormatName, args)
+	err := stream.Stream(filenames, inputFormatName, mapperName, outputFormatName)
 	if err != nil {
 		log.Fatal(err)
 	}

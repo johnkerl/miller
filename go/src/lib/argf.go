@@ -1,4 +1,4 @@
-package stream
+package lib
 
 import (
 	"io"

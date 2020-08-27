@@ -2,7 +2,6 @@ package stream
 
 import (
 	// System:
-	"bufio"
 	"errors"
 	"log"
 	"os"
@@ -15,30 +14,28 @@ import (
 
 // ----------------------------------------------------------------
 func Stream(
+	filenames []string,
 	inputFormatName string,
 	mapperName string,
 	outputFormatName string,
-	filenames []string,
 ) error {
+
+	recordReader := input.Create(inputFormatName)
+	if recordReader == nil {
+		return errors.New("Input format not found: " + inputFormatName)
+	}
 
 	recordMapper := mapping.Create(mapperName)
 	if recordMapper == nil {
 		return errors.New("Mapper not found: " + mapperName)
 	}
 
-	istream, err := Argf(filenames) // can't stay -- each CSV file has its own header, etc
-	if err != nil {
-		return err
-		os.Exit(1)
-	}
-	reader := bufio.NewReader(istream)
-
 	inrecs := make(chan *containers.Lrec, 10)
 	echan := make(chan error, 1)
 	outrecs := make(chan *containers.Lrec, 1)
 	donechan := make(chan bool, 1)
 
-	go input.ChannelReader(reader, inrecs, echan)
+	go recordReader.Read(filenames, inrecs, echan)
 	go mapping.ChannelMapper(inrecs, recordMapper, outrecs)
 	go output.ChannelWriter(outrecs, donechan, os.Stdout)
 

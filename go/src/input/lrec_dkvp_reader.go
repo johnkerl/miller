@@ -1,13 +1,63 @@
 package input
 
 import (
-	"containers"
+	// System:
+	"bufio"
+	"io"
 	"strings"
+	// Miller:
+	"containers"
+	"lib"
 )
 
-// reader class will be trivial since DKVPs are stateless
+type RecordReaderDKVP struct {
+	ifs string
+	ips string
+}
 
-func LrecFromDKVPLine(
+func NewRecordReaderDKVP(ifs string, ips string) *RecordReaderDKVP {
+	return &RecordReaderDKVP {
+		ifs,
+		ips,
+	}
+}
+
+func (this *RecordReaderDKVP) Read(
+	filenames []string,
+	inrecs chan<- *containers.Lrec,
+	echan chan error,
+) {
+
+	istream, err := lib.Argf(filenames) // can't stay -- each CSV file has its own header, etc
+	if err != nil {
+		echan <- err
+		return
+	}
+	lineReader := bufio.NewReader(istream)
+
+	eof := false
+
+	for !eof {
+		line, err := lineReader.ReadString('\n') // TODO: auto-detect
+		if err == io.EOF {
+			err = nil
+			eof = true
+		} else if err != nil {
+			echan <- err
+		} else {
+			// This is how to do a chomp:
+			line = strings.TrimRight(line, "\n")
+
+			lrec := lrecFromDKVPLine(&line, &this.ifs, &this.ips)
+			inrecs <- lrec
+		}
+	}
+
+	inrecs <- nil // signals end of input record stream
+}
+
+// ----------------------------------------------------------------
+func lrecFromDKVPLine(
 	line *string,
 	ifs *string,
 	ips *string,
