@@ -14,7 +14,9 @@ import (
 // ----------------------------------------------------------------
 // xxx to do: stdout/stderr w/ ternary on exitrc
 func usage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s [options] {filenames ...}\n", os.Args[0])
+	// xxx temp grammar
+	fmt.Fprintf(os.Stderr, "Usage: %s [options] {ifmt} {mapper} {ofmt} {filenames ...}\n",
+		os.Args[0])
 	fmt.Fprintf(os.Stderr, "If no file name is given, or if filename is \"-\", stdin is used.\n")
 	flag.PrintDefaults()
 	os.Exit(1)
@@ -22,15 +24,31 @@ func usage() {
 
 // ----------------------------------------------------------------
 func main() {
-	// pFoo := flag.Bool("f", false, "Foo")
 	cpuprofile := flag.String("cpuprofile", "", "Write CPU profile to `file`")
 
 	flag.Usage = usage
 	flag.Parse()
+	maybeProfile(cpuprofile)
+
 	args := flag.Args()
 
-	// foo := *pFoo
+	if len(args) < 3 {
+		usage()
+	}
+	inputFormatName := args[0]
+	mapperName := args[1]
+	outputFormatName := args[2]
+	args = args[3:]
 
+	err := stream.Stream(inputFormatName, mapperName, outputFormatName, args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// ----------------------------------------------------------------
+func maybeProfile(cpuprofile *string) {
+	// to do: move to method
 	// go tool pprof mlr foo.prof
 	//   top10
 	if *cpuprofile != "" {
@@ -45,8 +63,4 @@ func main() {
 	    defer pprof.StopCPUProfile()
 	}
 
-	err := stream.Stream(args)
-	if err != nil {
-		log.Fatal(err)
-	}
 }

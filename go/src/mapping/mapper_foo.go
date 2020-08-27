@@ -13,6 +13,10 @@ func NewMapperFoo() *MapperFoo {
 	}
 }
 
+func (this *MapperFoo) Name() string {
+	return "foo"
+}
+
 func (this *MapperFoo) Map(inrec *containers.Lrec, outrecs chan<- *containers.Lrec) {
 	ka := "a"
 	kb := "b"

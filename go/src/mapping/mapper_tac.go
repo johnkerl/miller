@@ -17,6 +17,10 @@ func NewMapperTac() *MapperTac {
 	}
 }
 
+func (this *MapperTac) Name() string {
+	return "tac"
+}
+
 func (this *MapperTac) Map(inrec *containers.Lrec, outrecs chan<- *containers.Lrec) {
 	if inrec != nil {
 		this.lrecs.PushFront(inrec)
