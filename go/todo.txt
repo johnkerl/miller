@@ -1,32 +1,15 @@
-* input.RecordReader interface
-* impls:
-  o dkvp
-  o xtab
-  o csv
-  o streaming json
-  o etc
-* factory
-* remove argf
-* needs fresh start on each new filename
+* lots of trivial things are just a matter of keystroking
+* defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
 
-* mapper interface
-* impls:
-  o cat
-  o cut
-  o head
-  o tail
-  o count
-  o ... lots more over time (if ever)
-  o defer DSL for a good long while
-* factory
-* defer then-chaining for the merest of moments
-  o needs []mapchan in the streamer
+harder / more worthy:
+* streaming JSON reader
+* streaming RFC-compliant CSV reader
+* sort
+* stats1
+* DSL
+* calendar/DST/TZ
 
-* output.RecordWriter interface
-* impls:
-  o dkvp
-  o xtab
-  o csv
-  o json
-  o etc
-* factory
+easier:
+* most of the verbs
+* most of the file formats
+* then-chaining
