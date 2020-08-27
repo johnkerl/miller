@@ -11,10 +11,9 @@ func ChannelMapper(
 ) {
 	for {
 		lrec := <-inrecs
-		if lrec == nil {
-			outrecs <- nil
+		recordMapper.Map(lrec, outrecs)
+		if lrec == nil { // end of stream
 			break
 		}
-		recordMapper.Map(lrec, outrecs)
 	}
 }

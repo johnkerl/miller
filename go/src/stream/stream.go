@@ -26,7 +26,9 @@ func Stream(filenames []string) error {
 	outrecs := make(chan *containers.Lrec, 1)
 	donechan := make(chan bool, 1)
 
-	recordMapper := mapping.NewMapperFoo();
+	//recordMapper := mapping.NewMapperFoo();
+	//recordMapper := mapping.NewMapperCat();
+	recordMapper := mapping.NewMapperTac();
 
 	go input.ChannelReader(reader, inrecs, echan)
 	go mapping.ChannelMapper(inrecs, recordMapper, outrecs)
