@@ -24,6 +24,10 @@ func NewRecordWriterNIDX(ifs string) *RecordWriterNIDX {
 func (this *RecordWriterNIDX) Write(
 	outrec *containers.Lrec,
 ) {
+	// End of record stream: nothing special for this output format
+	if outrec == nil {
+		return
+	}
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {

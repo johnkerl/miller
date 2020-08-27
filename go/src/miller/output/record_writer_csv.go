@@ -24,6 +24,11 @@ func NewRecordWriterCSV() *RecordWriterCSV {
 func (this *RecordWriterCSV) Write(
 	outrec *containers.Lrec,
 ) {
+	// End of record stream: nothing special for this output format
+	if outrec == nil {
+		return
+	}
+
 	// TODO: heterogeneity. keep previous header and reset if need.
 
 	if this.onFirst {

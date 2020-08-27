@@ -22,6 +22,11 @@ func NewRecordWriterXTAB() *RecordWriterXTAB {
 func (this *RecordWriterXTAB) Write(
 	outrec *containers.Lrec,
 ) {
+	// End of record stream: nothing special for this output format
+	if outrec == nil {
+		return
+	}
+
 	maxKeyLength := 1
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		keyLength := len(*pe.Key)

@@ -15,11 +15,10 @@ func ChannelWriter(
 ) {
 	for {
 		lrec := <-outrecs
+		recordWriter.Write(lrec)
 		if lrec == nil {
 			done <- true
 			break
-		} else {
-			recordWriter.Write(lrec)
 		}
 	}
 }

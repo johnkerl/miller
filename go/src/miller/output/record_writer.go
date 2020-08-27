@@ -4,7 +4,7 @@ import (
 	"miller/containers"
 )
 
-// ostream *os.File in constructors/factory
+// Convention: nil outrec signifies end of record stream
 type RecordWriter interface {
 	Write(outrec *containers.Lrec)
 }

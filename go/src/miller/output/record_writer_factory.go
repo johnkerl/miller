@@ -6,6 +6,8 @@ func Create(outputFormatName string) RecordWriter {
 		return NewRecordWriterCSV() // TODO: parameterize
 	case "dkvp":
 		return NewRecordWriterDKVP(",", "=") // TODO: parameterize
+	case "json":
+		return NewRecordWriterJSON() // TODO: parameterize
 	case "nidx":
 		return NewRecordWriterNIDX(",") // TODO: parameterize
 	case "xtab":

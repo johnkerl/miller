@@ -26,6 +26,11 @@ func NewRecordWriterDKVP(ifs string, ips string) *RecordWriterDKVP {
 func (this *RecordWriterDKVP) Write(
 	outrec *containers.Lrec,
 ) {
+	// End of record stream: nothing special for this output format
+	if outrec == nil {
+		return
+	}
+
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
