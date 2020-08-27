@@ -2,8 +2,8 @@
 * defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
 
 harder / more worthy:
-* streaming JSON reader
-* streaming RFC-compliant CSV reader
+~ streaming JSON reader
+~ streaming RFC-compliant CSV reader
 * sort
 * stats1
 * DSL

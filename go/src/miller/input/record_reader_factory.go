@@ -8,6 +8,8 @@ func Create(inputFormatName string) RecordReader {
 		return NewRecordReaderDKVP(",", "=") // TODO: parameterize
 	case "json":
 		return NewRecordReaderJSON()
+	case "nidx":
+		return NewRecordReaderNIDX() // TODO: parameterize
 	default:
 		return nil
 	}
