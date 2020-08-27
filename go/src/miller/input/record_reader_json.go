@@ -6,7 +6,6 @@ import (
 	//"fmt"
 	"os"
 	//"reflect"
-	"strconv"
 
 	// Miller:
 	"miller/containers"
@@ -84,9 +83,9 @@ func (this *RecordReaderJSON) Read(
 			if ok {
 				lrec.Put(&key, &sval)
 			} else {
-				nval, ok := value.(float64)
+				nval, ok := value.(json.Number)
 				if ok {
-					sval = strconv.FormatFloat(nval, 'g', -1, 64)
+					sval = nval.String()
 					lrec.Put(&key, &sval)
 				}
 			}
