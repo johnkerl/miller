@@ -9,8 +9,7 @@ type MapperCat struct {
 }
 
 func NewMapperCat() *MapperCat {
-	return &MapperCat {
-	}
+	return &MapperCat{}
 }
 
 func (this *MapperCat) Name() string {

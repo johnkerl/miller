@@ -15,7 +15,7 @@ type RecordWriterNIDX struct {
 }
 
 func NewRecordWriterNIDX(ifs string) *RecordWriterNIDX {
-	return &RecordWriterNIDX {
+	return &RecordWriterNIDX{
 		ifs,
 		"\n", // TODO: parameterize
 	}

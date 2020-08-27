@@ -9,8 +9,7 @@ type MapperFoo struct {
 }
 
 func NewMapperFoo() *MapperFoo {
-	return &MapperFoo {
-	}
+	return &MapperFoo{}
 }
 
 func (this *MapperFoo) Name() string {

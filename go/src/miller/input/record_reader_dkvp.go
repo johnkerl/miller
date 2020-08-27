@@ -16,7 +16,7 @@ type RecordReaderDKVP struct {
 }
 
 func NewRecordReaderDKVP(ifs string, ips string) *RecordReaderDKVP {
-	return &RecordReaderDKVP {
+	return &RecordReaderDKVP{
 		ifs,
 		ips,
 	}
@@ -64,7 +64,7 @@ func lrecFromDKVPLine(
 ) *containers.Lrec {
 	lrec := containers.LrecAlloc()
 	pairs := strings.Split(*line, *ifs)
-	for _, pair := range(pairs) {
+	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)
 		// xxx range-check
 		key := kv[0]

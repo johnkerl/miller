@@ -9,8 +9,7 @@ type MapperNothing struct {
 }
 
 func NewMapperNothing() *MapperNothing {
-	return &MapperNothing {
-	}
+	return &MapperNothing{}
 }
 
 func (this *MapperNothing) Name() string {

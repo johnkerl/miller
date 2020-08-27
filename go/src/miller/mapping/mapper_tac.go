@@ -12,7 +12,7 @@ type MapperTac struct {
 }
 
 func NewMapperTac() *MapperTac {
-	return &MapperTac {
+	return &MapperTac{
 		list.New(),
 	}
 }

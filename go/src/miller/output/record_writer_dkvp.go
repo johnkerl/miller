@@ -16,7 +16,7 @@ type RecordWriterDKVP struct {
 }
 
 func NewRecordWriterDKVP(ifs string, ips string) *RecordWriterDKVP {
-	return &RecordWriterDKVP {
+	return &RecordWriterDKVP{
 		ifs,
 		ips,
 		"\n", // TODO: parameterize

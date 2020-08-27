@@ -14,7 +14,7 @@ type RecordWriterXTAB struct {
 }
 
 func NewRecordWriterXTAB() *RecordWriterXTAB {
-	return &RecordWriterXTAB {
+	return &RecordWriterXTAB{
 		true,
 	}
 }

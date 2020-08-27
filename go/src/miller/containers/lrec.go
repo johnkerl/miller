@@ -53,15 +53,15 @@ import (
 // ----------------------------------------------------------------
 type Lrec struct {
 	FieldCount int
-	Head      *lrecEntry
-	Tail      *lrecEntry
+	Head       *lrecEntry
+	Tail       *lrecEntry
 }
 
 type lrecEntry struct {
 	Key   *string
 	Value *string
-	Prev *lrecEntry
-	Next *lrecEntry
+	Prev  *lrecEntry
+	Next  *lrecEntry
 }
 
 // ----------------------------------------------------------------

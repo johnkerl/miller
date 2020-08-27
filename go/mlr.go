@@ -60,7 +60,7 @@ func maybeProfile(cpuprofile *string) {
 		if err := pprof.StartCPUProfile(f); err != nil {
 			log.Fatal("Could not start CPU profile: ", err)
 		}
-	    defer pprof.StopCPUProfile()
+		defer pprof.StopCPUProfile()
 	}
 
 }

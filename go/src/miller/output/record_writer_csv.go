@@ -10,7 +10,7 @@ import (
 
 // ostream *os.File in constructors/factory
 type RecordWriterCSV struct {
-	onFirst bool
+	onFirst   bool
 	csvWriter *csv.Writer
 }
 
