@@ -1,3 +1,7 @@
+// ================================================================
+// FOUND AT https://gitlab.com/c0b/go-ordered-json
+// ================================================================
+
 // Package ordered provided a type OrderedMap for use in JSON handling
 // although JSON spec says the keys order of an object should not matter
 // but sometimes when working with particular third-party proprietary code
