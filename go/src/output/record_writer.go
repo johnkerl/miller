@@ -6,5 +6,5 @@ import (
 
 // ostream *os.File in constructors/factory
 type RecordWriter interface {
-	Writer(outrecs <-chan *containers.Lrec)
+	Write(outrec *containers.Lrec)
 }

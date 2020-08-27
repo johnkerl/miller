@@ -30,6 +30,11 @@ func Stream(
 		return errors.New("Mapper not found: " + mapperName)
 	}
 
+	recordWriter := output.Create(outputFormatName)
+	if recordWriter == nil {
+		return errors.New("Output format not found: " + outputFormatName)
+	}
+
 	inrecs := make(chan *containers.Lrec, 10)
 	echan := make(chan error, 1)
 	outrecs := make(chan *containers.Lrec, 1)
@@ -37,7 +42,7 @@ func Stream(
 
 	go recordReader.Read(filenames, inrecs, echan)
 	go mapping.ChannelMapper(inrecs, recordMapper, outrecs)
-	go output.ChannelWriter(outrecs, donechan, os.Stdout)
+	go output.ChannelWriter(outrecs, recordWriter, donechan, os.Stdout)
 
 	done := false
 	for !done {

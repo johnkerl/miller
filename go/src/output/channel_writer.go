@@ -9,6 +9,7 @@ import (
 
 func ChannelWriter(
 	outrecs <-chan *containers.Lrec,
+	recordWriter RecordWriter,
 	done chan<- bool,
 	ostream *os.File,
 ) {
@@ -18,7 +19,7 @@ func ChannelWriter(
 			done <- true
 			break
 		} else {
-			lrec.Print(os.Stdout)
+			recordWriter.Write(lrec)
 		}
 	}
 }

@@ -52,16 +52,16 @@ import (
 
 // ----------------------------------------------------------------
 type Lrec struct {
-	fieldCount int
-	phead      *lrecEntry
-	ptail      *lrecEntry
+	FieldCount int
+	Head      *lrecEntry
+	Tail      *lrecEntry
 }
 
 type lrecEntry struct {
-	key   *string
-	value *string
-	pprev *lrecEntry
-	pnext *lrecEntry
+	Key   *string
+	Value *string
+	Prev *lrecEntry
+	Next *lrecEntry
 }
 
 // ----------------------------------------------------------------
@@ -76,11 +76,11 @@ func LrecAlloc() *Lrec {
 // ----------------------------------------------------------------
 func (this *Lrec) Print(file *os.File) {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
-	for pe := this.phead; pe != nil; pe = pe.pnext {
-		buffer.WriteString(*pe.key)
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		buffer.WriteString(*pe.Key)
 		buffer.WriteString("=")
-		buffer.WriteString(*pe.value)
-		if pe.pnext != nil {
+		buffer.WriteString(*pe.Value)
+		if pe.Next != nil {
 			buffer.WriteString(",")
 		}
 	}
@@ -100,8 +100,8 @@ func lrecEntryAlloc(key *string, value *string) *lrecEntry {
 
 // ----------------------------------------------------------------
 func (this *Lrec) findEntry(key *string) *lrecEntry {
-	for pe := this.phead; pe != nil; pe = pe.pnext {
-		if *pe.key == *key {
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		if *pe.Key == *key {
 			return pe
 		}
 	}
@@ -113,33 +113,33 @@ func (this *Lrec) Put(key *string, value *string) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = lrecEntryAlloc(key, value)
-		if this.phead == nil {
-			this.phead = pe
-			this.ptail = pe
+		if this.Head == nil {
+			this.Head = pe
+			this.Tail = pe
 		} else {
-			pe.pprev = this.ptail
-			pe.pnext = nil
-			this.ptail.pnext = pe
-			this.ptail = pe
+			pe.Prev = this.Tail
+			pe.Next = nil
+			this.Tail.Next = pe
+			this.Tail = pe
 		}
-		this.fieldCount++
+		this.FieldCount++
 	} else {
-		pe.value = value
+		pe.Value = value
 	}
 }
 
 // ----------------------------------------------------------------
 func (this *Lrec) PutAtEnd(key *string, value *string) {
 	pe := lrecEntryAlloc(key, value)
-	if this.phead == nil {
-		this.phead = pe
-		this.ptail = pe
+	if this.Head == nil {
+		this.Head = pe
+		this.Tail = pe
 	} else {
-		pe.pprev = this.ptail
-		this.ptail.pnext = pe
-		this.ptail = pe
+		pe.Prev = this.Tail
+		this.Tail.Next = pe
+		this.Tail = pe
 	}
-	this.fieldCount++
+	this.FieldCount++
 }
 
 // ----------------------------------------------------------------
@@ -148,22 +148,22 @@ func (this *Lrec) Get(key *string) *string {
 	if pe == nil {
 		return nil
 	} else {
-		return pe.value
+		return pe.Value
 	}
 	return nil
 }
 
 func (this *Lrec) Clear() {
-	this.fieldCount = 0
+	this.FieldCount = 0
 	// Assuming everything unreferenced is getting GC'ed by the Go runtime
-	this.phead = nil
-	this.ptail = nil
+	this.Head = nil
+	this.Tail = nil
 }
 
 func (this *Lrec) Copy() *Lrec {
 	that := LrecAlloc()
-	for pe := this.phead; pe != nil; pe = pe.pnext {
-		that.Put(pe.key, pe.value)
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		that.Put(pe.Key, pe.Value)
 	}
 	return that
 }
@@ -186,16 +186,16 @@ func (this *Lrec) Copy() *Lrec {
 //		pe->free_flags  = free_flags;
 //		pe->quote_flags = 0;
 //
-//		if (prec->phead == NULL) {
-//			pe->pprev   = NULL;
-//			pe->pnext   = NULL;
-//			prec->phead = pe;
-//			prec->ptail = pe;
+//		if (prec->Head == NULL) {
+//			pe->Prev   = NULL;
+//			pe->Next   = NULL;
+//			prec->Head = pe;
+//			prec->Tail = pe;
 //		} else {
-//			pe->pnext   = prec->phead;
-//			pe->pprev   = NULL;
-//			prec->phead->pprev = pe;
-//			prec->phead = pe;
+//			pe->Next   = prec->Head;
+//			pe->Prev   = NULL;
+//			prec->Head->Prev = pe;
+//			prec->Head = pe;
 //		}
 //		prec->field_count++;
 //	}
@@ -219,18 +219,18 @@ func (this *Lrec) Copy() *Lrec {
 //		pe->free_flags  = free_flags;
 //		pe->quote_flags = 0;
 //
-//		if (pd->pnext == NULL) { // Append at end of list
-//			pd->pnext = pe;
-//			pe->pprev = pd;
-//			pe->pnext = NULL;
-//			prec->ptail = pe;
+//		if (pd->Next == NULL) { // Append at end of list
+//			pd->Next = pe;
+//			pe->Prev = pd;
+//			pe->Next = NULL;
+//			prec->Tail = pe;
 //
 //		} else {
-//			lrecEntry* pf = pd->pnext;
-//			pd->pnext = pe;
-//			pf->pprev = pe;
-//			pe->pprev = pd;
-//			pe->pnext = pf;
+//			lrecEntry* pf = pd->Next;
+//			pd->Next = pe;
+//			pf->Prev = pe;
+//			pe->Prev = pd;
+//			pe->Next = pf;
 //		}
 //
 //		prec->field_count++;
@@ -258,9 +258,9 @@ func (this *Lrec) Copy() *Lrec {
 //	int found_index = 0;
 //	lrecEntry* pe = NULL;
 //	for (
-//		found_index = 0, pe = prec->phead;
+//		found_index = 0, pe = prec->Head;
 //		pe != NULL;
-//		found_index++, pe = pe->pnext
+//		found_index++, pe = pe->Next
 //	) {
 //		if (found_index == sought_index) {
 //			return pe;
@@ -441,11 +441,11 @@ func (this *Lrec) Copy() *Lrec {
 //     the second 'd' field.
 
 //void  lrec_label(Lrec* prec, slls_t* pnames_as_list, hss_t* pnames_as_set) {
-//	lrecEntry* pe = prec->phead;
-//	sllse_t* pn = pnames_as_list->phead;
+//	lrecEntry* pe = prec->Head;
+//	sllse_t* pn = pnames_as_list->Head;
 //
 //	// Process the labels list
-//	for ( ; pe != NULL && pn != NULL; pe = pe->pnext, pn = pn->pnext) {
+//	for ( ; pe != NULL && pn != NULL; pe = pe->Next, pn = pn->Next) {
 //		char* new_name = pn->value;
 //
 //		if (pe->free_flags & FREE_ENTRY_KEY) {
@@ -459,7 +459,7 @@ func (this *Lrec) Copy() *Lrec {
 //	for ( ; pe != NULL; ) {
 //		char* name = pe->key;
 //		if (hss_has(pnames_as_set, name)) {
-//			lrecEntry* pnext = pe->pnext;
+//			lrecEntry* Next = pe->Next;
 //			if (pe->free_flags & FREE_ENTRY_KEY) {
 //				free(pe->key);
 //			}
@@ -468,9 +468,9 @@ func (this *Lrec) Copy() *Lrec {
 //			}
 //			lrec_unlink(prec, pe);
 //			free(pe);
-//			pe = pnext;
+//			pe = Next;
 //		} else {
-//			pe = pe->pnext;
+//			pe = pe->Next;
 //		}
 //	}
 //}
@@ -492,20 +492,20 @@ func (this *Lrec) Copy() *Lrec {
 
 //// ----------------------------------------------------------------
 //void lrec_unlink(Lrec* prec, lrecEntry* pe) {
-//	if (pe == prec->phead) {
-//		if (pe == prec->ptail) {
-//			prec->phead = NULL;
-//			prec->ptail = NULL;
+//	if (pe == prec->Head) {
+//		if (pe == prec->Tail) {
+//			prec->Head = NULL;
+//			prec->Tail = NULL;
 //		} else {
-//			prec->phead = pe->pnext;
-//			pe->pnext->pprev = NULL;
+//			prec->Head = pe->Next;
+//			pe->Next->Prev = NULL;
 //		}
 //	} else {
-//		pe->pprev->pnext = pe->pnext;
-//		if (pe == prec->ptail) {
-//			prec->ptail = pe->pprev;
+//		pe->Prev->Next = pe->Next;
+//		if (pe == prec->Tail) {
+//			prec->Tail = pe->Prev;
 //		} else {
-//			pe->pnext->pprev = pe->pprev;
+//			pe->Next->Prev = pe->Prev;
 //		}
 //	}
 //	prec->field_count--;
@@ -514,33 +514,33 @@ func (this *Lrec) Copy() *Lrec {
 //// ----------------------------------------------------------------
 //static void lrec_link_at_head(Lrec* prec, lrecEntry* pe) {
 //
-//	if (prec->phead == NULL) {
-//		pe->pprev   = NULL;
-//		pe->pnext   = NULL;
-//		prec->phead = pe;
-//		prec->ptail = pe;
+//	if (prec->Head == NULL) {
+//		pe->Prev   = NULL;
+//		pe->Next   = NULL;
+//		prec->Head = pe;
+//		prec->Tail = pe;
 //	} else {
 //		// [b,c,d] + a
-//		pe->pprev   = NULL;
-//		pe->pnext   = prec->phead;
-//		prec->phead->pprev = pe;
-//		prec->phead = pe;
+//		pe->Prev   = NULL;
+//		pe->Next   = prec->Head;
+//		prec->Head->Prev = pe;
+//		prec->Head = pe;
 //	}
 //	prec->field_count++;
 //}
 
 //static void lrec_link_at_tail(Lrec* prec, lrecEntry* pe) {
 //
-//	if (prec->phead == NULL) {
-//		pe->pprev   = NULL;
-//		pe->pnext   = NULL;
-//		prec->phead = pe;
-//		prec->ptail = pe;
+//	if (prec->Head == NULL) {
+//		pe->Prev   = NULL;
+//		pe->Next   = NULL;
+//		prec->Head = pe;
+//		prec->Tail = pe;
 //	} else {
-//		pe->pprev   = prec->ptail;
-//		pe->pnext   = NULL;
-//		prec->ptail->pnext = pe;
-//		prec->ptail = pe;
+//		pe->Prev   = prec->Tail;
+//		pe->Next   = NULL;
+//		prec->Tail->Next = pe;
+//		prec->Tail = pe;
 //	}
 //	prec->field_count++;
 //}
@@ -556,8 +556,8 @@ func (this *Lrec) Copy() *Lrec {
 //		return;
 //	}
 //	fprintf(fp, "field_count = %d\n", prec->field_count);
-//	fprintf(fp, "| phead: %16p | ptail %16p\n", prec->phead, prec->ptail);
-//	for (lrecEntry* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+//	fprintf(fp, "| Head: %16p | Tail %16p\n", prec->Head, prec->Tail);
+//	for (lrecEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
 //		const char* key_string = (pe == NULL) ? "none" :
 //			pe->key == NULL ? "null" :
 //			pe->key;
@@ -566,7 +566,7 @@ func (this *Lrec) Copy() *Lrec {
 //			pe->value;
 //		fprintf(fp,
 //		"| prev: %16p curr: %16p next: %16p | key: %12s | value: %12s |\n",
-//			pe->pprev, pe, pe->pnext,
+//			pe->Prev, pe, pe->Next,
 //			key_string, value_string);
 //	}
 //}
@@ -619,7 +619,7 @@ func (this *Lrec) Copy() *Lrec {
 //		return;
 //	}
 //	int nf = 0;
-//	for (lrecEntry* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+//	for (lrecEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
 //		if (nf > 0)
 //			fputc(ofs, output_stream);
 //		fputs(pe->key, output_stream);
@@ -636,7 +636,7 @@ func (this *Lrec) Copy() *Lrec {
 //		sb_append_string(psb, "NULL");
 //	} else {
 //		int nf = 0;
-//		for (lrecEntry* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+//		for (lrecEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
 //			if (nf > 0)
 //				sb_append_string(psb, ofs);
 //			sb_append_string(psb, pe->key);
