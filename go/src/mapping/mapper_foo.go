@@ -4,16 +4,25 @@ import (
 	"containers"
 )
 
-func MapperFoo(lrec *containers.Lrec, dest chan<- *containers.Lrec) {
+type MapperFoo struct {
+	// stateless
+}
+
+func NewMapperFoo() *MapperFoo {
+	return &MapperFoo {
+	}
+}
+
+func (this *MapperFoo) Map(inrec *containers.Lrec, outrecs chan<- *containers.Lrec) {
 	ka := "a"
 	kb := "b"
 	kab := "ab"
-	va := lrec.Get(&ka)
-	vb := lrec.Get(&kb)
+	va := inrec.Get(&ka)
+	vb := inrec.Get(&kb)
 	if va != nil && vb != nil {
 		vab := *va + ":" + *vb
 		// To-do: put-by-value variant
-		lrec.Put(&kab, &vab)
+		inrec.Put(&kab, &vab)
 	}
-	dest <- lrec
+	outrecs <- inrec
 }

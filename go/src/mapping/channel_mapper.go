@@ -6,6 +6,7 @@ import (
 
 func ChannelMapper(
 	inrecs <-chan *containers.Lrec,
+	recordMapper RecordMapper, // not *recordMapper since this is an interface
 	outrecs chan<- *containers.Lrec,
 ) {
 	for {
@@ -14,6 +15,6 @@ func ChannelMapper(
 			outrecs <- nil
 			break
 		}
-		MapperFoo(lrec, outrecs)
+		recordMapper.Map(lrec, outrecs)
 	}
 }
