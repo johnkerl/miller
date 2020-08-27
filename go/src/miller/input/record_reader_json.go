@@ -7,8 +7,12 @@ import (
 	"os"
 	//"reflect"
 	"strconv"
+
 	// Miller:
 	"miller/containers"
+
+	// Local dependencies:
+	"deps/ordered"
 )
 
 type RecordReaderJSON struct {
@@ -43,47 +47,50 @@ func (this *RecordReaderJSON) Read(
 	//	}
 	//	fmt.Printf("%T: %v\n", t, t)
 
+	// Ordered-map idea from:
+	//   https://gitlab.com/c0b/go-ordered-json
+	// found via
+	//   https://github.com/golang/go/issues/27179
+
 	for jsonDecoder.More() {
 
-		// decode an array value (Message)
-		var pairs map[string]interface{}
+		lrec := containers.LrecAlloc()
 
-		// oh no -- pairs are *not* order-preserved. :(
-		// https://github.com/golang/go/issues/27179
-
-		err = jsonDecoder.Decode(&pairs)
+		var om *ordered.OrderedMap = ordered.NewOrderedMap()
+		err = jsonDecoder.Decode(om)
 		if err != nil {
 			echan <- err
 			return
 		}
 
-		lrec := containers.LrecAlloc()
+		// Use an iterator func to loop over all key-value pairs.  It is OK to call Set
+		// append-modify new key-value pairs, but not safe to call Delete during
+		// iteration.
+		iter := om.EntriesIter()
+		for {
+			pair, ok := iter()
+			if !ok {
+				break
+			}
 
-		//fmt.Printf("%v\n", pairs)
-		for key, value := range pairs {
-			//fmt.Printf("-- key: %v\n", key)
-			//fmt.Printf("-- value: %v\n", value)
-			foo := key // copy
-			// TODO:
-			// * handle int values
-			// * handle float values
-			// * handle object values
+			key := pair.Key // copy
+			value := pair.Value
+			// TODO: handle object values
 
 			//fmt.Println("value is a ", reflect.TypeOf(value))
 
 			// xxx make helper functions
 			sval, ok := value.(string)
 			if ok {
-				lrec.Put(&foo, &sval)
+				lrec.Put(&key, &sval)
 			} else {
 				nval, ok := value.(float64)
 				if ok {
 					sval = strconv.FormatFloat(nval, 'g', -1, 64)
-					lrec.Put(&foo, &sval)
+					lrec.Put(&key, &sval)
 				}
 			}
 		}
-
 		inrecs <- lrec
 	}
 
