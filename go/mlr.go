@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"runtime/pprof"
 	// Miller:
 	"miller/stream"
@@ -24,6 +25,8 @@ func usage() {
 
 // ----------------------------------------------------------------
 func main() {
+	runtime.GOMAXPROCS(4) // Seems reasonable these days
+
 	cpuprofile := flag.String("cpuprofile", "", "Write CPU profile to `file`")
 
 	flag.Usage = usage
@@ -31,6 +34,7 @@ func main() {
 	maybeProfile(cpuprofile)
 
 	args := flag.Args()
+
 
 	if len(args) < 3 {
 		usage()
