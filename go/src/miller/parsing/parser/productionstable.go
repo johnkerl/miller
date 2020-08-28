@@ -381,7 +381,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : "true"	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     12,
 		Index:      36,
@@ -391,7 +391,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : "false"	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     12,
 		Index:      37,

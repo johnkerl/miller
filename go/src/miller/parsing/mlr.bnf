@@ -57,15 +57,29 @@ md_token_number
   | '0' 'x' _hexDigit { _hexDigit }
 ;
 
-// xxx want 'true' and 'false' defined in the grammar after all -- they are keywords.
+// ----------------------------------------------------------------
+// KEYWORDS
+// ----------------------------------------------------------------
 
 // NOTE: any new keywords defined here should also be documented
 /// in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
 
-//"filter" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FILTER);
-//	return md_token_filter;
-//}
+// true and false should be defined here rather than as string-literals within
+// the grammar -- this forces them to be keywords, not legal as variable names.
+md_token_true : 't' 'r' 'u' 'e' ;
+md_token_false : 'f' 'a' 'l' 's' 'e';
+
+//md_token_if       : 'i' 'f' ;
+//md_token_elif     : 'e' 'l' 'i' 'f' ;
+//md_token_else     : 'e' 'l' 's' 'e' ;
+//md_token_do       : 'd' 'o' ;
+//md_token_while    : 'w' 'h' 'i' 'l' 'e'  ;
+//md_token_for      : 'f' 'o' 'r' ;
+//md_token_in       : 'i' 'n' ;
+//md_token_break    : 'b' 'r' 'e' 'a' 'k';
+//md_token_continue : 'c' 'o' 'n' 't' 'i'  'n'  'u' 'e';
+//md_token_filter   : 'f' 'i' 'l' 't' 'e'  'r';
+
 //"unset" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_UNSET);
 //	return md_token_unset;
@@ -146,43 +160,6 @@ md_token_number
 //"all" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ALL);
 //	return md_token_all;
-//}
-
-//"do" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_DO_WHILE);
-//	return MD_TOKEN_DO;
-//}
-//"while" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_WHILE);
-//	return md_token_while;
-//}
-//"for" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_for;
-//}
-//"in" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IN);
-//	return md_token_in;
-//}
-//"break" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BREAK);
-//	return md_token_break;
-//}
-//"continue" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTINUE);
-//	return md_token_continue;
-//}
-//"if" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IF_ITEM);
-//	return md_token_if;
-//}
-//"elif" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IF_ITEM);
-//	return md_token_elif;
-//}
-//"else" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_IF_ITEM);
-//	return md_token_else;
 //}
 
 //\$\* {
@@ -2665,9 +2642,9 @@ AtomOrFunction
 //	A = B;
 //}
 //PositionalSrecValue(A) ::= md_token_dollar_sign
-//	md_token_left_bracket md_token_left_bracket md_token_left_bracket
+//	"[[["
 //		RHS(B)
-//	md_token_right_bracket md_token_right_bracket md_token_right_bracket.  {
+//	"]]].  {
 //	A = mlr_dsl_ast_node_alloc_unary(
 //		"indirect_field_name",
 //		MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME,
@@ -2728,10 +2705,10 @@ AtomOrFunction
   : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 AtomOrFunction
-  : "true"   << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+  : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 AtomOrFunction
-  : "false"  << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+  : md_token_false  << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 //AtomOrFunction(A) ::= md_string(B). {
 //	A = B;
@@ -2903,7 +2880,7 @@ AtomOrFunction
 //	A = mlr_dsl_ast_node_prepend_arg(C, B);
 //}
 
-//MapLiteralKeyValuePair(A) ::= MapLiteralKey(B) md_token_colon MapLiteralValue(C). {
+//MapLiteralKeyValuePair(A) ::= MapLiteralKey(B) ":" MapLiteralValue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("mappair", MD_AST_NODE_TYPE_MAP_LITERAL_PAIR, B, C);
 //}
 //MapLiteralKey(A) ::= RHS(B). {

@@ -41,8 +41,8 @@ var actionTab = actionTable{
 			nil,      // ^^
 			nil,      // &&
 			nil,      // md_token_number
-			nil,      // true
-			nil,      // false
+			nil,      // md_token_true
+			nil,      // md_token_false
 		},
 	},
 	actionRow{ // S1
@@ -75,8 +75,8 @@ var actionTab = actionTable{
 			nil,          // ^^
 			nil,          // &&
 			nil,          // md_token_number
-			nil,          // true
-			nil,          // false
+			nil,          // md_token_true
+			nil,          // md_token_false
 		},
 	},
 	actionRow{ // S2
@@ -109,8 +109,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S3
@@ -143,8 +143,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S4
@@ -177,8 +177,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S5
@@ -211,8 +211,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S6
@@ -245,8 +245,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S7
@@ -279,8 +279,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S8
@@ -313,8 +313,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S9
@@ -347,8 +347,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S10
@@ -381,8 +381,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S11
@@ -415,8 +415,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S12
@@ -449,8 +449,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S13
@@ -483,8 +483,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S14
@@ -517,8 +517,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S15
@@ -551,8 +551,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S16
@@ -585,8 +585,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S17
@@ -619,8 +619,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S18
@@ -653,8 +653,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S19
@@ -687,8 +687,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S20
@@ -721,8 +721,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S21
@@ -755,8 +755,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S22
@@ -789,8 +789,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S23
@@ -823,8 +823,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S24
@@ -857,8 +857,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S25
@@ -891,8 +891,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S26
@@ -925,8 +925,8 @@ var actionTab = actionTable{
 			reduce(34), // ^^, reduce: AtomOrFunction
 			reduce(34), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S27
@@ -959,8 +959,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S28
@@ -993,8 +993,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S29
@@ -1027,8 +1027,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S30
@@ -1061,8 +1061,8 @@ var actionTab = actionTable{
 			shift(55),  // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S31
@@ -1095,8 +1095,8 @@ var actionTab = actionTable{
 			reduce(30), // ^^, reduce: LogicalXORTerm
 			shift(56),  // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S32
@@ -1129,8 +1129,8 @@ var actionTab = actionTable{
 			reduce(32), // ^^, reduce: LogicalAndTerm
 			reduce(32), // &&, reduce: LogicalAndTerm
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S33
@@ -1163,8 +1163,8 @@ var actionTab = actionTable{
 			reduce(33), // ^^, reduce: Stub
 			reduce(33), // &&, reduce: Stub
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S34
@@ -1197,8 +1197,8 @@ var actionTab = actionTable{
 			reduce(35), // ^^, reduce: AtomOrFunction
 			reduce(35), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S35
@@ -1231,8 +1231,8 @@ var actionTab = actionTable{
 			reduce(36), // ^^, reduce: AtomOrFunction
 			reduce(36), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S36
@@ -1265,8 +1265,8 @@ var actionTab = actionTable{
 			reduce(37), // ^^, reduce: AtomOrFunction
 			reduce(37), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S37
@@ -1299,8 +1299,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S38
@@ -1333,8 +1333,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S39
@@ -1367,8 +1367,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S40
@@ -1401,8 +1401,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S41
@@ -1435,8 +1435,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S42
@@ -1469,8 +1469,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S43
@@ -1503,8 +1503,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S44
@@ -1537,8 +1537,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S45
@@ -1571,8 +1571,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S46
@@ -1605,8 +1605,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S47
@@ -1639,8 +1639,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S48
@@ -1673,8 +1673,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S49
@@ -1707,8 +1707,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S50
@@ -1741,8 +1741,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S51
@@ -1775,8 +1775,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S52
@@ -1809,8 +1809,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S53
@@ -1843,8 +1843,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(64), // md_token_number
-			shift(65), // true
-			shift(66), // false
+			shift(65), // md_token_true
+			shift(66), // md_token_false
 		},
 	},
 	actionRow{ // S54
@@ -1877,8 +1877,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S55
@@ -1911,8 +1911,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S56
@@ -1945,8 +1945,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S57
@@ -1979,8 +1979,8 @@ var actionTab = actionTable{
 			reduce(34), // ^^, reduce: AtomOrFunction
 			reduce(34), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S58
@@ -2013,8 +2013,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S59
@@ -2047,8 +2047,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S60
@@ -2081,8 +2081,8 @@ var actionTab = actionTable{
 			shift(73),  // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S61
@@ -2115,8 +2115,8 @@ var actionTab = actionTable{
 			reduce(30), // ^^, reduce: LogicalXORTerm
 			shift(74),  // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S62
@@ -2149,8 +2149,8 @@ var actionTab = actionTable{
 			reduce(32), // ^^, reduce: LogicalAndTerm
 			reduce(32), // &&, reduce: LogicalAndTerm
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S63
@@ -2183,8 +2183,8 @@ var actionTab = actionTable{
 			reduce(33), // ^^, reduce: Stub
 			reduce(33), // &&, reduce: Stub
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S64
@@ -2217,8 +2217,8 @@ var actionTab = actionTable{
 			reduce(35), // ^^, reduce: AtomOrFunction
 			reduce(35), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S65
@@ -2251,8 +2251,8 @@ var actionTab = actionTable{
 			reduce(36), // ^^, reduce: AtomOrFunction
 			reduce(36), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S66
@@ -2285,8 +2285,8 @@ var actionTab = actionTable{
 			reduce(37), // ^^, reduce: AtomOrFunction
 			reduce(37), // &&, reduce: AtomOrFunction
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S67
@@ -2319,8 +2319,8 @@ var actionTab = actionTable{
 			shift(55),  // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S68
@@ -2353,8 +2353,8 @@ var actionTab = actionTable{
 			reduce(29), // ^^, reduce: LogicalXORTerm
 			shift(56),  // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S69
@@ -2387,8 +2387,8 @@ var actionTab = actionTable{
 			reduce(31), // ^^, reduce: LogicalAndTerm
 			reduce(31), // &&, reduce: LogicalAndTerm
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S70
@@ -2421,8 +2421,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(34), // md_token_number
-			shift(35), // true
-			shift(36), // false
+			shift(35), // md_token_true
+			shift(36), // md_token_false
 		},
 	},
 	actionRow{ // S71
@@ -2455,8 +2455,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(64), // md_token_number
-			shift(65), // true
-			shift(66), // false
+			shift(65), // md_token_true
+			shift(66), // md_token_false
 		},
 	},
 	actionRow{ // S72
@@ -2489,8 +2489,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(64), // md_token_number
-			shift(65), // true
-			shift(66), // false
+			shift(65), // md_token_true
+			shift(66), // md_token_false
 		},
 	},
 	actionRow{ // S73
@@ -2523,8 +2523,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(64), // md_token_number
-			shift(65), // true
-			shift(66), // false
+			shift(65), // md_token_true
+			shift(66), // md_token_false
 		},
 	},
 	actionRow{ // S74
@@ -2557,8 +2557,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(64), // md_token_number
-			shift(65), // true
-			shift(66), // false
+			shift(65), // md_token_true
+			shift(66), // md_token_false
 		},
 	},
 	actionRow{ // S75
@@ -2591,8 +2591,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S76
@@ -2625,8 +2625,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			nil,       // md_token_number
-			nil,       // true
-			nil,       // false
+			nil,       // md_token_true
+			nil,       // md_token_false
 		},
 	},
 	actionRow{ // S77
@@ -2659,8 +2659,8 @@ var actionTab = actionTable{
 			shift(73),  // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S78
@@ -2693,8 +2693,8 @@ var actionTab = actionTable{
 			reduce(29), // ^^, reduce: LogicalXORTerm
 			shift(74),  // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S79
@@ -2727,8 +2727,8 @@ var actionTab = actionTable{
 			reduce(31), // ^^, reduce: LogicalAndTerm
 			reduce(31), // &&, reduce: LogicalAndTerm
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 	actionRow{ // S80
@@ -2761,8 +2761,8 @@ var actionTab = actionTable{
 			nil,       // ^^
 			nil,       // &&
 			shift(64), // md_token_number
-			shift(65), // true
-			shift(66), // false
+			shift(65), // md_token_true
+			shift(66), // md_token_false
 		},
 	},
 	actionRow{ // S81
@@ -2795,8 +2795,8 @@ var actionTab = actionTable{
 			nil,        // ^^
 			nil,        // &&
 			nil,        // md_token_number
-			nil,        // true
-			nil,        // false
+			nil,        // md_token_true
+			nil,        // md_token_false
 		},
 	},
 }

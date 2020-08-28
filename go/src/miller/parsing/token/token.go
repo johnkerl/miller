@@ -146,8 +146,8 @@ var TokMap = TokenMap{
 		"^^",
 		"&&",
 		"md_token_number",
-		"true",
-		"false",
+		"md_token_true",
+		"md_token_false",
 	},
 
 	idMap: map[string]Type{
@@ -178,7 +178,7 @@ var TokMap = TokenMap{
 		"^^":                  24,
 		"&&":                  25,
 		"md_token_number":     26,
-		"true":                27,
-		"false":               28,
+		"md_token_true":       27,
+		"md_token_false":      28,
 	},
 }
