@@ -628,19 +628,10 @@ md_token_number : _digit { _digit } | '-' _digit { _digit } ;
 
 << import "miller/dsl" >>
 
-StatementList : 
-    Statement               << dsl.NewStatementList($0) >>
-  | StatementList Statement << dsl.AppendStatement($0, $1) >>
-;
-
-Statement : 
-  md_token_field_name md_token_assign md_token_number << dsl.NewStatement($0) >>
-;
-
 //// The caller is expected to provide more context.
 //%syntax_error {
 //	fprintf(stderr, "mlr DSL: syntax error at \"%s\"\n", TOKEN->text);
-
+//
 ////	This is confusing and (as is) worse than nothing.
 ////	Ideally we want to show the position within the input of the syntax error.
 ////
@@ -651,13 +642,25 @@ Statement :
 ////				fprintf(stderr, "Possible token \"%s\"\n", yyTokenName[i]);
 ////			}
 ////	}
-
+//
 //}
 
-//// ================================================================
-//md_body ::= md_statement_block(B). {
-//	past->proot = B;
-//}
+// ================================================================
+Body :
+  StatementBlock
+    <<dsl.NewAST($0) >> ;
+
+StatementBlock :
+  Statement
+    << dsl.MakeZary($0) >> ; // xxx temp
+
+Statement : 
+  FieldName Assign Number
+    << dsl.MakeBinary($1, $0, $2) >> ;
+
+FieldName: md_token_field_name << dsl.NewASTNode($0) >> ;
+Assign:    md_token_assign     << dsl.NewASTNode($0) >> ;
+Number:    md_token_number     << dsl.NewASTNode($0) >> ;
 
 // ----------------------------------------------------------------
 // Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then

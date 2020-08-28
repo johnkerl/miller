@@ -5,85 +5,65 @@ import (
 )
 
 // ----------------------------------------------------------------
-// AST type:
-// root *Node
-
-// Node type:
-// * text string
-// * type enum
-// * children []Node
+// xxx comment interface{} everywhere vs. true types due to gocc polymorphism API.
+// and, line-count for casts here vs in the BNF:
+//
+// Statement :
+//   md_token_field_name md_token_assign md_token_number
+//
+// Statement :
+//   md_token_field_name md_token_assign md_token_number
+//     << dsl.NewASTNodeTernary("foo", $0, $1, $2) >> ;
 
 // ----------------------------------------------------------------
 type AST struct {
 	Root *ASTNode
 }
 
-func NewAST(root *ASTNode) *AST {
+func NewAST(root interface{}) (*AST, error) {
 	return &AST {
-		root,
-	}
+		root.(*ASTNode),
+	}, nil
 }
 
 // ----------------------------------------------------------------
 type ASTNode struct {
-	Text string
+	Token token.Token
 	// Type enum
+	// There need to be tokenless nodes
+	// text string
 	Children []*ASTNode
 }
 
-func NewASTNode(text string) *ASTNode {
+func NewASTNode(itok interface{}) (*ASTNode, error) {
+	tok := itok.(*token.Token)
 	return &ASTNode {
-		text,
+		*tok,
 		// type
 		nil,
-	}
+	}, nil
 }
 
-func NewASTNodeZary(text string) *ASTNode {
+func MakeZary(iparent interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 0)
-	return &ASTNode {
-		text,
-		// type
-		children,
-	}
+	parent.Children = children
+	return parent, nil
 }
 
-func NewASTNodeUnary(text string, childA *ASTNode) *ASTNode {
+func MakeUnary(iparent interface{}, childA interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 1)
-	children[0] = childA
-	return &ASTNode {
-		text,
-		// type
-		children,
-	}
+	children[0] = childA.(*ASTNode)
+	parent.Children = children
+	return parent, nil
 }
 
-func NewASTNodeBinary(text string, childA *ASTNode, childB *ASTNode) *ASTNode {
-	children := make([]*ASTNode, 1)
-	children[0] = childA
-	children[1] = childB
-	return &ASTNode {
-		text,
-		// type
-		children,
-	}
-}
-
-// ----------------------------------------------------------------
-// prototype stuff from gocc example
-type (
-	StatementList []Statement
-	Statement     string
-)
-
-func NewStatementList(statement interface{}) (StatementList, error) {
-	return StatementList{statement.(Statement)}, nil
-}
-
-func AppendStatement(statementList, statement interface{}) (StatementList, error) {
-	return append(statementList.(StatementList), statement.(Statement)), nil
-}
-
-func NewStatement(statementList interface{}) (Statement, error) {
-	return Statement(statementList.(*token.Token).Lit), nil
+func MakeBinary(iparent interface{}, childA interface{}, childB interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
+	children := make([]*ASTNode, 2)
+	children[0] = childA.(*ASTNode)
+	children[1] = childB.(*ASTNode)
+	parent.Children = children
+	return parent, nil
 }

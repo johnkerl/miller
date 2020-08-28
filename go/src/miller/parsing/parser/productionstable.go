@@ -21,7 +21,7 @@ type (
 
 var productionsTable = ProdTab{
 	ProdTabEntry{
-		String: `S' : StatementList	<<  >>`,
+		String: `S' : Body	<<  >>`,
 		Id:         "S'",
 		NTType:     0,
 		Index:      0,
@@ -31,33 +31,63 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `StatementList : Statement	<< dsl.NewStatementList(X[0]) >>`,
-		Id:         "StatementList",
+		String: `Body : StatementBlock	<< dsl.NewAST(X[0]) >>`,
+		Id:         "Body",
 		NTType:     1,
 		Index:      1,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewStatementList(X[0])
+			return dsl.NewAST(X[0])
 		},
 	},
 	ProdTabEntry{
-		String: `StatementList : StatementList Statement	<< dsl.AppendStatement(X[0], X[1]) >>`,
-		Id:         "StatementList",
-		NTType:     1,
-		Index:      2,
-		NumSymbols: 2,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.AppendStatement(X[0], X[1])
-		},
-	},
-	ProdTabEntry{
-		String: `Statement : md_token_field_name md_token_assign md_token_number	<< dsl.NewStatement(X[0]) >>`,
-		Id:         "Statement",
+		String: `StatementBlock : Statement	<< dsl.MakeZary(X[0]) >>`,
+		Id:         "StatementBlock",
 		NTType:     2,
+		Index:      2,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.MakeZary(X[0])
+		},
+	},
+	ProdTabEntry{
+		String: `Statement : FieldName Assign Number	<< dsl.MakeBinary(X[1], X[0], X[2]) >>`,
+		Id:         "Statement",
+		NTType:     3,
 		Index:      3,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewStatement(X[0])
+			return dsl.MakeBinary(X[1], X[0], X[2])
+		},
+	},
+	ProdTabEntry{
+		String: `FieldName : md_token_field_name	<< dsl.NewASTNode(X[0]) >>`,
+		Id:         "FieldName",
+		NTType:     4,
+		Index:      4,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0])
+		},
+	},
+	ProdTabEntry{
+		String: `Assign : md_token_assign	<< dsl.NewASTNode(X[0]) >>`,
+		Id:         "Assign",
+		NTType:     5,
+		Index:      5,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0])
+		},
+	},
+	ProdTabEntry{
+		String: `Number : md_token_number	<< dsl.NewASTNode(X[0]) >>`,
+		Id:         "Number",
+		NTType:     6,
+		Index:      6,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0])
 		},
 	},
 }

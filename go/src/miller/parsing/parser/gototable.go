@@ -2,7 +2,7 @@
 
 package parser
 
-const numNTSymbols = 3
+const numNTSymbols = 7
 
 type (
 	gotoTable [numStates]gotoRow
@@ -12,37 +12,92 @@ type (
 var gotoTab = gotoTable{
 	gotoRow{ // S0
 		-1, // S'
-		1,  // StatementList
-		2,  // Statement
+		1,  // Body
+		2,  // StatementBlock
+		3,  // Statement
+		4,  // FieldName
+		-1, // Assign
+		-1, // Number
 	},
 	gotoRow{ // S1
 		-1, // S'
-		-1, // StatementList
-		4,  // Statement
+		-1, // Body
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
 	},
 	gotoRow{ // S2
 		-1, // S'
-		-1, // StatementList
+		-1, // Body
+		-1, // StatementBlock
 		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
 	},
 	gotoRow{ // S3
 		-1, // S'
-		-1, // StatementList
+		-1, // Body
+		-1, // StatementBlock
 		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
 	},
 	gotoRow{ // S4
 		-1, // S'
-		-1, // StatementList
+		-1, // Body
+		-1, // StatementBlock
 		-1, // Statement
+		-1, // FieldName
+		6,  // Assign
+		-1, // Number
 	},
 	gotoRow{ // S5
 		-1, // S'
-		-1, // StatementList
+		-1, // Body
+		-1, // StatementBlock
 		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
 	},
 	gotoRow{ // S6
 		-1, // S'
-		-1, // StatementList
+		-1, // Body
+		-1, // StatementBlock
 		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		8,  // Number
+	},
+	gotoRow{ // S7
+		-1, // S'
+		-1, // Body
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
+	},
+	gotoRow{ // S8
+		-1, // S'
+		-1, // Body
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
+	},
+	gotoRow{ // S9
+		-1, // S'
+		-1, // Body
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
 	},
 }
