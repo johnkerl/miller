@@ -11,6 +11,7 @@ const (
 	NodeTypeStatementBlock = "StatementBlock"
 	NodeTypeStatement      = "Statement"
 	NodeTypeToken          = "Token"
+	NodeTypeAssignment     = "Assignment"
 	NodeTypeOperator       = "Operator"
 )
 
@@ -67,6 +68,11 @@ func (this *ASTNode) Print(depth int) {
 }
 
 func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+	return NewASTNodeNestable(itok, nodeType), nil
+}
+
+// xxx comment why grammar use
+func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 	var tok *token.Token = nil
 	if itok != nil {
 		tok = itok.(*token.Token)
@@ -75,7 +81,7 @@ func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 		tok,
 		nodeType,
 		nil,
-	}, nil
+	}
 }
 
 func NewASTNodeUnary(itok,  childA interface{}, nodeType TNodeType) (*ASTNode, error) {
@@ -83,7 +89,7 @@ func NewASTNodeUnary(itok,  childA interface{}, nodeType TNodeType) (*ASTNode, e
 	if err != nil {
 		return nil, err
 	}
-	_, err = MakeUnary(parent, childA)
+	_, err = ConvertToUnary(parent, childA)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +101,7 @@ func NewASTNodeBinary(itok, childA, childB interface{}, nodeType TNodeType) (*AS
 	if err != nil {
 		return nil, err
 	}
-	_, err = MakeBinary(parent, childA, childB)
+	_, err = ConvertToBinary(parent, childA, childB)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +113,7 @@ func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeT
 	if err != nil {
 		return nil, err
 	}
-	_, err = MakeTernary(parent, childA, childB, childC)
+	_, err = ConvertToTernary(parent, childA, childB, childC)
 	if err != nil {
 		return nil, err
 	}
@@ -120,14 +126,14 @@ func PairNil(iparent interface{}) (*ASTNode, error) {
 	return iparent.(*ASTNode), nil
 }
 
-func MakeZary(iparent interface{}) (*ASTNode, error) {
+func ConvertToZary(iparent interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 0)
 	parent.Children = children
 	return parent, nil
 }
 
-func MakeUnary(iparent interface{}, childA interface{}) (*ASTNode, error) {
+func ConvertToUnary(iparent interface{}, childA interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 1)
 	children[0] = childA.(*ASTNode)
@@ -135,7 +141,7 @@ func MakeUnary(iparent interface{}, childA interface{}) (*ASTNode, error) {
 	return parent, nil
 }
 
-func MakeBinary(iparent interface{}, childA, childB interface{}) (*ASTNode, error) {
+func ConvertToBinary(iparent interface{}, childA, childB interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 2)
 	children[0] = childA.(*ASTNode)
@@ -144,7 +150,7 @@ func MakeBinary(iparent interface{}, childA, childB interface{}) (*ASTNode, erro
 	return parent, nil
 }
 
-func MakeTernary(iparent interface{}, childA, childB, childC interface{}) (*ASTNode, error) {
+func ConvertToTernary(iparent interface{}, childA, childB, childC interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 3)
 	children[0] = childA.(*ASTNode)
@@ -157,7 +163,7 @@ func MakeTernary(iparent interface{}, childA, childB, childC interface{}) (*ASTN
 func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	if parent.Children == nil {
-		MakeUnary(iparent, child)
+		ConvertToUnary(iparent, child)
 	} else {
 		parent.Children = append(parent.Children, child.(*ASTNode))
 	}
