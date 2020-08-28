@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	numProductions = 38
-	numStates      = 82
-	numSymbols     = 42
+	numProductions = 79
+	numStates      = 228
+	numSymbols     = 79
 )
 
 // Stack

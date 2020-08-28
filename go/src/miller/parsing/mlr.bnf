@@ -2409,7 +2409,7 @@ RHS : TernaryTerm ;
 // to do: how to pass a "?:" token ...
 TernaryTerm
   : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
-    << dsl.NewASTNodeTernary(nil, $0, $2, $4, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNodeTernary($1, $0, $2, $4, dsl.NodeTypeOperator) >>
   | LogicalOrTerm
 ;
 
@@ -2426,167 +2426,82 @@ LogicalXORTerm
 ;
 
 LogicalAndTerm
-  : LogicalAndTerm "&&" Stub
+  : LogicalAndTerm "&&" EqneTerm
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | Stub
+  | EqneTerm
 ;
 
-// xxx temp
-Stub : AtomOrFunction ;
+EqneTerm
+  : EqneTerm "=~"  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "=="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "!="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm
+;
 
-//LogicalAndTerm
-//  : LogicalAndTerm "^" LogicalEqneTerm
-//    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-//  | LogicalEqneTerm
-//;
+CmpTerm
+  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseORTerm
+;
 
-//// ----------------------------------------------------------------
-//EqneTerm(A) ::= CmpTerm(B). {
-//	A = B;
-//}
-//EqneTerm(A) ::= EqneTerm(B) md_token_matches(O) CmpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//EqneTerm(A) ::= EqneTerm(B) MD_TOKEN_DOES_NOT_MATCH(O) CmpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//EqneTerm(A) ::= EqneTerm(B) md_token_eq(O) CmpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//EqneTerm(A) ::= EqneTerm(B) md_token_ne(O) CmpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+BitwiseORTerm
+  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseXORTerm
+;
 
-//// ----------------------------------------------------------------
-//CmpTerm(A) ::= BitwiseOrTerm(B). {
-//	A = B;
-//}
-//CmpTerm(A) ::= CmpTerm(B) md_token_gt(O) BitwiseOrTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//CmpTerm(A) ::= CmpTerm(B) md_token_ge(O) BitwiseOrTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//CmpTerm(A) ::= CmpTerm(B) md_token_lt(O) BitwiseOrTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//CmpTerm(A) ::= CmpTerm(B) md_token_le(O) BitwiseOrTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+BitwiseXORTerm
+  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseANDTerm
+;
 
-//// ----------------------------------------------------------------
-//BitwiseOrTerm(A) ::= BitwiseXorTerm(B). {
-//	A = B;
-//}
-//BitwiseOrTerm(A) ::= BitwiseOrTerm(B) md_token_bitwise_or(O) BitwiseXorTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+BitwiseANDTerm
+  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm
+;
 
-//// ----------------------------------------------------------------
-//BitwiseXorTerm(A) ::= BitwiseAndTerm(B). {
-//	A = B;
-//}
-//BitwiseXorTerm(A) ::= BitwiseXorTerm(B) md_token_bitwise_xor(O) BitwiseAndTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+BitwiseShiftTerm
+  : BitwiseShiftTerm "<<" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm ">>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm
+;
 
-//// ----------------------------------------------------------------
-//BitwiseAndTerm(A) ::= BitwiseShiftTerm(B). {
-//	A = B;
-//}
-//BitwiseAndTerm(A) ::= BitwiseAndTerm(B) md_token_bitwise_and(O) BitwiseShiftTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+AddsubdotTerm
+  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm
+;
 
-//// ----------------------------------------------------------------
-//BitwiseShiftTerm(A) ::= AddsubdotTerm(B). {
-//	A = B;
-//}
-//BitwiseShiftTerm(A) ::= BitwiseShiftTerm(B) md_token_bitwise_lsh(O) AddsubdotTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//BitwiseShiftTerm(A) ::= BitwiseShiftTerm(B) md_token_bitwise_rsh(O) AddsubdotTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+MuldivTerm
+  : MuldivTerm "*"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "/"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "//"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "%"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".*"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "./"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".//" UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | UnaryBitwiseOpTerm
+;
 
-//// ----------------------------------------------------------------
-//AddsubdotTerm(A) ::= MuldivTerm(B). {
-//	A = B;
-//}
-//AddsubdotTerm(A) ::= AddsubdotTerm(B) md_token_plus(O) MuldivTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//AddsubdotTerm(A) ::= AddsubdotTerm(B) md_token_minus(O) MuldivTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//AddsubdotTerm(A) ::= AddsubdotTerm(B) md_token_oplus(O) MuldivTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//AddsubdotTerm(A) ::= AddsubdotTerm(B) md_token_ominus(O) MuldivTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//AddsubdotTerm(A) ::= AddsubdotTerm(B) MD_TOKEN_DOT(O) MuldivTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+UnaryBitwiseOpTerm
+  : "+"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "-"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".+" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".-" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "!"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "~"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | PowTerm
+;
 
-//// ----------------------------------------------------------------
-//MuldivTerm(A) ::= UnaryBitwiseOpTerm(B). {
-//	A = B;
-//}
-
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_times(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_divide(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_int_divide(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_mod(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_otimes(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_odivide(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-//MuldivTerm(A) ::= MuldivTerm(B) md_token_int_odivide(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
-
-//// ----------------------------------------------------------------
-//UnaryBitwiseOpTerm(A) ::= PowTerm(B). {
-//	A = B;
-//}
-//UnaryBitwiseOpTerm(A) ::= md_token_plus(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
-//}
-//UnaryBitwiseOpTerm(A) ::= md_token_minus(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
-//}
-//UnaryBitwiseOpTerm(A) ::= md_token_oplus(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
-//}
-//UnaryBitwiseOpTerm(A) ::= md_token_ominus(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
-//}
-//UnaryBitwiseOpTerm(A) ::= md_token_logical_not(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
-//}
-//UnaryBitwiseOpTerm(A) ::= md_token_bitwise_not(O) UnaryBitwiseOpTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
-//}
-
-//// ----------------------------------------------------------------
-//PowTerm(A) ::= AtomOrFunction(B). {
-//	A = B;
-//}
-//PowTerm(A) ::= AtomOrFunction(B) md_token_pow(O) PowTerm(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+PowTerm
+  : AtomOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AtomOrFunction
+;
 
 // ================================================================
 // End RHS operator-precedence chain
