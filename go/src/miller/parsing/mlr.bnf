@@ -10,6 +10,7 @@ _idchar : _letter | _digit | '_' ;
 md_token_field_name : '$' _idchar { _idchar } ;
 md_token_assign : '=' ;
 md_token_number : _digit { _digit } | '-' _digit { _digit } ;
+md_semicolon : ';' ;
 
 
 //// NOTE: any new keywords defined here should also be documented
@@ -650,17 +651,38 @@ Body :
   StatementBlock
     <<dsl.NewAST($0) >> ;
 
-StatementBlock :
-  Statement
-    << dsl.Wrap($0) >> ; // xxx temp
+StatementBlock
+  : Statement
+    << dsl.NewASTNodeUnary($0, dsl.NodeTypeStatementBlock) >>
+  | StatementBlock md_semicolon Statement
+    <<dsl.AppendChild($0, $2) >>
+  ;
 
-Statement : 
-  FieldName Assign Number
+Statement
+  : FieldName Assign Number
     << dsl.MakeBinary($1, $0, $2) >> ;
 
-FieldName: md_token_field_name << dsl.NewASTNode($0) >> ;
-Assign:    md_token_assign     << dsl.NewASTNode($0) >> ;
-Number:    md_token_number     << dsl.NewASTNode($0) >> ;
+FieldName: md_token_field_name << dsl.NewASTNode($0, dsl.NodeTypeLeaf) >> ;
+Assign:    md_token_assign     << dsl.NewASTNode($0, dsl.NodeTypeLeaf) >> ;
+Number:    md_token_number     << dsl.NewASTNode($0, dsl.NodeTypeLeaf) >> ;
+
+// C example:
+// $ mlr put -v '$x=3;$y=4' /dev/null
+// RAW AST:
+// 
+// AST ROOT:
+// text="block", type=STATEMENT_BLOCK:
+//     text="=", type=SREC_ASSIGNMENT:
+//         text="x", type=FIELD_NAME.
+//         text="3", type=NUMERIC_LITERAL.
+//     text="=", type=SREC_ASSIGNMENT:
+//         text="y", type=FIELD_NAME.
+//         text="4", type=NUMERIC_LITERAL.
+
+
+
+
+
 
 // ----------------------------------------------------------------
 // Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then

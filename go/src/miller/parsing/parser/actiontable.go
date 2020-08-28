@@ -16,6 +16,7 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,      // INVALID
 			nil,      // $
+			nil,      // md_semicolon
 			shift(5), // md_token_field_name
 			nil,      // md_token_assign
 			nil,      // md_token_number
@@ -26,6 +27,7 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,          // INVALID
 			accept(true), // $
+			nil,          // md_semicolon
 			nil,          // md_token_field_name
 			nil,          // md_token_assign
 			nil,          // md_token_number
@@ -36,6 +38,7 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			reduce(1), // $, reduce: Body
+			shift(6),  // md_semicolon
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
@@ -46,6 +49,7 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			reduce(2), // $, reduce: StatementBlock
+			reduce(2), // md_semicolon, reduce: StatementBlock
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
@@ -56,8 +60,9 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,      // INVALID
 			nil,      // $
+			nil,      // md_semicolon
 			nil,      // md_token_field_name
-			shift(7), // md_token_assign
+			shift(8), // md_token_assign
 			nil,      // md_token_number
 		},
 	},
@@ -66,8 +71,9 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
+			nil,       // md_semicolon
 			nil,       // md_token_field_name
-			reduce(4), // md_token_assign, reduce: FieldName
+			reduce(5), // md_token_assign, reduce: FieldName
 			nil,       // md_token_number
 		},
 	},
@@ -76,9 +82,10 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,      // INVALID
 			nil,      // $
-			nil,      // md_token_field_name
+			nil,      // md_semicolon
+			shift(5), // md_token_field_name
 			nil,      // md_token_assign
-			shift(9), // md_token_number
+			nil,      // md_token_number
 		},
 	},
 	actionRow{ // S7
@@ -86,26 +93,51 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
+			nil,       // md_semicolon
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
-			reduce(5), // md_token_number, reduce: Assign
+			shift(11), // md_token_number
 		},
 	},
 	actionRow{ // S8
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(3), // $, reduce: Statement
+			nil,       // $
+			nil,       // md_semicolon
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
-			nil,       // md_token_number
+			reduce(6), // md_token_number, reduce: Assign
 		},
 	},
 	actionRow{ // S9
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(6), // $, reduce: Number
+			reduce(3), // $, reduce: StatementBlock
+			reduce(3), // md_semicolon, reduce: StatementBlock
+			nil,       // md_token_field_name
+			nil,       // md_token_assign
+			nil,       // md_token_number
+		},
+	},
+	actionRow{ // S10
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			reduce(4), // $, reduce: Statement
+			reduce(4), // md_semicolon, reduce: Statement
+			nil,       // md_token_field_name
+			nil,       // md_token_assign
+			nil,       // md_token_number
+		},
+	},
+	actionRow{ // S11
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			reduce(7), // $, reduce: Number
+			reduce(7), // md_semicolon, reduce: Number
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number

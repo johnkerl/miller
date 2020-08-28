@@ -5,6 +5,14 @@ import (
 	"miller/parsing/token"
 )
 
+type TNodeType string
+
+const (
+	NodeTypeStatementBlock = "StatementBlock"
+	NodeTypeStatement      = "Statement"
+	NodeTypeLeaf           = "Leaf" // xxx temp
+)
+
 // ----------------------------------------------------------------
 // xxx comment interface{} everywhere vs. true types due to gocc polymorphism API.
 // and, line-count for casts here vs in the BNF:
@@ -22,7 +30,7 @@ type AST struct {
 }
 
 func NewAST(root interface{}) (*AST, error) {
-	return &AST {
+	return &AST{
 		root.(*ASTNode),
 	}, nil
 }
@@ -33,20 +41,23 @@ func (this *AST) Print() {
 
 // ----------------------------------------------------------------
 type ASTNode struct {
-	Token token.Token
-	// Type enum
-	// There need to be tokenless nodes
-	// text string
+	Token   *token.Token // TODO: There need to be tokenless nodes
+	NodeType TNodeType
 	Children []*ASTNode
 }
 
 func (this *ASTNode) Print(depth int) {
 	for i := 0; i < depth; i++ {
-		fmt.Print("  ")
+		fmt.Print("    ")
 	}
 	tok := this.Token
-	fmt.Printf("* Type=\"%s\" Literal=\"%s\"\n",
-		token.TokMap.Id(tok.Type), string(tok.Lit))
+	fmt.Print("* NodeType=" + this.NodeType)
+
+	if tok != nil {
+		fmt.Printf(" TokenType=\"%s\" Literal=\"%s\"",
+			token.TokMap.Id(tok.Type), string(tok.Lit))
+	}
+	fmt.Println()
 	if this.Children != nil {
 		for _, child := range this.Children {
 			child.Print(depth + 1)
@@ -54,20 +65,35 @@ func (this *ASTNode) Print(depth int) {
 	}
 }
 
-func NewASTNode(itok interface{}) (*ASTNode, error) {
-	tok := itok.(*token.Token)
-	return &ASTNode {
-		*tok,
-		// type
+func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+	var tok *token.Token = nil
+	if itok != nil {
+		tok = itok.(*token.Token)
+	}
+	return &ASTNode{
+		tok,
+		nodeType,
 		nil,
 	}, nil
 }
 
-// xxx temp
-func Wrap(iparent interface{}) (*ASTNode, error) {
-	parent := iparent.(*ASTNode)
+func NewASTNodeUnary(childA interface{}, nodeType TNodeType) (*ASTNode, error) {
+	parent, err := NewASTNode(nil, nodeType)
+	if err != nil {
+		return nil, err
+	}
+	_, err = MakeUnary(parent, childA)
+	if err != nil {
+		return nil, err
+	}
 	return parent, nil
 }
+
+//// xxx temp
+//func Wrap(iparent interface{}) (*ASTNode, error) {
+//	parent := iparent.(*ASTNode)
+//	return parent, nil
+//}
 
 func MakeZary(iparent interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
@@ -90,5 +116,15 @@ func MakeBinary(iparent interface{}, childA interface{}, childB interface{}) (*A
 	children[0] = childA.(*ASTNode)
 	children[1] = childB.(*ASTNode)
 	parent.Children = children
+	return parent, nil
+}
+
+func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
+	if parent.Children == nil {
+		MakeUnary(iparent, child)
+	} else {
+		parent.Children = append(parent.Children, child.(*ASTNode))
+	}
 	return parent, nil
 }

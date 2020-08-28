@@ -52,7 +52,7 @@ var gotoTab = gotoTable{
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
-		6,  // Assign
+		7,  // Assign
 		-1, // Number
 	},
 	gotoRow{ // S5
@@ -68,10 +68,10 @@ var gotoTab = gotoTable{
 		-1, // S'
 		-1, // Body
 		-1, // StatementBlock
-		-1, // Statement
-		-1, // FieldName
+		9,  // Statement
+		4,  // FieldName
 		-1, // Assign
-		8,  // Number
+		-1, // Number
 	},
 	gotoRow{ // S7
 		-1, // S'
@@ -80,7 +80,7 @@ var gotoTab = gotoTable{
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		10, // Number
 	},
 	gotoRow{ // S8
 		-1, // S'
@@ -92,6 +92,24 @@ var gotoTab = gotoTable{
 		-1, // Number
 	},
 	gotoRow{ // S9
+		-1, // S'
+		-1, // Body
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
+	},
+	gotoRow{ // S10
+		-1, // S'
+		-1, // Body
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // Number
+	},
+	gotoRow{ // S11
 		-1, // S'
 		-1, // Body
 		-1, // StatementBlock

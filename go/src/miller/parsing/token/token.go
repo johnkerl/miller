@@ -121,6 +121,7 @@ var TokMap = TokenMap{
 	typeMap: []string{
 		"INVALID",
 		"$",
+		"md_semicolon",
 		"md_token_field_name",
 		"md_token_assign",
 		"md_token_number",
@@ -129,8 +130,9 @@ var TokMap = TokenMap{
 	idMap: map[string]Type{
 		"INVALID":             0,
 		"$":                   1,
-		"md_token_field_name": 2,
-		"md_token_assign":     3,
-		"md_token_number":     4,
+		"md_semicolon":        2,
+		"md_token_field_name": 3,
+		"md_token_assign":     4,
+		"md_token_number":     5,
 	},
 }

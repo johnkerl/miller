@@ -9,7 +9,7 @@ import (
 	"miller/parsing/parser"
 )
 
-func testOne(sourceString []byte) (*dsl.AST, error) {
+func testSingle(sourceString []byte) (*dsl.AST, error) {
 	fmt.Printf("Input: %s\n", sourceString)
 	theLexer := lexer.NewLexer(sourceString)
 	theParser := parser.NewParser()
@@ -21,8 +21,17 @@ func testOne(sourceString []byte) (*dsl.AST, error) {
 	}
 }
 
-func TestPass(t *testing.T) {
-	ast, err := testOne([]byte("$x = 3"))
+func TestFail(t *testing.T) {
+	_, err := testSingle([]byte("a b ; d e f"))
+	if err == nil {
+		t.Fatal("Expected parse error")
+	} else {
+		fmt.Printf("Parsing failed as expected: %v\n", err)
+	}
+}
+
+func TestPassOne(t *testing.T) {
+	ast, err := testSingle([]byte("$x = 3"))
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -30,11 +39,11 @@ func TestPass(t *testing.T) {
 	ast.Print()
 }
 
-func TestFail(t *testing.T) {
-	_, err := testOne([]byte("a b ; d e f"))
-	if err == nil {
-		t.Fatal("Expected parse error")
-	} else {
-		fmt.Printf("Parsing failed as expected: %v\n", err)
+func TestPassTwo(t *testing.T) {
+	ast, err := testSingle([]byte("$x = 3; $y = 4"))
+	if err != nil {
+		t.Fatal(err.Error())
 	}
+	fmt.Println("AST:")
+	ast.Print()
 }
