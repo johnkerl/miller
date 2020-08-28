@@ -12,110 +12,137 @@ type (
 var gotoTab = gotoTable{
 	gotoRow{ // S0
 		-1, // S'
-		1,  // Body
+		1,  // Root
 		2,  // StatementBlock
 		3,  // Statement
 		4,  // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S1
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S2
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S3
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S4
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		7,  // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S5
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S6
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		9,  // Statement
 		4,  // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S7
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		10, // Number
+		10, // AtomOrFunction
 	},
 	gotoRow{ // S8
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S9
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S10
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
 	},
 	gotoRow{ // S11
 		-1, // S'
-		-1, // Body
+		-1, // Root
 		-1, // StatementBlock
 		-1, // Statement
 		-1, // FieldName
 		-1, // Assign
-		-1, // Number
+		-1, // AtomOrFunction
+	},
+	gotoRow{ // S12
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // AtomOrFunction
+	},
+	gotoRow{ // S13
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // AtomOrFunction
+	},
+	gotoRow{ // S14
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // FieldName
+		-1, // Assign
+		-1, // AtomOrFunction
 	},
 }

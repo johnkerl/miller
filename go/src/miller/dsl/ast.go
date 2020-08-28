@@ -10,7 +10,7 @@ type TNodeType string
 const (
 	NodeTypeStatementBlock = "StatementBlock"
 	NodeTypeStatement      = "Statement"
-	NodeTypeLeaf           = "Leaf" // xxx temp
+	NodeTypeToken          = "Token"
 )
 
 // ----------------------------------------------------------------
@@ -89,11 +89,11 @@ func NewASTNodeUnary(childA interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return parent, nil
 }
 
-//// xxx temp
-//func Wrap(iparent interface{}) (*ASTNode, error) {
-//	parent := iparent.(*ASTNode)
-//	return parent, nil
-//}
+// Pass-through expressions in the grammar sometimes need to be turned from
+// (ASTNode) to (ASTNode, error)
+func PairNil(iparent interface{}) (*ASTNode, error) {
+	return iparent.(*ASTNode), nil
+}
 
 func MakeZary(iparent interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)

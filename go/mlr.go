@@ -10,6 +10,10 @@ import (
 	"runtime/pprof"
 	// Miller:
 	"miller/stream"
+	// Temp:
+	"miller/dsl"
+	"miller/parsing/lexer"
+	"miller/parsing/parser"
 )
 
 // ----------------------------------------------------------------
@@ -35,6 +39,11 @@ func main() {
 
 	args := flag.Args()
 
+	// xxx temp
+	if len(args) == 2 && args[0] == "parse" {
+		parse(args[1])
+		return
+	}
 
 	if len(args) < 3 {
 		usage()
@@ -47,6 +56,21 @@ func main() {
 	err := stream.Stream(filenames, inputFormatName, mapperName, outputFormatName)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+// ----------------------------------------------------------------
+// xxx temp
+func parse(sourceString string) {
+	fmt.Printf("Input: %s\n", sourceString)
+	theLexer := lexer.NewLexer([]byte(sourceString))
+	theParser := parser.NewParser()
+	interfaceAST, err := theParser.Parse(theLexer)
+	if err == nil {
+		interfaceAST.(*dsl.AST).Print()
+	} else {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
 

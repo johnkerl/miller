@@ -21,7 +21,7 @@ type (
 
 var productionsTable = ProdTab{
 	ProdTabEntry{
-		String: `S' : Body	<<  >>`,
+		String: `S' : Root	<<  >>`,
 		Id:         "S'",
 		NTType:     0,
 		Index:      0,
@@ -31,8 +31,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Body : StatementBlock	<< dsl.NewAST(X[0]) >>`,
-		Id:         "Body",
+		String: `Root : StatementBlock	<< dsl.NewAST(X[0]) >>`,
+		Id:         "Root",
 		NTType:     1,
 		Index:      1,
 		NumSymbols: 1,
@@ -51,53 +51,93 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `StatementBlock : StatementBlock md_semicolon Statement	<< dsl.AppendChild(X[0], X[2]) >>`,
+		String: `StatementBlock : StatementBlock ";"	<< dsl.PairNil(X[0]) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      3,
+		NumSymbols: 2,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.PairNil(X[0])
+		},
+	},
+	ProdTabEntry{
+		String: `StatementBlock : StatementBlock ";" Statement	<< dsl.AppendChild(X[0], X[2]) >>`,
+		Id:         "StatementBlock",
+		NTType:     2,
+		Index:      4,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.AppendChild(X[0], X[2])
 		},
 	},
 	ProdTabEntry{
-		String: `Statement : FieldName Assign Number	<< dsl.MakeBinary(X[1], X[0], X[2]) >>`,
+		String: `Statement : FieldName Assign AtomOrFunction	<< dsl.MakeBinary(X[1], X[0], X[2]) >>`,
 		Id:         "Statement",
 		NTType:     3,
-		Index:      4,
+		Index:      5,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.MakeBinary(X[1], X[0], X[2])
 		},
 	},
 	ProdTabEntry{
-		String: `FieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeLeaf) >>`,
+		String: `FieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "FieldName",
 		NTType:     4,
-		Index:      5,
-		NumSymbols: 1,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeLeaf)
-		},
-	},
-	ProdTabEntry{
-		String: `Assign : md_token_assign	<< dsl.NewASTNode(X[0], dsl.NodeTypeLeaf) >>`,
-		Id:         "Assign",
-		NTType:     5,
 		Index:      6,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeLeaf)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
 		},
 	},
 	ProdTabEntry{
-		String: `Number : md_token_number	<< dsl.NewASTNode(X[0], dsl.NodeTypeLeaf) >>`,
-		Id:         "Number",
-		NTType:     6,
+		String: `Assign : md_token_assign	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "Assign",
+		NTType:     5,
 		Index:      7,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeLeaf)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     6,
+		Index:      8,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : md_token_number	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     6,
+		Index:      9,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : "true"	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     6,
+		Index:      10,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : "false"	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     6,
+		Index:      11,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
 		},
 	},
 }

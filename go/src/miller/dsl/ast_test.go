@@ -40,7 +40,16 @@ func TestPassOne(t *testing.T) {
 }
 
 func TestPassTwo(t *testing.T) {
-	ast, err := testSingle([]byte("$x = 3; $y = 4"))
+	ast, err := testSingle([]byte("$x = 3; $y = 0xef"))
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	fmt.Println("AST:")
+	ast.Print()
+}
+
+func TestPassThree(t *testing.T) {
+	ast, err := testSingle([]byte("$x = 3; $y = 0xef; $z = true"))
 	if err != nil {
 		t.Fatal(err.Error())
 	}

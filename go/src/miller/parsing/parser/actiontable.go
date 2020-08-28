@@ -16,10 +16,12 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,      // INVALID
 			nil,      // $
-			nil,      // md_semicolon
+			nil,      // ;
 			shift(5), // md_token_field_name
 			nil,      // md_token_assign
 			nil,      // md_token_number
+			nil,      // true
+			nil,      // false
 		},
 	},
 	actionRow{ // S1
@@ -27,21 +29,25 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,          // INVALID
 			accept(true), // $
-			nil,          // md_semicolon
+			nil,          // ;
 			nil,          // md_token_field_name
 			nil,          // md_token_assign
 			nil,          // md_token_number
+			nil,          // true
+			nil,          // false
 		},
 	},
 	actionRow{ // S2
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(1), // $, reduce: Body
-			shift(6),  // md_semicolon
+			reduce(1), // $, reduce: Root
+			shift(6),  // ;
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
 		},
 	},
 	actionRow{ // S3
@@ -49,10 +55,12 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			reduce(2), // $, reduce: StatementBlock
-			reduce(2), // md_semicolon, reduce: StatementBlock
+			reduce(2), // ;, reduce: StatementBlock
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
 		},
 	},
 	actionRow{ // S4
@@ -60,10 +68,12 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,      // INVALID
 			nil,      // $
-			nil,      // md_semicolon
+			nil,      // ;
 			nil,      // md_token_field_name
 			shift(8), // md_token_assign
 			nil,      // md_token_number
+			nil,      // true
+			nil,      // false
 		},
 	},
 	actionRow{ // S5
@@ -71,21 +81,25 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
-			nil,       // md_semicolon
+			nil,       // ;
 			nil,       // md_token_field_name
-			reduce(5), // md_token_assign, reduce: FieldName
+			reduce(6), // md_token_assign, reduce: FieldName
 			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
 		},
 	},
 	actionRow{ // S6
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,      // INVALID
-			nil,      // $
-			nil,      // md_semicolon
-			shift(5), // md_token_field_name
-			nil,      // md_token_assign
-			nil,      // md_token_number
+			nil,       // INVALID
+			reduce(3), // $, reduce: StatementBlock
+			reduce(3), // ;, reduce: StatementBlock
+			shift(5),  // md_token_field_name
+			nil,       // md_token_assign
+			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
 		},
 	},
 	actionRow{ // S7
@@ -93,10 +107,12 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
-			nil,       // md_semicolon
-			nil,       // md_token_field_name
+			nil,       // ;
+			shift(11), // md_token_field_name
 			nil,       // md_token_assign
-			shift(11), // md_token_number
+			shift(12), // md_token_number
+			shift(13), // true
+			shift(14), // false
 		},
 	},
 	actionRow{ // S8
@@ -104,43 +120,90 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
-			nil,       // md_semicolon
-			nil,       // md_token_field_name
+			nil,       // ;
+			reduce(7), // md_token_field_name, reduce: Assign
 			nil,       // md_token_assign
-			reduce(6), // md_token_number, reduce: Assign
+			reduce(7), // md_token_number, reduce: Assign
+			reduce(7), // true, reduce: Assign
+			reduce(7), // false, reduce: Assign
 		},
 	},
 	actionRow{ // S9
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(3), // $, reduce: StatementBlock
-			reduce(3), // md_semicolon, reduce: StatementBlock
+			reduce(4), // $, reduce: StatementBlock
+			reduce(4), // ;, reduce: StatementBlock
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
 		},
 	},
 	actionRow{ // S10
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(4), // $, reduce: Statement
-			reduce(4), // md_semicolon, reduce: Statement
+			reduce(5), // $, reduce: Statement
+			reduce(5), // ;, reduce: Statement
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
 		},
 	},
 	actionRow{ // S11
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(7), // $, reduce: Number
-			reduce(7), // md_semicolon, reduce: Number
+			reduce(8), // $, reduce: AtomOrFunction
+			reduce(8), // ;, reduce: AtomOrFunction
 			nil,       // md_token_field_name
 			nil,       // md_token_assign
 			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
+		},
+	},
+	actionRow{ // S12
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			reduce(9), // $, reduce: AtomOrFunction
+			reduce(9), // ;, reduce: AtomOrFunction
+			nil,       // md_token_field_name
+			nil,       // md_token_assign
+			nil,       // md_token_number
+			nil,       // true
+			nil,       // false
+		},
+	},
+	actionRow{ // S13
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(10), // $, reduce: AtomOrFunction
+			reduce(10), // ;, reduce: AtomOrFunction
+			nil,        // md_token_field_name
+			nil,        // md_token_assign
+			nil,        // md_token_number
+			nil,        // true
+			nil,        // false
+		},
+	},
+	actionRow{ // S14
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(11), // $, reduce: AtomOrFunction
+			reduce(11), // ;, reduce: AtomOrFunction
+			nil,        // md_token_field_name
+			nil,        // md_token_assign
+			nil,        // md_token_number
+			nil,        // true
+			nil,        // false
 		},
 	},
 }
