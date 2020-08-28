@@ -1,0 +1,18 @@
+#!/bin/bash
+
+export GOPATH=$(pwd)
+
+# Build the bin/gocc executable:
+go get github.com/goccmack/gocc
+
+# Read the Miller DSL grammar file and generate code:
+bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf
+# Code-gen directories:
+#   src/miller/parsing/errors/
+#   src/miller/parsing/lexer/
+#   src/miller/parsing/parser/
+#   src/miller/parsing/token/
+#   src/miller/parsing/util/
+
+# Run tests:
+go test src/miller/dsl/ast_test.go
