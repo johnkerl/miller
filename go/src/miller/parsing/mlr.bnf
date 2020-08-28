@@ -611,206 +611,143 @@ Root :
 
 StatementBlock
   : Statement
-    << dsl.NewASTNodeUnary($0, dsl.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+
   | StatementBlock ";"
     // Semicolons are separators, not terminators, in the Miller DSL --
     // most importantly people can say '$x = 3' without '$x = 3;'.
     // However, we do allow trailing semicolons.
     << dsl.PairNil($0) >>
+
   | StatementBlock ";" Statement
     <<dsl.AppendChild($0, $2) >>
   ;
 
-Statement
-  : FieldName Assign AtomOrFunction
-    << dsl.MakeBinary($1, $0, $2) >> ;
-
-FieldName: md_token_field_name << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
-Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
-
-
-
-
-
+Statement : StatementInBody ;
 
 // ----------------------------------------------------------------
-// Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then
-// "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally realize that's the top level, or it's embedded
-// within a cond-block, or for-loop body, etc.
-
-// * On the "$a=1" we make a sub-AST called "list" with child $a=1.
-// * On the "$b=2" we append the next argument to get "list" having children $a=1 and $b=2.
-// * On the "$c=3" we append the next argument to get "list" having children $a=1, $b=2, and $c=3.
-
-// We handle statements of the form ' ; ; ' by parsing the empty spaces around
-// the semicolons as NOP nodes.  But, the NOP nodes are immediately stripped
-// here and are not included in the AST we return.
-
-//md_statement_block(A) ::= md_statement_not_braced_end(B). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = mlr_dsl_ast_node_alloc_zary("block", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
-//	} else {
-//		A = mlr_dsl_ast_node_alloc_unary("block", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
-//	}
-//}
-
-//md_statement_block(A) ::= md_statement_braced_end(B). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = mlr_dsl_ast_node_alloc_zary("block", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
-//	} else {
-//		A = mlr_dsl_ast_node_alloc_unary("block", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
-//	}
-//}
-
-//// This could also be done with the list on the left and statement on the right. However,
-//// curly-brace-terminated statements *end* with a semicolon; they don't start with one. So this seems
-//// to be the right way to differentiate.
-//md_statement_block(A) ::= md_statement_not_braced_end(B) MD_TOKEN_SEMICOLON md_statement_block(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_prepend_arg(C, B);
-//	}
-//}
-
-//md_statement_block(A) ::= md_statement_braced_end(B) md_statement_block(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_prepend_arg(C, B);
-//	}
-//}
-
-//// This allows for trailing semicolon, as well as empty string (or whitespace) between semicolons:
-//md_statement_not_braced_end(A) ::= . {
-//	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
-//}
-
 //// Local-variable definitions at the current scope
-//md_statement_not_braced_end(A) ::= md_untyped_local_definition(B).    { A = B; }
-//md_statement_not_braced_end(A) ::= md_numeric_local_definition(B).    { A = B; }
-//md_statement_not_braced_end(A) ::= md_int_local_definition(B).        { A = B; }
-//md_statement_not_braced_end(A) ::= md_float_local_definition(B).      { A = B; }
-//md_statement_not_braced_end(A) ::= md_boolean_local_definition(B).    { A = B; }
-//md_statement_not_braced_end(A) ::= md_string_local_definition(B).     { A = B; }
-//md_statement_not_braced_end(A) ::= md_map_local_definition(B).        { A = B; }
-//md_statement_not_braced_end(A) ::= md_nonindexed_local_assignment(B). { A = B; }
-//md_statement_not_braced_end(A) ::= md_indexed_local_assignment(B).    { A = B; }
+//StatementInBody(A) ::= md_untyped_local_definition(B).    { A = B; }
+//StatementInBody(A) ::= md_numeric_local_definition(B).    { A = B; }
+//StatementInBody(A) ::= md_int_local_definition(B).        { A = B; }
+//StatementInBody(A) ::= md_float_local_definition(B).      { A = B; }
+//StatementInBody(A) ::= md_boolean_local_definition(B).    { A = B; }
+//StatementInBody(A) ::= md_string_local_definition(B).     { A = B; }
+//StatementInBody(A) ::= md_map_local_definition(B).        { A = B; }
+//StatementInBody(A) ::= md_nonindexed_local_assignment(B). { A = B; }
+//StatementInBody(A) ::= md_indexed_local_assignment(B).    { A = B; }
 
 //// For user-defined functions
-//md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN RHS(B). {
+//StatementInBody(A) ::= MD_TOKEN_RETURN RHS(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
-//md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_map_literal(B). {
+//StatementInBody(A) ::= MD_TOKEN_RETURN md_map_literal(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
-//md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN MD_TOKEN_FULL_SREC(B). {
+//StatementInBody(A) ::= MD_TOKEN_RETURN MD_TOKEN_FULL_SREC(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
-//md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN MD_TOKEN_FULL_OOSVAR(B). {
+//StatementInBody(A) ::= MD_TOKEN_RETURN MD_TOKEN_FULL_OOSVAR(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
 //// For user-defined subroutines
-//md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN. {
+//StatementInBody(A) ::= MD_TOKEN_RETURN. {
 //	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
 //}
 
 //// Begin/end
-//md_statement_braced_end(A) ::= md_func_block(B).  { A = B; }
-//md_statement_braced_end(A) ::= md_subr_block(B).  { A = B; }
-//md_statement_braced_end(A) ::= md_begin_block(B). { A = B; }
-//md_statement_braced_end(A) ::= md_end_block(B).   { A = B; }
+//StatementInBeginOrEnd(A) ::= md_func_block(B).  { A = B; }
+//StatementInBeginOrEnd(A) ::= md_subr_block(B).  { A = B; }
+//StatementInBeginOrEnd(A) ::= md_begin_block(B). { A = B; }
+//StatementInBeginOrEnd(A) ::= md_end_block(B).   { A = B; }
 
 //// Nested control structures:
-//md_statement_braced_end(A) ::= md_cond_block(B).                    { A = B; }
-//md_statement_braced_end(A) ::= md_while_block(B).                   { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_full_srec(B).            { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_full_srec_key_only(B).   { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B).          { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_full_oosvar_key_only(B). { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_oosvar(B).               { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_oosvar_key_only(B).      { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_local_map(B).            { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_local_map_key_only(B).   { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_map_literal(B).          { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_map_literal_key_only(B). { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_func_retval(B).            { A = B; }
-//md_statement_braced_end(A) ::= md_for_loop_func_retval_key_only(B).   { A = B; }
-//md_statement_braced_end(A) ::= md_triple_for(B).                    { A = B; }
-//md_statement_braced_end(A) ::= md_if_chain(B).                      { A = B; }
+//StatementInBeginOrEnd(A) ::= md_cond_block(B).                    { A = B; }
+//StatementInBeginOrEnd(A) ::= md_while_block(B).                   { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_full_srec(B).            { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_full_srec_key_only(B).   { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_full_oosvar(B).          { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_full_oosvar_key_only(B). { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_oosvar(B).               { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_oosvar_key_only(B).      { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_local_map(B).            { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_local_map_key_only(B).   { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_map_literal(B).          { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_map_literal_key_only(B). { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_func_retval(B).            { A = B; }
+//StatementInBeginOrEnd(A) ::= md_for_loop_func_retval_key_only(B).   { A = B; }
+//StatementInBeginOrEnd(A) ::= md_triple_for(B).                    { A = B; }
+//StatementInBeginOrEnd(A) ::= md_if_chain(B).                      { A = B; }
 
-//md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
+//StatementInBody(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
 //}
 
-//// Not valid in begin/end since they refer to srecs:
-// xxx
-//md_statement_not_braced_end(A) ::= SrecAssignment(B).                  { A = B; }
-//md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
-//md_statement_not_braced_end(A) ::= md_srec_positional_name_assignment(B).  { A = B; }
-//md_statement_not_braced_end(A) ::= md_srec_positional_value_assignment(B). { A = B; }
-//md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
-//md_statement_not_braced_end(A) ::= md_full_srec_assignment(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_env_assignment(B).                   { A = B; }
+// Not valid in begin/end since they refer to srecs:
+
+StatementInBody :SrecAssignment ;
+
+//StatementInBody(A) ::= md_srec_indirect_assignment(B).         { A = B; }
+//StatementInBody(A) ::= md_srec_positional_name_assignment(B).  { A = B; }
+//StatementInBody(A) ::= md_srec_positional_value_assignment(B). { A = B; }
+//StatementInBody(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
+//StatementInBody(A) ::= md_full_srec_assignment(B).             { A = B; }
+//StatementInBody(A) ::= md_env_assignment(B).                   { A = B; }
 
 //// Valid in begin/end since they don't refer to srecs (although the RHSs might):
-//md_statement_not_braced_end(A) ::= md_do_while_block(B).         { A = B; }
-//md_statement_not_braced_end(A) ::= md_bare_boolean(B).           { A = B; }
-//md_statement_not_braced_end(A) ::= md_oosvar_assignment(B).      { A = B; }
-//md_statement_not_braced_end(A) ::= md_full_oosvar_assignment(B). { A = B; }
-//md_statement_not_braced_end(A) ::= md_filter(B).                 { A = B; }
-//md_statement_not_braced_end(A) ::= md_unset(B).                  { A = B; }
+//StatementInBody(A) ::= md_do_while_block(B).         { A = B; }
+//StatementInBody(A) ::= md_bare_boolean(B).           { A = B; }
+//StatementInBody(A) ::= md_oosvar_assignment(B).      { A = B; }
+//StatementInBody(A) ::= md_full_oosvar_assignment(B). { A = B; }
+//StatementInBody(A) ::= md_filter(B).                 { A = B; }
+//StatementInBody(A) ::= md_unset(B).                  { A = B; }
 
-//md_statement_not_braced_end(A) ::= md_tee_write(B).              { A = B; }
-//md_statement_not_braced_end(A) ::= md_tee_append(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_tee_pipe(B).               { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitf(B).                  { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitf_write(B).            { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitf_append(B).           { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitf_pipe(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp(B).                  { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_write(B).            { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_append(B).           { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_pipe(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit(B).                   { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_write(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_append(B).            { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_pipe(B).              { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_lashed(B).           { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_lashed_write(B).     { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_lashed_append(B).    { A = B; }
-//md_statement_not_braced_end(A) ::= md_emitp_lashed_pipe(B).      { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_lashed(B).            { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_lashed_write(B).      { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_lashed_append(B).     { A = B; }
-//md_statement_not_braced_end(A) ::= md_emit_lashed_pipe(B).       { A = B; }
+//StatementInBody(A) ::= md_tee_write(B).              { A = B; }
+//StatementInBody(A) ::= md_tee_append(B).             { A = B; }
+//StatementInBody(A) ::= md_tee_pipe(B).               { A = B; }
+//StatementInBody(A) ::= md_emitf(B).                  { A = B; }
+//StatementInBody(A) ::= md_emitf_write(B).            { A = B; }
+//StatementInBody(A) ::= md_emitf_append(B).           { A = B; }
+//StatementInBody(A) ::= md_emitf_pipe(B).             { A = B; }
+//StatementInBody(A) ::= md_emitp(B).                  { A = B; }
+//StatementInBody(A) ::= md_emitp_write(B).            { A = B; }
+//StatementInBody(A) ::= md_emitp_append(B).           { A = B; }
+//StatementInBody(A) ::= md_emitp_pipe(B).             { A = B; }
+//StatementInBody(A) ::= md_emit(B).                   { A = B; }
+//StatementInBody(A) ::= md_emit_write(B).             { A = B; }
+//StatementInBody(A) ::= md_emit_append(B).            { A = B; }
+//StatementInBody(A) ::= md_emit_pipe(B).              { A = B; }
+//StatementInBody(A) ::= md_emitp_lashed(B).           { A = B; }
+//StatementInBody(A) ::= md_emitp_lashed_write(B).     { A = B; }
+//StatementInBody(A) ::= md_emitp_lashed_append(B).    { A = B; }
+//StatementInBody(A) ::= md_emitp_lashed_pipe(B).      { A = B; }
+//StatementInBody(A) ::= md_emit_lashed(B).            { A = B; }
+//StatementInBody(A) ::= md_emit_lashed_write(B).      { A = B; }
+//StatementInBody(A) ::= md_emit_lashed_append(B).     { A = B; }
+//StatementInBody(A) ::= md_emit_lashed_pipe(B).       { A = B; }
 
-//md_statement_not_braced_end(A) ::= md_dump(B).                   { A = B; }
-//md_statement_not_braced_end(A) ::= md_dump_write(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_dump_append(B).            { A = B; }
-//md_statement_not_braced_end(A) ::= md_dump_pipe(B).              { A = B; }
-//md_statement_not_braced_end(A) ::= md_edump(B).                  { A = B; }
-//md_statement_not_braced_end(A) ::= md_print(B).                  { A = B; }
-//md_statement_not_braced_end(A) ::= md_eprint(B).                 { A = B; }
-//md_statement_not_braced_end(A) ::= md_print_write(B).            { A = B; }
-//md_statement_not_braced_end(A) ::= md_print_append(B).           { A = B; }
-//md_statement_not_braced_end(A) ::= md_print_pipe(B).             { A = B; }
-//md_statement_not_braced_end(A) ::= md_printn(B).                 { A = B; }
-//md_statement_not_braced_end(A) ::= md_eprintn(B).                { A = B; }
-//md_statement_not_braced_end(A) ::= md_printn_write(B).           { A = B; }
-//md_statement_not_braced_end(A) ::= md_printn_append(B).          { A = B; }
-//md_statement_not_braced_end(A) ::= md_printn_pipe(B).            { A = B; }
+//StatementInBody(A) ::= md_dump(B).                   { A = B; }
+//StatementInBody(A) ::= md_dump_write(B).             { A = B; }
+//StatementInBody(A) ::= md_dump_append(B).            { A = B; }
+//StatementInBody(A) ::= md_dump_pipe(B).              { A = B; }
+//StatementInBody(A) ::= md_edump(B).                  { A = B; }
+//StatementInBody(A) ::= md_print(B).                  { A = B; }
+//StatementInBody(A) ::= md_eprint(B).                 { A = B; }
+//StatementInBody(A) ::= md_print_write(B).            { A = B; }
+//StatementInBody(A) ::= md_print_append(B).           { A = B; }
+//StatementInBody(A) ::= md_print_pipe(B).             { A = B; }
+//StatementInBody(A) ::= md_printn(B).                 { A = B; }
+//StatementInBody(A) ::= md_eprintn(B).                { A = B; }
+//StatementInBody(A) ::= md_printn_write(B).           { A = B; }
+//StatementInBody(A) ::= md_printn_append(B).          { A = B; }
+//StatementInBody(A) ::= md_printn_pipe(B).            { A = B; }
 
 //// Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 //// conversion, where we can produce much more informative error messages:
-//md_statement_not_braced_end(A) ::= MD_TOKEN_BREAK(O). {
+//StatementInBody(A) ::= MD_TOKEN_BREAK(O). {
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 //}
-//md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
+//StatementInBody(A) ::= MD_TOKEN_CONTINUE(O). {
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
 //}
 
@@ -824,7 +761,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 //md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 //	MD_TOKEN_NON_SIGIL_NAME(F) "(" md_func_or_subr_parameter_list(A) ")"
-//	"{" md_statement_block(B) "}".
+//	"{" StatementBlock(B) "}".
 //{
 //	A = mlr_dsl_ast_node_set_function_name(A, F->text);
 //	mlr_dsl_ast_node_replace_text(B, "func_block");
@@ -834,7 +771,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 //	MD_TOKEN_NON_SIGIL_NAME(F) "(" md_func_or_subr_parameter_list(A) ")"
 //	MD_TOKEN_COLON md_typedecl(M)
-//	"{" md_statement_block(B) "}".
+//	"{" StatementBlock(B) "}".
 //{
 //	A = mlr_dsl_ast_node_set_function_name(A, F->text);
 //	mlr_dsl_ast_node_replace_text(B, "func_block");
@@ -843,7 +780,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 //md_subr_block(C) ::= MD_TOKEN_SUBR_DEF
 //	MD_TOKEN_NON_SIGIL_NAME(F) "(" md_func_or_subr_parameter_list(A) ")"
-//	"{" md_statement_block(B) "}".
+//	"{" StatementBlock(B) "}".
 //{
 //	A = mlr_dsl_ast_node_set_function_name(A, F->text);
 //	mlr_dsl_ast_node_replace_text(B, "subr_block");
@@ -884,17 +821,17 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //md_typedecl(A) ::= MD_TOKEN_MAP(B).     { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
 
 //// ================================================================
-//md_begin_block(A) ::= MD_TOKEN_BEGIN(O) "{" md_statement_block(B) "}". {
+//md_begin_block(A) ::= MD_TOKEN_BEGIN(O) "{" StatementBlock(B) "}". {
 //	mlr_dsl_ast_node_replace_text(B, "begin_block");
 //	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_BEGIN, B);
 //}
-//md_end_block(A)   ::= MD_TOKEN_END(O)   "{" md_statement_block(B) "}". {
+//md_end_block(A)   ::= MD_TOKEN_END(O)   "{" StatementBlock(B) "}". {
 //	mlr_dsl_ast_node_replace_text(B, "end_block");
 //	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_END, B);
 //}
 
 //// ----------------------------------------------------------------
-//md_cond_block(A) ::= RHS(B) "{" md_statement_block(C) "}". {
+//md_cond_block(A) ::= RHS(B) "{" StatementBlock(C) "}". {
 //	mlr_dsl_ast_node_replace_text(C, "cond_block");
 //	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
 //}
@@ -903,7 +840,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //md_while_block(A) ::=
 //	MD_TOKEN_WHILE(O)
 //		"(" RHS(B) ")"
-//		"{" md_statement_block(C) "}".
+//		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "while_block");
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_WHILE, B, C);
@@ -912,7 +849,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //// ----------------------------------------------------------------
 //md_do_while_block(A) ::=
 //	MD_TOKEN_DO(O)
-//		"{" md_statement_block(B) "}"
+//		"{" StatementBlock(B) "}"
 //	MD_TOKEN_WHILE
 //		"(" RHS(C) ")".
 //{
@@ -928,7 +865,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN MD_TOKEN_FULL_SREC
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_full_srec_block");
@@ -951,7 +888,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		md_for_loop_index(K) MD_TOKEN_IN MD_TOKEN_FULL_SREC
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_full_srec_block");
@@ -974,7 +911,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN MD_TOKEN_FULL_OOSVAR
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
@@ -1004,7 +941,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN MD_TOKEN_FULL_OOSVAR
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
@@ -1030,7 +967,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_FULL_OOSVAR
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
@@ -1050,7 +987,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_oosvar_keylist(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
@@ -1080,7 +1017,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_oosvar_keylist(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
@@ -1131,7 +1068,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_oosvar_keylist(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
@@ -1152,7 +1089,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_local_map_keylist(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
@@ -1182,7 +1119,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_local_map_keylist(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
@@ -1207,7 +1144,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_local_map_keylist(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
@@ -1228,7 +1165,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_map_literal(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
@@ -1258,7 +1195,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_map_literal(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
@@ -1283,7 +1220,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_map_literal(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
@@ -1304,7 +1241,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_fcn_or_subr_call(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_func_retval_block");
@@ -1334,7 +1271,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_fcn_or_subr_call(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_func_retval_block");
@@ -1359,7 +1296,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		MD_TOKEN_IN md_fcn_or_subr_call(O)
 //	")"
 //	"{"
-//		md_statement_block(S)
+//		StatementBlock(S)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(S, "for_loop_func_retval_block");
@@ -1382,14 +1319,14 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		md_triple_for_update(U)
 //	")"
 //	"{"
-//		md_statement_block(L)
+//		StatementBlock(L)
 //	"}".
 //{
 //	mlr_dsl_ast_node_replace_text(L, "triple_for_block");
 //	A = mlr_dsl_ast_node_alloc_quaternary(F->text, MD_AST_NODE_TYPE_TRIPLE_FOR, S, C, U, L);
 //}
 
-//md_triple_for_start(A) ::= md_statement_not_braced_end(B). {
+//md_triple_for_start(A) ::= StatementInBody(B). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = mlr_dsl_ast_node_alloc_zary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
@@ -1397,7 +1334,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		A = mlr_dsl_ast_node_alloc_unary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 //	}
 //}
-//md_triple_for_start(A) ::= md_triple_for_start(B) "," md_statement_not_braced_end(C). {
+//md_triple_for_start(A) ::= md_triple_for_start(B) "," StatementInBody(C). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = C;
@@ -1406,7 +1343,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //	}
 //}
 
-//md_triple_for_continuation(A) ::= md_statement_not_braced_end(B). {
+//md_triple_for_continuation(A) ::= StatementInBody(B). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = mlr_dsl_ast_node_alloc_zary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
@@ -1414,7 +1351,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		A = mlr_dsl_ast_node_alloc_unary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 //	}
 //}
-//md_triple_for_continuation(A) ::= md_triple_for_continuation(B) "," md_statement_not_braced_end(C). {
+//md_triple_for_continuation(A) ::= md_triple_for_continuation(B) "," StatementInBody(C). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = C;
@@ -1423,7 +1360,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //	}
 //}
 
-//md_triple_for_update(A) ::= md_statement_not_braced_end(B). {
+//md_triple_for_update(A) ::= StatementInBody(B). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = mlr_dsl_ast_node_alloc_zary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
@@ -1431,7 +1368,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //		A = mlr_dsl_ast_node_alloc_unary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 //	}
 //}
-//md_triple_for_update(A) ::= md_triple_for_update(B) "," md_statement_not_braced_end(C). {
+//md_triple_for_update(A) ::= md_triple_for_update(B) "," StatementInBody(C). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = C;
@@ -1461,7 +1398,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //md_if_block(A) ::=
 //	MD_TOKEN_IF(O)
 //		"(" RHS(B) ")"
-//		"{" md_statement_block(C) "}".
+//		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "if_block");
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
@@ -1470,7 +1407,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //md_elif_block(A) ::=
 //	MD_TOKEN_ELIF(O)
 //		"(" RHS(B) ")"
-//		"{" md_statement_block(C) "}".
+//		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "elif_block");
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
@@ -1478,7 +1415,7 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 //md_else_block(A) ::=
 //	MD_TOKEN_ELSE(O)
-//		"{" md_statement_block(C) "}".
+//		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "else_block");
 //	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IF_ITEM, C);
@@ -1567,9 +1504,13 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 //// ----------------------------------------------------------------
 // xxx
-//SrecAssignment(A)  ::= md_token_field_name(B) MD_TOKEN_ASSIGN(O) RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);
-//}
+
+SrecAssignment
+  : FieldName Assign RHS
+    << dsl.MakeBinary($1, $0, $2) >> ;
+
+FieldName: md_token_field_name << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 //md_srec_indirect_assignment(A)  ::=
 //	MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET RHS(B) MD_TOKEN_RIGHT_BRACKET
@@ -2763,45 +2704,45 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //md_output_file(A) ::= MD_TOKEN_STDERR(F). { A = F; }
 
 // ================================================================
-// Begin RHS precedence chain
+// Begin RHS operator-precedence chain
+// ================================================================
 
-// xxx
+RHS : TernaryTerm ;
 
-//RHS(A) ::= md_ternary(B). {
-//	A = B;
-//}
+// to do: how to pass a "?:" token ...
+TernaryTerm
+  : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
+    << dsl.NewASTNodeTernary(nil, $0, $2, $4, dsl.NodeTypeOperator) >>
+  | LogicalOrTerm
+;
 
-//md_ternary(A) ::= md_logical_or_term(B) MD_TOKEN_QUESTION_MARK md_ternary(C) MD_TOKEN_COLON md_ternary(D). {
-//	A = mlr_dsl_ast_node_alloc_ternary("? :", MD_AST_NODE_TYPE_OPERATOR, B, C, D);
-//}
+// xxx wrong!
+LogicalOrTerm
+  : LogicalOrTerm "||" LogicalXORTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | LogicalXORTerm
+;
 
-//md_ternary(A) ::= md_logical_or_term(B). {
-//	A = B;
-//}
+LogicalXORTerm
+  : LogicalXORTerm "^^" LogicalAndTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | LogicalAndTerm
+;
 
-//// ================================================================
-//md_logical_or_term(A) ::= md_logical_xor_term(B). {
-//	A = B;
-//}
-//md_logical_or_term(A) ::= md_logical_or_term(B) MD_TOKEN_LOGICAL_OR(O) md_logical_xor_term(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+LogicalAndTerm
+  : LogicalAndTerm "&&" Stub
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | Stub
+;
 
-//// ----------------------------------------------------------------
-//md_logical_xor_term(A) ::= md_logical_and_term(B). {
-//	A = B;
-//}
-//md_logical_xor_term(A) ::= md_logical_xor_term(B) MD_TOKEN_LOGICAL_XOR(O) md_logical_and_term(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+// xxx temp
+Stub : AtomOrFunction ;
 
-//// ----------------------------------------------------------------
-//md_logical_and_term(A) ::= md_eqne_term(B). {
-//	A = B;
-//}
-//md_logical_and_term(A) ::= md_logical_and_term(B) MD_TOKEN_LOGICAL_AND(O) md_eqne_term(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
-//}
+//LogicalAndTerm
+//  : LogicalAndTerm "^" LogicalEqneTerm
+//    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+//  | LogicalEqneTerm
+//;
 
 //// ----------------------------------------------------------------
 //md_eqne_term(A) ::= md_cmp_term(B). {
@@ -2951,12 +2892,17 @@ Assign: md_token_assign << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 //}
 
+// ================================================================
+// End RHS operator-precedence chain
+// ================================================================
 
-//// ----------------------------------------------------------------
-//// In the grammar provided to the user, field names are of the form "$x".  But
-//// within Miller internally, field names are of the form "x".  We coded the
-//// lexer to give us field names with leading "$" so we can confidently strip it
-//// off here.
+// ----------------------------------------------------------------
+// xxx to do
+
+// In the grammar provided to the user, field names are of the form "$x".  But
+// within Miller internally, field names are of the form "x".  We coded the
+// lexer to give us field names with leading "$" so we can confidently strip it
+// off here.
 
 AtomOrFunction
   : md_token_field_name << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
