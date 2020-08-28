@@ -1,4 +1,44 @@
 // ================================================================
+// MILLER DSL GRAMMAR
+//
+// This is the Miller DSL's BNF grammar, using the gocc tool framework.
+//
+// The first section is lexical elements and the second section is syntactical
+// elements -- the analogs of lex and yacc, respectively, using a classical
+// C/lex/yacc framework.
+//
+// Notes:
+//
+// * Lexical items are either literals inlined within the syntactical section,
+//   such as "/", or snake-cased named tokens within the lexical section, such
+//   as md_token_field_name.
+//
+// * Syntactical items are all camel-cased, such as SrecAssignment or MapLiteral.
+//
+// * This grammar is used to auto-generate Go code, using bin/gocc.
+//
+// * Everything is delivered in the form of an abstract syntax tree (AST),
+//   via <<...>>> code segments within this file's syntactical section, to be
+//   processed in hand-written Go code. That code, in turn, turns the AST into
+//   a CST (concrete syntax tree) which is what the DSL runtime executes.
+//
+// * The <<...>> code called by the gocc framework must accept interface{},
+//   to be generic, but in practice all arguments end up being token.Token
+//   (regcognizable here via string-literals or snake-cased namees) or
+//   *miller.dsl.AstNode (recognizable here via camel-cased names).
+//
+// * Another pattern worth pointing out is that in the gocc framework,
+//   return-types from AST methods must be a pair of (interface{}, error),
+//   whereas argument going into those same methods are interface{} only.
+//   Hence a few methods in the Miller AST API which don't return a pair of
+//   interface{}/error since they are meant for nesting as arguments here
+//   within this file.
+//
+// * Please see src/miller/dsl/ast.go for more about what the <<...>>
+//   code here is calling.
+// ================================================================
+
+// ================================================================
 // LEXICAL ELEMENTS
 // ================================================================
 
@@ -10,6 +50,7 @@ _idchar : _letter | _decimalDigit | '_' ;
 
 md_token_field_name : '$' _idchar { _idchar } ;
 
+// xxx temp -- needs floating-point literals too
 md_token_number
   : _decimalDigit { _decimalDigit }
   | '-' _decimalDigit { _decimalDigit }
@@ -370,7 +411,7 @@ StatementBlock
     // Semicolons are separators, not terminators, in the Miller DSL --
     // most importantly people can say '$x = 3' without '$x = 3;'.
     // However, we do allow trailing semicolons.
-    << dsl.PairNil($0) >>
+    << dsl.Nestable($0) >>
 
   | StatementBlock ";" Statement
     <<dsl.AppendChild($0, $2) >>
@@ -495,8 +536,9 @@ StatementInBody :SrecAssignment ;
 //StatementInBody(A) ::= PrintnAppend(B). { A = B; }
 //StatementInBody(A) ::= PrintnPipe(B).   { A = B; }
 
-//// Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
-//// conversion, where we can produce much more informative error messages:
+// Valid only within for/while, but we accept them here syntactically and
+// reject them in the AST-to-CST conversion, where we can produce much more
+// informative error messages:
 //StatementInBody(A) ::= md_token_break(O). {
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 //}
@@ -504,13 +546,13 @@ StatementInBody :SrecAssignment ;
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
 //}
 
-//// ================================================================
-//// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
-//// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
-//// * On the "a" we make a function sub-AST called "anon(a)".
-//// * On the "b" we append the next argument to get "anon(a,b)".
-//// * On the "c" we append the next argument to get "anon(a,b,c)".
-//// * On the "f" we change the function name to get "f(a,b,c)".
+// ================================================================
+// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
+// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
+// * On the "a" we make a function sub-AST called "anon(a)".
+// * On the "b" we append the next argument to get "anon(a,b)".
+// * On the "c" we append the next argument to get "anon(a,b,c)".
+// * On the "f" we change the function name to get "f(a,b,c)".
 
 //FuncBlock(C) ::= md_token_func_def
 //	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
@@ -1260,12 +1302,7 @@ StatementInBody :SrecAssignment ;
 
 SrecAssignment
   : md_token_field_name "=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
+    << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >> ;
 
 //SrecIndirectAssignment(A)  ::=
 //	md_token_dollar_sign md_token_left_bracket RHS(B) md_token_right_bracket
@@ -1368,135 +1405,24 @@ SrecAssignment
 //}
 
 // ----------------------------------------------------------------
-// xxx make a one-liner syntax for this
-
 SrecAssignment
-  : md_token_field_name "||=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-SrecAssignment
-  : md_token_field_name "^^=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-SrecAssignment
-  : md_token_field_name "&&=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-SrecAssignment
-  : md_token_field_name "|=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-SrecAssignment
-  : md_token_field_name "^=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-SrecAssignment
-  : md_token_field_name "&=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-SrecAssignment
-  : md_token_field_name "<<=" RHS
-    << dsl.NewASTNodeBinary(
-      $1,
-      dsl.NewASTNodeNestable($0, dsl.NodeTypeToken),
-      $2,
-      dsl.NodeTypeAssignment,
-    ) >> ;
-
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_bitwise_lsh_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("<<", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_bitwise_rsh_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_plus_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_minus_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) MD_TOKEN_DOT_EQUALS RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary(".", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_times_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_divide_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("/", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_int_divide_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_oplus_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_ominus_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_otimes_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_odivide_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_int_odivide_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_mod_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-//SrecAssignment(A)  ::= md_token_field_name(B) md_token_pow_equals RHS(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
-//		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
-//}
-
+  : md_token_field_name "||=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "^^=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "&&=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "|="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "^="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "&="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "<<=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name ">>=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "+="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name ".="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "-="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "*="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "/="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "//=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "%="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | md_token_field_name "**=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+;
 
 //OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_or_equals RHS(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
@@ -2510,7 +2436,6 @@ TernaryTerm
   | LogicalOrTerm
 ;
 
-// xxx wrong!
 LogicalOrTerm
   : LogicalOrTerm "||" LogicalXORTerm
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
