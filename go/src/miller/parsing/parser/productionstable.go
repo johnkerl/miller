@@ -91,173 +91,173 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      7,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "||=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "||=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      8,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "^^=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "^^=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      9,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "&&=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "&&=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      10,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "|=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "|=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      11,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "^=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "^=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      12,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "&=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "&=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      13,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "<<=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "<<=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      14,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name ">>=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName ">>=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      15,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "+=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "+=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      16,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name ".=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName ".=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      17,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "-=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "-=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      18,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "*=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "*=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      19,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "/=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "/=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      20,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "//=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "//=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      21,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "%!=(MISSING)" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "%!=(MISSING)" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      22,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : md_token_field_name "**=" RHS	<< dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "**=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      23,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinaryTTN(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
@@ -771,20 +771,60 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : FieldName	<<  >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      75,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
+		String: `FieldName : DirectFieldName	<<  >>`,
+		Id:         "FieldName",
+		NTType:     22,
+		Index:      76,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
+		String: `FieldName : IndirectFieldName	<<  >>`,
+		Id:         "FieldName",
+		NTType:     22,
+		Index:      77,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
+		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "DirectFieldName",
+		NTType:     23,
+		Index:      78,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
 		},
 	},
 	ProdTabEntry{
+		String: `IndirectFieldName : "$[" RHS "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeToken) >>`,
+		Id:         "IndirectFieldName",
+		NTType:     24,
+		Index:      79,
+		NumSymbols: 3,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
 		String: `AtomOrFunction : md_token_number	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
-		Index:      76,
+		Index:      80,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
@@ -794,7 +834,7 @@ var productionsTable = ProdTab{
 		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
-		Index:      77,
+		Index:      81,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
@@ -804,7 +844,7 @@ var productionsTable = ProdTab{
 		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
-		Index:      78,
+		Index:      82,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)

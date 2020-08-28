@@ -97,13 +97,6 @@ func NewASTNodeBinary(itok, childA, childB interface{}, nodeType TNodeType) (*AS
 	return parent, nil
 }
 
-// Signature: Token Token Node Type
-func NewASTNodeBinaryTTN(itok, childA, childB interface{}, nodeType TNodeType) (*ASTNode, error) {
-	parent := NewASTNodeNestable(itok, nodeType)
-	convertToBinary(parent, NewASTNodeNestable(childA, NodeTypeToken), childB)
-	return parent, nil
-}
-
 func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
 	parent := NewASTNodeNestable(itok, nodeType)
 	convertToTernary(parent, childA, childB, childC)

@@ -1278,8 +1278,8 @@ StatementInBody :SrecAssignment ;
 // xxx
 
 SrecAssignment
-  : md_token_field_name "=" RHS
-    << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >> ;
+  : FieldName "=" RHS
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
 
 //SrecIndirectAssignment(A)  ::=
 //	md_token_dollar_sign md_token_left_bracket RHS(B) md_token_right_bracket
@@ -1383,22 +1383,22 @@ SrecAssignment
 
 // ----------------------------------------------------------------
 SrecAssignment
-  : md_token_field_name "||=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "^^=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "&&=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "|="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "^="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "&="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "<<=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name ">>=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "+="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name ".="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "-="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "*="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "/="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "//=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "%="  RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | md_token_field_name "**=" RHS << dsl.NewASTNodeBinaryTTN($1, $0, $2, dsl.NodeTypeAssignment) >>
+  : FieldName "||=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "^^=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "&&=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "|="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "^="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "&="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "<<=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName ">>=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "+="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName ".="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "-="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "*="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "/="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "//=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "%="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "**=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
 ;
 
 //OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_or_equals RHS(C). {
@@ -1765,7 +1765,7 @@ SrecAssignment
 //	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_UNSET);
 //}
 
-//UnsetArgs(A) ::= md_token_field_name(B). {
+//UnsetArgs(A) ::= DirectFieldName(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 //}
 //UnsetArgs(A) ::= IndirectFieldName(B). {
@@ -1787,7 +1787,7 @@ SrecAssignment
 //	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 //}
 
-//UnsetArgs(A) ::= UnsetArgs(B) "," md_token_field_name(C). {
+//UnsetArgs(A) ::= UnsetArgs(B) "," DirectFieldName(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 //UnsetArgs(A) ::= UnsetArgs(B) "," OosvarKeylist(C). {
@@ -2516,8 +2516,24 @@ PowTerm
 // off here.
 
 AtomOrFunction
+  : FieldName
+;
+
+FieldName
+  : DirectFieldName
+  | IndirectFieldName
+  // BracedFieldName
+  // ...
+;
+
+DirectFieldName
   : md_token_field_name
     << dsl.NewASTNode($0, dsl.NodeTypeToken) >>
+;
+
+IndirectFieldName
+  : "$[" RHS "]"
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeToken) >>
 ;
 
 //md_token_field_name(A) ::= md_token_braced_field_name(B). {
