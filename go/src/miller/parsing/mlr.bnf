@@ -652,7 +652,7 @@ Body :
 
 StatementBlock :
   Statement
-    << dsl.MakeZary($0) >> ; // xxx temp
+    << dsl.Wrap($0) >> ; // xxx temp
 
 Statement : 
   FieldName Assign Number

@@ -41,13 +41,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `StatementBlock : Statement	<< dsl.MakeZary(X[0]) >>`,
+		String: `StatementBlock : Statement	<< dsl.Wrap(X[0]) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      2,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.MakeZary(X[0])
+			return dsl.Wrap(X[0])
 		},
 	},
 	ProdTabEntry{

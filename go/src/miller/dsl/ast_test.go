@@ -26,7 +26,8 @@ func TestPass(t *testing.T) {
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	fmt.Printf("Output: %v\n", ast)
+	fmt.Println("AST:")
+	ast.Print()
 }
 
 func TestFail(t *testing.T) {

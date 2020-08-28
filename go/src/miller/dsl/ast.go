@@ -1,6 +1,7 @@
 package dsl
 
 import (
+	"fmt"
 	"miller/parsing/token"
 )
 
@@ -26,6 +27,10 @@ func NewAST(root interface{}) (*AST, error) {
 	}, nil
 }
 
+func (this *AST) Print() {
+	this.Root.Print(0)
+}
+
 // ----------------------------------------------------------------
 type ASTNode struct {
 	Token token.Token
@@ -35,6 +40,20 @@ type ASTNode struct {
 	Children []*ASTNode
 }
 
+func (this *ASTNode) Print(depth int) {
+	for i := 0; i < depth; i++ {
+		fmt.Print("  ")
+	}
+	tok := this.Token
+	fmt.Printf("* Type=\"%s\" Literal=\"%s\"\n",
+		token.TokMap.Id(tok.Type), string(tok.Lit))
+	if this.Children != nil {
+		for _, child := range this.Children {
+			child.Print(depth + 1)
+		}
+	}
+}
+
 func NewASTNode(itok interface{}) (*ASTNode, error) {
 	tok := itok.(*token.Token)
 	return &ASTNode {
@@ -42,6 +61,12 @@ func NewASTNode(itok interface{}) (*ASTNode, error) {
 		// type
 		nil,
 	}, nil
+}
+
+// xxx temp
+func Wrap(iparent interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
+	return parent, nil
 }
 
 func MakeZary(iparent interface{}) (*ASTNode, error) {
