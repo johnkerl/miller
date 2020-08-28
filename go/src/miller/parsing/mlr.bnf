@@ -1,0 +1,28 @@
+// ================================================================
+// LEXICAL ELEMENTS
+// ================================================================
+
+_letter : 'a'-'z' | 'A'-'Z' ;
+_digit : '0'-'9' ;
+_idchar : _letter | _digit | '_' ;
+!whitespace : ' ' | '\t' | '\n' | '\r' ;
+
+md_token_field_name : '$' _idchar { _idchar } ;
+md_token_assign : '=' ;
+md_token_number : _digit { _digit } | '-' _digit { _digit } ;
+
+
+// ================================================================
+// SYNTAX ELEMENTS
+// ================================================================
+
+<< import "github.com/goccmack/gocc/example/astx/ast" >>
+
+StatementList : 
+    Statement               << ast.NewStmtList($0) >>
+  | StatementList Statement << ast.AppendStmt($0, $1) >>
+;
+
+Statement : 
+  md_token_field_name md_token_assign md_token_number << ast.NewStmt($0) >>
+;
