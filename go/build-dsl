@@ -15,4 +15,4 @@ bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf
 #   src/miller/parsing/util/
 
 # Run tests:
-go test src/miller/dsl/ast_test.go
+go test -v src/miller/dsl/ast_test.go

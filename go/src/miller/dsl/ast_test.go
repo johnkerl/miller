@@ -14,13 +14,13 @@ func TestPass(t *testing.T) {
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	fmt.Printf("output: %s\n", sml)
+	fmt.Printf("Output: %s\n", sml)
 }
 
 func TestFail(t *testing.T) {
 	_, err := test([]byte("a b ; d e f"))
 	if err == nil {
-		t.Fatal("expected parse error")
+		t.Fatal("Expected parse error")
 	} else {
 		fmt.Printf("Parsing failed as expected: %v\n", err)
 	}
