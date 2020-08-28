@@ -9,7 +9,7 @@ import (
 
 func ChannelWriter(
 	outrecs <-chan *containers.Lrec,
-	recordWriter RecordWriter,
+	recordWriter IRecordWriter,
 	done chan<- bool,
 	ostream *os.File,
 ) {

@@ -1,6 +1,6 @@
 package input
 
-func Create(inputFormatName string) RecordReader {
+func Create(inputFormatName string) IRecordReader {
 	switch inputFormatName {
 	case "csv":
 		return NewRecordReaderCSV() // TODO: parameterize

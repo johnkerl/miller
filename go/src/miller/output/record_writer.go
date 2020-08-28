@@ -5,6 +5,6 @@ import (
 )
 
 // Convention: nil outrec signifies end of record stream
-type RecordWriter interface {
+type IRecordWriter interface {
 	Write(outrec *containers.Lrec)
 }

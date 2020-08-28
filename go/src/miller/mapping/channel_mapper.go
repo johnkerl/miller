@@ -6,7 +6,7 @@ import (
 
 func ChannelMapper(
 	inrecs <-chan *containers.Lrec,
-	recordMapper RecordMapper, // not *recordMapper since this is an interface
+	recordMapper IRecordMapper, // not *recordMapper since this is an interface
 	outrecs chan<- *containers.Lrec,
 ) {
 	for {

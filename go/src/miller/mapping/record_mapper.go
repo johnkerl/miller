@@ -4,7 +4,7 @@ import (
 	"miller/containers"
 )
 
-type RecordMapper interface {
+type IRecordMapper interface {
 	Name() string
 	Map(inrec *containers.Lrec, outrecs chan<- *containers.Lrec)
 }

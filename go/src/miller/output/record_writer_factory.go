@@ -1,6 +1,6 @@
 package output
 
-func Create(outputFormatName string) RecordWriter {
+func Create(outputFormatName string) IRecordWriter {
 	switch outputFormatName {
 	case "csv":
 		return NewRecordWriterCSV() // TODO: parameterize

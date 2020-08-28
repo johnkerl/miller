@@ -3,11 +3,12 @@
 
 harder / more worthy:
 ~ streaming JSON reader
+  -> w/ and w/o enclosing [...] !
 ~ streaming RFC-compliant CSV reader
 * sort
 * stats1
-* DSL
 * calendar/DST/TZ
+! DSL
 
 easier:
 * most of the verbs
