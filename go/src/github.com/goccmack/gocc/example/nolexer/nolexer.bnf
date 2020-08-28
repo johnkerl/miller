@@ -1,0 +1,20 @@
+<<
+import (
+    "fmt"
+
+    "github.com/goccmack/gocc/example/nolexer/token"
+)
+>>
+
+Hello : Saying name   << func () (Attrib, error) {
+							fmt.Println(string($1.(*token.Token).Lit)); 
+                       		return nil, nil} () >> 
+      ;
+
+Saying : "hello"    << func () (Attrib, error) {
+							fmt.Print("hello "); 
+                       		return nil, nil} () >>
+       | "hiya"     << func () (Attrib, error) {
+							fmt.Print("hiya "); 
+                            return nil, nil} () >>
+       ;

@@ -1,0 +1,10 @@
+!whitespace : ' ' ;
+
+A 
+	: B "c" << []interface{}{$0, "c"}, nil >>
+	;
+
+B
+	: empty
+	| "b"		<< "b", nil >>
+	;

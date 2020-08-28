@@ -1,0 +1,1 @@
+gocc -a example.bnf

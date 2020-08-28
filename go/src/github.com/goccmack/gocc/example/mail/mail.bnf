@@ -1,0 +1,17 @@
+!whitespace : '\t' | '\n' | '\r' | ' ' ;
+
+_atext	: 'A'-'Z' | 'a'-'z' | '0'-'9'	
+		| '!' | '#' | '$' | '%' | '&' | '\'' | '*' | '+' | '-' | '/' 
+		| '=' | '?' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
+		| '\u0100'-'\U0010FFFF'
+;
+
+_atom : _atext {_atext} ;
+
+_dotatom : _atom {'.' _atom} ;
+
+_quotedpair : '\\' . ;
+
+_quotedstring : '"' (_quotedpair | .) {_quotedpair | .} '"' ;
+
+addrspec : (_dotatom | _quotedstring)  '@' _dotatom ;

@@ -1,0 +1,121 @@
+//Copyright 2013 Vastech SA (PTY) LTD
+//
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+
+/*** Syntactic items ***/
+
+<< import "github.com/goccmack/gocc/internal/ast" >>
+
+Grammar : LexicalPart SyntaxPart 							<< ast.NewGrammar($0, $1) >>
+		| LexicalPart 										<< ast.NewGrammar($0, nil) >>
+		| SyntaxPart										<< ast.NewGrammar(nil, $0) >>
+		;
+
+LexicalPart	: LexProductions 								<< ast.NewLexPart(nil, nil, $0) >>
+			;
+
+
+LexProductions	: LexProduction 							<< ast.NewLexProductions($0) >>
+				| LexProductions LexProduction 				<< ast.AppendLexProduction($0, $1) >>
+				;
+
+LexProduction 	: tokId ":" LexPattern ";" 					<< ast.NewLexTokDef($0, $2) >>
+				| regDefId ":" LexPattern ";" 				<< ast.NewLexRegDef($0, $2) >>
+				| ignoredTokId ":" LexPattern ";"			<< ast.NewLexIgnoredTokDef($0, $2) >>
+				;
+
+LexPattern 	: LexAlt 										<< ast.NewLexPattern($0) >>
+			| LexPattern "|" LexAlt 						<< ast.AppendLexAlt($0, $2) >>
+			;
+
+LexAlt 	: LexTerm											<< ast.NewLexAlt($0) >>
+		| LexAlt LexTerm 									<< ast.AppendLexTerm($0, $1) >>
+		;
+
+LexTerm : "."												<< ast.LexDOT, nil >>
+		| char_lit 											<< ast.NewLexCharLit($0) >>
+		| char_lit "-" char_lit 							<< ast.NewLexCharRange($0, $2) >>
+		| regDefId											<< ast.NewLexRegDefId($0) >>
+		| "[" LexPattern "]" 								<< ast.NewLexOptPattern($1) >>
+		| "{" LexPattern "}" 								<< ast.NewLexRepPattern($1) >>
+		| "(" LexPattern ")"								<< ast.NewLexGroupPattern($1) >>
+		;
+
+SyntaxPart	: FileHeader SyntaxProdList 					<< ast.NewSyntaxPart($0, $1) >>
+			| SyntaxProdList 								<< ast.NewSyntaxPart(nil, $0) >>
+			;
+
+FileHeader 	: g_sdt_lit										<< ast.NewFileHeader($0) >>
+			;
+
+SyntaxProdList	: SyntaxProduction							<< ast.NewSyntaxProdList($0) >>
+				| SyntaxProdList SyntaxProduction 			<< ast.AddSyntaxProds($0, $1) >>
+				;
+
+SyntaxProduction	: prodId ":" Alternatives ";"			<< ast.NewSyntaxProd($0, $2) >>
+					;
+
+Alternatives	:	SyntaxBody								<< ast.NewSyntaxAlts($0) >>
+				|	Alternatives "|" SyntaxBody				<< ast.AddSyntaxAlt($0, $2) >>
+				;
+
+SyntaxBody	: Symbols										<< ast.NewSyntaxBody($0, nil) >>
+			| Symbols g_sdt_lit								<< ast.NewSyntaxBody($0, $1) >>
+			| "error"										<< ast.NewErrorBody(nil, nil) >>
+			| "error" Symbols								<< ast.NewErrorBody($1, nil) >>
+			| "error" Symbols g_sdt_lit						<< ast.NewErrorBody($1, $2) >>
+			| "empty"										<< ast.NewEmptyBody() >>
+			;
+
+Symbols	: Symbol											<< ast.NewSyntaxSymbols($0) >>
+		| Symbols Symbol									<< ast.AddSyntaxSymbol($0, $1) >>
+		;
+
+Symbol	: prodId											<< ast.NewSyntaxProdId($0) >>
+		| tokId												<< ast.NewTokId($0) >>
+		| string_lit										<< ast.NewStringLit($0) >>
+		;
+
+/********
+Lexical items
+The basic unit of input to the lexical analyser is a UTF-8 encoded Unicode code point, defined as:
+
+_unicode_char : < any Unicode code point > .
+
+_letter : 'A' ... 'Z' | 'a' ... 'z' | '_' ;
+
+_digit : '0' ... '9' ;
+
+char : "'" ( _unicode_value | _byte_value ) "'" ;
+
+_unicode_value    : _unicode_char | _little_u_value | _big_u_value | _escaped_char ;
+_byte_value       : _octal_byte_value | _hex_byte_value ;
+_octal_byte_value : `\` _octal_digit _octal_digit _octal_digit ;
+_hex_byte_value   : `\` "x" _hex_digit _hex_digit ;
+_little_u_value   : `\` "u" _hex_digit _hex_digit _hex_digit _hex_digit ;
+_big_u_value      : `\` "U" _hex_digit _hex_digit _hex_digit _hex_digit
+                            _hex_digit _hex_digit _hex_digit _hex_digit ;
+_escaped_char     : `\` ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | `\` | `'` | `"` ) ;
+
+id : _letter (_letter | _digit)* ;
+
+string : _raw_string | _interpreted_string ;
+_raw_string : "`" _unicode_char* "`" ;
+_interpreted_string : `"` ( _unicode_value | byte_value )* `"` ;
+
+g_sdt_lit	: '<' '<' _unicode_char+ '>' '>'
+**********/
+
+/*** TODO: ***
+1. Handle reserved words correctly so that user cannot write reserved words in his grammar. E.g.: string_lit, prodId, etc.
+***/

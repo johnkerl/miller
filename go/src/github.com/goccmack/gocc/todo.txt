@@ -1,0 +1,13 @@
+Add lexer set action selection algorithm to doc.
+
+Lexer generation problem: the symbol range of imported function may overlap with the other character ranges and it is impossible during lexer generation to know the overlap.
+	Do: remove imports
+
+Symantic checking
+	Check that user does not use reserved words for ids
+
+Add error recovery to gocc2
+
+Clean up visibility of ast fields
+
+Generate compressed tables.

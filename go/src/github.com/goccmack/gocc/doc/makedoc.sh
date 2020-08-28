@@ -1,0 +1,1 @@
+pdflatex gocc_user_guide && pdflatex gocc_user_guide && pdflatex gocc_user_guide
