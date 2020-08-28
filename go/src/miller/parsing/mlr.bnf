@@ -668,8 +668,6 @@ Number:    md_token_number     << dsl.NewASTNode($0, dsl.NodeTypeLeaf) >> ;
 
 // C example:
 // $ mlr put -v '$x=3;$y=4' /dev/null
-// RAW AST:
-// 
 // AST ROOT:
 // text="block", type=STATEMENT_BLOCK:
 //     text="=", type=SREC_ASSIGNMENT:
@@ -678,6 +676,17 @@ Number:    md_token_number     << dsl.NewASTNode($0, dsl.NodeTypeLeaf) >> ;
 //     text="=", type=SREC_ASSIGNMENT:
 //         text="y", type=FIELD_NAME.
 //         text="4", type=NUMERIC_LITERAL.
+
+// Go example (this code):
+// Input: '$x = 3; $y = 4'
+// AST ROOT:
+// * NodeType=StatementBlock
+//     * NodeType=Leaf TokenType="md_token_assign" Literal="="
+//         * NodeType=Leaf TokenType="md_token_field_name" Literal="$x"
+//         * NodeType=Leaf TokenType="md_token_number" Literal="3"
+//     * NodeType=Leaf TokenType="md_token_assign" Literal="="
+//         * NodeType=Leaf TokenType="md_token_field_name" Literal="$y"
+//         * NodeType=Leaf TokenType="md_token_number" Literal="4"
 
 
 
