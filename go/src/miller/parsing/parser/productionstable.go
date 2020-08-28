@@ -2,7 +2,7 @@
 
 package parser
 
-import "miller/dsl/ast"
+import "miller/dsl"
 
 type (
 	//TODO: change type and variable names to be consistent with other tables
@@ -31,33 +31,33 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `StatementList : Statement	<< ast.NewStatementList(X[0]) >>`,
+		String: `StatementList : Statement	<< dsl.NewStatementList(X[0]) >>`,
 		Id:         "StatementList",
 		NTType:     1,
 		Index:      1,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return ast.NewStatementList(X[0])
+			return dsl.NewStatementList(X[0])
 		},
 	},
 	ProdTabEntry{
-		String: `StatementList : StatementList Statement	<< ast.AppendStatement(X[0], X[1]) >>`,
+		String: `StatementList : StatementList Statement	<< dsl.AppendStatement(X[0], X[1]) >>`,
 		Id:         "StatementList",
 		NTType:     1,
 		Index:      2,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return ast.AppendStatement(X[0], X[1])
+			return dsl.AppendStatement(X[0], X[1])
 		},
 	},
 	ProdTabEntry{
-		String: `Statement : md_token_field_name md_token_assign md_token_number	<< ast.NewStatement(X[0]) >>`,
+		String: `Statement : md_token_field_name md_token_assign md_token_number	<< dsl.NewStatement(X[0]) >>`,
 		Id:         "Statement",
 		NTType:     2,
 		Index:      3,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return ast.NewStatement(X[0])
+			return dsl.NewStatement(X[0])
 		},
 	},
 }

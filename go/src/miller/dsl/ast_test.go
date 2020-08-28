@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"testing"
 
-	"miller/dsl/ast"
+	"miller/dsl"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
 )
 
-func testOne(src []byte) (astree ast.StatementList, err error) {
+func testOne(src []byte) (astree dsl.StatementList, err error) {
 	fmt.Printf("Input: %s\n", src)
 	s := lexer.NewLexer(src)
 	p := parser.NewParser()
 	a, err := p.Parse(s)
 	if err == nil {
-		astree = a.(ast.StatementList)
+		astree = a.(dsl.StatementList)
 	}
 	return
 }

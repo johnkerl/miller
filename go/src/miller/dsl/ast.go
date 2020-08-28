@@ -1,4 +1,4 @@
-package ast // TODO: move up one level
+package dsl
 
 import (
 	"miller/parsing/token"

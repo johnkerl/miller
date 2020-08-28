@@ -626,15 +626,15 @@ md_token_number : _digit { _digit } | '-' _digit { _digit } ;
 // * Do "mlr -n put -v 'your expression goes here'"
 // ================================================================
 
-<< import "miller/dsl/ast" >>
+<< import "miller/dsl" >>
 
 StatementList : 
-    Statement               << ast.NewStatementList($0) >>
-  | StatementList Statement << ast.AppendStatement($0, $1) >>
+    Statement               << dsl.NewStatementList($0) >>
+  | StatementList Statement << dsl.AppendStatement($0, $1) >>
 ;
 
 Statement : 
-  md_token_field_name md_token_assign md_token_number << ast.NewStatement($0) >>
+  md_token_field_name md_token_assign md_token_number << dsl.NewStatement($0) >>
 ;
 
 //// The caller is expected to provide more context.
