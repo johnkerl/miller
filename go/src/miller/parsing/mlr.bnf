@@ -49,6 +49,7 @@ _hexDigit : '0'-'9' | 'a'-'f' | 'A'-'F';
 _idchar : _letter | _decimalDigit | '_' ;
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
 
+//md_token_id : _idchar { _idchar } ;
 md_token_field_name : '$' _idchar { _idchar } ;
 
 // xxx temp -- needs floating-point literals too
@@ -2523,7 +2524,7 @@ AtomOrFunction
 FieldName
   : DirectFieldName
   | IndirectFieldName
-  // BracedFieldName
+  //| BracedFieldName
   // PositionalFieldName
   // ...
 ;
@@ -2538,22 +2539,15 @@ IndirectFieldName
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeToken) >>
 ;
 
-//md_token_field_name(A) ::= md_token_braced_field_name(B). {
-//	// Replace "${field.name}" with just "field.name"
-//	char* dollar_name = B->text;
-//	char* no_dollar_name = &dollar_name[2];
-//	int len = strlen(no_dollar_name);
-//	if (len > 0)
-//		no_dollar_name[len-1] = 0;
-//	A = mlr_dsl_ast_node_alloc(no_dollar_name, B->type);
-//}
-
-//AtomOrFunction(A) ::= IndirectFieldName(B). {
-//	A = B;
-//}
-//IndirectFieldName(A) ::= md_token_dollar_sign md_token_left_bracket RHS(B) md_token_right_bracket.  {
-//	A = mlr_dsl_ast_node_alloc_unary("indirect_field_name", MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME, B);
-//}
+//// xxx make a token-wrap constructor in the API
+//BracedFieldName
+//  : "${" md_token_id "}"
+//    << dsl.NewASTNodeUnary(
+//      $0,
+//      dsl.NewASTNodeNestable($1, dsl.NodeTypeFieldName),
+//      dsl.NodeTypeToken,
+//    ) >>
+//;
 
 //AtomOrFunction(A) ::= PositionalSrecName(B). {
 //	A = B;

@@ -13,6 +13,7 @@ const (
 	NodeTypeToken          = "Token"
 	NodeTypeAssignment     = "Assignment"
 	NodeTypeOperator       = "Operator"
+	NodeTypeFieldName      = "FieldName"
 )
 
 // ----------------------------------------------------------------
