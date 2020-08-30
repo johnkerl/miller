@@ -16,17 +16,28 @@ type MapperPut struct {
 }
 
 func NewMapperPut(dslString string) *MapperPut {
-	theLexer := lexer.NewLexer([]byte(dslString))
-	theParser := parser.NewParser()
-	interfaceAST, err := theParser.Parse(theLexer)
+	ast, err := NewASTFromString(dslString)
 	if err != nil {
 		fmt.Println(err) // xxx error propagate to caller -- for all mapper constructors
 		os.Exit(1)
 	}
-	ast := interfaceAST.(*dsl.AST)
 	return &MapperPut{
 		ast,
 	}
+}
+
+// xxx note (package cycle) why not a dsl.AST constructor :(
+// xxx maybe split out dsl into two package ... and/or put the ast.go into miller/parsing -- ?
+//   depends on TBD split-out of AST and CST ...
+func NewASTFromString(dslString string) (*dsl.AST, error) {
+	theLexer := lexer.NewLexer([]byte(dslString))
+	theParser := parser.NewParser()
+	interfaceAST, err := theParser.Parse(theLexer)
+	if err != nil {
+		return nil, err
+	}
+	ast := interfaceAST.(*dsl.AST)
+	return ast, nil
 }
 
 func (this *MapperPut) Name() string {

@@ -21,3 +21,7 @@ long-term:
   o only requirement is that top-level be sequence of string-valued objects ...
   o json-to-json cat-mapping should be identical
   o json-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}
+
+gocc upstreams:
+* support "..." in the lexer part
+* research error-handling ...
