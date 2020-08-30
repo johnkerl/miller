@@ -16,10 +16,8 @@ const (
 	NodeTypeIndirectFieldName = "IndirectFieldName"
 
 	NodeTypeStatementBlock  = "StatementBlock"
-	NodeTypeStatement       = "Statement"
 	NodeTypeAssignment      = "Assignment"
 	NodeTypeOperator        = "Operator"
-	NodeTypeFieldName       = "FieldName"
 	NodeTypeContextVariable = "ContextVariable"
 )
 

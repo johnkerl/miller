@@ -52,8 +52,14 @@ func (this *MapperPut) Map(
 	outrecs chan<- *containers.Lrec,
 ) {
 	if inrec != nil {
-		outrec := this.interpreter.InterpretOnInputRecord(inrec, context)
-		outrecs <- outrec
+		// xxx maybe ast -> interpreter ctor
+		outrec, err := this.interpreter.InterpretOnInputRecord(inrec, context, this.ast)
+		if err != nil {
+			// need echan or what?
+			fmt.Println(err)
+		} else {
+			outrecs <- outrec
+		}
 	} else {
 		outrecs <- nil
 	}

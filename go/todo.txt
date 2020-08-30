@@ -25,3 +25,10 @@ long-term:
 gocc upstreams:
 * support "..." in the lexer part
 * research error-handling ...
+
+----------------------------------------------------------------
+nits:
+* AST post-processing: strip '$' and '"' ... '"'; etc
+* md_token_string -> md_token_string_literal
+* all manner of xxx
+* support whitespace-only DSL strings, either in the parser or outside ...
