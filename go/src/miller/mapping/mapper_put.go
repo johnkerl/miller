@@ -5,14 +5,14 @@ import (
 	"os"
 
 	"miller/containers"
-	"miller/dsl"
+	"miller/parsing"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
 	"miller/runtime"
 )
 
 type MapperPut struct {
-	ast *dsl.AST
+	ast *parsing.AST
 }
 
 func NewMapperPut(dslString string) *MapperPut {
@@ -26,17 +26,17 @@ func NewMapperPut(dslString string) *MapperPut {
 	}
 }
 
-// xxx note (package cycle) why not a dsl.AST constructor :(
+// xxx note (package cycle) why not a parsing.AST constructor :(
 // xxx maybe split out dsl into two package ... and/or put the ast.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
-func NewASTFromString(dslString string) (*dsl.AST, error) {
+func NewASTFromString(dslString string) (*parsing.AST, error) {
 	theLexer := lexer.NewLexer([]byte(dslString))
 	theParser := parser.NewParser()
 	interfaceAST, err := theParser.Parse(theLexer)
 	if err != nil {
 		return nil, err
 	}
-	ast := interfaceAST.(*dsl.AST)
+	ast := interfaceAST.(*parsing.AST)
 	return ast, nil
 }
 
