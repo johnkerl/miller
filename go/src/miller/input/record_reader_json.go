@@ -1,18 +1,15 @@
 package input
 
 import (
-	// System:
 	"encoding/json"
 	//"fmt"
 	"os"
 	//"reflect"
 
-	// Miller:
+	"localdeps/ordered"
+
 	"miller/containers"
 	"miller/runtime"
-
-	// Local dependencies:
-	"deps/ordered"
 )
 
 type RecordReaderJSON struct {

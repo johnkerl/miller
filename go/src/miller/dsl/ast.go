@@ -56,7 +56,7 @@ type ASTNode struct {
 	Children []*ASTNode
 
 	// xxx sketch:
-	// * no longer have separate AST/CST as in the C version
+	// * no longer have separate AST/CST as in the C version ?
 	// * have a nullable evaluator function pointer attached to each node
 	// * outrec := node.Evaluate(inrec, state) ?
 	// * what about evaluator-state ?

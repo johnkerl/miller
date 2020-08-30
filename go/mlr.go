@@ -48,12 +48,32 @@ func main() {
 	if len(args) < 3 {
 		usage()
 	}
-	inputFormatName := args[0]
-	mapperName := args[1]
-	outputFormatName := args[2]
-	filenames := args[3:]
 
-	err := stream.Stream(filenames, inputFormatName, mapperName, outputFormatName)
+	var inputFormatName string
+	var mapperName string
+	var dslString string
+	var outputFormatName string
+	var filenames []string
+
+	// xxx temp
+	if args[1] == "put" {
+		if len(args) < 4 {
+			usage()
+		}
+		inputFormatName = args[0]
+		mapperName = args[1]
+		dslString = args[2]
+		outputFormatName = args[3]
+		filenames = args[4:]
+	} else {
+		inputFormatName = args[0]
+		mapperName = args[1]
+		dslString = ""
+		outputFormatName = args[2]
+		filenames = args[3:]
+	}
+
+	err := stream.Stream(filenames, inputFormatName, mapperName, dslString, outputFormatName)
 	if err != nil {
 		log.Fatal(err)
 	}

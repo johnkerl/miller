@@ -1,11 +1,10 @@
 package stream
 
 import (
-	// System:
 	"errors"
 	"log"
 	"os"
-	// Miller:
+
 	"miller/containers"
 	"miller/input"
 	"miller/mapping"
@@ -18,6 +17,7 @@ func Stream(
 	filenames []string,
 	inputFormatName string,
 	mapperName string,
+	dslString string, // xxx temp
 	outputFormatName string,
 ) error {
 
@@ -32,7 +32,7 @@ func Stream(
 		return errors.New("Input format not found: " + inputFormatName)
 	}
 
-	recordMapper := mapping.Create(mapperName)
+	recordMapper := mapping.Create(mapperName, dslString) // xxx temp
 	if recordMapper == nil {
 		return errors.New("Mapper not found: " + mapperName)
 	}

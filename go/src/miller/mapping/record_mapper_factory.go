@@ -1,11 +1,15 @@
 package mapping
 
-func Create(mapperName string) IRecordMapper {
+func Create(mapperName string, dslString string) IRecordMapper {
 	switch mapperName {
 	case "cat":
 		return NewMapperCat()
+	case "check":
+		return NewMapperNothing()
 	case "nothing":
 		return NewMapperNothing()
+	case "put":
+		return NewMapperPut(dslString)
 	case "tac":
 		return NewMapperTac()
 	default:

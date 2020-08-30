@@ -14,3 +14,10 @@ easier:
 * most of the verbs
 * most of the file formats
 * then-chaining
+
+long-term:
+* srecs as string -> mlrvals, then mlrval | mlhmmv
+* support full json read/write
+  o only requirement is that top-level be sequence of string-valued objects ...
+  o json-to-json cat-mapping should be identical
+  o json-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}

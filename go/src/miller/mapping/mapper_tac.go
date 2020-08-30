@@ -1,10 +1,10 @@
 package mapping
 
 import (
-	// System:
 	"container/list"
-	// Miller:
+
 	"miller/containers"
+	"miller/runtime"
 )
 
 type MapperTac struct {
@@ -21,7 +21,11 @@ func (this *MapperTac) Name() string {
 	return "tac"
 }
 
-func (this *MapperTac) Map(inrec *containers.Lrec, outrecs chan<- *containers.Lrec) {
+func (this *MapperTac) Map(
+	inrec *containers.Lrec,
+	context *runtime.Context,
+	outrecs chan<- *containers.Lrec,
+) {
 	if inrec != nil {
 		this.lrecs.PushFront(inrec)
 	} else {

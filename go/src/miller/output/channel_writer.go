@@ -1,9 +1,8 @@
 package output
 
 import (
-	// System:
 	"os"
-	// Miller:
+
 	"miller/containers"
 )
 

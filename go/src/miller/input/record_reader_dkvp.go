@@ -1,11 +1,10 @@
 package input
 
 import (
-	// System:
 	"bufio"
 	"io"
 	"strings"
-	// Miller:
+
 	"miller/containers"
 	"miller/lib"
 	"miller/runtime"

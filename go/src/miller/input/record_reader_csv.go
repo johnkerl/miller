@@ -1,11 +1,10 @@
 package input
 
 import (
-	// System:
 	"encoding/csv"
 	"io"
 	"os"
-	// Miller:
+
 	"miller/containers"
 	"miller/runtime"
 )

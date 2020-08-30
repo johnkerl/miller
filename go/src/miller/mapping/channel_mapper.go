@@ -16,7 +16,7 @@ func ChannelMapper(
 
 		context.UpdateForInputRecord(lrec);
 
-		recordMapper.Map(lrec, outrecs)
+		recordMapper.Map(lrec, context, outrecs)
 		if lrec == nil { // end of stream
 			break
 		}

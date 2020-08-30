@@ -1,10 +1,9 @@
 package output
 
 import (
-	// System:
 	"encoding/csv"
 	"os"
-	// Miller:
+
 	"miller/containers"
 )
 
