@@ -2512,18 +2512,18 @@ FieldName
   : DirectFieldName
   | IndirectFieldName
   //| BracedFieldName
-  // PositionalFieldName
+  //| PositionalFieldName
   // ...
 ;
 
 DirectFieldName
   : md_token_field_name
-    << dsl.NewASTNode($0, dsl.NodeTypeToken) >>
+    << dsl.NewASTNode($0, dsl.NodeTypeDirectFieldName) >>
 ;
 
 IndirectFieldName
   : "$[" RHS "]"
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeToken) >>
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldName) >>
 ;
 
 //// xxx make a token-wrap constructor in the API
@@ -2539,16 +2539,12 @@ IndirectFieldName
 //AtomOrFunction(A) ::= PositionalSrecName(B). {
 //	A = B;
 //}
-//PositionalSrecName(A) ::= md_token_dollar_sign
-//	md_token_left_bracket md_token_left_bracket
-//		RHS(B)
-//	md_token_right_bracket md_token_right_bracket.  {
+//PositionalSrecName(A) ::= "$[[" RHS "]]"
 //	A = mlr_dsl_ast_node_alloc_unary(
 //		"positional_srec_field_name",
 //		MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
 //		B
 //	);
-//}
 
 //// '$value = $[[[3]]]' is shorthand for '$value = $[ $[[3]] ]'.
 //// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
@@ -2619,16 +2615,16 @@ IndirectFieldName
 // to the lrecs, with mlrvals there! :)
 
 AtomOrFunction
-  : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+  : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >> ;
 
 AtomOrFunction
-  : md_token_string << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+  : md_token_string << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >> ;
 
 AtomOrFunction
-  : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+  : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
 
 AtomOrFunction
-  : md_token_false  << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+  : md_token_false  << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
 
 //AtomOrFunction(A) ::= md_regexi(B). {
 //	A = B;

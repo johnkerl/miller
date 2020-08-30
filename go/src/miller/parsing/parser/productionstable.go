@@ -811,63 +811,63 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeDirectFieldName) >>`,
 		Id:         "DirectFieldName",
 		NTType:     23,
 		Index:      79,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeDirectFieldName)
 		},
 	},
 	ProdTabEntry{
-		String: `IndirectFieldName : "$[" RHS "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeToken) >>`,
+		String: `IndirectFieldName : "$[" RHS "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldName) >>`,
 		Id:         "IndirectFieldName",
 		NTType:     24,
 		Index:      80,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeToken)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldName)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_number	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_number	<< dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      81,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_string	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_string	<< dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      82,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      83,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      84,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral)
 		},
 	},
 	ProdTabEntry{
