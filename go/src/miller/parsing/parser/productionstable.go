@@ -831,7 +831,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_string	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      81,
@@ -841,13 +841,143 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      82,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeToken) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     21,
+		Index:      83,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeToken)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : ContextVariable	<<  >>`,
+		Id:         "AtomOrFunction",
+		NTType:     21,
+		Index:      84,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_IPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      85,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_IFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      86,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_IRS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      87,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_OPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      88,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_OFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      89,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_ORS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      90,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_NF	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      91,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_NR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      92,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_FNR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      93,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_FILENAME	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      94,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
+		},
+	},
+	ProdTabEntry{
+		String: `ContextVariable : md_token_FILENUM	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		Id:         "ContextVariable",
+		NTType:     25,
+		Index:      95,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 }

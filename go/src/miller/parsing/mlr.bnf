@@ -52,12 +52,63 @@ _idchar : _letter | _decimalDigit | '_' ;
 //md_token_id : _idchar { _idchar } ;
 md_token_field_name : '$' _idchar { _idchar } ;
 
+//[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
+//	// Leading minus sign is handled via the unary-minus operator, not here.
+//	// 123
+//	// 123. 123.4
+//	// .234
+//	// 1e2
+//	// 1e-2
+//	// 1.2e3 1.e3
+//	// 1.2e-3 1.e-3
+//	// .2e3
+//	// .2e-3 1.e-3
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
+//	return md_token_number;
+//}
+
+//0x[0-9a-fA-F]+ {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
+//	return md_token_number;
+//}
+
 // xxx temp -- needs floating-point literals too
 md_token_number
   : _decimalDigit { _decimalDigit }
   | '-' _decimalDigit { _decimalDigit }
   | '0' 'x' _hexDigit { _hexDigit }
 ;
+
+// xxx: gocc seems to lack a '[^"] notation ...
+// xxx expand ...
+
+_string_element : 'A'-'Z' | 'a'-'z' | '0'-'9'
+		| '!' | '#' | '$' | '%' | '&' | '\'' | '*' | '+' | '-' | '/' 
+		| '=' | '?' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
+		| '\u0100'-'\U0010FFFF'
+;
+
+md_token_string : '"' {_string_element} '"' ;
+
+//\"([^\\\"]|\\.)*\" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
+//	return md_token_string;
+//}
+
+md_token_IPS : 'I' 'P' 'S' ;
+md_token_IFS : 'I' 'F' 'S' ;
+md_token_IRS : 'I' 'R' 'S' ;
+
+md_token_OPS : 'O' 'P' 'S' ;
+md_token_OFS : 'O' 'F' 'S' ;
+md_token_ORS : 'O' 'R' 'S' ;
+
+md_token_NF  : 'N' 'F' ;
+md_token_NR  : 'N' 'R' ;
+md_token_FNR : 'F' 'N' 'R' ;
+
+md_token_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
+md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 
 // ----------------------------------------------------------------
 // KEYWORDS
@@ -203,30 +254,6 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 //	return md_token_full_oosvar;
 //}
 
-//[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+|[0-9]+[eE][0-9]+|[0-9]+[eE]-[0-9]+|[0-9]+\.[0-9]*[eE][0-9]+|[0-9]+\.[0-9]*[eE]-[0-9]+|[0-9]*\.[0-9]+[eE][0-9]+|[0-9]*\.[0-9]+[eE]-[0-9]+ {
-//	// Leading minus sign is handled via the unary-minus operator, not here.
-//	// 123
-//	// 123. 123.4
-//	// .234
-//	// 1e2
-//	// 1e-2
-//	// 1.2e3 1.e3
-//	// 1.2e-3 1.e-3
-//	// .2e3
-//	// .2e-3 1.e-3
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
-//	return md_token_number;
-//}
-//0x[0-9a-fA-F]+ {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
-//	return md_token_number;
-//}
-
-//\"([^\\\"]|\\.)*\" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
-//	return md_token_string;
-//}
-
 //\"([^\\\"]|\\.)*\"\i {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_REGEXI);
 //	return md_token_regexi;
@@ -261,51 +288,6 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 //	return md_token_string;
 //}
 
-//"IPS" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"IFS" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"IRS" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"OPS" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"OFS" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"ORS" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-
-//"NF" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"NR" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"FNR" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"FILENAME" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"FILENUM" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
 //"M_PI" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 //	return md_token_context_variable;
@@ -2632,14 +2614,14 @@ AtomOrFunction
   : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 AtomOrFunction
+  : md_token_string << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
+
+AtomOrFunction
   : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
 AtomOrFunction
   : md_token_false  << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
-//AtomOrFunction(A) ::= md_string(B). {
-//	A = B;
-//}
 //AtomOrFunction(A) ::= md_regexi(B). {
 //	A = B;
 //}
@@ -2663,7 +2645,6 @@ AtomOrFunction
 //IndexedLocalVariable(A) ::= IndexedLocalVariable(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
-
 
 //AtomOrFunction(A) ::= IndexedFunctionCall(B). {
 //	A = B;
@@ -2714,6 +2695,25 @@ AtomOrFunction
 //	stripped[len-3] = 0;
 //	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
 //}
+
+AtomOrFunction : ContextVariable ;
+
+ContextVariable
+  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+;
 
 //AtomOrFunction(A) ::= md_token_context_variable(B). {
 //	A = B;

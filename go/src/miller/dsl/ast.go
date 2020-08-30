@@ -8,12 +8,13 @@ import (
 type TNodeType string
 
 const (
-	NodeTypeStatementBlock = "StatementBlock"
-	NodeTypeStatement      = "Statement"
-	NodeTypeToken          = "Token"
-	NodeTypeAssignment     = "Assignment"
-	NodeTypeOperator       = "Operator"
-	NodeTypeFieldName      = "FieldName"
+	NodeTypeStatementBlock  = "StatementBlock"
+	NodeTypeStatement       = "Statement"
+	NodeTypeToken           = "Token"
+	NodeTypeAssignment      = "Assignment"
+	NodeTypeOperator        = "Operator"
+	NodeTypeFieldName       = "FieldName"
+	NodeTypeContextVariable = "ContextVariable"
 )
 
 // ----------------------------------------------------------------
@@ -44,7 +45,7 @@ func (this *AST) Print() {
 
 // ----------------------------------------------------------------
 type ASTNode struct {
-	Token   *token.Token // Nil for tokenless/structural nodes
+	Token    *token.Token // Nil for tokenless/structural nodes
 	NodeType TNodeType
 	Children []*ASTNode
 }
@@ -85,7 +86,7 @@ func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 	}
 }
 
-func NewASTNodeUnary(itok,  childA interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {
 	parent := NewASTNodeNestable(itok, nodeType)
 	convertToUnary(parent, childA)
 	return parent, nil
