@@ -4,8 +4,9 @@
 // This is the Miller DSL's BNF grammar, using the gocc tool framework.
 //
 // The first section is lexical elements and the second section is syntactical
-// elements -- the analogs of lex and yacc, respectively, using a classical
-// C/lex/yacc framework.
+// elements. These are the analogs of lex and yacc, respectively, using a
+// classical C/lex/yacc framework -- although for lex/yacc one would have
+// separate .l and .y files, whereas here there is a single .bnf file.
 //
 // Notes:
 //
@@ -2523,6 +2524,7 @@ FieldName
   : DirectFieldName
   | IndirectFieldName
   // BracedFieldName
+  // PositionalFieldName
   // ...
 ;
 
