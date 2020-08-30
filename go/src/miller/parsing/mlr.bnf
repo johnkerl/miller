@@ -338,7 +338,7 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 // ================================================================
 
 // Import the AST/ASTNode types and functions
-<< import "miller/parsing" >>
+<< import "miller/dsl" >>
 
 // TODO: port to gacc
 //
@@ -362,20 +362,20 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 // ================================================================
 Root :
   StatementBlock
-    <<parsing.NewAST($0) >> ;
+    <<dsl.NewAST($0) >> ;
 
 StatementBlock
   : Statement
-    << parsing.NewASTNodeUnary(nil, $0, parsing.NodeTypeStatementBlock) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   | StatementBlock ";"
     // Semicolons are separators, not terminators, in the Miller DSL --
     // most importantly people can say '$x = 3' without '$x = 3;'.
     // However, we do allow trailing semicolons.
-    << parsing.Nestable($0) >>
+    << dsl.Nestable($0) >>
 
   | StatementBlock ";" Statement
-    <<parsing.AppendChild($0, $2) >>
+    <<dsl.AppendChild($0, $2) >>
   ;
 
 Statement : StatementInBody ;
@@ -1263,7 +1263,7 @@ StatementInBody :SrecAssignment ;
 
 SrecAssignment
   : FieldName "=" RHS
-    << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >> ;
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
 
 //SrecIndirectAssignment(A)  ::=
 //	md_token_dollar_sign md_token_left_bracket RHS(B) md_token_right_bracket
@@ -1367,22 +1367,22 @@ SrecAssignment
 
 // ----------------------------------------------------------------
 SrecAssignment
-  : FieldName "||=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "^^=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "&&=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "|="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "^="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "&="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "<<=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName ">>=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "+="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName ".="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "-="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "*="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "/="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "//=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "%="  RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
-  | FieldName "**=" RHS << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeAssignment) >>
+  : FieldName "||=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "^^=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "&&=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "|="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "^="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "&="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "<<=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName ">>=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "+="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName ".="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "-="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "*="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "/="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "//=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "%="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | FieldName "**=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
 ;
 
 //OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_or_equals RHS(C). {
@@ -2393,103 +2393,103 @@ RHS : TernaryTerm ;
 // to do: how to pass a "?:" token ...
 TernaryTerm
   : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
-    << parsing.NewASTNodeTernary($1, $0, $2, $4, parsing.NodeTypeOperator) >>
+    << dsl.NewASTNodeTernary($1, $0, $2, $4, dsl.NodeTypeOperator) >>
   | LogicalOrTerm
 ;
 
 LogicalOrTerm
   : LogicalOrTerm "||" LogicalXORTerm
-    << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | LogicalXORTerm
 ;
 
 LogicalXORTerm
   : LogicalXORTerm "^^" LogicalAndTerm
-    << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | LogicalAndTerm
 ;
 
 LogicalAndTerm
   : LogicalAndTerm "&&" EqneTerm
-    << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | EqneTerm
 ;
 
 EqneTerm
-  : EqneTerm "=~"  CmpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | EqneTerm "!=~" CmpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | EqneTerm "=="  CmpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | EqneTerm "!="  CmpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : EqneTerm "=~"  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "=="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "!="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | CmpTerm
 ;
 
 CmpTerm
-  : CmpTerm ">"  BitwiseORTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | CmpTerm ">=" BitwiseORTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | CmpTerm "<"  BitwiseORTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | CmpTerm "<=" BitwiseORTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | BitwiseORTerm
 ;
 
 BitwiseORTerm
-  : BitwiseORTerm "|" BitwiseXORTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | BitwiseXORTerm
 ;
 
 BitwiseXORTerm
-  : BitwiseXORTerm "^" BitwiseANDTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | BitwiseANDTerm
 ;
 
 BitwiseANDTerm
-  : BitwiseANDTerm "&" BitwiseShiftTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | BitwiseShiftTerm
 ;
 
 BitwiseShiftTerm
-  : BitwiseShiftTerm "<<" AddsubdotTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | BitwiseShiftTerm ">>" AddsubdotTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : BitwiseShiftTerm "<<" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm ">>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm
 ;
 
 AddsubdotTerm
-  : AddsubdotTerm "+"  MuldivTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | AddsubdotTerm "-"  MuldivTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | AddsubdotTerm ".+" MuldivTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | AddsubdotTerm ".-" MuldivTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | AddsubdotTerm "."  MuldivTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | MuldivTerm
 ;
 
 MuldivTerm
-  : MuldivTerm "*"   UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | MuldivTerm "/"   UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | MuldivTerm "//"  UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | MuldivTerm "%"   UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | MuldivTerm ".*"  UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | MuldivTerm "./"  UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
-  | MuldivTerm ".//" UnaryBitwiseOpTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : MuldivTerm "*"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "/"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "//"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "%"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".*"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "./"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".//" UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | UnaryBitwiseOpTerm
 ;
 
 UnaryBitwiseOpTerm
-  : "+"  PowTerm << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeOperator) >>
-  | "-"  PowTerm << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeOperator) >>
-  | ".+" PowTerm << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeOperator) >>
-  | ".-" PowTerm << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeOperator) >>
-  | "!"  PowTerm << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeOperator) >>
-  | "~"  PowTerm << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeOperator) >>
+  : "+"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "-"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".+" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".-" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "!"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "~"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
   | PowTerm
 ;
 
 PowTerm
-  : AtomOrFunction "**" PowTerm << parsing.NewASTNodeBinary($1, $0, $2, parsing.NodeTypeOperator) >>
+  : AtomOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AtomOrFunction
 ;
 
 AtomOrFunction
   : "(" RHS ")"
-  << parsing.Nestable($1) >>
+  << dsl.Nestable($1) >>
 ;
 
 // ================================================================
@@ -2518,21 +2518,21 @@ FieldName
 
 DirectFieldName
   : md_token_field_name
-    << parsing.NewASTNode($0, parsing.NodeTypeDirectFieldName) >>
+    << dsl.NewASTNode($0, dsl.NodeTypeDirectFieldName) >>
 ;
 
 IndirectFieldName
   : "$[" RHS "]"
-    << parsing.NewASTNodeUnary($0, $1, parsing.NodeTypeIndirectFieldName) >>
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldName) >>
 ;
 
 //// xxx make a token-wrap constructor in the API
 //BracedFieldName
 //  : "${" md_token_id "}"
-//    << parsing.NewASTNodeUnary(
+//    << dsl.NewASTNodeUnary(
 //      $0,
-//      parsing.NewASTNodeNestable($1, parsing.NodeTypeFieldName),
-//      parsing.NodeTypeToken,
+//      dsl.NewASTNodeNestable($1, dsl.NodeTypeFieldName),
+//      dsl.NodeTypeToken,
 //    ) >>
 //;
 
@@ -2615,16 +2615,16 @@ IndirectFieldName
 // to the lrecs, with mlrvals there! :)
 
 AtomOrFunction
-  : md_token_number << parsing.NewASTNode($0, parsing.NodeTypeNumberLiteral) >> ;
+  : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >> ;
 
 AtomOrFunction
-  : md_token_string << parsing.NewASTNode($0, parsing.NodeTypeStringLiteral) >> ;
+  : md_token_string << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >> ;
 
 AtomOrFunction
-  : md_token_true   << parsing.NewASTNode($0, parsing.NodeTypeBooleanLiteral) >> ;
+  : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
 
 AtomOrFunction
-  : md_token_false  << parsing.NewASTNode($0, parsing.NodeTypeBooleanLiteral) >> ;
+  : md_token_false  << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
 
 //AtomOrFunction(A) ::= md_regexi(B). {
 //	A = B;
@@ -2703,20 +2703,20 @@ AtomOrFunction
 AtomOrFunction : ContextVariable ;
 
 ContextVariable
-  : md_token_IPS << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_IFS << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_IRS << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
+  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
-  | md_token_OPS << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_OFS << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_ORS << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
+  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
-  | md_token_NF  << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_NR  << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_FNR << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
+  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
-  | md_token_FILENAME << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
-  | md_token_FILENUM  << parsing.NewASTNode($0, parsing.NodeTypeContextVariable) >>
+  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 ;
 
 //AtomOrFunction(A) ::= EnvIndex(B). {

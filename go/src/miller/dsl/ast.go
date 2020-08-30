@@ -1,4 +1,4 @@
-package parsing
+package dsl
 
 import (
 	"fmt"
@@ -39,6 +39,7 @@ type AST struct {
 	Root *ASTNode
 }
 
+// This is for the GOCC/BNF parser, which produces an AST
 func NewAST(root interface{}) (*AST, error) {
 	return &AST{
 		root.(*ASTNode),

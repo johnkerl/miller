@@ -1,4 +1,4 @@
-package parsing
+package dsl
 
 import (
 	"fmt"

@@ -11,7 +11,7 @@ import (
 	// Miller:
 	"miller/stream"
 	// Temp:
-	"miller/parsing"
+	"miller/dsl"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
 )
@@ -87,7 +87,7 @@ func parse(sourceString string) {
 	theParser := parser.NewParser()
 	interfaceAST, err := theParser.Parse(theLexer)
 	if err == nil {
-		interfaceAST.(*parsing.AST).Print()
+		interfaceAST.(*dsl.AST).Print()
 	} else {
 		fmt.Println(err)
 		os.Exit(1)

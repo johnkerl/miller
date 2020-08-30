@@ -2,7 +2,7 @@
 
 package parser
 
-import "miller/parsing"
+import "miller/dsl"
 
 type (
 	//TODO: change type and variable names to be consistent with other tables
@@ -31,43 +31,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Root : StatementBlock	<< parsing.NewAST(X[0]) >>`,
+		String: `Root : StatementBlock	<< dsl.NewAST(X[0]) >>`,
 		Id:         "Root",
 		NTType:     1,
 		Index:      1,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewAST(X[0])
+			return dsl.NewAST(X[0])
 		},
 	},
 	ProdTabEntry{
-		String: `StatementBlock : Statement	<< parsing.NewASTNodeUnary(nil, X[0], parsing.NodeTypeStatementBlock) >>`,
+		String: `StatementBlock : Statement	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      2,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(nil, X[0], parsing.NodeTypeStatementBlock)
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
 		},
 	},
 	ProdTabEntry{
-		String: `StatementBlock : StatementBlock ";"	<< parsing.Nestable(X[0]) >>`,
+		String: `StatementBlock : StatementBlock ";"	<< dsl.Nestable(X[0]) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      3,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.Nestable(X[0])
+			return dsl.Nestable(X[0])
 		},
 	},
 	ProdTabEntry{
-		String: `StatementBlock : StatementBlock ";" Statement	<< parsing.AppendChild(X[0], X[2]) >>`,
+		String: `StatementBlock : StatementBlock ";" Statement	<< dsl.AppendChild(X[0], X[2]) >>`,
 		Id:         "StatementBlock",
 		NTType:     2,
 		Index:      4,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.AppendChild(X[0], X[2])
+			return dsl.AppendChild(X[0], X[2])
 		},
 	},
 	ProdTabEntry{
@@ -91,173 +91,173 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      7,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "||=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "||=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      8,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "^^=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "^^=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      9,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "&&=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "&&=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      10,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "|=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "|=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      11,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "^=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "^=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      12,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "&=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "&=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      13,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "<<=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "<<=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      14,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName ">>=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName ">>=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      15,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "+=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "+=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      16,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName ".=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName ".=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      17,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "-=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "-=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      18,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "*=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "*=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      19,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "/=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "/=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      20,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "//=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "//=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      21,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "%!=(MISSING)" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "%!=(MISSING)" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      22,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : FieldName "**=" RHS	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment) >>`,
+		String: `SrecAssignment : FieldName "**=" RHS	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "SrecAssignment",
 		NTType:     5,
 		Index:      23,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
@@ -271,13 +271,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `TernaryTerm : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm	<< parsing.NewASTNodeTernary(X[1], X[0], X[2], X[4], parsing.NodeTypeOperator) >>`,
+		String: `TernaryTerm : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm	<< dsl.NewASTNodeTernary(X[1], X[0], X[2], X[4], dsl.NodeTypeOperator) >>`,
 		Id:         "TernaryTerm",
 		NTType:     7,
 		Index:      25,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeTernary(X[1], X[0], X[2], X[4], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeTernary(X[1], X[0], X[2], X[4], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -291,13 +291,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `LogicalOrTerm : LogicalOrTerm "||" LogicalXORTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `LogicalOrTerm : LogicalOrTerm "||" LogicalXORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "LogicalOrTerm",
 		NTType:     8,
 		Index:      27,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -311,13 +311,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `LogicalXORTerm : LogicalXORTerm "^^" LogicalAndTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `LogicalXORTerm : LogicalXORTerm "^^" LogicalAndTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "LogicalXORTerm",
 		NTType:     9,
 		Index:      29,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -331,13 +331,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `LogicalAndTerm : LogicalAndTerm "&&" EqneTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `LogicalAndTerm : LogicalAndTerm "&&" EqneTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "LogicalAndTerm",
 		NTType:     10,
 		Index:      31,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -351,43 +351,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EqneTerm : EqneTerm "=~" CmpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `EqneTerm : EqneTerm "=~" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
 		NTType:     11,
 		Index:      33,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `EqneTerm : EqneTerm "!=~" CmpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `EqneTerm : EqneTerm "!=~" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
 		NTType:     11,
 		Index:      34,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `EqneTerm : EqneTerm "==" CmpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `EqneTerm : EqneTerm "==" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
 		NTType:     11,
 		Index:      35,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `EqneTerm : EqneTerm "!=" CmpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `EqneTerm : EqneTerm "!=" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
 		NTType:     11,
 		Index:      36,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -401,43 +401,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `CmpTerm : CmpTerm ">" BitwiseORTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `CmpTerm : CmpTerm ">" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
 		NTType:     12,
 		Index:      38,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `CmpTerm : CmpTerm ">=" BitwiseORTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `CmpTerm : CmpTerm ">=" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
 		NTType:     12,
 		Index:      39,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `CmpTerm : CmpTerm "<" BitwiseORTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `CmpTerm : CmpTerm "<" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
 		NTType:     12,
 		Index:      40,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `CmpTerm : CmpTerm "<=" BitwiseORTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `CmpTerm : CmpTerm "<=" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
 		NTType:     12,
 		Index:      41,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -451,13 +451,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BitwiseORTerm : BitwiseORTerm "|" BitwiseXORTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `BitwiseORTerm : BitwiseORTerm "|" BitwiseXORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseORTerm",
 		NTType:     13,
 		Index:      43,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -471,13 +471,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BitwiseXORTerm : BitwiseXORTerm "^" BitwiseANDTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `BitwiseXORTerm : BitwiseXORTerm "^" BitwiseANDTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseXORTerm",
 		NTType:     14,
 		Index:      45,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -491,13 +491,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BitwiseANDTerm : BitwiseANDTerm "&" BitwiseShiftTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `BitwiseANDTerm : BitwiseANDTerm "&" BitwiseShiftTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseANDTerm",
 		NTType:     15,
 		Index:      47,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -511,23 +511,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BitwiseShiftTerm : BitwiseShiftTerm "<<" AddsubdotTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `BitwiseShiftTerm : BitwiseShiftTerm "<<" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     16,
 		Index:      49,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `BitwiseShiftTerm : BitwiseShiftTerm ">>" AddsubdotTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `BitwiseShiftTerm : BitwiseShiftTerm ">>" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseShiftTerm",
 		NTType:     16,
 		Index:      50,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -541,53 +541,53 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AddsubdotTerm : AddsubdotTerm "+" MuldivTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `AddsubdotTerm : AddsubdotTerm "+" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     17,
 		Index:      52,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `AddsubdotTerm : AddsubdotTerm "-" MuldivTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `AddsubdotTerm : AddsubdotTerm "-" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     17,
 		Index:      53,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `AddsubdotTerm : AddsubdotTerm ".+" MuldivTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `AddsubdotTerm : AddsubdotTerm ".+" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     17,
 		Index:      54,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `AddsubdotTerm : AddsubdotTerm ".-" MuldivTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `AddsubdotTerm : AddsubdotTerm ".-" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     17,
 		Index:      55,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `AddsubdotTerm : AddsubdotTerm "." MuldivTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `AddsubdotTerm : AddsubdotTerm "." MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     17,
 		Index:      56,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -601,73 +601,73 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "*" UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "*" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      58,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "/" UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "/" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      59,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "//" UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "//" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      60,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "%!"(MISSING) UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "%!"(MISSING) UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      61,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm ".*" UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm ".*" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      62,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "./" UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "./" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      63,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm ".//" UnaryBitwiseOpTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm ".//" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     18,
 		Index:      64,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -681,63 +681,63 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "+" PowTerm	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator) >>`,
+		String: `UnaryBitwiseOpTerm : "+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryBitwiseOpTerm",
 		NTType:     19,
 		Index:      66,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "-" PowTerm	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator) >>`,
+		String: `UnaryBitwiseOpTerm : "-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryBitwiseOpTerm",
 		NTType:     19,
 		Index:      67,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : ".+" PowTerm	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator) >>`,
+		String: `UnaryBitwiseOpTerm : ".+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryBitwiseOpTerm",
 		NTType:     19,
 		Index:      68,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : ".-" PowTerm	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator) >>`,
+		String: `UnaryBitwiseOpTerm : ".-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryBitwiseOpTerm",
 		NTType:     19,
 		Index:      69,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "!" PowTerm	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator) >>`,
+		String: `UnaryBitwiseOpTerm : "!" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryBitwiseOpTerm",
 		NTType:     19,
 		Index:      70,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "~" PowTerm	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator) >>`,
+		String: `UnaryBitwiseOpTerm : "~" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryBitwiseOpTerm",
 		NTType:     19,
 		Index:      71,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -751,13 +751,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PowTerm : AtomOrFunction "**" PowTerm	<< parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator) >>`,
+		String: `PowTerm : AtomOrFunction "**" PowTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "PowTerm",
 		NTType:     20,
 		Index:      73,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeBinary(X[1], X[0], X[2], parsing.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
 		},
 	},
 	ProdTabEntry{
@@ -771,13 +771,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : "(" RHS ")"	<< parsing.Nestable(X[1]) >>`,
+		String: `AtomOrFunction : "(" RHS ")"	<< dsl.Nestable(X[1]) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      75,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.Nestable(X[1])
+			return dsl.Nestable(X[1])
 		},
 	},
 	ProdTabEntry{
@@ -811,63 +811,63 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DirectFieldName : md_token_field_name	<< parsing.NewASTNode(X[0], parsing.NodeTypeDirectFieldName) >>`,
+		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeDirectFieldName) >>`,
 		Id:         "DirectFieldName",
 		NTType:     23,
 		Index:      79,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeDirectFieldName)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeDirectFieldName)
 		},
 	},
 	ProdTabEntry{
-		String: `IndirectFieldName : "$[" RHS "]"	<< parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeIndirectFieldName) >>`,
+		String: `IndirectFieldName : "$[" RHS "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldName) >>`,
 		Id:         "IndirectFieldName",
 		NTType:     24,
 		Index:      80,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNodeUnary(X[0], X[1], parsing.NodeTypeIndirectFieldName)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldName)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_number	<< parsing.NewASTNode(X[0], parsing.NodeTypeNumberLiteral) >>`,
+		String: `AtomOrFunction : md_token_number	<< dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      81,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeNumberLiteral)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_string	<< parsing.NewASTNode(X[0], parsing.NodeTypeStringLiteral) >>`,
+		String: `AtomOrFunction : md_token_string	<< dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      82,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeStringLiteral)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_true	<< parsing.NewASTNode(X[0], parsing.NodeTypeBooleanLiteral) >>`,
+		String: `AtomOrFunction : md_token_true	<< dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      83,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeBooleanLiteral)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_false	<< parsing.NewASTNode(X[0], parsing.NodeTypeBooleanLiteral) >>`,
+		String: `AtomOrFunction : md_token_false	<< dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      84,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeBooleanLiteral)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral)
 		},
 	},
 	ProdTabEntry{
@@ -881,113 +881,113 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_IPS	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_IPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      86,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_IFS	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_IFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      87,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_IRS	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_IRS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      88,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_OPS	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_OPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      89,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_OFS	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_OFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      90,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_ORS	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_ORS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      91,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_NF	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_NF	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      92,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_NR	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_NR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      93,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_FNR	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_FNR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      94,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_FILENAME	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_FILENAME	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      95,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_FILENUM	<< parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : md_token_FILENUM	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     25,
 		Index:      96,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return parsing.NewASTNode(X[0], parsing.NodeTypeContextVariable)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
 }
