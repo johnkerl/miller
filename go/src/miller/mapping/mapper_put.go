@@ -12,7 +12,8 @@ import (
 )
 
 type MapperPut struct {
-	ast *dsl.AST
+	ast         *dsl.AST
+	interpreter *dsl.Interpreter
 }
 
 func NewMapperPut(dslString string) *MapperPut {
@@ -23,6 +24,7 @@ func NewMapperPut(dslString string) *MapperPut {
 	}
 	return &MapperPut{
 		ast,
+		dsl.NewInterpreter(),
 	}
 }
 
@@ -30,14 +32,14 @@ func NewMapperPut(dslString string) *MapperPut {
 // xxx maybe split out dsl into two package ... and/or put the ast.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
 func NewASTFromString(dslString string) (*dsl.AST, error) {
-       theLexer := lexer.NewLexer([]byte(dslString))
-       theParser := parser.NewParser()
-       interfaceAST, err := theParser.Parse(theLexer)
-       if err != nil {
-               return nil, err
-       }
-       ast := interfaceAST.(*dsl.AST)
-       return ast, nil
+	theLexer := lexer.NewLexer([]byte(dslString))
+	theParser := parser.NewParser()
+	interfaceAST, err := theParser.Parse(theLexer)
+	if err != nil {
+		return nil, err
+	}
+	ast := interfaceAST.(*dsl.AST)
+	return ast, nil
 }
 
 func (this *MapperPut) Name() string {
@@ -50,7 +52,8 @@ func (this *MapperPut) Map(
 	outrecs chan<- *containers.Lrec,
 ) {
 	if inrec != nil {
-		outrecs <- inrec
+		outrec := this.interpreter.InterpretOnInputRecord(inrec, context)
+		outrecs <- outrec
 	} else {
 		outrecs <- nil
 	}
