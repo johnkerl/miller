@@ -9,6 +9,7 @@ import (
 	// Miller:
 	"miller/containers"
 	"miller/lib"
+	"miller/runtime"
 )
 
 type RecordReaderNIDX struct {
@@ -26,6 +27,7 @@ func NewRecordReaderNIDX() *RecordReaderNIDX {
 
 func (this *RecordReaderNIDX) Read(
 	filenames []string,
+	context *runtime.Context,
 	inrecs chan<- *containers.Lrec,
 	echan chan error,
 ) {
@@ -36,6 +38,10 @@ func (this *RecordReaderNIDX) Read(
 		return
 	}
 	lineReader := bufio.NewReader(istream)
+
+	if len(filenames) > 0 {
+		context.UpdateForStartOfFile(filenames[0]) // xxx temp
+	}
 
 	eof := false
 

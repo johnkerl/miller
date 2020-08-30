@@ -54,6 +54,26 @@ type ASTNode struct {
 	Token    *token.Token // Nil for tokenless/structural nodes
 	NodeType TNodeType
 	Children []*ASTNode
+
+	// xxx sketch:
+	// * no longer have separate AST/CST as in the C version
+	// * have a nullable evaluator function pointer attached to each node
+	// * outrec := node.Evaluate(inrec, state) ?
+	// * what about evaluator-state ?
+	// * outrec := node.Evaluator.Evaluate(inrec, state) ?
+	// * state:
+	//   o lhmsmv_t*        ptyped_overlay; -- get rid of, w/ mlrval keys directly in the lrecs?
+	//   o string_array_t** ppregex_captures;
+	//   o mlhmmv_root_t*   poosvars;
+	//   o context_t*       pctx;
+	//   o local_stack_t*   plocal_stack;
+	//   o loop_stack_t*    ploop_stack;
+	//   o return_state_t   return_state;
+	//   o int              trace_execution; -- move out of state?
+	//   o int              json_quote_int_keys; -- move out of state?
+	//   o int              json_quote_non_string_values; -- move out of state?
+	// * statements:
+	// * node.Executor.Execute(inrec, state) ?
 }
 
 func (this *ASTNode) Print(depth int) {

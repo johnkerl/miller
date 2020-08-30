@@ -8,6 +8,7 @@ import (
 	// Miller:
 	"miller/containers"
 	"miller/lib"
+	"miller/runtime"
 )
 
 type RecordReaderDKVP struct {
@@ -24,6 +25,7 @@ func NewRecordReaderDKVP(ifs string, ips string) *RecordReaderDKVP {
 
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
+	context *runtime.Context,
 	inrecs chan<- *containers.Lrec,
 	echan chan error,
 ) {
@@ -34,6 +36,10 @@ func (this *RecordReaderDKVP) Read(
 		return
 	}
 	lineReader := bufio.NewReader(istream)
+
+	if len(filenames) > 0 {
+		context.UpdateForStartOfFile(filenames[0]) // xxx temp
+	}
 
 	eof := false
 

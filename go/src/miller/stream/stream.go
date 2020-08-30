@@ -10,6 +10,7 @@ import (
 	"miller/input"
 	"miller/mapping"
 	"miller/output"
+	"miller/runtime"
 )
 
 // ----------------------------------------------------------------
@@ -19,6 +20,12 @@ func Stream(
 	mapperName string,
 	outputFormatName string,
 ) error {
+
+	context := runtime.NewContext()
+
+	// xxx context:
+	// * NF/NR/FNR
+	// * FILENAME/FILENUM
 
 	recordReader := input.Create(inputFormatName)
 	if recordReader == nil {
@@ -40,8 +47,9 @@ func Stream(
 	outrecs := make(chan *containers.Lrec, 1)
 	donechan := make(chan bool, 1)
 
-	go recordReader.Read(filenames, inrecs, echan)
-	go mapping.ChannelMapper(inrecs, recordMapper, outrecs)
+	// xxx need callback/arg to update context filenum/filename
+	go recordReader.Read(filenames, context, inrecs, echan)
+	go mapping.ChannelMapper(inrecs, context, recordMapper, outrecs)
 	go output.ChannelWriter(outrecs, recordWriter, donechan, os.Stdout)
 
 	done := false

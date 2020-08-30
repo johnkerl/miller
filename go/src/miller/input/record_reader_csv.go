@@ -7,6 +7,7 @@ import (
 	"os"
 	// Miller:
 	"miller/containers"
+	"miller/runtime"
 )
 
 type RecordReaderCSV struct {
@@ -28,12 +29,14 @@ func NewRecordReaderCSV( /*ifs string, ips string*/ ) *RecordReaderCSV {
 
 func (this *RecordReaderCSV) Read(
 	filenames []string,
+	context *runtime.Context,
 	inrecs chan<- *containers.Lrec,
 	echan chan error,
 ) {
 	// TODO: loop over filenames
 	// TODO: handle empty filenames array as read-from-stdin
 	filename := filenames[0]
+	context.UpdateForStartOfFile(filename)
 
 	handle, err := os.Open(filename)
 	if err != nil {

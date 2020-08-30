@@ -52,7 +52,7 @@ import (
 
 // ----------------------------------------------------------------
 type Lrec struct {
-	FieldCount int
+	FieldCount int64
 	Head       *lrecEntry
 	Tail       *lrecEntry
 }
