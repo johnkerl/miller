@@ -114,7 +114,8 @@ func (this *Interpreter) evaluateNode(
 		break
 	case NodeTypeOperator:
 		this.checkArity(node, 2) // xxx temp -- binary-only for now
-		return "", errors.New("unhandled")
+		return this.evaluateBinaryOperatorNode(node, node.Children[0], node.Children[1],
+			inrec, context)
 		break
 	case NodeTypeContextVariable:
 		return this.evaluateContextVariableNode(node, context)
@@ -147,6 +148,47 @@ func (this *Interpreter) evaluateContextVariableNode(
 		break
 	case "FNR":
 		return strconv.FormatInt(context.FNR, 10), nil
+		break
+	}
+	return "", errors.New("internal coding error") // xxx libify
+}
+
+func (this *Interpreter) evaluateBinaryOperatorNode(
+	node *ASTNode,
+	leftChild *ASTNode,
+	rightChild *ASTNode,
+	inrec *containers.Lrec,
+	context *runtime.Context,
+) (string, error) {
+	sval := string(node.Token.Lit)
+
+	leftValue, leftErr := this.evaluateNode(leftChild, inrec, context)
+	if leftErr != nil {
+		return "", leftErr
+	}
+	rightValue, rightErr := this.evaluateNode(rightChild, inrec, context)
+	if rightErr != nil {
+		return "", rightErr
+	}
+
+	switch sval {
+	case ".":
+		return leftValue + rightValue, nil
+		break
+	case "+":
+		return "", errors.New("unhandled")
+		break
+	case "-":
+		return "", errors.New("unhandled")
+		break
+	case "*":
+		return "", errors.New("unhandled")
+		break
+	case "/":
+		return "", errors.New("unhandled")
+		break
+	case "//":
+		return "", errors.New("unhandled")
 		break
 	}
 	return "", errors.New("internal coding error") // xxx libify
