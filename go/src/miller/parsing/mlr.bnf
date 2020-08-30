@@ -2487,6 +2487,11 @@ PowTerm
   | AtomOrFunction
 ;
 
+AtomOrFunction
+  : "(" RHS ")"
+  << dsl.Nestable($1) >>
+;
+
 // ================================================================
 // End RHS operator-precedence chain
 // ================================================================
@@ -2610,6 +2615,9 @@ IndirectFieldName
 //}
 
 // ----------------------------------------------------------------
+// xxx split out node-type string vs number so we can track parsed-type through
+// to the lrecs, with mlrvals there! :)
+
 AtomOrFunction
   : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeToken) >> ;
 
@@ -2715,19 +2723,12 @@ ContextVariable
   | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 ;
 
-//AtomOrFunction(A) ::= md_token_context_variable(B). {
-//	A = B;
-//}
 //AtomOrFunction(A) ::= EnvIndex(B). {
 //	A = B;
 //}
 
 //EnvIndex(A) ::= md_token_env(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
 //	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
-//}
-
-//AtomOrFunction(A) ::= "(" RHS(B) ")". {
-//	A = B;
 //}
 
 //AtomOrFunction(A) ::= FcnOrSubrCall(B). {
