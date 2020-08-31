@@ -294,9 +294,18 @@ func (this *Mlrval) setPrintRep() {
 		this.printrepValid = true
 	}
 }
+
 func (this *Mlrval) String() string {
 	this.setPrintRep()
 	return this.printrep
+}
+
+// For JSON output. Second return value is true if the mlrval should be
+// double-quoted.
+func (this *Mlrval) StringWithQuoteInfo() (string, bool) {
+	this.setPrintRep()
+	quoteless := (this.mvtype == MT_INT || this.mvtype == MT_FLOAT || this.mvtype == MT_BOOL)
+	return this.printrep, !quoteless
 }
 
 // ================================================================

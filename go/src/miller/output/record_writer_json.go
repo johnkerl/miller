@@ -41,11 +41,21 @@ func (this *RecordWriterJSON) Write(
 	// TODO: value-quoting (numeric) ...
 	buffer.WriteString("{\n")
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
+		// Write the key which is necessarily string-valued in Miller
 		buffer.WriteString("  \"")
 		buffer.WriteString(*pe.Key)
-		buffer.WriteString("\": \"")
-		buffer.WriteString(pe.Value.String())
-		buffer.WriteString("\"")
+
+		// Write the value which is a mlrval
+		sval, needsQuote := pe.Value.StringWithQuoteInfo()
+		buffer.WriteString("\": ")
+		if needsQuote {
+			buffer.WriteString("\"")
+		}
+		buffer.WriteString(sval)
+		if needsQuote {
+			buffer.WriteString("\"")
+		}
+
 		if pe.Next != nil {
 			buffer.WriteString(",")
 		}

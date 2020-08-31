@@ -5,8 +5,8 @@ harder / more worthy:
 ~ streaming JSON reader
   -> w/ and w/o enclosing [...] !
 ~ streaming RFC-compliant CSV reader
-! srec with mlrval values
-  ! solve the JIT issue for formatting of numeric values
+k srec with mlrval values
+  k solve the JIT issue for formatting of numeric values
 * sort
 * stats1
 * calendar/DST/TZ

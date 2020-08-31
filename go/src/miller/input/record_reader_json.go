@@ -82,7 +82,9 @@ func (this *RecordReaderJSON) Read(
 			// xxx make helper functions
 			sval, ok := value.(string)
 			if ok {
-				mval := lib.MlrvalFromInferredType(sval)
+				// If it's double-quoted, leave it as a string, even if it
+				// looks like something parseable as int or float.
+				mval := lib.MlrvalFromString(sval)
 				lrec.Put(&key, &mval)
 			} else {
 				nval, ok := value.(json.Number)
