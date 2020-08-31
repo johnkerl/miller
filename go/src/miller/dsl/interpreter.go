@@ -205,6 +205,17 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 		break
 	}
 
+	switch sval {
+	case "+":
+		// xxx make a lib method -- Itoa64
+		//return lib.Itoa64(leftInt + rightInt), true, nil
+		a := lib.MlrvalFromInt64String(leftValue)
+		b := lib.MlrvalFromInt64String(rightValue)
+		c := lib.MlrvalPlus(&a, &b)
+		return c.String(), true, nil
+		break
+	}
+
 	// make a helper method for int-pairings
 	leftInt, lerr := strconv.ParseInt(leftValue, 10, 0)
 	if lerr != nil {
@@ -223,10 +234,6 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	}
 
 	switch sval {
-	case "+":
-		// xxx make a lib method -- Itoa64
-		return lib.Itoa64(leftInt + rightInt), true, nil
-		break
 	case "-":
 		return lib.Itoa64(leftInt - rightInt), true, nil
 		break

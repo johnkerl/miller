@@ -54,11 +54,11 @@ import (
 //static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT        FLOAT      BOOL
 //	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,        _2,        _err},
+//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2___,        _2___,        _err},
 //	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt,      _err},
 //	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*INT*/    {_err, _1,    _emt, _err,  plus_n_ii, plus_f_if, _err},
-//	/*FLOAT*/  {_err, _1,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
+//	/*INT*/    {_err, _1___,    _emt, _err,  plus_n_ii, plus_f_if, _err},
+//	/*FLOAT*/  {_err, _1___,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
 //	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err,      _err},
 //};
 
@@ -66,15 +66,15 @@ import (
 type MVType int
 
 const (
-	MT_ERROR MVType = iota
-	MT_ABSENT
-	MT_VOID
-	MT_STRING
-	MT_INT
-	MT_FLOAT
-	MT_BOOL
+	MT_ERROR MVType = 0
+	MT_ABSENT = 1
+	MT_VOID = 2
+	MT_STRING = 3
+	MT_INT = 4
+	MT_FLOAT = 5
+	MT_BOOL = 6
 	// Not a type -- this is a dimension for disposition matrices
-	MT_DIM
+	MT_DIM = 7
 )
 
 // ----------------------------------------------------------------
@@ -130,7 +130,9 @@ func MlrvalFromInt64String(input string) Mlrval {
 	ival, err := strconv.ParseInt(input, 10, 64)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Internal coding error detected")
+		// xxx get file/line info here .......
+		fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
+		os.Exit(1)
 	}
 
 	return Mlrval{
@@ -160,7 +162,9 @@ func MlrvalFromFloat64String(input string) Mlrval {
 	fval, err := strconv.ParseFloat(input, 64)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Internal coding error detected")
+		// xxx panic ?
+		fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
+		os.Exit(1)
 	}
 	return Mlrval{
 		MT_FLOAT,
@@ -217,6 +221,38 @@ func MlrvalFromBoolean(input bool) Mlrval {
 func (this *Mlrval) setPrintRep() {
 	if !this.printrepValid {
 		// xxx do it -- disposition vector
+		// xxx temp temp temp temp temp
+		switch this.mvtype {
+		case MT_ERROR:
+			this.printrep = "(error)" // xxx constdef at top of file
+			break
+		case MT_ABSENT:
+			// Callsites should be using absence to do non-assigns, so flag
+			// this clearly visually if it should (buggily) slip through to
+			// user-level visibility.
+			this.printrep = "(absent)" // xxx constdef at top of file
+			break
+		case MT_VOID:
+			this.printrep = "" // xxx constdef at top of file
+			break
+		case MT_STRING:
+			// panic i suppose
+			break
+		case MT_INT:
+			this.printrep = strconv.FormatInt(this.intval, 10)
+			break
+		case MT_FLOAT:
+			// xxx temp -- OFMT etc ...
+			this.printrep = strconv.FormatFloat(this.floatval, 'g', -1, 64)
+			break
+		case MT_BOOL:
+			if this.boolval == true {
+				this.printrep = "true"
+			} else {
+				this.printrep = "false"
+			}
+			break
+		}
 		this.printrepValid = true
 	}
 }
@@ -225,9 +261,9 @@ func (this *Mlrval) String() string {
 	return this.printrep
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 // xxx comment why short names
-func _err(val1, val2 *Mlrval) Mlrval {
+func _erro(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromError()
 }
 func _absn(val1, val2 *Mlrval) Mlrval {
@@ -236,32 +272,76 @@ func _absn(val1, val2 *Mlrval) Mlrval {
 func _void(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromVoid()
 }
-func _1(val1, val2 *Mlrval) Mlrval {
+func _1___(val1, val2 *Mlrval) Mlrval {
 	return *val1
 }
-func _2(val1, val2 *Mlrval) Mlrval {
+func _2___(val1, val2 *Mlrval) Mlrval {
 	return *val2
 }
 
 // ----------------------------------------------------------------
-//func plus_n_ii(val1, val2 *Mlrval) Mlrval {
-//}
-//func plus_f_fi(val1, val2 *Mlrval) Mlrval {
-//}
-//func plus_f_if(val1, val2 *Mlrval) Mlrval {
-//}
-//func plus_f_ff(val1, val2 *Mlrval) Mlrval {
-//}
+// Auto-overflows up to float.  Additions & subtractions overflow by at most
+// one bit so it suffices to check sign-changes.
+func plus_n_ii(val1, val2 *Mlrval) Mlrval {
+	a := val1.intval
+	b := val2.intval
+	c := a + b
+
+	overflowed := false
+	if a > 0 {
+		if b > 0 && c < 0 {
+			overflowed = true
+		}
+	} else if a < 0 {
+		if b < 0 && c > 0 {
+			overflowed = true
+		}
+	}
+
+	if overflowed {
+		return MlrvalFromFloat64(float64(a) + float64(b))
+	} else {
+		return MlrvalFromInt64(c)
+	}
+}
+
+func plus_f_fi(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromFloat64(val1.floatval + float64(val2.intval))
+}
+func plus_f_if(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromFloat64(float64(val1.intval) + val2.floatval)
+}
+func plus_f_ff(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromFloat64(val1.floatval + val2.floatval)
+}
+
+//  // var pfunc func(*Mlrval, *Mlrval) Mlrval
+type dyadicFunc func(*Mlrval, *Mlrval) Mlrval
+
+var plusDispositions = [MT_DIM][MT_DIM]dyadicFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, plus_n_ii, plus_f_if, _erro},
+	/*FLOAT  */ {_erro, _1___, _void, _erro, plus_f_fi, plus_f_ff, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalPlus(val1, val2 *Mlrval) Mlrval {
+	return plusDispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
 
 // ----------------------------------------------------------------
 //static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT        FLOAT      BOOL
 //	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,        _2,        _err},
+//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2___,        _2___,        _err},
 //	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt,      _err},
 //	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*INT*/    {_err, _1,    _emt, _err,  plus_n_ii, plus_f_if, _err},
-//	/*FLOAT*/  {_err, _1,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
+//	/*INT*/    {_err, _1___,    _emt, _err,  plus_n_ii, plus_f_if, _err},
+//	/*FLOAT*/  {_err, _1___,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
 //	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err,      _err},
 //};
 // mv_t x_xx_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
