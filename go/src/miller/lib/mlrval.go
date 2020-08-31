@@ -1,5 +1,11 @@
 package lib
 
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
+
 // Two kinds of null: absent (key not present in a record) and void (key
 // present with empty value).  Note void is an acceptable string (empty string)
 // but not an acceptable number. (In Javascript, similarly, there are null and
@@ -120,11 +126,18 @@ func MlrvalFromString(input string) Mlrval {
 
 // xxx comment why two -- one for from parsed user data; other for from math ops
 func MlrvalFromInt64String(input string) Mlrval {
+	// xxx handle octal, hex, ......
+	ival, err := strconv.ParseInt(input, 10, 64)
+	// xxx comment assummption is input-string already deemed parseable so no error return
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Internal coding error detected")
+	}
+
 	return Mlrval{
 		MT_INT,
 		input,
 		true,
-		0, // xxx parse
+		ival,
 		0.0,
 		false,
 	}
@@ -142,13 +155,19 @@ func MlrvalFromInt64(input int64) Mlrval {
 }
 
 // xxx comment why two -- one for from parsed user data; other for from math ops
+// xxx comment assummption is input-string already deemed parseable so no error return
 func MlrvalFromFloat64String(input string) Mlrval {
+	fval, err := strconv.ParseFloat(input, 64)
+	// xxx comment assummption is input-string already deemed parseable so no error return
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Internal coding error detected")
+	}
 	return Mlrval{
 		MT_FLOAT,
 		input,
 		true,
 		0,
-		0.0, // xxx parse
+		fval,
 		false,
 	}
 }
@@ -205,3 +224,47 @@ func (this *Mlrval) String() string {
 	this.setPrintRep()
 	return this.printrep
 }
+
+// ----------------------------------------------------------------
+// xxx comment why short names
+func _err(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromError()
+}
+func _absn(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromAbsent()
+}
+func _void(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromVoid()
+}
+func _1(val1, val2 *Mlrval) Mlrval {
+	return *val1
+}
+func _2(val1, val2 *Mlrval) Mlrval {
+	return *val2
+}
+
+// ----------------------------------------------------------------
+//func plus_n_ii(val1, val2 *Mlrval) Mlrval {
+//}
+//func plus_f_fi(val1, val2 *Mlrval) Mlrval {
+//}
+//func plus_f_if(val1, val2 *Mlrval) Mlrval {
+//}
+//func plus_f_ff(val1, val2 *Mlrval) Mlrval {
+//}
+
+// ----------------------------------------------------------------
+//static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
+//	//         ERROR  ABSENT EMPTY STRING INT        FLOAT      BOOL
+//	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err,      _err},
+//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,        _2,        _err},
+//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt,      _err},
+//	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err,      _err},
+//	/*INT*/    {_err, _1,    _emt, _err,  plus_n_ii, plus_f_if, _err},
+//	/*FLOAT*/  {_err, _1,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
+//	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err,      _err},
+//};
+// mv_t x_xx_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+// func MvPlus(val1, val2 *Mlrval) Mlrval {
+//	return plusDispositions[val1.mvtype][val2.mvtype]
+// }
