@@ -23,19 +23,17 @@ bonuses:
 also:
 * type up a why-go part:
   o 100% vs 240% CPU
-  o solve the streaming-json-reader problem, and some timezone/DST issues
-  o it'll make it easier for others to contribute (IMHO mappers easy to read; mlhmmv impenetrable)
-  o fun :)
+  o incorporate go/README.md notes
 
 long-term:
-* srecs as string -> mlrvals, then mlrval | mlhmmv
+* srecs as string -> mlrvals, then (mlrval | mlhmmv)
 * support full json read/write
   o only requirement is that top-level be sequence of string-valued objects ...
   o json-to-json cat-mapping should be identical
   o json-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}
 
 gocc upstreams:
-* support "..." in the lexer part
+* support "abc" (not just 'a' 'b' 'c') in the lexer part
 * research customization of error-handling ... line numbers in particular ...
 
 ----------------------------------------------------------------
@@ -45,4 +43,3 @@ nits:
 * all manner of xxx
 * support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
-* go through and make various class attributes private (not Lrec/LrecEntry but others ... ?)
