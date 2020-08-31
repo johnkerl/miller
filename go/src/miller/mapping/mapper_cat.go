@@ -9,8 +9,8 @@ type MapperCat struct {
 	// stateless
 }
 
-func NewMapperCat() *MapperCat {
-	return &MapperCat{}
+func NewMapperCat() (*MapperCat, error) {
+	return &MapperCat{}, nil
 }
 
 func (this *MapperCat) Name() string {

@@ -2,7 +2,6 @@ package mapping
 
 import (
 	"fmt"
-	"os"
 
 	"miller/containers"
 	"miller/dsl"
@@ -16,16 +15,15 @@ type MapperPut struct {
 	interpreter *dsl.Interpreter
 }
 
-func NewMapperPut(dslString string) *MapperPut {
+func NewMapperPut(dslString string) (*MapperPut, error) {
 	ast, err := NewASTFromString(dslString)
 	if err != nil {
-		fmt.Println(err) // xxx error propagate to caller -- for all mapper constructors
-		os.Exit(1)
+		return nil, err
 	}
 	return &MapperPut{
 		ast,
 		dsl.NewInterpreter(),
-	}
+	}, nil
 }
 
 // xxx note (package cycle) why not a dsl.AST constructor :(

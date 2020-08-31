@@ -11,10 +11,10 @@ type MapperTac struct {
 	lrecs *list.List
 }
 
-func NewMapperTac() *MapperTac {
+func NewMapperTac() (*MapperTac, error) {
 	return &MapperTac{
 		list.New(),
-	}
+	}, nil
 }
 
 func (this *MapperTac) Name() string {

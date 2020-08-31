@@ -1,6 +1,6 @@
 package mapping
 
-func Create(mapperName string, dslString string) IRecordMapper {
+func Create(mapperName string, dslString string) (IRecordMapper, error) {
 	switch mapperName {
 	case "cat":
 		return NewMapperCat()
@@ -13,6 +13,6 @@ func Create(mapperName string, dslString string) IRecordMapper {
 	case "tac":
 		return NewMapperTac()
 	default:
-		return nil
+		return nil, nil
 	}
 }

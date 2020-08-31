@@ -9,8 +9,8 @@ type MapperNothing struct {
 	// stateless
 }
 
-func NewMapperNothing() *MapperNothing {
-	return &MapperNothing{}
+func NewMapperNothing() (*MapperNothing, error) {
+	return &MapperNothing{}, nil
 }
 
 func (this *MapperNothing) Name() string {

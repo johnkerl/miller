@@ -32,7 +32,10 @@ func Stream(
 		return errors.New("Input format not found: " + inputFormatName)
 	}
 
-	recordMapper := mapping.Create(mapperName, dslString) // xxx temp
+	recordMapper, err := mapping.Create(mapperName, dslString) // xxx temp
+	if err != nil {
+		return err
+	}
 	if recordMapper == nil {
 		return errors.New("Mapper not found: " + mapperName)
 	}
