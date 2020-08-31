@@ -10,5 +10,4 @@
   * String/number-formatting issues in https://github.com/johnkerl/miller/issues/211 https://github.com/johnkerl/miller/issues/178 https://github.com/johnkerl/miller/issues/151 https://github.com/johnkerl/miller/issues/259 will be fixed during the Go port.
   * I think some DST/timezone issues such as https://github.com/johnkerl/miller/issues/359 will be easier to fix using the Go datetime library than using the C datetime library
   * The code will be easier to read and, I hope, easier for others to contribute to.
-* In the meantime I will still keep fixing bugs, doing some features, in C on Miller 5.x.
-
+* In the meantime I will still keep fixing bugs, doing some features, etc in C on Miller 5.x.
