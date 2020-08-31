@@ -8,9 +8,10 @@ import (
 type TNodeType string
 
 const (
-	NodeTypeStringLiteral  TNodeType = "StringLiteral"
-	NodeTypeNumberLiteral  = "NumberLiteral"
-	NodeTypeBooleanLiteral = "BooleanLiteral"
+	NodeTypeStringLiteral TNodeType = "StringLiteral"
+	NodeTypeIntLiteral              = "IntLiteral"
+	NodeTypeFloatLiteral            = "FloatLiteral"
+	NodeTypeBoolLiteral             = "BoolLiteral"
 
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"

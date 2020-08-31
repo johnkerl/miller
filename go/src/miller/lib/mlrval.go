@@ -6,78 +6,54 @@ import (
 	"strconv"
 )
 
-// Two kinds of null: absent (key not present in a record) and void (key
-// present with empty value).  Note void is an acceptable string (empty string)
-// but not an acceptable number. (In Javascript, similarly, there are null and
-// undefined.) Void-valued mlrvals have u.strv = "".
-
-// #define MT_ERROR    0 // E.g. error encountered in one eval & it propagates up the AST.
-
-// --> JS undefined -- rename this -- or maybe MT_ABSENT ok ...
-// #define MT_ABSENT   1 // No such key, e.g. $z in 'x=,y=2'
-
-// --> JS null -- rename this -- or maybe MT_VOID
-// xxx note it seralizes to "" ... which is kinda whack ...
-// #define MT_EMPTY    2 // Empty value, e.g. $x in 'x=,y=2'
-
-// #define MT_STRING   3
-// #define MT_INT      4
-// #define MT_FLOAT    5
-// #define MT_BOOL     6
-// #define MT_DIM      7
-
-// typedef struct _mv_t {
-// 	union {
-// 		char*      strv;  // MT_STRING and MT_EMPTY
-// 		long long  intv;  // MT_INT, and == 0 for MT_ABSENT and MT_ERROR
-// 		double     fltv;  // MT_FLOAT
-// 		int        boolv; // MT_BOOL
-// 	} u;
-// 	unsigned char type;
-// } mv_t;
-
-// Requirements:
+// ================================================================
+// Requirements for mlrvals:
+//
 // * Keep original string-formatting even if parseable/parsed as int
 //   o E.g. if 005 (octal), pass through as 005 unless math is done on it
 //   o Likewise with number of decimal places -- 7.4 not 7.400 or (worse) 7.399999999
 // * Invalidate the string-formatting as the output of a computational result
 // * Have number-to-string formatting methods in the API/DSL which stick the string format
 // * Final to-string method
-
+//
 // Also:
-// * split current C mvfuncs into mlrval-private (dispo matrices etc) and new
+// * Split current C mvfuncs into mlrval-private (dispo matrices etc) and new
 //   mvfuncs.go where the latter don't need access to private members
+// ================================================================
 
-// Question:
-// * What to do with disposition matrices from the C impl?
-//   Example:
-//static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT        FLOAT      BOOL
-//	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2___,        _2___,        _err},
-//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt,      _err},
-//	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*INT*/    {_err, _1___,    _emt, _err,  plus_n_ii, plus_f_if, _err},
-//	/*FLOAT*/  {_err, _1___,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
-//	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err,      _err},
-//};
+// ================================================================
+// There are two kinds of null: ABSENT (key not present in a record) and VOID
+// (key present with empty value).  Note void is an acceptable string (empty
+// string) but not an acceptable number. (In Javascript, similarly, there are
+// undefined and null, respectively.)
+// ================================================================
 
-// ----------------------------------------------------------------
+// ================================================================
 type MVType int
 
 const (
+	// E.g. error encountered in one eval & it propagates up the AST at evaluation time:
 	MT_ERROR MVType = 0
+
+	// Key not present in input record, e.g. 'foo = $nosuchkey'
 	MT_ABSENT = 1
+
+	// Key present in input record with empty value, e.g. input data '$x=,$y=2'
 	MT_VOID = 2
+
 	MT_STRING = 3
+
 	MT_INT = 4
+
 	MT_FLOAT = 5
+
 	MT_BOOL = 6
+
 	// Not a type -- this is a dimension for disposition matrices
 	MT_DIM = 7
 )
 
-// ----------------------------------------------------------------
+// ================================================================
 type Mlrval struct {
 	mvtype        MVType
 	printrep      string
@@ -87,7 +63,7 @@ type Mlrval struct {
 	boolval       bool
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 func MlrvalFromError() Mlrval {
 	return Mlrval{
 		MT_ERROR,
@@ -115,6 +91,7 @@ func MlrvalFromVoid() Mlrval {
 	}
 }
 
+// ----------------------------------------------------------------
 func MlrvalFromString(input string) Mlrval {
 	return Mlrval{
 		MT_STRING,
@@ -124,17 +101,16 @@ func MlrvalFromString(input string) Mlrval {
 	}
 }
 
+// ----------------------------------------------------------------
 // xxx comment why two -- one for from parsed user data; other for from math ops
 func MlrvalFromInt64String(input string) Mlrval {
-	// xxx handle octal, hex, ......
-	ival, err := strconv.ParseInt(input, 10, 64)
+	ival, ok := tryInt64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
-	if err != nil {
+	if !ok {
 		// xxx get file/line info here .......
 		fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
 		os.Exit(1)
 	}
-
 	return Mlrval{
 		MT_INT,
 		input,
@@ -148,7 +124,7 @@ func MlrvalFromInt64String(input string) Mlrval {
 func MlrvalFromInt64(input int64) Mlrval {
 	return Mlrval{
 		MT_INT,
-		"(uninit)",
+		"(bug-if-you-see-this)",
 		false,
 		input,
 		0.0,
@@ -156,30 +132,42 @@ func MlrvalFromInt64(input int64) Mlrval {
 	}
 }
 
+func tryInt64FromString(input string) (int64, bool) {
+	// xxx need to handle octal, hex, ......
+	ival, err := strconv.ParseInt(input, 10, 64)
+	if err == nil {
+		return ival, true
+	} else {
+		return 0, false
+	}
+}
+
+// ----------------------------------------------------------------
 // xxx comment why two -- one for from parsed user data; other for from math ops
 // xxx comment assummption is input-string already deemed parseable so no error return
+
 func MlrvalFromFloat64String(input string) Mlrval {
-	fval, err := strconv.ParseFloat(input, 64)
-	// xxx comment assummption is input-string already deemed parseable so no error return
-	if err != nil {
-		// xxx panic ?
-		fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
-		os.Exit(1)
-	}
-	return Mlrval{
-		MT_FLOAT,
-		input,
-		true,
-		0,
-		fval,
-		false,
-	}
+    fval, ok := tryFloat64FromString(input)
+    // xxx comment assummption is input-string already deemed parseable so no error return
+    if !ok {
+        // xxx get file/line info here .......
+        fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
+        os.Exit(1)
+    }
+    return Mlrval{
+        MT_FLOAT,
+        input,
+        true,
+        0,
+        fval,
+        false,
+    }
 }
 
 func MlrvalFromFloat64(input float64) Mlrval {
 	return Mlrval{
 		MT_FLOAT,
-		"(uninit)",
+		"(bug-if-you-see-this)",
 		false,
 		0,
 		input,
@@ -187,6 +175,16 @@ func MlrvalFromFloat64(input float64) Mlrval {
 	}
 }
 
+func tryFloat64FromString(input string) (float64, bool) {
+    ival, err := strconv.ParseFloat(input, 64)
+    if err == nil {
+        return ival, true
+    } else {
+        return 0, false
+    }
+}
+
+// ----------------------------------------------------------------
 func MlrvalFromTrue() Mlrval {
 	return Mlrval{
 		MT_BOOL,
@@ -209,15 +207,50 @@ func MlrvalFromFalse() Mlrval {
 	}
 }
 
-func MlrvalFromBoolean(input bool) Mlrval {
-	if input == true {
+func MlrvalFromBoolString(input string) Mlrval {
+	if input == "true" {
 		return MlrvalFromTrue()
 	} else {
 		return MlrvalFromFalse()
 	}
+	// else panic
+}
+
+func tryBoolFromBoolString(input string) (bool, bool) {
+	if input == "true" {
+		return true, true
+	} else if input == "false"{
+		return false, true
+	} else {
+		return false, false
+	}
 }
 
 // ----------------------------------------------------------------
+func MlrvalFromInferredType(input string) Mlrval {
+	// xxx the parsing has happened so stash it ...
+	// xxx emphasize the invariant that a non-invalid printrep always
+	// matches the nval ...
+	_, iok := tryInt64FromString(input)
+	if iok {
+		return MlrvalFromInt64String(input)
+	}
+
+	_, fok := tryFloat64FromString(input)
+	if fok {
+		return MlrvalFromFloat64String(input)
+	}
+
+	_, bok := tryBoolFromBoolString(input)
+	if bok {
+		return MlrvalFromBoolString(input)
+	}
+
+	return MlrvalFromString(input)
+}
+
+// ================================================================
+// xxx comment about JIT-parsing of string backings
 func (this *Mlrval) setPrintRep() {
 	if !this.printrepValid {
 		// xxx do it -- disposition vector
@@ -230,7 +263,7 @@ func (this *Mlrval) setPrintRep() {
 			// Callsites should be using absence to do non-assigns, so flag
 			// this clearly visually if it should (buggily) slip through to
 			// user-level visibility.
-			this.printrep = "(absent)" // xxx constdef at top of file
+			this.printrep = "(bug-if-you-see-this)" // xxx constdef at top of file
 			break
 		case MT_VOID:
 			this.printrep = "" // xxx constdef at top of file
@@ -332,19 +365,3 @@ var plusDispositions = [MT_DIM][MT_DIM]dyadicFunc{
 func MlrvalPlus(val1, val2 *Mlrval) Mlrval {
 	return plusDispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
-
-// ----------------------------------------------------------------
-//static mv_binary_func_t* plus_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT        FLOAT      BOOL
-//	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2___,        _2___,        _err},
-//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt,      _err},
-//	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err,      _err},
-//	/*INT*/    {_err, _1___,    _emt, _err,  plus_n_ii, plus_f_if, _err},
-//	/*FLOAT*/  {_err, _1___,    _emt, _err,  plus_f_fi, plus_f_ff, _err},
-//	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err,      _err},
-//};
-// mv_t x_xx_plus_func(mv_t* pval1, mv_t* pval2) { return (plus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
-// func MvPlus(val1, val2 *Mlrval) Mlrval {
-//	return plusDispositions[val1.mvtype][val2.mvtype]
-// }

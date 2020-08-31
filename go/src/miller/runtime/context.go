@@ -44,6 +44,7 @@ func NewContext() *Context {
 func (this *Context) UpdateForStartOfFile(filename string) {
 	this.FILENAME = filename
 	this.FILENUM++
+	this.FNR = 0
 }
 
 func (this *Context) UpdateForInputRecord(inrec *containers.Lrec) {
