@@ -1,8 +1,9 @@
 # Status of the Go port
 
-* This is not necessarily a full Go port of Miller. At the moment, it's a little spot for some experimentation. Things are very rough and very iterative.
+* This is not necessarily a full Go port of Miller. At the moment, it's a little spot for some experimentation. Things are very rough and very iterative and very incomplete.
 * One reason Miller exists is to be a useful tool for myself and others; another is it's fun to write. At bare minimum, I'll re-teach myself some Go.
 * In all likelihood though this will turn into a full port which will someday become Miller 6.0.
+* I hope to retain backward compatibility at the command-line level as much as possible.
 * Benefits:
   * The lack of a streaming (record-by-record) JSON reader in the C implementation (https://github.com/johnkerl/miller/issues/99) is immediately solved in the Go implementation.
   * The quoted-DKVP feature from https://github.com/johnkerl/miller/issues/266 will be easily addressed.
