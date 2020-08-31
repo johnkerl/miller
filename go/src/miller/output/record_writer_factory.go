@@ -10,6 +10,8 @@ func Create(outputFormatName string) IRecordWriter {
 		return NewRecordWriterJSON() // TODO: parameterize
 	case "nidx":
 		return NewRecordWriterNIDX(",") // TODO: parameterize
+	case "pprint":
+		return NewRecordWriterPPRINT() // TODO: parameterize
 	case "xtab":
 		return NewRecordWriterXTAB() // TODO: parameterize
 	default:
