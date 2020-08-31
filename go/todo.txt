@@ -8,12 +8,15 @@ harder / more worthy:
 * sort
 * stats1
 * calendar/DST/TZ
-! DSL
+~ DSL
 
 easier:
 * most of the verbs
 * most of the file formats
 * then-chaining
+
+bonuses:
+* non-lite dkvp as easy extension of golib CSV reader :D
 
 long-term:
 * srecs as string -> mlrvals, then mlrval | mlhmmv

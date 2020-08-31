@@ -152,6 +152,25 @@ func (this *Interpreter) evaluateContextVariableNode(
 	case "FNR":
 		return strconv.FormatInt(context.FNR, 10), true, nil
 		break
+
+	case "IPS":
+		return context.IPS, true, nil
+		break
+	case "IFS":
+		return context.IFS, true, nil
+		break
+	case "IRS":
+		return context.IRS, true, nil
+		break
+	case "OPS":
+		return context.OPS, true, nil
+		break
+	case "OFS":
+		return context.OFS, true, nil
+		break
+	case "ORS":
+		return context.ORS, true, nil
+		break
 	}
 	return "", true, errors.New("internal coding error") // xxx libify
 }

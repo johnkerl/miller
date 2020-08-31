@@ -25,7 +25,7 @@ func (this *RecordWriterPPRINT) Write(
 	// No output until end of record stream, since we need to find out max
 	// width down each column.
 	if outrec != nil {
-		this.lrecs.PushFront(outrec)
+		this.lrecs.PushBack(outrec)
 		return
 	}
 
