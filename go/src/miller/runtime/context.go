@@ -4,6 +4,23 @@ import (
 	"miller/containers"
 )
 
+// ----------------------------------------------------------------
+type LrecAndContext struct {
+	Lrec    *containers.Lrec
+	Context Context
+}
+
+func NewLrecAndContext(
+	lrec *containers.Lrec,
+	context *Context,
+) *LrecAndContext {
+	return &LrecAndContext{
+		lrec,
+		*context,
+	}
+}
+
+// ----------------------------------------------------------------
 // xxx comment about who writes this and who reads this
 type Context struct {
 	FILENAME string

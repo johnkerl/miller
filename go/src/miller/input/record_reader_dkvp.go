@@ -25,38 +25,41 @@ func NewRecordReaderDKVP(ifs string, ips string) *RecordReaderDKVP {
 
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
-	context *runtime.Context,
-	inrecs chan<- *containers.Lrec,
+	context runtime.Context,
+	inrecsAndContexts chan<- *runtime.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
 		handle := os.Stdin
-		this.processHandle(handle, "(stdin)", context, inrecs, echan)
+		this.processHandle(handle, "(stdin)", &context, inrecsAndContexts, echan)
 	} else {
 		for _, filename := range filenames {
 			handle, err := os.Open(filename)
 			if err != nil {
 				echan <- err
 			} else {
-				this.processHandle(handle, filename, context, inrecs, echan)
+				this.processHandle(handle, filename, &context, inrecsAndContexts, echan)
 				handle.Close()
 			}
 		}
 	}
-	inrecs <- nil // signals end of input record stream
+	inrecsAndContexts <- runtime.NewLrecAndContext(
+		nil, // signals end of input record stream
+		&context,
+	)
 }
 
 func (this *RecordReaderDKVP) processHandle(
 	handle *os.File,
 	filename string,
 	context *runtime.Context,
-	inrecs chan<- *containers.Lrec,
+	inrecsAndContexts chan<- *runtime.LrecAndContext,
 	echan chan error,
 ) {
+	context.UpdateForStartOfFile(filename)
+
 	lineReader := bufio.NewReader(handle)
-
 	eof := false
-
 	for !eof {
 		line, err := lineReader.ReadString('\n') // TODO: auto-detect
 		if err == io.EOF {
@@ -68,7 +71,11 @@ func (this *RecordReaderDKVP) processHandle(
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
 			lrec := lrecFromDKVPLine(&line, &this.ifs, &this.ips)
-			inrecs <- lrec
+			context.UpdateForInputRecord(lrec)
+			inrecsAndContexts <- runtime.NewLrecAndContext(
+				lrec,
+				context,
+			)
 		}
 	}
 }

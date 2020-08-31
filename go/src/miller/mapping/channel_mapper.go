@@ -6,17 +6,16 @@ import (
 )
 
 func ChannelMapper(
-	inrecs <-chan *containers.Lrec,
-	context *runtime.Context,
+	inrecsAndContexts <-chan *runtime.LrecAndContext,
 	recordMapper IRecordMapper, // not *recordMapper since this is an interface
 	outrecs chan<- *containers.Lrec,
 ) {
 	for {
-		lrec := <-inrecs
+		lrecAndContext := <-inrecsAndContexts
+		lrec := lrecAndContext.Lrec
+		context := lrecAndContext.Context
 
-		context.UpdateForInputRecord(lrec)
-
-		recordMapper.Map(lrec, context, outrecs)
+		recordMapper.Map(lrec, &context, outrecs)
 		if lrec == nil { // end of stream
 			break
 		}

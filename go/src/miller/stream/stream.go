@@ -21,11 +21,7 @@ func Stream(
 	outputFormatName string,
 ) error {
 
-	context := runtime.NewContext()
-
-	// xxx context:
-	// * NF/NR/FNR
-	// * FILENAME/FILENUM
+	initialContext := runtime.NewContext()
 
 	recordReader := input.Create(inputFormatName)
 	if recordReader == nil {
@@ -45,14 +41,13 @@ func Stream(
 		return errors.New("Output format not found: " + outputFormatName)
 	}
 
-	inrecs := make(chan *containers.Lrec, 10)
+	inrecs := make(chan *runtime.LrecAndContext, 10)
 	echan := make(chan error, 1)
 	outrecs := make(chan *containers.Lrec, 1)
 	donechan := make(chan bool, 1)
 
-	// xxx put context instance on the channels w/ the records
-	go recordReader.Read(filenames, context, inrecs, echan)
-	go mapping.ChannelMapper(inrecs, context, recordMapper, outrecs)
+	go recordReader.Read(filenames, *initialContext, inrecs, echan)
+	go mapping.ChannelMapper(inrecs, recordMapper, outrecs)
 	go output.ChannelWriter(outrecs, recordWriter, donechan, os.Stdout)
 
 	done := false

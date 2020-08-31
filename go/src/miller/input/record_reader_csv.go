@@ -25,32 +25,35 @@ func NewRecordReaderCSV( /*ifs string, ips string*/ ) *RecordReaderCSV {
 
 func (this *RecordReaderCSV) Read(
 	filenames []string,
-	context *runtime.Context,
-	inrecs chan<- *containers.Lrec,
+	context runtime.Context,
+	inrecsAndContexts chan<- *runtime.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
 		handle := os.Stdin
-		this.processHandle(handle, "(stdin)", context, inrecs, echan)
+		this.processHandle(handle, "(stdin)", &context, inrecsAndContexts, echan)
 	} else {
 		for _, filename := range filenames {
 			handle, err := os.Open(filename)
 			if err != nil {
 				echan <- err
 			} else {
-				this.processHandle(handle, filename, context, inrecs, echan)
+				this.processHandle(handle, filename, &context, inrecsAndContexts, echan)
 				handle.Close()
 			}
 		}
 	}
-	inrecs <- nil // signals end of input record stream
+	inrecsAndContexts <- runtime.NewLrecAndContext(
+		nil, // signals end of input record stream
+		&context,
+	)
 }
 
 func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
 	context *runtime.Context,
-	inrecs chan<- *containers.Lrec,
+	inrecsAndContexts chan<- *runtime.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -94,7 +97,11 @@ func (this *RecordReaderCSV) processHandle(
 			// to do: avoid re-walk ...
 			lrec.Put(&key, &value)
 		}
+		context.UpdateForInputRecord(lrec)
 
-		inrecs <- lrec
+		inrecsAndContexts <- runtime.NewLrecAndContext(
+			lrec,
+			context,
+		)
 	}
 }

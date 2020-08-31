@@ -1,15 +1,14 @@
 package input
 
 import (
-	"miller/containers"
 	"miller/runtime"
 )
 
 type IRecordReader interface {
 	Read(
 		filenames []string,
-		context *runtime.Context,
-		inrecs chan<- *containers.Lrec,
+		initialContext runtime.Context,
+		inrecsAndContexts chan<- *runtime.LrecAndContext,
 		echan chan error,
 	)
 }
