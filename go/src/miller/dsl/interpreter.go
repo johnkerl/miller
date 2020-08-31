@@ -5,13 +5,13 @@ import (
 	"strconv"
 
 	"miller/containers"
+	"miller/lib"
 	"miller/runtime"
 )
 
 // Just a very temporary CST-free, AST-only interpreter to get me executing
 // some DSL code with a minimum of keystroking, while I work out other issues
 // including mlrval-valued lrecs.
-
 type Interpreter struct {
 }
 
@@ -184,21 +184,52 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	case ".":
 		return leftValue + rightValue, true, nil
 		break
+	}
+
+	// make a helper method for int-pairings
+	leftInt, lerr := strconv.ParseInt(leftValue, 10, 0)
+	if lerr != nil {
+		// to do: consider error-propagation through the AST evaluator, with
+		// null/undefined/error in the binop matrices etc.
+		//
+		// need to separate internal coding errors, from data-dependent ones
+		//
+		//return "", true, lerr
+		return "(error)", true, nil
+	}
+	rightInt, rerr := strconv.ParseInt(rightValue, 10, 0)
+	if rerr != nil {
+		//return "", true, rerr
+		return "(error)", true, nil
+	}
+
+	switch sval {
 	case "+":
-		return "", true, errors.New("unhandled")
+		// xxx make a lib method -- Itoa64
+		return lib.Itoa64(leftInt+rightInt), true, nil
 		break
 	case "-":
-		return "", true, errors.New("unhandled")
+		return lib.Itoa64(leftInt-rightInt), true, nil
 		break
 	case "*":
-		return "", true, errors.New("unhandled")
+		return lib.Itoa64(leftInt*rightInt), true, nil
 		break
 	case "/":
-		return "", true, errors.New("unhandled")
+		return lib.Itoa64(leftInt/rightInt), true, nil
+		break
+	case "^":
+		return lib.Itoa64(leftInt^rightInt), true, nil
+		break
+	case "&":
+		return lib.Itoa64(leftInt&rightInt), true, nil
+		break
+	case "|":
+		return lib.Itoa64(leftInt|rightInt), true, nil
 		break
 	case "//":
 		return "", true, errors.New("unhandled")
 		break
 	}
+
 	return "", true, errors.New("internal coding error") // xxx libify
 }
