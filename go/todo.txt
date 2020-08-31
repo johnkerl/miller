@@ -5,6 +5,8 @@ harder / more worthy:
 ~ streaming JSON reader
   -> w/ and w/o enclosing [...] !
 ~ streaming RFC-compliant CSV reader
+! srec with mlrval values
+  ! solve the JIT issue for formatting of numeric values
 * sort
 * stats1
 * calendar/DST/TZ
@@ -17,6 +19,13 @@ easier:
 
 bonuses:
 * non-lite dkvp as easy extension of golib CSV reader :D
+
+also:
+* type up a why-go part:
+  o 100% vs 240% CPU
+  o solve the streaming-json-reader problem, and some timezone/DST issues
+  o it'll make it easier for others to contribute (IMHO mappers easy to read; mlhmmv impenetrable)
+  o fun :)
 
 long-term:
 * srecs as string -> mlrvals, then mlrval | mlhmmv
@@ -35,3 +44,5 @@ nits:
 * "...\"..." into string-literal parsing ...
 * all manner of xxx
 * support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
+* AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
+* go through and make various class attributes private (not Lrec/LrecEntry but others ... ?)
