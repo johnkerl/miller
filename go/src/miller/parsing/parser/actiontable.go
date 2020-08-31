@@ -72,10 +72,10 @@ var actionTab = actionTable{
 			shift(9),  // md_token_field_name
 			shift(10), // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -150,10 +150,10 @@ var actionTab = actionTable{
 			nil,          // md_token_field_name
 			nil,          // $[
 			nil,          // ]
-			nil,          // md_token_number
+			nil,          // md_token_int_literal
+			nil,          // md_token_float_literal
 			nil,          // md_token_string_literal
-			nil,          // md_token_true
-			nil,          // md_token_false
+			nil,          // md_token_boolean_literal
 			nil,          // md_token_IPS
 			nil,          // md_token_IFS
 			nil,          // md_token_IRS
@@ -228,10 +228,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -306,10 +306,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -384,10 +384,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -462,10 +462,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -540,10 +540,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -618,10 +618,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -696,10 +696,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -774,10 +774,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -852,10 +852,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -930,10 +930,10 @@ var actionTab = actionTable{
 			shift(9),  // md_token_field_name
 			shift(10), // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -1008,10 +1008,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1086,10 +1086,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1164,10 +1164,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1242,10 +1242,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1320,10 +1320,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1398,10 +1398,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1476,10 +1476,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1554,10 +1554,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1632,10 +1632,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1710,10 +1710,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1788,10 +1788,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1866,10 +1866,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -1944,10 +1944,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -2022,10 +2022,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -2100,10 +2100,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -2178,10 +2178,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -2256,10 +2256,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -2334,10 +2334,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(76), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2412,10 +2412,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			shift(134), // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2490,10 +2490,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(24), // ], reduce: RHS
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2568,10 +2568,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(26), // ], reduce: TernaryTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2646,10 +2646,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(28), // ], reduce: LogicalOrTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2724,10 +2724,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(30), // ], reduce: LogicalXORTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2802,10 +2802,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(32), // ], reduce: LogicalAndTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2880,10 +2880,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(37), // ], reduce: EqneTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -2958,10 +2958,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(42), // ], reduce: CmpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3036,10 +3036,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(44), // ], reduce: BitwiseORTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3114,10 +3114,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(46), // ], reduce: BitwiseXORTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3192,10 +3192,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(48), // ], reduce: BitwiseANDTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3270,10 +3270,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(51), // ], reduce: BitwiseShiftTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3348,10 +3348,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -3426,10 +3426,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(57), // ], reduce: AddsubdotTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3504,10 +3504,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -3582,10 +3582,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -3660,10 +3660,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -3738,10 +3738,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(65), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3816,10 +3816,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(72), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -3894,10 +3894,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -3972,10 +3972,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -4050,10 +4050,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(74), // ], reduce: PowTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4128,10 +4128,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -4206,10 +4206,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(77), // ], reduce: FieldName
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4284,10 +4284,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(78), // ], reduce: FieldName
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4362,10 +4362,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(79), // ], reduce: DirectFieldName
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4440,10 +4440,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -4518,10 +4518,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(81), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4596,10 +4596,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(82), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4674,10 +4674,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(83), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4752,10 +4752,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(84), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4830,10 +4830,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(85), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4908,10 +4908,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(86), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -4986,10 +4986,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(87), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5064,10 +5064,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(88), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5142,10 +5142,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(89), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5220,10 +5220,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(90), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5298,10 +5298,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(91), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5376,10 +5376,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(92), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5454,10 +5454,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(93), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5532,10 +5532,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(94), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5610,10 +5610,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(95), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5688,10 +5688,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(96), // ], reduce: ContextVariable
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5766,10 +5766,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -5844,10 +5844,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -5922,10 +5922,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -6000,10 +6000,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6078,10 +6078,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6156,10 +6156,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6234,10 +6234,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6312,10 +6312,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6390,10 +6390,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6468,10 +6468,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6546,10 +6546,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6624,10 +6624,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6702,10 +6702,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6780,10 +6780,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -6858,10 +6858,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -6936,10 +6936,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7014,10 +7014,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -7092,10 +7092,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -7170,10 +7170,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -7248,10 +7248,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7326,10 +7326,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7404,10 +7404,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -7482,10 +7482,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -7560,10 +7560,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7638,10 +7638,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -7716,10 +7716,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7794,10 +7794,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7872,10 +7872,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -7950,10 +7950,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -8028,10 +8028,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8106,10 +8106,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8184,10 +8184,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8262,10 +8262,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8340,10 +8340,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8418,10 +8418,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8496,10 +8496,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8574,10 +8574,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8652,10 +8652,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8730,10 +8730,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8808,10 +8808,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8886,10 +8886,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -8964,10 +8964,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9042,10 +9042,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9120,10 +9120,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9198,10 +9198,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9276,10 +9276,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -9354,10 +9354,10 @@ var actionTab = actionTable{
 			nil,       // md_token_field_name
 			nil,       // $[
 			nil,       // ]
-			nil,       // md_token_number
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
 			nil,       // md_token_string_literal
-			nil,       // md_token_true
-			nil,       // md_token_false
+			nil,       // md_token_boolean_literal
 			nil,       // md_token_IPS
 			nil,       // md_token_IFS
 			nil,       // md_token_IRS
@@ -9432,10 +9432,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9510,10 +9510,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9588,10 +9588,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9666,10 +9666,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9744,10 +9744,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9822,10 +9822,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9900,10 +9900,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -9978,10 +9978,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10056,10 +10056,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10134,10 +10134,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10212,10 +10212,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10290,10 +10290,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10368,10 +10368,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10446,10 +10446,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10524,10 +10524,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -10602,10 +10602,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -10680,10 +10680,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -10758,10 +10758,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -10836,10 +10836,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -10914,10 +10914,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -10992,10 +10992,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11070,10 +11070,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11148,10 +11148,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11226,10 +11226,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11304,10 +11304,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11382,10 +11382,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11460,10 +11460,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11538,10 +11538,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11616,10 +11616,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11694,10 +11694,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11772,10 +11772,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11850,10 +11850,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -11928,10 +11928,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12006,10 +12006,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12084,10 +12084,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12162,10 +12162,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12240,10 +12240,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12318,10 +12318,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(66), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -12396,10 +12396,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12474,10 +12474,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12552,10 +12552,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12630,10 +12630,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12708,10 +12708,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12786,10 +12786,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12864,10 +12864,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -12942,10 +12942,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(67), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13020,10 +13020,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(68), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13098,10 +13098,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(69), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13176,10 +13176,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(70), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13254,10 +13254,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(71), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13332,10 +13332,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -13410,10 +13410,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13488,10 +13488,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13566,10 +13566,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13644,10 +13644,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13722,10 +13722,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13800,10 +13800,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13878,10 +13878,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -13956,10 +13956,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14034,10 +14034,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14112,10 +14112,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14190,10 +14190,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14268,10 +14268,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14346,10 +14346,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14424,10 +14424,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -14502,10 +14502,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14580,10 +14580,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -14658,10 +14658,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -14736,10 +14736,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -14814,10 +14814,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14892,10 +14892,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -14970,10 +14970,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -15048,10 +15048,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -15126,10 +15126,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15204,10 +15204,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -15282,10 +15282,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15360,10 +15360,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15438,10 +15438,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15516,10 +15516,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -15594,10 +15594,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15672,10 +15672,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15750,10 +15750,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15828,10 +15828,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15906,10 +15906,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -15984,10 +15984,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16062,10 +16062,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16140,10 +16140,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16218,10 +16218,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16296,10 +16296,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16374,10 +16374,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16452,10 +16452,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16530,10 +16530,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16608,10 +16608,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16686,10 +16686,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16764,10 +16764,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16842,10 +16842,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			shift(365), // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -16920,10 +16920,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -16998,10 +16998,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17076,10 +17076,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17154,10 +17154,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17232,10 +17232,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17310,10 +17310,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17388,10 +17388,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17466,10 +17466,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17544,10 +17544,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17622,10 +17622,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17700,10 +17700,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17778,10 +17778,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17856,10 +17856,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -17934,10 +17934,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18012,10 +18012,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18090,10 +18090,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18168,10 +18168,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18246,10 +18246,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18324,10 +18324,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18402,10 +18402,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18480,10 +18480,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18558,10 +18558,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18636,10 +18636,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -18714,10 +18714,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18792,10 +18792,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18870,10 +18870,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -18948,10 +18948,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -19026,10 +19026,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -19104,10 +19104,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -19182,10 +19182,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -19260,10 +19260,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19338,10 +19338,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19416,10 +19416,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19494,10 +19494,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19572,10 +19572,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19650,10 +19650,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -19728,10 +19728,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19806,10 +19806,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			shift(397), // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19884,10 +19884,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -19962,10 +19962,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20040,10 +20040,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20118,10 +20118,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20196,10 +20196,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20274,10 +20274,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20352,10 +20352,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20430,10 +20430,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20508,10 +20508,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20586,10 +20586,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20664,10 +20664,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20742,10 +20742,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20820,10 +20820,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -20898,10 +20898,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -20976,10 +20976,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -21054,10 +21054,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -21132,10 +21132,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -21210,10 +21210,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -21288,10 +21288,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -21366,10 +21366,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -21444,10 +21444,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -21522,10 +21522,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -21600,10 +21600,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -21678,10 +21678,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -21756,10 +21756,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -21834,10 +21834,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -21912,10 +21912,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -21990,10 +21990,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22068,10 +22068,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22146,10 +22146,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22224,10 +22224,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22302,10 +22302,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22380,10 +22380,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22458,10 +22458,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22536,10 +22536,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22614,10 +22614,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22692,10 +22692,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22770,10 +22770,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22848,10 +22848,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -22926,10 +22926,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23004,10 +23004,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23082,10 +23082,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23160,10 +23160,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23238,10 +23238,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(27), // ], reduce: LogicalOrTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23316,10 +23316,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(29), // ], reduce: LogicalXORTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23394,10 +23394,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(31), // ], reduce: LogicalAndTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23472,10 +23472,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(33), // ], reduce: EqneTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23550,10 +23550,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(34), // ], reduce: EqneTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23628,10 +23628,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(35), // ], reduce: EqneTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23706,10 +23706,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(36), // ], reduce: EqneTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23784,10 +23784,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(38), // ], reduce: CmpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23862,10 +23862,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(39), // ], reduce: CmpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -23940,10 +23940,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(40), // ], reduce: CmpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24018,10 +24018,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(41), // ], reduce: CmpTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24096,10 +24096,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(43), // ], reduce: BitwiseORTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24174,10 +24174,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(45), // ], reduce: BitwiseXORTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24252,10 +24252,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(47), // ], reduce: BitwiseANDTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24330,10 +24330,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(49), // ], reduce: BitwiseShiftTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24408,10 +24408,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(50), // ], reduce: BitwiseShiftTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24486,10 +24486,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(52), // ], reduce: AddsubdotTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24564,10 +24564,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(53), // ], reduce: AddsubdotTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24642,10 +24642,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(54), // ], reduce: AddsubdotTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24720,10 +24720,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(55), // ], reduce: AddsubdotTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24798,10 +24798,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(56), // ], reduce: AddsubdotTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24876,10 +24876,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(58), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -24954,10 +24954,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(59), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25032,10 +25032,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(60), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25110,10 +25110,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(61), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25188,10 +25188,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(62), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25266,10 +25266,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(63), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25344,10 +25344,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(64), // ], reduce: MuldivTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25422,10 +25422,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(73), // ], reduce: PowTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25500,10 +25500,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(75), // ], reduce: AtomOrFunction
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -25578,10 +25578,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -25656,10 +25656,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -25734,10 +25734,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -25812,10 +25812,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -25890,10 +25890,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -25968,10 +25968,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26046,10 +26046,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26124,10 +26124,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26202,10 +26202,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26280,10 +26280,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26358,10 +26358,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26436,10 +26436,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26514,10 +26514,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26592,10 +26592,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26670,10 +26670,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26748,10 +26748,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26826,10 +26826,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26904,10 +26904,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -26982,10 +26982,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27060,10 +27060,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27138,10 +27138,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27216,10 +27216,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27294,10 +27294,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -27372,10 +27372,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27450,10 +27450,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27528,10 +27528,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27606,10 +27606,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27684,10 +27684,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27762,10 +27762,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27840,10 +27840,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -27918,10 +27918,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -27996,10 +27996,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28074,10 +28074,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28152,10 +28152,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28230,10 +28230,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28308,10 +28308,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -28386,10 +28386,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28464,10 +28464,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			shift(468), // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28542,10 +28542,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(80), // ], reduce: IndirectFieldName
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28620,10 +28620,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28698,10 +28698,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28776,10 +28776,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28854,10 +28854,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -28932,10 +28932,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29010,10 +29010,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29088,10 +29088,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29166,10 +29166,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29244,10 +29244,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29322,10 +29322,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29400,10 +29400,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29478,10 +29478,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29556,10 +29556,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29634,10 +29634,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29712,10 +29712,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29790,10 +29790,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29868,10 +29868,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -29946,10 +29946,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30024,10 +30024,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30102,10 +30102,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30180,10 +30180,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30258,10 +30258,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30336,10 +30336,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30414,10 +30414,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30492,10 +30492,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30570,10 +30570,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30648,10 +30648,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30726,10 +30726,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30804,10 +30804,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30882,10 +30882,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -30960,10 +30960,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -31038,10 +31038,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -31116,10 +31116,10 @@ var actionTab = actionTable{
 			shift(55), // md_token_field_name
 			shift(56), // $[
 			nil,       // ]
-			shift(57), // md_token_number
-			shift(58), // md_token_string_literal
-			shift(59), // md_token_true
-			shift(60), // md_token_false
+			shift(57), // md_token_int_literal
+			shift(58), // md_token_float_literal
+			shift(59), // md_token_string_literal
+			shift(60), // md_token_boolean_literal
 			shift(62), // md_token_IPS
 			shift(63), // md_token_IFS
 			shift(64), // md_token_IRS
@@ -31194,10 +31194,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31272,10 +31272,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31350,10 +31350,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31428,10 +31428,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31506,10 +31506,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31584,10 +31584,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31662,10 +31662,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31740,10 +31740,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31818,10 +31818,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31896,10 +31896,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -31974,10 +31974,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32052,10 +32052,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32130,10 +32130,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32208,10 +32208,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32286,10 +32286,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32364,10 +32364,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32442,10 +32442,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32520,10 +32520,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32598,10 +32598,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32676,10 +32676,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32754,10 +32754,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32832,10 +32832,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -32910,10 +32910,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -32988,10 +32988,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33066,10 +33066,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33144,10 +33144,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33222,10 +33222,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33300,10 +33300,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33378,10 +33378,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33456,10 +33456,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -33534,10 +33534,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -33612,10 +33612,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -33690,10 +33690,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -33768,10 +33768,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -33846,10 +33846,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -33924,10 +33924,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -34002,10 +34002,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34080,10 +34080,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			shift(502), // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34158,10 +34158,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34236,10 +34236,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34314,10 +34314,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34392,10 +34392,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34470,10 +34470,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34548,10 +34548,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34626,10 +34626,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34704,10 +34704,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34782,10 +34782,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34860,10 +34860,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -34938,10 +34938,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35016,10 +35016,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35094,10 +35094,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35172,10 +35172,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35250,10 +35250,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35328,10 +35328,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35406,10 +35406,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35484,10 +35484,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35562,10 +35562,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35640,10 +35640,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35718,10 +35718,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35796,10 +35796,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35874,10 +35874,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -35952,10 +35952,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36030,10 +36030,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36108,10 +36108,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36186,10 +36186,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36264,10 +36264,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36342,10 +36342,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36420,10 +36420,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36498,10 +36498,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36576,10 +36576,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36654,10 +36654,10 @@ var actionTab = actionTable{
 			shift(100), // md_token_field_name
 			shift(101), // $[
 			nil,        // ]
-			shift(102), // md_token_number
-			shift(103), // md_token_string_literal
-			shift(104), // md_token_true
-			shift(105), // md_token_false
+			shift(102), // md_token_int_literal
+			shift(103), // md_token_float_literal
+			shift(104), // md_token_string_literal
+			shift(105), // md_token_boolean_literal
 			shift(107), // md_token_IPS
 			shift(108), // md_token_IFS
 			shift(109), // md_token_IRS
@@ -36732,10 +36732,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			reduce(25), // ], reduce: TernaryTerm
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36810,10 +36810,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36888,10 +36888,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -36966,10 +36966,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37044,10 +37044,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37122,10 +37122,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37200,10 +37200,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37278,10 +37278,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37356,10 +37356,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37434,10 +37434,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37512,10 +37512,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37590,10 +37590,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37668,10 +37668,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37746,10 +37746,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37824,10 +37824,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37902,10 +37902,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -37980,10 +37980,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38058,10 +38058,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38136,10 +38136,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38214,10 +38214,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38292,10 +38292,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38370,10 +38370,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38448,10 +38448,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38526,10 +38526,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38604,10 +38604,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38682,10 +38682,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38760,10 +38760,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38838,10 +38838,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38916,10 +38916,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -38994,10 +38994,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -39072,10 +39072,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -39150,10 +39150,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -39228,10 +39228,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -39306,10 +39306,10 @@ var actionTab = actionTable{
 			shift(197), // md_token_field_name
 			shift(198), // $[
 			nil,        // ]
-			shift(199), // md_token_number
-			shift(200), // md_token_string_literal
-			shift(201), // md_token_true
-			shift(202), // md_token_false
+			shift(199), // md_token_int_literal
+			shift(200), // md_token_float_literal
+			shift(201), // md_token_string_literal
+			shift(202), // md_token_boolean_literal
 			shift(204), // md_token_IPS
 			shift(205), // md_token_IFS
 			shift(206), // md_token_IRS
@@ -39384,10 +39384,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -39462,10 +39462,10 @@ var actionTab = actionTable{
 			shift(279), // md_token_field_name
 			shift(280), // $[
 			nil,        // ]
-			shift(281), // md_token_number
-			shift(282), // md_token_string_literal
-			shift(283), // md_token_true
-			shift(284), // md_token_false
+			shift(281), // md_token_int_literal
+			shift(282), // md_token_float_literal
+			shift(283), // md_token_string_literal
+			shift(284), // md_token_boolean_literal
 			shift(286), // md_token_IPS
 			shift(287), // md_token_IFS
 			shift(288), // md_token_IRS
@@ -39540,10 +39540,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -39618,10 +39618,10 @@ var actionTab = actionTable{
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
-			nil,        // md_token_number
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
 			nil,        // md_token_string_literal
-			nil,        // md_token_true
-			nil,        // md_token_false
+			nil,        // md_token_boolean_literal
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS

@@ -15,3 +15,5 @@ bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf
 #   src/miller/parsing/parser/
 #   src/miller/parsing/token/
 #   src/miller/parsing/util/
+
+./build

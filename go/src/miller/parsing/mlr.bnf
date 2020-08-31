@@ -43,55 +43,21 @@
 // LEXICAL ELEMENTS
 // ================================================================
 
+// ----------------------------------------------------------------
+// CHARACTER CLASSES
+// ----------------------------------------------------------------
+
 _letter : 'a'-'z' | 'A'-'Z' ;
-_decimalDigit : '0'-'9' ;
-_hexDigit : '0'-'9' | 'a'-'f' | 'A'-'F';
-_idchar : _letter | _decimalDigit | '_' ;
+_decdig : '0'-'9' ;
+_hexdig : '0'-'9' | 'a'-'f' | 'A'-'F';
+_idchar : _letter | _decdig | '_' ;
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
 
-//md_token_id : _idchar { _idchar } ;
-md_token_field_name : '$' _idchar { _idchar } ;
+// ----------------------------------------------------------------
+// STRING/INT/FLOAT/BOOLEAN LITERALS
+// ----------------------------------------------------------------
 
-// : [0-9]+
-// | '0' 'x' [0-9a-fA-F]+
-
-// | [0-9]+\.[0-9]*
-// | [0-9]*\.[0-9]+
-// | [0-9]+[eE][0-9]+
-// | [0-9]+[eE]-[0-9]+
-// | [0-9]+\.[0-9]*[eE][0-9]+
-// | [0-9]+\.[0-9]*[eE]-[0-9]+
-// | [0-9]*\.[0-9]+[eE][0-9]+
-// | [0-9]*\.[0-9]+[eE]-[0-9]+ {
-
-//	// Leading minus sign is handled via the unary-minus operator, not here.
-//	// 123
-//	// 123. 123.4
-//	// .234
-//	// 1e2
-//	// 1e-2
-//	// 1.2e3 1.e3
-//	// 1.2e-3 1.e-3
-//	// .2e3
-//	// .2e-3 1.e-3
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
-//	return md_token_number;
-//}
-
-//0x[0-9a-fA-F]+ {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
-//	return md_token_number;
-//}
-
-// xxx temp -- needs floating-point literals too
-// xxx separate md_token_int and md_token_float
-md_token_number
-  : _decimalDigit { _decimalDigit }
-  | '-' _decimalDigit { _decimalDigit }
-  | '0' 'x' _hexDigit { _hexDigit }
-;
-
-// Notes:
+// Notes on string literals:
 // * " isn't included here -- need \" handling to put that inside strings
 // * GOCC seems to lack a '[^"] notation ...
 _string_literal_element
@@ -102,8 +68,54 @@ _string_literal_element
   | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
   | '\u0100'-'\U0010FFFF'
 ;
-
 md_token_string_literal : '"' {_string_literal_element} '"' ;
+
+//\"([^\\\"]|\\.)*\"\i {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_REGEXI);
+//	return md_token_regexi;
+//}
+
+// Notes on int literals:
+// * Leading minus sign is handled via the unary-minus operator, not here.
+md_token_int_literal
+  : _decdig { _decdig }
+  | '0' 'x' _hexdig { _hexdig }
+;
+
+// Notes on float literals:
+// * Leading minus sign is handled via the unary-minus operator, not here.
+// * The various shapes are for scientific notation. Examples:
+//   123
+//   123.
+//   123.4
+//   .234
+//   1e2
+//   1e-2
+//   1.2e3 1.e3
+//   1.2e-3 1.e-3
+//   .2e3
+//   .2e-3 1.e-3
+_scinotE : 'e' | 'E' ;
+md_token_float_literal
+  : _decdig { _decdig} '.' { _decdig }
+  | _decdig { _decdig}                        _scinotE     _decdig { _decdig}
+  | _decdig { _decdig}                        _scinotE '-' _decdig { _decdig}
+  | _decdig { _decdig} '.'         { _decdig} _scinotE     _decdig { _decdig}
+  | _decdig { _decdig} '.'         { _decdig} _scinotE '-' _decdig { _decdig}
+  |         { _decdig} '.' _decdig { _decdig} _scinotE     _decdig { _decdig}
+  |         { _decdig} '.' _decdig { _decdig} _scinotE '-' _decdig { _decdig}
+;
+
+// Notes on boolean literals:
+// * true and false should be defined here rather than as string-literals within
+//   the grammar -- this forces them to be keywords, not legal as variable names.
+_md_token_true : 't' 'r' 'u' 'e' ;
+_md_token_false : 'f' 'a' 'l' 's' 'e';
+md_token_boolean_literal : ( _md_token_true | _md_token_false );
+
+// ----------------------------------------------------------------
+// MILLER CONTEXT VARIABLES
+// ----------------------------------------------------------------
 
 //\"([^\\\"]|\\.)*\" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
@@ -125,17 +137,27 @@ md_token_FNR : 'F' 'N' 'R' ;
 md_token_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
 md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 
+//"M_PI" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+//	return md_token_context_variable;
+//}
+//"M_E" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+//	return md_token_context_variable;
+//}
+//"ENV" {
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ENV);
+//	return md_token_env;
+//}
+
 // ----------------------------------------------------------------
-// KEYWORDS
+// MILLER KEYWORDS
 // ----------------------------------------------------------------
 
-// NOTE: any new keywords defined here should also be documented
-/// in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
-
-// true and false should be defined here rather than as string-literals within
-// the grammar -- this forces them to be keywords, not legal as variable names.
-md_token_true : 't' 'r' 'u' 'e' ;
-md_token_false : 'f' 'a' 'l' 's' 'e';
+// Notes on keywords:
+// * Any new keywords defined here should also be documented
+//   in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
+// * true and false (boolean literals) are also keywords, defined above.
 
 //md_token_if       : 'i' 'f' ;
 //md_token_elif     : 'e' 'l' 'i' 'f' ;
@@ -230,21 +252,24 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 //	return md_token_all;
 //}
 
+// ----------------------------------------------------------------
+// FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
+// ----------------------------------------------------------------
+
+// Note: the parser depends on the dollar sign being here. If this is changed,
+// that needs to be changed as well.
+md_token_field_name : '$' _idchar { _idchar } ;
+
 //\$\* {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FULL_SREC);
 //	return md_token_full_srec;
 //}
+
 //\$ {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 //	return md_token_dollar_sign;
 //}
 
-//\$[a-zA-Z_0-9]+ {
-//	// Note: the parser depends on the dollar sign being here. If this is changed,
-//	// that needs to be changed as well.
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FIELD_NAME);
-//	return md_token_field_name;
-//}
 //\$\{([^\}]|\\.)*\} {
 //	// Note: the parser depends on the dollar sign being here. If this is changed,
 //	// that needs to be changed as well.
@@ -267,11 +292,6 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 //\@\* {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FULL_OOSVAR);
 //	return md_token_full_oosvar;
-//}
-
-//\"([^\\\"]|\\.)*\"\i {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_REGEXI);
-//	return md_token_regexi;
 //}
 
 //"map" {
@@ -303,23 +323,12 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 //	return md_token_string_literal;
 //}
 
-//"M_PI" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"M_E" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"ENV" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ENV);
-//	return md_token_env;
-//}
-
 //[a-zA-Z_][a-zA-Z_0-9]* {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 //	return md_token_non_sigil_name;
 //}
+
+
 
 // ================================================================
 // SYNTAX ELEMENTS
@@ -1281,7 +1290,7 @@ SrecAssignment
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
 
 //SrecIndirectAssignment(A)  ::=
-//	md_token_dollar_sign md_token_left_bracket RHS(B) md_token_right_bracket
+//	"$[" RHS "]"
 //	"="(O) RHS(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(
@@ -1292,10 +1301,9 @@ SrecAssignment
 //	);
 //}
 //SrecPositionalNameAssignment(A)  ::=
-//	md_token_dollar_sign
-//		md_token_left_bracket md_token_left_bracket
+//	"$[["
 //			RHS(B)
-//		md_token_right_bracket md_token_right_bracket
+//		"]]"
 //	"="(O) RHS(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(
@@ -1308,10 +1316,9 @@ SrecAssignment
 //// '$[[[3]]] = "new"' is shorthand for '$[ $[[3]] ] = "new"'.
 //// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
 //SrecPositionalValueAssignment(A)  ::=
-//	md_token_dollar_sign
-//		md_token_left_bracket md_token_left_bracket md_token_left_bracket
+//	"$[[["
 //			RHS(B)
-//		md_token_right_bracket md_token_right_bracket md_token_right_bracket
+//		"]]]"
 //	"="(O) RHS(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(
@@ -2566,7 +2573,7 @@ IndirectFieldName
 //AtomOrFunction(A) ::= PositionalSrecValue(B). {
 //	A = B;
 //}
-//PositionalSrecValue(A) ::= md_token_dollar_sign
+//PositionalSrecValue(A) ::= "$"
 //	"[[["
 //		RHS(B)
 //	"]]].  {
@@ -2589,7 +2596,7 @@ IndirectFieldName
 //OosvarKeylist(A) ::= OosvarBasename(B). {
 //	A = B;
 //}
-//OosvarKeylist(A) ::= OosvarKeylist(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//OosvarKeylist(A) ::= OosvarKeylist(B) "[" RHS(C) "]". {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2614,14 +2621,14 @@ IndirectFieldName
 //}
 
 //// E.g. @["name"]
-//OosvarBasename(A) ::= md_token_at_sign md_token_left_bracket RHS(B) md_token_right_bracket. {
+//OosvarBasename(A) ::= md_token_at_sign "[" RHS(B) "]". {
 //	A = mlr_dsl_ast_node_alloc_unary("oosvar_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST, B);
 //}
 
 //LocalMapKeylist(A) ::= NonindexedLocalVariable(B). {
 //	A = B;
 //}
-//LocalMapKeylist(A) ::= LocalMapKeylist(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//LocalMapKeylist(A) ::= LocalMapKeylist(B) "[" RHS(C) "]". {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2630,16 +2637,11 @@ IndirectFieldName
 // to the lrecs, with mlrvals there! :)
 
 AtomOrFunction
-  : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >> ;
-
-AtomOrFunction
-  : md_token_string_literal << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >> ;
-
-AtomOrFunction
-  : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
-
-AtomOrFunction
-  : md_token_false  << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
+  : md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >>
+  | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >>
+  | md_token_string_literal  << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >>
+  | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >>
+;
 
 //AtomOrFunction(A) ::= md_regexi(B). {
 //	A = B;
@@ -2657,11 +2659,11 @@ AtomOrFunction
 //	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 //}
 
-//IndexedLocalVariable(A) ::= NonindexedLocalVariable(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//IndexedLocalVariable(A) ::= NonindexedLocalVariable(B) "[" RHS(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE, C);
 //	mlr_dsl_ast_node_free(B);
 //}
-//IndexedLocalVariable(A) ::= IndexedLocalVariable(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//IndexedLocalVariable(A) ::= IndexedLocalVariable(B) "[" RHS(C) "]". {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2683,7 +2685,7 @@ AtomOrFunction
 ////     text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
 ////         text="4", type=NUMERIC_LITERAL.
 ////         text="5", type=NUMERIC_LITERAL.
-//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) "[" RHS(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_binary(
 //		B->text,
 //		MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
@@ -2695,7 +2697,7 @@ AtomOrFunction
 //		)
 //	);
 //}
-//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) "[" RHS(C) "]". {
 //	// Append to second child node which is list of indexing expressions.
 //	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
 //}
@@ -2738,7 +2740,7 @@ ContextVariable
 //	A = B;
 //}
 
-//EnvIndex(A) ::= md_token_env(B) md_token_left_bracket RHS(C) md_token_right_bracket. {
+//EnvIndex(A) ::= md_token_env(B) "[" RHS(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 //}
 
