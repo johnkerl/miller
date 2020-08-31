@@ -56,7 +56,9 @@ func (this *Interpreter) InterpretOnInputRecord(
 		if err != nil {
 			return nil, err
 		} else {
-			inrec.Put(&fieldName, &mvalue)
+			if !mvalue.IsAbsent() {
+				inrec.Put(&fieldName, &mvalue)
+			}
 		}
 	}
 
@@ -215,7 +217,7 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	case "//":
 		return lib.MlrvalIntDivide(&leftValue, &rightValue), nil
 		break
-	// xxx continue ...
+		// xxx continue ...
 	}
 
 	return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify

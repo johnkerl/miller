@@ -309,6 +309,11 @@ func (this *Mlrval) StringWithQuoteInfo() (string, bool) {
 }
 
 // ================================================================
+func (this *Mlrval) IsAbsent() bool {
+	return this.mvtype == MT_ABSENT
+}
+
+// ================================================================
 // xxx comment why short names
 func _erro(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromError()
