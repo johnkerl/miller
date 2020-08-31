@@ -841,7 +841,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_string	<< dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral) >>`,
+		String: `AtomOrFunction : md_token_string_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      82,

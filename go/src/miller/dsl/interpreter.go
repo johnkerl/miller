@@ -51,12 +51,13 @@ func (this *Interpreter) InterpretOnInputRecord(
 		rhsNode := child.Children[1]
 
 		fieldName := string(lhsNode.Token.Lit)[1:] // strip off leading '$'
-		value, err := this.evaluateNode(rhsNode, inrec, context)
-		// xxx temp undefined-handling
+		value, defined, err := this.evaluateNode(rhsNode, inrec, context)
 		if err != nil {
 			return nil, err
 		}
-		inrec.Put(&fieldName, &value)
+		if defined {
+			inrec.Put(&fieldName, &value)
+		}
 	}
 
 	return inrec, nil
@@ -74,11 +75,12 @@ func (this *Interpreter) checkArity(
 	}
 }
 
+// xxx needs null/undefined/string/error. then, string->mlrval.
 func (this *Interpreter) evaluateNode(
 	node *ASTNode,
 	inrec *containers.Lrec,
 	context *runtime.Context,
-) (string, error) {
+) (string, bool, error) {
 	var sval = ""
 	if node.Token != nil {
 		sval = string(node.Token.Lit)
@@ -87,30 +89,31 @@ func (this *Interpreter) evaluateNode(
 	switch node.NodeType {
 
 	case NodeTypeStringLiteral:
-		return sval[1 : len(sval)-1], nil // xxx temp -- fix this in the grammar or ast-insert?
+		// xxx temp -- fix this in the grammar or ast-insert?
+		return sval[1 : len(sval)-1], true, nil
 	case NodeTypeNumberLiteral:
-		return sval, nil
+		return sval, true, nil // xxx temp -- to mlrval
 	case NodeTypeBooleanLiteral:
-		return sval, nil
+		return sval, true, nil // xxx temp -- to mlrval
 
 	case NodeTypeDirectFieldName:
 		fieldName := sval[1:] // xxx temp -- fix this in the grammar or ast-insert?
 		fieldValue := inrec.Get(&fieldName)
 		if fieldValue == nil {
-			return "", errors.New("unhandled")
+			return "", false, nil
 		} else {
-			return *fieldValue, nil
+			return *fieldValue, true, nil
 		}
 		break
 	case NodeTypeIndirectFieldName:
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 
 	case NodeTypeStatementBlock:
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	case NodeTypeAssignment:
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	case NodeTypeOperator:
 		this.checkArity(node, 2) // xxx temp -- binary-only for now
@@ -122,35 +125,35 @@ func (this *Interpreter) evaluateNode(
 		break
 
 	}
-	return "", errors.New("unhandled")
+	return "", true, errors.New("unhandled")
 }
 
 func (this *Interpreter) evaluateContextVariableNode(
 	node *ASTNode,
 	context *runtime.Context,
-) (string, error) {
+) (string, bool, error) {
 	if node.Token == nil {
-		return "", errors.New("internal coding error") // xxx libify
+		return "", true, errors.New("internal coding error") // xxx libify
 	}
 	sval := string(node.Token.Lit)
 	switch sval {
 	case "FILENAME":
-		return context.FILENAME, nil
+		return context.FILENAME, true, nil
 		break
 	case "FILENUM":
-		return strconv.FormatInt(context.FILENUM, 10), nil
+		return strconv.FormatInt(context.FILENUM, 10), true, nil
 		break
 	case "NF":
-		return strconv.FormatInt(context.NF, 10), nil
+		return strconv.FormatInt(context.NF, 10), true, nil
 		break
 	case "NR":
-		return strconv.FormatInt(context.NR, 10), nil
+		return strconv.FormatInt(context.NR, 10), true, nil
 		break
 	case "FNR":
-		return strconv.FormatInt(context.FNR, 10), nil
+		return strconv.FormatInt(context.FNR, 10), true, nil
 		break
 	}
-	return "", errors.New("internal coding error") // xxx libify
+	return "", true, errors.New("internal coding error") // xxx libify
 }
 
 func (this *Interpreter) evaluateBinaryOperatorNode(
@@ -159,37 +162,43 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	rightChild *ASTNode,
 	inrec *containers.Lrec,
 	context *runtime.Context,
-) (string, error) {
+) (string, bool, error) {
 	sval := string(node.Token.Lit)
 
-	leftValue, leftErr := this.evaluateNode(leftChild, inrec, context)
+	leftValue, leftDefined, leftErr := this.evaluateNode(leftChild, inrec, context)
 	if leftErr != nil {
-		return "", leftErr
+		return "", true, leftErr
 	}
-	rightValue, rightErr := this.evaluateNode(rightChild, inrec, context)
+	if !leftDefined {
+		return "", false, nil
+	}
+	rightValue, rightDefined, rightErr := this.evaluateNode(rightChild, inrec, context)
 	if rightErr != nil {
-		return "", rightErr
+		return "", true, rightErr
+	}
+	if !rightDefined {
+		return "", false, nil
 	}
 
 	switch sval {
 	case ".":
-		return leftValue + rightValue, nil
+		return leftValue + rightValue, true, nil
 		break
 	case "+":
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	case "-":
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	case "*":
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	case "/":
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	case "//":
-		return "", errors.New("unhandled")
+		return "", true, errors.New("unhandled")
 		break
 	}
-	return "", errors.New("internal coding error") // xxx libify
+	return "", true, errors.New("internal coding error") // xxx libify
 }

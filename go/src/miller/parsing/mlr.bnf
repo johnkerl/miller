@@ -79,20 +79,23 @@ md_token_number
   | '0' 'x' _hexDigit { _hexDigit }
 ;
 
-// xxx: gocc seems to lack a '[^"] notation ...
-// xxx expand ...
-
-_string_element : 'A'-'Z' | 'a'-'z' | '0'-'9'
-		| '!' | '#' | '$' | '%' | '&' | '\'' | '*' | '+' | '-' | '/' 
-		| '=' | '?' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
-		| '\u0100'-'\U0010FFFF'
+// Notes:
+// * " isn't included here -- need \" handling to put that inside strings
+// * GOCC seems to lack a '[^"] notation ...
+_string_literal_element
+  : 'A'-'Z' | 'a'-'z' | '0'-'9'
+  | ' ' | '!' | '#' | '$' | '%' | '&' | '\'' | '\\'
+  | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
+  | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '['
+  | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
+  | '\u0100'-'\U0010FFFF'
 ;
 
-md_token_string : '"' {_string_element} '"' ;
+md_token_string_literal : '"' {_string_literal_element} '"' ;
 
 //\"([^\\\"]|\\.)*\" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
-//	return md_token_string;
+//	return md_token_string_literal;
 //}
 
 md_token_IPS : 'I' 'P' 'S' ;
@@ -285,7 +288,7 @@ md_token_false : 'f' 'a' 'l' 's' 'e';
 //}
 //"str" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
-//	return md_token_string;
+//	return md_token_string_literal;
 //}
 
 //"M_PI" {
@@ -572,7 +575,7 @@ StatementInBody :SrecAssignment ;
 //Typedecl(A) ::= md_token_numeric(B). { A = B; A->type = MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION; }
 //Typedecl(A) ::= md_token_int(B).     { A = B; A->type = MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION;     }
 //Typedecl(A) ::= md_token_float(B).   { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
-//Typedecl(A) ::= md_token_string(B).  { A = B; A->type = MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION;  }
+//Typedecl(A) ::= md_token_string_literal(B).  { A = B; A->type = MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION;  }
 //Typedecl(A) ::= md_token_boolean(B). { A = B; A->type = MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION; }
 //Typedecl(A) ::= md_token_map(B).     { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
 
@@ -803,7 +806,7 @@ StatementInBody :SrecAssignment ;
 //ForLoopIndex(A) ::= md_token_float md_token_non_sigil_name(B). {
 //	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
 //}
-//ForLoopIndex(A) ::= md_token_string md_token_non_sigil_name(B). {
+//ForLoopIndex(A) ::= md_token_string_literal md_token_non_sigil_name(B). {
 //	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
 //}
 //ForLoopIndex(A) ::= md_token_boolean md_token_non_sigil_name(B). {
@@ -1213,7 +1216,7 @@ StatementInBody :SrecAssignment ;
 //BooleanLocalDefinition(A) ::= md_token_boolean(T) NonindexedLocalVariable(N) "=" RHS(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION, N, B);
 //}
-//StringLocalDefinition(A) ::= md_token_string(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//StringLocalDefinition(A) ::= md_token_string_literal(T) NonindexedLocalVariable(N) "=" RHS(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION, N, B);
 //}
 
@@ -2618,7 +2621,7 @@ AtomOrFunction
   : md_token_number << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >> ;
 
 AtomOrFunction
-  : md_token_string << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >> ;
+  : md_token_string_literal << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >> ;
 
 AtomOrFunction
   : md_token_true   << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >> ;
@@ -2685,7 +2688,7 @@ AtomOrFunction
 //	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
 //}
 
-//md_string(A) ::= md_token_string(B). {
+//md_string(A) ::= md_token_string_literal(B). {
 //	char* input = B->text;
 //	char* stripped = &input[1];
 //	int len = strlen(input);
