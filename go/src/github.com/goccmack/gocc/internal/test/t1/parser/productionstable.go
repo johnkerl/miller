@@ -2,8 +2,6 @@
 
 package parser
 
-
-
 type (
 	//TODO: change type and variable names to be consistent with other tables
 	ProdTab      [numProductions]ProdTabEntry

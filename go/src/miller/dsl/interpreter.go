@@ -206,25 +206,25 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	switch sval {
 	case "+":
 		// xxx make a lib method -- Itoa64
-		return lib.Itoa64(leftInt+rightInt), true, nil
+		return lib.Itoa64(leftInt + rightInt), true, nil
 		break
 	case "-":
-		return lib.Itoa64(leftInt-rightInt), true, nil
+		return lib.Itoa64(leftInt - rightInt), true, nil
 		break
 	case "*":
-		return lib.Itoa64(leftInt*rightInt), true, nil
+		return lib.Itoa64(leftInt * rightInt), true, nil
 		break
 	case "/":
-		return lib.Itoa64(leftInt/rightInt), true, nil
+		return lib.Itoa64(leftInt / rightInt), true, nil
 		break
 	case "^":
-		return lib.Itoa64(leftInt^rightInt), true, nil
+		return lib.Itoa64(leftInt ^ rightInt), true, nil
 		break
 	case "&":
-		return lib.Itoa64(leftInt&rightInt), true, nil
+		return lib.Itoa64(leftInt & rightInt), true, nil
 		break
 	case "|":
-		return lib.Itoa64(leftInt|rightInt), true, nil
+		return lib.Itoa64(leftInt | rightInt), true, nil
 		break
 	case "//":
 		return "", true, errors.New("unhandled")
