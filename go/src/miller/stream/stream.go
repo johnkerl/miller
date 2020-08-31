@@ -2,7 +2,7 @@ package stream
 
 import (
 	"errors"
-	"log"
+	"fmt"
 	"os"
 
 	"miller/containers"
@@ -54,7 +54,8 @@ func Stream(
 	for !done {
 		select {
 		case err := <-echan:
-			log.Fatal(err)
+			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+			os.Exit(1)
 		case _ = <-donechan:
 			done = true
 			break

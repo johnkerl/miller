@@ -4,7 +4,6 @@ import (
 	// System:
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -75,7 +74,8 @@ func main() {
 
 	err := stream.Stream(filenames, inputFormatName, mapperName, dslString, outputFormatName)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+		os.Exit(1)
 	}
 }
 
@@ -102,11 +102,11 @@ func maybeProfile(cpuprofile *string) {
 	if *cpuprofile != "" {
 		f, err := os.Create(*cpuprofile)
 		if err != nil {
-			log.Fatal("Could not create CPU profile: ", err)
+			fmt.Fprintln(os.Stderr, os.Args[0], ": ", "Could not start CPU profile: ", err)
 		}
 		defer f.Close()
 		if err := pprof.StartCPUProfile(f); err != nil {
-			log.Fatal("Could not start CPU profile: ", err)
+			fmt.Fprintln(os.Stderr, os.Args[0], ": ", "Could not start CPU profile: ", err)
 		}
 		defer pprof.StopCPUProfile()
 	}
