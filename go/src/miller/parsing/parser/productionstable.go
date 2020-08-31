@@ -831,43 +831,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral) >>`,
-		Id:         "AtomOrFunction",
-		NTType:     21,
-		Index:      81,
-		NumSymbols: 1,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral)
-		},
-	},
-	ProdTabEntry{
-		String: `AtomOrFunction : md_token_float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral) >>`,
-		Id:         "AtomOrFunction",
-		NTType:     21,
-		Index:      82,
-		NumSymbols: 1,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeNumberLiteral)
-		},
-	},
-	ProdTabEntry{
 		String: `AtomOrFunction : md_token_string_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
-		Index:      83,
+		Index:      81,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(X[0], dsl.NodeTypeStringLiteral)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral) >>`,
+		String: `AtomOrFunction : md_token_int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     21,
+		Index:      82,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : md_token_float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		Id:         "AtomOrFunction",
+		NTType:     21,
+		Index:      83,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : md_token_boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
 		Id:         "AtomOrFunction",
 		NTType:     21,
 		Index:      84,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeBooleanLiteral)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral)
 		},
 	},
 	ProdTabEntry{

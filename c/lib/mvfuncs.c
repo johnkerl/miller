@@ -1091,7 +1091,7 @@ static mv_t minus_n_ii(mv_t* pa, mv_t* pb) {
 	}
 
 	if (overflowed) {
-		return mv_from_float((double)a + (double)b);
+		return mv_from_float((double)a - (double)b);
 	} else {
 		return mv_from_int(c);
 	}
@@ -1193,7 +1193,7 @@ static mv_t divide_f_if(mv_t* pa, mv_t* pb) {
 	double b = pb->u.fltv;
 	return mv_from_float(a / b);
 }
-static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
+static mv_t divide_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
 	if (b == 0LL) { // Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
@@ -1214,7 +1214,7 @@ static mv_binary_func_t* divide_dispositions[MT_DIM][MT_DIM] = {
 	/*ABSENT*/ {_err, _a,    _a,   _err,  _i0,         _f0,         _err},
 	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,        _emt,        _err},
 	/*STRING*/ {_err, _err,  _err, _err,  _err,        _err,        _err},
-	/*INT*/    {_err, _1,    _emt, _err,  divide_i_ii, divide_f_if, _err},
+	/*INT*/    {_err, _1,    _emt, _err,  divide_n_ii, divide_f_if, _err},
 	/*FLOAT*/  {_err, _1,    _emt, _err,  divide_f_fi, divide_f_ff, _err},
 	/*BOOL*/   {_err, _err,  _err, _err,  _err,        _err,        _err},
 };

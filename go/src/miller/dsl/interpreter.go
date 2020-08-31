@@ -2,16 +2,16 @@ package dsl
 
 import (
 	"errors"
-	"strconv"
 
 	"miller/containers"
 	"miller/lib"
 	"miller/runtime"
 )
 
+// ----------------------------------------------------------------
 // Just a very temporary CST-free, AST-only interpreter to get me executing
 // some DSL code with a minimum of keystroking, while I work out other issues
-// including mlrval-valued lrecs.
+// including mlrval-valued lrecs, and port of mvfuncs from C to Go.
 type Interpreter struct {
 }
 
@@ -19,6 +19,7 @@ func NewInterpreter() *Interpreter {
 	return &Interpreter{}
 }
 
+// ----------------------------------------------------------------
 func (this *Interpreter) InterpretOnInputRecord(
 	inrec *containers.Lrec,
 	context *runtime.Context,
@@ -51,19 +52,21 @@ func (this *Interpreter) InterpretOnInputRecord(
 		rhsNode := child.Children[1]
 
 		fieldName := string(lhsNode.Token.Lit)[1:] // strip off leading '$'
-		value, defined, err := this.evaluateNode(rhsNode, inrec, context)
+		mvalue, err := this.evaluateNode(rhsNode, inrec, context)
 		if err != nil {
 			return nil, err
-		}
-		if defined {
-			inrec.Put(&fieldName, &value)
+		} else {
+			// xxx temp -- srec values are going to be mlrvals all the way through
+			svalue := mvalue.String()
+			inrec.Put(&fieldName, &svalue)
 		}
 	}
 
 	return inrec, nil
 }
 
-// xxx make into ASTNode method
+// ----------------------------------------------------------------
+// xxx make into ASTNode method?
 func (this *Interpreter) checkArity(
 	node *ASTNode,
 	arity int,
@@ -75,12 +78,12 @@ func (this *Interpreter) checkArity(
 	}
 }
 
-// xxx needs null/undefined/string/error. then, string->mlrval.
+// ----------------------------------------------------------------
 func (this *Interpreter) evaluateNode(
 	node *ASTNode,
 	inrec *containers.Lrec,
 	context *runtime.Context,
-) (string, bool, error) {
+) (lib.Mlrval, error) {
 	var sval = ""
 	if node.Token != nil {
 		sval = string(node.Token.Lit)
@@ -89,31 +92,33 @@ func (this *Interpreter) evaluateNode(
 	switch node.NodeType {
 
 	case NodeTypeStringLiteral:
-		// xxx temp -- fix this in the grammar or ast-insert?
-		return sval[1 : len(sval)-1], true, nil
-	case NodeTypeNumberLiteral:
-		return sval, true, nil // xxx temp -- to mlrval
-	case NodeTypeBooleanLiteral:
-		return sval, true, nil // xxx temp -- to mlrval
+		// xxx temp "..." strip -- fix this in the grammar or ast-insert
+		return lib.MlrvalFromString(sval[1 : len(sval)-1]), nil
+	case NodeTypeIntLiteral:
+		return lib.MlrvalFromInt64String(sval), nil
+	case NodeTypeFloatLiteral:
+		return lib.MlrvalFromFloat64String(sval), nil
+	case NodeTypeBoolLiteral:
+		return lib.MlrvalFromBoolString(sval), nil
 
 	case NodeTypeDirectFieldName:
 		fieldName := sval[1:] // xxx temp -- fix this in the grammar or ast-insert?
 		fieldValue := inrec.Get(&fieldName)
 		if fieldValue == nil {
-			return "", false, nil
+			return lib.MlrvalFromAbsent(), nil
 		} else {
-			return *fieldValue, true, nil
+			return lib.MlrvalFromInferredType(*fieldValue), nil
 		}
 		break
 	case NodeTypeIndirectFieldName:
-		return "", true, errors.New("unhandled")
+		return lib.MlrvalFromError(), errors.New("unhandled1")
 		break
 
 	case NodeTypeStatementBlock:
-		return "", true, errors.New("unhandled")
+		return lib.MlrvalFromError(), errors.New("unhandled2")
 		break
 	case NodeTypeAssignment:
-		return "", true, errors.New("unhandled")
+		return lib.MlrvalFromError(), errors.New("unhandled3")
 		break
 	case NodeTypeOperator:
 		this.checkArity(node, 2) // xxx temp -- binary-only for now
@@ -125,54 +130,57 @@ func (this *Interpreter) evaluateNode(
 		break
 
 	}
-	return "", true, errors.New("unhandled")
+	return lib.MlrvalFromError(), errors.New("unhandled4")
 }
 
 func (this *Interpreter) evaluateContextVariableNode(
 	node *ASTNode,
 	context *runtime.Context,
-) (string, bool, error) {
+) (lib.Mlrval, error) {
 	if node.Token == nil {
-		return "", true, errors.New("internal coding error") // xxx libify
+		return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
 	}
 	sval := string(node.Token.Lit)
 	switch sval {
 	case "FILENAME":
-		return context.FILENAME, true, nil
+		return lib.MlrvalFromString(context.FILENAME), nil
 		break
 	case "FILENUM":
-		return strconv.FormatInt(context.FILENUM, 10), true, nil
+		return lib.MlrvalFromInt64(context.FILENUM), nil
 		break
 	case "NF":
-		return strconv.FormatInt(context.NF, 10), true, nil
+		return lib.MlrvalFromInt64(context.NF), nil
 		break
 	case "NR":
-		return strconv.FormatInt(context.NR, 10), true, nil
+		return lib.MlrvalFromInt64(context.NR), nil
 		break
 	case "FNR":
-		return strconv.FormatInt(context.FNR, 10), true, nil
+		return lib.MlrvalFromInt64(context.FNR), nil
 		break
 
 	case "IPS":
-		return context.IPS, true, nil
+		return lib.MlrvalFromString(context.IPS), nil
 		break
 	case "IFS":
-		return context.IFS, true, nil
+		return lib.MlrvalFromString(context.IFS), nil
 		break
 	case "IRS":
-		return context.IRS, true, nil
+		return lib.MlrvalFromString(context.IRS), nil
 		break
+
 	case "OPS":
-		return context.OPS, true, nil
+		return lib.MlrvalFromString(context.OPS), nil
 		break
 	case "OFS":
-		return context.OFS, true, nil
+		return lib.MlrvalFromString(context.OFS), nil
 		break
 	case "ORS":
-		return context.ORS, true, nil
+		return lib.MlrvalFromString(context.ORS), nil
+		break
+
 		break
 	}
-	return "", true, errors.New("internal coding error") // xxx libify
+	return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
 }
 
 func (this *Interpreter) evaluateBinaryOperatorNode(
@@ -181,81 +189,36 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	rightChild *ASTNode,
 	inrec *containers.Lrec,
 	context *runtime.Context,
-) (string, bool, error) {
-	sval := string(node.Token.Lit)
+) (lib.Mlrval, error) {
+	sop := string(node.Token.Lit)
 
-	leftValue, leftDefined, leftErr := this.evaluateNode(leftChild, inrec, context)
+	leftValue, leftErr := this.evaluateNode(leftChild, inrec, context)
 	if leftErr != nil {
-		return "", true, leftErr
+		return lib.MlrvalFromError(), leftErr
 	}
-	if !leftDefined {
-		return "", false, nil
-	}
-	rightValue, rightDefined, rightErr := this.evaluateNode(rightChild, inrec, context)
+	rightValue, rightErr := this.evaluateNode(rightChild, inrec, context)
 	if rightErr != nil {
-		return "", true, rightErr
-	}
-	if !rightDefined {
-		return "", false, nil
+		return lib.MlrvalFromError(), rightErr
 	}
 
-	switch sval {
-	case ".":
-		return leftValue + rightValue, true, nil
-		break
-	}
-
-	switch sval {
+	switch sop {
 	case "+":
-		// xxx make a lib method -- Itoa64
-		//return lib.Itoa64(leftInt + rightInt), true, nil
-		a := lib.MlrvalFromInt64String(leftValue)
-		b := lib.MlrvalFromInt64String(rightValue)
-		c := lib.MlrvalPlus(&a, &b)
-		return c.String(), true, nil
+		return lib.MlrvalPlus(&leftValue, &rightValue), nil
 		break
-	}
-
-	// make a helper method for int-pairings
-	leftInt, lerr := strconv.ParseInt(leftValue, 10, 0)
-	if lerr != nil {
-		// to do: consider error-propagation through the AST evaluator, with
-		// null/undefined/error in the binop matrices etc.
-		//
-		// need to separate internal coding errors, from data-dependent ones
-		//
-		//return "", true, lerr
-		return "(error)", true, nil
-	}
-	rightInt, rerr := strconv.ParseInt(rightValue, 10, 0)
-	if rerr != nil {
-		//return "", true, rerr
-		return "(error)", true, nil
-	}
-
-	switch sval {
 	case "-":
-		return lib.Itoa64(leftInt - rightInt), true, nil
+		return lib.MlrvalMinus(&leftValue, &rightValue), nil
 		break
 	case "*":
-		return lib.Itoa64(leftInt * rightInt), true, nil
+		return lib.MlrvalTimes(&leftValue, &rightValue), nil
 		break
 	case "/":
-		return lib.Itoa64(leftInt / rightInt), true, nil
-		break
-	case "^":
-		return lib.Itoa64(leftInt ^ rightInt), true, nil
-		break
-	case "&":
-		return lib.Itoa64(leftInt & rightInt), true, nil
-		break
-	case "|":
-		return lib.Itoa64(leftInt | rightInt), true, nil
+		return lib.MlrvalDivide(&leftValue, &rightValue), nil
 		break
 	case "//":
-		return "", true, errors.New("unhandled")
+		return lib.MlrvalIntDivide(&leftValue, &rightValue), nil
 		break
+	// xxx continue ...
 	}
 
-	return "", true, errors.New("internal coding error") // xxx libify
+	return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
 }

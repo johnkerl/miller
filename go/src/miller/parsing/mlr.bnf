@@ -2637,10 +2637,10 @@ IndirectFieldName
 // to the lrecs, with mlrvals there! :)
 
 AtomOrFunction
-  : md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >>
-  | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeNumberLiteral) >>
-  | md_token_string_literal  << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >>
-  | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBooleanLiteral) >>
+  : md_token_string_literal  << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >>
+  | md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
+  | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+  | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
 ;
 
 //AtomOrFunction(A) ::= md_regexi(B). {
