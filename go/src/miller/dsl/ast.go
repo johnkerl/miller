@@ -8,7 +8,7 @@ import (
 type TNodeType string
 
 const (
-	NodeTypeStringLiteral  = "StringLiteral"
+	NodeTypeStringLiteral  TNodeType = "StringLiteral"
 	NodeTypeNumberLiteral  = "NumberLiteral"
 	NodeTypeBooleanLiteral = "BooleanLiteral"
 

@@ -4,6 +4,7 @@ import (
 	"miller/containers"
 )
 
+// xxx comment about who writes this and who reads this
 type Context struct {
 	FILENAME string
 	FILENUM  int64
