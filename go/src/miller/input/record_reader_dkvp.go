@@ -73,7 +73,7 @@ func lrecFromDKVPLine(
 		kv := strings.SplitN(pair, *ips, 2)
 		// xxx range-check
 		key := kv[0]
-		value := kv[1]
+		value := lib.MlrvalFromInferredType(kv[1])
 		// to do: avoid re-walk ...
 		lrec.Put(&key, &value)
 	}

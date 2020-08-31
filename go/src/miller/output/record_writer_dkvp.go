@@ -34,7 +34,7 @@ func (this *RecordWriterDKVP) Write(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
 		buffer.WriteString(this.ips)
-		buffer.WriteString(*pe.Value)
+		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
 			buffer.WriteString(this.ifs)
 		}

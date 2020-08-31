@@ -9,6 +9,7 @@ import (
 	"localdeps/ordered"
 
 	"miller/containers"
+	"miller/lib"
 	"miller/runtime"
 )
 
@@ -81,12 +82,15 @@ func (this *RecordReaderJSON) Read(
 			// xxx make helper functions
 			sval, ok := value.(string)
 			if ok {
-				lrec.Put(&key, &sval)
+				mval := lib.MlrvalFromInferredType(sval)
+				lrec.Put(&key, &mval)
 			} else {
 				nval, ok := value.(json.Number)
 				if ok {
+					// xxx look deeper into input-format-preserving operations ...
 					sval = nval.String()
-					lrec.Put(&key, &sval)
+					mval := lib.MlrvalFromInferredType(sval)
+					lrec.Put(&key, &mval)
 				}
 			}
 		}

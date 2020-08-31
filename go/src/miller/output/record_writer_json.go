@@ -44,7 +44,7 @@ func (this *RecordWriterJSON) Write(
 		buffer.WriteString("  \"")
 		buffer.WriteString(*pe.Key)
 		buffer.WriteString("\": \"")
-		buffer.WriteString(*pe.Value)
+		buffer.WriteString(pe.Value.String())
 		buffer.WriteString("\"")
 		if pe.Next != nil {
 			buffer.WriteString(",")

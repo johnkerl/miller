@@ -45,7 +45,7 @@ func (this *RecordWriterCSV) Write(
 	fields := make([]string, outrec.FieldCount)
 	i := 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		fields[i] = *pe.Value
+		fields[i] = pe.Value.String()
 		i++
 	}
 	this.csvWriter.Write(fields)

@@ -48,6 +48,8 @@ package containers
 import (
 	"bytes"
 	"os"
+
+	"miller/lib"
 )
 
 // ----------------------------------------------------------------
@@ -59,7 +61,7 @@ type Lrec struct {
 
 type lrecEntry struct {
 	Key   *string
-	Value *string
+	Value *lib.Mlrval
 	Prev  *lrecEntry
 	Next  *lrecEntry
 }
@@ -79,7 +81,7 @@ func (this *Lrec) Print(file *os.File) {
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
 		buffer.WriteString("=")
-		buffer.WriteString(*pe.Value)
+		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
 			buffer.WriteString(",")
 		}
@@ -89,10 +91,11 @@ func (this *Lrec) Print(file *os.File) {
 }
 
 // ----------------------------------------------------------------
-func lrecEntryAlloc(key *string, value *string) *lrecEntry {
+func lrecEntryAlloc(key *string, value *lib.Mlrval) *lrecEntry {
+	copy := *value
 	return &lrecEntry{
 		key,
-		value,
+		&copy,
 		nil,
 		nil,
 	}
@@ -109,7 +112,7 @@ func (this *Lrec) findEntry(key *string) *lrecEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Put(key *string, value *string) {
+func (this *Lrec) Put(key *string, value *lib.Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = lrecEntryAlloc(key, value)
@@ -124,26 +127,13 @@ func (this *Lrec) Put(key *string, value *string) {
 		}
 		this.FieldCount++
 	} else {
-		pe.Value = value
+		copy := *value
+		pe.Value = &copy
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) PutAtEnd(key *string, value *string) {
-	pe := lrecEntryAlloc(key, value)
-	if this.Head == nil {
-		this.Head = pe
-		this.Tail = pe
-	} else {
-		pe.Prev = this.Tail
-		this.Tail.Next = pe
-		this.Tail = pe
-	}
-	this.FieldCount++
-}
-
-// ----------------------------------------------------------------
-func (this *Lrec) Get(key *string) *string {
+func (this *Lrec) Get(key *string) *lib.Mlrval {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return nil

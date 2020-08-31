@@ -56,9 +56,7 @@ func (this *Interpreter) InterpretOnInputRecord(
 		if err != nil {
 			return nil, err
 		} else {
-			// xxx temp -- srec values are going to be mlrvals all the way through
-			svalue := mvalue.String()
-			inrec.Put(&fieldName, &svalue)
+			inrec.Put(&fieldName, &mvalue)
 		}
 	}
 
@@ -107,7 +105,7 @@ func (this *Interpreter) evaluateNode(
 		if fieldValue == nil {
 			return lib.MlrvalFromAbsent(), nil
 		} else {
-			return lib.MlrvalFromInferredType(*fieldValue), nil
+			return *fieldValue, nil
 		}
 		break
 	case NodeTypeIndirectFieldName:

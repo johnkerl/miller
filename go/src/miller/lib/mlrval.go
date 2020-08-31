@@ -13,11 +13,15 @@ import (
 // * Keep original string-formatting even if parseable/parsed as int
 //   o E.g. if 005 (octal), pass through as 005 unless math is done on it
 //   o Likewise with number of decimal places -- 7.4 not 7.400 or (worse) 7.399999999
+//
 // * Invalidate the string-formatting as the output of a computational result
+//
 // * Have number-to-string formatting methods in the API/DSL which stick the string format
+//
 // * Final to-string method
 //
 // Also:
+//
 // * Split current C mvfuncs into mlrval-private (dispo matrices etc) and new
 //   mvfuncs.go where the latter don't need access to private members
 // ================================================================

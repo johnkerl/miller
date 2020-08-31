@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"miller/containers"
+	"miller/lib"
 	"miller/runtime"
 )
 
@@ -75,7 +76,7 @@ func (this *RecordReaderCSV) Read(
 		n := len(this.header)
 		for i := 0; i < n; i++ {
 			key := this.header[i]
-			value := record[i]
+			value := lib.MlrvalFromInferredType(record[i])
 			// to do: avoid re-walk ...
 			lrec.Put(&key, &value)
 		}

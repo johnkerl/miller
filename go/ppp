@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -euo pipefail
+
 echo; mlr parse '$y = 1 || 2'
 echo; mlr parse '$y = 1 || 2 || 3'
 echo; mlr parse '$y = 1 || 2 && 3'

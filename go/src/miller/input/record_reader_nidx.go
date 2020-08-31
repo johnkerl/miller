@@ -74,8 +74,8 @@ func lrecFromNIDXLine(
 		i++
 		key := strconv.FormatInt(i, 10)
 		// to do: avoid re-walk ...
-		copy := value // copy
-		lrec.Put(&key, &copy)
+		mval := lib.MlrvalFromInferredType(value)
+		lrec.Put(&key, &mval)
 	}
 	return lrec
 }

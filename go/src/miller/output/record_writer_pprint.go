@@ -35,7 +35,7 @@ func (this *RecordWriterPPRINT) Write(
 	for e := this.lrecs.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*containers.Lrec)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			width := len(*pe.Value)
+			width := len(pe.Value.String())
 			oldMaxWidth := maxWidths[*pe.Key]
 			if width > oldMaxWidth {
 				maxWidths[*pe.Key] = width
@@ -70,9 +70,9 @@ func (this *RecordWriterPPRINT) Write(
 		// Print data lines
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			if pe.Next != nil {
-				fmt.Printf("%-*s ", maxWidths[*pe.Key], *pe.Value)
+				fmt.Printf("%-*s ", maxWidths[*pe.Key], pe.Value.String())
 			} else {
-				fmt.Println(*pe.Value)
+				fmt.Println(pe.Value.String())
 			}
 		}
 	}

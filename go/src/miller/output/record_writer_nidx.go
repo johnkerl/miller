@@ -30,7 +30,7 @@ func (this *RecordWriterNIDX) Write(
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(*pe.Value)
+		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
 			buffer.WriteString(this.ifs)
 		}

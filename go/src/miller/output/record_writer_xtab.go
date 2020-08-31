@@ -52,7 +52,7 @@ func (this *RecordWriterXTAB) Write(
 		for i := 0; i < padLength; i++ {
 			buffer.WriteString(" ")
 		}
-		buffer.WriteString(*pe.Value)
+		buffer.WriteString(pe.Value.String())
 		buffer.WriteString("\n")
 	}
 	os.Stdout.WriteString(buffer.String())
