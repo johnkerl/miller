@@ -26,16 +26,31 @@ func (this *RecordReaderJSON) Read(
 	inrecs chan<- *containers.Lrec,
 	echan chan error,
 ) {
-	// TODO: loop over filenames
-	// TODO: handle empty filenames array as read-from-stdin
-	filename := filenames[0]
-	context.UpdateForStartOfFile(filename)
-
-	handle, err := os.Open(filename)
-	if err != nil {
-		echan <- err
-		return
+	if len(filenames) == 0 { // read from stdin
+		handle := os.Stdin
+		this.processHandle(handle, "(stdin)", context, inrecs, echan)
+	} else {
+		for _, filename := range filenames {
+			handle, err := os.Open(filename)
+			if err != nil {
+				echan <- err
+			} else {
+				this.processHandle(handle, filename, context, inrecs, echan)
+				handle.Close()
+			}
+		}
 	}
+	inrecs <- nil // signals end of input record stream
+}
+
+func (this *RecordReaderJSON) processHandle(
+	handle *os.File,
+	filename string,
+	context *runtime.Context,
+	inrecs chan<- *containers.Lrec,
+	echan chan error,
+) {
+	//context.UpdateForStartOfFile(filename)
 
 	jsonDecoder := json.NewDecoder(handle)
 
@@ -57,7 +72,7 @@ func (this *RecordReaderJSON) Read(
 		lrec := containers.LrecAlloc()
 
 		var om *ordered.OrderedMap = ordered.NewOrderedMap()
-		err = jsonDecoder.Decode(om)
+		err := jsonDecoder.Decode(om)
 		if err != nil {
 			echan <- err
 			return
@@ -106,6 +121,4 @@ func (this *RecordReaderJSON) Read(
 	//		return
 	//	}
 	//	fmt.Printf("%T: %v\n", t, t)
-
-	inrecs <- nil // signals end of input record stream
 }

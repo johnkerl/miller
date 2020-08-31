@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -euo pipefail
+
+#for ofmt in pprint csv dkvp nidx json; do
+#  for ifmt in csv dkvp nidx json; do
+#    echo ---------------------------------------------------------------- $ifmt $ofmt
+#    mlr $ifmt put '
+#      $nf=NF;
+#      $nr=NR;
+#      $fnr=FNR;
+#      $filename=FILENAME;
+#      $filenum=FILENUM;
+#    ' $ofmt s.$ifmt t.$ifmt
+#    echo
+#  done
+#done
+
+ofmt=pprint
+for ifmt in csv dkvp nidx json; do
+  echo ---------------------------------------------------------------- $ifmt $ofmt
+  mlr $ifmt put '
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+  ' $ofmt s.$ifmt t.$ifmt
+  echo
+done
+
+echo
+echo
+echo
+
+ifmt=dkvp
+for ofmt in pprint csv dkvp nidx json; do
+  echo ---------------------------------------------------------------- $ifmt $ofmt
+  mlr $ifmt put '
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+  ' $ofmt s.$ifmt t.$ifmt
+  echo
+done

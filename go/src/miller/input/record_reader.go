@@ -5,7 +5,6 @@ import (
 	"miller/runtime"
 )
 
-// reader *bufio.Reader in constructors/factory
 type IRecordReader interface {
 	Read(
 		filenames []string,

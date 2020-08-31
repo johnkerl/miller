@@ -50,7 +50,7 @@ func Stream(
 	outrecs := make(chan *containers.Lrec, 1)
 	donechan := make(chan bool, 1)
 
-	// xxx need callback/arg to update context filenum/filename
+	// xxx put context instance on the channels w/ the records
 	go recordReader.Read(filenames, context, inrecs, echan)
 	go mapping.ChannelMapper(inrecs, context, recordMapper, outrecs)
 	go output.ChannelWriter(outrecs, recordWriter, donechan, os.Stdout)

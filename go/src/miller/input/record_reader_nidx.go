@@ -3,6 +3,7 @@ package input
 import (
 	"bufio"
 	"io"
+	"os"
 	"strconv"
 	"strings"
 
@@ -30,17 +31,31 @@ func (this *RecordReaderNIDX) Read(
 	inrecs chan<- *containers.Lrec,
 	echan chan error,
 ) {
-
-	istream, err := lib.Argf(filenames) // can't stay -- each CSV file has its own header, etc
-	if err != nil {
-		echan <- err
-		return
+	if len(filenames) == 0 { // read from stdin
+		handle := os.Stdin
+		this.processHandle(handle, "(stdin)", context, inrecs, echan)
+	} else {
+		for _, filename := range filenames {
+			handle, err := os.Open(filename)
+			if err != nil {
+				echan <- err
+			} else {
+				this.processHandle(handle, filename, context, inrecs, echan)
+				handle.Close()
+			}
+		}
 	}
-	lineReader := bufio.NewReader(istream)
+	inrecs <- nil // signals end of input record stream
+}
 
-	if len(filenames) > 0 {
-		context.UpdateForStartOfFile(filenames[0]) // xxx temp
-	}
+func (this *RecordReaderNIDX) processHandle(
+	handle *os.File,
+	filename string,
+	context *runtime.Context,
+	inrecs chan<- *containers.Lrec,
+	echan chan error,
+) {
+	lineReader := bufio.NewReader(handle)
 
 	eof := false
 
@@ -54,13 +69,10 @@ func (this *RecordReaderNIDX) Read(
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
-
 			lrec := lrecFromNIDXLine(&line)
 			inrecs <- lrec
 		}
 	}
-
-	inrecs <- nil // signals end of input record stream
 }
 
 // ----------------------------------------------------------------

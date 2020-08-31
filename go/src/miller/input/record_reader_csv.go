@@ -14,14 +14,10 @@ type RecordReaderCSV struct {
 	// TODO: parameterize
 	//ifs string
 	//irs string
-	needHeader bool
-	header     []string
 }
 
 func NewRecordReaderCSV( /*ifs string, ips string*/ ) *RecordReaderCSV {
 	return &RecordReaderCSV{
-		true,
-		nil,
 		//ifs,
 		//irs,
 	}
@@ -33,20 +29,38 @@ func (this *RecordReaderCSV) Read(
 	inrecs chan<- *containers.Lrec,
 	echan chan error,
 ) {
-	// TODO: loop over filenames
-	// TODO: handle empty filenames array as read-from-stdin
-	filename := filenames[0]
-	context.UpdateForStartOfFile(filename)
-
-	handle, err := os.Open(filename)
-	if err != nil {
-		echan <- err
+	if len(filenames) == 0 { // read from stdin
+		handle := os.Stdin
+		this.processHandle(handle, "(stdin)", context, inrecs, echan)
+	} else {
+		for _, filename := range filenames {
+			handle, err := os.Open(filename)
+			if err != nil {
+				echan <- err
+			} else {
+				this.processHandle(handle, filename, context, inrecs, echan)
+				handle.Close()
+			}
+		}
 	}
+	inrecs <- nil // signals end of input record stream
+}
+
+func (this *RecordReaderCSV) processHandle(
+	handle *os.File,
+	filename string,
+	context *runtime.Context,
+	inrecs chan<- *containers.Lrec,
+	echan chan error,
+) {
+	context.UpdateForStartOfFile(filename)
+	needHeader := true
+	var header []string = nil
 
 	csvReader := csv.NewReader(handle)
 
 	for {
-		if this.needHeader {
+		if needHeader {
 			// TODO: make this a helper function
 			record, err := csvReader.Read()
 			if err == io.EOF {
@@ -56,9 +70,9 @@ func (this *RecordReaderCSV) Read(
 				echan <- err
 				return
 			}
-			this.header = record
+			header = record
 
-			this.needHeader = false
+			needHeader = false
 		}
 
 		record, err := csvReader.Read()
@@ -73,9 +87,9 @@ func (this *RecordReaderCSV) Read(
 		lrec := containers.LrecAlloc()
 
 		// TODO: check for length mismatches
-		n := len(this.header)
+		n := len(header)
 		for i := 0; i < n; i++ {
-			key := this.header[i]
+			key := header[i]
 			value := lib.MlrvalFromInferredType(record[i])
 			// to do: avoid re-walk ...
 			lrec.Put(&key, &value)
@@ -83,6 +97,4 @@ func (this *RecordReaderCSV) Read(
 
 		inrecs <- lrec
 	}
-
-	inrecs <- nil // signals end of input record stream
 }
