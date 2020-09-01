@@ -201,6 +201,9 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	}
 
 	switch sop {
+	case ".":
+		return lib.MlrvalDot(&leftValue, &rightValue), nil
+		break
 	case "+":
 		return lib.MlrvalPlus(&leftValue, &rightValue), nil
 		break

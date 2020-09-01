@@ -3,8 +3,6 @@
 
 TOP OF LIST:
 ! argparse
-! multi-channel w/ then-chains
-! . semantics
 
 harder / more worthy:
 ~ streaming JSON reader

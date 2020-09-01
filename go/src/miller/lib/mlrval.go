@@ -324,12 +324,21 @@ func _absn(val1, val2 *Mlrval) Mlrval {
 func _void(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromVoid()
 }
+
 func _1___(val1, val2 *Mlrval) Mlrval {
 	return *val1
 }
 func _2___(val1, val2 *Mlrval) Mlrval {
 	return *val2
 }
+
+func _s1__(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromString(val1.String())
+}
+func _s2__(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromString(val2.String())
+}
+
 func _i0__(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromInt64(0)
 }
@@ -341,63 +350,24 @@ func _f0__(val1, val2 *Mlrval) Mlrval {
 type dyadicFunc func(*Mlrval, *Mlrval) Mlrval
 
 // ================================================================
+func dot_s_xx(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromString(val1.String() + val2.String())
+}
 
-//static mv_t dot_strings(char* string1, char* string2) {
-//	int len1 = strlen(string1);
-//	int len2 = strlen(string2);
-//	int len3 = len1 + len2 + 1; // for the null-terminator byte
-//	char* string3 = mlr_malloc_or_die(len3);
-//	strcpy(&string3[0], string1);
-//	strcpy(&string3[len1], string2);
-//	return mv_from_string_with_free(string3);
-//}
-//
-//mv_t dot_s_ss(mv_t* pval1, mv_t* pval2) {
-//	mv_t rv = dot_strings(pval1->u.strv, pval2->u.strv);
-//	mv_free(pval1);
-//	mv_free(pval2);
-//	return rv;
-//}
-//
-//mv_t dot_s_xs(mv_t* pval1, mv_t* pval2) {
-//	mv_t sval1 = s_x_string_func(pval1);
-//	mv_free(pval1);
-//	mv_t rv = dot_strings(sval1.u.strv, pval2->u.strv);
-//	mv_free(&sval1);
-//	mv_free(pval2);
-//	return rv;
-//}
-//
-//mv_t dot_s_sx(mv_t* pval1, mv_t* pval2) {
-//	mv_t sval2 = s_x_string_func(pval2);
-//	mv_free(pval2);
-//	mv_t rv = dot_strings(pval1->u.strv, sval2.u.strv);
-//	mv_free(pval1);
-//	mv_free(&sval2);
-//	return rv;
-//}
-//
-//mv_t dot_s_xx(mv_t* pval1, mv_t* pval2) {
-//	mv_t sval1 = s_x_string_func(pval1);
-//	mv_t sval2 = s_x_string_func(pval2);
-//	mv_t rv = dot_strings(sval1.u.strv, sval2.u.strv);
-//	mv_free(&sval1);
-//	mv_free(&sval2);
-//	return rv;
-//}
-//
-//static mv_binary_func_t* dot_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING     INT        FLOAT      BOOL
-//	/*ERROR*/  {_erro, _erro,  _erro, _erro,      _erro,      _erro,      _erro},
-//	/*ABSENT*/ {_erro, _a,    _void, _2,        _s2,       _s2,       _s2},
-//	/*EMPTY*/  {_erro, _void,  _void, _2,        _s2,       _s2,       _s2},
-//	/*STRING*/ {_erro, _1,    _1,   dot_s_ss,  dot_s_sx,  dot_s_sx,  dot_s_sx},
-//	/*INT*/    {_erro, _s1,   _s1,  dot_s_xs,  dot_s_xx,  dot_s_xx,  dot_s_xx},
-//	/*FLOAT*/  {_erro, _s1,   _s1,  dot_s_xs,  dot_s_xx,  dot_s_xx,  dot_s_xx},
-//	/*BOOL*/   {_erro, _s1,   _s1,  dot_s_xs,  dot_s_xx,  dot_s_xx,  dot_s_xx},
-//};
-//
-//mv_t s_xx_dot_func(mv_t* pval1, mv_t* pval2) { return (dot_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+var dotDispositions = [MT_DIM][MT_DIM]dyadicFunc{
+	//       ERROR ABSENT  EMPTY  STRING INT       FLOAT     BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _void, _2___, _s2__, _s2__, _s2__},
+	/*EMPTY  */ {_erro, _void, _void, _2___, _s2__, _s2__, _s2__},
+	/*STRING */ {_erro, _1___, _1___, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*INT    */ {_erro, _s1__, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*FLOAT  */ {_erro, _s1__, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*BOOL   */ {_erro, _s1__, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+}
+
+func MlrvalDot(val1, val2 *Mlrval) Mlrval {
+	return dotDispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
 
 // ================================================================
 func plus_f_fi(val1, val2 *Mlrval) Mlrval {
