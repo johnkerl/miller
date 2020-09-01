@@ -76,3 +76,4 @@ nits:
 * comment precisely where context pointers -> copy and why
 * mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0
+* cst printer with reflect.TypeOf -- ?
