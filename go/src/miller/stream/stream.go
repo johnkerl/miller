@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"miller/cli"
 	"miller/containers"
 	"miller/input"
 	"miller/mapping"
@@ -14,31 +15,23 @@ import (
 
 // ----------------------------------------------------------------
 func Stream(
+	options cli.TOptions,
+	recordMappers []mapping.IRecordMapper,
 	filenames []string,
-	inputFormatName string,
-	mapperName string,
-	dslString string, // xxx temp
-	outputFormatName string,
 ) error {
 
 	initialContext := runtime.NewContext()
 
-	recordReader := input.Create(inputFormatName)
+	recordReader := input.Create(&options.ReaderOptions)
 	if recordReader == nil {
-		return errors.New("Input format not found: " + inputFormatName)
+		return errors.New("Input format not found: " + options.ReaderOptions.InputFileFormat)
 	}
 
-	recordMapper, err := mapping.Create(mapperName, dslString) // xxx temp
-	if err != nil {
-		return err
-	}
-	if recordMapper == nil {
-		return errors.New("Mapper not found: " + mapperName)
-	}
+	recordMapper := recordMappers[0] // xxx temp
 
-	recordWriter := output.Create(outputFormatName)
+	recordWriter := output.Create(&options.WriterOptions)
 	if recordWriter == nil {
-		return errors.New("Output format not found: " + outputFormatName)
+		return errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
 	}
 
 	inrecs := make(chan *runtime.LrecAndContext, 10)

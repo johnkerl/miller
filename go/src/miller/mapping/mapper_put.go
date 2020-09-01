@@ -21,8 +21,8 @@ func NewMapperPut(dslString string) (*MapperPut, error) {
 		return nil, err
 	}
 	return &MapperPut{
-		ast,
-		dsl.NewInterpreter(),
+		ast: ast,
+		interpreter: dsl.NewInterpreter(),
 	}, nil
 }
 

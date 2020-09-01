@@ -1,19 +1,23 @@
 package output
 
-func Create(outputFormatName string) IRecordWriter {
-	switch outputFormatName {
+import (
+	"miller/cli"
+)
+
+func Create(writerOptions *cli.TWriterOptions) IRecordWriter {
+	switch writerOptions.OutputFileFormat {
 	case "csv":
-		return NewRecordWriterCSV() // TODO: parameterize
+		return NewRecordWriterCSV(writerOptions)
 	case "dkvp":
-		return NewRecordWriterDKVP(",", "=") // TODO: parameterize
+		return NewRecordWriterDKVP(writerOptions)
 	case "json":
-		return NewRecordWriterJSON() // TODO: parameterize
+		return NewRecordWriterJSON(writerOptions)
 	case "nidx":
-		return NewRecordWriterNIDX(",") // TODO: parameterize
+		return NewRecordWriterNIDX(writerOptions)
 	case "pprint":
-		return NewRecordWriterPPRINT() // TODO: parameterize
+		return NewRecordWriterPPRINT(writerOptions)
 	case "xtab":
-		return NewRecordWriterXTAB() // TODO: parameterize
+		return NewRecordWriterXTAB(writerOptions)
 	default:
 		return nil
 	}

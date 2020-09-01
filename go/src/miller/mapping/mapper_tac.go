@@ -13,7 +13,7 @@ type MapperTac struct {
 
 func NewMapperTac() (*MapperTac, error) {
 	return &MapperTac{
-		list.New(),
+		lrecs: list.New(),
 	}, nil
 }
 

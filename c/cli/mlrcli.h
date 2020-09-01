@@ -16,7 +16,7 @@
 #include <unistd.h>
 
 // ----------------------------------------------------------------
-typedef struct _genereator_opts_t {
+typedef struct _generator_opts_t {
 	char* field_name;
 	// xxx to do: convert to mv_t
 	long long start;

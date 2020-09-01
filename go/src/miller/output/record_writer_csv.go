@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"os"
 
+	"miller/cli"
 	"miller/containers"
 )
 
@@ -13,10 +14,10 @@ type RecordWriterCSV struct {
 	csvWriter *csv.Writer
 }
 
-func NewRecordWriterCSV() *RecordWriterCSV {
+func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) *RecordWriterCSV {
 	return &RecordWriterCSV{
-		true,
-		csv.NewWriter(os.Stdout),
+		onFirst: true,
+		csvWriter: csv.NewWriter(os.Stdout),
 	}
 }
 

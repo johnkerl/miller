@@ -4,19 +4,20 @@ import (
 	"bytes"
 	"os"
 
+	"miller/cli"
 	"miller/containers"
 )
 
 // ostream *os.File in constructors/factory
 type RecordWriterNIDX struct {
-	ifs string
+	ofs string
 	ors string
 }
 
-func NewRecordWriterNIDX(ifs string) *RecordWriterNIDX {
+func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) *RecordWriterNIDX {
 	return &RecordWriterNIDX{
-		ifs,
-		"\n", // TODO: parameterize
+		ofs: writerOptions.OFS,
+		ors: writerOptions.ORS,
 	}
 }
 
@@ -32,7 +33,7 @@ func (this *RecordWriterNIDX) Write(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.ifs)
+			buffer.WriteString(this.ofs)
 		}
 	}
 	buffer.WriteString(this.ors)

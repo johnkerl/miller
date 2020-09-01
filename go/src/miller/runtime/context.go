@@ -15,8 +15,8 @@ func NewLrecAndContext(
 	context *Context,
 ) *LrecAndContext {
 	return &LrecAndContext{
-		lrec,
-		*context,
+		Lrec: lrec,
+		Context: *context,
 	}
 }
 

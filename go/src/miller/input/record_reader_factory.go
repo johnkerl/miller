@@ -1,15 +1,19 @@
 package input
 
-func Create(inputFormatName string) IRecordReader {
-	switch inputFormatName {
+import (
+	"miller/cli"
+)
+
+func Create(readerOptions *cli.TReaderOptions) IRecordReader {
+	switch readerOptions.InputFileFormat {
 	case "csv":
-		return NewRecordReaderCSV() // TODO: parameterize
+		return NewRecordReaderCSV(readerOptions)
 	case "dkvp":
-		return NewRecordReaderDKVP(",", "=") // TODO: parameterize
+		return NewRecordReaderDKVP(readerOptions)
 	case "json":
-		return NewRecordReaderJSON()
+		return NewRecordReaderJSON(readerOptions)
 	case "nidx":
-		return NewRecordReaderNIDX() // TODO: parameterize
+		return NewRecordReaderNIDX(readerOptions)
 	default:
 		return nil
 	}

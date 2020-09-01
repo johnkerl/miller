@@ -7,21 +7,22 @@ import (
 	"strconv"
 	"strings"
 
+	"miller/cli"
 	"miller/containers"
 	"miller/lib"
 	"miller/runtime"
 )
 
 type RecordReaderNIDX struct {
-	// TODO: parameterize
-	//ifs string
-	//ips string
+	// TODO: use the parameterization
+	ifs string
+	ips string
 }
 
-func NewRecordReaderNIDX() *RecordReaderNIDX {
+func NewRecordReaderNIDX(readerOptions *cli.TReaderOptions) *RecordReaderNIDX {
 	return &RecordReaderNIDX{
-		//ifs,
-		//ips,
+		ifs: readerOptions.IFS,
+		ips: readerOptions.IPS,
 	}
 }
 

@@ -8,6 +8,7 @@ import (
 
 	"localdeps/ordered"
 
+	"miller/cli"
 	"miller/containers"
 	"miller/lib"
 	"miller/runtime"
@@ -16,7 +17,7 @@ import (
 type RecordReaderJSON struct {
 }
 
-func NewRecordReaderJSON() *RecordReaderJSON {
+func NewRecordReaderJSON(readerOptions *cli.TReaderOptions) *RecordReaderJSON {
 	return &RecordReaderJSON{}
 }
 

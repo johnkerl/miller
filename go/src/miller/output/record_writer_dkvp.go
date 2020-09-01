@@ -4,21 +4,21 @@ import (
 	"bytes"
 	"os"
 
+	"miller/cli"
 	"miller/containers"
 )
 
-// ostream *os.File in constructors/factory
 type RecordWriterDKVP struct {
-	ifs string
-	ips string
+	ofs string
+	ops string
 	ors string
 }
 
-func NewRecordWriterDKVP(ifs string, ips string) *RecordWriterDKVP {
+func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) *RecordWriterDKVP {
 	return &RecordWriterDKVP{
-		ifs,
-		ips,
-		"\n", // TODO: parameterize
+		ofs: writerOptions.OFS,
+		ops: writerOptions.OPS,
+		ors: writerOptions.ORS,
 	}
 }
 
@@ -33,10 +33,10 @@ func (this *RecordWriterDKVP) Write(
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
-		buffer.WriteString(this.ips)
+		buffer.WriteString(this.ops)
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.ifs)
+			buffer.WriteString(this.ofs)
 		}
 	}
 	buffer.WriteString(this.ors)

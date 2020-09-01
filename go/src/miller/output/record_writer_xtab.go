@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 
+	"miller/cli"
 	"miller/containers"
 )
 
@@ -12,9 +13,9 @@ type RecordWriterXTAB struct {
 	onFirst bool
 }
 
-func NewRecordWriterXTAB() *RecordWriterXTAB {
+func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) *RecordWriterXTAB {
 	return &RecordWriterXTAB{
-		true,
+		onFirst: true,
 	}
 }
 

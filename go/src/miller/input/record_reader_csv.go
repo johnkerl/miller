@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"miller/cli"
 	"miller/containers"
 	"miller/lib"
 	"miller/runtime"
@@ -16,7 +17,7 @@ type RecordReaderCSV struct {
 	//irs string
 }
 
-func NewRecordReaderCSV( /*ifs string, ips string*/ ) *RecordReaderCSV {
+func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
 		//ifs,
 		//irs,

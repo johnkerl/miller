@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 
+	"miller/cli"
 	"miller/containers"
 )
 
@@ -12,9 +13,9 @@ type RecordWriterPPRINT struct {
 	lrecs *list.List
 }
 
-func NewRecordWriterPPRINT() *RecordWriterPPRINT {
+func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) *RecordWriterPPRINT {
 	return &RecordWriterPPRINT{
-		list.New(),
+		lrecs: list.New(),
 	}
 }
 
