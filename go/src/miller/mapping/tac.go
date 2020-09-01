@@ -54,10 +54,8 @@ func (this *MapperTac) Map(
 	inrecAndContext *containers.LrecAndContext,
 	outrecsAndContexts chan<- *containers.LrecAndContext,
 ) {
-	inrec := inrecAndContext.Lrec
-
-	if inrec != nil {
-		this.lrecsAndContexts.PushFront(inrec)
+	if inrecAndContext.Lrec != nil {
+		this.lrecsAndContexts.PushFront(inrecAndContext)
 	} else {
 		// end of stream
 		for e := this.lrecsAndContexts.Front(); e != nil; e = e.Next() {

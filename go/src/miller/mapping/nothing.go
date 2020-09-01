@@ -9,7 +9,7 @@ import (
 )
 
 var MapperNothingSetup = MapperSetup{
-	Verb:         "noting",
+	Verb:         "nothing",
 	ParseCLIFunc: mapperNothingParseCLIFunc,
 	UsageFunc:    mapperNothingUsageFunc,
 	IgnoresInput: false,
