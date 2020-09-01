@@ -782,14 +782,14 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 		`
 	  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
 	                                  (this is Miller's default format).
-	
+
 	  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields
 	                                  (Unix-toolkit style).
 	  -T                              Synonymous with "--nidx --fs tab".
-	
+
 	  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
 	                                  with --fs tab, etc.)
-	
+
 	  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
 	                                  "--ocsv --ofs tab", "--csv --fs tab".
 	  --iasv    --oasv    --asv       Similar but using ASCII FS %s and RS %s\n",
@@ -798,14 +798,14 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 		USV_FS_FOR_HELP);
 	                                  and RS %s\n",
 		USV_RS_FOR_HELP);
-	
+
 	  --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
 	                                  with --fs tab, etc.). The 'lite' CSV does not handle
 	                                  RFC-CSV double-quoting rules; is slightly faster;
 	                                  and handles heterogeneity in the input stream via
 	                                  empty newline followed by new header line. See also
 	                                  http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.
-	
+
 	  --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
 	                                  "--ocsvlite --ofs tab", "--csvlite --fs tab".
 	  -t                              Synonymous with --tsvlite.
@@ -815,18 +815,18 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 		USV_FS_FOR_HELP);
 	                                  and RS %s\n",
 		USV_RS_FOR_HELP);
-	
+
 	  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
 	                                  output until all input is in).
 	                      --right     Right-justifies all fields for PPRINT output.
 	                      --barred    Prints a border around PPRINT output
 	                                  (only available for output).
-	
+
 	            --omd                 Markdown-tabular (only available for output).
-	
+
 	  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
 	                      --xvright   Right-justifies values for XTAB format.
-	
+
 	  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
 	                                  maps: {...}{...} or [{...},{...}].
 	    --json-map-arrays-on-input    JSON arrays are unmillerable. --json-map-arrays-on-input
@@ -846,12 +846,12 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	                                  e.g. '{"a":{"b":3}}' becomes a:b => 3 for
 	                                  non-JSON formats. Defaults to %s.\n",
 		DEFAULT_JSON_FLATTEN_SEPARATOR);
-	
+
 	  -p is a keystroke-saver for --nidx --fs space --repifs
-	
+
 	  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
 	  DKVP-formatted input and pretty-printed output.
-	
+
 	  Please use --iformat1 --oformat2 rather than --format1 --oformat2.
 	  The latter sets up input and output flags for format1, not all of which
 	  are overridden in all cases by setting output format to format2.
