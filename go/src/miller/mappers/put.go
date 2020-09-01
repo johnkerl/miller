@@ -36,6 +36,13 @@ func mapperPutParseCLI(
 
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
+	pVerbose := flagSet.Bool(
+		"v",
+		false,
+		`Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.`,
+	)
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -53,14 +60,14 @@ func mapperPutParseCLI(
 	argi = len(args) - len(flagSet.Args())
 
 	// Get the DSL string from the command line, after the flags
-	if (argi >= argc) {
+	if argi >= argc {
 		flagSet.Usage()
 		os.Exit(1)
 	}
 	dslString := args[argi]
 	argi += 1
 
-	mapper, err := NewMapperPut(dslString)
+	mapper, err := NewMapperPut(dslString, *pVerbose)
 	if err != nil {
 		// xxx make sure better parse-fail info is printed by the DSL parser
 		fmt.Fprintf(os.Stderr, "%s %s: cannot parse DSL expression.\n",
@@ -92,10 +99,18 @@ type MapperPut struct {
 	interpreter *dsl.Interpreter
 }
 
-func NewMapperPut(dslString string) (*MapperPut, error) {
+func NewMapperPut(
+	dslString string,
+	verbose bool,
+) (*MapperPut, error) {
 	ast, err := NewASTFromString(dslString)
 	if err != nil {
 		return nil, err
+	}
+	if verbose {
+		fmt.Println("RAW AST:")
+		ast.Print()
+		fmt.Println()
 	}
 	return &MapperPut{
 		ast:         ast,

@@ -61,9 +61,9 @@ func mapperNothingUsage(
 	verb string,
 	flagSet *flag.FlagSet,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s\n", argv0, verb)
 	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
-	fmt.Fprintf(o, "produced other output.\n");
+	fmt.Fprintf(o, "produced other output.\n")
 	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
 	flagSet.VisitAll(func(f *flag.Flag) {
 		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value

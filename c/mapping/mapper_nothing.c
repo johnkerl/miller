@@ -32,7 +32,7 @@ static mapper_t* mapper_nothing_parse_cli(int* pargi, int argc, char** argv,
 }
 
 static void mapper_nothing_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Usage: %s %s\n", argv0, verb);
 	fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n");
 	fprintf(o, "produced other output.\n");
 }

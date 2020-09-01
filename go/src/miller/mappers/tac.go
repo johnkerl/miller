@@ -62,7 +62,7 @@ func mapperTacUsage(
 	verb string,
 	flagSet *flag.FlagSet,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s\n", argv0, verb)
 	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
 	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
 	flagSet.VisitAll(func(f *flag.Flag) {
