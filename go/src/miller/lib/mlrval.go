@@ -212,6 +212,14 @@ func MlrvalFromFalse() Mlrval {
 	}
 }
 
+func MlrvalFromBool(input bool) Mlrval {
+	if input == true {
+		return MlrvalFromTrue()
+	} else {
+		return MlrvalFromFalse()
+	}
+}
+
 func MlrvalFromBoolString(input string) Mlrval {
 	if input == "true" {
 		return MlrvalFromTrue()
