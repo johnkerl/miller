@@ -111,8 +111,8 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
-static void cli_load_mlrrc_or_die(cli_opts_t* popts);
-static int cli_try_load_mlrrc(cli_opts_t* popts, char* path);
+static void cli_load_mlrrc(cli_opts_t* popts);
+static void cli_try_load_mlrrc(cli_opts_t* popts, char* path);
 static int handle_mlrrc_line_1(cli_opts_t* popts, char* line);
 static int handle_mlrrc_line_2(cli_opts_t* popts, char* line);
 static int handle_mlrrc_line_3(cli_opts_t* popts, char* line);
@@ -178,7 +178,7 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	if (argc >= 2 && streq(argv[1], "--norc")) {
 		argi++;
 	} else {
-		cli_load_mlrrc_or_die(popts);
+		cli_load_mlrrc(popts);
 	}
 
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
@@ -871,6 +871,12 @@ static void main_usage_compressed_data_options(FILE* o, char* argv0) {
 	fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n");
 	fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
 		argv0);
+	fprintf(o, "\n");
+	fprintf(o, "  There are shorthands --prepipe-zcat and --prepipe-gunzip which are\n");
+	fprintf(o, "  valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc\n");
+	fprintf(o, "  files since that would put execution of the prepipe command under \n");
+	fprintf(o, "  control of the .mlrrc file.\n");
+	fprintf(o, "\n");
 	fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
 	fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
 	fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n");
@@ -881,6 +887,8 @@ static void main_usage_compressed_data_options(FILE* o, char* argv0) {
 	fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0);
 	fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0);
 	fprintf(o, "    %s --prepipe cat\n", argv0);
+	fprintf(o, "    %s --prepipe-gunzip\n", argv0);
+	fprintf(o, "    %s --prepipe-zcat\n", argv0);
 	fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n");
 	fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
 	fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
@@ -1110,31 +1118,30 @@ void cli_opts_init(cli_opts_t* popts) {
 // * Otherwise try first $HOME/.mlrrc and then ./.mlrrc but let them
 //   stack: e.g. $HOME/.mlrrc is lots of settings and maybe in one
 //   subdir you want to override just a setting or two.
-static void cli_load_mlrrc_or_die(cli_opts_t* popts) {
+static void cli_load_mlrrc(cli_opts_t* popts) {
 	char* env_mlrrc = getenv("MLRRC");
 	if (env_mlrrc != NULL) {
 		if (streq(env_mlrrc, "__none__")) {
 			return;
 		}
-		if (cli_try_load_mlrrc(popts, env_mlrrc)) {
-			return;
-		}
+		cli_try_load_mlrrc(popts, env_mlrrc);
+		return;
 	}
 
 	char* env_home = getenv("HOME");
 	if (env_home != NULL) {
 		char* path = mlr_paste_2_strings(env_home, "/.mlrrc");
-		(void)cli_try_load_mlrrc(popts, path);
+		cli_try_load_mlrrc(popts, path);
 		free(path);
 	}
 
-	(void)cli_try_load_mlrrc(popts, "./.mlrrc");
+	cli_try_load_mlrrc(popts, "./.mlrrc");
 }
 
-static int cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
+static void cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
 	FILE* fp = fopen(path, "r");
 	if (fp == NULL) {
-		return FALSE;
+		return;
 	}
 
 	char* line = NULL;
@@ -1157,8 +1164,6 @@ static int cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
 	if (line != NULL) {
 		free(line);
 	}
-
-	return TRUE;
 }
 
 // Chomps trailing CR, LF, or CR/LF; comment-strips; left-right trims.
@@ -1248,6 +1253,10 @@ static int handle_mlrrc_line_3(cli_opts_t* popts, char* line) {
 
 static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc) {
 	int argi = 0;
+	if (streq(argv[0], "--prepipe")) {
+		// Don't allow code execution via .mlrrc
+		return FALSE;
+	}
 	if (cli_handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
 		// handled
 	} else if (cli_handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
@@ -1782,6 +1791,14 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		check_arg_count(argv, argi, argc, 2);
 		preader_opts->prepipe = argv[argi+1];
 		argi += 2;
+
+	} else if (streq(argv[argi], "--prepipe-gunzip")) {
+		preader_opts->prepipe = "gunzip";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--prepipe-zcat")) {
+		preader_opts->prepipe = "zcat";
+		argi += 1;
 
 	} else if (streq(argv[argi], "--skip-comments")) {
 		preader_opts->comment_string = DEFAULT_COMMENT_STRING;
