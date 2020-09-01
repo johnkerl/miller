@@ -1,4 +1,4 @@
-package mapping
+package mappers
 
 import (
 	"fmt"
@@ -6,9 +6,10 @@ import (
 
 	"miller/clitypes"
 	"miller/containers"
+	"miller/mapping"
 )
 
-var MapperCatSetup = MapperSetup{
+var CatSetup = mapping.MapperSetup{
 	Verb:         "cat",
 	ParseCLIFunc: mapperCatParseCLIFunc,
 	UsageFunc:    mapperCatUsageFunc,
@@ -21,7 +22,7 @@ func mapperCatParseCLIFunc(
 	args []string,
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
-) IRecordMapper {
+) mapping.IRecordMapper {
 	//	char* default_counter_field_name = DEFAULT_COUNTER_FIELD_NAME;
 	//	char* counter_field_name = NULL;
 	//	int   do_counters = FALSE;

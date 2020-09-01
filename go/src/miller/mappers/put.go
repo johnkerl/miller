@@ -1,4 +1,4 @@
-package mapping
+package mappers
 
 import (
 	"fmt"
@@ -8,10 +8,11 @@ import (
 	"miller/containers"
 	"miller/dsl"
 	"miller/parsing/lexer"
+	"miller/mapping"
 	"miller/parsing/parser"
 )
 
-var MapperPutSetup = MapperSetup{
+var PutSetup = mapping.MapperSetup{
 	Verb:         "put",
 	ParseCLIFunc: mapperPutParseCLIFunc,
 	UsageFunc:    mapperPutUsageFunc,
@@ -24,7 +25,7 @@ func mapperPutParseCLIFunc(
 	args []string,
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
-) IRecordMapper {
+) mapping.IRecordMapper {
 	if argc-*pargi < 2 {
 		return nil
 	}

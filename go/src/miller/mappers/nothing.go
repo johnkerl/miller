@@ -1,4 +1,4 @@
-package mapping
+package mappers
 
 import (
 	"fmt"
@@ -6,9 +6,10 @@ import (
 
 	"miller/clitypes"
 	"miller/containers"
+	"miller/mapping"
 )
 
-var MapperNothingSetup = MapperSetup{
+var NothingSetup = mapping.MapperSetup{
 	Verb:         "nothing",
 	ParseCLIFunc: mapperNothingParseCLIFunc,
 	UsageFunc:    mapperNothingUsageFunc,
@@ -21,7 +22,7 @@ func mapperNothingParseCLIFunc(
 	args []string,
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
-) IRecordMapper {
+) mapping.IRecordMapper {
 	*pargi += 1
 
 	// xxx temp err keep or no

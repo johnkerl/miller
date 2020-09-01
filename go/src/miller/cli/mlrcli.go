@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"miller/clitypes"
+	"miller/mappers"
 	"miller/mapping"
 )
 
@@ -35,70 +36,6 @@ var VERSION_STRING string = "v6.0.0-dev"
 //
 //#define USV_FS_FOR_HELP "U+241F (UTF-8 0xe2909f)"
 //#define USV_RS_FOR_HELP "U+241E (UTF-8 0xe2909e)"
-
-// ----------------------------------------------------------------
-var mapperLookupTable = []mapping.MapperSetup{
-	mapping.MapperCatSetup,
-	mapping.MapperNothingSetup,
-	mapping.MapperPutSetup,
-	mapping.MapperTacSetup,
-}
-
-//
-//	&mapper_altkv_setup,
-//	&mapper_bar_setup,
-//	&mapper_bootstrap_setup,
-//	&mapper_cat_setup,
-//	&mapper_check_setup,
-//	&mapper_clean_whitespace_setup,
-//	&mapper_count_setup,
-//	&mapper_count_distinct_setup,
-//	&mapper_count_similar_setup,
-//	&mapper_cut_setup,
-//	&mapper_decimate_setup,
-//	&mapper_fill_down_setup,
-//	&mapper_filter_setup,
-//	&mapper_format_values_setup,
-//	&mapper_fraction_setup,
-//	&mapper_grep_setup,
-//	&mapper_group_by_setup,
-//	&mapper_group_like_setup,
-//	&mapper_having_fields_setup,
-//	&mapper_head_setup,
-//	&mapper_histogram_setup,
-//	&mapper_join_setup,
-//	&mapper_label_setup,
-//	&mapper_least_frequent_setup,
-//	&mapper_merge_fields_setup,
-//	&mapper_most_frequent_setup,
-//	&mapper_nest_setup,
-//	&mapper_nothing_setup,
-//	&mapper_put_setup,
-//	&mapper_regularize_setup,
-//	&mapper_remove_empty_columns_setup,
-//	&mapper_rename_setup,
-//	&mapper_reorder_setup,
-//	&mapper_repeat_setup,
-//	&mapper_reshape_setup,
-//	&mapper_sample_setup,
-//	&mapper_sec2gmt_setup,
-//	&mapper_sec2gmtdate_setup,
-//	&mapper_seqgen_setup,
-//	&mapper_shuffle_setup,
-//	&mapper_skip_trivial_records_setup,
-//	&mapper_sort_setup,
-//	// xxx temp for 5.4.0 -- will continue work after
-//	// &mapper_sort_within_records_setup,
-//	&mapper_stats1_setup,
-//	&mapper_stats2_setup,
-//	&mapper_step_setup,
-//	&mapper_tac_setup,
-//	&mapper_tail_setup,
-//	&mapper_tee_setup,
-//	&mapper_top_setup,
-//	&mapper_uniq_setup,
-//	&mapper_unsparsify_setup,
-//};
 
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
@@ -336,10 +273,10 @@ func usageAllVerbs(argv0 string) {
 }
 
 var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
-	mapping.MapperCatSetup,
-	mapping.MapperNothingSetup,
-	mapping.MapperPutSetup,
-	mapping.MapperTacSetup,
+	mappers.CatSetup,
+	mappers.NothingSetup,
+	mappers.PutSetup,
+	mappers.TacSetup,
 }
 
 //	&mapper_altkv_setup,
