@@ -76,7 +76,6 @@ func mapperCatUsageFunc(
 	//	fmt.Fprintf(o, "          keyed by specified field name(s).\n");
 	//	fmt.Fprintf(o, "-v        Write a low-level record-structure dump to stderr.\n");
 	//	fmt.Fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
-
 }
 
 // ----------------------------------------------------------------

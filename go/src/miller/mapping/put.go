@@ -2,7 +2,9 @@ package mapping
 
 import (
 	"fmt"
+	"os"
 
+	"miller/clitypes"
 	"miller/containers"
 	"miller/dsl"
 	"miller/parsing/lexer"
@@ -10,6 +12,41 @@ import (
 	"miller/runtime"
 )
 
+var MapperPutSetup = MapperSetup{
+	Verb:         "put",
+	ParseCLIFunc: mapperPutParseCLIFunc,
+	UsageFunc:    mapperPutUsageFunc,
+	IgnoresInput: false,
+}
+
+func mapperPutParseCLIFunc(
+	pargi *int,
+	argc int,
+	args []string,
+	_ *clitypes.TReaderOptions,
+	__ *clitypes.TWriterOptions,
+) IRecordMapper {
+	if argc - *pargi < 2 {
+		return nil
+	}
+	// xxx temp hack
+	dslString := args[*pargi + 1]
+	*pargi += 2
+
+	mapper, _ := NewMapperPut(dslString)
+	return mapper
+}
+
+func mapperPutUsageFunc(
+	o *os.File,
+	argv0 string,
+	verb string,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "TODO: un-stub this help function.\n");
+}
+
+// ----------------------------------------------------------------
 type MapperPut struct {
 	ast         *dsl.AST
 	interpreter *dsl.Interpreter

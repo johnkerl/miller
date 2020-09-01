@@ -8,6 +8,9 @@ import (
 	"miller/mapping"
 )
 
+// xxx to own file/package -- ?
+var VERSION_STRING string = "v6.0.0-dev"
+
 // ================================================================
 // Miller command-line interface
 // ================================================================
@@ -34,67 +37,6 @@ import (
 //#define USV_RS_FOR_HELP "U+241E (UTF-8 0xe2909e)"
 
 // ----------------------------------------------------------------
-var mapperLookupTable = []mapping.MapperSetup{
-	mapping.MapperCatSetup,
-}
-
-//
-//	&mapper_altkv_setup,
-//	&mapper_bar_setup,
-//	&mapper_bootstrap_setup,
-//	&mapper_cat_setup,
-//	&mapper_check_setup,
-//	&mapper_clean_whitespace_setup,
-//	&mapper_count_setup,
-//	&mapper_count_distinct_setup,
-//	&mapper_count_similar_setup,
-//	&mapper_cut_setup,
-//	&mapper_decimate_setup,
-//	&mapper_fill_down_setup,
-//	&mapper_filter_setup,
-//	&mapper_format_values_setup,
-//	&mapper_fraction_setup,
-//	&mapper_grep_setup,
-//	&mapper_group_by_setup,
-//	&mapper_group_like_setup,
-//	&mapper_having_fields_setup,
-//	&mapper_head_setup,
-//	&mapper_histogram_setup,
-//	&mapper_join_setup,
-//	&mapper_label_setup,
-//	&mapper_least_frequent_setup,
-//	&mapper_merge_fields_setup,
-//	&mapper_most_frequent_setup,
-//	&mapper_nest_setup,
-//	&mapper_nothing_setup,
-//	&mapper_put_setup,
-//	&mapper_regularize_setup,
-//	&mapper_remove_empty_columns_setup,
-//	&mapper_rename_setup,
-//	&mapper_reorder_setup,
-//	&mapper_repeat_setup,
-//	&mapper_reshape_setup,
-//	&mapper_sample_setup,
-//	&mapper_sec2gmt_setup,
-//	&mapper_sec2gmtdate_setup,
-//	&mapper_seqgen_setup,
-//	&mapper_shuffle_setup,
-//	&mapper_skip_trivial_records_setup,
-//	&mapper_sort_setup,
-//	// xxx temp for 5.4.0 -- will continue work after
-//	// &mapper_sort_within_records_setup,
-//	&mapper_stats1_setup,
-//	&mapper_stats2_setup,
-//	&mapper_step_setup,
-//	&mapper_tac_setup,
-//	&mapper_tail_setup,
-//	&mapper_tee_setup,
-//	&mapper_top_setup,
-//	&mapper_uniq_setup,
-//	&mapper_unsparsify_setup,
-//};
-
-// ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
 	options clitypes.TOptions,
 	recordMappers []mapping.IRecordMapper,
@@ -111,7 +53,7 @@ func ParseCommandLine(args []string) (
 	//	if (argc >= 2 && args[1] == "--norc" {
 	//		argi++;
 	//	} else {
-	//		cli_load_mlrrc_or_die(popts);
+	//		loadMlrrcOrDie(popts);
 	//	}
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -144,8 +86,8 @@ func ParseCommandLine(args []string) (
 	//
 	//	if (options.ReaderOptions.IRS == nil)
 	//		options.ReaderOptions.IRS = lhmss_get_or_die(default_rses, options.ReaderOptions.InputFileFormat);
-	//	if (options.ReaderOptions.ifs == nil)
-	//		options.ReaderOptions.ifs = lhmss_get_or_die(default_fses, options.ReaderOptions.InputFileFormat);
+	//	if (options.ReaderOptions.IFS == nil)
+	//		options.ReaderOptions.IFS = lhmss_get_or_die(default_fses, options.ReaderOptions.InputFileFormat);
 	//	if (options.ReaderOptions.ips == nil)
 	//		options.ReaderOptions.ips = lhmss_get_or_die(default_pses, options.ReaderOptions.InputFileFormat);
 	//
@@ -161,7 +103,7 @@ func ParseCommandLine(args []string) (
 	//	if (options.WriterOptions.ops == nil)
 	//		options.WriterOptions.ops = lhmss_get_or_die(default_pses, options.WriterOptions.OutputFileFormat);
 	//
-	//	if options.WriterOptions.OutputFileFormat == "pprint") && strlen(options.WriterOptions.OFS) != 1) {
+	//	if options.WriterOptions.OutputFileFormat == "pprint") && len(options.WriterOptions.OFS) != 1) {
 	//		fmt.Fprintf(os.Stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
 	//			os.Args[0], options.WriterOptions.OFS);
 	//		return nil;
@@ -252,9 +194,9 @@ func parseMappers(args []string, pargi *int, argc int, options *clitypes.TOption
 			&options.WriterOptions,
 		)
 
-		if (mapper == nil) {
+		if mapper == nil {
 			// Error message already printed out
-			os.Exit(1);
+			os.Exit(1)
 		}
 
 		//		if (mapperSetup.IgnoresInput && len(mapperList) == 0) {
@@ -273,6 +215,122 @@ func parseMappers(args []string, pargi *int, argc int, options *clitypes.TOption
 	*pargi = argi
 	return mapperList, nil
 }
+
+// ----------------------------------------------------------------
+func lookUpMapperSetup(verb string) *mapping.MapperSetup {
+	for _, mapperSetup := range MAPPER_LOOKUP_TABLE {
+		if mapperSetup.Verb == verb {
+			return &mapperSetup
+		}
+	}
+	return nil
+}
+
+func listAllVerbsRaw(o *os.File) {
+	for _, mapperSetup := range MAPPER_LOOKUP_TABLE {
+		fmt.Fprintf(o, "%s\n", mapperSetup.Verb)
+	}
+}
+
+func listAllVerbs(o *os.File, leader string) {
+	separator := " "
+
+	leaderlen := len(leader)
+	separatorlen := len(separator)
+	linelen := leaderlen
+	j := 0
+
+	for _, mapperSetup := range MAPPER_LOOKUP_TABLE {
+		verb := mapperSetup.Verb
+		verblen := len(verb)
+		linelen += separatorlen + verblen
+		if linelen >= 80 {
+			fmt.Fprintf(o, "\n")
+			linelen = leaderlen + separatorlen + verblen
+			j = 0
+		}
+		if j == 0 {
+			fmt.Fprintf(o, "%s", leader)
+		}
+		fmt.Fprintf(o, "%s%s", separator, verb)
+		j++
+	}
+
+	fmt.Fprintf(o, "\n")
+}
+
+func usageAllVerbs(argv0 string) {
+	separator := "================================================================"
+
+	for _, mapperSetup := range MAPPER_LOOKUP_TABLE {
+		fmt.Printf("%s\n", separator)
+		mapperSetup.UsageFunc(os.Stdout, argv0, mapperSetup.Verb)
+		fmt.Printf("\n")
+	}
+	fmt.Printf("%s\n", separator)
+	os.Exit(0)
+}
+
+var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
+	mapping.MapperCatSetup,
+	mapping.MapperNothingSetup,
+	mapping.MapperPutSetup,
+	mapping.MapperTacSetup,
+}
+
+//	&mapper_altkv_setup,
+//	&mapper_bar_setup,
+//	&mapper_bootstrap_setup,
+//	&mapper_cat_setup,
+//	&mapper_check_setup,
+//	&mapper_clean_whitespace_setup,
+//	&mapper_count_setup,
+//	&mapper_count_distinct_setup,
+//	&mapper_count_similar_setup,
+//	&mapper_cut_setup,
+//	&mapper_decimate_setup,
+//	&mapper_fill_down_setup,
+//	&mapper_filter_setup,
+//	&mapper_format_values_setup,
+//	&mapper_fraction_setup,
+//	&mapper_grep_setup,
+//	&mapper_group_by_setup,
+//	&mapper_group_like_setup,
+//	&mapper_having_fields_setup,
+//	&mapper_head_setup,
+//	&mapper_histogram_setup,
+//	&mapper_join_setup,
+//	&mapper_label_setup,
+//	&mapper_least_frequent_setup,
+//	&mapper_merge_fields_setup,
+//	&mapper_most_frequent_setup,
+//	&mapper_nest_setup,
+//	&mapper_nothing_setup,
+//	&mapper_put_setup,
+//	&mapper_regularize_setup,
+//	&mapper_remove_empty_columns_setup,
+//	&mapper_rename_setup,
+//	&mapper_reorder_setup,
+//	&mapper_repeat_setup,
+//	&mapper_reshape_setup,
+//	&mapper_sample_setup,
+//	&mapper_sec2gmt_setup,
+//	&mapper_sec2gmtdate_setup,
+//	&mapper_seqgen_setup,
+//	&mapper_shuffle_setup,
+//	&mapper_skip_trivial_records_setup,
+//	&mapper_sort_setup,
+//	// xxx temp for 5.4.0 -- will continue work after
+//	// &mapper_sort_within_records_setup,
+//	&mapper_stats1_setup,
+//	&mapper_stats2_setup,
+//	&mapper_step_setup,
+//	&mapper_tac_setup,
+//	&mapper_tail_setup,
+//	&mapper_tee_setup,
+//	&mapper_top_setup,
+//	&mapper_uniq_setup,
+//	&mapper_unsparsify_setup,
 
 // ----------------------------------------------------------------
 //static lhmss_t* singleton_pdesc_to_chars_map = nil;
@@ -397,7 +455,7 @@ func SeparatorFromArg(arg string) string {
 //	return singleton_default_repeat_ipses;
 //}
 //
-//static void free_opt_singletons() {
+//func free_opt_singletons() {
 //	lhmss_free(singleton_pdesc_to_chars_map);
 //	lhmss_free(singleton_default_rses);
 //	lhmss_free(singleton_default_fses);
@@ -429,444 +487,419 @@ func mainUsageShort() {
 }
 
 // ----------------------------------------------------------------
-// The main_usage_long() function is split out into subroutines in support of the
+// The mainUsageLong() function is split out into subroutines in support of the
 // manpage autogenerator.
 
-//static void main_usage_long(FILE* o, char* argv0) {
-//	main_usage_synopsis(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Command-line-syntax examples:\n");
-//	main_usage_examples(o, argv0, "  ");
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Data-format examples:\n");
-//	main_usage_data_format_examples(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Help options:\n");
-//	main_usage_help_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Customization via .mlrrc:\n");
-//	main_usage_mlrrc(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Verbs:\n");
-//	list_all_verbs(o, "  ");
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Functions for the filter and put verbs:\n");
-//	main_usage_functions(o, argv0, "  ");
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Data-format options, for input, output, or both:\n");
-//	main_usage_data_format_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Comments in data:\n");
-//	main_usage_comments_in_data(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Format-conversion keystroke-saver options, for input, output, or both:\n");
-//	main_usage_format_conversion_keystroke_saver_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Compressed-data options:\n");
-//	main_usage_compressed_data_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Separator options, for input, output, or both:\n");
-//	main_usage_separator_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
-//	main_usage_csv_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Double-quoting for CSV output:\n");
-//	main_usage_double_quoting(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Numerical formatting:\n");
-//	main_usage_numerical_formatting(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Other options:\n");
-//	main_usage_other_options(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Then-chaining:\n");
-//	main_usage_then_chaining(o, argv0);
-//	fprintf(o, "\n");
-//
-//	fprintf(o, "Auxiliary commands:\n");
-//	main_usage_auxents(o, argv0);
-//	fprintf(o, "\n");
-//
-//	main_usage_see_also(o, argv0);
+func mainUsageLong(o *os.File, argv0 string) {
+	mainUsageSynopsis(o, argv0)
+	fmt.Fprintf(o, "\n")
+
+	fmt.Fprintf(o, "Command-line-syntax examples:\n")
+	mainUsageExamples(o, argv0, "  ")
+	fmt.Fprintf(o, "\n")
+
+	fmt.Fprintf(o, "Data-format examples:\n")
+	mainUsageDataFormatExamples(o, argv0)
+	fmt.Fprintf(o, "\n")
+
+	fmt.Fprintf(o, "Help options:\n")
+	mainUsageHelpOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
+	//	fmt.Fprintf(o, "Customization via .mlrrc:\n");
+	//	mainUsageMlrrc(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+
+	fmt.Fprintf(o, "Verbs:\n")
+	listAllVerbs(o, "  ")
+	fmt.Fprintf(o, "\n")
+
+	//	fmt.Fprintf(o, "Functions for the filter and put verbs:\n");
+	//	mainUsageFunctions(o, argv0, "  ");
+	//	fmt.Fprintf(o, "\n");
+
+	fmt.Fprintf(o, "Data-format options, for input, output, or both:\n")
+	mainUsageDataFormatOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
+	//	fmt.Fprintf(o, "Comments in data:\n");
+	//	mainUsageCommentsInData(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	fmt.Fprintf(o, "Format-conversion keystroke-saver options, for input, output, or both:\n")
+	mainUsageFormatConversionKeystrokeSaverOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
+	//	fmt.Fprintf(o, "Compressed-data options:\n");
+	//	mainUsageCompressedDataOptions(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	//	fmt.Fprintf(o, "Separator options, for input, output, or both:\n");
+	//	mainUsageSeparatorOptions(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	//	fmt.Fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
+	//	mainUsageCsvOptions(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	//	fmt.Fprintf(o, "Double-quoting for CSV output:\n");
+	//	mainUsageDoubleQuoting(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	//	fmt.Fprintf(o, "Numerical formatting:\n");
+	//	mainUsageNumericalFormatting(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	//	fmt.Fprintf(o, "Other options:\n");
+	//	mainUsageOtherOptions(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	fmt.Fprintf(o, "Then-chaining:\n")
+	mainUsageThenChaining(o, argv0)
+	fmt.Fprintf(o, "\n")
+
+	//	fmt.Fprintf(o, "Auxiliary commands:\n");
+	//	mainUsageAuxents(o, argv0);
+	//	fmt.Fprintf(o, "\n");
+	//
+	mainUsageSeeAlso(o, argv0)
+}
+
+func mainUsageSynopsis(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {zero or more file names}\n", argv0)
+}
+
+func mainUsageExamples(o *os.File, argv0 string, leader string) {
+	fmt.Fprintf(o, "%s%s --csv cut -f hostname,uptime mydata.csv\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --tsv --rs lf filter '$status != \"down\" && $upsec >= 10000' *.tsv\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat\n", leader, argv0)
+	fmt.Fprintf(o, "%sgrep -v '^#' /etc/group | %s --ifs : --nidx --opprint label group,pass,gid,member then sort -f group\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s join -j account_id -f accounts.dat then group-by account_name balances.dat\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --json put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*.json\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s stats2 -a linreg-pca -f u,v -g shape data/*\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s put -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}' data/*\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --from estimates.tbl put '\n", leader, argv0)
+	fmt.Fprintf(o, "  for (k,v in $*) {\n")
+	fmt.Fprintf(o, "    if (is_numeric(v) && k =~ \"^[t-z].*$\") {\n")
+	fmt.Fprintf(o, "      $sum += v; $count += 1\n")
+	fmt.Fprintf(o, "    }\n")
+	fmt.Fprintf(o, "  }\n")
+	fmt.Fprintf(o, "  $mean = $sum / $count # no assignment if count unset'\n")
+	fmt.Fprintf(o, "%s%s --from infile.dat put -f analyze.mlr\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --from infile.dat put 'tee > \"./taps/data-\".$a.\"-\".$b, $*'\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --from infile.dat put 'tee | \"gzip > ./taps/data-\".$a.\"-\".$b.\".gz\", $*'\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --from infile.dat put -q '@v=$*; dump | \"jq .[]\"'\n", leader, argv0)
+	fmt.Fprintf(o, "%s%s --from infile.dat put  '(NR %% 1000 == 0) { print > os.Stderr, \"Checkpoint \".NR}'\n",
+		leader, argv0)
+}
+
+func mainUsageHelpOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "  -h or --help                 Show this message.\n")
+	fmt.Fprintf(o, "  --version                    Show the software version.\n")
+	fmt.Fprintf(o, "  {verb name} --help           Show verb-specific help.\n")
+	fmt.Fprintf(o, "  --help-all-verbs             Show help on all verbs.\n")
+	fmt.Fprintf(o, "  -l or --list-all-verbs       List only verb names.\n")
+	fmt.Fprintf(o, "  -L                           List only verb names, one per line.\n")
+	fmt.Fprintf(o, "  -f or --help-all-functions   Show help on all built-in functions.\n")
+	fmt.Fprintf(o, "  -F                           Show a bare listing of built-in functions by name.\n")
+	fmt.Fprintf(o, "  -k or --help-all-keywords    Show help on all keywords.\n")
+	fmt.Fprintf(o, "  -K                           Show a bare listing of keywords by name.\n")
+}
+
+//func mainUsageMlrrc(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.\n");
+//	fmt.Fprintf(o, "For example, if you usually process CSV, then you can put \"--csv\" in your .mlrrc file\n");
+//	fmt.Fprintf(o, "and that will be the default input/output format unless otherwise specified on the command line.\n");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "The .mlrrc file format is one \"--flag\" or \"--option value\" per line, with the leading \"--\" optional.\n");
+//	fmt.Fprintf(o, "Hash-style comments and blank lines are ignored.\n");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "Sample .mlrrc:\n");
+//	fmt.Fprintf(o, "# Input and output formats are CSV by default (unless otherwise specified\n");
+//	fmt.Fprintf(o, "# on the mlr command line):\n");
+//	fmt.Fprintf(o, "csv\n");
+//	fmt.Fprintf(o, "# These are no-ops for CSV, but when I do use JSON output, I want these\n");
+//	fmt.Fprintf(o, "# pretty-printing options to be used:\n");
+//	fmt.Fprintf(o, "jvstack\n");
+//	fmt.Fprintf(o, "jlistwrap\n");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "How to specify location of .mlrrc:\n");
+//	fmt.Fprintf(o, "* If $MLRRC is set:\n");
+//	fmt.Fprintf(o, "  o If its value is \"__none__\" then no .mlrrc files are processed.\n");
+//	fmt.Fprintf(o, "  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax\n");
+//	fmt.Fprintf(o, "    errors, they abort mlr with a usage message (as if you had mistyped something on the\n");
+//	fmt.Fprintf(o, "    command line). If the file can't be loaded at all, though, it is silently skipped.\n");
+//	fmt.Fprintf(o, "  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is\n");
+//	fmt.Fprintf(o, "    set in the environment.\n");
+//	fmt.Fprintf(o, "* Otherwise:\n");
+//	fmt.Fprintf(o, "  o If $HOME/.mlrrc exists, it's then processed as above.\n");
+//	fmt.Fprintf(o, "  o If ./.mlrrc exists, it's then also processed as above.\n");
+//	fmt.Fprintf(o, "  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)\n");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "See also:\n");
+//	fmt.Fprintf(o, "https://johnkerl.org/miller/doc/customization.html\n");
 //}
 
-//static void main_usage_synopsis(FILE* o, char* argv0) {
-//	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {zero or more file names}\n", argv0);
-//}
-
-//static void main_usage_examples(FILE* o, char* argv0, char* leader) {
-//
-//	fprintf(o, "%s%s --csv cut -f hostname,uptime mydata.csv\n", leader, argv0);
-//	fprintf(o, "%s%s --tsv --rs lf filter '$status != \"down\" && $upsec >= 10000' *.tsv\n", leader, argv0);
-//	fprintf(o, "%s%s --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat\n", leader, argv0);
-//	fprintf(o, "%sgrep -v '^#' /etc/group | %s --ifs : --nidx --opprint label group,pass,gid,member then sort -f group\n", leader, argv0);
-//	fprintf(o, "%s%s join -j account_id -f accounts.dat then group-by account_name balances.dat\n", leader, argv0);
-//	fprintf(o, "%s%s --json put '$attr = sub($attr, \"([0-9]+)_([0-9]+)_.*\", \"\\1:\\2\")' data/*.json\n", leader, argv0);
-//	fprintf(o, "%s%s stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*\n", leader, argv0);
-//	fprintf(o, "%s%s stats2 -a linreg-pca -f u,v -g shape data/*\n", leader, argv0);
-//	fprintf(o, "%s%s put -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}' data/*\n", leader, argv0);
-//	fprintf(o, "%s%s --from estimates.tbl put '\n", leader, argv0);
-//	fprintf(o, "  for (k,v in $*) {\n");
-//	fprintf(o, "    if (is_numeric(v) && k =~ \"^[t-z].*$\") {\n");
-//	fprintf(o, "      $sum += v; $count += 1\n");
-//	fprintf(o, "    }\n");
-//	fprintf(o, "  }\n");
-//	fprintf(o, "  $mean = $sum / $count # no assignment if count unset'\n");
-//	fprintf(o, "%s%s --from infile.dat put -f analyze.mlr\n", leader, argv0);
-//	fprintf(o, "%s%s --from infile.dat put 'tee > \"./taps/data-\".$a.\"-\".$b, $*'\n", leader, argv0);
-//	fprintf(o, "%s%s --from infile.dat put 'tee | \"gzip > ./taps/data-\".$a.\"-\".$b.\".gz\", $*'\n", leader, argv0);
-//	fprintf(o, "%s%s --from infile.dat put -q '@v=$*; dump | \"jq .[]\"'\n", leader, argv0);
-//	fprintf(o, "%s%s --from infile.dat put  '(NR %% 1000 == 0) { print > stderr, \"Checkpoint \".NR}'\n",
-//		leader, argv0);
-//}
-
-//static void list_all_verbs_raw(FILE* o) {
-//	for (int i = 0; i < mapper_lookup_table_length; i++) {
-//		fprintf(o, "%s\n", mapper_lookup_table[i].verb);
-//	}
-//}
-
-//static void list_all_verbs(FILE* o, char* leader) {
-//	char* separator = " ";
-//	int leaderlen = strlen(leader);
-//	int separatorlen = strlen(separator);
-//	int linelen = leaderlen;
-//	int j = 0;
-//	for (int i = 0; i < mapper_lookup_table_length; i++) {
-//		char* verb = mapper_lookup_table[i].verb;
-//		int verblen = strlen(verb);
-//		linelen += separatorlen + verblen;
-//		if (linelen >= 80) {
-//			fprintf(o, "\n");
-//			linelen = leaderlen + separatorlen + verblen;
-//			j = 0;
-//		}
-//		if (j == 0)
-//			fprintf(o, "%s", leader);
-//		fprintf(o, "%s%s", separator, verb);
-//		j++;
-//	}
-//	fprintf(o, "\n");
-//}
-
-//static void main_usage_help_options(FILE* o, char* argv0) {
-//	fprintf(o, "  -h or --help                 Show this message.\n");
-//	fprintf(o, "  --version                    Show the software version.\n");
-//	fprintf(o, "  {verb name} --help           Show verb-specific help.\n");
-//	fprintf(o, "  --help-all-verbs             Show help on all verbs.\n");
-//	fprintf(o, "  -l or --list-all-verbs       List only verb names.\n");
-//	fprintf(o, "  -L                           List only verb names, one per line.\n");
-//	fprintf(o, "  -f or --help-all-functions   Show help on all built-in functions.\n");
-//	fprintf(o, "  -F                           Show a bare listing of built-in functions by name.\n");
-//	fprintf(o, "  -k or --help-all-keywords    Show help on all keywords.\n");
-//	fprintf(o, "  -K                           Show a bare listing of keywords by name.\n");
-//}
-
-//static void main_usage_mlrrc(FILE* o, char* argv0) {
-//	fprintf(o, "You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.\n");
-//	fprintf(o, "For example, if you usually process CSV, then you can put \"--csv\" in your .mlrrc file\n");
-//	fprintf(o, "and that will be the default input/output format unless otherwise specified on the command line.\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "The .mlrrc file format is one \"--flag\" or \"--option value\" per line, with the leading \"--\" optional.\n");
-//	fprintf(o, "Hash-style comments and blank lines are ignored.\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "Sample .mlrrc:\n");
-//	fprintf(o, "# Input and output formats are CSV by default (unless otherwise specified\n");
-//	fprintf(o, "# on the mlr command line):\n");
-//	fprintf(o, "csv\n");
-//	fprintf(o, "# These are no-ops for CSV, but when I do use JSON output, I want these\n");
-//	fprintf(o, "# pretty-printing options to be used:\n");
-//	fprintf(o, "jvstack\n");
-//	fprintf(o, "jlistwrap\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "How to specify location of .mlrrc:\n");
-//	fprintf(o, "* If $MLRRC is set:\n");
-//	fprintf(o, "  o If its value is \"__none__\" then no .mlrrc files are processed.\n");
-//	fprintf(o, "  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax\n");
-//	fprintf(o, "    errors, they abort mlr with a usage message (as if you had mistyped something on the\n");
-//	fprintf(o, "    command line). If the file can't be loaded at all, though, it is silently skipped.\n");
-//	fprintf(o, "  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is\n");
-//	fprintf(o, "    set in the environment.\n");
-//	fprintf(o, "* Otherwise:\n");
-//	fprintf(o, "  o If $HOME/.mlrrc exists, it's then processed as above.\n");
-//	fprintf(o, "  o If ./.mlrrc exists, it's then also processed as above.\n");
-//	fprintf(o, "  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "See also:\n");
-//	fprintf(o, "https://johnkerl.org/miller/doc/customization.html\n");
-//}
-
-//static void main_usage_functions(FILE* o, char* argv0, char* leader) {
+//func mainUsageFunctions(o *os.File, argv0 string, char* leader) {
 //	fmgr_t* pfmgr = fmgr_alloc();
 //	fmgr_list_functions(pfmgr, o, leader);
 //	fmgr_free(pfmgr, nil);
-//	fprintf(o, "\n");
-//	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 //}
 
-//static void main_usage_data_format_examples(FILE* o, char* argv0) {
-//	fprintf(o,
-//		"  DKVP: delimited key-value pairs (Miller default format)\n"
-//		"  +---------------------+\n"
-//		"  | apple=1,bat=2,cog=3 | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-//		"  | dish=7,egg=8,flint  | Record 2: \"dish\" => \"7\", \"egg\" => \"8\", \"3\" => \"flint\"\n"
-//		"  +---------------------+\n"
-//		"\n"
-//		"  NIDX: implicitly numerically indexed (Unix-toolkit style)\n"
-//		"  +---------------------+\n"
-//		"  | the quick brown     | Record 1: \"1\" => \"the\", \"2\" => \"quick\", \"3\" => \"brown\"\n"
-//		"  | fox jumped          | Record 2: \"1\" => \"fox\", \"2\" => \"jumped\"\n"
-//		"  +---------------------+\n"
-//		"\n"
-//		"  CSV/CSV-lite: comma-separated values with separate header line\n"
-//		"  +---------------------+\n"
-//		"  | apple,bat,cog       |\n"
-//		"  | 1,2,3               | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-//		"  | 4,5,6               | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
-//		"  +---------------------+\n"
-//		"\n"
-//		"  Tabular JSON: nested objects are supported, although arrays within them are not:\n"
-//		"  +---------------------+\n"
-//		"  | {                   |\n"
-//		"  |  \"apple\": 1,        | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-//		"  |  \"bat\": 2,          |\n"
-//		"  |  \"cog\": 3           |\n"
-//		"  | }                   |\n"
-//		"  | {                   |\n"
-//		"  |   \"dish\": {         | Record 2: \"dish:egg\" => \"7\", \"dish:flint\" => \"8\", \"garlic\" => \"\"\n"
-//		"  |     \"egg\": 7,       |\n"
-//		"  |     \"flint\": 8      |\n"
-//		"  |   },                |\n"
-//		"  |   \"garlic\": \"\"      |\n"
-//		"  | }                   |\n"
-//		"  +---------------------+\n"
-//		"\n"
-//		"  PPRINT: pretty-printed tabular\n"
-//		"  +---------------------+\n"
-//		"  | apple bat cog       |\n"
-//		"  | 1     2   3         | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-//		"  | 4     5   6         | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
-//		"  +---------------------+\n"
-//		"\n"
-//		"  XTAB: pretty-printed transposed tabular\n"
-//		"  +---------------------+\n"
-//		"  | apple 1             | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-//		"  | bat   2             |\n"
-//		"  | cog   3             |\n"
-//		"  |                     |\n"
-//		"  | dish 7              | Record 2: \"dish\" => \"7\", \"egg\" => \"8\"\n"
-//		"  | egg  8              |\n"
-//		"  +---------------------+\n"
-//		"\n"
-//		"  Markdown tabular (supported for output only):\n"
-//		"  +-----------------------+\n"
-//		"  | | apple | bat | cog | |\n"
-//		"  | | ---   | --- | --- | |\n"
-//		"  | | 1     | 2   | 3   | | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-//		"  | | 4     | 5   | 6   | | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
-//		"  +-----------------------+\n");
-//}
+func mainUsageDataFormatExamples(o *os.File, argv0 string) {
+	fmt.Fprintf(o,
+		`  DKVP: delimited key-value pairs (Miller default format)
+  +---------------------+
+  | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+  | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+  +---------------------+
 
-//static void main_usage_data_format_options(FILE* o, char* argv0) {
-//	fprintf(o, "  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g \"a=1,b=2\"\n");
-//	fprintf(o, "                                  (this is Miller's default format).\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields\n");
-//	fprintf(o, "                                  (Unix-toolkit style).\n");
-//	fprintf(o, "  -T                              Synonymous with \"--nidx --fs tab\".\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated\n");
-//	fprintf(o, "                                  with --fs tab, etc.)\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  --itsv    --otsv    --tsv       Keystroke-savers for \"--icsv --ifs tab\",\n");
-//	fprintf(o, "                                  \"--ocsv --ofs tab\", \"--csv --fs tab\".\n");
-//	fprintf(o, "  --iasv    --oasv    --asv       Similar but using ASCII FS %s and RS %s\n",
-//		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
-//	fprintf(o, "  --iusv    --ousv    --usv       Similar but using Unicode FS %s\n",
-//		USV_FS_FOR_HELP);
-//	fprintf(o, "                                  and RS %s\n",
-//		USV_RS_FOR_HELP);
-//	fprintf(o, "\n");
-//	fprintf(o, "  --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated\n");
-//	fprintf(o, "                                  with --fs tab, etc.). The 'lite' CSV does not handle\n");
-//	fprintf(o, "                                  RFC-CSV double-quoting rules; is slightly faster;\n");
-//	fprintf(o, "                                  and handles heterogeneity in the input stream via\n");
-//	fprintf(o, "                                  empty newline followed by new header line. See also\n");
-//	fprintf(o, "                                  http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  --itsvlite --otsvlite --tsvlite Keystroke-savers for \"--icsvlite --ifs tab\",\n");
-//	fprintf(o, "                                  \"--ocsvlite --ofs tab\", \"--csvlite --fs tab\".\n");
-//	fprintf(o, "  -t                              Synonymous with --tsvlite.\n");
-//	fprintf(o, "  --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS %s and RS %s\n",
-//		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
-//	fprintf(o, "  --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS %s\n",
-//		USV_FS_FOR_HELP);
-//	fprintf(o, "                                  and RS %s\n",
-//		USV_RS_FOR_HELP);
-//	fprintf(o, "\n");
-//	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
-//	fprintf(o, "                                  output until all input is in).\n");
-//	fprintf(o, "                      --right     Right-justifies all fields for PPRINT output.\n");
-//	fprintf(o, "                      --barred    Prints a border around PPRINT output\n");
-//	fprintf(o, "                                  (only available for output).\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "            --omd                 Markdown-tabular (only available for output).\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.\n");
-//	fprintf(o, "                      --xvright   Right-justifies values for XTAB format.\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level\n");
-//	fprintf(o, "                                  maps: {...}{...} or [{...},{...}].\n");
-//	fprintf(o, "    --json-map-arrays-on-input    JSON arrays are unmillerable. --json-map-arrays-on-input\n");
-//	fprintf(o, "    --json-skip-arrays-on-input   is the default: arrays are converted to integer-indexed\n");
-//	fprintf(o, "    --json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or\n");
-//	fprintf(o, "                                  to be treated as errors.  Please use the jq tool for full\n");
-//	fprintf(o, "                                  JSON (pre)processing.\n");
-//	fprintf(o, "                      --jvstack   Put one key-value pair per line for JSON\n");
-//	fprintf(o, "                                  output.\n");
-//	fprintf(o, "                --jsonx --ojsonx  Keystroke-savers for --json --jvstack\n");
-//	fprintf(o, "                --jsonx --ojsonx  and --ojson --jvstack, respectively.\n");
-//	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
-//	fprintf(o, "                    --jknquoteint Do not quote non-string map keys in JSON output.\n");
-//	fprintf(o, "                     --jvquoteall Quote map values in JSON output, even if they're\n");
-//	fprintf(o, "                                  numeric.\n");
-//	fprintf(o, "              --jflatsep {string} Separator for flattening multi-level JSON keys,\n");
-//	fprintf(o, "                                  e.g. '{\"a\":{\"b\":3}}' becomes a:b => 3 for\n");
-//	fprintf(o, "                                  non-JSON formats. Defaults to %s.\n",
-//		DEFAULT_JSON_FLATTEN_SEPARATOR);
-//	fprintf(o, "\n");
-//	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
-//	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  Please use --iformat1 --oformat2 rather than --format1 --oformat2.\n");
-//	fprintf(o, "  The latter sets up input and output flags for format1, not all of which\n");
-//	fprintf(o, "  are overridden in all cases by setting output format to format2.\n");
-//}
+  NIDX: implicitly numerically indexed (Unix-toolkit style)
+  +---------------------+
+  | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
+  | fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
+  +---------------------+
 
-//static void main_usage_comments_in_data(FILE* o, char* argv0) {
-//	fprintf(o, "  --skip-comments                 Ignore commented lines (prefixed by \"%s\")\n",
+  CSV/CSV-lite: comma-separated values with separate header line
+  +---------------------+
+  | apple,bat,cog       |
+  | 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+  | 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+  +---------------------+
+
+  Tabular JSON: nested objects are supported, although arrays within them are not:
+  +---------------------+
+  | {                   |
+  |  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+  |  "bat": 2,          |
+  |  "cog": 3           |
+  | }                   |
+  | {                   |
+  |   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
+  |     "egg": 7,       |
+  |     "flint": 8      |
+  |   },                |
+  |   "garlic": ""      |
+  | }                   |
+  +---------------------+
+
+  PPRINT: pretty-printed tabular
+  +---------------------+
+  | apple bat cog       |
+  | 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+  | 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+  +---------------------+
+
+  XTAB: pretty-printed transposed tabular
+  +---------------------+
+  | apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+  | bat   2             |
+  | cog   3             |
+  |                     |
+  | dish 7              | Record 2: "dish" => "7", "egg" => "8"
+  | egg  8              |
+  +---------------------+
+
+  Markdown tabular (supported for output only):
+  +-----------------------+
+  | | apple | bat | cog | |
+  | | ---   | --- | --- | |
+  | | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+  | | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+  +-----------------------+
+`)
+}
+
+func mainUsageDataFormatOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o,
+		`
+	  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+	                                  (this is Miller's default format).
+	
+	  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields
+	                                  (Unix-toolkit style).
+	  -T                              Synonymous with "--nidx --fs tab".
+	
+	  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
+	                                  with --fs tab, etc.)
+	
+	  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+	                                  "--ocsv --ofs tab", "--csv --fs tab".
+	  --iasv    --oasv    --asv       Similar but using ASCII FS %s and RS %s\n",
+		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
+	  --iusv    --ousv    --usv       Similar but using Unicode FS %s\n",
+		USV_FS_FOR_HELP);
+	                                  and RS %s\n",
+		USV_RS_FOR_HELP);
+	
+	  --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
+	                                  with --fs tab, etc.). The 'lite' CSV does not handle
+	                                  RFC-CSV double-quoting rules; is slightly faster;
+	                                  and handles heterogeneity in the input stream via
+	                                  empty newline followed by new header line. See also
+	                                  http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.
+	
+	  --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
+	                                  "--ocsvlite --ofs tab", "--csvlite --fs tab".
+	  -t                              Synonymous with --tsvlite.
+	  --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS %s and RS %s\n",
+		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
+	  --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS %s\n",
+		USV_FS_FOR_HELP);
+	                                  and RS %s\n",
+		USV_RS_FOR_HELP);
+	
+	  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
+	                                  output until all input is in).
+	                      --right     Right-justifies all fields for PPRINT output.
+	                      --barred    Prints a border around PPRINT output
+	                                  (only available for output).
+	
+	            --omd                 Markdown-tabular (only available for output).
+	
+	  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+	                      --xvright   Right-justifies values for XTAB format.
+	
+	  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+	                                  maps: {...}{...} or [{...},{...}].
+	    --json-map-arrays-on-input    JSON arrays are unmillerable. --json-map-arrays-on-input
+	    --json-skip-arrays-on-input   is the default: arrays are converted to integer-indexed
+	    --json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or
+	                                  to be treated as errors.  Please use the jq tool for full
+	                                  JSON (pre)processing.
+	                      --jvstack   Put one key-value pair per line for JSON
+	                                  output.
+	                --jsonx --ojsonx  Keystroke-savers for --json --jvstack
+	                --jsonx --ojsonx  and --ojson --jvstack, respectively.
+	                      --jlistwrap Wrap JSON output in outermost [ ].
+	                    --jknquoteint Do not quote non-string map keys in JSON output.
+	                     --jvquoteall Quote map values in JSON output, even if they're
+	                                  numeric.
+	              --jflatsep {string} Separator for flattening multi-level JSON keys,
+	                                  e.g. '{"a":{"b":3}}' becomes a:b => 3 for
+	                                  non-JSON formats. Defaults to %s.\n",
+		DEFAULT_JSON_FLATTEN_SEPARATOR);
+	
+	  -p is a keystroke-saver for --nidx --fs space --repifs
+	
+	  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
+	  DKVP-formatted input and pretty-printed output.
+	
+	  Please use --iformat1 --oformat2 rather than --format1 --oformat2.
+	  The latter sets up input and output flags for format1, not all of which
+	  are overridden in all cases by setting output format to format2.
+
+`)
+}
+
+//func mainUsageCommentsInData(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --skip-comments                 Ignore commented lines (prefixed by \"%s\")\n",
 //		DEFAULT_COMMENT_STRING);
-//	fprintf(o, "                                  within the input.\n");
-//	fprintf(o, "  --skip-comments-with {string}   Ignore commented lines within input, with\n");
-//	fprintf(o, "                                  specified prefix.\n");
-//	fprintf(o, "  --pass-comments                 Immediately print commented lines (prefixed by \"%s\")\n",
+//	fmt.Fprintf(o, "                                  within the input.\n");
+//	fmt.Fprintf(o, "  --skip-comments-with {string}   Ignore commented lines within input, with\n");
+//	fmt.Fprintf(o, "                                  specified prefix.\n");
+//	fmt.Fprintf(o, "  --pass-comments                 Immediately print commented lines (prefixed by \"%s\")\n",
 //		DEFAULT_COMMENT_STRING);
-//	fprintf(o, "                                  within the input.\n");
-//	fprintf(o, "  --pass-comments-with {string}   Immediately print commented lines within input, with\n");
-//	fprintf(o, "                                  specified prefix.\n");
-//	fprintf(o, "Notes:\n");
-//	fprintf(o, "* Comments are only honored at the start of a line.\n");
-//	fprintf(o, "* In the absence of any of the above four options, comments are data like\n");
-//	fprintf(o, "  any other text.\n");
-//	fprintf(o, "* When pass-comments is used, comment lines are written to standard output\n");
-//	fprintf(o, "  immediately upon being read; they are not part of the record stream.\n");
-//	fprintf(o, "  Results may be counterintuitive. A suggestion is to place comments at the\n");
-//	fprintf(o, "  start of data files.\n");
+//	fmt.Fprintf(o, "                                  within the input.\n");
+//	fmt.Fprintf(o, "  --pass-comments-with {string}   Immediately print commented lines within input, with\n");
+//	fmt.Fprintf(o, "                                  specified prefix.\n");
+//	fmt.Fprintf(o, "Notes:\n");
+//	fmt.Fprintf(o, "* Comments are only honored at the start of a line.\n");
+//	fmt.Fprintf(o, "* In the absence of any of the above four options, comments are data like\n");
+//	fmt.Fprintf(o, "  any other text.\n");
+//	fmt.Fprintf(o, "* When pass-comments is used, comment lines are written to standard output\n");
+//	fmt.Fprintf(o, "  immediately upon being read; they are not part of the record stream.\n");
+//	fmt.Fprintf(o, "  Results may be counterintuitive. A suggestion is to place comments at the\n");
+//	fmt.Fprintf(o, "  start of data files.\n");
 //}
 
-//static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0) {
-//	fprintf(o, "As keystroke-savers for format-conversion you may use the following:\n");
-//	fprintf(o, "        --c2t --c2d --c2n --c2j --c2x --c2p --c2m\n");
-//	fprintf(o, "  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m\n");
-//	fprintf(o, "  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m\n");
-//	fprintf(o, "  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m\n");
-//	fprintf(o, "  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m\n");
-//	fprintf(o, "  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m\n");
-//	fprintf(o, "  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m\n");
-//	fprintf(o, "The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,\n");
-//	fprintf(o, "PPRINT, and markdown, respectively. Note that markdown format is available for\n");
-//	fprintf(o, "output only.\n");
-//}
+func mainUsageFormatConversionKeystrokeSaverOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "As keystroke-savers for format-conversion you may use the following:\n")
+	fmt.Fprintf(o, "        --c2t --c2d --c2n --c2j --c2x --c2p --c2m\n")
+	fmt.Fprintf(o, "  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m\n")
+	fmt.Fprintf(o, "  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m\n")
+	fmt.Fprintf(o, "  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m\n")
+	fmt.Fprintf(o, "  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m\n")
+	fmt.Fprintf(o, "  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m\n")
+	fmt.Fprintf(o, "  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m\n")
+	fmt.Fprintf(o, "The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,\n")
+	fmt.Fprintf(o, "PPRINT, and markdown, respectively. Note that markdown format is available for\n")
+	fmt.Fprintf(o, "output only.\n")
+}
 
-//static void main_usage_compressed_data_options(FILE* o, char* argv0) {
-//	fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n");
-//	fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
+//func mainUsageCompressedDataOptions(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n");
+//	fmt.Fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
 //		argv0);
-//	fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
-//	fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
-//	fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n");
-//	fprintf(o, "  be able to read from standard input; it will be invoked with\n");
-//	fprintf(o, "    {command} < {filename}.\n");
-//	fprintf(o, "  Examples:\n");
-//	fprintf(o, "    %s --prepipe 'gunzip'\n", argv0);
-//	fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0);
-//	fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0);
-//	fprintf(o, "    %s --prepipe cat\n", argv0);
-//	fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n");
-//	fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
-//	fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
-//	fprintf(o, "    %s ... | {your compression command}\n", argv0);
+//	fmt.Fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
+//	fmt.Fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
+//	fmt.Fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n");
+//	fmt.Fprintf(o, "  be able to read from standard input; it will be invoked with\n");
+//	fmt.Fprintf(o, "    {command} < {filename}.\n");
+//	fmt.Fprintf(o, "  Examples:\n");
+//	fmt.Fprintf(o, "    %s --prepipe 'gunzip'\n", argv0);
+//	fmt.Fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0);
+//	fmt.Fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0);
+//	fmt.Fprintf(o, "    %s --prepipe cat\n", argv0);
+//	fmt.Fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n");
+//	fmt.Fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
+//	fmt.Fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
+//	fmt.Fprintf(o, "    %s ... | {your compression command}\n", argv0);
 //}
 
-//static void main_usage_separator_options(FILE* o, char* argv0) {
-//	fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
-//	fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
-//	fprintf(o, "  --ps     --ips     --ops              Pair separators, e.g. equals sign\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  Notes about line endings:\n");
-//	fprintf(o, "  * Default line endings (--irs and --ors) are \"auto\" which means autodetect from\n");
-//	fprintf(o, "    the input file format, as long as the input file(s) have lines ending in either\n");
-//	fprintf(o, "    LF (also known as linefeed, '\\n', 0x0a, Unix-style) or CRLF (also known as\n");
-//	fprintf(o, "    carriage-return/linefeed pairs, '\\r\\n', 0x0d 0x0a, Windows style).\n");
-//	fprintf(o, "  * If both irs and ors are auto (which is the default) then LF input will lead to LF\n");
-//	fprintf(o, "    output and CRLF input will lead to CRLF output, regardless of the platform you're\n");
-//	fprintf(o, "    running on.\n");
-//	fprintf(o, "  * The line-ending autodetector triggers on the first line ending detected in the input\n");
-//	fprintf(o, "    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an\n");
-//	fprintf(o, "    LF-terminated file then autodetected line endings will be CRLF.\n");
-//	fprintf(o, "  * If you use --ors {something else} with (default or explicitly specified) --irs auto\n");
-//	fprintf(o, "    then line endings are autodetected on input and set to what you specify on output.\n");
-//	fprintf(o, "  * If you use --irs {something else} with (default or explicitly specified) --ors auto\n");
-//	fprintf(o, "    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.\n");
-//	fprintf(o, "\n");
-//	fprintf(o, "  Notes about all other separators:\n");
-//	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats\n");
-//	fprintf(o, "    do key-value pairs appear juxtaposed.\n");
-//	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;\n");
-//	fprintf(o, "    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.\n");
-//	fprintf(o, "    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs\n");
-//	fprintf(o, "    auto for XTAB format. (XTAB's default IFS/OFS are \"auto\".)\n");
-//	fprintf(o, "  * OFS must be single-character for PPRINT format. This is because it is used\n");
-//	fprintf(o, "    with repetition for alignment; multi-character separators would make\n");
-//	fprintf(o, "    alignment impossible.\n");
-//	fprintf(o, "  * OPS may be multi-character for XTAB format, in which case alignment is\n");
-//	fprintf(o, "    disabled.\n");
-//	fprintf(o, "  * TSV is simply CSV using tab as field separator (\"--fs tab\").\n");
-//	fprintf(o, "  * FS/PS are ignored for markdown format; RS is used.\n");
-//	fprintf(o, "  * All FS and PS options are ignored for JSON format, since they are not relevant\n");
-//	fprintf(o, "    to the JSON format.\n");
-//	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
-//	fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g.\n");
-//	fprintf(o, "      \"--fs '|' --ips :\"\n");
-//	fprintf(o, "    - C-style escape sequences, e.g. \"--rs '\\r\\n' --fs '\\t'\".\n");
-//	fprintf(o, "    - To avoid backslashing, you can use any of the following names:\n");
-//	fprintf(o, "     ");
+//func mainUsageSeparatorOptions(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");
+//	fmt.Fprintf(o, "  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma\n");
+//	fmt.Fprintf(o, "  --ps     --ips     --ops              Pair separators, e.g. equals sign\n");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "  Notes about line endings:\n");
+//	fmt.Fprintf(o, "  * Default line endings (--irs and --ors) are \"auto\" which means autodetect from\n");
+//	fmt.Fprintf(o, "    the input file format, as long as the input file(s) have lines ending in either\n");
+//	fmt.Fprintf(o, "    LF (also known as linefeed, '\\n', 0x0a, Unix-style) or CRLF (also known as\n");
+//	fmt.Fprintf(o, "    carriage-return/linefeed pairs, '\\r\\n', 0x0d 0x0a, Windows style).\n");
+//	fmt.Fprintf(o, "  * If both irs and ors are auto (which is the default) then LF input will lead to LF\n");
+//	fmt.Fprintf(o, "    output and CRLF input will lead to CRLF output, regardless of the platform you're\n");
+//	fmt.Fprintf(o, "    running on.\n");
+//	fmt.Fprintf(o, "  * The line-ending autodetector triggers on the first line ending detected in the input\n");
+//	fmt.Fprintf(o, "    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an\n");
+//	fmt.Fprintf(o, "    LF-terminated file then autodetected line endings will be CRLF.\n");
+//	fmt.Fprintf(o, "  * If you use --ors {something else} with (default or explicitly specified) --irs auto\n");
+//	fmt.Fprintf(o, "    then line endings are autodetected on input and set to what you specify on output.\n");
+//	fmt.Fprintf(o, "  * If you use --irs {something else} with (default or explicitly specified) --ors auto\n");
+//	fmt.Fprintf(o, "    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.\n");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "  Notes about all other separators:\n");
+//	fmt.Fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats\n");
+//	fmt.Fprintf(o, "    do key-value pairs appear juxtaposed.\n");
+//	fmt.Fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;\n");
+//	fmt.Fprintf(o, "    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.\n");
+//	fmt.Fprintf(o, "    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs\n");
+//	fmt.Fprintf(o, "    auto for XTAB format. (XTAB's default IFS/OFS are \"auto\".)\n");
+//	fmt.Fprintf(o, "  * OFS must be single-character for PPRINT format. This is because it is used\n");
+//	fmt.Fprintf(o, "    with repetition for alignment; multi-character separators would make\n");
+//	fmt.Fprintf(o, "    alignment impossible.\n");
+//	fmt.Fprintf(o, "  * OPS may be multi-character for XTAB format, in which case alignment is\n");
+//	fmt.Fprintf(o, "    disabled.\n");
+//	fmt.Fprintf(o, "  * TSV is simply CSV using tab as field separator (\"--fs tab\").\n");
+//	fmt.Fprintf(o, "  * FS/PS are ignored for markdown format; RS is used.\n");
+//	fmt.Fprintf(o, "  * All FS and PS options are ignored for JSON format, since they are not relevant\n");
+//	fmt.Fprintf(o, "    to the JSON format.\n");
+//	fmt.Fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
+//	fmt.Fprintf(o, "    - Type them out, quoting as necessary for shell escapes, e.g.\n");
+//	fmt.Fprintf(o, "      \"--fs '|' --ips :\"\n");
+//	fmt.Fprintf(o, "    - C-style escape sequences, e.g. \"--rs '\\r\\n' --fs '\\t'\".\n");
+//	fmt.Fprintf(o, "    - To avoid backslashing, you can use any of the following names:\n");
+//	fmt.Fprintf(o, "     ");
 //	lhmss_t* pmap = get_desc_to_chars_map();
 //	for (lhmsse_t* pe = pmap.phead; pe != nil; pe = pe.pnext) {
-//		fprintf(o, " %s", pe.key);
+//		fmt.Fprintf(o, " %s", pe.key);
 //	}
-//	fprintf(o, "\n");
-//	fprintf(o, "  * Default separators by format:\n");
-//	fprintf(o, "      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS");
+//	fmt.Fprintf(o, "\n");
+//	fmt.Fprintf(o, "  * Default separators by format:\n");
+//	fmt.Fprintf(o, "      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS");
 //	lhmss_t* default_rses = get_default_rses();
 //	lhmss_t* default_fses = get_default_fses();
 //	lhmss_t* default_pses = get_default_pses();
@@ -875,120 +908,107 @@ func mainUsageShort() {
 //		char* rs = pe.value;
 //		char* fs = lhmss_get(default_fses, filefmt);
 //		char* ps = lhmss_get(default_pses, filefmt);
-//		fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
+//		fmt.Fprintf(o, "      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps));
 //	}
 //}
 
-//static void main_usage_csv_options(FILE* o, char* argv0) {
-//	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
-//	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
-//	fprintf(o, "                     missing headers.\n");
-//	fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n");
-//	fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
-//	fprintf(o, "                     fields than the header line, use integer field labels as in\n");
-//	fprintf(o, "                     the implicit-header case.\n");
-//	fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
-//	fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
+//func mainUsageCsvOptions(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
+//	fmt.Fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
+//	fmt.Fprintf(o, "                     missing headers.\n");
+//	fmt.Fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n");
+//	fmt.Fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
+//	fmt.Fprintf(o, "                     fields than the header line, use integer field labels as in\n");
+//	fmt.Fprintf(o, "                     the implicit-header case.\n");
+//	fmt.Fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
+//	fmt.Fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
 //}
 
-//static void main_usage_double_quoting(FILE* o, char* argv0) {
-//	fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
-//	fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have\n");
-//	fprintf(o, "                     OFS or ORS in them\n");
-//	fprintf(o, "  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n");
-//	fprintf(o, "                     in them (default)\n");
-//	fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers\n");
-//	fprintf(o, "                     in them\n");
-//	fprintf(o, "  --quote-original   Wrap fields in double quotes if and only if they were\n");
-//	fprintf(o, "                     quoted on input. This isn't sticky for computed fields:\n");
-//	fprintf(o, "                     e.g. if fields a and b were quoted on input and you do\n");
-//	fprintf(o, "                     \"put '$c = $a . $b'\" then field c won't inherit a or b's\n");
-//	fprintf(o, "                     was-quoted-on-input flag.\n");
+//func mainUsageDoubleQuoting(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");
+//	fmt.Fprintf(o, "  --quote-none       Do not wrap any fields in double quotes, even if they have\n");
+//	fmt.Fprintf(o, "                     OFS or ORS in them\n");
+//	fmt.Fprintf(o, "  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n");
+//	fmt.Fprintf(o, "                     in them (default)\n");
+//	fmt.Fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers\n");
+//	fmt.Fprintf(o, "                     in them\n");
+//	fmt.Fprintf(o, "  --quote-original   Wrap fields in double quotes if and only if they were\n");
+//	fmt.Fprintf(o, "                     quoted on input. This isn't sticky for computed fields:\n");
+//	fmt.Fprintf(o, "                     e.g. if fields a and b were quoted on input and you do\n");
+//	fmt.Fprintf(o, "                     \"put '$c = $a . $b'\" then field c won't inherit a or b's\n");
+//	fmt.Fprintf(o, "                     was-quoted-on-input flag.\n");
 //}
 
-//static void main_usage_numerical_formatting(FILE* o, char* argv0) {
-//	fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for\n");
-//	fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
-//	fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
-//	fprintf(o, "                     function within mlr put (mlr --help-all-functions).\n");
-//	fprintf(o, "                     Defaults to %s.\n", DEFAULT_OFMT);
+//func mainUsageNumericalFormatting(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for\n");
+//	fmt.Fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
+//	fmt.Fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
+//	fmt.Fprintf(o, "                     function within mlr put (mlr --help-all-functions).\n");
+//	fmt.Fprintf(o, "                     Defaults to %s.\n", DEFAULT_OFMT);
 //}
 
-//static void main_usage_other_options(FILE* o, char* argv0) {
-//	fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter\n");
-//	fprintf(o, "                     urand()/urandint()/urand32().\n");
-//	fprintf(o, "  --nr-progress-mod {m}, with m a positive integer: print filename and record\n");
-//	fprintf(o, "                     count to stderr every m input records.\n");
-//	fprintf(o, "  --from {filename}  Use this to specify an input file before the verb(s),\n");
-//	fprintf(o, "                     rather than after. May be used more than once. Example:\n");
-//	fprintf(o, "                     \"%s --from a.dat --from b.dat cat\" is the same as\n", argv0);
-//	fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0);
-//	fprintf(o, "  -n                 Process no input files, nor standard input either. Useful\n");
-//	fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0);
-//	fprintf(o, "                     /dev/null.) Also useful in \"%s -n put -v '...'\" for\n", argv0);
-//	fprintf(o, "                     analyzing abstract syntax trees (if that's your thing).\n");
-//	fprintf(o, "  -I                 Process files in-place. For each file name on the command\n");
-//	fprintf(o, "                     line, output is written to a temp file in the same\n");
-//	fprintf(o, "                     directory, which is then renamed over the original. Each\n");
-//	fprintf(o, "                     file is processed in isolation: if the output format is\n");
-//	fprintf(o, "                     CSV, CSV headers will be present in each output file;\n");
-//	fprintf(o, "                     statistics are only over each file's own records; and so on.\n");
+//func mainUsageOtherOptions(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter\n");
+//	fmt.Fprintf(o, "                     urand()/urandint()/urand32().\n");
+//	fmt.Fprintf(o, "  --nr-progress-mod {m}, with m a positive integer: print filename and record\n");
+//	fmt.Fprintf(o, "                     count to os.Stderr every m input records.\n");
+//	fmt.Fprintf(o, "  --from {filename}  Use this to specify an input file before the verb(s),\n");
+//	fmt.Fprintf(o, "                     rather than after. May be used more than once. Example:\n");
+//	fmt.Fprintf(o, "                     \"%s --from a.dat --from b.dat cat\" is the same as\n", argv0);
+//	fmt.Fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0);
+//	fmt.Fprintf(o, "  -n                 Process no input files, nor standard input either. Useful\n");
+//	fmt.Fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0);
+//	fmt.Fprintf(o, "                     /dev/null.) Also useful in \"%s -n put -v '...'\" for\n", argv0);
+//	fmt.Fprintf(o, "                     analyzing abstract syntax trees (if that's your thing).\n");
+//	fmt.Fprintf(o, "  -I                 Process files in-place. For each file name on the command\n");
+//	fmt.Fprintf(o, "                     line, output is written to a temp file in the same\n");
+//	fmt.Fprintf(o, "                     directory, which is then renamed over the original. Each\n");
+//	fmt.Fprintf(o, "                     file is processed in isolation: if the output format is\n");
+//	fmt.Fprintf(o, "                     CSV, CSV headers will be present in each output file;\n");
+//	fmt.Fprintf(o, "                     statistics are only over each file's own records; and so on.\n");
 //}
 
-//static void main_usage_then_chaining(FILE* o, char* argv0) {
-//	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
-//	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
-//}
+func mainUsageThenChaining(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n")
+	fmt.Fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0)
+}
 
-//static void main_usage_auxents(FILE* o, char* argv0) {
-//	fprintf(o, "Miller has a few otherwise-standalone executables packaged within it.\n");
-//	fprintf(o, "They do not participate in any other parts of Miller.\n");
+//func mainUsageAuxents(o *os.File, argv0 string) {
+//	fmt.Fprintf(o, "Miller has a few otherwise-standalone executables packaged within it.\n");
+//	fmt.Fprintf(o, "They do not participate in any other parts of Miller.\n");
 //	show_aux_entries(o);
 //}
 
-//static void main_usage_see_also(FILE* o, char* argv0) {
-//	fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n");
-//	fprintf(o, "http://github.com/johnkerl/miller.");
-//	fprintf(o, " This is Miller version %s.\n", VERSION_STRING);
-//}
+func mainUsageSeeAlso(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n")
+	fmt.Fprintf(o, "http://github.com/johnkerl/miller.")
+	fmt.Fprintf(o, " This is Miller version %s.\n", VERSION_STRING)
+}
 
-//static void print_type_arithmetic_info(FILE* o, char* argv0) {
+//func printTypeArithmeticInfo(o *os.File, argv0 string) {
 //	for (int i = -2; i < MT_DIM; i++) {
 //		mv_t a = (mv_t) {.type = i, .free_flags = NO_FREE, .u.intv = 0};
 //		if (i == -2)
-//			printf("%-6s |", "(+)");
+//			fmt.Printf("%-6s |", "(+)");
 //		else if (i == -1)
-//			printf("%-6s +", "------");
+//			fmt.Printf("%-6s +", "------");
 //		else
-//			printf("%-6s |", mt_describe_type_simple(a.type));
+//			fmt.Printf("%-6s |", mt_describe_type_simple(a.type));
 //
 //		for (int j = 0; j < MT_DIM; j++) {
 //			mv_t b = (mv_t) {.type = j, .free_flags = NO_FREE, .u.intv = 0};
 //			if (i == -2) {
-//				printf(" %-6s", mt_describe_type_simple(b.type));
+//				fmt.Printf(" %-6s", mt_describe_type_simple(b.type));
 //			} else if (i == -1) {
-//				printf(" %-6s", "------");
+//				fmt.Printf(" %-6s", "------");
 //			} else {
 //				mv_t c = x_xx_plus_func(&a, &b);
-//				printf(" %-6s", mt_describe_type_simple(c.type));
+//				fmt.Printf(" %-6s", mt_describe_type_simple(c.type));
 //			}
 //		}
 //
-//		fprintf(o, "\n");
+//		fmt.Fprintf(o, "\n");
 //	}
-//}
-
-// ----------------------------------------------------------------
-//static void usage_all_verbs(char* argv0) {
-//	char* separator = "================================================================";
-//
-//	for (int i = 0; i < mapper_lookup_table_length; i++) {
-//		fprintf(stdout, "%s\n", separator);
-//		mapper_lookup_table[i].pusage_func(stdout, argv0, mapper_lookup_table[i].verb);
-//		fprintf(stdout, "\n");
-//	}
-//	fprintf(stdout, "%s\n", separator);
-//	os.Exit(0);
 //}
 
 func usageUnrecognizedVerb(argv0 string, arg string) {
@@ -1003,15 +1023,6 @@ func checkArgCount(args []string, argi int, argc int, n int) {
 		mainUsageShort()
 		os.Exit(1)
 	}
-}
-
-func lookUpMapperSetup(verb string) *mapping.MapperSetup {
-	for _, mapperSetup := range mapperLookupTable {
-		if mapperSetup.Verb == verb {
-			return &mapperSetup
-		}
-	}
-	return nil
 }
 
 //	cli_reader_opts_init(&options.ReaderOptions);
@@ -1036,13 +1047,13 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 //   stack: e.g. $HOME/.mlrrc is lots of settings and maybe in one
 //   subdir you want to override just a setting or two.
 
-//static void cli_load_mlrrc_or_die(cli_opts_t* popts) {
+//func loadMlrrcOrDie(cli_opts_t* popts) {
 //	char* env_mlrrc = getenv("MLRRC");
 //	if (env_mlrrc != nil) {
 //		if env_mlrrc == "__none__" {
 //			return;
 //		}
-//		if (cli_try_load_mlrrc(popts, env_mlrrc)) {
+//		if (tryLoadMlrrc(popts, env_mlrrc)) {
 //			return;
 //		}
 //	}
@@ -1050,14 +1061,14 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 //	char* env_home = getenv("HOME");
 //	if (env_home != nil) {
 //		char* path = mlr_paste_2_strings(env_home, "/.mlrrc");
-//		(void)cli_try_load_mlrrc(popts, path);
+//		(void)tryLoadMlrrc(popts, path);
 //		free(path);
 //	}
 //
-//	(void)cli_try_load_mlrrc(popts, "./.mlrrc");
+//	(void)tryLoadMlrrc(popts, "./.mlrrc");
 //}
 
-//static int cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
+//static int tryLoadMlrrc(cli_opts_t* popts, char* path) {
 //	FILE* fp = fopen(path, "r");
 //	if (fp == nil) {
 //		return false;
@@ -1091,7 +1102,7 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 
 //static int handle_mlrrc_line_1(cli_opts_t* popts, char* line) {
 //	// chomp
-//	size_t len = strlen(line);
+//	size_t len = len(line);
 //	if (len >= 2 && line[len-2] == '\r' && line[len-1] == '\n') {
 //		line[len-2] = 0;
 //	} else if (len >= 1 && (line[len-1] == '\r' || line[len-1] == '\n')) {
@@ -1111,7 +1122,7 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 //	}
 //
 //	// Right-trim
-//	len = strlen(start);
+//	len = len(start);
 //	char* end = &start[len-1];
 //	while (end > start && (*end == ' ' || *end == '\t')) {
 //		*end = 0;
@@ -1126,7 +1137,7 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 
 // Prepends initial "--" if it's not already there
 //static int handle_mlrrc_line_2(cli_opts_t* popts, char* line) {
-//	size_t len = strlen(line);
+//	size_t len = len(line);
 //
 //	char* dashed_line = nil;
 //	if (len >= 2 && line[0] != '-' && line[1] != '-') {
@@ -1195,7 +1206,7 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 //void cli_reader_opts_init(clitypes.TReaderOptions* readerOptions) {
 //	readerOptions.InputFileFormat                      = nil;
 //	readerOptions.IRS                            = nil;
-//	readerOptions.ifs                            = nil;
+//	readerOptions.IFS                            = nil;
 //	readerOptions.ips                            = nil;
 //	readerOptions.input_json_flatten_separator   = nil;
 //	readerOptions.json_array_ingest              = JSON_ARRAY_INGEST_UNSPECIFIED;
@@ -1332,8 +1343,8 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 //
 //		if (pfunc_opts.IRS == nil)
 //			pfunc_opts.IRS = pmain_opts.IRS;
-//		if (pfunc_opts.ifs == nil)
-//			pfunc_opts.ifs = pmain_opts.ifs;
+//		if (pfunc_opts.IFS == nil)
+//			pfunc_opts.IFS = pmain_opts.IFS;
 //		if (pfunc_opts.ips == nil)
 //			pfunc_opts.ips = pmain_opts.ips;
 //		if (pfunc_opts.allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
@@ -1345,8 +1356,8 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 //
 //		if (pfunc_opts.IRS == nil)
 //			pfunc_opts.IRS = lhmss_get_or_die(get_default_rses(), pfunc_opts.InputFileFormat);
-//		if (pfunc_opts.ifs == nil)
-//			pfunc_opts.ifs = lhmss_get_or_die(get_default_fses(), pfunc_opts.InputFileFormat);
+//		if (pfunc_opts.IFS == nil)
+//			pfunc_opts.IFS = lhmss_get_or_die(get_default_fses(), pfunc_opts.InputFileFormat);
 //		if (pfunc_opts.ips == nil)
 //			pfunc_opts.ips = lhmss_get_or_die(get_default_pses(), pfunc_opts.InputFileFormat);
 //		if (pfunc_opts.allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
@@ -1430,121 +1441,121 @@ func lookUpMapperSetup(verb string) *mapping.MapperSetup {
 
 // ----------------------------------------------------------------
 func handleTerminalUsage(args []string, argc int, argi int) bool {
-	//	if args[argi] == "--version" {
-	//		printf("Miller %s\n", VERSION_STRING);
-	//		return true;
-	//	} else if args[argi] == "-h" {
-	//		main_usage_long(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--help" {
-	//		main_usage_long(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--print-type-arithmetic-info" {
-	//		print_type_arithmetic_info(stdout, os.Args[0]);
-	//		return true;
-	//
-	//	} else if args[argi] == "--help-all-verbs" {
-	//		usage_all_verbs(os.Args[0]);
-	//	} else if args[argi] == "--list-all-verbs" || args[argi] == "-l" {
-	//		list_all_verbs(stdout, "");
-	//		return true;
-	//	} else if args[argi] == "--list-all-verbs-raw" || args[argi] == "-L" {
-	//		list_all_verbs_raw(stdout);
-	//		return true;
-	//
-	//	} else if args[argi] == "--list-all-functions-raw" || args[argi] == "-F" {
-	//		fmgr_t* pfmgr = fmgr_alloc();
-	//		fmgr_list_all_functions_raw(pfmgr, stdout);
-	//		fmgr_free(pfmgr, nil);
-	//		return true;
-	//	} else if args[argi] == "--list-all-functions-as-table" {
-	//		fmgr_t* pfmgr = fmgr_alloc();
-	//		fmgr_list_all_functions_as_table(pfmgr, stdout);
-	//		fmgr_free(pfmgr, nil);
-	//		return true;
-	//	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
-	//		fmgr_t* pfmgr = fmgr_alloc();
-	//		fmgr_function_usage(pfmgr, stdout, nil);
-	//		fmgr_free(pfmgr, nil);
-	//		return true;
-	//	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
-	//		checkArgCount(args, argi, argc, 2);
-	//		fmgr_t* pfmgr = fmgr_alloc();
-	//		fmgr_function_usage(pfmgr, stdout, args[argi+1]);
-	//		fmgr_free(pfmgr, nil);
-	//		return true;
-	//
-	//	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
-	//		mlr_dsl_list_all_keywords_raw(stdout);
-	//		return true;
-	//	} else if args[argi] == "--help-all-keywords" || args[argi] == "-k" {
-	//		mlr_dsl_keyword_usage(stdout, nil);
-	//		return true;
-	//	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
-	//		checkArgCount(args, argi, argc, 2);
-	//		mlr_dsl_keyword_usage(stdout, args[argi+1]);
-	//		return true;
-	//
-	//	// main-usage subsections, individually accessible for the benefit of
-	//	// the manpage-autogenerator
-	//	} else if args[argi] == "--usage-synopsis" {
-	//		main_usage_synopsis(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-examples" {
-	//		main_usage_examples(stdout, os.Args[0], "");
-	//		return true;
-	//	} else if args[argi] == "--usage-list-all-verbs" {
-	//		list_all_verbs(stdout, "");
-	//		return true;
-	//	} else if args[argi] == "--usage-help-options" {
-	//		main_usage_help_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-mlrrc" {
-	//		main_usage_mlrrc(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-functions" {
-	//		main_usage_functions(stdout, os.Args[0], "");
-	//		return true;
-	//	} else if args[argi] == "--usage-data-format-examples" {
-	//		main_usage_data_format_examples(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-data-format-options" {
-	//		main_usage_data_format_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-comments-in-data" {
-	//		main_usage_comments_in_data(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-format-conversion-keystroke-saver-options" {
-	//		main_usage_format_conversion_keystroke_saver_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-compressed-data-options" {
-	//		main_usage_compressed_data_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-separator-options" {
-	//		main_usage_separator_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-csv-options" {
-	//		main_usage_csv_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-double-quoting" {
-	//		main_usage_double_quoting(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-numerical-formatting" {
-	//		main_usage_numerical_formatting(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-other-options" {
-	//		main_usage_other_options(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-then-chaining" {
-	//		main_usage_then_chaining(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-auxents" {
-	//		main_usage_auxents(stdout, os.Args[0]);
-	//		return true;
-	//	} else if args[argi] == "--usage-see-also" {
-	//		main_usage_see_also(stdout, os.Args[0]);
-	//		return true;
-	//	}
+	if args[argi] == "--version" {
+		fmt.Printf("Miller %s\n", VERSION_STRING)
+		return true
+	} else if args[argi] == "-h" {
+		mainUsageLong(os.Stdout, os.Args[0])
+		return true
+	} else if args[argi] == "--help" {
+		mainUsageLong(os.Stdout, os.Args[0])
+		return true
+		//	} else if args[argi] == "--print-type-arithmetic-info" {
+		//		printTypeArithmeticInfo(os.Stdout, os.Args[0]);
+		//		return true;
+		//
+	} else if args[argi] == "--help-all-verbs" {
+		usageAllVerbs(os.Args[0])
+	} else if args[argi] == "--list-all-verbs" || args[argi] == "-l" {
+		listAllVerbs(os.Stdout, " ")
+		return true
+	} else if args[argi] == "--list-all-verbs-raw" || args[argi] == "-L" {
+		listAllVerbsRaw(os.Stdout)
+		return true
+
+		//	} else if args[argi] == "--list-all-functions-raw" || args[argi] == "-F" {
+		//		fmgr_t* pfmgr = fmgr_alloc();
+		//		fmgr_list_all_functions_raw(pfmgr, os.Stdout);
+		//		fmgr_free(pfmgr, nil);
+		//		return true;
+		//	} else if args[argi] == "--list-all-functions-as-table" {
+		//		fmgr_t* pfmgr = fmgr_alloc();
+		//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
+		//		fmgr_free(pfmgr, nil);
+		//		return true;
+		//	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
+		//		fmgr_t* pfmgr = fmgr_alloc();
+		//		fmgr_function_usage(pfmgr, os.Stdout, nil);
+		//		fmgr_free(pfmgr, nil);
+		//		return true;
+		//	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
+		//		checkArgCount(args, argi, argc, 2);
+		//		fmgr_t* pfmgr = fmgr_alloc();
+		//		fmgr_function_usage(pfmgr, os.Stdout, args[argi+1]);
+		//		fmgr_free(pfmgr, nil);
+		//		return true;
+		//
+		//	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
+		//		mlr_dsl_list_all_keywords_raw(os.Stdout);
+		//		return true;
+		//	} else if args[argi] == "--help-all-keywords" || args[argi] == "-k" {
+		//		mlr_dsl_keyword_usage(os.Stdout, nil);
+		//		return true;
+		//	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
+		//		checkArgCount(args, argi, argc, 2);
+		//		mlr_dsl_keyword_usage(os.Stdout, args[argi+1]);
+		//		return true;
+		//
+		//	// main-usage subsections, individually accessible for the benefit of
+		//	// the manpage-autogenerator
+	} else if args[argi] == "--usage-synopsis" {
+		mainUsageSynopsis(os.Stdout, os.Args[0])
+		return true
+	} else if args[argi] == "--usage-examples" {
+		mainUsageExamples(os.Stdout, os.Args[0], "")
+		return true
+	} else if args[argi] == "--usage-list-all-verbs" {
+		listAllVerbs(os.Stdout, "")
+		return true
+	} else if args[argi] == "--usage-help-options" {
+		mainUsageHelpOptions(os.Stdout, os.Args[0])
+		return true
+		//	} else if args[argi] == "--usage-mlrrc" {
+		//		mainUsageMlrrc(os.Stdout, os.Args[0]);
+		//		return true;
+		//	} else if args[argi] == "--usage-functions" {
+		//		mainUsageFunctions(os.Stdout, os.Args[0], "");
+		//		return true;
+		//	} else if args[argi] == "--usage-data-format-examples" {
+		mainUsageDataFormatExamples(os.Stdout, os.Args[0])
+		//		return true;
+	} else if args[argi] == "--usage-data-format-options" {
+		mainUsageDataFormatOptions(os.Stdout, os.Args[0])
+		return true
+		//	} else if args[argi] == "--usage-comments-in-data" {
+		//		mainUsageCommentsInData(os.Stdout, os.Args[0]);
+		//		return true;
+	} else if args[argi] == "--usage-format-conversion-keystroke-saver-options" {
+		mainUsageFormatConversionKeystrokeSaverOptions(os.Stdout, os.Args[0])
+		return true
+		//	} else if args[argi] == "--usage-compressed-data-options" {
+		//		mainUsageCompressedDataOptions(os.Stdout, os.Args[0]);
+		//		return true;
+		//	} else if args[argi] == "--usage-separator-options" {
+		//		mainUsageSeparatorOptions(os.Stdout, os.Args[0]);
+		//		return true;
+		//	} else if args[argi] == "--usage-csv-options" {
+		//		mainUsageCsvOptions(os.Stdout, os.Args[0]);
+		//		return true;
+		//	} else if args[argi] == "--usage-double-quoting" {
+		//		mainUsageDoubleQuoting(os.Stdout, os.Args[0]);
+		//		return true;
+		//	} else if args[argi] == "--usage-numerical-formatting" {
+		//		mainUsageNumericalFormatting(os.Stdout, os.Args[0]);
+		//		return true;
+		//	} else if args[argi] == "--usage-other-options" {
+		//		mainUsageOtherOptions(os.Stdout, os.Args[0]);
+		//		return true;
+	} else if args[argi] == "--usage-then-chaining" {
+		mainUsageThenChaining(os.Stdout, os.Args[0])
+		return true
+		//	} else if args[argi] == "--usage-auxents" {
+		//		mainUsageAuxents(os.Stdout, os.Args[0]);
+		//		return true;
+	} else if args[argi] == "--usage-see-also" {
+		mainUsageSeeAlso(os.Stdout, os.Args[0])
+		return true
+	}
 	return false
 }
 
@@ -1642,35 +1653,35 @@ func handleReaderOptions(args []string, argc int, pargi *int, readerOptions *cli
 		//
 		//	} else if args[argi] == "--itsv" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs = "\t";
+		//		readerOptions.IFS = "\t";
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--itsvlite" {
 		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.ifs = "\t";
+		//		readerOptions.IFS = "\t";
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--iasv" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs = ASV_FS;
+		//		readerOptions.IFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--iasvlite" {
 		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.ifs = ASV_FS;
+		//		readerOptions.IFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--iusv" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs = USV_FS;
+		//		readerOptions.IFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--iusvlite" {
 		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.ifs = USV_FS;
+		//		readerOptions.IFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
 		//		argi += 1;
 		//
@@ -1692,7 +1703,7 @@ func handleReaderOptions(args []string, argc int, pargi *int, readerOptions *cli
 		//
 		//	} else if args[argi] == "--ipprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		argi += 1;
 		//
@@ -1929,7 +1940,7 @@ func handleReaderWriterOptions(
 		//	} else if args[argi] == "-p" {
 		//		readerOptions.InputFileFormat = "nidx";
 		//		writerOptions.OutputFileFormat = "nidx";
-		//		readerOptions.ifs = " ";
+		//		readerOptions.IFS = " ";
 		//		writerOptions.OFS = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		argi += 1;
@@ -1969,19 +1980,19 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--tsv" {
 		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
-		//		readerOptions.ifs = "\t";
+		//		readerOptions.IFS = "\t";
 		//		writerOptions.OFS = "\t";
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--tsvlite" || args[argi] == "-t" {
 		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.ifs = "\t";
+		//		readerOptions.IFS = "\t";
 		//		writerOptions.OFS = "\t";
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--asv" {
 		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
-		//		readerOptions.ifs = ASV_FS;
+		//		readerOptions.IFS = ASV_FS;
 		//		writerOptions.OFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
 		//		writerOptions.ORS = ASV_RS;
@@ -1989,7 +2000,7 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--asvlite" {
 		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.ifs = ASV_FS;
+		//		readerOptions.IFS = ASV_FS;
 		//		writerOptions.OFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
 		//		writerOptions.ORS = ASV_RS;
@@ -1997,7 +2008,7 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--usv" {
 		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
-		//		readerOptions.ifs = USV_FS;
+		//		readerOptions.IFS = USV_FS;
 		//		writerOptions.OFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
 		//		writerOptions.ORS = USV_RS;
@@ -2005,7 +2016,7 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--usvlite" {
 		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.ifs = USV_FS;
+		//		readerOptions.IFS = USV_FS;
 		//		writerOptions.OFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
 		//		writerOptions.ORS = USV_RS;
@@ -2034,7 +2045,7 @@ func handleReaderWriterOptions(
 		//	} else if args[argi] == "-T" {
 		//		readerOptions.InputFileFormat = "nidx";
 		//		writerOptions.OutputFileFormat = "nidx";
-		//		readerOptions.ifs = "\t";
+		//		readerOptions.IFS = "\t";
 		//		writerOptions.OFS = "\t";
 		//		argi += 1;
 		//
@@ -2045,7 +2056,7 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--pprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "pprint";
 		//		argi += 1;
@@ -2090,44 +2101,44 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--t2c" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "csv";
 		//		writerOptions.ORS       = "auto";
 		//		argi += 1;
 		//	} else if args[argi] == "--t2d" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "dkvp";
 		//		argi += 1;
 		//	} else if args[argi] == "--t2n" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "nidx";
 		//		argi += 1;
 		//	} else if args[argi] == "--t2j" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "json";
 		//		argi += 1;
 		//	} else if args[argi] == "--t2p" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "pprint";
 		//		argi += 1;
 		//	} else if args[argi] == "--t2x" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "xtab";
 		//		argi += 1;
 		//	} else if args[argi] == "--t2m" {
 		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.ifs       = "\t";
+		//		readerOptions.IFS       = "\t";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
@@ -2230,14 +2241,14 @@ func handleReaderWriterOptions(
 		//
 		//	} else if args[argi] == "--p2c" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "csv";
 		//		writerOptions.ORS              = "auto";
 		//		argi += 1;
 		//	} else if args[argi] == "--p2t" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "csv";
 		//		writerOptions.ORS              = "auto";
@@ -2245,31 +2256,31 @@ func handleReaderWriterOptions(
 		//		argi += 1;
 		//	} else if args[argi] == "--p2d" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "dkvp";
 		//		argi += 1;
 		//	} else if args[argi] == "--p2n" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "nidx";
 		//		argi += 1;
 		//	} else if args[argi] == "--p2j" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat = "json";
 		//		argi += 1;
 		//	} else if args[argi] == "--p2x" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "xtab";
 		//		argi += 1;
 		//	} else if args[argi] == "--p2m" {
 		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.ifs              = " ";
+		//		readerOptions.IFS              = " ";
 		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "markdown";
 		//		argi += 1;
