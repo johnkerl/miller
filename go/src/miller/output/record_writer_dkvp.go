@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"os"
 
-	"miller/cli"
+	"miller/clitypes"
 	"miller/containers"
 )
 
@@ -14,7 +14,7 @@ type RecordWriterDKVP struct {
 	ors string
 }
 
-func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) *RecordWriterDKVP {
+func NewRecordWriterDKVP(writerOptions *clitypes.TWriterOptions) *RecordWriterDKVP {
 	return &RecordWriterDKVP{
 		ofs: writerOptions.OFS,
 		ops: writerOptions.OPS,

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"os"
 
-	"miller/cli"
+	"miller/clitypes"
 	"miller/containers"
 )
 
@@ -14,7 +14,7 @@ type RecordWriterNIDX struct {
 	ors string
 }
 
-func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) *RecordWriterNIDX {
+func NewRecordWriterNIDX(writerOptions *clitypes.TWriterOptions) *RecordWriterNIDX {
 	return &RecordWriterNIDX{
 		ofs: writerOptions.OFS,
 		ors: writerOptions.ORS,

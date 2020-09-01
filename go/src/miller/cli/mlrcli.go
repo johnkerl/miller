@@ -4,95 +4,13 @@ import (
 	"fmt"
 	"os"
 
+	"miller/clitypes"
 	"miller/mapping"
 )
 
 // ================================================================
 // Miller command-line interface
 // ================================================================
-
-// ----------------------------------------------------------------
-//typedef struct _generator_opts_t {
-//	char* field_name;
-//	// xxx to do: convert to mv_t
-//	long long start;
-//	long long stop;
-//	long long step;
-//} generator_opts_t;
-
-// ----------------------------------------------------------------
-type TReaderOptions struct {
-	InputFileFormat string
-	IRS             string
-	IFS             string
-	IPS             string
-
-	//	char* input_json_flatten_separator;
-	//	json_array_ingest_t  json_array_ingest;
-
-	//	allow_repeat_ifs bool;
-	//	allow_repeat_ips bool;
-	//	use_implicit_csv_header bool;
-	//	allow_ragged_csv_input bool;
-	//
-	//	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
-	//	// files are read directly rather than through a pipe.
-	//	prepipe string;
-	//
-	//	comment_handling_t comment_handling;
-	//	comment_string string;
-	//
-	//	// Fake internal-data-generator 'reader'
-	//	generator_opts_t generator_opts;
-}
-
-// ----------------------------------------------------------------
-type TWriterOptions struct {
-	OutputFileFormat string
-	ORS              string
-	OFS              string
-	OPS              string
-
-	//	headerless_csv_output bool;
-	//	right_justify_xtab_value bool;
-	//	right_align_pprint bool;
-	//	pprint_barred bool;
-	//	stack_json_output_vertically bool;
-	//	wrap_json_output_in_outer_list bool;
-	//	json_quote_int_keys bool;
-	//	json_quote_non_string_values bool;
-	//	output_json_flatten_separator string;
-	//	oosvar_flatten_separator string;
-	//
-	//	quoting_t oquoting;
-}
-
-// ----------------------------------------------------------------
-type TOptions struct {
-	ReaderOptions TReaderOptions
-	WriterOptions TWriterOptions
-
-	// These are used to construct the mapper list. In particular, for in-place mode
-	// they're reconstructed for each file.  We make copies since each pass through a
-	// CLI-parser operates destructively, principally by running strtok over
-	// comma-delimited field-name lists.
-	//
-	//	char**  original_argv;
-	//	char**  non_in_place_argv;
-	//	int     argc;
-	//	int     mapper_argb;
-	//
-	//	filenames []string;
-	//
-	//	char* ofmt;
-	//	nr_progress_mod int64u;
-	//
-	//	do_in_place bool;
-	//
-	//	no_input bool;
-	//	have_rand_seed bool;
-	//	rand_seed uint32;
-}
 
 //// ----------------------------------------------------------------
 //#define DEFAULT_OFMT                     "%lf"
@@ -116,7 +34,10 @@ type TOptions struct {
 //#define USV_RS_FOR_HELP "U+241E (UTF-8 0xe2909e)"
 
 // ----------------------------------------------------------------
-//static mapper_setup_t* mapper_lookup_table[] = {
+var mapperLookupTable = []mapping.MapperSetup{
+	mapping.MapperCatSetup,
+}
+
 //
 //	&mapper_altkv_setup,
 //	&mapper_bar_setup,
@@ -171,18 +92,16 @@ type TOptions struct {
 //	&mapper_top_setup,
 //	&mapper_uniq_setup,
 //	&mapper_unsparsify_setup,
-//
 //};
-//static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
-	options TOptions,
+	options clitypes.TOptions,
 	recordMappers []mapping.IRecordMapper,
 	filenames []string,
 	err error,
 ) {
-	options = DefaultOptions()
+	options = clitypes.DefaultOptions()
 	argc := len(args)
 	argi := 1
 
@@ -286,7 +205,7 @@ func ParseCommandLine(args []string) (
 // Returns a list of mappers, from the starting point in args given by *pargi.
 // Bumps *pargi to point to remaining post-mapper-setup args, i.e. filenames.
 
-func parseMappers(args []string, pargi *int, argc int, options *TOptions) ([]mapping.IRecordMapper, error) {
+func parseMappers(args []string, pargi *int, argc int, options *clitypes.TOptions) ([]mapping.IRecordMapper, error) {
 	mapperList := make([]mapping.IRecordMapper, 0)
 	argi := *pargi
 
@@ -306,55 +225,45 @@ func parseMappers(args []string, pargi *int, argc int, options *TOptions) ([]map
 		checkArgCount(args, argi, argc, 1)
 		verb := args[argi]
 
-		//		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
-		//		if (pmapper_setup == nil) {
-		//			fmt.Fprintf(os.Stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-		//				os.Args[0], verb, os.Args[0]);
-		//			os.Exit(1);
-		//		}
-
-//// ----------------------------------------------------------------
-//mapper_setup_t mapper_foo_setup = {
-//	.verb = "foo",
-//	.pusage_func = mapper_foo_usage,
-//	.pparse_func = mapper_foo_parse_cli,
-//	.ignores_input = FALSE,
-//};
+		mapperSetup := lookUpMapperSetup(verb)
+		if mapperSetup == nil {
+			fmt.Fprintf(os.Stderr,
+				"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
+				os.Args[0], verb, os.Args[0])
+			os.Exit(1)
+		}
 
 		if (argc - argi) >= 2 {
 			if args[argi+1] == "-h" || args[argi+1] == "--help" {
-				//				pmapper_setup.pusage_func(stdout, os.Args[0], verb);
+				mapperSetup.UsageFunc(os.Stdout, os.Args[0], verb)
 				os.Exit(0)
 			}
 		}
-
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		// xxx temp temp temp temp temp
-		mapper, err := mapping.Create(verb, "")
-		if err != nil {
-			return nil, err
-		}
-		mapperList = append(mapperList, mapper)
-		argi++
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		// It's up to the parse func to print its usage on CLI-parse failure.
 		// Also note: this assumes main reader/writer opts are all parsed
 		// *before* mapper parse-CLI methods are invoked.
 
-		//		mapper_t* pmapper = pmapper_setup.pparse_func(&argi, argc, args,
-		//			&options.ReaderOptions, &options.WriterOptions);
-		//		if (pmapper == nil) {
-		//			os.Exit(1);
-		//		}
-		//
-		//		if (pmapper_setup.ignores_input && mapperList.length == 0) {
+		mapper := mapperSetup.ParseCLIFunc(
+			&argi,
+			argc,
+			args,
+			&options.ReaderOptions,
+			&options.WriterOptions,
+		)
+
+		if (mapper == nil) {
+			// Error message already printed out
+			os.Exit(1);
+		}
+
+		//		if (mapperSetup.IgnoresInput && len(mapperList) == 0) {
 		//			// e.g. then-chain starts with seqgen
 		//			options.no_input = true;
 		//		}
-		//
-		//		mapperList = append(mapperList, mapper)
-		//
+
+		mapperList = append(mapperList, mapper)
+
 		if argi >= argc || args[argi] != "then" {
 			break
 		}
@@ -1096,40 +1005,13 @@ func checkArgCount(args []string, argi int, argc int, n int) {
 	}
 }
 
-//static mapper_setup_t* look_up_mapper_setup(char* verb) {
-//	mapper_setup_t* pmapper_setup = nil;
-//	for (int i = 0; i < mapper_lookup_table_length; i++) {
-//		if mapper_lookup_table[i].verb == verb))
-//			return mapper_lookup_table[i];
-//	}
-//
-//	return pmapper_setup;
-//}
-
-// ----------------------------------------------------------------
-func DefaultOptions() TOptions {
-	return TOptions{
-		ReaderOptions: DefaultReaderOptions(),
-		WriterOptions: DefaultWriterOptions(),
+func lookUpMapperSetup(verb string) *mapping.MapperSetup {
+	for _, mapperSetup := range mapperLookupTable {
+		if mapperSetup.Verb == verb {
+			return &mapperSetup
+		}
 	}
-}
-
-func DefaultReaderOptions() TReaderOptions {
-	return TReaderOptions{
-		InputFileFormat: "dkvp", // xxx constify at top
-		IRS:             "\n",
-		IFS:             ",",
-		IPS:             "=",
-	}
-}
-
-func DefaultWriterOptions() TWriterOptions {
-	return TWriterOptions{
-		OutputFileFormat: "dkvp",
-		ORS:              "\n",
-		OFS:              ",",
-		OPS:              "=",
-	}
+	return nil
 }
 
 //	cli_reader_opts_init(&options.ReaderOptions);
@@ -1310,7 +1192,7 @@ func DefaultWriterOptions() TWriterOptions {
 //}
 
 // ----------------------------------------------------------------
-//void cli_reader_opts_init(TReaderOptions* readerOptions) {
+//void cli_reader_opts_init(clitypes.TReaderOptions* readerOptions) {
 //	readerOptions.InputFileFormat                      = nil;
 //	readerOptions.IRS                            = nil;
 //	readerOptions.ifs                            = nil;
@@ -1333,7 +1215,7 @@ func DefaultWriterOptions() TWriterOptions {
 //	readerOptions.generator_opts.step           = 1LL;
 //}
 
-//void cli_writer_opts_init(TWriterOptions* writerOptions) {
+//void cli_writer_opts_init(clitypes.TWriterOptions* writerOptions) {
 //	writerOptions.OutputFileFormat                      = nil;
 //	writerOptions.ORS                            = nil;
 //	writerOptions.OFS                            = nil;
@@ -1364,7 +1246,7 @@ func DefaultWriterOptions() TWriterOptions {
 //		options.ofmt = DEFAULT_OFMT;
 //}
 
-//void cli_apply_reader_defaults(TReaderOptions* readerOptions) {
+//void cli_apply_reader_defaults(clitypes.TReaderOptions* readerOptions) {
 //	if (readerOptions.InputFileFormat == nil)
 //		readerOptions.InputFileFormat = "dkvp";
 //
@@ -1381,7 +1263,7 @@ func DefaultWriterOptions() TWriterOptions {
 //		readerOptions.input_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
 //}
 
-//void cli_apply_writer_defaults(TWriterOptions* writerOptions) {
+//void cli_apply_writer_defaults(clitypes.TWriterOptions* writerOptions) {
 //	if (writerOptions.OutputFileFormat == nil)
 //		writerOptions.OutputFileFormat = "dkvp";
 //
@@ -1440,7 +1322,7 @@ func DefaultWriterOptions() TWriterOptions {
 // * If the join input format was specified and is not the same as main input
 //   format, take unspecified values from defaults for the join input format.
 
-//void cli_merge_reader_opts(TReaderOptions* pfunc_opts, TReaderOptions* pmain_opts) {
+//void cli_merge_reader_opts(clitypes.TReaderOptions* pfunc_opts, TReaderOptions* pmain_opts) {
 //
 //	if (pfunc_opts.InputFileFormat == nil) {
 //		pfunc_opts.InputFileFormat = pmain_opts.InputFileFormat;
@@ -1490,7 +1372,7 @@ func DefaultWriterOptions() TWriterOptions {
 // Similar to cli_merge_reader_opts but for mapper tee & mapper put which have their
 // own output-format overrides.
 
-//void cli_merge_writer_opts(TWriterOptions* pfunc_opts, TWriterOptions* pmain_opts) {
+//void cli_merge_writer_opts(clitypes.TWriterOptions* pfunc_opts, TWriterOptions* pmain_opts) {
 //
 //	if (pfunc_opts.OutputFileFormat == nil) {
 //		pfunc_opts.OutputFileFormat = pmain_opts.OutputFileFormat;
@@ -1667,7 +1549,7 @@ func handleTerminalUsage(args []string, argc int, argi int) bool {
 }
 
 // Returns true if the current flag was handled.
-func handleReaderOptions(args []string, argc int, pargi *int, readerOptions *TReaderOptions) bool {
+func handleReaderOptions(args []string, argc int, pargi *int, readerOptions *clitypes.TReaderOptions) bool {
 	argi := *pargi
 	oargi := argi
 
@@ -1857,7 +1739,7 @@ func handleReaderOptions(args []string, argc int, pargi *int, readerOptions *TRe
 }
 
 // Returns true if the current flag was handled.
-func handleWriterOptions(args []string, argc int, pargi *int, writerOptions *TWriterOptions) bool {
+func handleWriterOptions(args []string, argc int, pargi *int, writerOptions *clitypes.TWriterOptions) bool {
 	argi := *pargi
 	oargi := argi
 
@@ -2021,8 +1903,14 @@ func handleWriterOptions(args []string, argc int, pargi *int, writerOptions *TWr
 }
 
 // Returns true if the current flag was handled.
-func handleReaderWriterOptions(args []string, argc int, pargi *int, readerOptions *TReaderOptions, writerOptions *TWriterOptions) bool {
-	//	TReaderOptions* readerOptions, TWriterOptions* writerOptions)
+func handleReaderWriterOptions(
+	args []string,
+	argc int,
+	pargi *int,
+	readerOptions *clitypes.TReaderOptions,
+	writerOptions *clitypes.TWriterOptions,
+) bool {
+
 	argi := *pargi
 	oargi := argi
 
@@ -2428,7 +2316,7 @@ func handleReaderWriterOptions(args []string, argc int, pargi *int, readerOption
 }
 
 // Returns true if the current flag was handled.
-func handleMiscOptions(args []string, argc int, pargi *int, options *TOptions) bool {
+func handleMiscOptions(args []string, argc int, pargi *int, options *clitypes.TOptions) bool {
 	argi := *pargi
 	oargi := argi
 	//

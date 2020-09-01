@@ -40,10 +40,6 @@ func NewASTFromString(dslString string) (*dsl.AST, error) {
 	return ast, nil
 }
 
-func (this *MapperPut) Name() string {
-	return "put"
-}
-
 func (this *MapperPut) Map(
 	inrec *containers.Lrec,
 	context *runtime.Context,

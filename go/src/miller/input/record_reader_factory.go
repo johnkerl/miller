@@ -1,10 +1,10 @@
 package input
 
 import (
-	"miller/cli"
+	"miller/clitypes"
 )
 
-func Create(readerOptions *cli.TReaderOptions) IRecordReader {
+func Create(readerOptions *clitypes.TReaderOptions) IRecordReader {
 	switch readerOptions.InputFileFormat {
 	case "csv":
 		return NewRecordReaderCSV(readerOptions)

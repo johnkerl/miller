@@ -13,10 +13,6 @@ func NewMapperNothing() (*MapperNothing, error) {
 	return &MapperNothing{}, nil
 }
 
-func (this *MapperNothing) Name() string {
-	return "nothing"
-}
-
 func (this *MapperNothing) Map(
 	inrec *containers.Lrec,
 	context *runtime.Context,

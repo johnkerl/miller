@@ -6,7 +6,6 @@ import (
 )
 
 type IRecordMapper interface {
-	Name() string
 	Map(
 		inrec *containers.Lrec,
 		context *runtime.Context,

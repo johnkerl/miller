@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/cli"
+	"miller/clitypes"
 	"miller/containers"
 	"miller/lib"
 	"miller/runtime"
@@ -17,7 +17,7 @@ type RecordReaderDKVP struct {
 	ips string
 }
 
-func NewRecordReaderDKVP(readerOptions *cli.TReaderOptions) *RecordReaderDKVP {
+func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDKVP {
 	return &RecordReaderDKVP{
 		ifs: readerOptions.IFS,
 		ips: readerOptions.IPS,

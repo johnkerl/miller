@@ -17,10 +17,6 @@ func NewMapperTac() (*MapperTac, error) {
 	}, nil
 }
 
-func (this *MapperTac) Name() string {
-	return "tac"
-}
-
 func (this *MapperTac) Map(
 	inrec *containers.Lrec,
 	context *runtime.Context,

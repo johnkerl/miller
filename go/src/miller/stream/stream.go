@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"miller/cli"
+	"miller/clitypes"
 	"miller/containers"
 	"miller/input"
 	"miller/mapping"
@@ -15,7 +15,7 @@ import (
 
 // ----------------------------------------------------------------
 func Stream(
-	options cli.TOptions,
+	options clitypes.TOptions,
 	recordMappers []mapping.IRecordMapper,
 	filenames []string,
 ) error {

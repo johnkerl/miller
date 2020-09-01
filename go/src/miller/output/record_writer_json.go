@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"os"
 
-	"miller/cli"
+	"miller/clitypes"
 	"miller/containers"
 )
 
@@ -13,7 +13,7 @@ type RecordWriterJSON struct {
 	onFirst bool
 }
 
-func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) *RecordWriterJSON {
+func NewRecordWriterJSON(writerOptions *clitypes.TWriterOptions) *RecordWriterJSON {
 	return &RecordWriterJSON{
 		onFirst: true,
 	}
