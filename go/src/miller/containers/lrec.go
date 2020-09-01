@@ -133,6 +133,27 @@ func (this *Lrec) Put(key *string, value *lib.Mlrval) {
 }
 
 // ----------------------------------------------------------------
+func (this *Lrec) Prepend(key *string, value *lib.Mlrval) {
+	pe := this.findEntry(key)
+	if pe == nil {
+		pe = lrecEntryAlloc(key, value)
+		if this.Tail == nil {
+			this.Head = pe
+			this.Tail = pe
+		} else {
+			pe.Prev = nil
+			pe.Next = this.Head
+			this.Head.Prev = pe
+			this.Head = pe
+		}
+		this.FieldCount++
+	} else {
+		copy := *value
+		pe.Value = &copy
+	}
+}
+
+// ----------------------------------------------------------------
 func (this *Lrec) Get(key *string) *lib.Mlrval {
 	pe := this.findEntry(key)
 	if pe == nil {

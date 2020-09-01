@@ -12,14 +12,15 @@ import (
 	"miller/parsing/parser"
 )
 
+// ----------------------------------------------------------------
 var PutSetup = mapping.MapperSetup{
 	Verb:         "put",
-	ParseCLIFunc: mapperPutParseCLIFunc,
-	UsageFunc:    mapperPutUsageFunc,
+	ParseCLIFunc: mapperPutParseCLI,
+	UsageFunc:    mapperPutUsage,
 	IgnoresInput: false,
 }
 
-func mapperPutParseCLIFunc(
+func mapperPutParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -37,7 +38,7 @@ func mapperPutParseCLIFunc(
 	return mapper
 }
 
-func mapperPutUsageFunc(
+func mapperPutUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

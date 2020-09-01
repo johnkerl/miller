@@ -9,14 +9,15 @@ import (
 	"miller/mapping"
 )
 
+// ----------------------------------------------------------------
 var NothingSetup = mapping.MapperSetup{
 	Verb:         "nothing",
-	ParseCLIFunc: mapperNothingParseCLIFunc,
-	UsageFunc:    mapperNothingUsageFunc,
+	ParseCLIFunc: mapperNothingParseCLI,
+	UsageFunc:    mapperNothingUsage,
 	IgnoresInput: false,
 }
 
-func mapperNothingParseCLIFunc(
+func mapperNothingParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -30,7 +31,7 @@ func mapperNothingParseCLIFunc(
 	return mapper
 }
 
-func mapperNothingUsageFunc(
+func mapperNothingUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

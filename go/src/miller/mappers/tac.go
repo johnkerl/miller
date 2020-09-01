@@ -10,14 +10,15 @@ import (
 	"miller/containers"
 )
 
+// ----------------------------------------------------------------
 var TacSetup = mapping.MapperSetup{
 	Verb:         "tac",
-	ParseCLIFunc: mapperTacParseCLIFunc,
-	UsageFunc:    mapperTacUsageFunc,
+	ParseCLIFunc: mapperTacParseCLI,
+	UsageFunc:    mapperTacUsage,
 	IgnoresInput: false,
 }
 
-func mapperTacParseCLIFunc(
+func mapperTacParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -31,7 +32,7 @@ func mapperTacParseCLIFunc(
 	return mapper
 }
 
-func mapperTacUsageFunc(
+func mapperTacUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
