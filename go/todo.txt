@@ -1,6 +1,13 @@
 * lots of trivial things are just a matter of keystroking
 * defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
 
+TOP OF LIST:
+* widen reader coverage, incl xtab
+• widen writer coverage, incl md
+* widen verb coverage
+* widen DSL coverage
+* move from AST+interpreter to CST, or decorated CST ...
+
 harder / more worthy:
 ~ streaming JSON reader
   -> w/ and w/o enclosing [...] !
@@ -15,7 +22,6 @@ k srec with mlrval values
 easier:
 * most of the verbs
 * most of the file formats
-* then-chaining
 
 bonuses:
 * non-lite dkvp as easy extension of golib CSV reader :D
