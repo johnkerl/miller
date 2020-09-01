@@ -1,10 +1,25 @@
-
 ----------------------------------------------------------------
 TOP OF LIST:
-* widen reader coverage, incl xtab
-• widen writer coverage, incl md
+* widen reader coverage
+  o TSV/ASV
+  o XTAB
+• widen writer coverage
+  o TSV/ASV
+  o markdown
+* I/O
+  o --allow-ragged-csv-input|--ragged
+  o --implicit-csv-header
+  o --headerless-csv-output
 * non-lite DKVP reader/writer
 * widen verb coverage
+  o cut
+  o count
+  o label
+  o rename
+  o repeat
+  o head/tail
+  o sort
+* implement mlrrc
 * widen DSL coverage
 * move from AST+interpreter to CST, or decorated CST ...
 ----------------------------------------------------------------
@@ -59,3 +74,4 @@ nits:
 * lrec -> srec everywhere
 * comment precisely where context pointers -> copy and why
 * mlr --help-for w/ stdout redirect for manpage -- ?
+* mlr verb -h -> stdout & exit 0
