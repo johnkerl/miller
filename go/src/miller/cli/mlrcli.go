@@ -501,74 +501,75 @@ func mainUsageLong(o *os.File, argv0 string) {
 	mainUsageSynopsis(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	fmt.Fprintf(o, "Command-line-syntax examples:\n")
+	fmt.Fprintf(o, "COMMAND-LINE-SYNTAX EXAMPLES:\n")
 	mainUsageExamples(o, argv0, "  ")
 	fmt.Fprintf(o, "\n")
 
-	fmt.Fprintf(o, "Data-format examples:\n")
+	fmt.Fprintf(o, "DATA-FORMAT EXAMPLES:\n")
 	mainUsageDataFormatExamples(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	fmt.Fprintf(o, "Help options:\n")
+	fmt.Fprintf(o, "HELP OPTIONS:\n")
 	mainUsageHelpOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "Customization via .mlrrc:\n");
+	//	fmt.Fprintf(o, "CUSTOMIZATION VIA .MLRRC:\N");
 	//	mainUsageMlrrc(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 
-	fmt.Fprintf(o, "Verbs:\n")
+	fmt.Fprintf(o, "VERBS:\n")
 	listAllVerbs(o, "  ")
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "Functions for the filter and put verbs:\n");
+	//	fmt.Fprintf(o, "FUNCTIONS FOR THE FILTER AND PUT VERBS:\n");
 	//	mainUsageFunctions(o, argv0, "  ");
 	//	fmt.Fprintf(o, "\n");
 
-	fmt.Fprintf(o, "Data-format options, for input, output, or both:\n")
+	fmt.Fprintf(o, "DATA-FORMAT OPTIONS, FOR INPUT, OUTPUT, OR BOTH:\n")
 	mainUsageDataFormatOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "Comments in data:\n");
+	//	fmt.Fprintf(o, "COMMENTS IN DATA:\N");
 	//	mainUsageCommentsInData(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	fmt.Fprintf(o, "Format-conversion keystroke-saver options, for input, output, or both:\n")
+	fmt.Fprintf(o, "FORMAT-CONVERSION KEYSTROKE-SAVER OPTIONS:\n")
 	mainUsageFormatConversionKeystrokeSaverOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "Compressed-data options:\n");
+	//	fmt.Fprintf(o, "COMPRESSED-DATA OPTIONS:\N");
 	//	mainUsageCompressedDataOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	//	fmt.Fprintf(o, "Separator options, for input, output, or both:\n");
+	//	fmt.Fprintf(o, "SEPARATOR OPTIONS:\n");
 	//	mainUsageSeparatorOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	//	fmt.Fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
+	//	fmt.Fprintf(o, "RELEVANT TO CSV/CSV-LITE INPUT ONLY:\n");
 	//	mainUsageCsvOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	//	fmt.Fprintf(o, "Double-quoting for CSV output:\n");
+	//	fmt.Fprintf(o, "DOUBLE-QUOTING FOR CSV OUTPUT:\n");
 	//	mainUsageDoubleQuoting(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	//	fmt.Fprintf(o, "Numerical formatting:\n");
+	//	fmt.Fprintf(o, "NUMERICAL FORMATTING:\n");
 	//	mainUsageNumericalFormatting(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	//	fmt.Fprintf(o, "Other options:\n");
+	//	fmt.Fprintf(o, "OTHER OPTIONS:\n");
 	//	mainUsageOtherOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
-	fmt.Fprintf(o, "Then-chaining:\n")
+	fmt.Fprintf(o, "THEN-CHAINING:\n")
 	mainUsageThenChaining(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "Auxiliary commands:\n");
+	//	fmt.Fprintf(o, "AUXILIARY COMMANDS:\N");
 	//	mainUsageAuxents(o, argv0);
 	//	fmt.Fprintf(o, "\n");
 	//
+	fmt.Fprintf(o, "SEE ALSO:\n")
 	mainUsageSeeAlso(o, argv0)
 }
 

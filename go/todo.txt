@@ -1,12 +1,17 @@
-* lots of trivial things are just a matter of keystroking
-* defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
 
+----------------------------------------------------------------
 TOP OF LIST:
 * widen reader coverage, incl xtab
 • widen writer coverage, incl md
+* non-lite DKVP reader/writer
 * widen verb coverage
 * widen DSL coverage
 * move from AST+interpreter to CST, or decorated CST ...
+----------------------------------------------------------------
+
+general plan:
+* lots of trivial things are just a matter of keystroking
+* defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
 
 harder / more worthy:
 ~ streaming JSON reader
