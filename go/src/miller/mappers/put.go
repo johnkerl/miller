@@ -1,14 +1,15 @@
 package mappers
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
 	"miller/clitypes"
 	"miller/containers"
 	"miller/dsl"
-	"miller/parsing/lexer"
 	"miller/mapping"
+	"miller/parsing/lexer"
 	"miller/parsing/parser"
 )
 
@@ -16,7 +17,6 @@ import (
 var PutSetup = mapping.MapperSetup{
 	Verb:         "put",
 	ParseCLIFunc: mapperPutParseCLI,
-	UsageFunc:    mapperPutUsage,
 	IgnoresInput: false,
 }
 
@@ -24,17 +24,51 @@ func mapperPutParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
+	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) mapping.IRecordMapper {
-	if argc-*pargi < 2 {
+
+	// Get the verb name from the current spot in the mlr command line
+	argi := *pargi
+	verb := args[argi]
+	argi++
+
+	// Parse local flags
+	flagSet := flag.NewFlagSet(verb, errorHandling)
+	flagSet.Usage = func() {
+		ostream := os.Stderr
+		if errorHandling == flag.ContinueOnError { // help intentionally requested
+			ostream = os.Stdout
+		}
+		mapperPutUsage(ostream, args[0], verb, flagSet)
+	}
+	flagSet.Parse(args[argi:])
+	if errorHandling == flag.ContinueOnError { // help intentioally requested
 		return nil
 	}
-	// xxx temp hack
-	dslString := args[*pargi+1]
-	*pargi += 2
 
-	mapper, _ := NewMapperPut(dslString)
+	// Find out how many flags were consumed by this verb and advance for the
+	// next verb
+	argi = len(args) - len(flagSet.Args())
+
+	// Get the DSL string from the command line, after the flags
+	if (argi >= argc) {
+		flagSet.Usage()
+		os.Exit(1)
+	}
+	dslString := args[argi]
+	argi += 1
+
+	mapper, err := NewMapperPut(dslString)
+	if err != nil {
+		// xxx make sure better parse-fail info is printed by the DSL parser
+		fmt.Fprintf(os.Stderr, "%s %s: cannot parse DSL expression.\n",
+			args[0], verb)
+		os.Exit(1)
+	}
+
+	*pargi = argi
 	return mapper
 }
 
@@ -42,9 +76,14 @@ func mapperPutUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
+	flagSet *flag.FlagSet,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprintf(o, "TODO: un-stub this help function.\n")
+	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", argv0, verb)
+	fmt.Fprintf(o, "TODO: put detailed on-line help here.\n")
+	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
+	flagSet.VisitAll(func(f *flag.Flag) {
+		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
+	})
 }
 
 // ----------------------------------------------------------------

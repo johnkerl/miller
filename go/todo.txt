@@ -50,3 +50,4 @@ nits:
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 * lrec -> srec everywhere
 * comment precisely where context pointers -> copy and why
+* mlr --help-for w/ stdout redirect for manpage -- ?

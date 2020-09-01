@@ -15,7 +15,6 @@ import (
 var CatSetup = mapping.MapperSetup{
 	Verb:         "cat",
 	ParseCLIFunc: mapperCatParseCLI,
-	UsageFunc:    mapperCatUsage,
 	IgnoresInput: false,
 }
 
@@ -23,29 +22,34 @@ func mapperCatParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
+	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) mapping.IRecordMapper {
+
 	// Get the verb name from the current spot in the mlr command line
 	argi := *pargi
-	if (argc - argi) < 1 {
-		mapperCatUsage(os.Stderr, args[0], args[*pargi])
-		return nil
-	}
 	verb := args[argi]
 	argi++
 
 	// Parse local flags
-	flagset := flag.NewFlagSet(verb, flag.ExitOnError)
-	pDoCounters := flagset.Bool(
+	flagSet := flag.NewFlagSet(verb, errorHandling)
+	pDoCounters := flagSet.Bool(
 		"n",
 		false,
 		"Prepend field \"n\" to each record with record-counter starting at 1",
 	)
-	flagset.Usage = func() {
-		mapperCatUsage(os.Stderr, args[0], verb)
+	flagSet.Usage = func() {
+		ostream := os.Stderr
+		if errorHandling == flag.ContinueOnError { // help intentionally requested
+			ostream = os.Stdout
+		}
+		mapperCatUsage(ostream, args[0], verb, flagSet)
 	}
-	flagset.Parse(args[argi:])
+	flagSet.Parse(args[argi:])
+	if errorHandling == flag.ContinueOnError { // help intentioally requested
+		return nil
+	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// xxx to be ported:
@@ -77,23 +81,7 @@ func mapperCatParseCLI(
 	//	return pmapper;
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	*pargi = len(args) - len(flagset.Args())
-
-	mapper, _ := NewMapperCat(*pDoCounters)
-
-	return mapper
-}
-
-func mapperCatUsage(
-	o *os.File,
-	argv0 string,
-	verb string,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
-	// xxx to do -- connect flagset into here ...
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	//	fmt.Fprintf(o, "Options:\n");
 	//	fmt.Fprintf(o, "-n        Prepend field \"%s\" to each record with record-counter starting at 1\n",
 	//		DEFAULT_COUNTER_FIELD_NAME);
@@ -101,6 +89,30 @@ func mapperCatUsage(
 	//	fmt.Fprintf(o, "          keyed by specified field name(s).\n");
 	//	fmt.Fprintf(o, "-v        Write a low-level record-structure dump to stderr.\n");
 	//	fmt.Fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	// Find out how many flags were consumed by this verb and advance for the
+	// next verb
+	argi = len(args) - len(flagSet.Args())
+
+	mapper, _ := NewMapperCat(*pDoCounters)
+
+	*pargi = argi
+	return mapper
+}
+
+func mapperCatUsage(
+	o *os.File,
+	argv0 string,
+	verb string,
+	flagSet *flag.FlagSet,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
+	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
+	flagSet.VisitAll(func(f *flag.Flag) {
+		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
+	})
 }
 
 // ----------------------------------------------------------------

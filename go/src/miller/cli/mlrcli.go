@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -15,6 +16,8 @@ var VERSION_STRING string = "v6.0.0-dev"
 // ================================================================
 // Miller command-line interface
 // ================================================================
+
+// xxx comment why Go flag package is used by verb handlers but not by main
 
 //// ----------------------------------------------------------------
 //#define DEFAULT_OFMT                     "%lf"
@@ -176,13 +179,6 @@ func parseMappers(args []string, pargi *int, argc int, options *clitypes.TOption
 			os.Exit(1)
 		}
 
-		if (argc - argi) >= 2 {
-			if args[argi+1] == "-h" || args[argi+1] == "--help" {
-				mapperSetup.UsageFunc(os.Stdout, os.Args[0], verb)
-				os.Exit(0)
-			}
-		}
-
 		// It's up to the parse func to print its usage on CLI-parse failure.
 		// Also note: this assumes main reader/writer opts are all parsed
 		// *before* mapper parse-CLI methods are invoked.
@@ -191,6 +187,7 @@ func parseMappers(args []string, pargi *int, argc int, options *clitypes.TOption
 			&argi,
 			argc,
 			args,
+			flag.ExitOnError,
 			&options.ReaderOptions,
 			&options.WriterOptions,
 		)
@@ -265,7 +262,16 @@ func usageAllVerbs(argv0 string) {
 
 	for _, mapperSetup := range MAPPER_LOOKUP_TABLE {
 		fmt.Printf("%s\n", separator)
-		mapperSetup.UsageFunc(os.Stdout, argv0, mapperSetup.Verb)
+		args := [3]string{os.Args[0], mapperSetup.Verb, "--help"}
+		argi := 1
+		mapperSetup.ParseCLIFunc(
+			&argi,
+			3,
+			args[:],
+			flag.ContinueOnError,
+			nil,
+			nil,
+		)
 		fmt.Printf("\n")
 	}
 	fmt.Printf("%s\n", separator)
@@ -1455,7 +1461,7 @@ func handleTerminalUsage(args []string, argc int, argi int) bool {
 		//		printTypeArithmeticInfo(os.Stdout, os.Args[0]);
 		//		return true;
 		//
-	} else if args[argi] == "--help-all-verbs" {
+	} else if args[argi] == "--help-all-verbs" || args[argi] == "--usage-all-verbs" {
 		usageAllVerbs(os.Args[0])
 	} else if args[argi] == "--list-all-verbs" || args[argi] == "-l" {
 		listAllVerbs(os.Stdout, " ")
