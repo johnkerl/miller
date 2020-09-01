@@ -36,6 +36,9 @@ import (
 // ----------------------------------------------------------------
 var mapperLookupTable = []mapping.MapperSetup{
 	mapping.MapperCatSetup,
+	mapping.MapperNothingSetup,
+	mapping.MapperPutSetup,
+	mapping.MapperTacSetup,
 }
 
 //
