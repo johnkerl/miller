@@ -3,6 +3,7 @@ package mappers
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"miller/clitypes"
@@ -43,6 +44,11 @@ func mapperPutParseCLI(
     full transparency on the precedence and associativity rules of
     Miller's grammar, to stdout.`,
 	)
+	pExpressionFileName := flagSet.String(
+		"f",
+		"",
+		`File containing a DSL expression.`,
+	)
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -59,13 +65,25 @@ func mapperPutParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	// Get the DSL string from the command line, after the flags
-	if argi >= argc {
-		flagSet.Usage()
-		os.Exit(1)
+	dslString := ""
+	if *pExpressionFileName != "" {
+		// Get the DSL string from the user-specified filename
+		data, err := ioutil.ReadFile(*pExpressionFileName)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression: ", args[0], verb)
+			fmt.Println(err)
+			return nil
+		}
+		dslString = string(data)
+	} else {
+		// Get the DSL string from the command line, after the flags
+		if argi >= argc {
+			flagSet.Usage()
+			os.Exit(1)
+		}
+		dslString = args[argi]
+		argi += 1
 	}
-	dslString := args[argi]
-	argi += 1
 
 	mapper, err := NewMapperPut(dslString, *pVerbose)
 	if err != nil {
