@@ -16,7 +16,7 @@ type RecordWriterCSV struct {
 
 func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
 	return &RecordWriterCSV{
-		onFirst: true,
+		onFirst:   true,
 		csvWriter: csv.NewWriter(os.Stdout),
 	}
 }

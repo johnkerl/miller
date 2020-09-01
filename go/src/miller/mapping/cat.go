@@ -6,7 +6,6 @@ import (
 
 	"miller/clitypes"
 	"miller/containers"
-	"miller/runtime"
 )
 
 var MapperCatSetup = MapperSetup{
@@ -88,9 +87,8 @@ func NewMapperCat() (*MapperCat, error) {
 }
 
 func (this *MapperCat) Map(
-	inrec *containers.Lrec,
-	context *runtime.Context,
-	outrecs chan<- *containers.Lrec,
+	inrecAndContext *containers.LrecAndContext,
+	outrecsAndContexts chan<- *containers.LrecAndContext,
 ) {
-	outrecs <- inrec
+	outrecsAndContexts <- inrecAndContext
 }

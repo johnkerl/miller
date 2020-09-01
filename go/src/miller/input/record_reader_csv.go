@@ -8,7 +8,6 @@ import (
 	"miller/clitypes"
 	"miller/containers"
 	"miller/lib"
-	"miller/runtime"
 )
 
 type RecordReaderCSV struct {
@@ -26,8 +25,8 @@ func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV
 
 func (this *RecordReaderCSV) Read(
 	filenames []string,
-	context runtime.Context,
-	inrecsAndContexts chan<- *runtime.LrecAndContext,
+	context containers.Context,
+	inrecsAndContexts chan<- *containers.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -44,7 +43,7 @@ func (this *RecordReaderCSV) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- runtime.NewLrecAndContext(
+	inrecsAndContexts <- containers.NewLrecAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -53,8 +52,8 @@ func (this *RecordReaderCSV) Read(
 func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
-	context *runtime.Context,
-	inrecsAndContexts chan<- *runtime.LrecAndContext,
+	context *containers.Context,
+	inrecsAndContexts chan<- *containers.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -100,7 +99,7 @@ func (this *RecordReaderCSV) processHandle(
 		}
 		context.UpdateForInputRecord(lrec)
 
-		inrecsAndContexts <- runtime.NewLrecAndContext(
+		inrecsAndContexts <- containers.NewLrecAndContext(
 			lrec,
 			context,
 		)

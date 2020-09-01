@@ -1,21 +1,17 @@
-package runtime
-
-import (
-	"miller/containers"
-)
+package containers
 
 // ----------------------------------------------------------------
 type LrecAndContext struct {
-	Lrec    *containers.Lrec
+	Lrec    *Lrec
 	Context Context
 }
 
 func NewLrecAndContext(
-	lrec *containers.Lrec,
+	lrec *Lrec,
 	context *Context,
 ) *LrecAndContext {
 	return &LrecAndContext{
-		Lrec: lrec,
+		Lrec:    lrec,
 		Context: *context,
 	}
 }
@@ -64,7 +60,7 @@ func (this *Context) UpdateForStartOfFile(filename string) {
 	this.FNR = 0
 }
 
-func (this *Context) UpdateForInputRecord(inrec *containers.Lrec) {
+func (this *Context) UpdateForInputRecord(inrec *Lrec) {
 	if inrec != nil { // do not count the end-of-stream marker which is a nil record pointer
 		this.NF = inrec.FieldCount
 		this.NR++

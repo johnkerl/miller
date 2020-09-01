@@ -5,7 +5,6 @@ import (
 
 	"miller/containers"
 	"miller/lib"
-	"miller/runtime"
 )
 
 // ----------------------------------------------------------------
@@ -22,7 +21,7 @@ func NewInterpreter() *Interpreter {
 // ----------------------------------------------------------------
 func (this *Interpreter) InterpretOnInputRecord(
 	inrec *containers.Lrec,
-	context *runtime.Context,
+	context *containers.Context,
 	ast *AST,
 ) (outrec *containers.Lrec, err error) {
 	root := ast.Root
@@ -82,7 +81,7 @@ func (this *Interpreter) checkArity(
 func (this *Interpreter) evaluateNode(
 	node *ASTNode,
 	inrec *containers.Lrec,
-	context *runtime.Context,
+	context *containers.Context,
 ) (lib.Mlrval, error) {
 	var sval = ""
 	if node.Token != nil {
@@ -135,7 +134,7 @@ func (this *Interpreter) evaluateNode(
 
 func (this *Interpreter) evaluateContextVariableNode(
 	node *ASTNode,
-	context *runtime.Context,
+	context *containers.Context,
 ) (lib.Mlrval, error) {
 	if node.Token == nil {
 		return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
@@ -188,7 +187,7 @@ func (this *Interpreter) evaluateBinaryOperatorNode(
 	leftChild *ASTNode,
 	rightChild *ASTNode,
 	inrec *containers.Lrec,
-	context *runtime.Context,
+	context *containers.Context,
 ) (lib.Mlrval, error) {
 	sop := string(node.Token.Lit)
 

@@ -4,7 +4,6 @@ package clitypes
 // deeper package to avoid a package-dependency cycle between miller/cli and
 // miiller/mapping.
 
-
 // ----------------------------------------------------------------
 //typedef struct _generator_opts_t {
 //	char* field_name;

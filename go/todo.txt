@@ -1,6 +1,11 @@
 * lots of trivial things are just a matter of keystroking
 * defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
 
+TOP OF LIST:
+! argparse
+! multi-channel w/ then-chains
+! . semantics
+
 harder / more worthy:
 ~ streaming JSON reader
   -> w/ and w/o enclosing [...] !
@@ -26,7 +31,8 @@ also:
   o incorporate go/README.md notes
 
 long-term:
-* srecs as string -> mlrvals, then (mlrval | mlhmmv)
+k srecs as string -> mlrvals
+* then srecs as string -> (mlrval | mlhmmv)
 * support full json read/write
   o only requirement is that top-level be sequence of string-valued objects ...
   o json-to-json cat-mapping should be identical
@@ -38,8 +44,11 @@ gocc upstreams:
 
 ----------------------------------------------------------------
 nits:
+* split up mlrcli
 * AST post-processing: strip '$' and '"' ... '"'; etc
 * "...\"..." into string-literal parsing ...
 * all manner of xxx
 * support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
+* lrec -> srec everywhere
+* comment precisely where context pointers -> copy and why

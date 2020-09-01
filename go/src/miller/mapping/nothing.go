@@ -6,7 +6,6 @@ import (
 
 	"miller/clitypes"
 	"miller/containers"
-	"miller/runtime"
 )
 
 var MapperNothingSetup = MapperSetup{
@@ -36,8 +35,8 @@ func mapperNothingUsageFunc(
 	verb string,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n");
-    fmt.Fprintf(o, "produced other output.\n")
+	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
+	fmt.Fprintf(o, "produced other output.\n")
 }
 
 // ----------------------------------------------------------------
@@ -50,11 +49,10 @@ func NewMapperNothing() (*MapperNothing, error) {
 }
 
 func (this *MapperNothing) Map(
-	inrec *containers.Lrec,
-	context *runtime.Context,
-	outrecs chan<- *containers.Lrec,
+	inrecAndContext *containers.LrecAndContext,
+	outrecsAndContexts chan<- *containers.LrecAndContext,
 ) {
-	if inrec == nil { // end of stream
-		outrecs <- inrec
+	if inrecAndContext.Lrec == nil { // end of stream
+		outrecsAndContexts <- inrecAndContext
 	}
 }

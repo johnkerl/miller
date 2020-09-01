@@ -10,7 +10,6 @@ import (
 	"miller/clitypes"
 	"miller/containers"
 	"miller/lib"
-	"miller/runtime"
 )
 
 type RecordReaderNIDX struct {
@@ -28,8 +27,8 @@ func NewRecordReaderNIDX(readerOptions *clitypes.TReaderOptions) *RecordReaderNI
 
 func (this *RecordReaderNIDX) Read(
 	filenames []string,
-	context runtime.Context,
-	inrecsAndContexts chan<- *runtime.LrecAndContext,
+	context containers.Context,
+	inrecsAndContexts chan<- *containers.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -46,7 +45,7 @@ func (this *RecordReaderNIDX) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- runtime.NewLrecAndContext(
+	inrecsAndContexts <- containers.NewLrecAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -55,8 +54,8 @@ func (this *RecordReaderNIDX) Read(
 func (this *RecordReaderNIDX) processHandle(
 	handle *os.File,
 	filename string,
-	context *runtime.Context,
-	inrecsAndContexts chan<- *runtime.LrecAndContext,
+	context *containers.Context,
+	inrecsAndContexts chan<- *containers.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -77,7 +76,7 @@ func (this *RecordReaderNIDX) processHandle(
 			lrec := lrecFromNIDXLine(&line)
 
 			context.UpdateForInputRecord(lrec)
-			inrecsAndContexts <- runtime.NewLrecAndContext(
+			inrecsAndContexts <- containers.NewLrecAndContext(
 				lrec,
 				context,
 			)

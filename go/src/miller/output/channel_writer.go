@@ -7,13 +7,14 @@ import (
 )
 
 func ChannelWriter(
-	outrecs <-chan *containers.Lrec,
+	outrecsAndContexts <-chan *containers.LrecAndContext,
 	recordWriter IRecordWriter,
 	done chan<- bool,
 	ostream *os.File,
 ) {
 	for {
-		lrec := <-outrecs
+		lrecAndContext := <-outrecsAndContexts
+		lrec := lrecAndContext.Lrec
 		recordWriter.Write(lrec)
 		if lrec == nil {
 			done <- true

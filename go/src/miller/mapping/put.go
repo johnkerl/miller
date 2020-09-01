@@ -9,7 +9,6 @@ import (
 	"miller/dsl"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
-	"miller/runtime"
 )
 
 var MapperPutSetup = MapperSetup{
@@ -26,11 +25,11 @@ func mapperPutParseCLIFunc(
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) IRecordMapper {
-	if argc - *pargi < 2 {
+	if argc-*pargi < 2 {
 		return nil
 	}
 	// xxx temp hack
-	dslString := args[*pargi + 1]
+	dslString := args[*pargi+1]
 	*pargi += 2
 
 	mapper, _ := NewMapperPut(dslString)
@@ -43,7 +42,7 @@ func mapperPutUsageFunc(
 	verb string,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprintf(o, "TODO: un-stub this help function.\n");
+	fmt.Fprintf(o, "TODO: un-stub this help function.\n")
 }
 
 // ----------------------------------------------------------------
@@ -58,7 +57,7 @@ func NewMapperPut(dslString string) (*MapperPut, error) {
 		return nil, err
 	}
 	return &MapperPut{
-		ast: ast,
+		ast:         ast,
 		interpreter: dsl.NewInterpreter(),
 	}, nil
 }
@@ -78,20 +77,28 @@ func NewASTFromString(dslString string) (*dsl.AST, error) {
 }
 
 func (this *MapperPut) Map(
-	inrec *containers.Lrec,
-	context *runtime.Context,
-	outrecs chan<- *containers.Lrec,
+	inrecAndContext *containers.LrecAndContext,
+	outrecsAndContexts chan<- *containers.LrecAndContext,
 ) {
+	inrec := inrecAndContext.Lrec
+	context := inrecAndContext.Context
 	if inrec != nil {
 		// xxx maybe ast -> interpreter ctor
-		outrec, err := this.interpreter.InterpretOnInputRecord(inrec, context, this.ast)
+		outrec, err := this.interpreter.InterpretOnInputRecord(inrec, &context, this.ast)
 		if err != nil {
 			// need echan or what?
 			fmt.Println(err)
 		} else {
-			outrecs <- outrec
+			outrecsAndContexts <- containers.NewLrecAndContext(
+				outrec,
+				&context,
+			)
 		}
 	} else {
-		outrecs <- nil
+		outrecsAndContexts <- containers.NewLrecAndContext(
+			nil, // signals end of input record stream
+			&context,
+		)
+
 	}
 }

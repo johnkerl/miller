@@ -7,7 +7,6 @@ import (
 
 	"miller/clitypes"
 	"miller/containers"
-	"miller/runtime"
 )
 
 var MapperTacSetup = MapperSetup{
@@ -42,27 +41,31 @@ func mapperTacUsageFunc(
 
 // ----------------------------------------------------------------
 type MapperTac struct {
-	lrecs *list.List
+	lrecsAndContexts *list.List
 }
 
 func NewMapperTac() (*MapperTac, error) {
 	return &MapperTac{
-		lrecs: list.New(),
+		lrecsAndContexts: list.New(),
 	}, nil
 }
 
 func (this *MapperTac) Map(
-	inrec *containers.Lrec,
-	context *runtime.Context,
-	outrecs chan<- *containers.Lrec,
+	inrecAndContext *containers.LrecAndContext,
+	outrecsAndContexts chan<- *containers.LrecAndContext,
 ) {
+	inrec := inrecAndContext.Lrec
+
 	if inrec != nil {
-		this.lrecs.PushFront(inrec)
+		this.lrecsAndContexts.PushFront(inrec)
 	} else {
 		// end of stream
-		for e := this.lrecs.Front(); e != nil; e = e.Next() {
-			outrecs <- e.Value.(*containers.Lrec)
+		for e := this.lrecsAndContexts.Front(); e != nil; e = e.Next() {
+			outrecsAndContexts <- e.Value.(*containers.LrecAndContext)
 		}
-		outrecs <- nil
+		outrecsAndContexts <- containers.NewLrecAndContext(
+			nil, // signals end of input record stream
+			&inrecAndContext.Context,
+		)
 	}
 }
