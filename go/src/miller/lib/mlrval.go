@@ -303,7 +303,9 @@ func (this *Mlrval) setPrintRep() {
 	}
 }
 
-func (this *Mlrval) String() string {
+// Must have non-pointer receiver in order to implement the fmt.Stringer
+// interface to make this printable via fmt.Println et al.
+func (this Mlrval) String() string {
 	this.setPrintRep()
 	return this.printrep
 }
