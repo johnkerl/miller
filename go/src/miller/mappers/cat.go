@@ -43,7 +43,7 @@ func mapperCatParseCLI(
 
 	pCounterFieldName := flagSet.String(
 		"N",
-		"unused",
+		"",
 		"Prepend field {name} to each record with record-counter starting at 1",
 	)
 
@@ -137,7 +137,7 @@ func NewMapperCat(
 ) (*MapperCat, error) {
 
 	counterFieldName := "n"
-	if pCounterFieldName != nil {
+	if *pCounterFieldName != "" {
 		counterFieldName = *pCounterFieldName
 		doCounters = true
 	}
