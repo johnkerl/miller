@@ -1291,7 +1291,7 @@ static mv_t oplus_f_if(mv_t* pa, mv_t* pb) {
 	double b = pb->u.fltv;
 	return mv_from_float(a + b);
 }
-static mv_t oplus_n_ii(mv_t* pa, mv_t* pb) {
+static mv_t oplus_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
 	long long c = a + b;
@@ -1304,7 +1304,7 @@ static mv_binary_func_t* oplus_dispositions[MT_DIM][MT_DIM] = {
 	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,         _2,         _err},
 	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,       _emt,       _err},
 	/*STRING*/ {_err, _err,  _err, _err,  _err,       _err,       _err},
-	/*INT*/    {_err, _1,    _emt, _err,  oplus_n_ii, oplus_f_if, _err},
+	/*INT*/    {_err, _1,    _emt, _err,  oplus_i_ii, oplus_f_if, _err},
 	/*FLOAT*/  {_err, _1,    _emt, _err,  oplus_f_fi, oplus_f_ff, _err},
 	/*BOOL*/   {_err, _err,  _err, _err,  _err,       _err,       _err},
 };

@@ -38,7 +38,22 @@ func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	if arity != 1 {
 		return nil, errors.New("Internal coding error detected") // xxx libify
 	}
-	//astChild := astNode.Children[0]
+	astChild := astNode.Children[0]
+
+	cstChild, err := NewEvaluable(astChild)
+	if err != nil {
+		return nil, err
+	}
+
+	sop := string(astNode.Token.Lit)
+	switch sop {
+	case "+":
+		return NewUnaryPlusOperator(cstChild), nil
+		break
+	case "-":
+		return NewUnaryMinusOperator(cstChild), nil
+		break
+	}
 
 	return nil, errors.New("CST build: AST unary operator node unhandled.")
 }
@@ -67,6 +82,7 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case ".":
 		return NewDotOperator(leftCSTChild, rightCSTChild), nil
 		break
+
 	case "+":
 		return NewPlusOperator(leftCSTChild, rightCSTChild), nil
 		break
@@ -81,6 +97,19 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		break
 	case "//":
 		return NewIntDivideOperator(leftCSTChild, rightCSTChild), nil
+		break
+
+	case ".+":
+		return NewDotPlusOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case ".-":
+		return NewDotMinusOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case ".*":
+		return NewDotTimesOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "./":
+		return NewDotDivideOperator(leftCSTChild, rightCSTChild), nil
 		break
 
 		// xxx continue ...
@@ -103,6 +132,28 @@ func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	//rightASTChild := astNode.Children[2]
 
 	return nil, errors.New("CST build: AST ternary operator node unhandled.")
+}
+
+// ================================================================
+type UnaryPlusOperator struct{ a IEvaluable }
+
+func NewUnaryPlusOperator(a IEvaluable) *UnaryPlusOperator {
+	return &UnaryPlusOperator{a: a}
+}
+func (this *UnaryPlusOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	return lib.MlrvalUnaryPlus(&aout)
+}
+
+// ----------------------------------------------------------------
+type UnaryMinusOperator struct{ a IEvaluable }
+
+func NewUnaryMinusOperator(a IEvaluable) *UnaryMinusOperator {
+	return &UnaryMinusOperator{a: a}
+}
+func (this *UnaryMinusOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	return lib.MlrvalUnaryMinus(&aout)
 }
 
 // ================================================================
@@ -175,4 +226,52 @@ func (this *IntDivideOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalIntDivide(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type DotPlusOperator struct{ a, b IEvaluable }
+
+func NewDotPlusOperator(a, b IEvaluable) *DotPlusOperator {
+	return &DotPlusOperator{a: a, b: b}
+}
+func (this *DotPlusOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalDotPlus(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type DotMinusOperator struct{ a, b IEvaluable }
+
+func NewDotMinusOperator(a, b IEvaluable) *DotMinusOperator {
+	return &DotMinusOperator{a: a, b: b}
+}
+func (this *DotMinusOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalDotMinus(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type DotTimesOperator struct{ a, b IEvaluable }
+
+func NewDotTimesOperator(a, b IEvaluable) *DotTimesOperator {
+	return &DotTimesOperator{a: a, b: b}
+}
+func (this *DotTimesOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalDotTimes(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type DotDivideOperator struct{ a, b IEvaluable }
+
+func NewDotDivideOperator(a, b IEvaluable) *DotDivideOperator {
+	return &DotDivideOperator{a: a, b: b}
+}
+func (this *DotDivideOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalDotDivide(&aout, &bout)
 }
