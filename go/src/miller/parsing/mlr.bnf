@@ -464,7 +464,7 @@ Statement : StatementInBody ;
 
 // Not valid in begin/end since they refer to srecs:
 
-StatementInBody :SrecAssignment ;
+StatementInBody : SrecAssignment ;
 
 //StatementInBody(A) ::= SrecIndirectAssignment(B).        { A = B; }
 //StatementInBody(A) ::= SrecPositionalNameAssignment(B).  { A = B; }
@@ -1285,9 +1285,11 @@ StatementInBody :SrecAssignment ;
 //// ----------------------------------------------------------------
 // xxx
 
-SrecAssignment
+SrecAssignment : SrecDirectAssignment ;
+
+SrecDirectAssignment
   : FieldName "=" RHS
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >> ;
 
 //SrecIndirectAssignment(A)  ::=
 //	"$[" RHS "]"
@@ -1388,23 +1390,26 @@ SrecAssignment
 //}
 
 // ----------------------------------------------------------------
-SrecAssignment
-  : FieldName "||=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "^^=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "&&=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "|="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "^="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "&="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "<<=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName ">>=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "+="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName ".="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "-="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "*="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "/="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "//=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "%="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | FieldName "**=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+// xxx awkward factorization -- there will be huge cardinality if this is
+// number of assignment operators times number of possible LHSes.
+
+SrecDirectAssignment
+  : FieldName "||=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "^^=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "&&=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "|="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "^="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "&="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "<<=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName ">>=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "+="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName ".="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "-="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "*="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "/="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "//=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "%="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "**=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
 ;
 
 //OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_or_equals RHS(C). {

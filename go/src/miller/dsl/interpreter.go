@@ -28,7 +28,7 @@ func (this *Interpreter) InterpretOnInputRecord(
 	if root == nil {
 		return nil, errors.New("internal coding error") // xxx libify
 	}
-	if root.NodeType != NodeTypeStatementBlock {
+	if root.Type != NodeTypeStatementBlock {
 		return nil, errors.New("non-statement-block root node unhandled")
 	}
 	children := root.Children
@@ -39,11 +39,11 @@ func (this *Interpreter) InterpretOnInputRecord(
 	// For this very early stub, only process statement nodes (which is all the
 	// grammar produces at this point ...)
 	for _, child := range children {
-		if child.NodeType != NodeTypeAssignment {
+		if child.Type != NodeTypeSrecDirectAssignment {
 			return nil, errors.New("non-assignment node unhandled")
 		}
 
-		err := this.checkArity(child, 2)
+		err := child.CheckArity(2)
 		if err != nil {
 			return nil, err
 		}
@@ -65,19 +65,6 @@ func (this *Interpreter) InterpretOnInputRecord(
 }
 
 // ----------------------------------------------------------------
-// xxx make into ASTNode method?
-func (this *Interpreter) checkArity(
-	node *ASTNode,
-	arity int,
-) error {
-	if len(node.Children) != arity {
-		return errors.New("internal coding error") // xxx libify
-	} else {
-		return nil
-	}
-}
-
-// ----------------------------------------------------------------
 func (this *Interpreter) evaluateNode(
 	node *ASTNode,
 	inrec *containers.Lrec,
@@ -88,7 +75,7 @@ func (this *Interpreter) evaluateNode(
 		sval = string(node.Token.Lit)
 	}
 
-	switch node.NodeType {
+	switch node.Type {
 
 	case NodeTypeStringLiteral:
 		// xxx temp "..." strip -- fix this in the grammar or ast-insert
@@ -116,11 +103,11 @@ func (this *Interpreter) evaluateNode(
 	case NodeTypeStatementBlock:
 		return lib.MlrvalFromError(), errors.New("unhandled2")
 		break
-	case NodeTypeAssignment:
+	case NodeTypeSrecDirectAssignment:
 		return lib.MlrvalFromError(), errors.New("unhandled3")
 		break
 	case NodeTypeOperator:
-		this.checkArity(node, 2) // xxx temp -- binary-only for now
+		node.CheckArity(2) // xxx temp -- binary-only for now
 		return this.evaluateBinaryOperatorNode(node, node.Children[0], node.Children[1],
 			inrec, context)
 		break

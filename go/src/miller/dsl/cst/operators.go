@@ -1,11 +1,106 @@
 package cst
 
 import (
-	"miller/containers"
+	"errors"
+
+	"miller/dsl"
 	"miller/lib"
 )
 
+// ================================================================
+func NewOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	if astNode.Type != dsl.NodeTypeOperator {
+		return nil, errors.New("Internal coding error detected") // xxx libify
+	}
+
+	arity := len(astNode.Children)
+	switch arity {
+	case 1:
+		return NewUnaryOperatorNode(astNode)
+		break
+	case 2:
+		return NewBinaryOperatorNode(astNode)
+		break
+	case 3:
+		return NewTernaryOperatorNode(astNode)
+		break
+	}
+	return nil, errors.New("CST build: AST operator node unhandled.")
+}
+
 // ----------------------------------------------------------------
+func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	arity := len(astNode.Children)
+	if arity != 1 {
+		return nil, errors.New("Internal coding error detected") // xxx libify
+	}
+	//astChild := astNode.Children[0]
+
+	return nil, errors.New("CST build: AST unary operator node unhandled.")
+}
+
+// ----------------------------------------------------------------
+func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	arity := len(astNode.Children)
+	if arity != 2 {
+		return nil, errors.New("Internal coding error detected") // xxx libify
+	}
+
+	leftASTChild := astNode.Children[0]
+	rightASTChild := astNode.Children[1]
+
+	leftCSTChild, err := NewEvaluable(leftASTChild)
+	if err != nil {
+		return nil, err
+	}
+	rightCSTChild , err:= NewEvaluable(rightASTChild)
+	if err != nil {
+		return nil, err
+	}
+
+	sop := string(astNode.Token.Lit)
+	switch sop {
+	case ".":
+		return NewDotOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "+":
+		return NewPlusOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "-":
+		return NewMinusOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "*":
+		return NewTimesOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "/":
+		return NewDivideOperator(leftCSTChild, rightCSTChild), nil
+		break
+
+		//	case "//":
+		//		return NewIntDivideOperator(leftCSTChild, rightCSTChild)
+		//		break
+
+		//		// xxx continue ...
+	}
+
+	return nil, errors.New("CST build: AST binary operator node unhandled.")
+}
+
+// ----------------------------------------------------------------
+func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	arity := len(astNode.Children)
+	if arity != 3 {
+		return nil, errors.New("Internal coding error detected") // xxx libify
+	}
+
+	//leftASTChild := astNode.Children[0]
+	//middleASTChild := astNode.Children[1]
+	//rightASTChild := astNode.Children[2]
+
+	return nil, errors.New("CST build: AST ternary operator node unhandled.")
+}
+
+// ================================================================
 type DotOperator struct{ a, b IEvaluable }
 
 func NewDotOperator(a, b IEvaluable) *DotOperator {

@@ -64,32 +64,11 @@ type Root struct {
 	executables []IExecutable
 }
 
-func NewRoot() *Root {
-	return &Root{
-		make([]IExecutable, 0),
-	}
-}
-func (this *Root) AppendStatement(executable IExecutable) {
-	this.executables = append(this.executables, executable)
-}
-
-type DirectSrecFieldAssignment struct {
+// ----------------------------------------------------------------
+type SrecDirectFieldAssignment struct {
 	lhsFieldName string
 	rhs          IEvaluable
 }
-
-func NewDirectSrecFieldAssignment(
-	lhsFieldName string,
-	rhs IEvaluable,
-) *DirectSrecFieldAssignment {
-	return &DirectSrecFieldAssignment{
-		lhsFieldName: lhsFieldName,
-		rhs:          rhs,
-	}
-}
-
-// xxx separate dsl/cst/execute.go ?
-// xxx implement IExecutable
 
 type IndirectSrecFieldAssignment struct {
 	lhsFieldName IEvaluable

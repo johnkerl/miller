@@ -69,8 +69,8 @@ var actionTab = actionTable{
 			nil,       // **
 			nil,       // (
 			nil,       // )
-			shift(9),  // md_token_field_name
-			shift(10), // $[
+			shift(10), // md_token_field_name
+			shift(11), // $[
 			nil,       // ]
 			nil,       // md_token_string_literal
 			nil,       // md_token_int_literal
@@ -172,7 +172,7 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			reduce(1), // $, reduce: Root
-			shift(11), // ;
+			shift(12), // ;
 			nil,       // =
 			nil,       // ||=
 			nil,       // ^^=
@@ -483,25 +483,25 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			shift(12), // =
-			shift(13), // ||=
-			shift(14), // ^^=
-			shift(15), // &&=
-			shift(16), // |=
-			shift(17), // ^=
-			shift(18), // &=
-			shift(19), // <<=
-			shift(20), // >>=
-			shift(21), // +=
-			shift(22), // .=
-			shift(23), // -=
-			shift(24), // *=
-			shift(25), // /=
-			shift(26), // //=
-			shift(27), // %=
-			shift(28), // **=
+			reduce(7), // $, reduce: SrecAssignment
+			reduce(7), // ;, reduce: SrecAssignment
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
 			nil,       // ?
 			nil,       // :
 			nil,       // ||
@@ -560,79 +560,79 @@ var actionTab = actionTable{
 	actionRow{ // S7
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			reduce(77), // =, reduce: FieldName
-			reduce(77), // ||=, reduce: FieldName
-			reduce(77), // ^^=, reduce: FieldName
-			reduce(77), // &&=, reduce: FieldName
-			reduce(77), // |=, reduce: FieldName
-			reduce(77), // ^=, reduce: FieldName
-			reduce(77), // &=, reduce: FieldName
-			reduce(77), // <<=, reduce: FieldName
-			reduce(77), // >>=, reduce: FieldName
-			reduce(77), // +=, reduce: FieldName
-			reduce(77), // .=, reduce: FieldName
-			reduce(77), // -=, reduce: FieldName
-			reduce(77), // *=, reduce: FieldName
-			reduce(77), // /=, reduce: FieldName
-			reduce(77), // //=, reduce: FieldName
-			reduce(77), // %=, reduce: FieldName
-			reduce(77), // **=, reduce: FieldName
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			shift(13), // =
+			shift(14), // ||=
+			shift(15), // ^^=
+			shift(16), // &&=
+			shift(17), // |=
+			shift(18), // ^=
+			shift(19), // &=
+			shift(20), // <<=
+			shift(21), // >>=
+			shift(22), // +=
+			shift(23), // .=
+			shift(24), // -=
+			shift(25), // *=
+			shift(26), // /=
+			shift(27), // //=
+			shift(28), // %=
+			shift(29), // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			nil,       // +
+			nil,       // -
+			nil,       // .+
+			nil,       // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			nil,       // !
+			nil,       // ~
+			nil,       // **
+			nil,       // (
+			nil,       // )
+			nil,       // md_token_field_name
+			nil,       // $[
+			nil,       // ]
+			nil,       // md_token_string_literal
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
+			nil,       // md_token_boolean_literal
+			nil,       // md_token_IPS
+			nil,       // md_token_IFS
+			nil,       // md_token_IRS
+			nil,       // md_token_OPS
+			nil,       // md_token_OFS
+			nil,       // md_token_ORS
+			nil,       // md_token_NF
+			nil,       // md_token_NR
+			nil,       // md_token_FNR
+			nil,       // md_token_FILENAME
+			nil,       // md_token_FILENUM
 		},
 	},
 	actionRow{ // S8
@@ -719,23 +719,23 @@ var actionTab = actionTable{
 			nil,        // INVALID
 			nil,        // $
 			nil,        // ;
-			reduce(79), // =, reduce: DirectFieldName
-			reduce(79), // ||=, reduce: DirectFieldName
-			reduce(79), // ^^=, reduce: DirectFieldName
-			reduce(79), // &&=, reduce: DirectFieldName
-			reduce(79), // |=, reduce: DirectFieldName
-			reduce(79), // ^=, reduce: DirectFieldName
-			reduce(79), // &=, reduce: DirectFieldName
-			reduce(79), // <<=, reduce: DirectFieldName
-			reduce(79), // >>=, reduce: DirectFieldName
-			reduce(79), // +=, reduce: DirectFieldName
-			reduce(79), // .=, reduce: DirectFieldName
-			reduce(79), // -=, reduce: DirectFieldName
-			reduce(79), // *=, reduce: DirectFieldName
-			reduce(79), // /=, reduce: DirectFieldName
-			reduce(79), // //=, reduce: DirectFieldName
-			reduce(79), // %=, reduce: DirectFieldName
-			reduce(79), // **=, reduce: DirectFieldName
+			reduce(79), // =, reduce: FieldName
+			reduce(79), // ||=, reduce: FieldName
+			reduce(79), // ^^=, reduce: FieldName
+			reduce(79), // &&=, reduce: FieldName
+			reduce(79), // |=, reduce: FieldName
+			reduce(79), // ^=, reduce: FieldName
+			reduce(79), // &=, reduce: FieldName
+			reduce(79), // <<=, reduce: FieldName
+			reduce(79), // >>=, reduce: FieldName
+			reduce(79), // +=, reduce: FieldName
+			reduce(79), // .=, reduce: FieldName
+			reduce(79), // -=, reduce: FieldName
+			reduce(79), // *=, reduce: FieldName
+			reduce(79), // /=, reduce: FieldName
+			reduce(79), // //=, reduce: FieldName
+			reduce(79), // %=, reduce: FieldName
+			reduce(79), // **=, reduce: FieldName
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -794,6 +794,84 @@ var actionTab = actionTable{
 	actionRow{ // S10
 		canRecover: false,
 		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			reduce(80), // =, reduce: DirectFieldName
+			reduce(80), // ||=, reduce: DirectFieldName
+			reduce(80), // ^^=, reduce: DirectFieldName
+			reduce(80), // &&=, reduce: DirectFieldName
+			reduce(80), // |=, reduce: DirectFieldName
+			reduce(80), // ^=, reduce: DirectFieldName
+			reduce(80), // &=, reduce: DirectFieldName
+			reduce(80), // <<=, reduce: DirectFieldName
+			reduce(80), // >>=, reduce: DirectFieldName
+			reduce(80), // +=, reduce: DirectFieldName
+			reduce(80), // .=, reduce: DirectFieldName
+			reduce(80), // -=, reduce: DirectFieldName
+			reduce(80), // *=, reduce: DirectFieldName
+			reduce(80), // /=, reduce: DirectFieldName
+			reduce(80), // //=, reduce: DirectFieldName
+			reduce(80), // %=, reduce: DirectFieldName
+			reduce(80), // **=, reduce: DirectFieldName
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S11
+		canRecover: false,
+		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
 			nil,       // ;
@@ -832,10 +910,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -844,32 +922,32 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
-	actionRow{ // S11
+	actionRow{ // S12
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -927,8 +1005,8 @@ var actionTab = actionTable{
 			nil,       // **
 			nil,       // (
 			nil,       // )
-			shift(9),  // md_token_field_name
-			shift(10), // $[
+			shift(10), // md_token_field_name
+			shift(11), // $[
 			nil,       // ]
 			nil,       // md_token_string_literal
 			nil,       // md_token_int_literal
@@ -945,84 +1023,6 @@ var actionTab = actionTable{
 			nil,       // md_token_FNR
 			nil,       // md_token_FILENAME
 			nil,       // md_token_FILENUM
-		},
-	},
-	actionRow{ // S12
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S13
@@ -1066,10 +1066,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1078,29 +1078,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S14
@@ -1144,10 +1144,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1156,29 +1156,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S15
@@ -1222,10 +1222,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1234,29 +1234,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S16
@@ -1300,10 +1300,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1312,29 +1312,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S17
@@ -1378,10 +1378,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1390,29 +1390,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S18
@@ -1456,10 +1456,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1468,29 +1468,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S19
@@ -1534,10 +1534,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1546,29 +1546,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S20
@@ -1612,10 +1612,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1624,29 +1624,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S21
@@ -1690,10 +1690,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1702,29 +1702,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S22
@@ -1768,10 +1768,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1780,29 +1780,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S23
@@ -1846,10 +1846,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1858,29 +1858,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S24
@@ -1924,10 +1924,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -1936,29 +1936,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S25
@@ -2002,10 +2002,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -2014,29 +2014,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S26
@@ -2080,10 +2080,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -2092,29 +2092,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S27
@@ -2158,10 +2158,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -2170,29 +2170,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S28
@@ -2236,10 +2236,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -2248,110 +2248,32 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S29
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(76), // ?, reduce: AtomOrFunction
-			nil,        // :
-			reduce(76), // ||, reduce: AtomOrFunction
-			reduce(76), // ^^, reduce: AtomOrFunction
-			reduce(76), // &&, reduce: AtomOrFunction
-			reduce(76), // =~, reduce: AtomOrFunction
-			reduce(76), // !=~, reduce: AtomOrFunction
-			reduce(76), // ==, reduce: AtomOrFunction
-			reduce(76), // !=, reduce: AtomOrFunction
-			reduce(76), // >, reduce: AtomOrFunction
-			reduce(76), // >=, reduce: AtomOrFunction
-			reduce(76), // <, reduce: AtomOrFunction
-			reduce(76), // <=, reduce: AtomOrFunction
-			reduce(76), // |, reduce: AtomOrFunction
-			reduce(76), // ^, reduce: AtomOrFunction
-			reduce(76), // &, reduce: AtomOrFunction
-			reduce(76), // <<, reduce: AtomOrFunction
-			reduce(76), // >>, reduce: AtomOrFunction
-			reduce(76), // +, reduce: AtomOrFunction
-			reduce(76), // -, reduce: AtomOrFunction
-			reduce(76), // .+, reduce: AtomOrFunction
-			reduce(76), // .-, reduce: AtomOrFunction
-			reduce(76), // ., reduce: AtomOrFunction
-			reduce(76), // *, reduce: AtomOrFunction
-			reduce(76), // /, reduce: AtomOrFunction
-			reduce(76), // //, reduce: AtomOrFunction
-			reduce(76), // %, reduce: AtomOrFunction
-			reduce(76), // .*, reduce: AtomOrFunction
-			reduce(76), // ./, reduce: AtomOrFunction
-			reduce(76), // .//, reduce: AtomOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(76), // **, reduce: AtomOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(76), // ], reduce: AtomOrFunction
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S30
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -2392,10 +2314,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -2404,14 +2326,92 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S30
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: AtomOrFunction
+			nil,        // :
+			reduce(77), // ||, reduce: AtomOrFunction
+			reduce(77), // ^^, reduce: AtomOrFunction
+			reduce(77), // &&, reduce: AtomOrFunction
+			reduce(77), // =~, reduce: AtomOrFunction
+			reduce(77), // !=~, reduce: AtomOrFunction
+			reduce(77), // ==, reduce: AtomOrFunction
+			reduce(77), // !=, reduce: AtomOrFunction
+			reduce(77), // >, reduce: AtomOrFunction
+			reduce(77), // >=, reduce: AtomOrFunction
+			reduce(77), // <, reduce: AtomOrFunction
+			reduce(77), // <=, reduce: AtomOrFunction
+			reduce(77), // |, reduce: AtomOrFunction
+			reduce(77), // ^, reduce: AtomOrFunction
+			reduce(77), // &, reduce: AtomOrFunction
+			reduce(77), // <<, reduce: AtomOrFunction
+			reduce(77), // >>, reduce: AtomOrFunction
+			reduce(77), // +, reduce: AtomOrFunction
+			reduce(77), // -, reduce: AtomOrFunction
+			reduce(77), // .+, reduce: AtomOrFunction
+			reduce(77), // .-, reduce: AtomOrFunction
+			reduce(77), // ., reduce: AtomOrFunction
+			reduce(77), // *, reduce: AtomOrFunction
+			reduce(77), // /, reduce: AtomOrFunction
+			reduce(77), // //, reduce: AtomOrFunction
+			reduce(77), // %, reduce: AtomOrFunction
+			reduce(77), // .*, reduce: AtomOrFunction
+			reduce(77), // ./, reduce: AtomOrFunction
+			reduce(77), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			nil,        // **
+			reduce(77), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			shift(134), // ]
+			reduce(77), // ], reduce: AtomOrFunction
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2489,7 +2489,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(24), // ], reduce: RHS
+			shift(135), // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2530,9 +2530,9 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			shift(135), // ?
+			nil,        // ?
 			nil,        // :
-			shift(136), // ||
+			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
@@ -2567,7 +2567,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(26), // ], reduce: TernaryTerm
+			reduce(25), // ], reduce: RHS
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2608,10 +2608,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(28), // ?, reduce: LogicalOrTerm
+			shift(136), // ?
 			nil,        // :
-			reduce(28), // ||, reduce: LogicalOrTerm
-			shift(137), // ^^
+			shift(137), // ||
+			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -2645,7 +2645,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(28), // ], reduce: LogicalOrTerm
+			reduce(27), // ], reduce: TernaryTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2686,11 +2686,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(30), // ?, reduce: LogicalXORTerm
+			reduce(29), // ?, reduce: LogicalOrTerm
 			nil,        // :
-			reduce(30), // ||, reduce: LogicalXORTerm
-			reduce(30), // ^^, reduce: LogicalXORTerm
-			shift(138), // &&
+			reduce(29), // ||, reduce: LogicalOrTerm
+			shift(138), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -2723,7 +2723,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(30), // ], reduce: LogicalXORTerm
+			reduce(29), // ], reduce: LogicalOrTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2764,15 +2764,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(32), // ?, reduce: LogicalAndTerm
+			reduce(31), // ?, reduce: LogicalXORTerm
 			nil,        // :
-			reduce(32), // ||, reduce: LogicalAndTerm
-			reduce(32), // ^^, reduce: LogicalAndTerm
-			reduce(32), // &&, reduce: LogicalAndTerm
-			shift(139), // =~
-			shift(140), // !=~
-			shift(141), // ==
-			shift(142), // !=
+			reduce(31), // ||, reduce: LogicalXORTerm
+			reduce(31), // ^^, reduce: LogicalXORTerm
+			shift(139), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -2801,7 +2801,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(32), // ], reduce: LogicalAndTerm
+			reduce(31), // ], reduce: LogicalXORTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2842,19 +2842,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(37), // ?, reduce: EqneTerm
+			reduce(33), // ?, reduce: LogicalAndTerm
 			nil,        // :
-			reduce(37), // ||, reduce: EqneTerm
-			reduce(37), // ^^, reduce: EqneTerm
-			reduce(37), // &&, reduce: EqneTerm
-			reduce(37), // =~, reduce: EqneTerm
-			reduce(37), // !=~, reduce: EqneTerm
-			reduce(37), // ==, reduce: EqneTerm
-			reduce(37), // !=, reduce: EqneTerm
-			shift(143), // >
-			shift(144), // >=
-			shift(145), // <
-			shift(146), // <=
+			reduce(33), // ||, reduce: LogicalAndTerm
+			reduce(33), // ^^, reduce: LogicalAndTerm
+			reduce(33), // &&, reduce: LogicalAndTerm
+			shift(140), // =~
+			shift(141), // !=~
+			shift(142), // ==
+			shift(143), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -2879,7 +2879,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(37), // ], reduce: EqneTerm
+			reduce(33), // ], reduce: LogicalAndTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2920,20 +2920,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(42), // ?, reduce: CmpTerm
+			reduce(38), // ?, reduce: EqneTerm
 			nil,        // :
-			reduce(42), // ||, reduce: CmpTerm
-			reduce(42), // ^^, reduce: CmpTerm
-			reduce(42), // &&, reduce: CmpTerm
-			reduce(42), // =~, reduce: CmpTerm
-			reduce(42), // !=~, reduce: CmpTerm
-			reduce(42), // ==, reduce: CmpTerm
-			reduce(42), // !=, reduce: CmpTerm
-			reduce(42), // >, reduce: CmpTerm
-			reduce(42), // >=, reduce: CmpTerm
-			reduce(42), // <, reduce: CmpTerm
-			reduce(42), // <=, reduce: CmpTerm
-			shift(147), // |
+			reduce(38), // ||, reduce: EqneTerm
+			reduce(38), // ^^, reduce: EqneTerm
+			reduce(38), // &&, reduce: EqneTerm
+			reduce(38), // =~, reduce: EqneTerm
+			reduce(38), // !=~, reduce: EqneTerm
+			reduce(38), // ==, reduce: EqneTerm
+			reduce(38), // !=, reduce: EqneTerm
+			shift(144), // >
+			shift(145), // >=
+			shift(146), // <
+			shift(147), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -2957,7 +2957,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(42), // ], reduce: CmpTerm
+			reduce(38), // ], reduce: EqneTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -2998,21 +2998,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(44), // ?, reduce: BitwiseORTerm
+			reduce(43), // ?, reduce: CmpTerm
 			nil,        // :
-			reduce(44), // ||, reduce: BitwiseORTerm
-			reduce(44), // ^^, reduce: BitwiseORTerm
-			reduce(44), // &&, reduce: BitwiseORTerm
-			reduce(44), // =~, reduce: BitwiseORTerm
-			reduce(44), // !=~, reduce: BitwiseORTerm
-			reduce(44), // ==, reduce: BitwiseORTerm
-			reduce(44), // !=, reduce: BitwiseORTerm
-			reduce(44), // >, reduce: BitwiseORTerm
-			reduce(44), // >=, reduce: BitwiseORTerm
-			reduce(44), // <, reduce: BitwiseORTerm
-			reduce(44), // <=, reduce: BitwiseORTerm
-			reduce(44), // |, reduce: BitwiseORTerm
-			shift(148), // ^
+			reduce(43), // ||, reduce: CmpTerm
+			reduce(43), // ^^, reduce: CmpTerm
+			reduce(43), // &&, reduce: CmpTerm
+			reduce(43), // =~, reduce: CmpTerm
+			reduce(43), // !=~, reduce: CmpTerm
+			reduce(43), // ==, reduce: CmpTerm
+			reduce(43), // !=, reduce: CmpTerm
+			reduce(43), // >, reduce: CmpTerm
+			reduce(43), // >=, reduce: CmpTerm
+			reduce(43), // <, reduce: CmpTerm
+			reduce(43), // <=, reduce: CmpTerm
+			shift(148), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -3035,7 +3035,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(44), // ], reduce: BitwiseORTerm
+			reduce(43), // ], reduce: CmpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -3076,22 +3076,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(46), // ?, reduce: BitwiseXORTerm
+			reduce(45), // ?, reduce: BitwiseORTerm
 			nil,        // :
-			reduce(46), // ||, reduce: BitwiseXORTerm
-			reduce(46), // ^^, reduce: BitwiseXORTerm
-			reduce(46), // &&, reduce: BitwiseXORTerm
-			reduce(46), // =~, reduce: BitwiseXORTerm
-			reduce(46), // !=~, reduce: BitwiseXORTerm
-			reduce(46), // ==, reduce: BitwiseXORTerm
-			reduce(46), // !=, reduce: BitwiseXORTerm
-			reduce(46), // >, reduce: BitwiseXORTerm
-			reduce(46), // >=, reduce: BitwiseXORTerm
-			reduce(46), // <, reduce: BitwiseXORTerm
-			reduce(46), // <=, reduce: BitwiseXORTerm
-			reduce(46), // |, reduce: BitwiseXORTerm
-			reduce(46), // ^, reduce: BitwiseXORTerm
-			shift(149), // &
+			reduce(45), // ||, reduce: BitwiseORTerm
+			reduce(45), // ^^, reduce: BitwiseORTerm
+			reduce(45), // &&, reduce: BitwiseORTerm
+			reduce(45), // =~, reduce: BitwiseORTerm
+			reduce(45), // !=~, reduce: BitwiseORTerm
+			reduce(45), // ==, reduce: BitwiseORTerm
+			reduce(45), // !=, reduce: BitwiseORTerm
+			reduce(45), // >, reduce: BitwiseORTerm
+			reduce(45), // >=, reduce: BitwiseORTerm
+			reduce(45), // <, reduce: BitwiseORTerm
+			reduce(45), // <=, reduce: BitwiseORTerm
+			reduce(45), // |, reduce: BitwiseORTerm
+			shift(149), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -3113,7 +3113,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(46), // ], reduce: BitwiseXORTerm
+			reduce(45), // ], reduce: BitwiseORTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -3154,24 +3154,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(48), // ?, reduce: BitwiseANDTerm
+			reduce(47), // ?, reduce: BitwiseXORTerm
 			nil,        // :
-			reduce(48), // ||, reduce: BitwiseANDTerm
-			reduce(48), // ^^, reduce: BitwiseANDTerm
-			reduce(48), // &&, reduce: BitwiseANDTerm
-			reduce(48), // =~, reduce: BitwiseANDTerm
-			reduce(48), // !=~, reduce: BitwiseANDTerm
-			reduce(48), // ==, reduce: BitwiseANDTerm
-			reduce(48), // !=, reduce: BitwiseANDTerm
-			reduce(48), // >, reduce: BitwiseANDTerm
-			reduce(48), // >=, reduce: BitwiseANDTerm
-			reduce(48), // <, reduce: BitwiseANDTerm
-			reduce(48), // <=, reduce: BitwiseANDTerm
-			reduce(48), // |, reduce: BitwiseANDTerm
-			reduce(48), // ^, reduce: BitwiseANDTerm
-			reduce(48), // &, reduce: BitwiseANDTerm
-			shift(150), // <<
-			shift(151), // >>
+			reduce(47), // ||, reduce: BitwiseXORTerm
+			reduce(47), // ^^, reduce: BitwiseXORTerm
+			reduce(47), // &&, reduce: BitwiseXORTerm
+			reduce(47), // =~, reduce: BitwiseXORTerm
+			reduce(47), // !=~, reduce: BitwiseXORTerm
+			reduce(47), // ==, reduce: BitwiseXORTerm
+			reduce(47), // !=, reduce: BitwiseXORTerm
+			reduce(47), // >, reduce: BitwiseXORTerm
+			reduce(47), // >=, reduce: BitwiseXORTerm
+			reduce(47), // <, reduce: BitwiseXORTerm
+			reduce(47), // <=, reduce: BitwiseXORTerm
+			reduce(47), // |, reduce: BitwiseXORTerm
+			reduce(47), // ^, reduce: BitwiseXORTerm
+			shift(150), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -3191,7 +3191,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(48), // ], reduce: BitwiseANDTerm
+			reduce(47), // ], reduce: BitwiseXORTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -3232,29 +3232,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(51), // ?, reduce: BitwiseShiftTerm
+			reduce(49), // ?, reduce: BitwiseANDTerm
 			nil,        // :
-			reduce(51), // ||, reduce: BitwiseShiftTerm
-			reduce(51), // ^^, reduce: BitwiseShiftTerm
-			reduce(51), // &&, reduce: BitwiseShiftTerm
-			reduce(51), // =~, reduce: BitwiseShiftTerm
-			reduce(51), // !=~, reduce: BitwiseShiftTerm
-			reduce(51), // ==, reduce: BitwiseShiftTerm
-			reduce(51), // !=, reduce: BitwiseShiftTerm
-			reduce(51), // >, reduce: BitwiseShiftTerm
-			reduce(51), // >=, reduce: BitwiseShiftTerm
-			reduce(51), // <, reduce: BitwiseShiftTerm
-			reduce(51), // <=, reduce: BitwiseShiftTerm
-			reduce(51), // |, reduce: BitwiseShiftTerm
-			reduce(51), // ^, reduce: BitwiseShiftTerm
-			reduce(51), // &, reduce: BitwiseShiftTerm
-			reduce(51), // <<, reduce: BitwiseShiftTerm
-			reduce(51), // >>, reduce: BitwiseShiftTerm
-			shift(152), // +
-			shift(153), // -
-			shift(154), // .+
-			shift(155), // .-
-			shift(156), // .
+			reduce(49), // ||, reduce: BitwiseANDTerm
+			reduce(49), // ^^, reduce: BitwiseANDTerm
+			reduce(49), // &&, reduce: BitwiseANDTerm
+			reduce(49), // =~, reduce: BitwiseANDTerm
+			reduce(49), // !=~, reduce: BitwiseANDTerm
+			reduce(49), // ==, reduce: BitwiseANDTerm
+			reduce(49), // !=, reduce: BitwiseANDTerm
+			reduce(49), // >, reduce: BitwiseANDTerm
+			reduce(49), // >=, reduce: BitwiseANDTerm
+			reduce(49), // <, reduce: BitwiseANDTerm
+			reduce(49), // <=, reduce: BitwiseANDTerm
+			reduce(49), // |, reduce: BitwiseANDTerm
+			reduce(49), // ^, reduce: BitwiseANDTerm
+			reduce(49), // &, reduce: BitwiseANDTerm
+			shift(151), // <<
+			shift(152), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -3269,7 +3269,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(51), // ], reduce: BitwiseShiftTerm
+			reduce(49), // ], reduce: BitwiseANDTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -3288,84 +3288,6 @@ var actionTab = actionTable{
 		},
 	},
 	actionRow{ // S42
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			nil,       // +
-			nil,       // -
-			nil,       // .+
-			nil,       // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			nil,       // !
-			nil,       // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S43
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -3388,36 +3310,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(57), // ?, reduce: AddsubdotTerm
+			reduce(52), // ?, reduce: BitwiseShiftTerm
 			nil,        // :
-			reduce(57), // ||, reduce: AddsubdotTerm
-			reduce(57), // ^^, reduce: AddsubdotTerm
-			reduce(57), // &&, reduce: AddsubdotTerm
-			reduce(57), // =~, reduce: AddsubdotTerm
-			reduce(57), // !=~, reduce: AddsubdotTerm
-			reduce(57), // ==, reduce: AddsubdotTerm
-			reduce(57), // !=, reduce: AddsubdotTerm
-			reduce(57), // >, reduce: AddsubdotTerm
-			reduce(57), // >=, reduce: AddsubdotTerm
-			reduce(57), // <, reduce: AddsubdotTerm
-			reduce(57), // <=, reduce: AddsubdotTerm
-			reduce(57), // |, reduce: AddsubdotTerm
-			reduce(57), // ^, reduce: AddsubdotTerm
-			reduce(57), // &, reduce: AddsubdotTerm
-			reduce(57), // <<, reduce: AddsubdotTerm
-			reduce(57), // >>, reduce: AddsubdotTerm
-			reduce(57), // +, reduce: AddsubdotTerm
-			reduce(57), // -, reduce: AddsubdotTerm
-			reduce(57), // .+, reduce: AddsubdotTerm
-			reduce(57), // .-, reduce: AddsubdotTerm
-			reduce(57), // ., reduce: AddsubdotTerm
-			shift(158), // *
-			shift(159), // /
-			shift(160), // //
-			shift(161), // %
-			shift(162), // .*
-			shift(163), // ./
-			shift(164), // .//
+			reduce(52), // ||, reduce: BitwiseShiftTerm
+			reduce(52), // ^^, reduce: BitwiseShiftTerm
+			reduce(52), // &&, reduce: BitwiseShiftTerm
+			reduce(52), // =~, reduce: BitwiseShiftTerm
+			reduce(52), // !=~, reduce: BitwiseShiftTerm
+			reduce(52), // ==, reduce: BitwiseShiftTerm
+			reduce(52), // !=, reduce: BitwiseShiftTerm
+			reduce(52), // >, reduce: BitwiseShiftTerm
+			reduce(52), // >=, reduce: BitwiseShiftTerm
+			reduce(52), // <, reduce: BitwiseShiftTerm
+			reduce(52), // <=, reduce: BitwiseShiftTerm
+			reduce(52), // |, reduce: BitwiseShiftTerm
+			reduce(52), // ^, reduce: BitwiseShiftTerm
+			reduce(52), // &, reduce: BitwiseShiftTerm
+			reduce(52), // <<, reduce: BitwiseShiftTerm
+			reduce(52), // >>, reduce: BitwiseShiftTerm
+			shift(153), // +
+			shift(154), // -
+			shift(155), // .+
+			shift(156), // .-
+			shift(157), // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -3425,7 +3347,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(57), // ], reduce: AddsubdotTerm
+			reduce(52), // ], reduce: BitwiseShiftTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -3443,7 +3365,7 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENUM
 		},
 	},
-	actionRow{ // S44
+	actionRow{ // S43
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -3499,26 +3421,104 @@ var actionTab = actionTable{
 			nil,       // !
 			nil,       // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S44
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(58), // ?, reduce: AddsubdotTerm
+			nil,        // :
+			reduce(58), // ||, reduce: AddsubdotTerm
+			reduce(58), // ^^, reduce: AddsubdotTerm
+			reduce(58), // &&, reduce: AddsubdotTerm
+			reduce(58), // =~, reduce: AddsubdotTerm
+			reduce(58), // !=~, reduce: AddsubdotTerm
+			reduce(58), // ==, reduce: AddsubdotTerm
+			reduce(58), // !=, reduce: AddsubdotTerm
+			reduce(58), // >, reduce: AddsubdotTerm
+			reduce(58), // >=, reduce: AddsubdotTerm
+			reduce(58), // <, reduce: AddsubdotTerm
+			reduce(58), // <=, reduce: AddsubdotTerm
+			reduce(58), // |, reduce: AddsubdotTerm
+			reduce(58), // ^, reduce: AddsubdotTerm
+			reduce(58), // &, reduce: AddsubdotTerm
+			reduce(58), // <<, reduce: AddsubdotTerm
+			reduce(58), // >>, reduce: AddsubdotTerm
+			reduce(58), // +, reduce: AddsubdotTerm
+			reduce(58), // -, reduce: AddsubdotTerm
+			reduce(58), // .+, reduce: AddsubdotTerm
+			reduce(58), // .-, reduce: AddsubdotTerm
+			reduce(58), // ., reduce: AddsubdotTerm
+			shift(159), // *
+			shift(160), // /
+			shift(161), // //
+			shift(162), // %
+			shift(163), // .*
+			shift(164), // ./
+			shift(165), // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(58), // ], reduce: AddsubdotTerm
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S45
@@ -3577,26 +3577,26 @@ var actionTab = actionTable{
 			nil,       // !
 			nil,       // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S46
@@ -3655,185 +3655,29 @@ var actionTab = actionTable{
 			nil,       // !
 			nil,       // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S47
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(65), // ?, reduce: MuldivTerm
-			nil,        // :
-			reduce(65), // ||, reduce: MuldivTerm
-			reduce(65), // ^^, reduce: MuldivTerm
-			reduce(65), // &&, reduce: MuldivTerm
-			reduce(65), // =~, reduce: MuldivTerm
-			reduce(65), // !=~, reduce: MuldivTerm
-			reduce(65), // ==, reduce: MuldivTerm
-			reduce(65), // !=, reduce: MuldivTerm
-			reduce(65), // >, reduce: MuldivTerm
-			reduce(65), // >=, reduce: MuldivTerm
-			reduce(65), // <, reduce: MuldivTerm
-			reduce(65), // <=, reduce: MuldivTerm
-			reduce(65), // |, reduce: MuldivTerm
-			reduce(65), // ^, reduce: MuldivTerm
-			reduce(65), // &, reduce: MuldivTerm
-			reduce(65), // <<, reduce: MuldivTerm
-			reduce(65), // >>, reduce: MuldivTerm
-			reduce(65), // +, reduce: MuldivTerm
-			reduce(65), // -, reduce: MuldivTerm
-			reduce(65), // .+, reduce: MuldivTerm
-			reduce(65), // .-, reduce: MuldivTerm
-			reduce(65), // ., reduce: MuldivTerm
-			reduce(65), // *, reduce: MuldivTerm
-			reduce(65), // /, reduce: MuldivTerm
-			reduce(65), // //, reduce: MuldivTerm
-			reduce(65), // %, reduce: MuldivTerm
-			reduce(65), // .*, reduce: MuldivTerm
-			reduce(65), // ./, reduce: MuldivTerm
-			reduce(65), // .//, reduce: MuldivTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(65), // ], reduce: MuldivTerm
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S48
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
-			nil,        // :
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(72), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S49
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -3889,26 +3733,182 @@ var actionTab = actionTable{
 			nil,       // !
 			nil,       // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S48
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(66), // ?, reduce: MuldivTerm
+			nil,        // :
+			reduce(66), // ||, reduce: MuldivTerm
+			reduce(66), // ^^, reduce: MuldivTerm
+			reduce(66), // &&, reduce: MuldivTerm
+			reduce(66), // =~, reduce: MuldivTerm
+			reduce(66), // !=~, reduce: MuldivTerm
+			reduce(66), // ==, reduce: MuldivTerm
+			reduce(66), // !=, reduce: MuldivTerm
+			reduce(66), // >, reduce: MuldivTerm
+			reduce(66), // >=, reduce: MuldivTerm
+			reduce(66), // <, reduce: MuldivTerm
+			reduce(66), // <=, reduce: MuldivTerm
+			reduce(66), // |, reduce: MuldivTerm
+			reduce(66), // ^, reduce: MuldivTerm
+			reduce(66), // &, reduce: MuldivTerm
+			reduce(66), // <<, reduce: MuldivTerm
+			reduce(66), // >>, reduce: MuldivTerm
+			reduce(66), // +, reduce: MuldivTerm
+			reduce(66), // -, reduce: MuldivTerm
+			reduce(66), // .+, reduce: MuldivTerm
+			reduce(66), // .-, reduce: MuldivTerm
+			reduce(66), // ., reduce: MuldivTerm
+			reduce(66), // *, reduce: MuldivTerm
+			reduce(66), // /, reduce: MuldivTerm
+			reduce(66), // //, reduce: MuldivTerm
+			reduce(66), // %, reduce: MuldivTerm
+			reduce(66), // .*, reduce: MuldivTerm
+			reduce(66), // ./, reduce: MuldivTerm
+			reduce(66), // .//, reduce: MuldivTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(66), // ], reduce: MuldivTerm
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S49
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			nil,        // :
+			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // |, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(73), // +, reduce: UnaryBitwiseOpTerm
+			reduce(73), // -, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ., reduce: UnaryBitwiseOpTerm
+			reduce(73), // *, reduce: UnaryBitwiseOpTerm
+			reduce(73), // /, reduce: UnaryBitwiseOpTerm
+			reduce(73), // //, reduce: UnaryBitwiseOpTerm
+			reduce(73), // %, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(73), // ], reduce: UnaryBitwiseOpTerm
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S50
@@ -3967,29 +3967,107 @@ var actionTab = actionTable{
 			nil,       // !
 			nil,       // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S51
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			nil,       // +
+			nil,       // -
+			nil,       // .+
+			nil,       // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			nil,       // !
+			nil,       // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S52
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -4012,44 +4090,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(74), // ?, reduce: PowTerm
+			reduce(75), // ?, reduce: PowTerm
 			nil,        // :
-			reduce(74), // ||, reduce: PowTerm
-			reduce(74), // ^^, reduce: PowTerm
-			reduce(74), // &&, reduce: PowTerm
-			reduce(74), // =~, reduce: PowTerm
-			reduce(74), // !=~, reduce: PowTerm
-			reduce(74), // ==, reduce: PowTerm
-			reduce(74), // !=, reduce: PowTerm
-			reduce(74), // >, reduce: PowTerm
-			reduce(74), // >=, reduce: PowTerm
-			reduce(74), // <, reduce: PowTerm
-			reduce(74), // <=, reduce: PowTerm
-			reduce(74), // |, reduce: PowTerm
-			reduce(74), // ^, reduce: PowTerm
-			reduce(74), // &, reduce: PowTerm
-			reduce(74), // <<, reduce: PowTerm
-			reduce(74), // >>, reduce: PowTerm
-			reduce(74), // +, reduce: PowTerm
-			reduce(74), // -, reduce: PowTerm
-			reduce(74), // .+, reduce: PowTerm
-			reduce(74), // .-, reduce: PowTerm
-			reduce(74), // ., reduce: PowTerm
-			reduce(74), // *, reduce: PowTerm
-			reduce(74), // /, reduce: PowTerm
-			reduce(74), // //, reduce: PowTerm
-			reduce(74), // %, reduce: PowTerm
-			reduce(74), // .*, reduce: PowTerm
-			reduce(74), // ./, reduce: PowTerm
-			reduce(74), // .//, reduce: PowTerm
+			reduce(75), // ||, reduce: PowTerm
+			reduce(75), // ^^, reduce: PowTerm
+			reduce(75), // &&, reduce: PowTerm
+			reduce(75), // =~, reduce: PowTerm
+			reduce(75), // !=~, reduce: PowTerm
+			reduce(75), // ==, reduce: PowTerm
+			reduce(75), // !=, reduce: PowTerm
+			reduce(75), // >, reduce: PowTerm
+			reduce(75), // >=, reduce: PowTerm
+			reduce(75), // <, reduce: PowTerm
+			reduce(75), // <=, reduce: PowTerm
+			reduce(75), // |, reduce: PowTerm
+			reduce(75), // ^, reduce: PowTerm
+			reduce(75), // &, reduce: PowTerm
+			reduce(75), // <<, reduce: PowTerm
+			reduce(75), // >>, reduce: PowTerm
+			reduce(75), // +, reduce: PowTerm
+			reduce(75), // -, reduce: PowTerm
+			reduce(75), // .+, reduce: PowTerm
+			reduce(75), // .-, reduce: PowTerm
+			reduce(75), // ., reduce: PowTerm
+			reduce(75), // *, reduce: PowTerm
+			reduce(75), // /, reduce: PowTerm
+			reduce(75), // //, reduce: PowTerm
+			reduce(75), // %, reduce: PowTerm
+			reduce(75), // .*, reduce: PowTerm
+			reduce(75), // ./, reduce: PowTerm
+			reduce(75), // .//, reduce: PowTerm
 			nil,        // !
 			nil,        // ~
-			shift(170), // **
+			shift(171), // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(74), // ], reduce: PowTerm
+			reduce(75), // ], reduce: PowTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -4067,7 +4145,7 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENUM
 		},
 	},
-	actionRow{ // S52
+	actionRow{ // S53
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -4108,10 +4186,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -4120,107 +4198,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S53
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(77), // ?, reduce: FieldName
-			nil,        // :
-			reduce(77), // ||, reduce: FieldName
-			reduce(77), // ^^, reduce: FieldName
-			reduce(77), // &&, reduce: FieldName
-			reduce(77), // =~, reduce: FieldName
-			reduce(77), // !=~, reduce: FieldName
-			reduce(77), // ==, reduce: FieldName
-			reduce(77), // !=, reduce: FieldName
-			reduce(77), // >, reduce: FieldName
-			reduce(77), // >=, reduce: FieldName
-			reduce(77), // <, reduce: FieldName
-			reduce(77), // <=, reduce: FieldName
-			reduce(77), // |, reduce: FieldName
-			reduce(77), // ^, reduce: FieldName
-			reduce(77), // &, reduce: FieldName
-			reduce(77), // <<, reduce: FieldName
-			reduce(77), // >>, reduce: FieldName
-			reduce(77), // +, reduce: FieldName
-			reduce(77), // -, reduce: FieldName
-			reduce(77), // .+, reduce: FieldName
-			reduce(77), // .-, reduce: FieldName
-			reduce(77), // ., reduce: FieldName
-			reduce(77), // *, reduce: FieldName
-			reduce(77), // /, reduce: FieldName
-			reduce(77), // //, reduce: FieldName
-			reduce(77), // %, reduce: FieldName
-			reduce(77), // .*, reduce: FieldName
-			reduce(77), // ./, reduce: FieldName
-			reduce(77), // .//, reduce: FieldName
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: FieldName
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(77), // ], reduce: FieldName
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S54
@@ -4324,44 +4324,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(79), // ?, reduce: DirectFieldName
+			reduce(79), // ?, reduce: FieldName
 			nil,        // :
-			reduce(79), // ||, reduce: DirectFieldName
-			reduce(79), // ^^, reduce: DirectFieldName
-			reduce(79), // &&, reduce: DirectFieldName
-			reduce(79), // =~, reduce: DirectFieldName
-			reduce(79), // !=~, reduce: DirectFieldName
-			reduce(79), // ==, reduce: DirectFieldName
-			reduce(79), // !=, reduce: DirectFieldName
-			reduce(79), // >, reduce: DirectFieldName
-			reduce(79), // >=, reduce: DirectFieldName
-			reduce(79), // <, reduce: DirectFieldName
-			reduce(79), // <=, reduce: DirectFieldName
-			reduce(79), // |, reduce: DirectFieldName
-			reduce(79), // ^, reduce: DirectFieldName
-			reduce(79), // &, reduce: DirectFieldName
-			reduce(79), // <<, reduce: DirectFieldName
-			reduce(79), // >>, reduce: DirectFieldName
-			reduce(79), // +, reduce: DirectFieldName
-			reduce(79), // -, reduce: DirectFieldName
-			reduce(79), // .+, reduce: DirectFieldName
-			reduce(79), // .-, reduce: DirectFieldName
-			reduce(79), // ., reduce: DirectFieldName
-			reduce(79), // *, reduce: DirectFieldName
-			reduce(79), // /, reduce: DirectFieldName
-			reduce(79), // //, reduce: DirectFieldName
-			reduce(79), // %, reduce: DirectFieldName
-			reduce(79), // .*, reduce: DirectFieldName
-			reduce(79), // ./, reduce: DirectFieldName
-			reduce(79), // .//, reduce: DirectFieldName
+			reduce(79), // ||, reduce: FieldName
+			reduce(79), // ^^, reduce: FieldName
+			reduce(79), // &&, reduce: FieldName
+			reduce(79), // =~, reduce: FieldName
+			reduce(79), // !=~, reduce: FieldName
+			reduce(79), // ==, reduce: FieldName
+			reduce(79), // !=, reduce: FieldName
+			reduce(79), // >, reduce: FieldName
+			reduce(79), // >=, reduce: FieldName
+			reduce(79), // <, reduce: FieldName
+			reduce(79), // <=, reduce: FieldName
+			reduce(79), // |, reduce: FieldName
+			reduce(79), // ^, reduce: FieldName
+			reduce(79), // &, reduce: FieldName
+			reduce(79), // <<, reduce: FieldName
+			reduce(79), // >>, reduce: FieldName
+			reduce(79), // +, reduce: FieldName
+			reduce(79), // -, reduce: FieldName
+			reduce(79), // .+, reduce: FieldName
+			reduce(79), // .-, reduce: FieldName
+			reduce(79), // ., reduce: FieldName
+			reduce(79), // *, reduce: FieldName
+			reduce(79), // /, reduce: FieldName
+			reduce(79), // //, reduce: FieldName
+			reduce(79), // %, reduce: FieldName
+			reduce(79), // .*, reduce: FieldName
+			reduce(79), // ./, reduce: FieldName
+			reduce(79), // .//, reduce: FieldName
 			nil,        // !
 			nil,        // ~
-			reduce(79), // **, reduce: DirectFieldName
+			reduce(79), // **, reduce: FieldName
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(79), // ], reduce: DirectFieldName
+			reduce(79), // ], reduce: FieldName
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -4380,6 +4380,84 @@ var actionTab = actionTable{
 		},
 	},
 	actionRow{ // S56
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(80), // ?, reduce: DirectFieldName
+			nil,        // :
+			reduce(80), // ||, reduce: DirectFieldName
+			reduce(80), // ^^, reduce: DirectFieldName
+			reduce(80), // &&, reduce: DirectFieldName
+			reduce(80), // =~, reduce: DirectFieldName
+			reduce(80), // !=~, reduce: DirectFieldName
+			reduce(80), // ==, reduce: DirectFieldName
+			reduce(80), // !=, reduce: DirectFieldName
+			reduce(80), // >, reduce: DirectFieldName
+			reduce(80), // >=, reduce: DirectFieldName
+			reduce(80), // <, reduce: DirectFieldName
+			reduce(80), // <=, reduce: DirectFieldName
+			reduce(80), // |, reduce: DirectFieldName
+			reduce(80), // ^, reduce: DirectFieldName
+			reduce(80), // &, reduce: DirectFieldName
+			reduce(80), // <<, reduce: DirectFieldName
+			reduce(80), // >>, reduce: DirectFieldName
+			reduce(80), // +, reduce: DirectFieldName
+			reduce(80), // -, reduce: DirectFieldName
+			reduce(80), // .+, reduce: DirectFieldName
+			reduce(80), // .-, reduce: DirectFieldName
+			reduce(80), // ., reduce: DirectFieldName
+			reduce(80), // *, reduce: DirectFieldName
+			reduce(80), // /, reduce: DirectFieldName
+			reduce(80), // //, reduce: DirectFieldName
+			reduce(80), // %, reduce: DirectFieldName
+			reduce(80), // .*, reduce: DirectFieldName
+			reduce(80), // ./, reduce: DirectFieldName
+			reduce(80), // .//, reduce: DirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(80), // **, reduce: DirectFieldName
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(80), // ], reduce: DirectFieldName
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S57
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -4420,10 +4498,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -4432,107 +4510,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S57
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(81), // ?, reduce: AtomOrFunction
-			nil,        // :
-			reduce(81), // ||, reduce: AtomOrFunction
-			reduce(81), // ^^, reduce: AtomOrFunction
-			reduce(81), // &&, reduce: AtomOrFunction
-			reduce(81), // =~, reduce: AtomOrFunction
-			reduce(81), // !=~, reduce: AtomOrFunction
-			reduce(81), // ==, reduce: AtomOrFunction
-			reduce(81), // !=, reduce: AtomOrFunction
-			reduce(81), // >, reduce: AtomOrFunction
-			reduce(81), // >=, reduce: AtomOrFunction
-			reduce(81), // <, reduce: AtomOrFunction
-			reduce(81), // <=, reduce: AtomOrFunction
-			reduce(81), // |, reduce: AtomOrFunction
-			reduce(81), // ^, reduce: AtomOrFunction
-			reduce(81), // &, reduce: AtomOrFunction
-			reduce(81), // <<, reduce: AtomOrFunction
-			reduce(81), // >>, reduce: AtomOrFunction
-			reduce(81), // +, reduce: AtomOrFunction
-			reduce(81), // -, reduce: AtomOrFunction
-			reduce(81), // .+, reduce: AtomOrFunction
-			reduce(81), // .-, reduce: AtomOrFunction
-			reduce(81), // ., reduce: AtomOrFunction
-			reduce(81), // *, reduce: AtomOrFunction
-			reduce(81), // /, reduce: AtomOrFunction
-			reduce(81), // //, reduce: AtomOrFunction
-			reduce(81), // %, reduce: AtomOrFunction
-			reduce(81), // .*, reduce: AtomOrFunction
-			reduce(81), // ./, reduce: AtomOrFunction
-			reduce(81), // .//, reduce: AtomOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(81), // **, reduce: AtomOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(81), // ], reduce: AtomOrFunction
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S58
@@ -4870,44 +4870,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(86), // ?, reduce: ContextVariable
+			reduce(86), // ?, reduce: AtomOrFunction
 			nil,        // :
-			reduce(86), // ||, reduce: ContextVariable
-			reduce(86), // ^^, reduce: ContextVariable
-			reduce(86), // &&, reduce: ContextVariable
-			reduce(86), // =~, reduce: ContextVariable
-			reduce(86), // !=~, reduce: ContextVariable
-			reduce(86), // ==, reduce: ContextVariable
-			reduce(86), // !=, reduce: ContextVariable
-			reduce(86), // >, reduce: ContextVariable
-			reduce(86), // >=, reduce: ContextVariable
-			reduce(86), // <, reduce: ContextVariable
-			reduce(86), // <=, reduce: ContextVariable
-			reduce(86), // |, reduce: ContextVariable
-			reduce(86), // ^, reduce: ContextVariable
-			reduce(86), // &, reduce: ContextVariable
-			reduce(86), // <<, reduce: ContextVariable
-			reduce(86), // >>, reduce: ContextVariable
-			reduce(86), // +, reduce: ContextVariable
-			reduce(86), // -, reduce: ContextVariable
-			reduce(86), // .+, reduce: ContextVariable
-			reduce(86), // .-, reduce: ContextVariable
-			reduce(86), // ., reduce: ContextVariable
-			reduce(86), // *, reduce: ContextVariable
-			reduce(86), // /, reduce: ContextVariable
-			reduce(86), // //, reduce: ContextVariable
-			reduce(86), // %, reduce: ContextVariable
-			reduce(86), // .*, reduce: ContextVariable
-			reduce(86), // ./, reduce: ContextVariable
-			reduce(86), // .//, reduce: ContextVariable
+			reduce(86), // ||, reduce: AtomOrFunction
+			reduce(86), // ^^, reduce: AtomOrFunction
+			reduce(86), // &&, reduce: AtomOrFunction
+			reduce(86), // =~, reduce: AtomOrFunction
+			reduce(86), // !=~, reduce: AtomOrFunction
+			reduce(86), // ==, reduce: AtomOrFunction
+			reduce(86), // !=, reduce: AtomOrFunction
+			reduce(86), // >, reduce: AtomOrFunction
+			reduce(86), // >=, reduce: AtomOrFunction
+			reduce(86), // <, reduce: AtomOrFunction
+			reduce(86), // <=, reduce: AtomOrFunction
+			reduce(86), // |, reduce: AtomOrFunction
+			reduce(86), // ^, reduce: AtomOrFunction
+			reduce(86), // &, reduce: AtomOrFunction
+			reduce(86), // <<, reduce: AtomOrFunction
+			reduce(86), // >>, reduce: AtomOrFunction
+			reduce(86), // +, reduce: AtomOrFunction
+			reduce(86), // -, reduce: AtomOrFunction
+			reduce(86), // .+, reduce: AtomOrFunction
+			reduce(86), // .-, reduce: AtomOrFunction
+			reduce(86), // ., reduce: AtomOrFunction
+			reduce(86), // *, reduce: AtomOrFunction
+			reduce(86), // /, reduce: AtomOrFunction
+			reduce(86), // //, reduce: AtomOrFunction
+			reduce(86), // %, reduce: AtomOrFunction
+			reduce(86), // .*, reduce: AtomOrFunction
+			reduce(86), // ./, reduce: AtomOrFunction
+			reduce(86), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(86), // **, reduce: ContextVariable
+			reduce(86), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(86), // ], reduce: ContextVariable
+			reduce(86), // ], reduce: AtomOrFunction
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -5708,6 +5708,84 @@ var actionTab = actionTable{
 	actionRow{ // S73
 		canRecover: false,
 		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(97), // ?, reduce: ContextVariable
+			nil,        // :
+			reduce(97), // ||, reduce: ContextVariable
+			reduce(97), // ^^, reduce: ContextVariable
+			reduce(97), // &&, reduce: ContextVariable
+			reduce(97), // =~, reduce: ContextVariable
+			reduce(97), // !=~, reduce: ContextVariable
+			reduce(97), // ==, reduce: ContextVariable
+			reduce(97), // !=, reduce: ContextVariable
+			reduce(97), // >, reduce: ContextVariable
+			reduce(97), // >=, reduce: ContextVariable
+			reduce(97), // <, reduce: ContextVariable
+			reduce(97), // <=, reduce: ContextVariable
+			reduce(97), // |, reduce: ContextVariable
+			reduce(97), // ^, reduce: ContextVariable
+			reduce(97), // &, reduce: ContextVariable
+			reduce(97), // <<, reduce: ContextVariable
+			reduce(97), // >>, reduce: ContextVariable
+			reduce(97), // +, reduce: ContextVariable
+			reduce(97), // -, reduce: ContextVariable
+			reduce(97), // .+, reduce: ContextVariable
+			reduce(97), // .-, reduce: ContextVariable
+			reduce(97), // ., reduce: ContextVariable
+			reduce(97), // *, reduce: ContextVariable
+			reduce(97), // /, reduce: ContextVariable
+			reduce(97), // //, reduce: ContextVariable
+			reduce(97), // %, reduce: ContextVariable
+			reduce(97), // .*, reduce: ContextVariable
+			reduce(97), // ./, reduce: ContextVariable
+			reduce(97), // .//, reduce: ContextVariable
+			nil,        // !
+			nil,        // ~
+			reduce(97), // **, reduce: ContextVariable
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(97), // ], reduce: ContextVariable
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S74
+		canRecover: false,
+		actions: [numSymbols]action{
 			nil,       // INVALID
 			reduce(4), // $, reduce: StatementBlock
 			reduce(4), // ;, reduce: StatementBlock
@@ -5783,12 +5861,12 @@ var actionTab = actionTable{
 			nil,       // md_token_FILENUM
 		},
 	},
-	actionRow{ // S74
+	actionRow{ // S75
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(76), // $, reduce: AtomOrFunction
-			reduce(76), // ;, reduce: AtomOrFunction
+			reduce(77), // $, reduce: AtomOrFunction
+			reduce(77), // ;, reduce: AtomOrFunction
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -5806,39 +5884,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(76), // ?, reduce: AtomOrFunction
+			reduce(77), // ?, reduce: AtomOrFunction
 			nil,        // :
-			reduce(76), // ||, reduce: AtomOrFunction
-			reduce(76), // ^^, reduce: AtomOrFunction
-			reduce(76), // &&, reduce: AtomOrFunction
-			reduce(76), // =~, reduce: AtomOrFunction
-			reduce(76), // !=~, reduce: AtomOrFunction
-			reduce(76), // ==, reduce: AtomOrFunction
-			reduce(76), // !=, reduce: AtomOrFunction
-			reduce(76), // >, reduce: AtomOrFunction
-			reduce(76), // >=, reduce: AtomOrFunction
-			reduce(76), // <, reduce: AtomOrFunction
-			reduce(76), // <=, reduce: AtomOrFunction
-			reduce(76), // |, reduce: AtomOrFunction
-			reduce(76), // ^, reduce: AtomOrFunction
-			reduce(76), // &, reduce: AtomOrFunction
-			reduce(76), // <<, reduce: AtomOrFunction
-			reduce(76), // >>, reduce: AtomOrFunction
-			reduce(76), // +, reduce: AtomOrFunction
-			reduce(76), // -, reduce: AtomOrFunction
-			reduce(76), // .+, reduce: AtomOrFunction
-			reduce(76), // .-, reduce: AtomOrFunction
-			reduce(76), // ., reduce: AtomOrFunction
-			reduce(76), // *, reduce: AtomOrFunction
-			reduce(76), // /, reduce: AtomOrFunction
-			reduce(76), // //, reduce: AtomOrFunction
-			reduce(76), // %, reduce: AtomOrFunction
-			reduce(76), // .*, reduce: AtomOrFunction
-			reduce(76), // ./, reduce: AtomOrFunction
-			reduce(76), // .//, reduce: AtomOrFunction
+			reduce(77), // ||, reduce: AtomOrFunction
+			reduce(77), // ^^, reduce: AtomOrFunction
+			reduce(77), // &&, reduce: AtomOrFunction
+			reduce(77), // =~, reduce: AtomOrFunction
+			reduce(77), // !=~, reduce: AtomOrFunction
+			reduce(77), // ==, reduce: AtomOrFunction
+			reduce(77), // !=, reduce: AtomOrFunction
+			reduce(77), // >, reduce: AtomOrFunction
+			reduce(77), // >=, reduce: AtomOrFunction
+			reduce(77), // <, reduce: AtomOrFunction
+			reduce(77), // <=, reduce: AtomOrFunction
+			reduce(77), // |, reduce: AtomOrFunction
+			reduce(77), // ^, reduce: AtomOrFunction
+			reduce(77), // &, reduce: AtomOrFunction
+			reduce(77), // <<, reduce: AtomOrFunction
+			reduce(77), // >>, reduce: AtomOrFunction
+			reduce(77), // +, reduce: AtomOrFunction
+			reduce(77), // -, reduce: AtomOrFunction
+			reduce(77), // .+, reduce: AtomOrFunction
+			reduce(77), // .-, reduce: AtomOrFunction
+			reduce(77), // ., reduce: AtomOrFunction
+			reduce(77), // *, reduce: AtomOrFunction
+			reduce(77), // /, reduce: AtomOrFunction
+			reduce(77), // //, reduce: AtomOrFunction
+			reduce(77), // %, reduce: AtomOrFunction
+			reduce(77), // .*, reduce: AtomOrFunction
+			reduce(77), // ./, reduce: AtomOrFunction
+			reduce(77), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(76), // **, reduce: AtomOrFunction
+			reduce(77), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -5861,12 +5939,12 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENUM
 		},
 	},
-	actionRow{ // S75
+	actionRow{ // S76
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(7), // $, reduce: SrecAssignment
-			reduce(7), // ;, reduce: SrecAssignment
+			reduce(8), // $, reduce: SrecDirectAssignment
+			reduce(8), // ;, reduce: SrecDirectAssignment
 			nil,       // =
 			nil,       // ||=
 			nil,       // ^^=
@@ -5939,12 +6017,12 @@ var actionTab = actionTable{
 			nil,       // md_token_FILENUM
 		},
 	},
-	actionRow{ // S76
+	actionRow{ // S77
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(24), // $, reduce: RHS
-			reduce(24), // ;, reduce: RHS
+			reduce(25), // $, reduce: RHS
+			reduce(25), // ;, reduce: RHS
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -5965,84 +6043,6 @@ var actionTab = actionTable{
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S77
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			reduce(26), // $, reduce: TernaryTerm
-			reduce(26), // ;, reduce: TernaryTerm
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			shift(216), // ?
-			nil,        // :
-			shift(217), // ||
 			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
@@ -6099,8 +6099,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(28), // $, reduce: LogicalOrTerm
-			reduce(28), // ;, reduce: LogicalOrTerm
+			reduce(27), // $, reduce: TernaryTerm
+			reduce(27), // ;, reduce: TernaryTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6118,10 +6118,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(28), // ?, reduce: LogicalOrTerm
+			shift(217), // ?
 			nil,        // :
-			reduce(28), // ||, reduce: LogicalOrTerm
-			shift(218), // ^^
+			shift(218), // ||
+			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -6177,8 +6177,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(30), // $, reduce: LogicalXORTerm
-			reduce(30), // ;, reduce: LogicalXORTerm
+			reduce(29), // $, reduce: LogicalOrTerm
+			reduce(29), // ;, reduce: LogicalOrTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6196,11 +6196,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(30), // ?, reduce: LogicalXORTerm
+			reduce(29), // ?, reduce: LogicalOrTerm
 			nil,        // :
-			reduce(30), // ||, reduce: LogicalXORTerm
-			reduce(30), // ^^, reduce: LogicalXORTerm
-			shift(219), // &&
+			reduce(29), // ||, reduce: LogicalOrTerm
+			shift(219), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -6255,8 +6255,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(32), // $, reduce: LogicalAndTerm
-			reduce(32), // ;, reduce: LogicalAndTerm
+			reduce(31), // $, reduce: LogicalXORTerm
+			reduce(31), // ;, reduce: LogicalXORTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6274,15 +6274,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(32), // ?, reduce: LogicalAndTerm
+			reduce(31), // ?, reduce: LogicalXORTerm
 			nil,        // :
-			reduce(32), // ||, reduce: LogicalAndTerm
-			reduce(32), // ^^, reduce: LogicalAndTerm
-			reduce(32), // &&, reduce: LogicalAndTerm
-			shift(220), // =~
-			shift(221), // !=~
-			shift(222), // ==
-			shift(223), // !=
+			reduce(31), // ||, reduce: LogicalXORTerm
+			reduce(31), // ^^, reduce: LogicalXORTerm
+			shift(220), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -6333,8 +6333,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(37), // $, reduce: EqneTerm
-			reduce(37), // ;, reduce: EqneTerm
+			reduce(33), // $, reduce: LogicalAndTerm
+			reduce(33), // ;, reduce: LogicalAndTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6352,19 +6352,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(37), // ?, reduce: EqneTerm
+			reduce(33), // ?, reduce: LogicalAndTerm
 			nil,        // :
-			reduce(37), // ||, reduce: EqneTerm
-			reduce(37), // ^^, reduce: EqneTerm
-			reduce(37), // &&, reduce: EqneTerm
-			reduce(37), // =~, reduce: EqneTerm
-			reduce(37), // !=~, reduce: EqneTerm
-			reduce(37), // ==, reduce: EqneTerm
-			reduce(37), // !=, reduce: EqneTerm
-			shift(224), // >
-			shift(225), // >=
-			shift(226), // <
-			shift(227), // <=
+			reduce(33), // ||, reduce: LogicalAndTerm
+			reduce(33), // ^^, reduce: LogicalAndTerm
+			reduce(33), // &&, reduce: LogicalAndTerm
+			shift(221), // =~
+			shift(222), // !=~
+			shift(223), // ==
+			shift(224), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -6411,8 +6411,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(42), // $, reduce: CmpTerm
-			reduce(42), // ;, reduce: CmpTerm
+			reduce(38), // $, reduce: EqneTerm
+			reduce(38), // ;, reduce: EqneTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6430,20 +6430,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(42), // ?, reduce: CmpTerm
+			reduce(38), // ?, reduce: EqneTerm
 			nil,        // :
-			reduce(42), // ||, reduce: CmpTerm
-			reduce(42), // ^^, reduce: CmpTerm
-			reduce(42), // &&, reduce: CmpTerm
-			reduce(42), // =~, reduce: CmpTerm
-			reduce(42), // !=~, reduce: CmpTerm
-			reduce(42), // ==, reduce: CmpTerm
-			reduce(42), // !=, reduce: CmpTerm
-			reduce(42), // >, reduce: CmpTerm
-			reduce(42), // >=, reduce: CmpTerm
-			reduce(42), // <, reduce: CmpTerm
-			reduce(42), // <=, reduce: CmpTerm
-			shift(228), // |
+			reduce(38), // ||, reduce: EqneTerm
+			reduce(38), // ^^, reduce: EqneTerm
+			reduce(38), // &&, reduce: EqneTerm
+			reduce(38), // =~, reduce: EqneTerm
+			reduce(38), // !=~, reduce: EqneTerm
+			reduce(38), // ==, reduce: EqneTerm
+			reduce(38), // !=, reduce: EqneTerm
+			shift(225), // >
+			shift(226), // >=
+			shift(227), // <
+			shift(228), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -6489,8 +6489,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(44), // $, reduce: BitwiseORTerm
-			reduce(44), // ;, reduce: BitwiseORTerm
+			reduce(43), // $, reduce: CmpTerm
+			reduce(43), // ;, reduce: CmpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6508,21 +6508,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(44), // ?, reduce: BitwiseORTerm
+			reduce(43), // ?, reduce: CmpTerm
 			nil,        // :
-			reduce(44), // ||, reduce: BitwiseORTerm
-			reduce(44), // ^^, reduce: BitwiseORTerm
-			reduce(44), // &&, reduce: BitwiseORTerm
-			reduce(44), // =~, reduce: BitwiseORTerm
-			reduce(44), // !=~, reduce: BitwiseORTerm
-			reduce(44), // ==, reduce: BitwiseORTerm
-			reduce(44), // !=, reduce: BitwiseORTerm
-			reduce(44), // >, reduce: BitwiseORTerm
-			reduce(44), // >=, reduce: BitwiseORTerm
-			reduce(44), // <, reduce: BitwiseORTerm
-			reduce(44), // <=, reduce: BitwiseORTerm
-			reduce(44), // |, reduce: BitwiseORTerm
-			shift(229), // ^
+			reduce(43), // ||, reduce: CmpTerm
+			reduce(43), // ^^, reduce: CmpTerm
+			reduce(43), // &&, reduce: CmpTerm
+			reduce(43), // =~, reduce: CmpTerm
+			reduce(43), // !=~, reduce: CmpTerm
+			reduce(43), // ==, reduce: CmpTerm
+			reduce(43), // !=, reduce: CmpTerm
+			reduce(43), // >, reduce: CmpTerm
+			reduce(43), // >=, reduce: CmpTerm
+			reduce(43), // <, reduce: CmpTerm
+			reduce(43), // <=, reduce: CmpTerm
+			shift(229), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -6567,8 +6567,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(46), // $, reduce: BitwiseXORTerm
-			reduce(46), // ;, reduce: BitwiseXORTerm
+			reduce(45), // $, reduce: BitwiseORTerm
+			reduce(45), // ;, reduce: BitwiseORTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6586,22 +6586,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(46), // ?, reduce: BitwiseXORTerm
+			reduce(45), // ?, reduce: BitwiseORTerm
 			nil,        // :
-			reduce(46), // ||, reduce: BitwiseXORTerm
-			reduce(46), // ^^, reduce: BitwiseXORTerm
-			reduce(46), // &&, reduce: BitwiseXORTerm
-			reduce(46), // =~, reduce: BitwiseXORTerm
-			reduce(46), // !=~, reduce: BitwiseXORTerm
-			reduce(46), // ==, reduce: BitwiseXORTerm
-			reduce(46), // !=, reduce: BitwiseXORTerm
-			reduce(46), // >, reduce: BitwiseXORTerm
-			reduce(46), // >=, reduce: BitwiseXORTerm
-			reduce(46), // <, reduce: BitwiseXORTerm
-			reduce(46), // <=, reduce: BitwiseXORTerm
-			reduce(46), // |, reduce: BitwiseXORTerm
-			reduce(46), // ^, reduce: BitwiseXORTerm
-			shift(230), // &
+			reduce(45), // ||, reduce: BitwiseORTerm
+			reduce(45), // ^^, reduce: BitwiseORTerm
+			reduce(45), // &&, reduce: BitwiseORTerm
+			reduce(45), // =~, reduce: BitwiseORTerm
+			reduce(45), // !=~, reduce: BitwiseORTerm
+			reduce(45), // ==, reduce: BitwiseORTerm
+			reduce(45), // !=, reduce: BitwiseORTerm
+			reduce(45), // >, reduce: BitwiseORTerm
+			reduce(45), // >=, reduce: BitwiseORTerm
+			reduce(45), // <, reduce: BitwiseORTerm
+			reduce(45), // <=, reduce: BitwiseORTerm
+			reduce(45), // |, reduce: BitwiseORTerm
+			shift(230), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -6645,8 +6645,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(48), // $, reduce: BitwiseANDTerm
-			reduce(48), // ;, reduce: BitwiseANDTerm
+			reduce(47), // $, reduce: BitwiseXORTerm
+			reduce(47), // ;, reduce: BitwiseXORTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6664,24 +6664,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(48), // ?, reduce: BitwiseANDTerm
+			reduce(47), // ?, reduce: BitwiseXORTerm
 			nil,        // :
-			reduce(48), // ||, reduce: BitwiseANDTerm
-			reduce(48), // ^^, reduce: BitwiseANDTerm
-			reduce(48), // &&, reduce: BitwiseANDTerm
-			reduce(48), // =~, reduce: BitwiseANDTerm
-			reduce(48), // !=~, reduce: BitwiseANDTerm
-			reduce(48), // ==, reduce: BitwiseANDTerm
-			reduce(48), // !=, reduce: BitwiseANDTerm
-			reduce(48), // >, reduce: BitwiseANDTerm
-			reduce(48), // >=, reduce: BitwiseANDTerm
-			reduce(48), // <, reduce: BitwiseANDTerm
-			reduce(48), // <=, reduce: BitwiseANDTerm
-			reduce(48), // |, reduce: BitwiseANDTerm
-			reduce(48), // ^, reduce: BitwiseANDTerm
-			reduce(48), // &, reduce: BitwiseANDTerm
-			shift(231), // <<
-			shift(232), // >>
+			reduce(47), // ||, reduce: BitwiseXORTerm
+			reduce(47), // ^^, reduce: BitwiseXORTerm
+			reduce(47), // &&, reduce: BitwiseXORTerm
+			reduce(47), // =~, reduce: BitwiseXORTerm
+			reduce(47), // !=~, reduce: BitwiseXORTerm
+			reduce(47), // ==, reduce: BitwiseXORTerm
+			reduce(47), // !=, reduce: BitwiseXORTerm
+			reduce(47), // >, reduce: BitwiseXORTerm
+			reduce(47), // >=, reduce: BitwiseXORTerm
+			reduce(47), // <, reduce: BitwiseXORTerm
+			reduce(47), // <=, reduce: BitwiseXORTerm
+			reduce(47), // |, reduce: BitwiseXORTerm
+			reduce(47), // ^, reduce: BitwiseXORTerm
+			shift(231), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -6723,8 +6723,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(51), // $, reduce: BitwiseShiftTerm
-			reduce(51), // ;, reduce: BitwiseShiftTerm
+			reduce(49), // $, reduce: BitwiseANDTerm
+			reduce(49), // ;, reduce: BitwiseANDTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6742,29 +6742,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(51), // ?, reduce: BitwiseShiftTerm
+			reduce(49), // ?, reduce: BitwiseANDTerm
 			nil,        // :
-			reduce(51), // ||, reduce: BitwiseShiftTerm
-			reduce(51), // ^^, reduce: BitwiseShiftTerm
-			reduce(51), // &&, reduce: BitwiseShiftTerm
-			reduce(51), // =~, reduce: BitwiseShiftTerm
-			reduce(51), // !=~, reduce: BitwiseShiftTerm
-			reduce(51), // ==, reduce: BitwiseShiftTerm
-			reduce(51), // !=, reduce: BitwiseShiftTerm
-			reduce(51), // >, reduce: BitwiseShiftTerm
-			reduce(51), // >=, reduce: BitwiseShiftTerm
-			reduce(51), // <, reduce: BitwiseShiftTerm
-			reduce(51), // <=, reduce: BitwiseShiftTerm
-			reduce(51), // |, reduce: BitwiseShiftTerm
-			reduce(51), // ^, reduce: BitwiseShiftTerm
-			reduce(51), // &, reduce: BitwiseShiftTerm
-			reduce(51), // <<, reduce: BitwiseShiftTerm
-			reduce(51), // >>, reduce: BitwiseShiftTerm
-			shift(233), // +
-			shift(234), // -
-			shift(235), // .+
-			shift(236), // .-
-			shift(237), // .
+			reduce(49), // ||, reduce: BitwiseANDTerm
+			reduce(49), // ^^, reduce: BitwiseANDTerm
+			reduce(49), // &&, reduce: BitwiseANDTerm
+			reduce(49), // =~, reduce: BitwiseANDTerm
+			reduce(49), // !=~, reduce: BitwiseANDTerm
+			reduce(49), // ==, reduce: BitwiseANDTerm
+			reduce(49), // !=, reduce: BitwiseANDTerm
+			reduce(49), // >, reduce: BitwiseANDTerm
+			reduce(49), // >=, reduce: BitwiseANDTerm
+			reduce(49), // <, reduce: BitwiseANDTerm
+			reduce(49), // <=, reduce: BitwiseANDTerm
+			reduce(49), // |, reduce: BitwiseANDTerm
+			reduce(49), // ^, reduce: BitwiseANDTerm
+			reduce(49), // &, reduce: BitwiseANDTerm
+			shift(232), // <<
+			shift(233), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -6801,8 +6801,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
+			reduce(52), // $, reduce: BitwiseShiftTerm
+			reduce(52), // ;, reduce: BitwiseShiftTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -6820,29 +6820,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(52), // ?, reduce: BitwiseShiftTerm
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
+			reduce(52), // ||, reduce: BitwiseShiftTerm
+			reduce(52), // ^^, reduce: BitwiseShiftTerm
+			reduce(52), // &&, reduce: BitwiseShiftTerm
+			reduce(52), // =~, reduce: BitwiseShiftTerm
+			reduce(52), // !=~, reduce: BitwiseShiftTerm
+			reduce(52), // ==, reduce: BitwiseShiftTerm
+			reduce(52), // !=, reduce: BitwiseShiftTerm
+			reduce(52), // >, reduce: BitwiseShiftTerm
+			reduce(52), // >=, reduce: BitwiseShiftTerm
+			reduce(52), // <, reduce: BitwiseShiftTerm
+			reduce(52), // <=, reduce: BitwiseShiftTerm
+			reduce(52), // |, reduce: BitwiseShiftTerm
+			reduce(52), // ^, reduce: BitwiseShiftTerm
+			reduce(52), // &, reduce: BitwiseShiftTerm
+			reduce(52), // <<, reduce: BitwiseShiftTerm
+			reduce(52), // >>, reduce: BitwiseShiftTerm
+			shift(234), // +
+			shift(235), // -
+			shift(236), // .+
+			shift(237), // .-
+			shift(238), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -6850,84 +6850,6 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S88
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			reduce(57), // $, reduce: AddsubdotTerm
-			reduce(57), // ;, reduce: AddsubdotTerm
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(57), // ?, reduce: AddsubdotTerm
-			nil,        // :
-			reduce(57), // ||, reduce: AddsubdotTerm
-			reduce(57), // ^^, reduce: AddsubdotTerm
-			reduce(57), // &&, reduce: AddsubdotTerm
-			reduce(57), // =~, reduce: AddsubdotTerm
-			reduce(57), // !=~, reduce: AddsubdotTerm
-			reduce(57), // ==, reduce: AddsubdotTerm
-			reduce(57), // !=, reduce: AddsubdotTerm
-			reduce(57), // >, reduce: AddsubdotTerm
-			reduce(57), // >=, reduce: AddsubdotTerm
-			reduce(57), // <, reduce: AddsubdotTerm
-			reduce(57), // <=, reduce: AddsubdotTerm
-			reduce(57), // |, reduce: AddsubdotTerm
-			reduce(57), // ^, reduce: AddsubdotTerm
-			reduce(57), // &, reduce: AddsubdotTerm
-			reduce(57), // <<, reduce: AddsubdotTerm
-			reduce(57), // >>, reduce: AddsubdotTerm
-			reduce(57), // +, reduce: AddsubdotTerm
-			reduce(57), // -, reduce: AddsubdotTerm
-			reduce(57), // .+, reduce: AddsubdotTerm
-			reduce(57), // .-, reduce: AddsubdotTerm
-			reduce(57), // ., reduce: AddsubdotTerm
-			shift(239), // *
-			shift(240), // /
-			shift(241), // //
-			shift(242), // %
-			shift(243), // .*
-			shift(244), // ./
-			shift(245), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -6953,7 +6875,7 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENUM
 		},
 	},
-	actionRow{ // S89
+	actionRow{ // S88
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -7009,26 +6931,104 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S89
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(58), // $, reduce: AddsubdotTerm
+			reduce(58), // ;, reduce: AddsubdotTerm
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(58), // ?, reduce: AddsubdotTerm
+			nil,        // :
+			reduce(58), // ||, reduce: AddsubdotTerm
+			reduce(58), // ^^, reduce: AddsubdotTerm
+			reduce(58), // &&, reduce: AddsubdotTerm
+			reduce(58), // =~, reduce: AddsubdotTerm
+			reduce(58), // !=~, reduce: AddsubdotTerm
+			reduce(58), // ==, reduce: AddsubdotTerm
+			reduce(58), // !=, reduce: AddsubdotTerm
+			reduce(58), // >, reduce: AddsubdotTerm
+			reduce(58), // >=, reduce: AddsubdotTerm
+			reduce(58), // <, reduce: AddsubdotTerm
+			reduce(58), // <=, reduce: AddsubdotTerm
+			reduce(58), // |, reduce: AddsubdotTerm
+			reduce(58), // ^, reduce: AddsubdotTerm
+			reduce(58), // &, reduce: AddsubdotTerm
+			reduce(58), // <<, reduce: AddsubdotTerm
+			reduce(58), // >>, reduce: AddsubdotTerm
+			reduce(58), // +, reduce: AddsubdotTerm
+			reduce(58), // -, reduce: AddsubdotTerm
+			reduce(58), // .+, reduce: AddsubdotTerm
+			reduce(58), // .-, reduce: AddsubdotTerm
+			reduce(58), // ., reduce: AddsubdotTerm
+			shift(240), // *
+			shift(241), // /
+			shift(242), // //
+			shift(243), // %
+			shift(244), // .*
+			shift(245), // ./
+			shift(246), // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S90
@@ -7087,26 +7087,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S91
@@ -7165,185 +7165,29 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S92
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			reduce(65), // $, reduce: MuldivTerm
-			reduce(65), // ;, reduce: MuldivTerm
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(65), // ?, reduce: MuldivTerm
-			nil,        // :
-			reduce(65), // ||, reduce: MuldivTerm
-			reduce(65), // ^^, reduce: MuldivTerm
-			reduce(65), // &&, reduce: MuldivTerm
-			reduce(65), // =~, reduce: MuldivTerm
-			reduce(65), // !=~, reduce: MuldivTerm
-			reduce(65), // ==, reduce: MuldivTerm
-			reduce(65), // !=, reduce: MuldivTerm
-			reduce(65), // >, reduce: MuldivTerm
-			reduce(65), // >=, reduce: MuldivTerm
-			reduce(65), // <, reduce: MuldivTerm
-			reduce(65), // <=, reduce: MuldivTerm
-			reduce(65), // |, reduce: MuldivTerm
-			reduce(65), // ^, reduce: MuldivTerm
-			reduce(65), // &, reduce: MuldivTerm
-			reduce(65), // <<, reduce: MuldivTerm
-			reduce(65), // >>, reduce: MuldivTerm
-			reduce(65), // +, reduce: MuldivTerm
-			reduce(65), // -, reduce: MuldivTerm
-			reduce(65), // .+, reduce: MuldivTerm
-			reduce(65), // .-, reduce: MuldivTerm
-			reduce(65), // ., reduce: MuldivTerm
-			reduce(65), // *, reduce: MuldivTerm
-			reduce(65), // /, reduce: MuldivTerm
-			reduce(65), // //, reduce: MuldivTerm
-			reduce(65), // %, reduce: MuldivTerm
-			reduce(65), // .*, reduce: MuldivTerm
-			reduce(65), // ./, reduce: MuldivTerm
-			reduce(65), // .//, reduce: MuldivTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S93
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			reduce(72), // $, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ;, reduce: UnaryBitwiseOpTerm
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
-			nil,        // :
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S94
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -7399,26 +7243,182 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S93
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(66), // $, reduce: MuldivTerm
+			reduce(66), // ;, reduce: MuldivTerm
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(66), // ?, reduce: MuldivTerm
+			nil,        // :
+			reduce(66), // ||, reduce: MuldivTerm
+			reduce(66), // ^^, reduce: MuldivTerm
+			reduce(66), // &&, reduce: MuldivTerm
+			reduce(66), // =~, reduce: MuldivTerm
+			reduce(66), // !=~, reduce: MuldivTerm
+			reduce(66), // ==, reduce: MuldivTerm
+			reduce(66), // !=, reduce: MuldivTerm
+			reduce(66), // >, reduce: MuldivTerm
+			reduce(66), // >=, reduce: MuldivTerm
+			reduce(66), // <, reduce: MuldivTerm
+			reduce(66), // <=, reduce: MuldivTerm
+			reduce(66), // |, reduce: MuldivTerm
+			reduce(66), // ^, reduce: MuldivTerm
+			reduce(66), // &, reduce: MuldivTerm
+			reduce(66), // <<, reduce: MuldivTerm
+			reduce(66), // >>, reduce: MuldivTerm
+			reduce(66), // +, reduce: MuldivTerm
+			reduce(66), // -, reduce: MuldivTerm
+			reduce(66), // .+, reduce: MuldivTerm
+			reduce(66), // .-, reduce: MuldivTerm
+			reduce(66), // ., reduce: MuldivTerm
+			reduce(66), // *, reduce: MuldivTerm
+			reduce(66), // /, reduce: MuldivTerm
+			reduce(66), // //, reduce: MuldivTerm
+			reduce(66), // %, reduce: MuldivTerm
+			reduce(66), // .*, reduce: MuldivTerm
+			reduce(66), // ./, reduce: MuldivTerm
+			reduce(66), // .//, reduce: MuldivTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S94
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(73), // $, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ;, reduce: UnaryBitwiseOpTerm
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			nil,        // :
+			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // |, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(73), // +, reduce: UnaryBitwiseOpTerm
+			reduce(73), // -, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ., reduce: UnaryBitwiseOpTerm
+			reduce(73), // *, reduce: UnaryBitwiseOpTerm
+			reduce(73), // /, reduce: UnaryBitwiseOpTerm
+			reduce(73), // //, reduce: UnaryBitwiseOpTerm
+			reduce(73), // %, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S95
@@ -7477,107 +7477,29 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S96
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			reduce(74), // $, reduce: PowTerm
-			reduce(74), // ;, reduce: PowTerm
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(74), // ?, reduce: PowTerm
-			nil,        // :
-			reduce(74), // ||, reduce: PowTerm
-			reduce(74), // ^^, reduce: PowTerm
-			reduce(74), // &&, reduce: PowTerm
-			reduce(74), // =~, reduce: PowTerm
-			reduce(74), // !=~, reduce: PowTerm
-			reduce(74), // ==, reduce: PowTerm
-			reduce(74), // !=, reduce: PowTerm
-			reduce(74), // >, reduce: PowTerm
-			reduce(74), // >=, reduce: PowTerm
-			reduce(74), // <, reduce: PowTerm
-			reduce(74), // <=, reduce: PowTerm
-			reduce(74), // |, reduce: PowTerm
-			reduce(74), // ^, reduce: PowTerm
-			reduce(74), // &, reduce: PowTerm
-			reduce(74), // <<, reduce: PowTerm
-			reduce(74), // >>, reduce: PowTerm
-			reduce(74), // +, reduce: PowTerm
-			reduce(74), // -, reduce: PowTerm
-			reduce(74), // .+, reduce: PowTerm
-			reduce(74), // .-, reduce: PowTerm
-			reduce(74), // ., reduce: PowTerm
-			reduce(74), // *, reduce: PowTerm
-			reduce(74), // /, reduce: PowTerm
-			reduce(74), // //, reduce: PowTerm
-			reduce(74), // %, reduce: PowTerm
-			reduce(74), // .*, reduce: PowTerm
-			reduce(74), // ./, reduce: PowTerm
-			reduce(74), // .//, reduce: PowTerm
-			nil,        // !
-			nil,        // ~
-			shift(251), // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S97
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -7618,10 +7540,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -7630,37 +7552,37 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			nil,        // !
+			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(98),  // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
-	actionRow{ // S98
+	actionRow{ // S97
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(77), // $, reduce: FieldName
-			reduce(77), // ;, reduce: FieldName
+			reduce(75), // $, reduce: PowTerm
+			reduce(75), // ;, reduce: PowTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -7678,39 +7600,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: FieldName
+			reduce(75), // ?, reduce: PowTerm
 			nil,        // :
-			reduce(77), // ||, reduce: FieldName
-			reduce(77), // ^^, reduce: FieldName
-			reduce(77), // &&, reduce: FieldName
-			reduce(77), // =~, reduce: FieldName
-			reduce(77), // !=~, reduce: FieldName
-			reduce(77), // ==, reduce: FieldName
-			reduce(77), // !=, reduce: FieldName
-			reduce(77), // >, reduce: FieldName
-			reduce(77), // >=, reduce: FieldName
-			reduce(77), // <, reduce: FieldName
-			reduce(77), // <=, reduce: FieldName
-			reduce(77), // |, reduce: FieldName
-			reduce(77), // ^, reduce: FieldName
-			reduce(77), // &, reduce: FieldName
-			reduce(77), // <<, reduce: FieldName
-			reduce(77), // >>, reduce: FieldName
-			reduce(77), // +, reduce: FieldName
-			reduce(77), // -, reduce: FieldName
-			reduce(77), // .+, reduce: FieldName
-			reduce(77), // .-, reduce: FieldName
-			reduce(77), // ., reduce: FieldName
-			reduce(77), // *, reduce: FieldName
-			reduce(77), // /, reduce: FieldName
-			reduce(77), // //, reduce: FieldName
-			reduce(77), // %, reduce: FieldName
-			reduce(77), // .*, reduce: FieldName
-			reduce(77), // ./, reduce: FieldName
-			reduce(77), // .//, reduce: FieldName
+			reduce(75), // ||, reduce: PowTerm
+			reduce(75), // ^^, reduce: PowTerm
+			reduce(75), // &&, reduce: PowTerm
+			reduce(75), // =~, reduce: PowTerm
+			reduce(75), // !=~, reduce: PowTerm
+			reduce(75), // ==, reduce: PowTerm
+			reduce(75), // !=, reduce: PowTerm
+			reduce(75), // >, reduce: PowTerm
+			reduce(75), // >=, reduce: PowTerm
+			reduce(75), // <, reduce: PowTerm
+			reduce(75), // <=, reduce: PowTerm
+			reduce(75), // |, reduce: PowTerm
+			reduce(75), // ^, reduce: PowTerm
+			reduce(75), // &, reduce: PowTerm
+			reduce(75), // <<, reduce: PowTerm
+			reduce(75), // >>, reduce: PowTerm
+			reduce(75), // +, reduce: PowTerm
+			reduce(75), // -, reduce: PowTerm
+			reduce(75), // .+, reduce: PowTerm
+			reduce(75), // .-, reduce: PowTerm
+			reduce(75), // ., reduce: PowTerm
+			reduce(75), // *, reduce: PowTerm
+			reduce(75), // /, reduce: PowTerm
+			reduce(75), // //, reduce: PowTerm
+			reduce(75), // %, reduce: PowTerm
+			reduce(75), // .*, reduce: PowTerm
+			reduce(75), // ./, reduce: PowTerm
+			reduce(75), // .//, reduce: PowTerm
 			nil,        // !
 			nil,        // ~
-			reduce(77), // **, reduce: FieldName
+			shift(252), // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -7731,6 +7653,84 @@ var actionTab = actionTable{
 			nil,        // md_token_FNR
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S98
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S99
@@ -7815,8 +7815,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(79), // $, reduce: DirectFieldName
-			reduce(79), // ;, reduce: DirectFieldName
+			reduce(79), // $, reduce: FieldName
+			reduce(79), // ;, reduce: FieldName
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -7834,39 +7834,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(79), // ?, reduce: DirectFieldName
+			reduce(79), // ?, reduce: FieldName
 			nil,        // :
-			reduce(79), // ||, reduce: DirectFieldName
-			reduce(79), // ^^, reduce: DirectFieldName
-			reduce(79), // &&, reduce: DirectFieldName
-			reduce(79), // =~, reduce: DirectFieldName
-			reduce(79), // !=~, reduce: DirectFieldName
-			reduce(79), // ==, reduce: DirectFieldName
-			reduce(79), // !=, reduce: DirectFieldName
-			reduce(79), // >, reduce: DirectFieldName
-			reduce(79), // >=, reduce: DirectFieldName
-			reduce(79), // <, reduce: DirectFieldName
-			reduce(79), // <=, reduce: DirectFieldName
-			reduce(79), // |, reduce: DirectFieldName
-			reduce(79), // ^, reduce: DirectFieldName
-			reduce(79), // &, reduce: DirectFieldName
-			reduce(79), // <<, reduce: DirectFieldName
-			reduce(79), // >>, reduce: DirectFieldName
-			reduce(79), // +, reduce: DirectFieldName
-			reduce(79), // -, reduce: DirectFieldName
-			reduce(79), // .+, reduce: DirectFieldName
-			reduce(79), // .-, reduce: DirectFieldName
-			reduce(79), // ., reduce: DirectFieldName
-			reduce(79), // *, reduce: DirectFieldName
-			reduce(79), // /, reduce: DirectFieldName
-			reduce(79), // //, reduce: DirectFieldName
-			reduce(79), // %, reduce: DirectFieldName
-			reduce(79), // .*, reduce: DirectFieldName
-			reduce(79), // ./, reduce: DirectFieldName
-			reduce(79), // .//, reduce: DirectFieldName
+			reduce(79), // ||, reduce: FieldName
+			reduce(79), // ^^, reduce: FieldName
+			reduce(79), // &&, reduce: FieldName
+			reduce(79), // =~, reduce: FieldName
+			reduce(79), // !=~, reduce: FieldName
+			reduce(79), // ==, reduce: FieldName
+			reduce(79), // !=, reduce: FieldName
+			reduce(79), // >, reduce: FieldName
+			reduce(79), // >=, reduce: FieldName
+			reduce(79), // <, reduce: FieldName
+			reduce(79), // <=, reduce: FieldName
+			reduce(79), // |, reduce: FieldName
+			reduce(79), // ^, reduce: FieldName
+			reduce(79), // &, reduce: FieldName
+			reduce(79), // <<, reduce: FieldName
+			reduce(79), // >>, reduce: FieldName
+			reduce(79), // +, reduce: FieldName
+			reduce(79), // -, reduce: FieldName
+			reduce(79), // .+, reduce: FieldName
+			reduce(79), // .-, reduce: FieldName
+			reduce(79), // ., reduce: FieldName
+			reduce(79), // *, reduce: FieldName
+			reduce(79), // /, reduce: FieldName
+			reduce(79), // //, reduce: FieldName
+			reduce(79), // %, reduce: FieldName
+			reduce(79), // .*, reduce: FieldName
+			reduce(79), // ./, reduce: FieldName
+			reduce(79), // .//, reduce: FieldName
 			nil,        // !
 			nil,        // ~
-			reduce(79), // **, reduce: DirectFieldName
+			reduce(79), // **, reduce: FieldName
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -7890,6 +7890,84 @@ var actionTab = actionTable{
 		},
 	},
 	actionRow{ // S101
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(80), // $, reduce: DirectFieldName
+			reduce(80), // ;, reduce: DirectFieldName
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(80), // ?, reduce: DirectFieldName
+			nil,        // :
+			reduce(80), // ||, reduce: DirectFieldName
+			reduce(80), // ^^, reduce: DirectFieldName
+			reduce(80), // &&, reduce: DirectFieldName
+			reduce(80), // =~, reduce: DirectFieldName
+			reduce(80), // !=~, reduce: DirectFieldName
+			reduce(80), // ==, reduce: DirectFieldName
+			reduce(80), // !=, reduce: DirectFieldName
+			reduce(80), // >, reduce: DirectFieldName
+			reduce(80), // >=, reduce: DirectFieldName
+			reduce(80), // <, reduce: DirectFieldName
+			reduce(80), // <=, reduce: DirectFieldName
+			reduce(80), // |, reduce: DirectFieldName
+			reduce(80), // ^, reduce: DirectFieldName
+			reduce(80), // &, reduce: DirectFieldName
+			reduce(80), // <<, reduce: DirectFieldName
+			reduce(80), // >>, reduce: DirectFieldName
+			reduce(80), // +, reduce: DirectFieldName
+			reduce(80), // -, reduce: DirectFieldName
+			reduce(80), // .+, reduce: DirectFieldName
+			reduce(80), // .-, reduce: DirectFieldName
+			reduce(80), // ., reduce: DirectFieldName
+			reduce(80), // *, reduce: DirectFieldName
+			reduce(80), // /, reduce: DirectFieldName
+			reduce(80), // //, reduce: DirectFieldName
+			reduce(80), // %, reduce: DirectFieldName
+			reduce(80), // .*, reduce: DirectFieldName
+			reduce(80), // ./, reduce: DirectFieldName
+			reduce(80), // .//, reduce: DirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(80), // **, reduce: DirectFieldName
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S102
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -7930,10 +8008,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -7942,107 +8020,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S102
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			reduce(81), // $, reduce: AtomOrFunction
-			reduce(81), // ;, reduce: AtomOrFunction
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(81), // ?, reduce: AtomOrFunction
-			nil,        // :
-			reduce(81), // ||, reduce: AtomOrFunction
-			reduce(81), // ^^, reduce: AtomOrFunction
-			reduce(81), // &&, reduce: AtomOrFunction
-			reduce(81), // =~, reduce: AtomOrFunction
-			reduce(81), // !=~, reduce: AtomOrFunction
-			reduce(81), // ==, reduce: AtomOrFunction
-			reduce(81), // !=, reduce: AtomOrFunction
-			reduce(81), // >, reduce: AtomOrFunction
-			reduce(81), // >=, reduce: AtomOrFunction
-			reduce(81), // <, reduce: AtomOrFunction
-			reduce(81), // <=, reduce: AtomOrFunction
-			reduce(81), // |, reduce: AtomOrFunction
-			reduce(81), // ^, reduce: AtomOrFunction
-			reduce(81), // &, reduce: AtomOrFunction
-			reduce(81), // <<, reduce: AtomOrFunction
-			reduce(81), // >>, reduce: AtomOrFunction
-			reduce(81), // +, reduce: AtomOrFunction
-			reduce(81), // -, reduce: AtomOrFunction
-			reduce(81), // .+, reduce: AtomOrFunction
-			reduce(81), // .-, reduce: AtomOrFunction
-			reduce(81), // ., reduce: AtomOrFunction
-			reduce(81), // *, reduce: AtomOrFunction
-			reduce(81), // /, reduce: AtomOrFunction
-			reduce(81), // //, reduce: AtomOrFunction
-			reduce(81), // %, reduce: AtomOrFunction
-			reduce(81), // .*, reduce: AtomOrFunction
-			reduce(81), // ./, reduce: AtomOrFunction
-			reduce(81), // .//, reduce: AtomOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(81), // **, reduce: AtomOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S103
@@ -8361,8 +8361,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(86), // $, reduce: ContextVariable
-			reduce(86), // ;, reduce: ContextVariable
+			reduce(86), // $, reduce: AtomOrFunction
+			reduce(86), // ;, reduce: AtomOrFunction
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -8380,39 +8380,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(86), // ?, reduce: ContextVariable
+			reduce(86), // ?, reduce: AtomOrFunction
 			nil,        // :
-			reduce(86), // ||, reduce: ContextVariable
-			reduce(86), // ^^, reduce: ContextVariable
-			reduce(86), // &&, reduce: ContextVariable
-			reduce(86), // =~, reduce: ContextVariable
-			reduce(86), // !=~, reduce: ContextVariable
-			reduce(86), // ==, reduce: ContextVariable
-			reduce(86), // !=, reduce: ContextVariable
-			reduce(86), // >, reduce: ContextVariable
-			reduce(86), // >=, reduce: ContextVariable
-			reduce(86), // <, reduce: ContextVariable
-			reduce(86), // <=, reduce: ContextVariable
-			reduce(86), // |, reduce: ContextVariable
-			reduce(86), // ^, reduce: ContextVariable
-			reduce(86), // &, reduce: ContextVariable
-			reduce(86), // <<, reduce: ContextVariable
-			reduce(86), // >>, reduce: ContextVariable
-			reduce(86), // +, reduce: ContextVariable
-			reduce(86), // -, reduce: ContextVariable
-			reduce(86), // .+, reduce: ContextVariable
-			reduce(86), // .-, reduce: ContextVariable
-			reduce(86), // ., reduce: ContextVariable
-			reduce(86), // *, reduce: ContextVariable
-			reduce(86), // /, reduce: ContextVariable
-			reduce(86), // //, reduce: ContextVariable
-			reduce(86), // %, reduce: ContextVariable
-			reduce(86), // .*, reduce: ContextVariable
-			reduce(86), // ./, reduce: ContextVariable
-			reduce(86), // .//, reduce: ContextVariable
+			reduce(86), // ||, reduce: AtomOrFunction
+			reduce(86), // ^^, reduce: AtomOrFunction
+			reduce(86), // &&, reduce: AtomOrFunction
+			reduce(86), // =~, reduce: AtomOrFunction
+			reduce(86), // !=~, reduce: AtomOrFunction
+			reduce(86), // ==, reduce: AtomOrFunction
+			reduce(86), // !=, reduce: AtomOrFunction
+			reduce(86), // >, reduce: AtomOrFunction
+			reduce(86), // >=, reduce: AtomOrFunction
+			reduce(86), // <, reduce: AtomOrFunction
+			reduce(86), // <=, reduce: AtomOrFunction
+			reduce(86), // |, reduce: AtomOrFunction
+			reduce(86), // ^, reduce: AtomOrFunction
+			reduce(86), // &, reduce: AtomOrFunction
+			reduce(86), // <<, reduce: AtomOrFunction
+			reduce(86), // >>, reduce: AtomOrFunction
+			reduce(86), // +, reduce: AtomOrFunction
+			reduce(86), // -, reduce: AtomOrFunction
+			reduce(86), // .+, reduce: AtomOrFunction
+			reduce(86), // .-, reduce: AtomOrFunction
+			reduce(86), // ., reduce: AtomOrFunction
+			reduce(86), // *, reduce: AtomOrFunction
+			reduce(86), // /, reduce: AtomOrFunction
+			reduce(86), // //, reduce: AtomOrFunction
+			reduce(86), // %, reduce: AtomOrFunction
+			reduce(86), // .*, reduce: AtomOrFunction
+			reduce(86), // ./, reduce: AtomOrFunction
+			reduce(86), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(86), // **, reduce: ContextVariable
+			reduce(86), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -9218,87 +9218,87 @@ var actionTab = actionTable{
 	actionRow{ // S118
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			reduce(8), // $, reduce: SrecAssignment
-			reduce(8), // ;, reduce: SrecAssignment
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			nil,       // +
-			nil,       // -
-			nil,       // .+
-			nil,       // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			nil,       // !
-			nil,       // ~
-			nil,       // **
-			nil,       // (
-			nil,       // )
-			nil,       // md_token_field_name
-			nil,       // $[
-			nil,       // ]
-			nil,       // md_token_string_literal
-			nil,       // md_token_int_literal
-			nil,       // md_token_float_literal
-			nil,       // md_token_boolean_literal
-			nil,       // md_token_IPS
-			nil,       // md_token_IFS
-			nil,       // md_token_IRS
-			nil,       // md_token_OPS
-			nil,       // md_token_OFS
-			nil,       // md_token_ORS
-			nil,       // md_token_NF
-			nil,       // md_token_NR
-			nil,       // md_token_FNR
-			nil,       // md_token_FILENAME
-			nil,       // md_token_FILENUM
+			nil,        // INVALID
+			reduce(97), // $, reduce: ContextVariable
+			reduce(97), // ;, reduce: ContextVariable
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(97), // ?, reduce: ContextVariable
+			nil,        // :
+			reduce(97), // ||, reduce: ContextVariable
+			reduce(97), // ^^, reduce: ContextVariable
+			reduce(97), // &&, reduce: ContextVariable
+			reduce(97), // =~, reduce: ContextVariable
+			reduce(97), // !=~, reduce: ContextVariable
+			reduce(97), // ==, reduce: ContextVariable
+			reduce(97), // !=, reduce: ContextVariable
+			reduce(97), // >, reduce: ContextVariable
+			reduce(97), // >=, reduce: ContextVariable
+			reduce(97), // <, reduce: ContextVariable
+			reduce(97), // <=, reduce: ContextVariable
+			reduce(97), // |, reduce: ContextVariable
+			reduce(97), // ^, reduce: ContextVariable
+			reduce(97), // &, reduce: ContextVariable
+			reduce(97), // <<, reduce: ContextVariable
+			reduce(97), // >>, reduce: ContextVariable
+			reduce(97), // +, reduce: ContextVariable
+			reduce(97), // -, reduce: ContextVariable
+			reduce(97), // .+, reduce: ContextVariable
+			reduce(97), // .-, reduce: ContextVariable
+			reduce(97), // ., reduce: ContextVariable
+			reduce(97), // *, reduce: ContextVariable
+			reduce(97), // /, reduce: ContextVariable
+			reduce(97), // //, reduce: ContextVariable
+			reduce(97), // %, reduce: ContextVariable
+			reduce(97), // .*, reduce: ContextVariable
+			reduce(97), // ./, reduce: ContextVariable
+			reduce(97), // .//, reduce: ContextVariable
+			nil,        // !
+			nil,        // ~
+			reduce(97), // **, reduce: ContextVariable
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S119
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(9), // $, reduce: SrecAssignment
-			reduce(9), // ;, reduce: SrecAssignment
+			reduce(9), // $, reduce: SrecDirectAssignment
+			reduce(9), // ;, reduce: SrecDirectAssignment
 			nil,       // =
 			nil,       // ||=
 			nil,       // ^^=
@@ -9375,8 +9375,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(10), // $, reduce: SrecAssignment
-			reduce(10), // ;, reduce: SrecAssignment
+			reduce(10), // $, reduce: SrecDirectAssignment
+			reduce(10), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9453,8 +9453,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(11), // $, reduce: SrecAssignment
-			reduce(11), // ;, reduce: SrecAssignment
+			reduce(11), // $, reduce: SrecDirectAssignment
+			reduce(11), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9531,8 +9531,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(12), // $, reduce: SrecAssignment
-			reduce(12), // ;, reduce: SrecAssignment
+			reduce(12), // $, reduce: SrecDirectAssignment
+			reduce(12), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9609,8 +9609,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(13), // $, reduce: SrecAssignment
-			reduce(13), // ;, reduce: SrecAssignment
+			reduce(13), // $, reduce: SrecDirectAssignment
+			reduce(13), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9687,8 +9687,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(14), // $, reduce: SrecAssignment
-			reduce(14), // ;, reduce: SrecAssignment
+			reduce(14), // $, reduce: SrecDirectAssignment
+			reduce(14), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9765,8 +9765,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(15), // $, reduce: SrecAssignment
-			reduce(15), // ;, reduce: SrecAssignment
+			reduce(15), // $, reduce: SrecDirectAssignment
+			reduce(15), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9843,8 +9843,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(16), // $, reduce: SrecAssignment
-			reduce(16), // ;, reduce: SrecAssignment
+			reduce(16), // $, reduce: SrecDirectAssignment
+			reduce(16), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9921,8 +9921,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(17), // $, reduce: SrecAssignment
-			reduce(17), // ;, reduce: SrecAssignment
+			reduce(17), // $, reduce: SrecDirectAssignment
+			reduce(17), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -9999,8 +9999,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(18), // $, reduce: SrecAssignment
-			reduce(18), // ;, reduce: SrecAssignment
+			reduce(18), // $, reduce: SrecDirectAssignment
+			reduce(18), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10077,8 +10077,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(19), // $, reduce: SrecAssignment
-			reduce(19), // ;, reduce: SrecAssignment
+			reduce(19), // $, reduce: SrecDirectAssignment
+			reduce(19), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10155,8 +10155,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(20), // $, reduce: SrecAssignment
-			reduce(20), // ;, reduce: SrecAssignment
+			reduce(20), // $, reduce: SrecDirectAssignment
+			reduce(20), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10233,8 +10233,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(21), // $, reduce: SrecAssignment
-			reduce(21), // ;, reduce: SrecAssignment
+			reduce(21), // $, reduce: SrecDirectAssignment
+			reduce(21), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10311,8 +10311,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(22), // $, reduce: SrecAssignment
-			reduce(22), // ;, reduce: SrecAssignment
+			reduce(22), // $, reduce: SrecDirectAssignment
+			reduce(22), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10389,8 +10389,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(23), // $, reduce: SrecAssignment
-			reduce(23), // ;, reduce: SrecAssignment
+			reduce(23), // $, reduce: SrecDirectAssignment
+			reduce(23), // ;, reduce: SrecDirectAssignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10467,25 +10467,25 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			reduce(80), // =, reduce: IndirectFieldName
-			reduce(80), // ||=, reduce: IndirectFieldName
-			reduce(80), // ^^=, reduce: IndirectFieldName
-			reduce(80), // &&=, reduce: IndirectFieldName
-			reduce(80), // |=, reduce: IndirectFieldName
-			reduce(80), // ^=, reduce: IndirectFieldName
-			reduce(80), // &=, reduce: IndirectFieldName
-			reduce(80), // <<=, reduce: IndirectFieldName
-			reduce(80), // >>=, reduce: IndirectFieldName
-			reduce(80), // +=, reduce: IndirectFieldName
-			reduce(80), // .=, reduce: IndirectFieldName
-			reduce(80), // -=, reduce: IndirectFieldName
-			reduce(80), // *=, reduce: IndirectFieldName
-			reduce(80), // /=, reduce: IndirectFieldName
-			reduce(80), // //=, reduce: IndirectFieldName
-			reduce(80), // %=, reduce: IndirectFieldName
-			reduce(80), // **=, reduce: IndirectFieldName
+			reduce(24), // $, reduce: SrecDirectAssignment
+			reduce(24), // ;, reduce: SrecDirectAssignment
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -10547,6 +10547,84 @@ var actionTab = actionTable{
 			nil,        // INVALID
 			nil,        // $
 			nil,        // ;
+			reduce(81), // =, reduce: IndirectFieldName
+			reduce(81), // ||=, reduce: IndirectFieldName
+			reduce(81), // ^^=, reduce: IndirectFieldName
+			reduce(81), // &&=, reduce: IndirectFieldName
+			reduce(81), // |=, reduce: IndirectFieldName
+			reduce(81), // ^=, reduce: IndirectFieldName
+			reduce(81), // &=, reduce: IndirectFieldName
+			reduce(81), // <<=, reduce: IndirectFieldName
+			reduce(81), // >>=, reduce: IndirectFieldName
+			reduce(81), // +=, reduce: IndirectFieldName
+			reduce(81), // .=, reduce: IndirectFieldName
+			reduce(81), // -=, reduce: IndirectFieldName
+			reduce(81), // *=, reduce: IndirectFieldName
+			reduce(81), // /=, reduce: IndirectFieldName
+			reduce(81), // //=, reduce: IndirectFieldName
+			reduce(81), // %=, reduce: IndirectFieldName
+			reduce(81), // **=, reduce: IndirectFieldName
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S136
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -10582,10 +10660,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -10594,107 +10672,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S136
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S137
@@ -10738,10 +10738,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -10750,29 +10750,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S138
@@ -10816,10 +10816,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -10828,29 +10828,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S139
@@ -10894,10 +10894,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -10906,29 +10906,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S140
@@ -10972,10 +10972,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -10984,29 +10984,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S141
@@ -11050,10 +11050,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11062,29 +11062,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S142
@@ -11128,10 +11128,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11140,29 +11140,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S143
@@ -11206,10 +11206,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11218,29 +11218,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S144
@@ -11284,10 +11284,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11296,29 +11296,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S145
@@ -11362,10 +11362,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11374,29 +11374,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S146
@@ -11440,10 +11440,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11452,29 +11452,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S147
@@ -11518,10 +11518,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11530,29 +11530,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S148
@@ -11596,10 +11596,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11608,29 +11608,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S149
@@ -11674,10 +11674,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11686,29 +11686,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S150
@@ -11752,10 +11752,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11764,29 +11764,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S151
@@ -11830,10 +11830,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11842,29 +11842,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S152
@@ -11908,10 +11908,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11920,29 +11920,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S153
@@ -11986,10 +11986,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -11998,29 +11998,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S154
@@ -12064,10 +12064,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -12076,29 +12076,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S155
@@ -12142,10 +12142,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -12154,29 +12154,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S156
@@ -12220,10 +12220,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -12232,656 +12232,110 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S157
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(66), // ?, reduce: UnaryBitwiseOpTerm
-			nil,        // :
-			reduce(66), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(66), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // |, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(66), // +, reduce: UnaryBitwiseOpTerm
-			reduce(66), // -, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ., reduce: UnaryBitwiseOpTerm
-			reduce(66), // *, reduce: UnaryBitwiseOpTerm
-			reduce(66), // /, reduce: UnaryBitwiseOpTerm
-			reduce(66), // //, reduce: UnaryBitwiseOpTerm
-			reduce(66), // %, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(66), // ], reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S158
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S159
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S160
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S161
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S162
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S163
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S164
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // $
-			nil,       // ;
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
-			nil,       // **
-			shift(52), // (
-			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
-			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S165
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -12957,6 +12411,552 @@ var actionTab = actionTable{
 			nil,        // md_token_FNR
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S159
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S160
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S161
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S162
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S163
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S164
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S165
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // $
+			nil,       // ;
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			shift(50), // !
+			shift(51), // ~
+			nil,       // **
+			shift(53), // (
+			nil,       // )
+			shift(56), // md_token_field_name
+			shift(57), // $[
+			nil,       // ]
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S166
@@ -13274,6 +13274,84 @@ var actionTab = actionTable{
 	actionRow{ // S170
 		canRecover: false,
 		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
+			nil,        // :
+			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // |, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(72), // +, reduce: UnaryBitwiseOpTerm
+			reduce(72), // -, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ., reduce: UnaryBitwiseOpTerm
+			reduce(72), // *, reduce: UnaryBitwiseOpTerm
+			reduce(72), // /, reduce: UnaryBitwiseOpTerm
+			reduce(72), // //, reduce: UnaryBitwiseOpTerm
+			reduce(72), // %, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(72), // ], reduce: UnaryBitwiseOpTerm
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S171
+		canRecover: false,
+		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // $
 			nil,       // ;
@@ -13327,104 +13405,26 @@ var actionTab = actionTable{
 			nil,       // !
 			nil,       // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S171
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(76), // ?, reduce: AtomOrFunction
-			nil,        // :
-			reduce(76), // ||, reduce: AtomOrFunction
-			reduce(76), // ^^, reduce: AtomOrFunction
-			reduce(76), // &&, reduce: AtomOrFunction
-			reduce(76), // =~, reduce: AtomOrFunction
-			reduce(76), // !=~, reduce: AtomOrFunction
-			reduce(76), // ==, reduce: AtomOrFunction
-			reduce(76), // !=, reduce: AtomOrFunction
-			reduce(76), // >, reduce: AtomOrFunction
-			reduce(76), // >=, reduce: AtomOrFunction
-			reduce(76), // <, reduce: AtomOrFunction
-			reduce(76), // <=, reduce: AtomOrFunction
-			reduce(76), // |, reduce: AtomOrFunction
-			reduce(76), // ^, reduce: AtomOrFunction
-			reduce(76), // &, reduce: AtomOrFunction
-			reduce(76), // <<, reduce: AtomOrFunction
-			reduce(76), // >>, reduce: AtomOrFunction
-			reduce(76), // +, reduce: AtomOrFunction
-			reduce(76), // -, reduce: AtomOrFunction
-			reduce(76), // .+, reduce: AtomOrFunction
-			reduce(76), // .-, reduce: AtomOrFunction
-			reduce(76), // ., reduce: AtomOrFunction
-			reduce(76), // *, reduce: AtomOrFunction
-			reduce(76), // /, reduce: AtomOrFunction
-			reduce(76), // //, reduce: AtomOrFunction
-			reduce(76), // %, reduce: AtomOrFunction
-			reduce(76), // .*, reduce: AtomOrFunction
-			reduce(76), // ./, reduce: AtomOrFunction
-			reduce(76), // .//, reduce: AtomOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(76), // **, reduce: AtomOrFunction
-			nil,        // (
-			reduce(76), // ), reduce: AtomOrFunction
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S172
@@ -13450,41 +13450,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(77), // ?, reduce: AtomOrFunction
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(77), // ||, reduce: AtomOrFunction
+			reduce(77), // ^^, reduce: AtomOrFunction
+			reduce(77), // &&, reduce: AtomOrFunction
+			reduce(77), // =~, reduce: AtomOrFunction
+			reduce(77), // !=~, reduce: AtomOrFunction
+			reduce(77), // ==, reduce: AtomOrFunction
+			reduce(77), // !=, reduce: AtomOrFunction
+			reduce(77), // >, reduce: AtomOrFunction
+			reduce(77), // >=, reduce: AtomOrFunction
+			reduce(77), // <, reduce: AtomOrFunction
+			reduce(77), // <=, reduce: AtomOrFunction
+			reduce(77), // |, reduce: AtomOrFunction
+			reduce(77), // ^, reduce: AtomOrFunction
+			reduce(77), // &, reduce: AtomOrFunction
+			reduce(77), // <<, reduce: AtomOrFunction
+			reduce(77), // >>, reduce: AtomOrFunction
+			reduce(77), // +, reduce: AtomOrFunction
+			reduce(77), // -, reduce: AtomOrFunction
+			reduce(77), // .+, reduce: AtomOrFunction
+			reduce(77), // .-, reduce: AtomOrFunction
+			reduce(77), // ., reduce: AtomOrFunction
+			reduce(77), // *, reduce: AtomOrFunction
+			reduce(77), // /, reduce: AtomOrFunction
+			reduce(77), // //, reduce: AtomOrFunction
+			reduce(77), // %, reduce: AtomOrFunction
+			reduce(77), // .*, reduce: AtomOrFunction
+			reduce(77), // ./, reduce: AtomOrFunction
+			reduce(77), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			nil,        // **
+			reduce(77), // **, reduce: AtomOrFunction
 			nil,        // (
-			shift(326), // )
+			reduce(77), // ), reduce: AtomOrFunction
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13562,7 +13562,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(24), // ), reduce: RHS
+			shift(327), // )
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13606,9 +13606,9 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			shift(327), // ?
+			nil,        // ?
 			nil,        // :
-			shift(328), // ||
+			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
@@ -13640,7 +13640,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(26), // ), reduce: TernaryTerm
+			reduce(25), // ), reduce: RHS
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13684,10 +13684,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(28), // ?, reduce: LogicalOrTerm
+			shift(328), // ?
 			nil,        // :
-			reduce(28), // ||, reduce: LogicalOrTerm
-			shift(329), // ^^
+			shift(329), // ||
+			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -13718,7 +13718,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(28), // ), reduce: LogicalOrTerm
+			reduce(27), // ), reduce: TernaryTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13762,11 +13762,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(30), // ?, reduce: LogicalXORTerm
+			reduce(29), // ?, reduce: LogicalOrTerm
 			nil,        // :
-			reduce(30), // ||, reduce: LogicalXORTerm
-			reduce(30), // ^^, reduce: LogicalXORTerm
-			shift(330), // &&
+			reduce(29), // ||, reduce: LogicalOrTerm
+			shift(330), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -13796,7 +13796,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(30), // ), reduce: LogicalXORTerm
+			reduce(29), // ), reduce: LogicalOrTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13840,15 +13840,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(32), // ?, reduce: LogicalAndTerm
+			reduce(31), // ?, reduce: LogicalXORTerm
 			nil,        // :
-			reduce(32), // ||, reduce: LogicalAndTerm
-			reduce(32), // ^^, reduce: LogicalAndTerm
-			reduce(32), // &&, reduce: LogicalAndTerm
-			shift(331), // =~
-			shift(332), // !=~
-			shift(333), // ==
-			shift(334), // !=
+			reduce(31), // ||, reduce: LogicalXORTerm
+			reduce(31), // ^^, reduce: LogicalXORTerm
+			shift(331), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -13874,7 +13874,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(32), // ), reduce: LogicalAndTerm
+			reduce(31), // ), reduce: LogicalXORTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13918,19 +13918,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(37), // ?, reduce: EqneTerm
+			reduce(33), // ?, reduce: LogicalAndTerm
 			nil,        // :
-			reduce(37), // ||, reduce: EqneTerm
-			reduce(37), // ^^, reduce: EqneTerm
-			reduce(37), // &&, reduce: EqneTerm
-			reduce(37), // =~, reduce: EqneTerm
-			reduce(37), // !=~, reduce: EqneTerm
-			reduce(37), // ==, reduce: EqneTerm
-			reduce(37), // !=, reduce: EqneTerm
-			shift(335), // >
-			shift(336), // >=
-			shift(337), // <
-			shift(338), // <=
+			reduce(33), // ||, reduce: LogicalAndTerm
+			reduce(33), // ^^, reduce: LogicalAndTerm
+			reduce(33), // &&, reduce: LogicalAndTerm
+			shift(332), // =~
+			shift(333), // !=~
+			shift(334), // ==
+			shift(335), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -13952,7 +13952,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(37), // ), reduce: EqneTerm
+			reduce(33), // ), reduce: LogicalAndTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -13996,20 +13996,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(42), // ?, reduce: CmpTerm
+			reduce(38), // ?, reduce: EqneTerm
 			nil,        // :
-			reduce(42), // ||, reduce: CmpTerm
-			reduce(42), // ^^, reduce: CmpTerm
-			reduce(42), // &&, reduce: CmpTerm
-			reduce(42), // =~, reduce: CmpTerm
-			reduce(42), // !=~, reduce: CmpTerm
-			reduce(42), // ==, reduce: CmpTerm
-			reduce(42), // !=, reduce: CmpTerm
-			reduce(42), // >, reduce: CmpTerm
-			reduce(42), // >=, reduce: CmpTerm
-			reduce(42), // <, reduce: CmpTerm
-			reduce(42), // <=, reduce: CmpTerm
-			shift(339), // |
+			reduce(38), // ||, reduce: EqneTerm
+			reduce(38), // ^^, reduce: EqneTerm
+			reduce(38), // &&, reduce: EqneTerm
+			reduce(38), // =~, reduce: EqneTerm
+			reduce(38), // !=~, reduce: EqneTerm
+			reduce(38), // ==, reduce: EqneTerm
+			reduce(38), // !=, reduce: EqneTerm
+			shift(336), // >
+			shift(337), // >=
+			shift(338), // <
+			shift(339), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -14030,7 +14030,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(42), // ), reduce: CmpTerm
+			reduce(38), // ), reduce: EqneTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -14074,21 +14074,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(44), // ?, reduce: BitwiseORTerm
+			reduce(43), // ?, reduce: CmpTerm
 			nil,        // :
-			reduce(44), // ||, reduce: BitwiseORTerm
-			reduce(44), // ^^, reduce: BitwiseORTerm
-			reduce(44), // &&, reduce: BitwiseORTerm
-			reduce(44), // =~, reduce: BitwiseORTerm
-			reduce(44), // !=~, reduce: BitwiseORTerm
-			reduce(44), // ==, reduce: BitwiseORTerm
-			reduce(44), // !=, reduce: BitwiseORTerm
-			reduce(44), // >, reduce: BitwiseORTerm
-			reduce(44), // >=, reduce: BitwiseORTerm
-			reduce(44), // <, reduce: BitwiseORTerm
-			reduce(44), // <=, reduce: BitwiseORTerm
-			reduce(44), // |, reduce: BitwiseORTerm
-			shift(340), // ^
+			reduce(43), // ||, reduce: CmpTerm
+			reduce(43), // ^^, reduce: CmpTerm
+			reduce(43), // &&, reduce: CmpTerm
+			reduce(43), // =~, reduce: CmpTerm
+			reduce(43), // !=~, reduce: CmpTerm
+			reduce(43), // ==, reduce: CmpTerm
+			reduce(43), // !=, reduce: CmpTerm
+			reduce(43), // >, reduce: CmpTerm
+			reduce(43), // >=, reduce: CmpTerm
+			reduce(43), // <, reduce: CmpTerm
+			reduce(43), // <=, reduce: CmpTerm
+			shift(340), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -14108,7 +14108,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(44), // ), reduce: BitwiseORTerm
+			reduce(43), // ), reduce: CmpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -14152,22 +14152,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(46), // ?, reduce: BitwiseXORTerm
+			reduce(45), // ?, reduce: BitwiseORTerm
 			nil,        // :
-			reduce(46), // ||, reduce: BitwiseXORTerm
-			reduce(46), // ^^, reduce: BitwiseXORTerm
-			reduce(46), // &&, reduce: BitwiseXORTerm
-			reduce(46), // =~, reduce: BitwiseXORTerm
-			reduce(46), // !=~, reduce: BitwiseXORTerm
-			reduce(46), // ==, reduce: BitwiseXORTerm
-			reduce(46), // !=, reduce: BitwiseXORTerm
-			reduce(46), // >, reduce: BitwiseXORTerm
-			reduce(46), // >=, reduce: BitwiseXORTerm
-			reduce(46), // <, reduce: BitwiseXORTerm
-			reduce(46), // <=, reduce: BitwiseXORTerm
-			reduce(46), // |, reduce: BitwiseXORTerm
-			reduce(46), // ^, reduce: BitwiseXORTerm
-			shift(341), // &
+			reduce(45), // ||, reduce: BitwiseORTerm
+			reduce(45), // ^^, reduce: BitwiseORTerm
+			reduce(45), // &&, reduce: BitwiseORTerm
+			reduce(45), // =~, reduce: BitwiseORTerm
+			reduce(45), // !=~, reduce: BitwiseORTerm
+			reduce(45), // ==, reduce: BitwiseORTerm
+			reduce(45), // !=, reduce: BitwiseORTerm
+			reduce(45), // >, reduce: BitwiseORTerm
+			reduce(45), // >=, reduce: BitwiseORTerm
+			reduce(45), // <, reduce: BitwiseORTerm
+			reduce(45), // <=, reduce: BitwiseORTerm
+			reduce(45), // |, reduce: BitwiseORTerm
+			shift(341), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -14186,7 +14186,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(46), // ), reduce: BitwiseXORTerm
+			reduce(45), // ), reduce: BitwiseORTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -14230,24 +14230,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(48), // ?, reduce: BitwiseANDTerm
+			reduce(47), // ?, reduce: BitwiseXORTerm
 			nil,        // :
-			reduce(48), // ||, reduce: BitwiseANDTerm
-			reduce(48), // ^^, reduce: BitwiseANDTerm
-			reduce(48), // &&, reduce: BitwiseANDTerm
-			reduce(48), // =~, reduce: BitwiseANDTerm
-			reduce(48), // !=~, reduce: BitwiseANDTerm
-			reduce(48), // ==, reduce: BitwiseANDTerm
-			reduce(48), // !=, reduce: BitwiseANDTerm
-			reduce(48), // >, reduce: BitwiseANDTerm
-			reduce(48), // >=, reduce: BitwiseANDTerm
-			reduce(48), // <, reduce: BitwiseANDTerm
-			reduce(48), // <=, reduce: BitwiseANDTerm
-			reduce(48), // |, reduce: BitwiseANDTerm
-			reduce(48), // ^, reduce: BitwiseANDTerm
-			reduce(48), // &, reduce: BitwiseANDTerm
-			shift(342), // <<
-			shift(343), // >>
+			reduce(47), // ||, reduce: BitwiseXORTerm
+			reduce(47), // ^^, reduce: BitwiseXORTerm
+			reduce(47), // &&, reduce: BitwiseXORTerm
+			reduce(47), // =~, reduce: BitwiseXORTerm
+			reduce(47), // !=~, reduce: BitwiseXORTerm
+			reduce(47), // ==, reduce: BitwiseXORTerm
+			reduce(47), // !=, reduce: BitwiseXORTerm
+			reduce(47), // >, reduce: BitwiseXORTerm
+			reduce(47), // >=, reduce: BitwiseXORTerm
+			reduce(47), // <, reduce: BitwiseXORTerm
+			reduce(47), // <=, reduce: BitwiseXORTerm
+			reduce(47), // |, reduce: BitwiseXORTerm
+			reduce(47), // ^, reduce: BitwiseXORTerm
+			shift(342), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -14264,7 +14264,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(48), // ), reduce: BitwiseANDTerm
+			reduce(47), // ), reduce: BitwiseXORTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -14308,29 +14308,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(51), // ?, reduce: BitwiseShiftTerm
+			reduce(49), // ?, reduce: BitwiseANDTerm
 			nil,        // :
-			reduce(51), // ||, reduce: BitwiseShiftTerm
-			reduce(51), // ^^, reduce: BitwiseShiftTerm
-			reduce(51), // &&, reduce: BitwiseShiftTerm
-			reduce(51), // =~, reduce: BitwiseShiftTerm
-			reduce(51), // !=~, reduce: BitwiseShiftTerm
-			reduce(51), // ==, reduce: BitwiseShiftTerm
-			reduce(51), // !=, reduce: BitwiseShiftTerm
-			reduce(51), // >, reduce: BitwiseShiftTerm
-			reduce(51), // >=, reduce: BitwiseShiftTerm
-			reduce(51), // <, reduce: BitwiseShiftTerm
-			reduce(51), // <=, reduce: BitwiseShiftTerm
-			reduce(51), // |, reduce: BitwiseShiftTerm
-			reduce(51), // ^, reduce: BitwiseShiftTerm
-			reduce(51), // &, reduce: BitwiseShiftTerm
-			reduce(51), // <<, reduce: BitwiseShiftTerm
-			reduce(51), // >>, reduce: BitwiseShiftTerm
-			shift(344), // +
-			shift(345), // -
-			shift(346), // .+
-			shift(347), // .-
-			shift(348), // .
+			reduce(49), // ||, reduce: BitwiseANDTerm
+			reduce(49), // ^^, reduce: BitwiseANDTerm
+			reduce(49), // &&, reduce: BitwiseANDTerm
+			reduce(49), // =~, reduce: BitwiseANDTerm
+			reduce(49), // !=~, reduce: BitwiseANDTerm
+			reduce(49), // ==, reduce: BitwiseANDTerm
+			reduce(49), // !=, reduce: BitwiseANDTerm
+			reduce(49), // >, reduce: BitwiseANDTerm
+			reduce(49), // >=, reduce: BitwiseANDTerm
+			reduce(49), // <, reduce: BitwiseANDTerm
+			reduce(49), // <=, reduce: BitwiseANDTerm
+			reduce(49), // |, reduce: BitwiseANDTerm
+			reduce(49), // ^, reduce: BitwiseANDTerm
+			reduce(49), // &, reduce: BitwiseANDTerm
+			shift(343), // <<
+			shift(344), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -14342,7 +14342,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(51), // ), reduce: BitwiseShiftTerm
+			reduce(49), // ), reduce: BitwiseANDTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -14386,29 +14386,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(52), // ?, reduce: BitwiseShiftTerm
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
+			reduce(52), // ||, reduce: BitwiseShiftTerm
+			reduce(52), // ^^, reduce: BitwiseShiftTerm
+			reduce(52), // &&, reduce: BitwiseShiftTerm
+			reduce(52), // =~, reduce: BitwiseShiftTerm
+			reduce(52), // !=~, reduce: BitwiseShiftTerm
+			reduce(52), // ==, reduce: BitwiseShiftTerm
+			reduce(52), // !=, reduce: BitwiseShiftTerm
+			reduce(52), // >, reduce: BitwiseShiftTerm
+			reduce(52), // >=, reduce: BitwiseShiftTerm
+			reduce(52), // <, reduce: BitwiseShiftTerm
+			reduce(52), // <=, reduce: BitwiseShiftTerm
+			reduce(52), // |, reduce: BitwiseShiftTerm
+			reduce(52), // ^, reduce: BitwiseShiftTerm
+			reduce(52), // &, reduce: BitwiseShiftTerm
+			reduce(52), // <<, reduce: BitwiseShiftTerm
+			reduce(52), // >>, reduce: BitwiseShiftTerm
+			shift(345), // +
+			shift(346), // -
+			shift(347), // .+
+			shift(348), // .-
+			shift(349), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -14419,26 +14419,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			nil,        // (
+			reduce(52), // ), reduce: BitwiseShiftTerm
+			nil,        // md_token_field_name
+			nil,        // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S185
@@ -14464,84 +14464,6 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(57), // ?, reduce: AddsubdotTerm
-			nil,        // :
-			reduce(57), // ||, reduce: AddsubdotTerm
-			reduce(57), // ^^, reduce: AddsubdotTerm
-			reduce(57), // &&, reduce: AddsubdotTerm
-			reduce(57), // =~, reduce: AddsubdotTerm
-			reduce(57), // !=~, reduce: AddsubdotTerm
-			reduce(57), // ==, reduce: AddsubdotTerm
-			reduce(57), // !=, reduce: AddsubdotTerm
-			reduce(57), // >, reduce: AddsubdotTerm
-			reduce(57), // >=, reduce: AddsubdotTerm
-			reduce(57), // <, reduce: AddsubdotTerm
-			reduce(57), // <=, reduce: AddsubdotTerm
-			reduce(57), // |, reduce: AddsubdotTerm
-			reduce(57), // ^, reduce: AddsubdotTerm
-			reduce(57), // &, reduce: AddsubdotTerm
-			reduce(57), // <<, reduce: AddsubdotTerm
-			reduce(57), // >>, reduce: AddsubdotTerm
-			reduce(57), // +, reduce: AddsubdotTerm
-			reduce(57), // -, reduce: AddsubdotTerm
-			reduce(57), // .+, reduce: AddsubdotTerm
-			reduce(57), // .-, reduce: AddsubdotTerm
-			reduce(57), // ., reduce: AddsubdotTerm
-			shift(350), // *
-			shift(351), // /
-			shift(352), // //
-			shift(353), // %
-			shift(354), // .*
-			shift(355), // ./
-			shift(356), // .//
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			reduce(57), // ), reduce: AddsubdotTerm
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S186
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -14575,26 +14497,104 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S186
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(58), // ?, reduce: AddsubdotTerm
+			nil,        // :
+			reduce(58), // ||, reduce: AddsubdotTerm
+			reduce(58), // ^^, reduce: AddsubdotTerm
+			reduce(58), // &&, reduce: AddsubdotTerm
+			reduce(58), // =~, reduce: AddsubdotTerm
+			reduce(58), // !=~, reduce: AddsubdotTerm
+			reduce(58), // ==, reduce: AddsubdotTerm
+			reduce(58), // !=, reduce: AddsubdotTerm
+			reduce(58), // >, reduce: AddsubdotTerm
+			reduce(58), // >=, reduce: AddsubdotTerm
+			reduce(58), // <, reduce: AddsubdotTerm
+			reduce(58), // <=, reduce: AddsubdotTerm
+			reduce(58), // |, reduce: AddsubdotTerm
+			reduce(58), // ^, reduce: AddsubdotTerm
+			reduce(58), // &, reduce: AddsubdotTerm
+			reduce(58), // <<, reduce: AddsubdotTerm
+			reduce(58), // >>, reduce: AddsubdotTerm
+			reduce(58), // +, reduce: AddsubdotTerm
+			reduce(58), // -, reduce: AddsubdotTerm
+			reduce(58), // .+, reduce: AddsubdotTerm
+			reduce(58), // .-, reduce: AddsubdotTerm
+			reduce(58), // ., reduce: AddsubdotTerm
+			shift(351), // *
+			shift(352), // /
+			shift(353), // //
+			shift(354), // %
+			shift(355), // .*
+			shift(356), // ./
+			shift(357), // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			reduce(58), // ), reduce: AddsubdotTerm
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S187
@@ -14653,26 +14653,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S188
@@ -14731,185 +14731,29 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S189
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(65), // ?, reduce: MuldivTerm
-			nil,        // :
-			reduce(65), // ||, reduce: MuldivTerm
-			reduce(65), // ^^, reduce: MuldivTerm
-			reduce(65), // &&, reduce: MuldivTerm
-			reduce(65), // =~, reduce: MuldivTerm
-			reduce(65), // !=~, reduce: MuldivTerm
-			reduce(65), // ==, reduce: MuldivTerm
-			reduce(65), // !=, reduce: MuldivTerm
-			reduce(65), // >, reduce: MuldivTerm
-			reduce(65), // >=, reduce: MuldivTerm
-			reduce(65), // <, reduce: MuldivTerm
-			reduce(65), // <=, reduce: MuldivTerm
-			reduce(65), // |, reduce: MuldivTerm
-			reduce(65), // ^, reduce: MuldivTerm
-			reduce(65), // &, reduce: MuldivTerm
-			reduce(65), // <<, reduce: MuldivTerm
-			reduce(65), // >>, reduce: MuldivTerm
-			reduce(65), // +, reduce: MuldivTerm
-			reduce(65), // -, reduce: MuldivTerm
-			reduce(65), // .+, reduce: MuldivTerm
-			reduce(65), // .-, reduce: MuldivTerm
-			reduce(65), // ., reduce: MuldivTerm
-			reduce(65), // *, reduce: MuldivTerm
-			reduce(65), // /, reduce: MuldivTerm
-			reduce(65), // //, reduce: MuldivTerm
-			reduce(65), // %, reduce: MuldivTerm
-			reduce(65), // .*, reduce: MuldivTerm
-			reduce(65), // ./, reduce: MuldivTerm
-			reduce(65), // .//, reduce: MuldivTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			reduce(65), // ), reduce: MuldivTerm
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S190
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
-			nil,        // :
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			reduce(72), // ), reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S191
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -14965,26 +14809,182 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S190
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(66), // ?, reduce: MuldivTerm
+			nil,        // :
+			reduce(66), // ||, reduce: MuldivTerm
+			reduce(66), // ^^, reduce: MuldivTerm
+			reduce(66), // &&, reduce: MuldivTerm
+			reduce(66), // =~, reduce: MuldivTerm
+			reduce(66), // !=~, reduce: MuldivTerm
+			reduce(66), // ==, reduce: MuldivTerm
+			reduce(66), // !=, reduce: MuldivTerm
+			reduce(66), // >, reduce: MuldivTerm
+			reduce(66), // >=, reduce: MuldivTerm
+			reduce(66), // <, reduce: MuldivTerm
+			reduce(66), // <=, reduce: MuldivTerm
+			reduce(66), // |, reduce: MuldivTerm
+			reduce(66), // ^, reduce: MuldivTerm
+			reduce(66), // &, reduce: MuldivTerm
+			reduce(66), // <<, reduce: MuldivTerm
+			reduce(66), // >>, reduce: MuldivTerm
+			reduce(66), // +, reduce: MuldivTerm
+			reduce(66), // -, reduce: MuldivTerm
+			reduce(66), // .+, reduce: MuldivTerm
+			reduce(66), // .-, reduce: MuldivTerm
+			reduce(66), // ., reduce: MuldivTerm
+			reduce(66), // *, reduce: MuldivTerm
+			reduce(66), // /, reduce: MuldivTerm
+			reduce(66), // //, reduce: MuldivTerm
+			reduce(66), // %, reduce: MuldivTerm
+			reduce(66), // .*, reduce: MuldivTerm
+			reduce(66), // ./, reduce: MuldivTerm
+			reduce(66), // .//, reduce: MuldivTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			reduce(66), // ), reduce: MuldivTerm
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S191
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			nil,        // :
+			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // |, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(73), // +, reduce: UnaryBitwiseOpTerm
+			reduce(73), // -, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ., reduce: UnaryBitwiseOpTerm
+			reduce(73), // *, reduce: UnaryBitwiseOpTerm
+			reduce(73), // /, reduce: UnaryBitwiseOpTerm
+			reduce(73), // //, reduce: UnaryBitwiseOpTerm
+			reduce(73), // %, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			reduce(73), // ), reduce: UnaryBitwiseOpTerm
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S192
@@ -15043,107 +15043,29 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S193
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(74), // ?, reduce: PowTerm
-			nil,        // :
-			reduce(74), // ||, reduce: PowTerm
-			reduce(74), // ^^, reduce: PowTerm
-			reduce(74), // &&, reduce: PowTerm
-			reduce(74), // =~, reduce: PowTerm
-			reduce(74), // !=~, reduce: PowTerm
-			reduce(74), // ==, reduce: PowTerm
-			reduce(74), // !=, reduce: PowTerm
-			reduce(74), // >, reduce: PowTerm
-			reduce(74), // >=, reduce: PowTerm
-			reduce(74), // <, reduce: PowTerm
-			reduce(74), // <=, reduce: PowTerm
-			reduce(74), // |, reduce: PowTerm
-			reduce(74), // ^, reduce: PowTerm
-			reduce(74), // &, reduce: PowTerm
-			reduce(74), // <<, reduce: PowTerm
-			reduce(74), // >>, reduce: PowTerm
-			reduce(74), // +, reduce: PowTerm
-			reduce(74), // -, reduce: PowTerm
-			reduce(74), // .+, reduce: PowTerm
-			reduce(74), // .-, reduce: PowTerm
-			reduce(74), // ., reduce: PowTerm
-			reduce(74), // *, reduce: PowTerm
-			reduce(74), // /, reduce: PowTerm
-			reduce(74), // //, reduce: PowTerm
-			reduce(74), // %, reduce: PowTerm
-			reduce(74), // .*, reduce: PowTerm
-			reduce(74), // ./, reduce: PowTerm
-			reduce(74), // .//, reduce: PowTerm
-			nil,        // !
-			nil,        // ~
-			shift(362), // **
-			nil,        // (
-			reduce(74), // ), reduce: PowTerm
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S194
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -15184,10 +15106,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -15196,29 +15118,107 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			nil,        // !
+			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S194
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(75), // ?, reduce: PowTerm
+			nil,        // :
+			reduce(75), // ||, reduce: PowTerm
+			reduce(75), // ^^, reduce: PowTerm
+			reduce(75), // &&, reduce: PowTerm
+			reduce(75), // =~, reduce: PowTerm
+			reduce(75), // !=~, reduce: PowTerm
+			reduce(75), // ==, reduce: PowTerm
+			reduce(75), // !=, reduce: PowTerm
+			reduce(75), // >, reduce: PowTerm
+			reduce(75), // >=, reduce: PowTerm
+			reduce(75), // <, reduce: PowTerm
+			reduce(75), // <=, reduce: PowTerm
+			reduce(75), // |, reduce: PowTerm
+			reduce(75), // ^, reduce: PowTerm
+			reduce(75), // &, reduce: PowTerm
+			reduce(75), // <<, reduce: PowTerm
+			reduce(75), // >>, reduce: PowTerm
+			reduce(75), // +, reduce: PowTerm
+			reduce(75), // -, reduce: PowTerm
+			reduce(75), // .+, reduce: PowTerm
+			reduce(75), // .-, reduce: PowTerm
+			reduce(75), // ., reduce: PowTerm
+			reduce(75), // *, reduce: PowTerm
+			reduce(75), // /, reduce: PowTerm
+			reduce(75), // //, reduce: PowTerm
+			reduce(75), // %, reduce: PowTerm
+			reduce(75), // .*, reduce: PowTerm
+			reduce(75), // ./, reduce: PowTerm
+			reduce(75), // .//, reduce: PowTerm
+			nil,        // !
+			nil,        // ~
+			shift(363), // **
+			nil,        // (
+			reduce(75), // ), reduce: PowTerm
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S195
@@ -15244,59 +15244,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: FieldName
+			nil,        // ?
 			nil,        // :
-			reduce(77), // ||, reduce: FieldName
-			reduce(77), // ^^, reduce: FieldName
-			reduce(77), // &&, reduce: FieldName
-			reduce(77), // =~, reduce: FieldName
-			reduce(77), // !=~, reduce: FieldName
-			reduce(77), // ==, reduce: FieldName
-			reduce(77), // !=, reduce: FieldName
-			reduce(77), // >, reduce: FieldName
-			reduce(77), // >=, reduce: FieldName
-			reduce(77), // <, reduce: FieldName
-			reduce(77), // <=, reduce: FieldName
-			reduce(77), // |, reduce: FieldName
-			reduce(77), // ^, reduce: FieldName
-			reduce(77), // &, reduce: FieldName
-			reduce(77), // <<, reduce: FieldName
-			reduce(77), // >>, reduce: FieldName
-			reduce(77), // +, reduce: FieldName
-			reduce(77), // -, reduce: FieldName
-			reduce(77), // .+, reduce: FieldName
-			reduce(77), // .-, reduce: FieldName
-			reduce(77), // ., reduce: FieldName
-			reduce(77), // *, reduce: FieldName
-			reduce(77), // /, reduce: FieldName
-			reduce(77), // //, reduce: FieldName
-			reduce(77), // %, reduce: FieldName
-			reduce(77), // .*, reduce: FieldName
-			reduce(77), // ./, reduce: FieldName
-			reduce(77), // .//, reduce: FieldName
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: FieldName
-			nil,        // (
-			reduce(77), // ), reduce: FieldName
-			nil,        // md_token_field_name
-			nil,        // $[
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S196
@@ -15400,41 +15400,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(79), // ?, reduce: DirectFieldName
+			reduce(79), // ?, reduce: FieldName
 			nil,        // :
-			reduce(79), // ||, reduce: DirectFieldName
-			reduce(79), // ^^, reduce: DirectFieldName
-			reduce(79), // &&, reduce: DirectFieldName
-			reduce(79), // =~, reduce: DirectFieldName
-			reduce(79), // !=~, reduce: DirectFieldName
-			reduce(79), // ==, reduce: DirectFieldName
-			reduce(79), // !=, reduce: DirectFieldName
-			reduce(79), // >, reduce: DirectFieldName
-			reduce(79), // >=, reduce: DirectFieldName
-			reduce(79), // <, reduce: DirectFieldName
-			reduce(79), // <=, reduce: DirectFieldName
-			reduce(79), // |, reduce: DirectFieldName
-			reduce(79), // ^, reduce: DirectFieldName
-			reduce(79), // &, reduce: DirectFieldName
-			reduce(79), // <<, reduce: DirectFieldName
-			reduce(79), // >>, reduce: DirectFieldName
-			reduce(79), // +, reduce: DirectFieldName
-			reduce(79), // -, reduce: DirectFieldName
-			reduce(79), // .+, reduce: DirectFieldName
-			reduce(79), // .-, reduce: DirectFieldName
-			reduce(79), // ., reduce: DirectFieldName
-			reduce(79), // *, reduce: DirectFieldName
-			reduce(79), // /, reduce: DirectFieldName
-			reduce(79), // //, reduce: DirectFieldName
-			reduce(79), // %, reduce: DirectFieldName
-			reduce(79), // .*, reduce: DirectFieldName
-			reduce(79), // ./, reduce: DirectFieldName
-			reduce(79), // .//, reduce: DirectFieldName
+			reduce(79), // ||, reduce: FieldName
+			reduce(79), // ^^, reduce: FieldName
+			reduce(79), // &&, reduce: FieldName
+			reduce(79), // =~, reduce: FieldName
+			reduce(79), // !=~, reduce: FieldName
+			reduce(79), // ==, reduce: FieldName
+			reduce(79), // !=, reduce: FieldName
+			reduce(79), // >, reduce: FieldName
+			reduce(79), // >=, reduce: FieldName
+			reduce(79), // <, reduce: FieldName
+			reduce(79), // <=, reduce: FieldName
+			reduce(79), // |, reduce: FieldName
+			reduce(79), // ^, reduce: FieldName
+			reduce(79), // &, reduce: FieldName
+			reduce(79), // <<, reduce: FieldName
+			reduce(79), // >>, reduce: FieldName
+			reduce(79), // +, reduce: FieldName
+			reduce(79), // -, reduce: FieldName
+			reduce(79), // .+, reduce: FieldName
+			reduce(79), // .-, reduce: FieldName
+			reduce(79), // ., reduce: FieldName
+			reduce(79), // *, reduce: FieldName
+			reduce(79), // /, reduce: FieldName
+			reduce(79), // //, reduce: FieldName
+			reduce(79), // %, reduce: FieldName
+			reduce(79), // .*, reduce: FieldName
+			reduce(79), // ./, reduce: FieldName
+			reduce(79), // .//, reduce: FieldName
 			nil,        // !
 			nil,        // ~
-			reduce(79), // **, reduce: DirectFieldName
+			reduce(79), // **, reduce: FieldName
 			nil,        // (
-			reduce(79), // ), reduce: DirectFieldName
+			reduce(79), // ), reduce: FieldName
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -15456,6 +15456,84 @@ var actionTab = actionTable{
 		},
 	},
 	actionRow{ // S198
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(80), // ?, reduce: DirectFieldName
+			nil,        // :
+			reduce(80), // ||, reduce: DirectFieldName
+			reduce(80), // ^^, reduce: DirectFieldName
+			reduce(80), // &&, reduce: DirectFieldName
+			reduce(80), // =~, reduce: DirectFieldName
+			reduce(80), // !=~, reduce: DirectFieldName
+			reduce(80), // ==, reduce: DirectFieldName
+			reduce(80), // !=, reduce: DirectFieldName
+			reduce(80), // >, reduce: DirectFieldName
+			reduce(80), // >=, reduce: DirectFieldName
+			reduce(80), // <, reduce: DirectFieldName
+			reduce(80), // <=, reduce: DirectFieldName
+			reduce(80), // |, reduce: DirectFieldName
+			reduce(80), // ^, reduce: DirectFieldName
+			reduce(80), // &, reduce: DirectFieldName
+			reduce(80), // <<, reduce: DirectFieldName
+			reduce(80), // >>, reduce: DirectFieldName
+			reduce(80), // +, reduce: DirectFieldName
+			reduce(80), // -, reduce: DirectFieldName
+			reduce(80), // .+, reduce: DirectFieldName
+			reduce(80), // .-, reduce: DirectFieldName
+			reduce(80), // ., reduce: DirectFieldName
+			reduce(80), // *, reduce: DirectFieldName
+			reduce(80), // /, reduce: DirectFieldName
+			reduce(80), // //, reduce: DirectFieldName
+			reduce(80), // %, reduce: DirectFieldName
+			reduce(80), // .*, reduce: DirectFieldName
+			reduce(80), // ./, reduce: DirectFieldName
+			reduce(80), // .//, reduce: DirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(80), // **, reduce: DirectFieldName
+			nil,        // (
+			reduce(80), // ), reduce: DirectFieldName
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S199
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -15496,10 +15574,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -15508,107 +15586,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S199
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(81), // ?, reduce: AtomOrFunction
-			nil,        // :
-			reduce(81), // ||, reduce: AtomOrFunction
-			reduce(81), // ^^, reduce: AtomOrFunction
-			reduce(81), // &&, reduce: AtomOrFunction
-			reduce(81), // =~, reduce: AtomOrFunction
-			reduce(81), // !=~, reduce: AtomOrFunction
-			reduce(81), // ==, reduce: AtomOrFunction
-			reduce(81), // !=, reduce: AtomOrFunction
-			reduce(81), // >, reduce: AtomOrFunction
-			reduce(81), // >=, reduce: AtomOrFunction
-			reduce(81), // <, reduce: AtomOrFunction
-			reduce(81), // <=, reduce: AtomOrFunction
-			reduce(81), // |, reduce: AtomOrFunction
-			reduce(81), // ^, reduce: AtomOrFunction
-			reduce(81), // &, reduce: AtomOrFunction
-			reduce(81), // <<, reduce: AtomOrFunction
-			reduce(81), // >>, reduce: AtomOrFunction
-			reduce(81), // +, reduce: AtomOrFunction
-			reduce(81), // -, reduce: AtomOrFunction
-			reduce(81), // .+, reduce: AtomOrFunction
-			reduce(81), // .-, reduce: AtomOrFunction
-			reduce(81), // ., reduce: AtomOrFunction
-			reduce(81), // *, reduce: AtomOrFunction
-			reduce(81), // /, reduce: AtomOrFunction
-			reduce(81), // //, reduce: AtomOrFunction
-			reduce(81), // %, reduce: AtomOrFunction
-			reduce(81), // .*, reduce: AtomOrFunction
-			reduce(81), // ./, reduce: AtomOrFunction
-			reduce(81), // .//, reduce: AtomOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(81), // **, reduce: AtomOrFunction
-			nil,        // (
-			reduce(81), // ), reduce: AtomOrFunction
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S200
@@ -15946,41 +15946,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(86), // ?, reduce: ContextVariable
+			reduce(86), // ?, reduce: AtomOrFunction
 			nil,        // :
-			reduce(86), // ||, reduce: ContextVariable
-			reduce(86), // ^^, reduce: ContextVariable
-			reduce(86), // &&, reduce: ContextVariable
-			reduce(86), // =~, reduce: ContextVariable
-			reduce(86), // !=~, reduce: ContextVariable
-			reduce(86), // ==, reduce: ContextVariable
-			reduce(86), // !=, reduce: ContextVariable
-			reduce(86), // >, reduce: ContextVariable
-			reduce(86), // >=, reduce: ContextVariable
-			reduce(86), // <, reduce: ContextVariable
-			reduce(86), // <=, reduce: ContextVariable
-			reduce(86), // |, reduce: ContextVariable
-			reduce(86), // ^, reduce: ContextVariable
-			reduce(86), // &, reduce: ContextVariable
-			reduce(86), // <<, reduce: ContextVariable
-			reduce(86), // >>, reduce: ContextVariable
-			reduce(86), // +, reduce: ContextVariable
-			reduce(86), // -, reduce: ContextVariable
-			reduce(86), // .+, reduce: ContextVariable
-			reduce(86), // .-, reduce: ContextVariable
-			reduce(86), // ., reduce: ContextVariable
-			reduce(86), // *, reduce: ContextVariable
-			reduce(86), // /, reduce: ContextVariable
-			reduce(86), // //, reduce: ContextVariable
-			reduce(86), // %, reduce: ContextVariable
-			reduce(86), // .*, reduce: ContextVariable
-			reduce(86), // ./, reduce: ContextVariable
-			reduce(86), // .//, reduce: ContextVariable
+			reduce(86), // ||, reduce: AtomOrFunction
+			reduce(86), // ^^, reduce: AtomOrFunction
+			reduce(86), // &&, reduce: AtomOrFunction
+			reduce(86), // =~, reduce: AtomOrFunction
+			reduce(86), // !=~, reduce: AtomOrFunction
+			reduce(86), // ==, reduce: AtomOrFunction
+			reduce(86), // !=, reduce: AtomOrFunction
+			reduce(86), // >, reduce: AtomOrFunction
+			reduce(86), // >=, reduce: AtomOrFunction
+			reduce(86), // <, reduce: AtomOrFunction
+			reduce(86), // <=, reduce: AtomOrFunction
+			reduce(86), // |, reduce: AtomOrFunction
+			reduce(86), // ^, reduce: AtomOrFunction
+			reduce(86), // &, reduce: AtomOrFunction
+			reduce(86), // <<, reduce: AtomOrFunction
+			reduce(86), // >>, reduce: AtomOrFunction
+			reduce(86), // +, reduce: AtomOrFunction
+			reduce(86), // -, reduce: AtomOrFunction
+			reduce(86), // .+, reduce: AtomOrFunction
+			reduce(86), // .-, reduce: AtomOrFunction
+			reduce(86), // ., reduce: AtomOrFunction
+			reduce(86), // *, reduce: AtomOrFunction
+			reduce(86), // /, reduce: AtomOrFunction
+			reduce(86), // //, reduce: AtomOrFunction
+			reduce(86), // %, reduce: AtomOrFunction
+			reduce(86), // .*, reduce: AtomOrFunction
+			reduce(86), // ./, reduce: AtomOrFunction
+			reduce(86), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(86), // **, reduce: ContextVariable
+			reduce(86), // **, reduce: AtomOrFunction
 			nil,        // (
-			reduce(86), // ), reduce: ContextVariable
+			reduce(86), // ), reduce: AtomOrFunction
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -16804,44 +16804,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(97), // ?, reduce: ContextVariable
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(97), // ||, reduce: ContextVariable
+			reduce(97), // ^^, reduce: ContextVariable
+			reduce(97), // &&, reduce: ContextVariable
+			reduce(97), // =~, reduce: ContextVariable
+			reduce(97), // !=~, reduce: ContextVariable
+			reduce(97), // ==, reduce: ContextVariable
+			reduce(97), // !=, reduce: ContextVariable
+			reduce(97), // >, reduce: ContextVariable
+			reduce(97), // >=, reduce: ContextVariable
+			reduce(97), // <, reduce: ContextVariable
+			reduce(97), // <=, reduce: ContextVariable
+			reduce(97), // |, reduce: ContextVariable
+			reduce(97), // ^, reduce: ContextVariable
+			reduce(97), // &, reduce: ContextVariable
+			reduce(97), // <<, reduce: ContextVariable
+			reduce(97), // >>, reduce: ContextVariable
+			reduce(97), // +, reduce: ContextVariable
+			reduce(97), // -, reduce: ContextVariable
+			reduce(97), // .+, reduce: ContextVariable
+			reduce(97), // .-, reduce: ContextVariable
+			reduce(97), // ., reduce: ContextVariable
+			reduce(97), // *, reduce: ContextVariable
+			reduce(97), // /, reduce: ContextVariable
+			reduce(97), // //, reduce: ContextVariable
+			reduce(97), // %, reduce: ContextVariable
+			reduce(97), // .*, reduce: ContextVariable
+			reduce(97), // ./, reduce: ContextVariable
+			reduce(97), // .//, reduce: ContextVariable
 			nil,        // !
 			nil,        // ~
-			nil,        // **
+			reduce(97), // **, reduce: ContextVariable
 			nil,        // (
-			nil,        // )
+			reduce(97), // ), reduce: ContextVariable
 			nil,        // md_token_field_name
 			nil,        // $[
-			shift(365), // ]
+			nil,        // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -16900,10 +16900,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -16912,29 +16912,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			nil,        // !
+			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			nil,        // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			nil,        // md_token_field_name
+			nil,        // $[
+			shift(366), // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S217
@@ -16978,10 +16978,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -16990,29 +16990,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(97),  // (
+			shift(277), // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S218
@@ -17056,10 +17056,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17068,29 +17068,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S219
@@ -17134,10 +17134,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17146,29 +17146,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S220
@@ -17212,10 +17212,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17224,29 +17224,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S221
@@ -17290,10 +17290,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17302,29 +17302,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S222
@@ -17368,10 +17368,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17380,29 +17380,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S223
@@ -17446,10 +17446,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17458,29 +17458,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S224
@@ -17524,10 +17524,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17536,29 +17536,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S225
@@ -17602,10 +17602,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17614,29 +17614,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S226
@@ -17680,10 +17680,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17692,29 +17692,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S227
@@ -17758,10 +17758,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17770,29 +17770,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S228
@@ -17836,10 +17836,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17848,29 +17848,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S229
@@ -17914,10 +17914,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -17926,29 +17926,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S230
@@ -17992,10 +17992,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18004,29 +18004,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S231
@@ -18070,10 +18070,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18082,29 +18082,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S232
@@ -18148,10 +18148,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18160,29 +18160,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S233
@@ -18226,10 +18226,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18238,29 +18238,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S234
@@ -18304,10 +18304,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18316,29 +18316,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S235
@@ -18382,10 +18382,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18394,29 +18394,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S236
@@ -18460,10 +18460,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18472,29 +18472,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S237
@@ -18538,10 +18538,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -18550,37 +18550,37 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			shift(97),  // (
+			shift(98),  // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S238
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(66), // $, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ;, reduce: UnaryBitwiseOpTerm
+			nil,        // $
+			nil,        // ;
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -18598,608 +18598,62 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(66), // ?, reduce: UnaryBitwiseOpTerm
+			nil,        // ?
 			nil,        // :
-			reduce(66), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(66), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // |, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(66), // +, reduce: UnaryBitwiseOpTerm
-			reduce(66), // -, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ., reduce: UnaryBitwiseOpTerm
-			reduce(66), // *, reduce: UnaryBitwiseOpTerm
-			reduce(66), // /, reduce: UnaryBitwiseOpTerm
-			reduce(66), // //, reduce: UnaryBitwiseOpTerm
-			reduce(66), // %, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			nil,        // (
+			shift(98),  // (
 			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S239
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S240
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S241
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S242
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S243
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S244
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S245
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
-			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S246
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -19275,6 +18729,552 @@ var actionTab = actionTable{
 			nil,        // md_token_FNR
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S240
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S241
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S242
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S243
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S244
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S245
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S246
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(95),  // !
+			shift(96),  // ~
+			nil,        // **
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S247
@@ -19593,8 +19593,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
+			reduce(72), // $, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ;, reduce: UnaryBitwiseOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -19612,59 +19612,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // |, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(72), // +, reduce: UnaryBitwiseOpTerm
+			reduce(72), // -, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ., reduce: UnaryBitwiseOpTerm
+			reduce(72), // *, reduce: UnaryBitwiseOpTerm
+			reduce(72), // /, reduce: UnaryBitwiseOpTerm
+			reduce(72), // //, reduce: UnaryBitwiseOpTerm
+			reduce(72), // %, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(97),  // (
+			nil,        // (
 			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			nil,        // md_token_field_name
+			nil,        // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S252
@@ -19723,26 +19723,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			nil,        // (
-			shift(396), // )
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(98),  // (
+			nil,        // )
+			shift(101), // md_token_field_name
+			shift(102), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S253
@@ -19802,10 +19802,10 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			nil,        // )
+			shift(397), // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			shift(397), // ]
+			nil,        // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -19846,44 +19846,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(76), // ?, reduce: AtomOrFunction
-			reduce(76), // :, reduce: AtomOrFunction
-			reduce(76), // ||, reduce: AtomOrFunction
-			reduce(76), // ^^, reduce: AtomOrFunction
-			reduce(76), // &&, reduce: AtomOrFunction
-			reduce(76), // =~, reduce: AtomOrFunction
-			reduce(76), // !=~, reduce: AtomOrFunction
-			reduce(76), // ==, reduce: AtomOrFunction
-			reduce(76), // !=, reduce: AtomOrFunction
-			reduce(76), // >, reduce: AtomOrFunction
-			reduce(76), // >=, reduce: AtomOrFunction
-			reduce(76), // <, reduce: AtomOrFunction
-			reduce(76), // <=, reduce: AtomOrFunction
-			reduce(76), // |, reduce: AtomOrFunction
-			reduce(76), // ^, reduce: AtomOrFunction
-			reduce(76), // &, reduce: AtomOrFunction
-			reduce(76), // <<, reduce: AtomOrFunction
-			reduce(76), // >>, reduce: AtomOrFunction
-			reduce(76), // +, reduce: AtomOrFunction
-			reduce(76), // -, reduce: AtomOrFunction
-			reduce(76), // .+, reduce: AtomOrFunction
-			reduce(76), // .-, reduce: AtomOrFunction
-			reduce(76), // ., reduce: AtomOrFunction
-			reduce(76), // *, reduce: AtomOrFunction
-			reduce(76), // /, reduce: AtomOrFunction
-			reduce(76), // //, reduce: AtomOrFunction
-			reduce(76), // %, reduce: AtomOrFunction
-			reduce(76), // .*, reduce: AtomOrFunction
-			reduce(76), // ./, reduce: AtomOrFunction
-			reduce(76), // .//, reduce: AtomOrFunction
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
-			reduce(76), // **, reduce: AtomOrFunction
+			nil,        // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			nil,        // ]
+			shift(398), // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -19924,39 +19924,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
-			shift(398), // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(77), // ?, reduce: AtomOrFunction
+			reduce(77), // :, reduce: AtomOrFunction
+			reduce(77), // ||, reduce: AtomOrFunction
+			reduce(77), // ^^, reduce: AtomOrFunction
+			reduce(77), // &&, reduce: AtomOrFunction
+			reduce(77), // =~, reduce: AtomOrFunction
+			reduce(77), // !=~, reduce: AtomOrFunction
+			reduce(77), // ==, reduce: AtomOrFunction
+			reduce(77), // !=, reduce: AtomOrFunction
+			reduce(77), // >, reduce: AtomOrFunction
+			reduce(77), // >=, reduce: AtomOrFunction
+			reduce(77), // <, reduce: AtomOrFunction
+			reduce(77), // <=, reduce: AtomOrFunction
+			reduce(77), // |, reduce: AtomOrFunction
+			reduce(77), // ^, reduce: AtomOrFunction
+			reduce(77), // &, reduce: AtomOrFunction
+			reduce(77), // <<, reduce: AtomOrFunction
+			reduce(77), // >>, reduce: AtomOrFunction
+			reduce(77), // +, reduce: AtomOrFunction
+			reduce(77), // -, reduce: AtomOrFunction
+			reduce(77), // .+, reduce: AtomOrFunction
+			reduce(77), // .-, reduce: AtomOrFunction
+			reduce(77), // ., reduce: AtomOrFunction
+			reduce(77), // *, reduce: AtomOrFunction
+			reduce(77), // /, reduce: AtomOrFunction
+			reduce(77), // //, reduce: AtomOrFunction
+			reduce(77), // %, reduce: AtomOrFunction
+			reduce(77), // .*, reduce: AtomOrFunction
+			reduce(77), // ./, reduce: AtomOrFunction
+			reduce(77), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			nil,        // **
+			reduce(77), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -20002,9 +20002,9 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			shift(399), // ?
-			reduce(26), // :, reduce: TernaryTerm
-			shift(400), // ||
+			nil,        // ?
+			shift(399), // :
+			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
@@ -20080,10 +20080,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(28), // ?, reduce: LogicalOrTerm
-			reduce(28), // :, reduce: LogicalOrTerm
-			reduce(28), // ||, reduce: LogicalOrTerm
-			shift(401), // ^^
+			shift(400), // ?
+			reduce(27), // :, reduce: TernaryTerm
+			shift(401), // ||
+			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -20158,11 +20158,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(30), // ?, reduce: LogicalXORTerm
-			reduce(30), // :, reduce: LogicalXORTerm
-			reduce(30), // ||, reduce: LogicalXORTerm
-			reduce(30), // ^^, reduce: LogicalXORTerm
-			shift(402), // &&
+			reduce(29), // ?, reduce: LogicalOrTerm
+			reduce(29), // :, reduce: LogicalOrTerm
+			reduce(29), // ||, reduce: LogicalOrTerm
+			shift(402), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -20236,15 +20236,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(32), // ?, reduce: LogicalAndTerm
-			reduce(32), // :, reduce: LogicalAndTerm
-			reduce(32), // ||, reduce: LogicalAndTerm
-			reduce(32), // ^^, reduce: LogicalAndTerm
-			reduce(32), // &&, reduce: LogicalAndTerm
-			shift(403), // =~
-			shift(404), // !=~
-			shift(405), // ==
-			shift(406), // !=
+			reduce(31), // ?, reduce: LogicalXORTerm
+			reduce(31), // :, reduce: LogicalXORTerm
+			reduce(31), // ||, reduce: LogicalXORTerm
+			reduce(31), // ^^, reduce: LogicalXORTerm
+			shift(403), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -20314,19 +20314,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(37), // ?, reduce: EqneTerm
-			reduce(37), // :, reduce: EqneTerm
-			reduce(37), // ||, reduce: EqneTerm
-			reduce(37), // ^^, reduce: EqneTerm
-			reduce(37), // &&, reduce: EqneTerm
-			reduce(37), // =~, reduce: EqneTerm
-			reduce(37), // !=~, reduce: EqneTerm
-			reduce(37), // ==, reduce: EqneTerm
-			reduce(37), // !=, reduce: EqneTerm
-			shift(407), // >
-			shift(408), // >=
-			shift(409), // <
-			shift(410), // <=
+			reduce(33), // ?, reduce: LogicalAndTerm
+			reduce(33), // :, reduce: LogicalAndTerm
+			reduce(33), // ||, reduce: LogicalAndTerm
+			reduce(33), // ^^, reduce: LogicalAndTerm
+			reduce(33), // &&, reduce: LogicalAndTerm
+			shift(404), // =~
+			shift(405), // !=~
+			shift(406), // ==
+			shift(407), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -20392,20 +20392,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(42), // ?, reduce: CmpTerm
-			reduce(42), // :, reduce: CmpTerm
-			reduce(42), // ||, reduce: CmpTerm
-			reduce(42), // ^^, reduce: CmpTerm
-			reduce(42), // &&, reduce: CmpTerm
-			reduce(42), // =~, reduce: CmpTerm
-			reduce(42), // !=~, reduce: CmpTerm
-			reduce(42), // ==, reduce: CmpTerm
-			reduce(42), // !=, reduce: CmpTerm
-			reduce(42), // >, reduce: CmpTerm
-			reduce(42), // >=, reduce: CmpTerm
-			reduce(42), // <, reduce: CmpTerm
-			reduce(42), // <=, reduce: CmpTerm
-			shift(411), // |
+			reduce(38), // ?, reduce: EqneTerm
+			reduce(38), // :, reduce: EqneTerm
+			reduce(38), // ||, reduce: EqneTerm
+			reduce(38), // ^^, reduce: EqneTerm
+			reduce(38), // &&, reduce: EqneTerm
+			reduce(38), // =~, reduce: EqneTerm
+			reduce(38), // !=~, reduce: EqneTerm
+			reduce(38), // ==, reduce: EqneTerm
+			reduce(38), // !=, reduce: EqneTerm
+			shift(408), // >
+			shift(409), // >=
+			shift(410), // <
+			shift(411), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -20470,21 +20470,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(44), // ?, reduce: BitwiseORTerm
-			reduce(44), // :, reduce: BitwiseORTerm
-			reduce(44), // ||, reduce: BitwiseORTerm
-			reduce(44), // ^^, reduce: BitwiseORTerm
-			reduce(44), // &&, reduce: BitwiseORTerm
-			reduce(44), // =~, reduce: BitwiseORTerm
-			reduce(44), // !=~, reduce: BitwiseORTerm
-			reduce(44), // ==, reduce: BitwiseORTerm
-			reduce(44), // !=, reduce: BitwiseORTerm
-			reduce(44), // >, reduce: BitwiseORTerm
-			reduce(44), // >=, reduce: BitwiseORTerm
-			reduce(44), // <, reduce: BitwiseORTerm
-			reduce(44), // <=, reduce: BitwiseORTerm
-			reduce(44), // |, reduce: BitwiseORTerm
-			shift(412), // ^
+			reduce(43), // ?, reduce: CmpTerm
+			reduce(43), // :, reduce: CmpTerm
+			reduce(43), // ||, reduce: CmpTerm
+			reduce(43), // ^^, reduce: CmpTerm
+			reduce(43), // &&, reduce: CmpTerm
+			reduce(43), // =~, reduce: CmpTerm
+			reduce(43), // !=~, reduce: CmpTerm
+			reduce(43), // ==, reduce: CmpTerm
+			reduce(43), // !=, reduce: CmpTerm
+			reduce(43), // >, reduce: CmpTerm
+			reduce(43), // >=, reduce: CmpTerm
+			reduce(43), // <, reduce: CmpTerm
+			reduce(43), // <=, reduce: CmpTerm
+			shift(412), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -20548,22 +20548,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(46), // ?, reduce: BitwiseXORTerm
-			reduce(46), // :, reduce: BitwiseXORTerm
-			reduce(46), // ||, reduce: BitwiseXORTerm
-			reduce(46), // ^^, reduce: BitwiseXORTerm
-			reduce(46), // &&, reduce: BitwiseXORTerm
-			reduce(46), // =~, reduce: BitwiseXORTerm
-			reduce(46), // !=~, reduce: BitwiseXORTerm
-			reduce(46), // ==, reduce: BitwiseXORTerm
-			reduce(46), // !=, reduce: BitwiseXORTerm
-			reduce(46), // >, reduce: BitwiseXORTerm
-			reduce(46), // >=, reduce: BitwiseXORTerm
-			reduce(46), // <, reduce: BitwiseXORTerm
-			reduce(46), // <=, reduce: BitwiseXORTerm
-			reduce(46), // |, reduce: BitwiseXORTerm
-			reduce(46), // ^, reduce: BitwiseXORTerm
-			shift(413), // &
+			reduce(45), // ?, reduce: BitwiseORTerm
+			reduce(45), // :, reduce: BitwiseORTerm
+			reduce(45), // ||, reduce: BitwiseORTerm
+			reduce(45), // ^^, reduce: BitwiseORTerm
+			reduce(45), // &&, reduce: BitwiseORTerm
+			reduce(45), // =~, reduce: BitwiseORTerm
+			reduce(45), // !=~, reduce: BitwiseORTerm
+			reduce(45), // ==, reduce: BitwiseORTerm
+			reduce(45), // !=, reduce: BitwiseORTerm
+			reduce(45), // >, reduce: BitwiseORTerm
+			reduce(45), // >=, reduce: BitwiseORTerm
+			reduce(45), // <, reduce: BitwiseORTerm
+			reduce(45), // <=, reduce: BitwiseORTerm
+			reduce(45), // |, reduce: BitwiseORTerm
+			shift(413), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -20626,24 +20626,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(48), // ?, reduce: BitwiseANDTerm
-			reduce(48), // :, reduce: BitwiseANDTerm
-			reduce(48), // ||, reduce: BitwiseANDTerm
-			reduce(48), // ^^, reduce: BitwiseANDTerm
-			reduce(48), // &&, reduce: BitwiseANDTerm
-			reduce(48), // =~, reduce: BitwiseANDTerm
-			reduce(48), // !=~, reduce: BitwiseANDTerm
-			reduce(48), // ==, reduce: BitwiseANDTerm
-			reduce(48), // !=, reduce: BitwiseANDTerm
-			reduce(48), // >, reduce: BitwiseANDTerm
-			reduce(48), // >=, reduce: BitwiseANDTerm
-			reduce(48), // <, reduce: BitwiseANDTerm
-			reduce(48), // <=, reduce: BitwiseANDTerm
-			reduce(48), // |, reduce: BitwiseANDTerm
-			reduce(48), // ^, reduce: BitwiseANDTerm
-			reduce(48), // &, reduce: BitwiseANDTerm
-			shift(414), // <<
-			shift(415), // >>
+			reduce(47), // ?, reduce: BitwiseXORTerm
+			reduce(47), // :, reduce: BitwiseXORTerm
+			reduce(47), // ||, reduce: BitwiseXORTerm
+			reduce(47), // ^^, reduce: BitwiseXORTerm
+			reduce(47), // &&, reduce: BitwiseXORTerm
+			reduce(47), // =~, reduce: BitwiseXORTerm
+			reduce(47), // !=~, reduce: BitwiseXORTerm
+			reduce(47), // ==, reduce: BitwiseXORTerm
+			reduce(47), // !=, reduce: BitwiseXORTerm
+			reduce(47), // >, reduce: BitwiseXORTerm
+			reduce(47), // >=, reduce: BitwiseXORTerm
+			reduce(47), // <, reduce: BitwiseXORTerm
+			reduce(47), // <=, reduce: BitwiseXORTerm
+			reduce(47), // |, reduce: BitwiseXORTerm
+			reduce(47), // ^, reduce: BitwiseXORTerm
+			shift(414), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -20704,29 +20704,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(51), // ?, reduce: BitwiseShiftTerm
-			reduce(51), // :, reduce: BitwiseShiftTerm
-			reduce(51), // ||, reduce: BitwiseShiftTerm
-			reduce(51), // ^^, reduce: BitwiseShiftTerm
-			reduce(51), // &&, reduce: BitwiseShiftTerm
-			reduce(51), // =~, reduce: BitwiseShiftTerm
-			reduce(51), // !=~, reduce: BitwiseShiftTerm
-			reduce(51), // ==, reduce: BitwiseShiftTerm
-			reduce(51), // !=, reduce: BitwiseShiftTerm
-			reduce(51), // >, reduce: BitwiseShiftTerm
-			reduce(51), // >=, reduce: BitwiseShiftTerm
-			reduce(51), // <, reduce: BitwiseShiftTerm
-			reduce(51), // <=, reduce: BitwiseShiftTerm
-			reduce(51), // |, reduce: BitwiseShiftTerm
-			reduce(51), // ^, reduce: BitwiseShiftTerm
-			reduce(51), // &, reduce: BitwiseShiftTerm
-			reduce(51), // <<, reduce: BitwiseShiftTerm
-			reduce(51), // >>, reduce: BitwiseShiftTerm
-			shift(416), // +
-			shift(417), // -
-			shift(418), // .+
-			shift(419), // .-
-			shift(420), // .
+			reduce(49), // ?, reduce: BitwiseANDTerm
+			reduce(49), // :, reduce: BitwiseANDTerm
+			reduce(49), // ||, reduce: BitwiseANDTerm
+			reduce(49), // ^^, reduce: BitwiseANDTerm
+			reduce(49), // &&, reduce: BitwiseANDTerm
+			reduce(49), // =~, reduce: BitwiseANDTerm
+			reduce(49), // !=~, reduce: BitwiseANDTerm
+			reduce(49), // ==, reduce: BitwiseANDTerm
+			reduce(49), // !=, reduce: BitwiseANDTerm
+			reduce(49), // >, reduce: BitwiseANDTerm
+			reduce(49), // >=, reduce: BitwiseANDTerm
+			reduce(49), // <, reduce: BitwiseANDTerm
+			reduce(49), // <=, reduce: BitwiseANDTerm
+			reduce(49), // |, reduce: BitwiseANDTerm
+			reduce(49), // ^, reduce: BitwiseANDTerm
+			reduce(49), // &, reduce: BitwiseANDTerm
+			shift(415), // <<
+			shift(416), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -20782,29 +20782,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
+			reduce(52), // ?, reduce: BitwiseShiftTerm
+			reduce(52), // :, reduce: BitwiseShiftTerm
+			reduce(52), // ||, reduce: BitwiseShiftTerm
+			reduce(52), // ^^, reduce: BitwiseShiftTerm
+			reduce(52), // &&, reduce: BitwiseShiftTerm
+			reduce(52), // =~, reduce: BitwiseShiftTerm
+			reduce(52), // !=~, reduce: BitwiseShiftTerm
+			reduce(52), // ==, reduce: BitwiseShiftTerm
+			reduce(52), // !=, reduce: BitwiseShiftTerm
+			reduce(52), // >, reduce: BitwiseShiftTerm
+			reduce(52), // >=, reduce: BitwiseShiftTerm
+			reduce(52), // <, reduce: BitwiseShiftTerm
+			reduce(52), // <=, reduce: BitwiseShiftTerm
+			reduce(52), // |, reduce: BitwiseShiftTerm
+			reduce(52), // ^, reduce: BitwiseShiftTerm
+			reduce(52), // &, reduce: BitwiseShiftTerm
+			reduce(52), // <<, reduce: BitwiseShiftTerm
+			reduce(52), // >>, reduce: BitwiseShiftTerm
+			shift(417), // +
+			shift(418), // -
+			shift(419), // .+
+			shift(420), // .-
+			shift(421), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -20812,84 +20812,6 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S267
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(57), // ?, reduce: AddsubdotTerm
-			reduce(57), // :, reduce: AddsubdotTerm
-			reduce(57), // ||, reduce: AddsubdotTerm
-			reduce(57), // ^^, reduce: AddsubdotTerm
-			reduce(57), // &&, reduce: AddsubdotTerm
-			reduce(57), // =~, reduce: AddsubdotTerm
-			reduce(57), // !=~, reduce: AddsubdotTerm
-			reduce(57), // ==, reduce: AddsubdotTerm
-			reduce(57), // !=, reduce: AddsubdotTerm
-			reduce(57), // >, reduce: AddsubdotTerm
-			reduce(57), // >=, reduce: AddsubdotTerm
-			reduce(57), // <, reduce: AddsubdotTerm
-			reduce(57), // <=, reduce: AddsubdotTerm
-			reduce(57), // |, reduce: AddsubdotTerm
-			reduce(57), // ^, reduce: AddsubdotTerm
-			reduce(57), // &, reduce: AddsubdotTerm
-			reduce(57), // <<, reduce: AddsubdotTerm
-			reduce(57), // >>, reduce: AddsubdotTerm
-			reduce(57), // +, reduce: AddsubdotTerm
-			reduce(57), // -, reduce: AddsubdotTerm
-			reduce(57), // .+, reduce: AddsubdotTerm
-			reduce(57), // .-, reduce: AddsubdotTerm
-			reduce(57), // ., reduce: AddsubdotTerm
-			shift(422), // *
-			shift(423), // /
-			shift(424), // //
-			shift(425), // %
-			shift(426), // .*
-			shift(427), // ./
-			shift(428), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -20915,7 +20837,7 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENUM
 		},
 	},
-	actionRow{ // S268
+	actionRow{ // S267
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -20971,26 +20893,104 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S268
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(58), // ?, reduce: AddsubdotTerm
+			reduce(58), // :, reduce: AddsubdotTerm
+			reduce(58), // ||, reduce: AddsubdotTerm
+			reduce(58), // ^^, reduce: AddsubdotTerm
+			reduce(58), // &&, reduce: AddsubdotTerm
+			reduce(58), // =~, reduce: AddsubdotTerm
+			reduce(58), // !=~, reduce: AddsubdotTerm
+			reduce(58), // ==, reduce: AddsubdotTerm
+			reduce(58), // !=, reduce: AddsubdotTerm
+			reduce(58), // >, reduce: AddsubdotTerm
+			reduce(58), // >=, reduce: AddsubdotTerm
+			reduce(58), // <, reduce: AddsubdotTerm
+			reduce(58), // <=, reduce: AddsubdotTerm
+			reduce(58), // |, reduce: AddsubdotTerm
+			reduce(58), // ^, reduce: AddsubdotTerm
+			reduce(58), // &, reduce: AddsubdotTerm
+			reduce(58), // <<, reduce: AddsubdotTerm
+			reduce(58), // >>, reduce: AddsubdotTerm
+			reduce(58), // +, reduce: AddsubdotTerm
+			reduce(58), // -, reduce: AddsubdotTerm
+			reduce(58), // .+, reduce: AddsubdotTerm
+			reduce(58), // .-, reduce: AddsubdotTerm
+			reduce(58), // ., reduce: AddsubdotTerm
+			shift(423), // *
+			shift(424), // /
+			shift(425), // //
+			shift(426), // %
+			shift(427), // .*
+			shift(428), // ./
+			shift(429), // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S269
@@ -21049,26 +21049,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S270
@@ -21127,185 +21127,29 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S271
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(65), // ?, reduce: MuldivTerm
-			reduce(65), // :, reduce: MuldivTerm
-			reduce(65), // ||, reduce: MuldivTerm
-			reduce(65), // ^^, reduce: MuldivTerm
-			reduce(65), // &&, reduce: MuldivTerm
-			reduce(65), // =~, reduce: MuldivTerm
-			reduce(65), // !=~, reduce: MuldivTerm
-			reduce(65), // ==, reduce: MuldivTerm
-			reduce(65), // !=, reduce: MuldivTerm
-			reduce(65), // >, reduce: MuldivTerm
-			reduce(65), // >=, reduce: MuldivTerm
-			reduce(65), // <, reduce: MuldivTerm
-			reduce(65), // <=, reduce: MuldivTerm
-			reduce(65), // |, reduce: MuldivTerm
-			reduce(65), // ^, reduce: MuldivTerm
-			reduce(65), // &, reduce: MuldivTerm
-			reduce(65), // <<, reduce: MuldivTerm
-			reduce(65), // >>, reduce: MuldivTerm
-			reduce(65), // +, reduce: MuldivTerm
-			reduce(65), // -, reduce: MuldivTerm
-			reduce(65), // .+, reduce: MuldivTerm
-			reduce(65), // .-, reduce: MuldivTerm
-			reduce(65), // ., reduce: MuldivTerm
-			reduce(65), // *, reduce: MuldivTerm
-			reduce(65), // /, reduce: MuldivTerm
-			reduce(65), // //, reduce: MuldivTerm
-			reduce(65), // %, reduce: MuldivTerm
-			reduce(65), // .*, reduce: MuldivTerm
-			reduce(65), // ./, reduce: MuldivTerm
-			reduce(65), // .//, reduce: MuldivTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S272
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(72), // :, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S273
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -21361,26 +21205,182 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S272
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(66), // ?, reduce: MuldivTerm
+			reduce(66), // :, reduce: MuldivTerm
+			reduce(66), // ||, reduce: MuldivTerm
+			reduce(66), // ^^, reduce: MuldivTerm
+			reduce(66), // &&, reduce: MuldivTerm
+			reduce(66), // =~, reduce: MuldivTerm
+			reduce(66), // !=~, reduce: MuldivTerm
+			reduce(66), // ==, reduce: MuldivTerm
+			reduce(66), // !=, reduce: MuldivTerm
+			reduce(66), // >, reduce: MuldivTerm
+			reduce(66), // >=, reduce: MuldivTerm
+			reduce(66), // <, reduce: MuldivTerm
+			reduce(66), // <=, reduce: MuldivTerm
+			reduce(66), // |, reduce: MuldivTerm
+			reduce(66), // ^, reduce: MuldivTerm
+			reduce(66), // &, reduce: MuldivTerm
+			reduce(66), // <<, reduce: MuldivTerm
+			reduce(66), // >>, reduce: MuldivTerm
+			reduce(66), // +, reduce: MuldivTerm
+			reduce(66), // -, reduce: MuldivTerm
+			reduce(66), // .+, reduce: MuldivTerm
+			reduce(66), // .-, reduce: MuldivTerm
+			reduce(66), // ., reduce: MuldivTerm
+			reduce(66), // *, reduce: MuldivTerm
+			reduce(66), // /, reduce: MuldivTerm
+			reduce(66), // //, reduce: MuldivTerm
+			reduce(66), // %, reduce: MuldivTerm
+			reduce(66), // .*, reduce: MuldivTerm
+			reduce(66), // ./, reduce: MuldivTerm
+			reduce(66), // .//, reduce: MuldivTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S273
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(73), // :, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(73), // |, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(73), // &, reduce: UnaryBitwiseOpTerm
+			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(73), // +, reduce: UnaryBitwiseOpTerm
+			reduce(73), // -, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ., reduce: UnaryBitwiseOpTerm
+			reduce(73), // *, reduce: UnaryBitwiseOpTerm
+			reduce(73), // /, reduce: UnaryBitwiseOpTerm
+			reduce(73), // //, reduce: UnaryBitwiseOpTerm
+			reduce(73), // %, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S274
@@ -21439,107 +21439,29 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S275
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(74), // ?, reduce: PowTerm
-			reduce(74), // :, reduce: PowTerm
-			reduce(74), // ||, reduce: PowTerm
-			reduce(74), // ^^, reduce: PowTerm
-			reduce(74), // &&, reduce: PowTerm
-			reduce(74), // =~, reduce: PowTerm
-			reduce(74), // !=~, reduce: PowTerm
-			reduce(74), // ==, reduce: PowTerm
-			reduce(74), // !=, reduce: PowTerm
-			reduce(74), // >, reduce: PowTerm
-			reduce(74), // >=, reduce: PowTerm
-			reduce(74), // <, reduce: PowTerm
-			reduce(74), // <=, reduce: PowTerm
-			reduce(74), // |, reduce: PowTerm
-			reduce(74), // ^, reduce: PowTerm
-			reduce(74), // &, reduce: PowTerm
-			reduce(74), // <<, reduce: PowTerm
-			reduce(74), // >>, reduce: PowTerm
-			reduce(74), // +, reduce: PowTerm
-			reduce(74), // -, reduce: PowTerm
-			reduce(74), // .+, reduce: PowTerm
-			reduce(74), // .-, reduce: PowTerm
-			reduce(74), // ., reduce: PowTerm
-			reduce(74), // *, reduce: PowTerm
-			reduce(74), // /, reduce: PowTerm
-			reduce(74), // //, reduce: PowTerm
-			reduce(74), // %, reduce: PowTerm
-			reduce(74), // .*, reduce: PowTerm
-			reduce(74), // ./, reduce: PowTerm
-			reduce(74), // .//, reduce: PowTerm
-			nil,        // !
-			nil,        // ~
-			shift(434), // **
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S276
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -21580,10 +21502,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -21592,29 +21514,107 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			nil,        // !
+			nil,        // ~
 			nil,        // **
-			shift(194), // (
+			shift(277), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S276
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(75), // ?, reduce: PowTerm
+			reduce(75), // :, reduce: PowTerm
+			reduce(75), // ||, reduce: PowTerm
+			reduce(75), // ^^, reduce: PowTerm
+			reduce(75), // &&, reduce: PowTerm
+			reduce(75), // =~, reduce: PowTerm
+			reduce(75), // !=~, reduce: PowTerm
+			reduce(75), // ==, reduce: PowTerm
+			reduce(75), // !=, reduce: PowTerm
+			reduce(75), // >, reduce: PowTerm
+			reduce(75), // >=, reduce: PowTerm
+			reduce(75), // <, reduce: PowTerm
+			reduce(75), // <=, reduce: PowTerm
+			reduce(75), // |, reduce: PowTerm
+			reduce(75), // ^, reduce: PowTerm
+			reduce(75), // &, reduce: PowTerm
+			reduce(75), // <<, reduce: PowTerm
+			reduce(75), // >>, reduce: PowTerm
+			reduce(75), // +, reduce: PowTerm
+			reduce(75), // -, reduce: PowTerm
+			reduce(75), // .+, reduce: PowTerm
+			reduce(75), // .-, reduce: PowTerm
+			reduce(75), // ., reduce: PowTerm
+			reduce(75), // *, reduce: PowTerm
+			reduce(75), // /, reduce: PowTerm
+			reduce(75), // //, reduce: PowTerm
+			reduce(75), // %, reduce: PowTerm
+			reduce(75), // .*, reduce: PowTerm
+			reduce(75), // ./, reduce: PowTerm
+			reduce(75), // .//, reduce: PowTerm
+			nil,        // !
+			nil,        // ~
+			shift(435), // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S277
@@ -21640,59 +21640,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: FieldName
-			reduce(77), // :, reduce: FieldName
-			reduce(77), // ||, reduce: FieldName
-			reduce(77), // ^^, reduce: FieldName
-			reduce(77), // &&, reduce: FieldName
-			reduce(77), // =~, reduce: FieldName
-			reduce(77), // !=~, reduce: FieldName
-			reduce(77), // ==, reduce: FieldName
-			reduce(77), // !=, reduce: FieldName
-			reduce(77), // >, reduce: FieldName
-			reduce(77), // >=, reduce: FieldName
-			reduce(77), // <, reduce: FieldName
-			reduce(77), // <=, reduce: FieldName
-			reduce(77), // |, reduce: FieldName
-			reduce(77), // ^, reduce: FieldName
-			reduce(77), // &, reduce: FieldName
-			reduce(77), // <<, reduce: FieldName
-			reduce(77), // >>, reduce: FieldName
-			reduce(77), // +, reduce: FieldName
-			reduce(77), // -, reduce: FieldName
-			reduce(77), // .+, reduce: FieldName
-			reduce(77), // .-, reduce: FieldName
-			reduce(77), // ., reduce: FieldName
-			reduce(77), // *, reduce: FieldName
-			reduce(77), // /, reduce: FieldName
-			reduce(77), // //, reduce: FieldName
-			reduce(77), // %, reduce: FieldName
-			reduce(77), // .*, reduce: FieldName
-			reduce(77), // ./, reduce: FieldName
-			reduce(77), // .//, reduce: FieldName
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: FieldName
-			nil,        // (
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
 			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S278
@@ -21796,39 +21796,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(79), // ?, reduce: DirectFieldName
-			reduce(79), // :, reduce: DirectFieldName
-			reduce(79), // ||, reduce: DirectFieldName
-			reduce(79), // ^^, reduce: DirectFieldName
-			reduce(79), // &&, reduce: DirectFieldName
-			reduce(79), // =~, reduce: DirectFieldName
-			reduce(79), // !=~, reduce: DirectFieldName
-			reduce(79), // ==, reduce: DirectFieldName
-			reduce(79), // !=, reduce: DirectFieldName
-			reduce(79), // >, reduce: DirectFieldName
-			reduce(79), // >=, reduce: DirectFieldName
-			reduce(79), // <, reduce: DirectFieldName
-			reduce(79), // <=, reduce: DirectFieldName
-			reduce(79), // |, reduce: DirectFieldName
-			reduce(79), // ^, reduce: DirectFieldName
-			reduce(79), // &, reduce: DirectFieldName
-			reduce(79), // <<, reduce: DirectFieldName
-			reduce(79), // >>, reduce: DirectFieldName
-			reduce(79), // +, reduce: DirectFieldName
-			reduce(79), // -, reduce: DirectFieldName
-			reduce(79), // .+, reduce: DirectFieldName
-			reduce(79), // .-, reduce: DirectFieldName
-			reduce(79), // ., reduce: DirectFieldName
-			reduce(79), // *, reduce: DirectFieldName
-			reduce(79), // /, reduce: DirectFieldName
-			reduce(79), // //, reduce: DirectFieldName
-			reduce(79), // %, reduce: DirectFieldName
-			reduce(79), // .*, reduce: DirectFieldName
-			reduce(79), // ./, reduce: DirectFieldName
-			reduce(79), // .//, reduce: DirectFieldName
+			reduce(79), // ?, reduce: FieldName
+			reduce(79), // :, reduce: FieldName
+			reduce(79), // ||, reduce: FieldName
+			reduce(79), // ^^, reduce: FieldName
+			reduce(79), // &&, reduce: FieldName
+			reduce(79), // =~, reduce: FieldName
+			reduce(79), // !=~, reduce: FieldName
+			reduce(79), // ==, reduce: FieldName
+			reduce(79), // !=, reduce: FieldName
+			reduce(79), // >, reduce: FieldName
+			reduce(79), // >=, reduce: FieldName
+			reduce(79), // <, reduce: FieldName
+			reduce(79), // <=, reduce: FieldName
+			reduce(79), // |, reduce: FieldName
+			reduce(79), // ^, reduce: FieldName
+			reduce(79), // &, reduce: FieldName
+			reduce(79), // <<, reduce: FieldName
+			reduce(79), // >>, reduce: FieldName
+			reduce(79), // +, reduce: FieldName
+			reduce(79), // -, reduce: FieldName
+			reduce(79), // .+, reduce: FieldName
+			reduce(79), // .-, reduce: FieldName
+			reduce(79), // ., reduce: FieldName
+			reduce(79), // *, reduce: FieldName
+			reduce(79), // /, reduce: FieldName
+			reduce(79), // //, reduce: FieldName
+			reduce(79), // %, reduce: FieldName
+			reduce(79), // .*, reduce: FieldName
+			reduce(79), // ./, reduce: FieldName
+			reduce(79), // .//, reduce: FieldName
 			nil,        // !
 			nil,        // ~
-			reduce(79), // **, reduce: DirectFieldName
+			reduce(79), // **, reduce: FieldName
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -21852,6 +21852,84 @@ var actionTab = actionTable{
 		},
 	},
 	actionRow{ // S280
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(80), // ?, reduce: DirectFieldName
+			reduce(80), // :, reduce: DirectFieldName
+			reduce(80), // ||, reduce: DirectFieldName
+			reduce(80), // ^^, reduce: DirectFieldName
+			reduce(80), // &&, reduce: DirectFieldName
+			reduce(80), // =~, reduce: DirectFieldName
+			reduce(80), // !=~, reduce: DirectFieldName
+			reduce(80), // ==, reduce: DirectFieldName
+			reduce(80), // !=, reduce: DirectFieldName
+			reduce(80), // >, reduce: DirectFieldName
+			reduce(80), // >=, reduce: DirectFieldName
+			reduce(80), // <, reduce: DirectFieldName
+			reduce(80), // <=, reduce: DirectFieldName
+			reduce(80), // |, reduce: DirectFieldName
+			reduce(80), // ^, reduce: DirectFieldName
+			reduce(80), // &, reduce: DirectFieldName
+			reduce(80), // <<, reduce: DirectFieldName
+			reduce(80), // >>, reduce: DirectFieldName
+			reduce(80), // +, reduce: DirectFieldName
+			reduce(80), // -, reduce: DirectFieldName
+			reduce(80), // .+, reduce: DirectFieldName
+			reduce(80), // .-, reduce: DirectFieldName
+			reduce(80), // ., reduce: DirectFieldName
+			reduce(80), // *, reduce: DirectFieldName
+			reduce(80), // /, reduce: DirectFieldName
+			reduce(80), // //, reduce: DirectFieldName
+			reduce(80), // %, reduce: DirectFieldName
+			reduce(80), // .*, reduce: DirectFieldName
+			reduce(80), // ./, reduce: DirectFieldName
+			reduce(80), // .//, reduce: DirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(80), // **, reduce: DirectFieldName
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S281
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -21892,10 +21970,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -21904,107 +21982,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S281
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(81), // ?, reduce: AtomOrFunction
-			reduce(81), // :, reduce: AtomOrFunction
-			reduce(81), // ||, reduce: AtomOrFunction
-			reduce(81), // ^^, reduce: AtomOrFunction
-			reduce(81), // &&, reduce: AtomOrFunction
-			reduce(81), // =~, reduce: AtomOrFunction
-			reduce(81), // !=~, reduce: AtomOrFunction
-			reduce(81), // ==, reduce: AtomOrFunction
-			reduce(81), // !=, reduce: AtomOrFunction
-			reduce(81), // >, reduce: AtomOrFunction
-			reduce(81), // >=, reduce: AtomOrFunction
-			reduce(81), // <, reduce: AtomOrFunction
-			reduce(81), // <=, reduce: AtomOrFunction
-			reduce(81), // |, reduce: AtomOrFunction
-			reduce(81), // ^, reduce: AtomOrFunction
-			reduce(81), // &, reduce: AtomOrFunction
-			reduce(81), // <<, reduce: AtomOrFunction
-			reduce(81), // >>, reduce: AtomOrFunction
-			reduce(81), // +, reduce: AtomOrFunction
-			reduce(81), // -, reduce: AtomOrFunction
-			reduce(81), // .+, reduce: AtomOrFunction
-			reduce(81), // .-, reduce: AtomOrFunction
-			reduce(81), // ., reduce: AtomOrFunction
-			reduce(81), // *, reduce: AtomOrFunction
-			reduce(81), // /, reduce: AtomOrFunction
-			reduce(81), // //, reduce: AtomOrFunction
-			reduce(81), // %, reduce: AtomOrFunction
-			reduce(81), // .*, reduce: AtomOrFunction
-			reduce(81), // ./, reduce: AtomOrFunction
-			reduce(81), // .//, reduce: AtomOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(81), // **, reduce: AtomOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S282
@@ -22342,39 +22342,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(86), // ?, reduce: ContextVariable
-			reduce(86), // :, reduce: ContextVariable
-			reduce(86), // ||, reduce: ContextVariable
-			reduce(86), // ^^, reduce: ContextVariable
-			reduce(86), // &&, reduce: ContextVariable
-			reduce(86), // =~, reduce: ContextVariable
-			reduce(86), // !=~, reduce: ContextVariable
-			reduce(86), // ==, reduce: ContextVariable
-			reduce(86), // !=, reduce: ContextVariable
-			reduce(86), // >, reduce: ContextVariable
-			reduce(86), // >=, reduce: ContextVariable
-			reduce(86), // <, reduce: ContextVariable
-			reduce(86), // <=, reduce: ContextVariable
-			reduce(86), // |, reduce: ContextVariable
-			reduce(86), // ^, reduce: ContextVariable
-			reduce(86), // &, reduce: ContextVariable
-			reduce(86), // <<, reduce: ContextVariable
-			reduce(86), // >>, reduce: ContextVariable
-			reduce(86), // +, reduce: ContextVariable
-			reduce(86), // -, reduce: ContextVariable
-			reduce(86), // .+, reduce: ContextVariable
-			reduce(86), // .-, reduce: ContextVariable
-			reduce(86), // ., reduce: ContextVariable
-			reduce(86), // *, reduce: ContextVariable
-			reduce(86), // /, reduce: ContextVariable
-			reduce(86), // //, reduce: ContextVariable
-			reduce(86), // %, reduce: ContextVariable
-			reduce(86), // .*, reduce: ContextVariable
-			reduce(86), // ./, reduce: ContextVariable
-			reduce(86), // .//, reduce: ContextVariable
+			reduce(86), // ?, reduce: AtomOrFunction
+			reduce(86), // :, reduce: AtomOrFunction
+			reduce(86), // ||, reduce: AtomOrFunction
+			reduce(86), // ^^, reduce: AtomOrFunction
+			reduce(86), // &&, reduce: AtomOrFunction
+			reduce(86), // =~, reduce: AtomOrFunction
+			reduce(86), // !=~, reduce: AtomOrFunction
+			reduce(86), // ==, reduce: AtomOrFunction
+			reduce(86), // !=, reduce: AtomOrFunction
+			reduce(86), // >, reduce: AtomOrFunction
+			reduce(86), // >=, reduce: AtomOrFunction
+			reduce(86), // <, reduce: AtomOrFunction
+			reduce(86), // <=, reduce: AtomOrFunction
+			reduce(86), // |, reduce: AtomOrFunction
+			reduce(86), // ^, reduce: AtomOrFunction
+			reduce(86), // &, reduce: AtomOrFunction
+			reduce(86), // <<, reduce: AtomOrFunction
+			reduce(86), // >>, reduce: AtomOrFunction
+			reduce(86), // +, reduce: AtomOrFunction
+			reduce(86), // -, reduce: AtomOrFunction
+			reduce(86), // .+, reduce: AtomOrFunction
+			reduce(86), // .-, reduce: AtomOrFunction
+			reduce(86), // ., reduce: AtomOrFunction
+			reduce(86), // *, reduce: AtomOrFunction
+			reduce(86), // /, reduce: AtomOrFunction
+			reduce(86), // //, reduce: AtomOrFunction
+			reduce(86), // %, reduce: AtomOrFunction
+			reduce(86), // .*, reduce: AtomOrFunction
+			reduce(86), // ./, reduce: AtomOrFunction
+			reduce(86), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(86), // **, reduce: ContextVariable
+			reduce(86), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -23200,44 +23200,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(27), // ?, reduce: LogicalOrTerm
-			nil,        // :
-			reduce(27), // ||, reduce: LogicalOrTerm
-			shift(137), // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(97), // ?, reduce: ContextVariable
+			reduce(97), // :, reduce: ContextVariable
+			reduce(97), // ||, reduce: ContextVariable
+			reduce(97), // ^^, reduce: ContextVariable
+			reduce(97), // &&, reduce: ContextVariable
+			reduce(97), // =~, reduce: ContextVariable
+			reduce(97), // !=~, reduce: ContextVariable
+			reduce(97), // ==, reduce: ContextVariable
+			reduce(97), // !=, reduce: ContextVariable
+			reduce(97), // >, reduce: ContextVariable
+			reduce(97), // >=, reduce: ContextVariable
+			reduce(97), // <, reduce: ContextVariable
+			reduce(97), // <=, reduce: ContextVariable
+			reduce(97), // |, reduce: ContextVariable
+			reduce(97), // ^, reduce: ContextVariable
+			reduce(97), // &, reduce: ContextVariable
+			reduce(97), // <<, reduce: ContextVariable
+			reduce(97), // >>, reduce: ContextVariable
+			reduce(97), // +, reduce: ContextVariable
+			reduce(97), // -, reduce: ContextVariable
+			reduce(97), // .+, reduce: ContextVariable
+			reduce(97), // .-, reduce: ContextVariable
+			reduce(97), // ., reduce: ContextVariable
+			reduce(97), // *, reduce: ContextVariable
+			reduce(97), // /, reduce: ContextVariable
+			reduce(97), // //, reduce: ContextVariable
+			reduce(97), // %, reduce: ContextVariable
+			reduce(97), // .*, reduce: ContextVariable
+			reduce(97), // ./, reduce: ContextVariable
+			reduce(97), // .//, reduce: ContextVariable
 			nil,        // !
 			nil,        // ~
-			nil,        // **
+			reduce(97), // **, reduce: ContextVariable
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(27), // ], reduce: LogicalOrTerm
+			nil,        // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -23278,11 +23278,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(29), // ?, reduce: LogicalXORTerm
+			reduce(28), // ?, reduce: LogicalOrTerm
 			nil,        // :
-			reduce(29), // ||, reduce: LogicalXORTerm
-			reduce(29), // ^^, reduce: LogicalXORTerm
-			shift(138), // &&
+			reduce(28), // ||, reduce: LogicalOrTerm
+			shift(138), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -23315,7 +23315,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(29), // ], reduce: LogicalXORTerm
+			reduce(28), // ], reduce: LogicalOrTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -23356,15 +23356,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(31), // ?, reduce: LogicalAndTerm
+			reduce(30), // ?, reduce: LogicalXORTerm
 			nil,        // :
-			reduce(31), // ||, reduce: LogicalAndTerm
-			reduce(31), // ^^, reduce: LogicalAndTerm
-			reduce(31), // &&, reduce: LogicalAndTerm
-			shift(139), // =~
-			shift(140), // !=~
-			shift(141), // ==
-			shift(142), // !=
+			reduce(30), // ||, reduce: LogicalXORTerm
+			reduce(30), // ^^, reduce: LogicalXORTerm
+			shift(139), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -23393,7 +23393,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(31), // ], reduce: LogicalAndTerm
+			reduce(30), // ], reduce: LogicalXORTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -23434,19 +23434,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(33), // ?, reduce: EqneTerm
+			reduce(32), // ?, reduce: LogicalAndTerm
 			nil,        // :
-			reduce(33), // ||, reduce: EqneTerm
-			reduce(33), // ^^, reduce: EqneTerm
-			reduce(33), // &&, reduce: EqneTerm
-			reduce(33), // =~, reduce: EqneTerm
-			reduce(33), // !=~, reduce: EqneTerm
-			reduce(33), // ==, reduce: EqneTerm
-			reduce(33), // !=, reduce: EqneTerm
-			shift(143), // >
-			shift(144), // >=
-			shift(145), // <
-			shift(146), // <=
+			reduce(32), // ||, reduce: LogicalAndTerm
+			reduce(32), // ^^, reduce: LogicalAndTerm
+			reduce(32), // &&, reduce: LogicalAndTerm
+			shift(140), // =~
+			shift(141), // !=~
+			shift(142), // ==
+			shift(143), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -23471,7 +23471,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(33), // ], reduce: EqneTerm
+			reduce(32), // ], reduce: LogicalAndTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -23521,10 +23521,10 @@ var actionTab = actionTable{
 			reduce(34), // !=~, reduce: EqneTerm
 			reduce(34), // ==, reduce: EqneTerm
 			reduce(34), // !=, reduce: EqneTerm
-			shift(143), // >
-			shift(144), // >=
-			shift(145), // <
-			shift(146), // <=
+			shift(144), // >
+			shift(145), // >=
+			shift(146), // <
+			shift(147), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -23599,10 +23599,10 @@ var actionTab = actionTable{
 			reduce(35), // !=~, reduce: EqneTerm
 			reduce(35), // ==, reduce: EqneTerm
 			reduce(35), // !=, reduce: EqneTerm
-			shift(143), // >
-			shift(144), // >=
-			shift(145), // <
-			shift(146), // <=
+			shift(144), // >
+			shift(145), // >=
+			shift(146), // <
+			shift(147), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -23677,10 +23677,10 @@ var actionTab = actionTable{
 			reduce(36), // !=~, reduce: EqneTerm
 			reduce(36), // ==, reduce: EqneTerm
 			reduce(36), // !=, reduce: EqneTerm
-			shift(143), // >
-			shift(144), // >=
-			shift(145), // <
-			shift(146), // <=
+			shift(144), // >
+			shift(145), // >=
+			shift(146), // <
+			shift(147), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -23746,20 +23746,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(38), // ?, reduce: CmpTerm
+			reduce(37), // ?, reduce: EqneTerm
 			nil,        // :
-			reduce(38), // ||, reduce: CmpTerm
-			reduce(38), // ^^, reduce: CmpTerm
-			reduce(38), // &&, reduce: CmpTerm
-			reduce(38), // =~, reduce: CmpTerm
-			reduce(38), // !=~, reduce: CmpTerm
-			reduce(38), // ==, reduce: CmpTerm
-			reduce(38), // !=, reduce: CmpTerm
-			reduce(38), // >, reduce: CmpTerm
-			reduce(38), // >=, reduce: CmpTerm
-			reduce(38), // <, reduce: CmpTerm
-			reduce(38), // <=, reduce: CmpTerm
-			shift(147), // |
+			reduce(37), // ||, reduce: EqneTerm
+			reduce(37), // ^^, reduce: EqneTerm
+			reduce(37), // &&, reduce: EqneTerm
+			reduce(37), // =~, reduce: EqneTerm
+			reduce(37), // !=~, reduce: EqneTerm
+			reduce(37), // ==, reduce: EqneTerm
+			reduce(37), // !=, reduce: EqneTerm
+			shift(144), // >
+			shift(145), // >=
+			shift(146), // <
+			shift(147), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -23783,7 +23783,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(38), // ], reduce: CmpTerm
+			reduce(37), // ], reduce: EqneTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -23837,7 +23837,7 @@ var actionTab = actionTable{
 			reduce(39), // >=, reduce: CmpTerm
 			reduce(39), // <, reduce: CmpTerm
 			reduce(39), // <=, reduce: CmpTerm
-			shift(147), // |
+			shift(148), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -23915,7 +23915,7 @@ var actionTab = actionTable{
 			reduce(40), // >=, reduce: CmpTerm
 			reduce(40), // <, reduce: CmpTerm
 			reduce(40), // <=, reduce: CmpTerm
-			shift(147), // |
+			shift(148), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -23993,7 +23993,7 @@ var actionTab = actionTable{
 			reduce(41), // >=, reduce: CmpTerm
 			reduce(41), // <, reduce: CmpTerm
 			reduce(41), // <=, reduce: CmpTerm
-			shift(147), // |
+			shift(148), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -24058,21 +24058,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(43), // ?, reduce: BitwiseORTerm
+			reduce(42), // ?, reduce: CmpTerm
 			nil,        // :
-			reduce(43), // ||, reduce: BitwiseORTerm
-			reduce(43), // ^^, reduce: BitwiseORTerm
-			reduce(43), // &&, reduce: BitwiseORTerm
-			reduce(43), // =~, reduce: BitwiseORTerm
-			reduce(43), // !=~, reduce: BitwiseORTerm
-			reduce(43), // ==, reduce: BitwiseORTerm
-			reduce(43), // !=, reduce: BitwiseORTerm
-			reduce(43), // >, reduce: BitwiseORTerm
-			reduce(43), // >=, reduce: BitwiseORTerm
-			reduce(43), // <, reduce: BitwiseORTerm
-			reduce(43), // <=, reduce: BitwiseORTerm
-			reduce(43), // |, reduce: BitwiseORTerm
-			shift(148), // ^
+			reduce(42), // ||, reduce: CmpTerm
+			reduce(42), // ^^, reduce: CmpTerm
+			reduce(42), // &&, reduce: CmpTerm
+			reduce(42), // =~, reduce: CmpTerm
+			reduce(42), // !=~, reduce: CmpTerm
+			reduce(42), // ==, reduce: CmpTerm
+			reduce(42), // !=, reduce: CmpTerm
+			reduce(42), // >, reduce: CmpTerm
+			reduce(42), // >=, reduce: CmpTerm
+			reduce(42), // <, reduce: CmpTerm
+			reduce(42), // <=, reduce: CmpTerm
+			shift(148), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -24095,7 +24095,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(43), // ], reduce: BitwiseORTerm
+			reduce(42), // ], reduce: CmpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -24136,22 +24136,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(45), // ?, reduce: BitwiseXORTerm
+			reduce(44), // ?, reduce: BitwiseORTerm
 			nil,        // :
-			reduce(45), // ||, reduce: BitwiseXORTerm
-			reduce(45), // ^^, reduce: BitwiseXORTerm
-			reduce(45), // &&, reduce: BitwiseXORTerm
-			reduce(45), // =~, reduce: BitwiseXORTerm
-			reduce(45), // !=~, reduce: BitwiseXORTerm
-			reduce(45), // ==, reduce: BitwiseXORTerm
-			reduce(45), // !=, reduce: BitwiseXORTerm
-			reduce(45), // >, reduce: BitwiseXORTerm
-			reduce(45), // >=, reduce: BitwiseXORTerm
-			reduce(45), // <, reduce: BitwiseXORTerm
-			reduce(45), // <=, reduce: BitwiseXORTerm
-			reduce(45), // |, reduce: BitwiseXORTerm
-			reduce(45), // ^, reduce: BitwiseXORTerm
-			shift(149), // &
+			reduce(44), // ||, reduce: BitwiseORTerm
+			reduce(44), // ^^, reduce: BitwiseORTerm
+			reduce(44), // &&, reduce: BitwiseORTerm
+			reduce(44), // =~, reduce: BitwiseORTerm
+			reduce(44), // !=~, reduce: BitwiseORTerm
+			reduce(44), // ==, reduce: BitwiseORTerm
+			reduce(44), // !=, reduce: BitwiseORTerm
+			reduce(44), // >, reduce: BitwiseORTerm
+			reduce(44), // >=, reduce: BitwiseORTerm
+			reduce(44), // <, reduce: BitwiseORTerm
+			reduce(44), // <=, reduce: BitwiseORTerm
+			reduce(44), // |, reduce: BitwiseORTerm
+			shift(149), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -24173,7 +24173,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(45), // ], reduce: BitwiseXORTerm
+			reduce(44), // ], reduce: BitwiseORTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -24214,24 +24214,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(47), // ?, reduce: BitwiseANDTerm
+			reduce(46), // ?, reduce: BitwiseXORTerm
 			nil,        // :
-			reduce(47), // ||, reduce: BitwiseANDTerm
-			reduce(47), // ^^, reduce: BitwiseANDTerm
-			reduce(47), // &&, reduce: BitwiseANDTerm
-			reduce(47), // =~, reduce: BitwiseANDTerm
-			reduce(47), // !=~, reduce: BitwiseANDTerm
-			reduce(47), // ==, reduce: BitwiseANDTerm
-			reduce(47), // !=, reduce: BitwiseANDTerm
-			reduce(47), // >, reduce: BitwiseANDTerm
-			reduce(47), // >=, reduce: BitwiseANDTerm
-			reduce(47), // <, reduce: BitwiseANDTerm
-			reduce(47), // <=, reduce: BitwiseANDTerm
-			reduce(47), // |, reduce: BitwiseANDTerm
-			reduce(47), // ^, reduce: BitwiseANDTerm
-			reduce(47), // &, reduce: BitwiseANDTerm
-			shift(150), // <<
-			shift(151), // >>
+			reduce(46), // ||, reduce: BitwiseXORTerm
+			reduce(46), // ^^, reduce: BitwiseXORTerm
+			reduce(46), // &&, reduce: BitwiseXORTerm
+			reduce(46), // =~, reduce: BitwiseXORTerm
+			reduce(46), // !=~, reduce: BitwiseXORTerm
+			reduce(46), // ==, reduce: BitwiseXORTerm
+			reduce(46), // !=, reduce: BitwiseXORTerm
+			reduce(46), // >, reduce: BitwiseXORTerm
+			reduce(46), // >=, reduce: BitwiseXORTerm
+			reduce(46), // <, reduce: BitwiseXORTerm
+			reduce(46), // <=, reduce: BitwiseXORTerm
+			reduce(46), // |, reduce: BitwiseXORTerm
+			reduce(46), // ^, reduce: BitwiseXORTerm
+			shift(150), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -24251,7 +24251,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(47), // ], reduce: BitwiseANDTerm
+			reduce(46), // ], reduce: BitwiseXORTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -24292,29 +24292,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(49), // ?, reduce: BitwiseShiftTerm
+			reduce(48), // ?, reduce: BitwiseANDTerm
 			nil,        // :
-			reduce(49), // ||, reduce: BitwiseShiftTerm
-			reduce(49), // ^^, reduce: BitwiseShiftTerm
-			reduce(49), // &&, reduce: BitwiseShiftTerm
-			reduce(49), // =~, reduce: BitwiseShiftTerm
-			reduce(49), // !=~, reduce: BitwiseShiftTerm
-			reduce(49), // ==, reduce: BitwiseShiftTerm
-			reduce(49), // !=, reduce: BitwiseShiftTerm
-			reduce(49), // >, reduce: BitwiseShiftTerm
-			reduce(49), // >=, reduce: BitwiseShiftTerm
-			reduce(49), // <, reduce: BitwiseShiftTerm
-			reduce(49), // <=, reduce: BitwiseShiftTerm
-			reduce(49), // |, reduce: BitwiseShiftTerm
-			reduce(49), // ^, reduce: BitwiseShiftTerm
-			reduce(49), // &, reduce: BitwiseShiftTerm
-			reduce(49), // <<, reduce: BitwiseShiftTerm
-			reduce(49), // >>, reduce: BitwiseShiftTerm
-			shift(152), // +
-			shift(153), // -
-			shift(154), // .+
-			shift(155), // .-
-			shift(156), // .
+			reduce(48), // ||, reduce: BitwiseANDTerm
+			reduce(48), // ^^, reduce: BitwiseANDTerm
+			reduce(48), // &&, reduce: BitwiseANDTerm
+			reduce(48), // =~, reduce: BitwiseANDTerm
+			reduce(48), // !=~, reduce: BitwiseANDTerm
+			reduce(48), // ==, reduce: BitwiseANDTerm
+			reduce(48), // !=, reduce: BitwiseANDTerm
+			reduce(48), // >, reduce: BitwiseANDTerm
+			reduce(48), // >=, reduce: BitwiseANDTerm
+			reduce(48), // <, reduce: BitwiseANDTerm
+			reduce(48), // <=, reduce: BitwiseANDTerm
+			reduce(48), // |, reduce: BitwiseANDTerm
+			reduce(48), // ^, reduce: BitwiseANDTerm
+			reduce(48), // &, reduce: BitwiseANDTerm
+			shift(151), // <<
+			shift(152), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -24329,7 +24329,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(49), // ], reduce: BitwiseShiftTerm
+			reduce(48), // ], reduce: BitwiseANDTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -24388,11 +24388,11 @@ var actionTab = actionTable{
 			reduce(50), // &, reduce: BitwiseShiftTerm
 			reduce(50), // <<, reduce: BitwiseShiftTerm
 			reduce(50), // >>, reduce: BitwiseShiftTerm
-			shift(152), // +
-			shift(153), // -
-			shift(154), // .+
-			shift(155), // .-
-			shift(156), // .
+			shift(153), // +
+			shift(154), // -
+			shift(155), // .+
+			shift(156), // .-
+			shift(157), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -24448,36 +24448,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(52), // ?, reduce: AddsubdotTerm
+			reduce(51), // ?, reduce: BitwiseShiftTerm
 			nil,        // :
-			reduce(52), // ||, reduce: AddsubdotTerm
-			reduce(52), // ^^, reduce: AddsubdotTerm
-			reduce(52), // &&, reduce: AddsubdotTerm
-			reduce(52), // =~, reduce: AddsubdotTerm
-			reduce(52), // !=~, reduce: AddsubdotTerm
-			reduce(52), // ==, reduce: AddsubdotTerm
-			reduce(52), // !=, reduce: AddsubdotTerm
-			reduce(52), // >, reduce: AddsubdotTerm
-			reduce(52), // >=, reduce: AddsubdotTerm
-			reduce(52), // <, reduce: AddsubdotTerm
-			reduce(52), // <=, reduce: AddsubdotTerm
-			reduce(52), // |, reduce: AddsubdotTerm
-			reduce(52), // ^, reduce: AddsubdotTerm
-			reduce(52), // &, reduce: AddsubdotTerm
-			reduce(52), // <<, reduce: AddsubdotTerm
-			reduce(52), // >>, reduce: AddsubdotTerm
-			reduce(52), // +, reduce: AddsubdotTerm
-			reduce(52), // -, reduce: AddsubdotTerm
-			reduce(52), // .+, reduce: AddsubdotTerm
-			reduce(52), // .-, reduce: AddsubdotTerm
-			reduce(52), // ., reduce: AddsubdotTerm
-			shift(158), // *
-			shift(159), // /
-			shift(160), // //
-			shift(161), // %
-			shift(162), // .*
-			shift(163), // ./
-			shift(164), // .//
+			reduce(51), // ||, reduce: BitwiseShiftTerm
+			reduce(51), // ^^, reduce: BitwiseShiftTerm
+			reduce(51), // &&, reduce: BitwiseShiftTerm
+			reduce(51), // =~, reduce: BitwiseShiftTerm
+			reduce(51), // !=~, reduce: BitwiseShiftTerm
+			reduce(51), // ==, reduce: BitwiseShiftTerm
+			reduce(51), // !=, reduce: BitwiseShiftTerm
+			reduce(51), // >, reduce: BitwiseShiftTerm
+			reduce(51), // >=, reduce: BitwiseShiftTerm
+			reduce(51), // <, reduce: BitwiseShiftTerm
+			reduce(51), // <=, reduce: BitwiseShiftTerm
+			reduce(51), // |, reduce: BitwiseShiftTerm
+			reduce(51), // ^, reduce: BitwiseShiftTerm
+			reduce(51), // &, reduce: BitwiseShiftTerm
+			reduce(51), // <<, reduce: BitwiseShiftTerm
+			reduce(51), // >>, reduce: BitwiseShiftTerm
+			shift(153), // +
+			shift(154), // -
+			shift(155), // .+
+			shift(156), // .-
+			shift(157), // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -24485,7 +24485,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(52), // ], reduce: AddsubdotTerm
+			reduce(51), // ], reduce: BitwiseShiftTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -24549,13 +24549,13 @@ var actionTab = actionTable{
 			reduce(53), // .+, reduce: AddsubdotTerm
 			reduce(53), // .-, reduce: AddsubdotTerm
 			reduce(53), // ., reduce: AddsubdotTerm
-			shift(158), // *
-			shift(159), // /
-			shift(160), // //
-			shift(161), // %
-			shift(162), // .*
-			shift(163), // ./
-			shift(164), // .//
+			shift(159), // *
+			shift(160), // /
+			shift(161), // //
+			shift(162), // %
+			shift(163), // .*
+			shift(164), // ./
+			shift(165), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -24627,13 +24627,13 @@ var actionTab = actionTable{
 			reduce(54), // .+, reduce: AddsubdotTerm
 			reduce(54), // .-, reduce: AddsubdotTerm
 			reduce(54), // ., reduce: AddsubdotTerm
-			shift(158), // *
-			shift(159), // /
-			shift(160), // //
-			shift(161), // %
-			shift(162), // .*
-			shift(163), // ./
-			shift(164), // .//
+			shift(159), // *
+			shift(160), // /
+			shift(161), // //
+			shift(162), // %
+			shift(163), // .*
+			shift(164), // ./
+			shift(165), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -24705,13 +24705,13 @@ var actionTab = actionTable{
 			reduce(55), // .+, reduce: AddsubdotTerm
 			reduce(55), // .-, reduce: AddsubdotTerm
 			reduce(55), // ., reduce: AddsubdotTerm
-			shift(158), // *
-			shift(159), // /
-			shift(160), // //
-			shift(161), // %
-			shift(162), // .*
-			shift(163), // ./
-			shift(164), // .//
+			shift(159), // *
+			shift(160), // /
+			shift(161), // //
+			shift(162), // %
+			shift(163), // .*
+			shift(164), // ./
+			shift(165), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -24783,13 +24783,13 @@ var actionTab = actionTable{
 			reduce(56), // .+, reduce: AddsubdotTerm
 			reduce(56), // .-, reduce: AddsubdotTerm
 			reduce(56), // ., reduce: AddsubdotTerm
-			shift(158), // *
-			shift(159), // /
-			shift(160), // //
-			shift(161), // %
-			shift(162), // .*
-			shift(163), // ./
-			shift(164), // .//
+			shift(159), // *
+			shift(160), // /
+			shift(161), // //
+			shift(162), // %
+			shift(163), // .*
+			shift(164), // ./
+			shift(165), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -24838,36 +24838,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(58), // ?, reduce: MuldivTerm
+			reduce(57), // ?, reduce: AddsubdotTerm
 			nil,        // :
-			reduce(58), // ||, reduce: MuldivTerm
-			reduce(58), // ^^, reduce: MuldivTerm
-			reduce(58), // &&, reduce: MuldivTerm
-			reduce(58), // =~, reduce: MuldivTerm
-			reduce(58), // !=~, reduce: MuldivTerm
-			reduce(58), // ==, reduce: MuldivTerm
-			reduce(58), // !=, reduce: MuldivTerm
-			reduce(58), // >, reduce: MuldivTerm
-			reduce(58), // >=, reduce: MuldivTerm
-			reduce(58), // <, reduce: MuldivTerm
-			reduce(58), // <=, reduce: MuldivTerm
-			reduce(58), // |, reduce: MuldivTerm
-			reduce(58), // ^, reduce: MuldivTerm
-			reduce(58), // &, reduce: MuldivTerm
-			reduce(58), // <<, reduce: MuldivTerm
-			reduce(58), // >>, reduce: MuldivTerm
-			reduce(58), // +, reduce: MuldivTerm
-			reduce(58), // -, reduce: MuldivTerm
-			reduce(58), // .+, reduce: MuldivTerm
-			reduce(58), // .-, reduce: MuldivTerm
-			reduce(58), // ., reduce: MuldivTerm
-			reduce(58), // *, reduce: MuldivTerm
-			reduce(58), // /, reduce: MuldivTerm
-			reduce(58), // //, reduce: MuldivTerm
-			reduce(58), // %, reduce: MuldivTerm
-			reduce(58), // .*, reduce: MuldivTerm
-			reduce(58), // ./, reduce: MuldivTerm
-			reduce(58), // .//, reduce: MuldivTerm
+			reduce(57), // ||, reduce: AddsubdotTerm
+			reduce(57), // ^^, reduce: AddsubdotTerm
+			reduce(57), // &&, reduce: AddsubdotTerm
+			reduce(57), // =~, reduce: AddsubdotTerm
+			reduce(57), // !=~, reduce: AddsubdotTerm
+			reduce(57), // ==, reduce: AddsubdotTerm
+			reduce(57), // !=, reduce: AddsubdotTerm
+			reduce(57), // >, reduce: AddsubdotTerm
+			reduce(57), // >=, reduce: AddsubdotTerm
+			reduce(57), // <, reduce: AddsubdotTerm
+			reduce(57), // <=, reduce: AddsubdotTerm
+			reduce(57), // |, reduce: AddsubdotTerm
+			reduce(57), // ^, reduce: AddsubdotTerm
+			reduce(57), // &, reduce: AddsubdotTerm
+			reduce(57), // <<, reduce: AddsubdotTerm
+			reduce(57), // >>, reduce: AddsubdotTerm
+			reduce(57), // +, reduce: AddsubdotTerm
+			reduce(57), // -, reduce: AddsubdotTerm
+			reduce(57), // .+, reduce: AddsubdotTerm
+			reduce(57), // .-, reduce: AddsubdotTerm
+			reduce(57), // ., reduce: AddsubdotTerm
+			shift(159), // *
+			shift(160), // /
+			shift(161), // //
+			shift(162), // %
+			shift(163), // .*
+			shift(164), // ./
+			shift(165), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -24875,7 +24875,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(58), // ], reduce: MuldivTerm
+			reduce(57), // ], reduce: AddsubdotTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -25384,36 +25384,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: PowTerm
+			reduce(65), // ?, reduce: MuldivTerm
 			nil,        // :
-			reduce(73), // ||, reduce: PowTerm
-			reduce(73), // ^^, reduce: PowTerm
-			reduce(73), // &&, reduce: PowTerm
-			reduce(73), // =~, reduce: PowTerm
-			reduce(73), // !=~, reduce: PowTerm
-			reduce(73), // ==, reduce: PowTerm
-			reduce(73), // !=, reduce: PowTerm
-			reduce(73), // >, reduce: PowTerm
-			reduce(73), // >=, reduce: PowTerm
-			reduce(73), // <, reduce: PowTerm
-			reduce(73), // <=, reduce: PowTerm
-			reduce(73), // |, reduce: PowTerm
-			reduce(73), // ^, reduce: PowTerm
-			reduce(73), // &, reduce: PowTerm
-			reduce(73), // <<, reduce: PowTerm
-			reduce(73), // >>, reduce: PowTerm
-			reduce(73), // +, reduce: PowTerm
-			reduce(73), // -, reduce: PowTerm
-			reduce(73), // .+, reduce: PowTerm
-			reduce(73), // .-, reduce: PowTerm
-			reduce(73), // ., reduce: PowTerm
-			reduce(73), // *, reduce: PowTerm
-			reduce(73), // /, reduce: PowTerm
-			reduce(73), // //, reduce: PowTerm
-			reduce(73), // %, reduce: PowTerm
-			reduce(73), // .*, reduce: PowTerm
-			reduce(73), // ./, reduce: PowTerm
-			reduce(73), // .//, reduce: PowTerm
+			reduce(65), // ||, reduce: MuldivTerm
+			reduce(65), // ^^, reduce: MuldivTerm
+			reduce(65), // &&, reduce: MuldivTerm
+			reduce(65), // =~, reduce: MuldivTerm
+			reduce(65), // !=~, reduce: MuldivTerm
+			reduce(65), // ==, reduce: MuldivTerm
+			reduce(65), // !=, reduce: MuldivTerm
+			reduce(65), // >, reduce: MuldivTerm
+			reduce(65), // >=, reduce: MuldivTerm
+			reduce(65), // <, reduce: MuldivTerm
+			reduce(65), // <=, reduce: MuldivTerm
+			reduce(65), // |, reduce: MuldivTerm
+			reduce(65), // ^, reduce: MuldivTerm
+			reduce(65), // &, reduce: MuldivTerm
+			reduce(65), // <<, reduce: MuldivTerm
+			reduce(65), // >>, reduce: MuldivTerm
+			reduce(65), // +, reduce: MuldivTerm
+			reduce(65), // -, reduce: MuldivTerm
+			reduce(65), // .+, reduce: MuldivTerm
+			reduce(65), // .-, reduce: MuldivTerm
+			reduce(65), // ., reduce: MuldivTerm
+			reduce(65), // *, reduce: MuldivTerm
+			reduce(65), // /, reduce: MuldivTerm
+			reduce(65), // //, reduce: MuldivTerm
+			reduce(65), // %, reduce: MuldivTerm
+			reduce(65), // .*, reduce: MuldivTerm
+			reduce(65), // ./, reduce: MuldivTerm
+			reduce(65), // .//, reduce: MuldivTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -25421,7 +25421,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(73), // ], reduce: PowTerm
+			reduce(65), // ], reduce: MuldivTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -25462,44 +25462,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(75), // ?, reduce: AtomOrFunction
+			reduce(74), // ?, reduce: PowTerm
 			nil,        // :
-			reduce(75), // ||, reduce: AtomOrFunction
-			reduce(75), // ^^, reduce: AtomOrFunction
-			reduce(75), // &&, reduce: AtomOrFunction
-			reduce(75), // =~, reduce: AtomOrFunction
-			reduce(75), // !=~, reduce: AtomOrFunction
-			reduce(75), // ==, reduce: AtomOrFunction
-			reduce(75), // !=, reduce: AtomOrFunction
-			reduce(75), // >, reduce: AtomOrFunction
-			reduce(75), // >=, reduce: AtomOrFunction
-			reduce(75), // <, reduce: AtomOrFunction
-			reduce(75), // <=, reduce: AtomOrFunction
-			reduce(75), // |, reduce: AtomOrFunction
-			reduce(75), // ^, reduce: AtomOrFunction
-			reduce(75), // &, reduce: AtomOrFunction
-			reduce(75), // <<, reduce: AtomOrFunction
-			reduce(75), // >>, reduce: AtomOrFunction
-			reduce(75), // +, reduce: AtomOrFunction
-			reduce(75), // -, reduce: AtomOrFunction
-			reduce(75), // .+, reduce: AtomOrFunction
-			reduce(75), // .-, reduce: AtomOrFunction
-			reduce(75), // ., reduce: AtomOrFunction
-			reduce(75), // *, reduce: AtomOrFunction
-			reduce(75), // /, reduce: AtomOrFunction
-			reduce(75), // //, reduce: AtomOrFunction
-			reduce(75), // %, reduce: AtomOrFunction
-			reduce(75), // .*, reduce: AtomOrFunction
-			reduce(75), // ./, reduce: AtomOrFunction
-			reduce(75), // .//, reduce: AtomOrFunction
+			reduce(74), // ||, reduce: PowTerm
+			reduce(74), // ^^, reduce: PowTerm
+			reduce(74), // &&, reduce: PowTerm
+			reduce(74), // =~, reduce: PowTerm
+			reduce(74), // !=~, reduce: PowTerm
+			reduce(74), // ==, reduce: PowTerm
+			reduce(74), // !=, reduce: PowTerm
+			reduce(74), // >, reduce: PowTerm
+			reduce(74), // >=, reduce: PowTerm
+			reduce(74), // <, reduce: PowTerm
+			reduce(74), // <=, reduce: PowTerm
+			reduce(74), // |, reduce: PowTerm
+			reduce(74), // ^, reduce: PowTerm
+			reduce(74), // &, reduce: PowTerm
+			reduce(74), // <<, reduce: PowTerm
+			reduce(74), // >>, reduce: PowTerm
+			reduce(74), // +, reduce: PowTerm
+			reduce(74), // -, reduce: PowTerm
+			reduce(74), // .+, reduce: PowTerm
+			reduce(74), // .-, reduce: PowTerm
+			reduce(74), // ., reduce: PowTerm
+			reduce(74), // *, reduce: PowTerm
+			reduce(74), // /, reduce: PowTerm
+			reduce(74), // //, reduce: PowTerm
+			reduce(74), // %, reduce: PowTerm
+			reduce(74), // .*, reduce: PowTerm
+			reduce(74), // ./, reduce: PowTerm
+			reduce(74), // .//, reduce: PowTerm
 			nil,        // !
 			nil,        // ~
-			reduce(75), // **, reduce: AtomOrFunction
+			nil,        // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(75), // ], reduce: AtomOrFunction
+			reduce(74), // ], reduce: PowTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -25540,59 +25540,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(76), // ?, reduce: AtomOrFunction
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
+			reduce(76), // ||, reduce: AtomOrFunction
+			reduce(76), // ^^, reduce: AtomOrFunction
+			reduce(76), // &&, reduce: AtomOrFunction
+			reduce(76), // =~, reduce: AtomOrFunction
+			reduce(76), // !=~, reduce: AtomOrFunction
+			reduce(76), // ==, reduce: AtomOrFunction
+			reduce(76), // !=, reduce: AtomOrFunction
+			reduce(76), // >, reduce: AtomOrFunction
+			reduce(76), // >=, reduce: AtomOrFunction
+			reduce(76), // <, reduce: AtomOrFunction
+			reduce(76), // <=, reduce: AtomOrFunction
+			reduce(76), // |, reduce: AtomOrFunction
+			reduce(76), // ^, reduce: AtomOrFunction
+			reduce(76), // &, reduce: AtomOrFunction
+			reduce(76), // <<, reduce: AtomOrFunction
+			reduce(76), // >>, reduce: AtomOrFunction
+			reduce(76), // +, reduce: AtomOrFunction
+			reduce(76), // -, reduce: AtomOrFunction
+			reduce(76), // .+, reduce: AtomOrFunction
+			reduce(76), // .-, reduce: AtomOrFunction
+			reduce(76), // ., reduce: AtomOrFunction
+			reduce(76), // *, reduce: AtomOrFunction
+			reduce(76), // /, reduce: AtomOrFunction
+			reduce(76), // //, reduce: AtomOrFunction
+			reduce(76), // %, reduce: AtomOrFunction
+			reduce(76), // .*, reduce: AtomOrFunction
+			reduce(76), // ./, reduce: AtomOrFunction
+			reduce(76), // .//, reduce: AtomOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(76), // **, reduce: AtomOrFunction
+			nil,        // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(76), // ], reduce: AtomOrFunction
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S328
@@ -25636,10 +25636,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -25648,29 +25648,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(194), // (
+			shift(277), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S329
@@ -25714,10 +25714,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -25726,29 +25726,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S330
@@ -25792,10 +25792,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -25804,29 +25804,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S331
@@ -25870,10 +25870,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -25882,29 +25882,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S332
@@ -25948,10 +25948,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -25960,29 +25960,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S333
@@ -26026,10 +26026,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26038,29 +26038,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S334
@@ -26104,10 +26104,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26116,29 +26116,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S335
@@ -26182,10 +26182,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26194,29 +26194,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S336
@@ -26260,10 +26260,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26272,29 +26272,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S337
@@ -26338,10 +26338,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26350,29 +26350,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S338
@@ -26416,10 +26416,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26428,29 +26428,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S339
@@ -26494,10 +26494,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26506,29 +26506,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S340
@@ -26572,10 +26572,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26584,29 +26584,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S341
@@ -26650,10 +26650,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26662,29 +26662,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S342
@@ -26728,10 +26728,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26740,29 +26740,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S343
@@ -26806,10 +26806,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26818,29 +26818,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S344
@@ -26884,10 +26884,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26896,29 +26896,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S345
@@ -26962,10 +26962,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -26974,29 +26974,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S346
@@ -27040,10 +27040,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -27052,29 +27052,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S347
@@ -27118,10 +27118,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -27130,29 +27130,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S348
@@ -27196,10 +27196,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -27208,29 +27208,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S349
@@ -27256,608 +27256,62 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(66), // ?, reduce: UnaryBitwiseOpTerm
+			nil,        // ?
 			nil,        // :
-			reduce(66), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(66), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // |, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(66), // +, reduce: UnaryBitwiseOpTerm
-			reduce(66), // -, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ., reduce: UnaryBitwiseOpTerm
-			reduce(66), // *, reduce: UnaryBitwiseOpTerm
-			reduce(66), // /, reduce: UnaryBitwiseOpTerm
-			reduce(66), // //, reduce: UnaryBitwiseOpTerm
-			reduce(66), // %, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			nil,        // (
-			reduce(66), // ), reduce: UnaryBitwiseOpTerm
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S350
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S351
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S352
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S353
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S354
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S355
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S356
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
-			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
-			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S357
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -27933,6 +27387,552 @@ var actionTab = actionTable{
 			nil,        // md_token_FNR
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S351
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S352
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S353
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S354
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S355
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S356
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S357
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(192), // !
+			shift(193), // ~
+			nil,        // **
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
+			nil,        // ]
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S358
@@ -28270,59 +28270,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // |, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(72), // +, reduce: UnaryBitwiseOpTerm
+			reduce(72), // -, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ., reduce: UnaryBitwiseOpTerm
+			reduce(72), // *, reduce: UnaryBitwiseOpTerm
+			reduce(72), // /, reduce: UnaryBitwiseOpTerm
+			reduce(72), // //, reduce: UnaryBitwiseOpTerm
+			reduce(72), // %, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(194), // (
-			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			nil,        // (
+			reduce(72), // ), reduce: UnaryBitwiseOpTerm
+			nil,        // md_token_field_name
+			nil,        // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S363
@@ -28381,26 +28381,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			nil,        // (
-			shift(467), // )
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(195), // (
+			nil,        // )
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S364
@@ -28460,10 +28460,10 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			nil,        // )
+			shift(468), // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			shift(468), // ]
+			nil,        // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -28504,44 +28504,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(80), // ?, reduce: IndirectFieldName
+			nil,        // ?
 			nil,        // :
-			reduce(80), // ||, reduce: IndirectFieldName
-			reduce(80), // ^^, reduce: IndirectFieldName
-			reduce(80), // &&, reduce: IndirectFieldName
-			reduce(80), // =~, reduce: IndirectFieldName
-			reduce(80), // !=~, reduce: IndirectFieldName
-			reduce(80), // ==, reduce: IndirectFieldName
-			reduce(80), // !=, reduce: IndirectFieldName
-			reduce(80), // >, reduce: IndirectFieldName
-			reduce(80), // >=, reduce: IndirectFieldName
-			reduce(80), // <, reduce: IndirectFieldName
-			reduce(80), // <=, reduce: IndirectFieldName
-			reduce(80), // |, reduce: IndirectFieldName
-			reduce(80), // ^, reduce: IndirectFieldName
-			reduce(80), // &, reduce: IndirectFieldName
-			reduce(80), // <<, reduce: IndirectFieldName
-			reduce(80), // >>, reduce: IndirectFieldName
-			reduce(80), // +, reduce: IndirectFieldName
-			reduce(80), // -, reduce: IndirectFieldName
-			reduce(80), // .+, reduce: IndirectFieldName
-			reduce(80), // .-, reduce: IndirectFieldName
-			reduce(80), // ., reduce: IndirectFieldName
-			reduce(80), // *, reduce: IndirectFieldName
-			reduce(80), // /, reduce: IndirectFieldName
-			reduce(80), // //, reduce: IndirectFieldName
-			reduce(80), // %, reduce: IndirectFieldName
-			reduce(80), // .*, reduce: IndirectFieldName
-			reduce(80), // ./, reduce: IndirectFieldName
-			reduce(80), // .//, reduce: IndirectFieldName
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
-			reduce(80), // **, reduce: IndirectFieldName
+			nil,        // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(80), // ], reduce: IndirectFieldName
+			shift(469), // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -28582,44 +28582,44 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
-			shift(469), // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(81), // ?, reduce: IndirectFieldName
+			nil,        // :
+			reduce(81), // ||, reduce: IndirectFieldName
+			reduce(81), // ^^, reduce: IndirectFieldName
+			reduce(81), // &&, reduce: IndirectFieldName
+			reduce(81), // =~, reduce: IndirectFieldName
+			reduce(81), // !=~, reduce: IndirectFieldName
+			reduce(81), // ==, reduce: IndirectFieldName
+			reduce(81), // !=, reduce: IndirectFieldName
+			reduce(81), // >, reduce: IndirectFieldName
+			reduce(81), // >=, reduce: IndirectFieldName
+			reduce(81), // <, reduce: IndirectFieldName
+			reduce(81), // <=, reduce: IndirectFieldName
+			reduce(81), // |, reduce: IndirectFieldName
+			reduce(81), // ^, reduce: IndirectFieldName
+			reduce(81), // &, reduce: IndirectFieldName
+			reduce(81), // <<, reduce: IndirectFieldName
+			reduce(81), // >>, reduce: IndirectFieldName
+			reduce(81), // +, reduce: IndirectFieldName
+			reduce(81), // -, reduce: IndirectFieldName
+			reduce(81), // .+, reduce: IndirectFieldName
+			reduce(81), // .-, reduce: IndirectFieldName
+			reduce(81), // ., reduce: IndirectFieldName
+			reduce(81), // *, reduce: IndirectFieldName
+			reduce(81), // /, reduce: IndirectFieldName
+			reduce(81), // //, reduce: IndirectFieldName
+			reduce(81), // %, reduce: IndirectFieldName
+			reduce(81), // .*, reduce: IndirectFieldName
+			reduce(81), // ./, reduce: IndirectFieldName
+			reduce(81), // .//, reduce: IndirectFieldName
 			nil,        // !
 			nil,        // ~
-			nil,        // **
+			reduce(81), // **, reduce: IndirectFieldName
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			nil,        // ]
+			reduce(81), // ], reduce: IndirectFieldName
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -28641,8 +28641,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(27), // $, reduce: LogicalOrTerm
-			reduce(27), // ;, reduce: LogicalOrTerm
+			nil,        // $
+			nil,        // ;
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -28660,10 +28660,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(27), // ?, reduce: LogicalOrTerm
-			nil,        // :
-			reduce(27), // ||, reduce: LogicalOrTerm
-			shift(218), // ^^
+			nil,        // ?
+			shift(470), // :
+			nil,        // ||
+			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -28719,8 +28719,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(29), // $, reduce: LogicalXORTerm
-			reduce(29), // ;, reduce: LogicalXORTerm
+			reduce(28), // $, reduce: LogicalOrTerm
+			reduce(28), // ;, reduce: LogicalOrTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -28738,11 +28738,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(29), // ?, reduce: LogicalXORTerm
+			reduce(28), // ?, reduce: LogicalOrTerm
 			nil,        // :
-			reduce(29), // ||, reduce: LogicalXORTerm
-			reduce(29), // ^^, reduce: LogicalXORTerm
-			shift(219), // &&
+			reduce(28), // ||, reduce: LogicalOrTerm
+			shift(219), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -28797,8 +28797,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(31), // $, reduce: LogicalAndTerm
-			reduce(31), // ;, reduce: LogicalAndTerm
+			reduce(30), // $, reduce: LogicalXORTerm
+			reduce(30), // ;, reduce: LogicalXORTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -28816,15 +28816,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(31), // ?, reduce: LogicalAndTerm
+			reduce(30), // ?, reduce: LogicalXORTerm
 			nil,        // :
-			reduce(31), // ||, reduce: LogicalAndTerm
-			reduce(31), // ^^, reduce: LogicalAndTerm
-			reduce(31), // &&, reduce: LogicalAndTerm
-			shift(220), // =~
-			shift(221), // !=~
-			shift(222), // ==
-			shift(223), // !=
+			reduce(30), // ||, reduce: LogicalXORTerm
+			reduce(30), // ^^, reduce: LogicalXORTerm
+			shift(220), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -28875,8 +28875,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(33), // $, reduce: EqneTerm
-			reduce(33), // ;, reduce: EqneTerm
+			reduce(32), // $, reduce: LogicalAndTerm
+			reduce(32), // ;, reduce: LogicalAndTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -28894,19 +28894,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(33), // ?, reduce: EqneTerm
+			reduce(32), // ?, reduce: LogicalAndTerm
 			nil,        // :
-			reduce(33), // ||, reduce: EqneTerm
-			reduce(33), // ^^, reduce: EqneTerm
-			reduce(33), // &&, reduce: EqneTerm
-			reduce(33), // =~, reduce: EqneTerm
-			reduce(33), // !=~, reduce: EqneTerm
-			reduce(33), // ==, reduce: EqneTerm
-			reduce(33), // !=, reduce: EqneTerm
-			shift(224), // >
-			shift(225), // >=
-			shift(226), // <
-			shift(227), // <=
+			reduce(32), // ||, reduce: LogicalAndTerm
+			reduce(32), // ^^, reduce: LogicalAndTerm
+			reduce(32), // &&, reduce: LogicalAndTerm
+			shift(221), // =~
+			shift(222), // !=~
+			shift(223), // ==
+			shift(224), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -28981,10 +28981,10 @@ var actionTab = actionTable{
 			reduce(34), // !=~, reduce: EqneTerm
 			reduce(34), // ==, reduce: EqneTerm
 			reduce(34), // !=, reduce: EqneTerm
-			shift(224), // >
-			shift(225), // >=
-			shift(226), // <
-			shift(227), // <=
+			shift(225), // >
+			shift(226), // >=
+			shift(227), // <
+			shift(228), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -29059,10 +29059,10 @@ var actionTab = actionTable{
 			reduce(35), // !=~, reduce: EqneTerm
 			reduce(35), // ==, reduce: EqneTerm
 			reduce(35), // !=, reduce: EqneTerm
-			shift(224), // >
-			shift(225), // >=
-			shift(226), // <
-			shift(227), // <=
+			shift(225), // >
+			shift(226), // >=
+			shift(227), // <
+			shift(228), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -29137,10 +29137,10 @@ var actionTab = actionTable{
 			reduce(36), // !=~, reduce: EqneTerm
 			reduce(36), // ==, reduce: EqneTerm
 			reduce(36), // !=, reduce: EqneTerm
-			shift(224), // >
-			shift(225), // >=
-			shift(226), // <
-			shift(227), // <=
+			shift(225), // >
+			shift(226), // >=
+			shift(227), // <
+			shift(228), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -29187,8 +29187,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(38), // $, reduce: CmpTerm
-			reduce(38), // ;, reduce: CmpTerm
+			reduce(37), // $, reduce: EqneTerm
+			reduce(37), // ;, reduce: EqneTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -29206,20 +29206,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(38), // ?, reduce: CmpTerm
+			reduce(37), // ?, reduce: EqneTerm
 			nil,        // :
-			reduce(38), // ||, reduce: CmpTerm
-			reduce(38), // ^^, reduce: CmpTerm
-			reduce(38), // &&, reduce: CmpTerm
-			reduce(38), // =~, reduce: CmpTerm
-			reduce(38), // !=~, reduce: CmpTerm
-			reduce(38), // ==, reduce: CmpTerm
-			reduce(38), // !=, reduce: CmpTerm
-			reduce(38), // >, reduce: CmpTerm
-			reduce(38), // >=, reduce: CmpTerm
-			reduce(38), // <, reduce: CmpTerm
-			reduce(38), // <=, reduce: CmpTerm
-			shift(228), // |
+			reduce(37), // ||, reduce: EqneTerm
+			reduce(37), // ^^, reduce: EqneTerm
+			reduce(37), // &&, reduce: EqneTerm
+			reduce(37), // =~, reduce: EqneTerm
+			reduce(37), // !=~, reduce: EqneTerm
+			reduce(37), // ==, reduce: EqneTerm
+			reduce(37), // !=, reduce: EqneTerm
+			shift(225), // >
+			shift(226), // >=
+			shift(227), // <
+			shift(228), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -29297,7 +29297,7 @@ var actionTab = actionTable{
 			reduce(39), // >=, reduce: CmpTerm
 			reduce(39), // <, reduce: CmpTerm
 			reduce(39), // <=, reduce: CmpTerm
-			shift(228), // |
+			shift(229), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -29375,7 +29375,7 @@ var actionTab = actionTable{
 			reduce(40), // >=, reduce: CmpTerm
 			reduce(40), // <, reduce: CmpTerm
 			reduce(40), // <=, reduce: CmpTerm
-			shift(228), // |
+			shift(229), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -29453,7 +29453,7 @@ var actionTab = actionTable{
 			reduce(41), // >=, reduce: CmpTerm
 			reduce(41), // <, reduce: CmpTerm
 			reduce(41), // <=, reduce: CmpTerm
-			shift(228), // |
+			shift(229), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -29499,8 +29499,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(43), // $, reduce: BitwiseORTerm
-			reduce(43), // ;, reduce: BitwiseORTerm
+			reduce(42), // $, reduce: CmpTerm
+			reduce(42), // ;, reduce: CmpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -29518,21 +29518,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(43), // ?, reduce: BitwiseORTerm
+			reduce(42), // ?, reduce: CmpTerm
 			nil,        // :
-			reduce(43), // ||, reduce: BitwiseORTerm
-			reduce(43), // ^^, reduce: BitwiseORTerm
-			reduce(43), // &&, reduce: BitwiseORTerm
-			reduce(43), // =~, reduce: BitwiseORTerm
-			reduce(43), // !=~, reduce: BitwiseORTerm
-			reduce(43), // ==, reduce: BitwiseORTerm
-			reduce(43), // !=, reduce: BitwiseORTerm
-			reduce(43), // >, reduce: BitwiseORTerm
-			reduce(43), // >=, reduce: BitwiseORTerm
-			reduce(43), // <, reduce: BitwiseORTerm
-			reduce(43), // <=, reduce: BitwiseORTerm
-			reduce(43), // |, reduce: BitwiseORTerm
-			shift(229), // ^
+			reduce(42), // ||, reduce: CmpTerm
+			reduce(42), // ^^, reduce: CmpTerm
+			reduce(42), // &&, reduce: CmpTerm
+			reduce(42), // =~, reduce: CmpTerm
+			reduce(42), // !=~, reduce: CmpTerm
+			reduce(42), // ==, reduce: CmpTerm
+			reduce(42), // !=, reduce: CmpTerm
+			reduce(42), // >, reduce: CmpTerm
+			reduce(42), // >=, reduce: CmpTerm
+			reduce(42), // <, reduce: CmpTerm
+			reduce(42), // <=, reduce: CmpTerm
+			shift(229), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -29577,8 +29577,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(45), // $, reduce: BitwiseXORTerm
-			reduce(45), // ;, reduce: BitwiseXORTerm
+			reduce(44), // $, reduce: BitwiseORTerm
+			reduce(44), // ;, reduce: BitwiseORTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -29596,22 +29596,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(45), // ?, reduce: BitwiseXORTerm
+			reduce(44), // ?, reduce: BitwiseORTerm
 			nil,        // :
-			reduce(45), // ||, reduce: BitwiseXORTerm
-			reduce(45), // ^^, reduce: BitwiseXORTerm
-			reduce(45), // &&, reduce: BitwiseXORTerm
-			reduce(45), // =~, reduce: BitwiseXORTerm
-			reduce(45), // !=~, reduce: BitwiseXORTerm
-			reduce(45), // ==, reduce: BitwiseXORTerm
-			reduce(45), // !=, reduce: BitwiseXORTerm
-			reduce(45), // >, reduce: BitwiseXORTerm
-			reduce(45), // >=, reduce: BitwiseXORTerm
-			reduce(45), // <, reduce: BitwiseXORTerm
-			reduce(45), // <=, reduce: BitwiseXORTerm
-			reduce(45), // |, reduce: BitwiseXORTerm
-			reduce(45), // ^, reduce: BitwiseXORTerm
-			shift(230), // &
+			reduce(44), // ||, reduce: BitwiseORTerm
+			reduce(44), // ^^, reduce: BitwiseORTerm
+			reduce(44), // &&, reduce: BitwiseORTerm
+			reduce(44), // =~, reduce: BitwiseORTerm
+			reduce(44), // !=~, reduce: BitwiseORTerm
+			reduce(44), // ==, reduce: BitwiseORTerm
+			reduce(44), // !=, reduce: BitwiseORTerm
+			reduce(44), // >, reduce: BitwiseORTerm
+			reduce(44), // >=, reduce: BitwiseORTerm
+			reduce(44), // <, reduce: BitwiseORTerm
+			reduce(44), // <=, reduce: BitwiseORTerm
+			reduce(44), // |, reduce: BitwiseORTerm
+			shift(230), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -29655,8 +29655,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(47), // $, reduce: BitwiseANDTerm
-			reduce(47), // ;, reduce: BitwiseANDTerm
+			reduce(46), // $, reduce: BitwiseXORTerm
+			reduce(46), // ;, reduce: BitwiseXORTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -29674,24 +29674,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(47), // ?, reduce: BitwiseANDTerm
+			reduce(46), // ?, reduce: BitwiseXORTerm
 			nil,        // :
-			reduce(47), // ||, reduce: BitwiseANDTerm
-			reduce(47), // ^^, reduce: BitwiseANDTerm
-			reduce(47), // &&, reduce: BitwiseANDTerm
-			reduce(47), // =~, reduce: BitwiseANDTerm
-			reduce(47), // !=~, reduce: BitwiseANDTerm
-			reduce(47), // ==, reduce: BitwiseANDTerm
-			reduce(47), // !=, reduce: BitwiseANDTerm
-			reduce(47), // >, reduce: BitwiseANDTerm
-			reduce(47), // >=, reduce: BitwiseANDTerm
-			reduce(47), // <, reduce: BitwiseANDTerm
-			reduce(47), // <=, reduce: BitwiseANDTerm
-			reduce(47), // |, reduce: BitwiseANDTerm
-			reduce(47), // ^, reduce: BitwiseANDTerm
-			reduce(47), // &, reduce: BitwiseANDTerm
-			shift(231), // <<
-			shift(232), // >>
+			reduce(46), // ||, reduce: BitwiseXORTerm
+			reduce(46), // ^^, reduce: BitwiseXORTerm
+			reduce(46), // &&, reduce: BitwiseXORTerm
+			reduce(46), // =~, reduce: BitwiseXORTerm
+			reduce(46), // !=~, reduce: BitwiseXORTerm
+			reduce(46), // ==, reduce: BitwiseXORTerm
+			reduce(46), // !=, reduce: BitwiseXORTerm
+			reduce(46), // >, reduce: BitwiseXORTerm
+			reduce(46), // >=, reduce: BitwiseXORTerm
+			reduce(46), // <, reduce: BitwiseXORTerm
+			reduce(46), // <=, reduce: BitwiseXORTerm
+			reduce(46), // |, reduce: BitwiseXORTerm
+			reduce(46), // ^, reduce: BitwiseXORTerm
+			shift(231), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -29733,8 +29733,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(49), // $, reduce: BitwiseShiftTerm
-			reduce(49), // ;, reduce: BitwiseShiftTerm
+			reduce(48), // $, reduce: BitwiseANDTerm
+			reduce(48), // ;, reduce: BitwiseANDTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -29752,29 +29752,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(49), // ?, reduce: BitwiseShiftTerm
+			reduce(48), // ?, reduce: BitwiseANDTerm
 			nil,        // :
-			reduce(49), // ||, reduce: BitwiseShiftTerm
-			reduce(49), // ^^, reduce: BitwiseShiftTerm
-			reduce(49), // &&, reduce: BitwiseShiftTerm
-			reduce(49), // =~, reduce: BitwiseShiftTerm
-			reduce(49), // !=~, reduce: BitwiseShiftTerm
-			reduce(49), // ==, reduce: BitwiseShiftTerm
-			reduce(49), // !=, reduce: BitwiseShiftTerm
-			reduce(49), // >, reduce: BitwiseShiftTerm
-			reduce(49), // >=, reduce: BitwiseShiftTerm
-			reduce(49), // <, reduce: BitwiseShiftTerm
-			reduce(49), // <=, reduce: BitwiseShiftTerm
-			reduce(49), // |, reduce: BitwiseShiftTerm
-			reduce(49), // ^, reduce: BitwiseShiftTerm
-			reduce(49), // &, reduce: BitwiseShiftTerm
-			reduce(49), // <<, reduce: BitwiseShiftTerm
-			reduce(49), // >>, reduce: BitwiseShiftTerm
-			shift(233), // +
-			shift(234), // -
-			shift(235), // .+
-			shift(236), // .-
-			shift(237), // .
+			reduce(48), // ||, reduce: BitwiseANDTerm
+			reduce(48), // ^^, reduce: BitwiseANDTerm
+			reduce(48), // &&, reduce: BitwiseANDTerm
+			reduce(48), // =~, reduce: BitwiseANDTerm
+			reduce(48), // !=~, reduce: BitwiseANDTerm
+			reduce(48), // ==, reduce: BitwiseANDTerm
+			reduce(48), // !=, reduce: BitwiseANDTerm
+			reduce(48), // >, reduce: BitwiseANDTerm
+			reduce(48), // >=, reduce: BitwiseANDTerm
+			reduce(48), // <, reduce: BitwiseANDTerm
+			reduce(48), // <=, reduce: BitwiseANDTerm
+			reduce(48), // |, reduce: BitwiseANDTerm
+			reduce(48), // ^, reduce: BitwiseANDTerm
+			reduce(48), // &, reduce: BitwiseANDTerm
+			shift(232), // <<
+			shift(233), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -29848,11 +29848,11 @@ var actionTab = actionTable{
 			reduce(50), // &, reduce: BitwiseShiftTerm
 			reduce(50), // <<, reduce: BitwiseShiftTerm
 			reduce(50), // >>, reduce: BitwiseShiftTerm
-			shift(233), // +
-			shift(234), // -
-			shift(235), // .+
-			shift(236), // .-
-			shift(237), // .
+			shift(234), // +
+			shift(235), // -
+			shift(236), // .+
+			shift(237), // .-
+			shift(238), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -29889,8 +29889,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(52), // $, reduce: AddsubdotTerm
-			reduce(52), // ;, reduce: AddsubdotTerm
+			reduce(51), // $, reduce: BitwiseShiftTerm
+			reduce(51), // ;, reduce: BitwiseShiftTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -29908,36 +29908,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(52), // ?, reduce: AddsubdotTerm
+			reduce(51), // ?, reduce: BitwiseShiftTerm
 			nil,        // :
-			reduce(52), // ||, reduce: AddsubdotTerm
-			reduce(52), // ^^, reduce: AddsubdotTerm
-			reduce(52), // &&, reduce: AddsubdotTerm
-			reduce(52), // =~, reduce: AddsubdotTerm
-			reduce(52), // !=~, reduce: AddsubdotTerm
-			reduce(52), // ==, reduce: AddsubdotTerm
-			reduce(52), // !=, reduce: AddsubdotTerm
-			reduce(52), // >, reduce: AddsubdotTerm
-			reduce(52), // >=, reduce: AddsubdotTerm
-			reduce(52), // <, reduce: AddsubdotTerm
-			reduce(52), // <=, reduce: AddsubdotTerm
-			reduce(52), // |, reduce: AddsubdotTerm
-			reduce(52), // ^, reduce: AddsubdotTerm
-			reduce(52), // &, reduce: AddsubdotTerm
-			reduce(52), // <<, reduce: AddsubdotTerm
-			reduce(52), // >>, reduce: AddsubdotTerm
-			reduce(52), // +, reduce: AddsubdotTerm
-			reduce(52), // -, reduce: AddsubdotTerm
-			reduce(52), // .+, reduce: AddsubdotTerm
-			reduce(52), // .-, reduce: AddsubdotTerm
-			reduce(52), // ., reduce: AddsubdotTerm
-			shift(239), // *
-			shift(240), // /
-			shift(241), // //
-			shift(242), // %
-			shift(243), // .*
-			shift(244), // ./
-			shift(245), // .//
+			reduce(51), // ||, reduce: BitwiseShiftTerm
+			reduce(51), // ^^, reduce: BitwiseShiftTerm
+			reduce(51), // &&, reduce: BitwiseShiftTerm
+			reduce(51), // =~, reduce: BitwiseShiftTerm
+			reduce(51), // !=~, reduce: BitwiseShiftTerm
+			reduce(51), // ==, reduce: BitwiseShiftTerm
+			reduce(51), // !=, reduce: BitwiseShiftTerm
+			reduce(51), // >, reduce: BitwiseShiftTerm
+			reduce(51), // >=, reduce: BitwiseShiftTerm
+			reduce(51), // <, reduce: BitwiseShiftTerm
+			reduce(51), // <=, reduce: BitwiseShiftTerm
+			reduce(51), // |, reduce: BitwiseShiftTerm
+			reduce(51), // ^, reduce: BitwiseShiftTerm
+			reduce(51), // &, reduce: BitwiseShiftTerm
+			reduce(51), // <<, reduce: BitwiseShiftTerm
+			reduce(51), // >>, reduce: BitwiseShiftTerm
+			shift(234), // +
+			shift(235), // -
+			shift(236), // .+
+			shift(237), // .-
+			shift(238), // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30009,13 +30009,13 @@ var actionTab = actionTable{
 			reduce(53), // .+, reduce: AddsubdotTerm
 			reduce(53), // .-, reduce: AddsubdotTerm
 			reduce(53), // ., reduce: AddsubdotTerm
-			shift(239), // *
-			shift(240), // /
-			shift(241), // //
-			shift(242), // %
-			shift(243), // .*
-			shift(244), // ./
-			shift(245), // .//
+			shift(240), // *
+			shift(241), // /
+			shift(242), // //
+			shift(243), // %
+			shift(244), // .*
+			shift(245), // ./
+			shift(246), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30087,13 +30087,13 @@ var actionTab = actionTable{
 			reduce(54), // .+, reduce: AddsubdotTerm
 			reduce(54), // .-, reduce: AddsubdotTerm
 			reduce(54), // ., reduce: AddsubdotTerm
-			shift(239), // *
-			shift(240), // /
-			shift(241), // //
-			shift(242), // %
-			shift(243), // .*
-			shift(244), // ./
-			shift(245), // .//
+			shift(240), // *
+			shift(241), // /
+			shift(242), // //
+			shift(243), // %
+			shift(244), // .*
+			shift(245), // ./
+			shift(246), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30165,13 +30165,13 @@ var actionTab = actionTable{
 			reduce(55), // .+, reduce: AddsubdotTerm
 			reduce(55), // .-, reduce: AddsubdotTerm
 			reduce(55), // ., reduce: AddsubdotTerm
-			shift(239), // *
-			shift(240), // /
-			shift(241), // //
-			shift(242), // %
-			shift(243), // .*
-			shift(244), // ./
-			shift(245), // .//
+			shift(240), // *
+			shift(241), // /
+			shift(242), // //
+			shift(243), // %
+			shift(244), // .*
+			shift(245), // ./
+			shift(246), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30243,13 +30243,13 @@ var actionTab = actionTable{
 			reduce(56), // .+, reduce: AddsubdotTerm
 			reduce(56), // .-, reduce: AddsubdotTerm
 			reduce(56), // ., reduce: AddsubdotTerm
-			shift(239), // *
-			shift(240), // /
-			shift(241), // //
-			shift(242), // %
-			shift(243), // .*
-			shift(244), // ./
-			shift(245), // .//
+			shift(240), // *
+			shift(241), // /
+			shift(242), // //
+			shift(243), // %
+			shift(244), // .*
+			shift(245), // ./
+			shift(246), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30279,8 +30279,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(58), // $, reduce: MuldivTerm
-			reduce(58), // ;, reduce: MuldivTerm
+			reduce(57), // $, reduce: AddsubdotTerm
+			reduce(57), // ;, reduce: AddsubdotTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -30298,36 +30298,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(58), // ?, reduce: MuldivTerm
+			reduce(57), // ?, reduce: AddsubdotTerm
 			nil,        // :
-			reduce(58), // ||, reduce: MuldivTerm
-			reduce(58), // ^^, reduce: MuldivTerm
-			reduce(58), // &&, reduce: MuldivTerm
-			reduce(58), // =~, reduce: MuldivTerm
-			reduce(58), // !=~, reduce: MuldivTerm
-			reduce(58), // ==, reduce: MuldivTerm
-			reduce(58), // !=, reduce: MuldivTerm
-			reduce(58), // >, reduce: MuldivTerm
-			reduce(58), // >=, reduce: MuldivTerm
-			reduce(58), // <, reduce: MuldivTerm
-			reduce(58), // <=, reduce: MuldivTerm
-			reduce(58), // |, reduce: MuldivTerm
-			reduce(58), // ^, reduce: MuldivTerm
-			reduce(58), // &, reduce: MuldivTerm
-			reduce(58), // <<, reduce: MuldivTerm
-			reduce(58), // >>, reduce: MuldivTerm
-			reduce(58), // +, reduce: MuldivTerm
-			reduce(58), // -, reduce: MuldivTerm
-			reduce(58), // .+, reduce: MuldivTerm
-			reduce(58), // .-, reduce: MuldivTerm
-			reduce(58), // ., reduce: MuldivTerm
-			reduce(58), // *, reduce: MuldivTerm
-			reduce(58), // /, reduce: MuldivTerm
-			reduce(58), // //, reduce: MuldivTerm
-			reduce(58), // %, reduce: MuldivTerm
-			reduce(58), // .*, reduce: MuldivTerm
-			reduce(58), // ./, reduce: MuldivTerm
-			reduce(58), // .//, reduce: MuldivTerm
+			reduce(57), // ||, reduce: AddsubdotTerm
+			reduce(57), // ^^, reduce: AddsubdotTerm
+			reduce(57), // &&, reduce: AddsubdotTerm
+			reduce(57), // =~, reduce: AddsubdotTerm
+			reduce(57), // !=~, reduce: AddsubdotTerm
+			reduce(57), // ==, reduce: AddsubdotTerm
+			reduce(57), // !=, reduce: AddsubdotTerm
+			reduce(57), // >, reduce: AddsubdotTerm
+			reduce(57), // >=, reduce: AddsubdotTerm
+			reduce(57), // <, reduce: AddsubdotTerm
+			reduce(57), // <=, reduce: AddsubdotTerm
+			reduce(57), // |, reduce: AddsubdotTerm
+			reduce(57), // ^, reduce: AddsubdotTerm
+			reduce(57), // &, reduce: AddsubdotTerm
+			reduce(57), // <<, reduce: AddsubdotTerm
+			reduce(57), // >>, reduce: AddsubdotTerm
+			reduce(57), // +, reduce: AddsubdotTerm
+			reduce(57), // -, reduce: AddsubdotTerm
+			reduce(57), // .+, reduce: AddsubdotTerm
+			reduce(57), // .-, reduce: AddsubdotTerm
+			reduce(57), // ., reduce: AddsubdotTerm
+			shift(240), // *
+			shift(241), // /
+			shift(242), // //
+			shift(243), // %
+			shift(244), // .*
+			shift(245), // ./
+			shift(246), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30825,8 +30825,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(73), // $, reduce: PowTerm
-			reduce(73), // ;, reduce: PowTerm
+			reduce(65), // $, reduce: MuldivTerm
+			reduce(65), // ;, reduce: MuldivTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -30844,36 +30844,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: PowTerm
+			reduce(65), // ?, reduce: MuldivTerm
 			nil,        // :
-			reduce(73), // ||, reduce: PowTerm
-			reduce(73), // ^^, reduce: PowTerm
-			reduce(73), // &&, reduce: PowTerm
-			reduce(73), // =~, reduce: PowTerm
-			reduce(73), // !=~, reduce: PowTerm
-			reduce(73), // ==, reduce: PowTerm
-			reduce(73), // !=, reduce: PowTerm
-			reduce(73), // >, reduce: PowTerm
-			reduce(73), // >=, reduce: PowTerm
-			reduce(73), // <, reduce: PowTerm
-			reduce(73), // <=, reduce: PowTerm
-			reduce(73), // |, reduce: PowTerm
-			reduce(73), // ^, reduce: PowTerm
-			reduce(73), // &, reduce: PowTerm
-			reduce(73), // <<, reduce: PowTerm
-			reduce(73), // >>, reduce: PowTerm
-			reduce(73), // +, reduce: PowTerm
-			reduce(73), // -, reduce: PowTerm
-			reduce(73), // .+, reduce: PowTerm
-			reduce(73), // .-, reduce: PowTerm
-			reduce(73), // ., reduce: PowTerm
-			reduce(73), // *, reduce: PowTerm
-			reduce(73), // /, reduce: PowTerm
-			reduce(73), // //, reduce: PowTerm
-			reduce(73), // %, reduce: PowTerm
-			reduce(73), // .*, reduce: PowTerm
-			reduce(73), // ./, reduce: PowTerm
-			reduce(73), // .//, reduce: PowTerm
+			reduce(65), // ||, reduce: MuldivTerm
+			reduce(65), // ^^, reduce: MuldivTerm
+			reduce(65), // &&, reduce: MuldivTerm
+			reduce(65), // =~, reduce: MuldivTerm
+			reduce(65), // !=~, reduce: MuldivTerm
+			reduce(65), // ==, reduce: MuldivTerm
+			reduce(65), // !=, reduce: MuldivTerm
+			reduce(65), // >, reduce: MuldivTerm
+			reduce(65), // >=, reduce: MuldivTerm
+			reduce(65), // <, reduce: MuldivTerm
+			reduce(65), // <=, reduce: MuldivTerm
+			reduce(65), // |, reduce: MuldivTerm
+			reduce(65), // ^, reduce: MuldivTerm
+			reduce(65), // &, reduce: MuldivTerm
+			reduce(65), // <<, reduce: MuldivTerm
+			reduce(65), // >>, reduce: MuldivTerm
+			reduce(65), // +, reduce: MuldivTerm
+			reduce(65), // -, reduce: MuldivTerm
+			reduce(65), // .+, reduce: MuldivTerm
+			reduce(65), // .-, reduce: MuldivTerm
+			reduce(65), // ., reduce: MuldivTerm
+			reduce(65), // *, reduce: MuldivTerm
+			reduce(65), // /, reduce: MuldivTerm
+			reduce(65), // //, reduce: MuldivTerm
+			reduce(65), // %, reduce: MuldivTerm
+			reduce(65), // .*, reduce: MuldivTerm
+			reduce(65), // ./, reduce: MuldivTerm
+			reduce(65), // .//, reduce: MuldivTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -30903,8 +30903,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(75), // $, reduce: AtomOrFunction
-			reduce(75), // ;, reduce: AtomOrFunction
+			reduce(74), // $, reduce: PowTerm
+			reduce(74), // ;, reduce: PowTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -30922,39 +30922,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(75), // ?, reduce: AtomOrFunction
+			reduce(74), // ?, reduce: PowTerm
 			nil,        // :
-			reduce(75), // ||, reduce: AtomOrFunction
-			reduce(75), // ^^, reduce: AtomOrFunction
-			reduce(75), // &&, reduce: AtomOrFunction
-			reduce(75), // =~, reduce: AtomOrFunction
-			reduce(75), // !=~, reduce: AtomOrFunction
-			reduce(75), // ==, reduce: AtomOrFunction
-			reduce(75), // !=, reduce: AtomOrFunction
-			reduce(75), // >, reduce: AtomOrFunction
-			reduce(75), // >=, reduce: AtomOrFunction
-			reduce(75), // <, reduce: AtomOrFunction
-			reduce(75), // <=, reduce: AtomOrFunction
-			reduce(75), // |, reduce: AtomOrFunction
-			reduce(75), // ^, reduce: AtomOrFunction
-			reduce(75), // &, reduce: AtomOrFunction
-			reduce(75), // <<, reduce: AtomOrFunction
-			reduce(75), // >>, reduce: AtomOrFunction
-			reduce(75), // +, reduce: AtomOrFunction
-			reduce(75), // -, reduce: AtomOrFunction
-			reduce(75), // .+, reduce: AtomOrFunction
-			reduce(75), // .-, reduce: AtomOrFunction
-			reduce(75), // ., reduce: AtomOrFunction
-			reduce(75), // *, reduce: AtomOrFunction
-			reduce(75), // /, reduce: AtomOrFunction
-			reduce(75), // //, reduce: AtomOrFunction
-			reduce(75), // %, reduce: AtomOrFunction
-			reduce(75), // .*, reduce: AtomOrFunction
-			reduce(75), // ./, reduce: AtomOrFunction
-			reduce(75), // .//, reduce: AtomOrFunction
+			reduce(74), // ||, reduce: PowTerm
+			reduce(74), // ^^, reduce: PowTerm
+			reduce(74), // &&, reduce: PowTerm
+			reduce(74), // =~, reduce: PowTerm
+			reduce(74), // !=~, reduce: PowTerm
+			reduce(74), // ==, reduce: PowTerm
+			reduce(74), // !=, reduce: PowTerm
+			reduce(74), // >, reduce: PowTerm
+			reduce(74), // >=, reduce: PowTerm
+			reduce(74), // <, reduce: PowTerm
+			reduce(74), // <=, reduce: PowTerm
+			reduce(74), // |, reduce: PowTerm
+			reduce(74), // ^, reduce: PowTerm
+			reduce(74), // &, reduce: PowTerm
+			reduce(74), // <<, reduce: PowTerm
+			reduce(74), // >>, reduce: PowTerm
+			reduce(74), // +, reduce: PowTerm
+			reduce(74), // -, reduce: PowTerm
+			reduce(74), // .+, reduce: PowTerm
+			reduce(74), // .-, reduce: PowTerm
+			reduce(74), // ., reduce: PowTerm
+			reduce(74), // *, reduce: PowTerm
+			reduce(74), // /, reduce: PowTerm
+			reduce(74), // //, reduce: PowTerm
+			reduce(74), // %, reduce: PowTerm
+			reduce(74), // .*, reduce: PowTerm
+			reduce(74), // ./, reduce: PowTerm
+			reduce(74), // .//, reduce: PowTerm
 			nil,        // !
 			nil,        // ~
-			reduce(75), // **, reduce: AtomOrFunction
+			nil,        // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -30981,8 +30981,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(80), // $, reduce: IndirectFieldName
-			reduce(80), // ;, reduce: IndirectFieldName
+			reduce(76), // $, reduce: AtomOrFunction
+			reduce(76), // ;, reduce: AtomOrFunction
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -31000,39 +31000,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(80), // ?, reduce: IndirectFieldName
+			reduce(76), // ?, reduce: AtomOrFunction
 			nil,        // :
-			reduce(80), // ||, reduce: IndirectFieldName
-			reduce(80), // ^^, reduce: IndirectFieldName
-			reduce(80), // &&, reduce: IndirectFieldName
-			reduce(80), // =~, reduce: IndirectFieldName
-			reduce(80), // !=~, reduce: IndirectFieldName
-			reduce(80), // ==, reduce: IndirectFieldName
-			reduce(80), // !=, reduce: IndirectFieldName
-			reduce(80), // >, reduce: IndirectFieldName
-			reduce(80), // >=, reduce: IndirectFieldName
-			reduce(80), // <, reduce: IndirectFieldName
-			reduce(80), // <=, reduce: IndirectFieldName
-			reduce(80), // |, reduce: IndirectFieldName
-			reduce(80), // ^, reduce: IndirectFieldName
-			reduce(80), // &, reduce: IndirectFieldName
-			reduce(80), // <<, reduce: IndirectFieldName
-			reduce(80), // >>, reduce: IndirectFieldName
-			reduce(80), // +, reduce: IndirectFieldName
-			reduce(80), // -, reduce: IndirectFieldName
-			reduce(80), // .+, reduce: IndirectFieldName
-			reduce(80), // .-, reduce: IndirectFieldName
-			reduce(80), // ., reduce: IndirectFieldName
-			reduce(80), // *, reduce: IndirectFieldName
-			reduce(80), // /, reduce: IndirectFieldName
-			reduce(80), // //, reduce: IndirectFieldName
-			reduce(80), // %, reduce: IndirectFieldName
-			reduce(80), // .*, reduce: IndirectFieldName
-			reduce(80), // ./, reduce: IndirectFieldName
-			reduce(80), // .//, reduce: IndirectFieldName
+			reduce(76), // ||, reduce: AtomOrFunction
+			reduce(76), // ^^, reduce: AtomOrFunction
+			reduce(76), // &&, reduce: AtomOrFunction
+			reduce(76), // =~, reduce: AtomOrFunction
+			reduce(76), // !=~, reduce: AtomOrFunction
+			reduce(76), // ==, reduce: AtomOrFunction
+			reduce(76), // !=, reduce: AtomOrFunction
+			reduce(76), // >, reduce: AtomOrFunction
+			reduce(76), // >=, reduce: AtomOrFunction
+			reduce(76), // <, reduce: AtomOrFunction
+			reduce(76), // <=, reduce: AtomOrFunction
+			reduce(76), // |, reduce: AtomOrFunction
+			reduce(76), // ^, reduce: AtomOrFunction
+			reduce(76), // &, reduce: AtomOrFunction
+			reduce(76), // <<, reduce: AtomOrFunction
+			reduce(76), // >>, reduce: AtomOrFunction
+			reduce(76), // +, reduce: AtomOrFunction
+			reduce(76), // -, reduce: AtomOrFunction
+			reduce(76), // .+, reduce: AtomOrFunction
+			reduce(76), // .-, reduce: AtomOrFunction
+			reduce(76), // ., reduce: AtomOrFunction
+			reduce(76), // *, reduce: AtomOrFunction
+			reduce(76), // /, reduce: AtomOrFunction
+			reduce(76), // //, reduce: AtomOrFunction
+			reduce(76), // %, reduce: AtomOrFunction
+			reduce(76), // .*, reduce: AtomOrFunction
+			reduce(76), // ./, reduce: AtomOrFunction
+			reduce(76), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(80), // **, reduce: IndirectFieldName
+			reduce(76), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -31056,6 +31056,84 @@ var actionTab = actionTable{
 		},
 	},
 	actionRow{ // S398
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			reduce(81), // $, reduce: IndirectFieldName
+			reduce(81), // ;, reduce: IndirectFieldName
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(81), // ?, reduce: IndirectFieldName
+			nil,        // :
+			reduce(81), // ||, reduce: IndirectFieldName
+			reduce(81), // ^^, reduce: IndirectFieldName
+			reduce(81), // &&, reduce: IndirectFieldName
+			reduce(81), // =~, reduce: IndirectFieldName
+			reduce(81), // !=~, reduce: IndirectFieldName
+			reduce(81), // ==, reduce: IndirectFieldName
+			reduce(81), // !=, reduce: IndirectFieldName
+			reduce(81), // >, reduce: IndirectFieldName
+			reduce(81), // >=, reduce: IndirectFieldName
+			reduce(81), // <, reduce: IndirectFieldName
+			reduce(81), // <=, reduce: IndirectFieldName
+			reduce(81), // |, reduce: IndirectFieldName
+			reduce(81), // ^, reduce: IndirectFieldName
+			reduce(81), // &, reduce: IndirectFieldName
+			reduce(81), // <<, reduce: IndirectFieldName
+			reduce(81), // >>, reduce: IndirectFieldName
+			reduce(81), // +, reduce: IndirectFieldName
+			reduce(81), // -, reduce: IndirectFieldName
+			reduce(81), // .+, reduce: IndirectFieldName
+			reduce(81), // .-, reduce: IndirectFieldName
+			reduce(81), // ., reduce: IndirectFieldName
+			reduce(81), // *, reduce: IndirectFieldName
+			reduce(81), // /, reduce: IndirectFieldName
+			reduce(81), // //, reduce: IndirectFieldName
+			reduce(81), // %, reduce: IndirectFieldName
+			reduce(81), // .*, reduce: IndirectFieldName
+			reduce(81), // ./, reduce: IndirectFieldName
+			reduce(81), // .//, reduce: IndirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(81), // **, reduce: IndirectFieldName
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S399
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -31096,10 +31174,10 @@ var actionTab = actionTable{
 			nil,       // &
 			nil,       // <<
 			nil,       // >>
-			shift(42), // +
-			shift(44), // -
-			shift(45), // .+
-			shift(46), // .-
+			shift(43), // +
+			shift(45), // -
+			shift(46), // .+
+			shift(47), // .-
 			nil,       // .
 			nil,       // *
 			nil,       // /
@@ -31108,107 +31186,29 @@ var actionTab = actionTable{
 			nil,       // .*
 			nil,       // ./
 			nil,       // .//
-			shift(49), // !
-			shift(50), // ~
+			shift(50), // !
+			shift(51), // ~
 			nil,       // **
-			shift(52), // (
+			shift(53), // (
 			nil,       // )
-			shift(55), // md_token_field_name
-			shift(56), // $[
+			shift(56), // md_token_field_name
+			shift(57), // $[
 			nil,       // ]
-			shift(57), // md_token_string_literal
-			shift(58), // md_token_int_literal
-			shift(59), // md_token_float_literal
-			shift(60), // md_token_boolean_literal
-			shift(62), // md_token_IPS
-			shift(63), // md_token_IFS
-			shift(64), // md_token_IRS
-			shift(65), // md_token_OPS
-			shift(66), // md_token_OFS
-			shift(67), // md_token_ORS
-			shift(68), // md_token_NF
-			shift(69), // md_token_NR
-			shift(70), // md_token_FNR
-			shift(71), // md_token_FILENAME
-			shift(72), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S399
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(58), // md_token_string_literal
+			shift(59), // md_token_int_literal
+			shift(60), // md_token_float_literal
+			shift(61), // md_token_boolean_literal
+			shift(63), // md_token_IPS
+			shift(64), // md_token_IFS
+			shift(65), // md_token_IRS
+			shift(66), // md_token_OPS
+			shift(67), // md_token_OFS
+			shift(68), // md_token_ORS
+			shift(69), // md_token_NF
+			shift(70), // md_token_NR
+			shift(71), // md_token_FNR
+			shift(72), // md_token_FILENAME
+			shift(73), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S400
@@ -31252,10 +31252,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31264,29 +31264,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S401
@@ -31330,10 +31330,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31342,29 +31342,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S402
@@ -31408,10 +31408,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31420,29 +31420,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S403
@@ -31486,10 +31486,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31498,29 +31498,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S404
@@ -31564,10 +31564,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31576,29 +31576,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S405
@@ -31642,10 +31642,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31654,29 +31654,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S406
@@ -31720,10 +31720,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31732,29 +31732,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S407
@@ -31798,10 +31798,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31810,29 +31810,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S408
@@ -31876,10 +31876,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31888,29 +31888,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S409
@@ -31954,10 +31954,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -31966,29 +31966,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S410
@@ -32032,10 +32032,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32044,29 +32044,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S411
@@ -32110,10 +32110,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32122,29 +32122,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S412
@@ -32188,10 +32188,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32200,29 +32200,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S413
@@ -32266,10 +32266,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32278,29 +32278,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S414
@@ -32344,10 +32344,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32356,29 +32356,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S415
@@ -32422,10 +32422,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32434,29 +32434,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S416
@@ -32500,10 +32500,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32512,29 +32512,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S417
@@ -32578,10 +32578,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32590,29 +32590,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S418
@@ -32656,10 +32656,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32668,29 +32668,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S419
@@ -32734,10 +32734,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32746,29 +32746,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S420
@@ -32812,10 +32812,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -32824,29 +32824,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			shift(276), // (
+			shift(277), // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S421
@@ -32872,608 +32872,62 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(66), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(66), // :, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(66), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(66), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(66), // |, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(66), // &, reduce: UnaryBitwiseOpTerm
-			reduce(66), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(66), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(66), // +, reduce: UnaryBitwiseOpTerm
-			reduce(66), // -, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ., reduce: UnaryBitwiseOpTerm
-			reduce(66), // *, reduce: UnaryBitwiseOpTerm
-			reduce(66), // /, reduce: UnaryBitwiseOpTerm
-			reduce(66), // //, reduce: UnaryBitwiseOpTerm
-			reduce(66), // %, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(66), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(66), // .//, reduce: UnaryBitwiseOpTerm
-			nil,        // !
-			nil,        // ~
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			nil,        // (
+			shift(277), // (
 			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S422
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S423
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S424
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S425
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S426
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S427
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S428
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
-		},
-	},
-	actionRow{ // S429
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -33549,6 +33003,552 @@ var actionTab = actionTable{
 			nil,        // md_token_FNR
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S423
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S424
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S425
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S426
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S427
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S428
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
+		},
+	},
+	actionRow{ // S429
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			shift(274), // !
+			shift(275), // ~
+			nil,        // **
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
+			nil,        // ]
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S430
@@ -33886,59 +33886,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
+			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(72), // :, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
+			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
+			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
+			reduce(72), // |, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
+			reduce(72), // &, reduce: UnaryBitwiseOpTerm
+			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
+			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
+			reduce(72), // +, reduce: UnaryBitwiseOpTerm
+			reduce(72), // -, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ., reduce: UnaryBitwiseOpTerm
+			reduce(72), // *, reduce: UnaryBitwiseOpTerm
+			reduce(72), // /, reduce: UnaryBitwiseOpTerm
+			reduce(72), // //, reduce: UnaryBitwiseOpTerm
+			reduce(72), // %, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
+			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			shift(276), // (
+			nil,        // (
 			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
+			nil,        // md_token_field_name
+			nil,        // $[
 			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S435
@@ -33997,26 +33997,26 @@ var actionTab = actionTable{
 			nil,        // !
 			nil,        // ~
 			nil,        // **
-			nil,        // (
-			shift(501), // )
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S436
@@ -34076,10 +34076,10 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			nil,        // )
+			shift(502), // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			shift(502), // ]
+			nil,        // ]
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -34121,7 +34121,85 @@ var actionTab = actionTable{
 			nil,        // %=
 			nil,        // **=
 			nil,        // ?
-			shift(503), // :
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			shift(503), // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S438
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			shift(504), // :
 			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
@@ -34175,7 +34253,7 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENUM
 		},
 	},
-	actionRow{ // S438
+	actionRow{ // S439
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
@@ -34198,10 +34276,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(27), // ?, reduce: LogicalOrTerm
+			reduce(28), // ?, reduce: LogicalOrTerm
 			nil,        // :
-			reduce(27), // ||, reduce: LogicalOrTerm
-			shift(329), // ^^
+			reduce(28), // ||, reduce: LogicalOrTerm
+			shift(330), // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -34232,85 +34310,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(27), // ), reduce: LogicalOrTerm
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S439
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(29), // ?, reduce: LogicalXORTerm
-			nil,        // :
-			reduce(29), // ||, reduce: LogicalXORTerm
-			reduce(29), // ^^, reduce: LogicalXORTerm
-			shift(330), // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			nil,        // !
-			nil,        // ~
-			nil,        // **
-			nil,        // (
-			reduce(29), // ), reduce: LogicalXORTerm
+			reduce(28), // ), reduce: LogicalOrTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -34354,15 +34354,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(31), // ?, reduce: LogicalAndTerm
+			reduce(30), // ?, reduce: LogicalXORTerm
 			nil,        // :
-			reduce(31), // ||, reduce: LogicalAndTerm
-			reduce(31), // ^^, reduce: LogicalAndTerm
-			reduce(31), // &&, reduce: LogicalAndTerm
-			shift(331), // =~
-			shift(332), // !=~
-			shift(333), // ==
-			shift(334), // !=
+			reduce(30), // ||, reduce: LogicalXORTerm
+			reduce(30), // ^^, reduce: LogicalXORTerm
+			shift(331), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -34388,7 +34388,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(31), // ), reduce: LogicalAndTerm
+			reduce(30), // ), reduce: LogicalXORTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -34432,19 +34432,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(33), // ?, reduce: EqneTerm
+			reduce(32), // ?, reduce: LogicalAndTerm
 			nil,        // :
-			reduce(33), // ||, reduce: EqneTerm
-			reduce(33), // ^^, reduce: EqneTerm
-			reduce(33), // &&, reduce: EqneTerm
-			reduce(33), // =~, reduce: EqneTerm
-			reduce(33), // !=~, reduce: EqneTerm
-			reduce(33), // ==, reduce: EqneTerm
-			reduce(33), // !=, reduce: EqneTerm
-			shift(335), // >
-			shift(336), // >=
-			shift(337), // <
-			shift(338), // <=
+			reduce(32), // ||, reduce: LogicalAndTerm
+			reduce(32), // ^^, reduce: LogicalAndTerm
+			reduce(32), // &&, reduce: LogicalAndTerm
+			shift(332), // =~
+			shift(333), // !=~
+			shift(334), // ==
+			shift(335), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -34466,7 +34466,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(33), // ), reduce: EqneTerm
+			reduce(32), // ), reduce: LogicalAndTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -34519,10 +34519,10 @@ var actionTab = actionTable{
 			reduce(34), // !=~, reduce: EqneTerm
 			reduce(34), // ==, reduce: EqneTerm
 			reduce(34), // !=, reduce: EqneTerm
-			shift(335), // >
-			shift(336), // >=
-			shift(337), // <
-			shift(338), // <=
+			shift(336), // >
+			shift(337), // >=
+			shift(338), // <
+			shift(339), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -34597,10 +34597,10 @@ var actionTab = actionTable{
 			reduce(35), // !=~, reduce: EqneTerm
 			reduce(35), // ==, reduce: EqneTerm
 			reduce(35), // !=, reduce: EqneTerm
-			shift(335), // >
-			shift(336), // >=
-			shift(337), // <
-			shift(338), // <=
+			shift(336), // >
+			shift(337), // >=
+			shift(338), // <
+			shift(339), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -34675,10 +34675,10 @@ var actionTab = actionTable{
 			reduce(36), // !=~, reduce: EqneTerm
 			reduce(36), // ==, reduce: EqneTerm
 			reduce(36), // !=, reduce: EqneTerm
-			shift(335), // >
-			shift(336), // >=
-			shift(337), // <
-			shift(338), // <=
+			shift(336), // >
+			shift(337), // >=
+			shift(338), // <
+			shift(339), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -34744,20 +34744,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(38), // ?, reduce: CmpTerm
+			reduce(37), // ?, reduce: EqneTerm
 			nil,        // :
-			reduce(38), // ||, reduce: CmpTerm
-			reduce(38), // ^^, reduce: CmpTerm
-			reduce(38), // &&, reduce: CmpTerm
-			reduce(38), // =~, reduce: CmpTerm
-			reduce(38), // !=~, reduce: CmpTerm
-			reduce(38), // ==, reduce: CmpTerm
-			reduce(38), // !=, reduce: CmpTerm
-			reduce(38), // >, reduce: CmpTerm
-			reduce(38), // >=, reduce: CmpTerm
-			reduce(38), // <, reduce: CmpTerm
-			reduce(38), // <=, reduce: CmpTerm
-			shift(339), // |
+			reduce(37), // ||, reduce: EqneTerm
+			reduce(37), // ^^, reduce: EqneTerm
+			reduce(37), // &&, reduce: EqneTerm
+			reduce(37), // =~, reduce: EqneTerm
+			reduce(37), // !=~, reduce: EqneTerm
+			reduce(37), // ==, reduce: EqneTerm
+			reduce(37), // !=, reduce: EqneTerm
+			shift(336), // >
+			shift(337), // >=
+			shift(338), // <
+			shift(339), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -34778,7 +34778,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(38), // ), reduce: CmpTerm
+			reduce(37), // ), reduce: EqneTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -34835,7 +34835,7 @@ var actionTab = actionTable{
 			reduce(39), // >=, reduce: CmpTerm
 			reduce(39), // <, reduce: CmpTerm
 			reduce(39), // <=, reduce: CmpTerm
-			shift(339), // |
+			shift(340), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -34913,7 +34913,7 @@ var actionTab = actionTable{
 			reduce(40), // >=, reduce: CmpTerm
 			reduce(40), // <, reduce: CmpTerm
 			reduce(40), // <=, reduce: CmpTerm
-			shift(339), // |
+			shift(340), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -34991,7 +34991,7 @@ var actionTab = actionTable{
 			reduce(41), // >=, reduce: CmpTerm
 			reduce(41), // <, reduce: CmpTerm
 			reduce(41), // <=, reduce: CmpTerm
-			shift(339), // |
+			shift(340), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -35056,21 +35056,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(43), // ?, reduce: BitwiseORTerm
+			reduce(42), // ?, reduce: CmpTerm
 			nil,        // :
-			reduce(43), // ||, reduce: BitwiseORTerm
-			reduce(43), // ^^, reduce: BitwiseORTerm
-			reduce(43), // &&, reduce: BitwiseORTerm
-			reduce(43), // =~, reduce: BitwiseORTerm
-			reduce(43), // !=~, reduce: BitwiseORTerm
-			reduce(43), // ==, reduce: BitwiseORTerm
-			reduce(43), // !=, reduce: BitwiseORTerm
-			reduce(43), // >, reduce: BitwiseORTerm
-			reduce(43), // >=, reduce: BitwiseORTerm
-			reduce(43), // <, reduce: BitwiseORTerm
-			reduce(43), // <=, reduce: BitwiseORTerm
-			reduce(43), // |, reduce: BitwiseORTerm
-			shift(340), // ^
+			reduce(42), // ||, reduce: CmpTerm
+			reduce(42), // ^^, reduce: CmpTerm
+			reduce(42), // &&, reduce: CmpTerm
+			reduce(42), // =~, reduce: CmpTerm
+			reduce(42), // !=~, reduce: CmpTerm
+			reduce(42), // ==, reduce: CmpTerm
+			reduce(42), // !=, reduce: CmpTerm
+			reduce(42), // >, reduce: CmpTerm
+			reduce(42), // >=, reduce: CmpTerm
+			reduce(42), // <, reduce: CmpTerm
+			reduce(42), // <=, reduce: CmpTerm
+			shift(340), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -35090,7 +35090,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(43), // ), reduce: BitwiseORTerm
+			reduce(42), // ), reduce: CmpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -35134,22 +35134,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(45), // ?, reduce: BitwiseXORTerm
+			reduce(44), // ?, reduce: BitwiseORTerm
 			nil,        // :
-			reduce(45), // ||, reduce: BitwiseXORTerm
-			reduce(45), // ^^, reduce: BitwiseXORTerm
-			reduce(45), // &&, reduce: BitwiseXORTerm
-			reduce(45), // =~, reduce: BitwiseXORTerm
-			reduce(45), // !=~, reduce: BitwiseXORTerm
-			reduce(45), // ==, reduce: BitwiseXORTerm
-			reduce(45), // !=, reduce: BitwiseXORTerm
-			reduce(45), // >, reduce: BitwiseXORTerm
-			reduce(45), // >=, reduce: BitwiseXORTerm
-			reduce(45), // <, reduce: BitwiseXORTerm
-			reduce(45), // <=, reduce: BitwiseXORTerm
-			reduce(45), // |, reduce: BitwiseXORTerm
-			reduce(45), // ^, reduce: BitwiseXORTerm
-			shift(341), // &
+			reduce(44), // ||, reduce: BitwiseORTerm
+			reduce(44), // ^^, reduce: BitwiseORTerm
+			reduce(44), // &&, reduce: BitwiseORTerm
+			reduce(44), // =~, reduce: BitwiseORTerm
+			reduce(44), // !=~, reduce: BitwiseORTerm
+			reduce(44), // ==, reduce: BitwiseORTerm
+			reduce(44), // !=, reduce: BitwiseORTerm
+			reduce(44), // >, reduce: BitwiseORTerm
+			reduce(44), // >=, reduce: BitwiseORTerm
+			reduce(44), // <, reduce: BitwiseORTerm
+			reduce(44), // <=, reduce: BitwiseORTerm
+			reduce(44), // |, reduce: BitwiseORTerm
+			shift(341), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -35168,7 +35168,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(45), // ), reduce: BitwiseXORTerm
+			reduce(44), // ), reduce: BitwiseORTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -35212,24 +35212,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(47), // ?, reduce: BitwiseANDTerm
+			reduce(46), // ?, reduce: BitwiseXORTerm
 			nil,        // :
-			reduce(47), // ||, reduce: BitwiseANDTerm
-			reduce(47), // ^^, reduce: BitwiseANDTerm
-			reduce(47), // &&, reduce: BitwiseANDTerm
-			reduce(47), // =~, reduce: BitwiseANDTerm
-			reduce(47), // !=~, reduce: BitwiseANDTerm
-			reduce(47), // ==, reduce: BitwiseANDTerm
-			reduce(47), // !=, reduce: BitwiseANDTerm
-			reduce(47), // >, reduce: BitwiseANDTerm
-			reduce(47), // >=, reduce: BitwiseANDTerm
-			reduce(47), // <, reduce: BitwiseANDTerm
-			reduce(47), // <=, reduce: BitwiseANDTerm
-			reduce(47), // |, reduce: BitwiseANDTerm
-			reduce(47), // ^, reduce: BitwiseANDTerm
-			reduce(47), // &, reduce: BitwiseANDTerm
-			shift(342), // <<
-			shift(343), // >>
+			reduce(46), // ||, reduce: BitwiseXORTerm
+			reduce(46), // ^^, reduce: BitwiseXORTerm
+			reduce(46), // &&, reduce: BitwiseXORTerm
+			reduce(46), // =~, reduce: BitwiseXORTerm
+			reduce(46), // !=~, reduce: BitwiseXORTerm
+			reduce(46), // ==, reduce: BitwiseXORTerm
+			reduce(46), // !=, reduce: BitwiseXORTerm
+			reduce(46), // >, reduce: BitwiseXORTerm
+			reduce(46), // >=, reduce: BitwiseXORTerm
+			reduce(46), // <, reduce: BitwiseXORTerm
+			reduce(46), // <=, reduce: BitwiseXORTerm
+			reduce(46), // |, reduce: BitwiseXORTerm
+			reduce(46), // ^, reduce: BitwiseXORTerm
+			shift(342), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -35246,7 +35246,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(47), // ), reduce: BitwiseANDTerm
+			reduce(46), // ), reduce: BitwiseXORTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -35290,29 +35290,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(49), // ?, reduce: BitwiseShiftTerm
+			reduce(48), // ?, reduce: BitwiseANDTerm
 			nil,        // :
-			reduce(49), // ||, reduce: BitwiseShiftTerm
-			reduce(49), // ^^, reduce: BitwiseShiftTerm
-			reduce(49), // &&, reduce: BitwiseShiftTerm
-			reduce(49), // =~, reduce: BitwiseShiftTerm
-			reduce(49), // !=~, reduce: BitwiseShiftTerm
-			reduce(49), // ==, reduce: BitwiseShiftTerm
-			reduce(49), // !=, reduce: BitwiseShiftTerm
-			reduce(49), // >, reduce: BitwiseShiftTerm
-			reduce(49), // >=, reduce: BitwiseShiftTerm
-			reduce(49), // <, reduce: BitwiseShiftTerm
-			reduce(49), // <=, reduce: BitwiseShiftTerm
-			reduce(49), // |, reduce: BitwiseShiftTerm
-			reduce(49), // ^, reduce: BitwiseShiftTerm
-			reduce(49), // &, reduce: BitwiseShiftTerm
-			reduce(49), // <<, reduce: BitwiseShiftTerm
-			reduce(49), // >>, reduce: BitwiseShiftTerm
-			shift(344), // +
-			shift(345), // -
-			shift(346), // .+
-			shift(347), // .-
-			shift(348), // .
+			reduce(48), // ||, reduce: BitwiseANDTerm
+			reduce(48), // ^^, reduce: BitwiseANDTerm
+			reduce(48), // &&, reduce: BitwiseANDTerm
+			reduce(48), // =~, reduce: BitwiseANDTerm
+			reduce(48), // !=~, reduce: BitwiseANDTerm
+			reduce(48), // ==, reduce: BitwiseANDTerm
+			reduce(48), // !=, reduce: BitwiseANDTerm
+			reduce(48), // >, reduce: BitwiseANDTerm
+			reduce(48), // >=, reduce: BitwiseANDTerm
+			reduce(48), // <, reduce: BitwiseANDTerm
+			reduce(48), // <=, reduce: BitwiseANDTerm
+			reduce(48), // |, reduce: BitwiseANDTerm
+			reduce(48), // ^, reduce: BitwiseANDTerm
+			reduce(48), // &, reduce: BitwiseANDTerm
+			shift(343), // <<
+			shift(344), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -35324,7 +35324,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(49), // ), reduce: BitwiseShiftTerm
+			reduce(48), // ), reduce: BitwiseANDTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -35386,11 +35386,11 @@ var actionTab = actionTable{
 			reduce(50), // &, reduce: BitwiseShiftTerm
 			reduce(50), // <<, reduce: BitwiseShiftTerm
 			reduce(50), // >>, reduce: BitwiseShiftTerm
-			shift(344), // +
-			shift(345), // -
-			shift(346), // .+
-			shift(347), // .-
-			shift(348), // .
+			shift(345), // +
+			shift(346), // -
+			shift(347), // .+
+			shift(348), // .-
+			shift(349), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -35446,41 +35446,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(52), // ?, reduce: AddsubdotTerm
+			reduce(51), // ?, reduce: BitwiseShiftTerm
 			nil,        // :
-			reduce(52), // ||, reduce: AddsubdotTerm
-			reduce(52), // ^^, reduce: AddsubdotTerm
-			reduce(52), // &&, reduce: AddsubdotTerm
-			reduce(52), // =~, reduce: AddsubdotTerm
-			reduce(52), // !=~, reduce: AddsubdotTerm
-			reduce(52), // ==, reduce: AddsubdotTerm
-			reduce(52), // !=, reduce: AddsubdotTerm
-			reduce(52), // >, reduce: AddsubdotTerm
-			reduce(52), // >=, reduce: AddsubdotTerm
-			reduce(52), // <, reduce: AddsubdotTerm
-			reduce(52), // <=, reduce: AddsubdotTerm
-			reduce(52), // |, reduce: AddsubdotTerm
-			reduce(52), // ^, reduce: AddsubdotTerm
-			reduce(52), // &, reduce: AddsubdotTerm
-			reduce(52), // <<, reduce: AddsubdotTerm
-			reduce(52), // >>, reduce: AddsubdotTerm
-			reduce(52), // +, reduce: AddsubdotTerm
-			reduce(52), // -, reduce: AddsubdotTerm
-			reduce(52), // .+, reduce: AddsubdotTerm
-			reduce(52), // .-, reduce: AddsubdotTerm
-			reduce(52), // ., reduce: AddsubdotTerm
-			shift(350), // *
-			shift(351), // /
-			shift(352), // //
-			shift(353), // %
-			shift(354), // .*
-			shift(355), // ./
-			shift(356), // .//
+			reduce(51), // ||, reduce: BitwiseShiftTerm
+			reduce(51), // ^^, reduce: BitwiseShiftTerm
+			reduce(51), // &&, reduce: BitwiseShiftTerm
+			reduce(51), // =~, reduce: BitwiseShiftTerm
+			reduce(51), // !=~, reduce: BitwiseShiftTerm
+			reduce(51), // ==, reduce: BitwiseShiftTerm
+			reduce(51), // !=, reduce: BitwiseShiftTerm
+			reduce(51), // >, reduce: BitwiseShiftTerm
+			reduce(51), // >=, reduce: BitwiseShiftTerm
+			reduce(51), // <, reduce: BitwiseShiftTerm
+			reduce(51), // <=, reduce: BitwiseShiftTerm
+			reduce(51), // |, reduce: BitwiseShiftTerm
+			reduce(51), // ^, reduce: BitwiseShiftTerm
+			reduce(51), // &, reduce: BitwiseShiftTerm
+			reduce(51), // <<, reduce: BitwiseShiftTerm
+			reduce(51), // >>, reduce: BitwiseShiftTerm
+			shift(345), // +
+			shift(346), // -
+			shift(347), // .+
+			shift(348), // .-
+			shift(349), // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(52), // ), reduce: AddsubdotTerm
+			reduce(51), // ), reduce: BitwiseShiftTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -35547,13 +35547,13 @@ var actionTab = actionTable{
 			reduce(53), // .+, reduce: AddsubdotTerm
 			reduce(53), // .-, reduce: AddsubdotTerm
 			reduce(53), // ., reduce: AddsubdotTerm
-			shift(350), // *
-			shift(351), // /
-			shift(352), // //
-			shift(353), // %
-			shift(354), // .*
-			shift(355), // ./
-			shift(356), // .//
+			shift(351), // *
+			shift(352), // /
+			shift(353), // //
+			shift(354), // %
+			shift(355), // .*
+			shift(356), // ./
+			shift(357), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -35625,13 +35625,13 @@ var actionTab = actionTable{
 			reduce(54), // .+, reduce: AddsubdotTerm
 			reduce(54), // .-, reduce: AddsubdotTerm
 			reduce(54), // ., reduce: AddsubdotTerm
-			shift(350), // *
-			shift(351), // /
-			shift(352), // //
-			shift(353), // %
-			shift(354), // .*
-			shift(355), // ./
-			shift(356), // .//
+			shift(351), // *
+			shift(352), // /
+			shift(353), // //
+			shift(354), // %
+			shift(355), // .*
+			shift(356), // ./
+			shift(357), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -35703,13 +35703,13 @@ var actionTab = actionTable{
 			reduce(55), // .+, reduce: AddsubdotTerm
 			reduce(55), // .-, reduce: AddsubdotTerm
 			reduce(55), // ., reduce: AddsubdotTerm
-			shift(350), // *
-			shift(351), // /
-			shift(352), // //
-			shift(353), // %
-			shift(354), // .*
-			shift(355), // ./
-			shift(356), // .//
+			shift(351), // *
+			shift(352), // /
+			shift(353), // //
+			shift(354), // %
+			shift(355), // .*
+			shift(356), // ./
+			shift(357), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -35781,13 +35781,13 @@ var actionTab = actionTable{
 			reduce(56), // .+, reduce: AddsubdotTerm
 			reduce(56), // .-, reduce: AddsubdotTerm
 			reduce(56), // ., reduce: AddsubdotTerm
-			shift(350), // *
-			shift(351), // /
-			shift(352), // //
-			shift(353), // %
-			shift(354), // .*
-			shift(355), // ./
-			shift(356), // .//
+			shift(351), // *
+			shift(352), // /
+			shift(353), // //
+			shift(354), // %
+			shift(355), // .*
+			shift(356), // ./
+			shift(357), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -35836,41 +35836,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(58), // ?, reduce: MuldivTerm
+			reduce(57), // ?, reduce: AddsubdotTerm
 			nil,        // :
-			reduce(58), // ||, reduce: MuldivTerm
-			reduce(58), // ^^, reduce: MuldivTerm
-			reduce(58), // &&, reduce: MuldivTerm
-			reduce(58), // =~, reduce: MuldivTerm
-			reduce(58), // !=~, reduce: MuldivTerm
-			reduce(58), // ==, reduce: MuldivTerm
-			reduce(58), // !=, reduce: MuldivTerm
-			reduce(58), // >, reduce: MuldivTerm
-			reduce(58), // >=, reduce: MuldivTerm
-			reduce(58), // <, reduce: MuldivTerm
-			reduce(58), // <=, reduce: MuldivTerm
-			reduce(58), // |, reduce: MuldivTerm
-			reduce(58), // ^, reduce: MuldivTerm
-			reduce(58), // &, reduce: MuldivTerm
-			reduce(58), // <<, reduce: MuldivTerm
-			reduce(58), // >>, reduce: MuldivTerm
-			reduce(58), // +, reduce: MuldivTerm
-			reduce(58), // -, reduce: MuldivTerm
-			reduce(58), // .+, reduce: MuldivTerm
-			reduce(58), // .-, reduce: MuldivTerm
-			reduce(58), // ., reduce: MuldivTerm
-			reduce(58), // *, reduce: MuldivTerm
-			reduce(58), // /, reduce: MuldivTerm
-			reduce(58), // //, reduce: MuldivTerm
-			reduce(58), // %, reduce: MuldivTerm
-			reduce(58), // .*, reduce: MuldivTerm
-			reduce(58), // ./, reduce: MuldivTerm
-			reduce(58), // .//, reduce: MuldivTerm
+			reduce(57), // ||, reduce: AddsubdotTerm
+			reduce(57), // ^^, reduce: AddsubdotTerm
+			reduce(57), // &&, reduce: AddsubdotTerm
+			reduce(57), // =~, reduce: AddsubdotTerm
+			reduce(57), // !=~, reduce: AddsubdotTerm
+			reduce(57), // ==, reduce: AddsubdotTerm
+			reduce(57), // !=, reduce: AddsubdotTerm
+			reduce(57), // >, reduce: AddsubdotTerm
+			reduce(57), // >=, reduce: AddsubdotTerm
+			reduce(57), // <, reduce: AddsubdotTerm
+			reduce(57), // <=, reduce: AddsubdotTerm
+			reduce(57), // |, reduce: AddsubdotTerm
+			reduce(57), // ^, reduce: AddsubdotTerm
+			reduce(57), // &, reduce: AddsubdotTerm
+			reduce(57), // <<, reduce: AddsubdotTerm
+			reduce(57), // >>, reduce: AddsubdotTerm
+			reduce(57), // +, reduce: AddsubdotTerm
+			reduce(57), // -, reduce: AddsubdotTerm
+			reduce(57), // .+, reduce: AddsubdotTerm
+			reduce(57), // .-, reduce: AddsubdotTerm
+			reduce(57), // ., reduce: AddsubdotTerm
+			shift(351), // *
+			shift(352), // /
+			shift(353), // //
+			shift(354), // %
+			shift(355), // .*
+			shift(356), // ./
+			shift(357), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(58), // ), reduce: MuldivTerm
+			reduce(57), // ), reduce: AddsubdotTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -36382,41 +36382,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: PowTerm
+			reduce(65), // ?, reduce: MuldivTerm
 			nil,        // :
-			reduce(73), // ||, reduce: PowTerm
-			reduce(73), // ^^, reduce: PowTerm
-			reduce(73), // &&, reduce: PowTerm
-			reduce(73), // =~, reduce: PowTerm
-			reduce(73), // !=~, reduce: PowTerm
-			reduce(73), // ==, reduce: PowTerm
-			reduce(73), // !=, reduce: PowTerm
-			reduce(73), // >, reduce: PowTerm
-			reduce(73), // >=, reduce: PowTerm
-			reduce(73), // <, reduce: PowTerm
-			reduce(73), // <=, reduce: PowTerm
-			reduce(73), // |, reduce: PowTerm
-			reduce(73), // ^, reduce: PowTerm
-			reduce(73), // &, reduce: PowTerm
-			reduce(73), // <<, reduce: PowTerm
-			reduce(73), // >>, reduce: PowTerm
-			reduce(73), // +, reduce: PowTerm
-			reduce(73), // -, reduce: PowTerm
-			reduce(73), // .+, reduce: PowTerm
-			reduce(73), // .-, reduce: PowTerm
-			reduce(73), // ., reduce: PowTerm
-			reduce(73), // *, reduce: PowTerm
-			reduce(73), // /, reduce: PowTerm
-			reduce(73), // //, reduce: PowTerm
-			reduce(73), // %, reduce: PowTerm
-			reduce(73), // .*, reduce: PowTerm
-			reduce(73), // ./, reduce: PowTerm
-			reduce(73), // .//, reduce: PowTerm
+			reduce(65), // ||, reduce: MuldivTerm
+			reduce(65), // ^^, reduce: MuldivTerm
+			reduce(65), // &&, reduce: MuldivTerm
+			reduce(65), // =~, reduce: MuldivTerm
+			reduce(65), // !=~, reduce: MuldivTerm
+			reduce(65), // ==, reduce: MuldivTerm
+			reduce(65), // !=, reduce: MuldivTerm
+			reduce(65), // >, reduce: MuldivTerm
+			reduce(65), // >=, reduce: MuldivTerm
+			reduce(65), // <, reduce: MuldivTerm
+			reduce(65), // <=, reduce: MuldivTerm
+			reduce(65), // |, reduce: MuldivTerm
+			reduce(65), // ^, reduce: MuldivTerm
+			reduce(65), // &, reduce: MuldivTerm
+			reduce(65), // <<, reduce: MuldivTerm
+			reduce(65), // >>, reduce: MuldivTerm
+			reduce(65), // +, reduce: MuldivTerm
+			reduce(65), // -, reduce: MuldivTerm
+			reduce(65), // .+, reduce: MuldivTerm
+			reduce(65), // .-, reduce: MuldivTerm
+			reduce(65), // ., reduce: MuldivTerm
+			reduce(65), // *, reduce: MuldivTerm
+			reduce(65), // /, reduce: MuldivTerm
+			reduce(65), // //, reduce: MuldivTerm
+			reduce(65), // %, reduce: MuldivTerm
+			reduce(65), // .*, reduce: MuldivTerm
+			reduce(65), // ./, reduce: MuldivTerm
+			reduce(65), // .//, reduce: MuldivTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(73), // ), reduce: PowTerm
+			reduce(65), // ), reduce: MuldivTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -36460,41 +36460,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(75), // ?, reduce: AtomOrFunction
+			reduce(74), // ?, reduce: PowTerm
 			nil,        // :
-			reduce(75), // ||, reduce: AtomOrFunction
-			reduce(75), // ^^, reduce: AtomOrFunction
-			reduce(75), // &&, reduce: AtomOrFunction
-			reduce(75), // =~, reduce: AtomOrFunction
-			reduce(75), // !=~, reduce: AtomOrFunction
-			reduce(75), // ==, reduce: AtomOrFunction
-			reduce(75), // !=, reduce: AtomOrFunction
-			reduce(75), // >, reduce: AtomOrFunction
-			reduce(75), // >=, reduce: AtomOrFunction
-			reduce(75), // <, reduce: AtomOrFunction
-			reduce(75), // <=, reduce: AtomOrFunction
-			reduce(75), // |, reduce: AtomOrFunction
-			reduce(75), // ^, reduce: AtomOrFunction
-			reduce(75), // &, reduce: AtomOrFunction
-			reduce(75), // <<, reduce: AtomOrFunction
-			reduce(75), // >>, reduce: AtomOrFunction
-			reduce(75), // +, reduce: AtomOrFunction
-			reduce(75), // -, reduce: AtomOrFunction
-			reduce(75), // .+, reduce: AtomOrFunction
-			reduce(75), // .-, reduce: AtomOrFunction
-			reduce(75), // ., reduce: AtomOrFunction
-			reduce(75), // *, reduce: AtomOrFunction
-			reduce(75), // /, reduce: AtomOrFunction
-			reduce(75), // //, reduce: AtomOrFunction
-			reduce(75), // %, reduce: AtomOrFunction
-			reduce(75), // .*, reduce: AtomOrFunction
-			reduce(75), // ./, reduce: AtomOrFunction
-			reduce(75), // .//, reduce: AtomOrFunction
+			reduce(74), // ||, reduce: PowTerm
+			reduce(74), // ^^, reduce: PowTerm
+			reduce(74), // &&, reduce: PowTerm
+			reduce(74), // =~, reduce: PowTerm
+			reduce(74), // !=~, reduce: PowTerm
+			reduce(74), // ==, reduce: PowTerm
+			reduce(74), // !=, reduce: PowTerm
+			reduce(74), // >, reduce: PowTerm
+			reduce(74), // >=, reduce: PowTerm
+			reduce(74), // <, reduce: PowTerm
+			reduce(74), // <=, reduce: PowTerm
+			reduce(74), // |, reduce: PowTerm
+			reduce(74), // ^, reduce: PowTerm
+			reduce(74), // &, reduce: PowTerm
+			reduce(74), // <<, reduce: PowTerm
+			reduce(74), // >>, reduce: PowTerm
+			reduce(74), // +, reduce: PowTerm
+			reduce(74), // -, reduce: PowTerm
+			reduce(74), // .+, reduce: PowTerm
+			reduce(74), // .-, reduce: PowTerm
+			reduce(74), // ., reduce: PowTerm
+			reduce(74), // *, reduce: PowTerm
+			reduce(74), // /, reduce: PowTerm
+			reduce(74), // //, reduce: PowTerm
+			reduce(74), // %, reduce: PowTerm
+			reduce(74), // .*, reduce: PowTerm
+			reduce(74), // ./, reduce: PowTerm
+			reduce(74), // .//, reduce: PowTerm
 			nil,        // !
 			nil,        // ~
-			reduce(75), // **, reduce: AtomOrFunction
+			nil,        // **
 			nil,        // (
-			reduce(75), // ), reduce: AtomOrFunction
+			reduce(74), // ), reduce: PowTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -36538,41 +36538,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(80), // ?, reduce: IndirectFieldName
+			reduce(76), // ?, reduce: AtomOrFunction
 			nil,        // :
-			reduce(80), // ||, reduce: IndirectFieldName
-			reduce(80), // ^^, reduce: IndirectFieldName
-			reduce(80), // &&, reduce: IndirectFieldName
-			reduce(80), // =~, reduce: IndirectFieldName
-			reduce(80), // !=~, reduce: IndirectFieldName
-			reduce(80), // ==, reduce: IndirectFieldName
-			reduce(80), // !=, reduce: IndirectFieldName
-			reduce(80), // >, reduce: IndirectFieldName
-			reduce(80), // >=, reduce: IndirectFieldName
-			reduce(80), // <, reduce: IndirectFieldName
-			reduce(80), // <=, reduce: IndirectFieldName
-			reduce(80), // |, reduce: IndirectFieldName
-			reduce(80), // ^, reduce: IndirectFieldName
-			reduce(80), // &, reduce: IndirectFieldName
-			reduce(80), // <<, reduce: IndirectFieldName
-			reduce(80), // >>, reduce: IndirectFieldName
-			reduce(80), // +, reduce: IndirectFieldName
-			reduce(80), // -, reduce: IndirectFieldName
-			reduce(80), // .+, reduce: IndirectFieldName
-			reduce(80), // .-, reduce: IndirectFieldName
-			reduce(80), // ., reduce: IndirectFieldName
-			reduce(80), // *, reduce: IndirectFieldName
-			reduce(80), // /, reduce: IndirectFieldName
-			reduce(80), // //, reduce: IndirectFieldName
-			reduce(80), // %, reduce: IndirectFieldName
-			reduce(80), // .*, reduce: IndirectFieldName
-			reduce(80), // ./, reduce: IndirectFieldName
-			reduce(80), // .//, reduce: IndirectFieldName
+			reduce(76), // ||, reduce: AtomOrFunction
+			reduce(76), // ^^, reduce: AtomOrFunction
+			reduce(76), // &&, reduce: AtomOrFunction
+			reduce(76), // =~, reduce: AtomOrFunction
+			reduce(76), // !=~, reduce: AtomOrFunction
+			reduce(76), // ==, reduce: AtomOrFunction
+			reduce(76), // !=, reduce: AtomOrFunction
+			reduce(76), // >, reduce: AtomOrFunction
+			reduce(76), // >=, reduce: AtomOrFunction
+			reduce(76), // <, reduce: AtomOrFunction
+			reduce(76), // <=, reduce: AtomOrFunction
+			reduce(76), // |, reduce: AtomOrFunction
+			reduce(76), // ^, reduce: AtomOrFunction
+			reduce(76), // &, reduce: AtomOrFunction
+			reduce(76), // <<, reduce: AtomOrFunction
+			reduce(76), // >>, reduce: AtomOrFunction
+			reduce(76), // +, reduce: AtomOrFunction
+			reduce(76), // -, reduce: AtomOrFunction
+			reduce(76), // .+, reduce: AtomOrFunction
+			reduce(76), // .-, reduce: AtomOrFunction
+			reduce(76), // ., reduce: AtomOrFunction
+			reduce(76), // *, reduce: AtomOrFunction
+			reduce(76), // /, reduce: AtomOrFunction
+			reduce(76), // //, reduce: AtomOrFunction
+			reduce(76), // %, reduce: AtomOrFunction
+			reduce(76), // .*, reduce: AtomOrFunction
+			reduce(76), // ./, reduce: AtomOrFunction
+			reduce(76), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(80), // **, reduce: IndirectFieldName
+			reduce(76), // **, reduce: AtomOrFunction
 			nil,        // (
-			reduce(80), // ), reduce: IndirectFieldName
+			reduce(76), // ), reduce: AtomOrFunction
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -36616,59 +36616,59 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			nil,        // ?
+			reduce(81), // ?, reduce: IndirectFieldName
 			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(87),  // +
-			shift(89),  // -
-			shift(90),  // .+
-			shift(91),  // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(94),  // !
-			shift(95),  // ~
-			nil,        // **
-			shift(97),  // (
-			nil,        // )
-			shift(100), // md_token_field_name
-			shift(101), // $[
+			reduce(81), // ||, reduce: IndirectFieldName
+			reduce(81), // ^^, reduce: IndirectFieldName
+			reduce(81), // &&, reduce: IndirectFieldName
+			reduce(81), // =~, reduce: IndirectFieldName
+			reduce(81), // !=~, reduce: IndirectFieldName
+			reduce(81), // ==, reduce: IndirectFieldName
+			reduce(81), // !=, reduce: IndirectFieldName
+			reduce(81), // >, reduce: IndirectFieldName
+			reduce(81), // >=, reduce: IndirectFieldName
+			reduce(81), // <, reduce: IndirectFieldName
+			reduce(81), // <=, reduce: IndirectFieldName
+			reduce(81), // |, reduce: IndirectFieldName
+			reduce(81), // ^, reduce: IndirectFieldName
+			reduce(81), // &, reduce: IndirectFieldName
+			reduce(81), // <<, reduce: IndirectFieldName
+			reduce(81), // >>, reduce: IndirectFieldName
+			reduce(81), // +, reduce: IndirectFieldName
+			reduce(81), // -, reduce: IndirectFieldName
+			reduce(81), // .+, reduce: IndirectFieldName
+			reduce(81), // .-, reduce: IndirectFieldName
+			reduce(81), // ., reduce: IndirectFieldName
+			reduce(81), // *, reduce: IndirectFieldName
+			reduce(81), // /, reduce: IndirectFieldName
+			reduce(81), // //, reduce: IndirectFieldName
+			reduce(81), // %, reduce: IndirectFieldName
+			reduce(81), // .*, reduce: IndirectFieldName
+			reduce(81), // ./, reduce: IndirectFieldName
+			reduce(81), // .//, reduce: IndirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(81), // **, reduce: IndirectFieldName
+			nil,        // (
+			reduce(81), // ), reduce: IndirectFieldName
+			nil,        // md_token_field_name
+			nil,        // $[
 			nil,        // ]
-			shift(102), // md_token_string_literal
-			shift(103), // md_token_int_literal
-			shift(104), // md_token_float_literal
-			shift(105), // md_token_boolean_literal
-			shift(107), // md_token_IPS
-			shift(108), // md_token_IFS
-			shift(109), // md_token_IRS
-			shift(110), // md_token_OPS
-			shift(111), // md_token_OFS
-			shift(112), // md_token_ORS
-			shift(113), // md_token_NF
-			shift(114), // md_token_NR
-			shift(115), // md_token_FNR
-			shift(116), // md_token_FILENAME
-			shift(117), // md_token_FILENUM
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
 		},
 	},
 	actionRow{ // S470
@@ -36712,10 +36712,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
+			shift(88),  // +
+			shift(90),  // -
+			shift(91),  // .+
+			shift(92),  // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -36724,29 +36724,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			nil,        // !
-			nil,        // ~
+			shift(95),  // !
+			shift(96),  // ~
 			nil,        // **
-			nil,        // (
+			shift(98),  // (
 			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(25), // ], reduce: TernaryTerm
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(101), // md_token_field_name
+			shift(102), // $[
+			nil,        // ]
+			shift(103), // md_token_string_literal
+			shift(104), // md_token_int_literal
+			shift(105), // md_token_float_literal
+			shift(106), // md_token_boolean_literal
+			shift(108), // md_token_IPS
+			shift(109), // md_token_IFS
+			shift(110), // md_token_IRS
+			shift(111), // md_token_OPS
+			shift(112), // md_token_OFS
+			shift(113), // md_token_ORS
+			shift(114), // md_token_NF
+			shift(115), // md_token_NR
+			shift(116), // md_token_FNR
+			shift(117), // md_token_FILENAME
+			shift(118), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S471
@@ -36773,7 +36773,7 @@ var actionTab = actionTable{
 			nil,        // %=
 			nil,        // **=
 			nil,        // ?
-			shift(505), // :
+			nil,        // :
 			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
@@ -36809,7 +36809,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			nil,        // ]
+			reduce(26), // ], reduce: TernaryTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -36850,10 +36850,10 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(27), // ?, reduce: LogicalOrTerm
-			reduce(27), // :, reduce: LogicalOrTerm
-			reduce(27), // ||, reduce: LogicalOrTerm
-			shift(401), // ^^
+			nil,        // ?
+			shift(506), // :
+			nil,        // ||
+			nil,        // ^^
 			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
@@ -36928,11 +36928,11 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(29), // ?, reduce: LogicalXORTerm
-			reduce(29), // :, reduce: LogicalXORTerm
-			reduce(29), // ||, reduce: LogicalXORTerm
-			reduce(29), // ^^, reduce: LogicalXORTerm
-			shift(402), // &&
+			reduce(28), // ?, reduce: LogicalOrTerm
+			reduce(28), // :, reduce: LogicalOrTerm
+			reduce(28), // ||, reduce: LogicalOrTerm
+			shift(402), // ^^
+			nil,        // &&
 			nil,        // =~
 			nil,        // !=~
 			nil,        // ==
@@ -37006,15 +37006,15 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(31), // ?, reduce: LogicalAndTerm
-			reduce(31), // :, reduce: LogicalAndTerm
-			reduce(31), // ||, reduce: LogicalAndTerm
-			reduce(31), // ^^, reduce: LogicalAndTerm
-			reduce(31), // &&, reduce: LogicalAndTerm
-			shift(403), // =~
-			shift(404), // !=~
-			shift(405), // ==
-			shift(406), // !=
+			reduce(30), // ?, reduce: LogicalXORTerm
+			reduce(30), // :, reduce: LogicalXORTerm
+			reduce(30), // ||, reduce: LogicalXORTerm
+			reduce(30), // ^^, reduce: LogicalXORTerm
+			shift(403), // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
 			nil,        // >
 			nil,        // >=
 			nil,        // <
@@ -37084,19 +37084,19 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(33), // ?, reduce: EqneTerm
-			reduce(33), // :, reduce: EqneTerm
-			reduce(33), // ||, reduce: EqneTerm
-			reduce(33), // ^^, reduce: EqneTerm
-			reduce(33), // &&, reduce: EqneTerm
-			reduce(33), // =~, reduce: EqneTerm
-			reduce(33), // !=~, reduce: EqneTerm
-			reduce(33), // ==, reduce: EqneTerm
-			reduce(33), // !=, reduce: EqneTerm
-			shift(407), // >
-			shift(408), // >=
-			shift(409), // <
-			shift(410), // <=
+			reduce(32), // ?, reduce: LogicalAndTerm
+			reduce(32), // :, reduce: LogicalAndTerm
+			reduce(32), // ||, reduce: LogicalAndTerm
+			reduce(32), // ^^, reduce: LogicalAndTerm
+			reduce(32), // &&, reduce: LogicalAndTerm
+			shift(404), // =~
+			shift(405), // !=~
+			shift(406), // ==
+			shift(407), // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -37171,10 +37171,10 @@ var actionTab = actionTable{
 			reduce(34), // !=~, reduce: EqneTerm
 			reduce(34), // ==, reduce: EqneTerm
 			reduce(34), // !=, reduce: EqneTerm
-			shift(407), // >
-			shift(408), // >=
-			shift(409), // <
-			shift(410), // <=
+			shift(408), // >
+			shift(409), // >=
+			shift(410), // <
+			shift(411), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -37249,10 +37249,10 @@ var actionTab = actionTable{
 			reduce(35), // !=~, reduce: EqneTerm
 			reduce(35), // ==, reduce: EqneTerm
 			reduce(35), // !=, reduce: EqneTerm
-			shift(407), // >
-			shift(408), // >=
-			shift(409), // <
-			shift(410), // <=
+			shift(408), // >
+			shift(409), // >=
+			shift(410), // <
+			shift(411), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -37327,10 +37327,10 @@ var actionTab = actionTable{
 			reduce(36), // !=~, reduce: EqneTerm
 			reduce(36), // ==, reduce: EqneTerm
 			reduce(36), // !=, reduce: EqneTerm
-			shift(407), // >
-			shift(408), // >=
-			shift(409), // <
-			shift(410), // <=
+			shift(408), // >
+			shift(409), // >=
+			shift(410), // <
+			shift(411), // <=
 			nil,        // |
 			nil,        // ^
 			nil,        // &
@@ -37396,20 +37396,20 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(38), // ?, reduce: CmpTerm
-			reduce(38), // :, reduce: CmpTerm
-			reduce(38), // ||, reduce: CmpTerm
-			reduce(38), // ^^, reduce: CmpTerm
-			reduce(38), // &&, reduce: CmpTerm
-			reduce(38), // =~, reduce: CmpTerm
-			reduce(38), // !=~, reduce: CmpTerm
-			reduce(38), // ==, reduce: CmpTerm
-			reduce(38), // !=, reduce: CmpTerm
-			reduce(38), // >, reduce: CmpTerm
-			reduce(38), // >=, reduce: CmpTerm
-			reduce(38), // <, reduce: CmpTerm
-			reduce(38), // <=, reduce: CmpTerm
-			shift(411), // |
+			reduce(37), // ?, reduce: EqneTerm
+			reduce(37), // :, reduce: EqneTerm
+			reduce(37), // ||, reduce: EqneTerm
+			reduce(37), // ^^, reduce: EqneTerm
+			reduce(37), // &&, reduce: EqneTerm
+			reduce(37), // =~, reduce: EqneTerm
+			reduce(37), // !=~, reduce: EqneTerm
+			reduce(37), // ==, reduce: EqneTerm
+			reduce(37), // !=, reduce: EqneTerm
+			shift(408), // >
+			shift(409), // >=
+			shift(410), // <
+			shift(411), // <=
+			nil,        // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -37487,7 +37487,7 @@ var actionTab = actionTable{
 			reduce(39), // >=, reduce: CmpTerm
 			reduce(39), // <, reduce: CmpTerm
 			reduce(39), // <=, reduce: CmpTerm
-			shift(411), // |
+			shift(412), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -37565,7 +37565,7 @@ var actionTab = actionTable{
 			reduce(40), // >=, reduce: CmpTerm
 			reduce(40), // <, reduce: CmpTerm
 			reduce(40), // <=, reduce: CmpTerm
-			shift(411), // |
+			shift(412), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -37643,7 +37643,7 @@ var actionTab = actionTable{
 			reduce(41), // >=, reduce: CmpTerm
 			reduce(41), // <, reduce: CmpTerm
 			reduce(41), // <=, reduce: CmpTerm
-			shift(411), // |
+			shift(412), // |
 			nil,        // ^
 			nil,        // &
 			nil,        // <<
@@ -37708,21 +37708,21 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(43), // ?, reduce: BitwiseORTerm
-			reduce(43), // :, reduce: BitwiseORTerm
-			reduce(43), // ||, reduce: BitwiseORTerm
-			reduce(43), // ^^, reduce: BitwiseORTerm
-			reduce(43), // &&, reduce: BitwiseORTerm
-			reduce(43), // =~, reduce: BitwiseORTerm
-			reduce(43), // !=~, reduce: BitwiseORTerm
-			reduce(43), // ==, reduce: BitwiseORTerm
-			reduce(43), // !=, reduce: BitwiseORTerm
-			reduce(43), // >, reduce: BitwiseORTerm
-			reduce(43), // >=, reduce: BitwiseORTerm
-			reduce(43), // <, reduce: BitwiseORTerm
-			reduce(43), // <=, reduce: BitwiseORTerm
-			reduce(43), // |, reduce: BitwiseORTerm
-			shift(412), // ^
+			reduce(42), // ?, reduce: CmpTerm
+			reduce(42), // :, reduce: CmpTerm
+			reduce(42), // ||, reduce: CmpTerm
+			reduce(42), // ^^, reduce: CmpTerm
+			reduce(42), // &&, reduce: CmpTerm
+			reduce(42), // =~, reduce: CmpTerm
+			reduce(42), // !=~, reduce: CmpTerm
+			reduce(42), // ==, reduce: CmpTerm
+			reduce(42), // !=, reduce: CmpTerm
+			reduce(42), // >, reduce: CmpTerm
+			reduce(42), // >=, reduce: CmpTerm
+			reduce(42), // <, reduce: CmpTerm
+			reduce(42), // <=, reduce: CmpTerm
+			shift(412), // |
+			nil,        // ^
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
@@ -37786,22 +37786,22 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(45), // ?, reduce: BitwiseXORTerm
-			reduce(45), // :, reduce: BitwiseXORTerm
-			reduce(45), // ||, reduce: BitwiseXORTerm
-			reduce(45), // ^^, reduce: BitwiseXORTerm
-			reduce(45), // &&, reduce: BitwiseXORTerm
-			reduce(45), // =~, reduce: BitwiseXORTerm
-			reduce(45), // !=~, reduce: BitwiseXORTerm
-			reduce(45), // ==, reduce: BitwiseXORTerm
-			reduce(45), // !=, reduce: BitwiseXORTerm
-			reduce(45), // >, reduce: BitwiseXORTerm
-			reduce(45), // >=, reduce: BitwiseXORTerm
-			reduce(45), // <, reduce: BitwiseXORTerm
-			reduce(45), // <=, reduce: BitwiseXORTerm
-			reduce(45), // |, reduce: BitwiseXORTerm
-			reduce(45), // ^, reduce: BitwiseXORTerm
-			shift(413), // &
+			reduce(44), // ?, reduce: BitwiseORTerm
+			reduce(44), // :, reduce: BitwiseORTerm
+			reduce(44), // ||, reduce: BitwiseORTerm
+			reduce(44), // ^^, reduce: BitwiseORTerm
+			reduce(44), // &&, reduce: BitwiseORTerm
+			reduce(44), // =~, reduce: BitwiseORTerm
+			reduce(44), // !=~, reduce: BitwiseORTerm
+			reduce(44), // ==, reduce: BitwiseORTerm
+			reduce(44), // !=, reduce: BitwiseORTerm
+			reduce(44), // >, reduce: BitwiseORTerm
+			reduce(44), // >=, reduce: BitwiseORTerm
+			reduce(44), // <, reduce: BitwiseORTerm
+			reduce(44), // <=, reduce: BitwiseORTerm
+			reduce(44), // |, reduce: BitwiseORTerm
+			shift(413), // ^
+			nil,        // &
 			nil,        // <<
 			nil,        // >>
 			nil,        // +
@@ -37864,24 +37864,24 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(47), // ?, reduce: BitwiseANDTerm
-			reduce(47), // :, reduce: BitwiseANDTerm
-			reduce(47), // ||, reduce: BitwiseANDTerm
-			reduce(47), // ^^, reduce: BitwiseANDTerm
-			reduce(47), // &&, reduce: BitwiseANDTerm
-			reduce(47), // =~, reduce: BitwiseANDTerm
-			reduce(47), // !=~, reduce: BitwiseANDTerm
-			reduce(47), // ==, reduce: BitwiseANDTerm
-			reduce(47), // !=, reduce: BitwiseANDTerm
-			reduce(47), // >, reduce: BitwiseANDTerm
-			reduce(47), // >=, reduce: BitwiseANDTerm
-			reduce(47), // <, reduce: BitwiseANDTerm
-			reduce(47), // <=, reduce: BitwiseANDTerm
-			reduce(47), // |, reduce: BitwiseANDTerm
-			reduce(47), // ^, reduce: BitwiseANDTerm
-			reduce(47), // &, reduce: BitwiseANDTerm
-			shift(414), // <<
-			shift(415), // >>
+			reduce(46), // ?, reduce: BitwiseXORTerm
+			reduce(46), // :, reduce: BitwiseXORTerm
+			reduce(46), // ||, reduce: BitwiseXORTerm
+			reduce(46), // ^^, reduce: BitwiseXORTerm
+			reduce(46), // &&, reduce: BitwiseXORTerm
+			reduce(46), // =~, reduce: BitwiseXORTerm
+			reduce(46), // !=~, reduce: BitwiseXORTerm
+			reduce(46), // ==, reduce: BitwiseXORTerm
+			reduce(46), // !=, reduce: BitwiseXORTerm
+			reduce(46), // >, reduce: BitwiseXORTerm
+			reduce(46), // >=, reduce: BitwiseXORTerm
+			reduce(46), // <, reduce: BitwiseXORTerm
+			reduce(46), // <=, reduce: BitwiseXORTerm
+			reduce(46), // |, reduce: BitwiseXORTerm
+			reduce(46), // ^, reduce: BitwiseXORTerm
+			shift(414), // &
+			nil,        // <<
+			nil,        // >>
 			nil,        // +
 			nil,        // -
 			nil,        // .+
@@ -37942,29 +37942,29 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(49), // ?, reduce: BitwiseShiftTerm
-			reduce(49), // :, reduce: BitwiseShiftTerm
-			reduce(49), // ||, reduce: BitwiseShiftTerm
-			reduce(49), // ^^, reduce: BitwiseShiftTerm
-			reduce(49), // &&, reduce: BitwiseShiftTerm
-			reduce(49), // =~, reduce: BitwiseShiftTerm
-			reduce(49), // !=~, reduce: BitwiseShiftTerm
-			reduce(49), // ==, reduce: BitwiseShiftTerm
-			reduce(49), // !=, reduce: BitwiseShiftTerm
-			reduce(49), // >, reduce: BitwiseShiftTerm
-			reduce(49), // >=, reduce: BitwiseShiftTerm
-			reduce(49), // <, reduce: BitwiseShiftTerm
-			reduce(49), // <=, reduce: BitwiseShiftTerm
-			reduce(49), // |, reduce: BitwiseShiftTerm
-			reduce(49), // ^, reduce: BitwiseShiftTerm
-			reduce(49), // &, reduce: BitwiseShiftTerm
-			reduce(49), // <<, reduce: BitwiseShiftTerm
-			reduce(49), // >>, reduce: BitwiseShiftTerm
-			shift(416), // +
-			shift(417), // -
-			shift(418), // .+
-			shift(419), // .-
-			shift(420), // .
+			reduce(48), // ?, reduce: BitwiseANDTerm
+			reduce(48), // :, reduce: BitwiseANDTerm
+			reduce(48), // ||, reduce: BitwiseANDTerm
+			reduce(48), // ^^, reduce: BitwiseANDTerm
+			reduce(48), // &&, reduce: BitwiseANDTerm
+			reduce(48), // =~, reduce: BitwiseANDTerm
+			reduce(48), // !=~, reduce: BitwiseANDTerm
+			reduce(48), // ==, reduce: BitwiseANDTerm
+			reduce(48), // !=, reduce: BitwiseANDTerm
+			reduce(48), // >, reduce: BitwiseANDTerm
+			reduce(48), // >=, reduce: BitwiseANDTerm
+			reduce(48), // <, reduce: BitwiseANDTerm
+			reduce(48), // <=, reduce: BitwiseANDTerm
+			reduce(48), // |, reduce: BitwiseANDTerm
+			reduce(48), // ^, reduce: BitwiseANDTerm
+			reduce(48), // &, reduce: BitwiseANDTerm
+			shift(415), // <<
+			shift(416), // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -38038,11 +38038,11 @@ var actionTab = actionTable{
 			reduce(50), // &, reduce: BitwiseShiftTerm
 			reduce(50), // <<, reduce: BitwiseShiftTerm
 			reduce(50), // >>, reduce: BitwiseShiftTerm
-			shift(416), // +
-			shift(417), // -
-			shift(418), // .+
-			shift(419), // .-
-			shift(420), // .
+			shift(417), // +
+			shift(418), // -
+			shift(419), // .+
+			shift(420), // .-
+			shift(421), // .
 			nil,        // *
 			nil,        // /
 			nil,        // //
@@ -38098,36 +38098,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(52), // ?, reduce: AddsubdotTerm
-			reduce(52), // :, reduce: AddsubdotTerm
-			reduce(52), // ||, reduce: AddsubdotTerm
-			reduce(52), // ^^, reduce: AddsubdotTerm
-			reduce(52), // &&, reduce: AddsubdotTerm
-			reduce(52), // =~, reduce: AddsubdotTerm
-			reduce(52), // !=~, reduce: AddsubdotTerm
-			reduce(52), // ==, reduce: AddsubdotTerm
-			reduce(52), // !=, reduce: AddsubdotTerm
-			reduce(52), // >, reduce: AddsubdotTerm
-			reduce(52), // >=, reduce: AddsubdotTerm
-			reduce(52), // <, reduce: AddsubdotTerm
-			reduce(52), // <=, reduce: AddsubdotTerm
-			reduce(52), // |, reduce: AddsubdotTerm
-			reduce(52), // ^, reduce: AddsubdotTerm
-			reduce(52), // &, reduce: AddsubdotTerm
-			reduce(52), // <<, reduce: AddsubdotTerm
-			reduce(52), // >>, reduce: AddsubdotTerm
-			reduce(52), // +, reduce: AddsubdotTerm
-			reduce(52), // -, reduce: AddsubdotTerm
-			reduce(52), // .+, reduce: AddsubdotTerm
-			reduce(52), // .-, reduce: AddsubdotTerm
-			reduce(52), // ., reduce: AddsubdotTerm
-			shift(422), // *
-			shift(423), // /
-			shift(424), // //
-			shift(425), // %
-			shift(426), // .*
-			shift(427), // ./
-			shift(428), // .//
+			reduce(51), // ?, reduce: BitwiseShiftTerm
+			reduce(51), // :, reduce: BitwiseShiftTerm
+			reduce(51), // ||, reduce: BitwiseShiftTerm
+			reduce(51), // ^^, reduce: BitwiseShiftTerm
+			reduce(51), // &&, reduce: BitwiseShiftTerm
+			reduce(51), // =~, reduce: BitwiseShiftTerm
+			reduce(51), // !=~, reduce: BitwiseShiftTerm
+			reduce(51), // ==, reduce: BitwiseShiftTerm
+			reduce(51), // !=, reduce: BitwiseShiftTerm
+			reduce(51), // >, reduce: BitwiseShiftTerm
+			reduce(51), // >=, reduce: BitwiseShiftTerm
+			reduce(51), // <, reduce: BitwiseShiftTerm
+			reduce(51), // <=, reduce: BitwiseShiftTerm
+			reduce(51), // |, reduce: BitwiseShiftTerm
+			reduce(51), // ^, reduce: BitwiseShiftTerm
+			reduce(51), // &, reduce: BitwiseShiftTerm
+			reduce(51), // <<, reduce: BitwiseShiftTerm
+			reduce(51), // >>, reduce: BitwiseShiftTerm
+			shift(417), // +
+			shift(418), // -
+			shift(419), // .+
+			shift(420), // .-
+			shift(421), // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -38199,13 +38199,13 @@ var actionTab = actionTable{
 			reduce(53), // .+, reduce: AddsubdotTerm
 			reduce(53), // .-, reduce: AddsubdotTerm
 			reduce(53), // ., reduce: AddsubdotTerm
-			shift(422), // *
-			shift(423), // /
-			shift(424), // //
-			shift(425), // %
-			shift(426), // .*
-			shift(427), // ./
-			shift(428), // .//
+			shift(423), // *
+			shift(424), // /
+			shift(425), // //
+			shift(426), // %
+			shift(427), // .*
+			shift(428), // ./
+			shift(429), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -38277,13 +38277,13 @@ var actionTab = actionTable{
 			reduce(54), // .+, reduce: AddsubdotTerm
 			reduce(54), // .-, reduce: AddsubdotTerm
 			reduce(54), // ., reduce: AddsubdotTerm
-			shift(422), // *
-			shift(423), // /
-			shift(424), // //
-			shift(425), // %
-			shift(426), // .*
-			shift(427), // ./
-			shift(428), // .//
+			shift(423), // *
+			shift(424), // /
+			shift(425), // //
+			shift(426), // %
+			shift(427), // .*
+			shift(428), // ./
+			shift(429), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -38355,13 +38355,13 @@ var actionTab = actionTable{
 			reduce(55), // .+, reduce: AddsubdotTerm
 			reduce(55), // .-, reduce: AddsubdotTerm
 			reduce(55), // ., reduce: AddsubdotTerm
-			shift(422), // *
-			shift(423), // /
-			shift(424), // //
-			shift(425), // %
-			shift(426), // .*
-			shift(427), // ./
-			shift(428), // .//
+			shift(423), // *
+			shift(424), // /
+			shift(425), // //
+			shift(426), // %
+			shift(427), // .*
+			shift(428), // ./
+			shift(429), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -38433,13 +38433,13 @@ var actionTab = actionTable{
 			reduce(56), // .+, reduce: AddsubdotTerm
 			reduce(56), // .-, reduce: AddsubdotTerm
 			reduce(56), // ., reduce: AddsubdotTerm
-			shift(422), // *
-			shift(423), // /
-			shift(424), // //
-			shift(425), // %
-			shift(426), // .*
-			shift(427), // ./
-			shift(428), // .//
+			shift(423), // *
+			shift(424), // /
+			shift(425), // //
+			shift(426), // %
+			shift(427), // .*
+			shift(428), // ./
+			shift(429), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -38488,36 +38488,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(58), // ?, reduce: MuldivTerm
-			reduce(58), // :, reduce: MuldivTerm
-			reduce(58), // ||, reduce: MuldivTerm
-			reduce(58), // ^^, reduce: MuldivTerm
-			reduce(58), // &&, reduce: MuldivTerm
-			reduce(58), // =~, reduce: MuldivTerm
-			reduce(58), // !=~, reduce: MuldivTerm
-			reduce(58), // ==, reduce: MuldivTerm
-			reduce(58), // !=, reduce: MuldivTerm
-			reduce(58), // >, reduce: MuldivTerm
-			reduce(58), // >=, reduce: MuldivTerm
-			reduce(58), // <, reduce: MuldivTerm
-			reduce(58), // <=, reduce: MuldivTerm
-			reduce(58), // |, reduce: MuldivTerm
-			reduce(58), // ^, reduce: MuldivTerm
-			reduce(58), // &, reduce: MuldivTerm
-			reduce(58), // <<, reduce: MuldivTerm
-			reduce(58), // >>, reduce: MuldivTerm
-			reduce(58), // +, reduce: MuldivTerm
-			reduce(58), // -, reduce: MuldivTerm
-			reduce(58), // .+, reduce: MuldivTerm
-			reduce(58), // .-, reduce: MuldivTerm
-			reduce(58), // ., reduce: MuldivTerm
-			reduce(58), // *, reduce: MuldivTerm
-			reduce(58), // /, reduce: MuldivTerm
-			reduce(58), // //, reduce: MuldivTerm
-			reduce(58), // %, reduce: MuldivTerm
-			reduce(58), // .*, reduce: MuldivTerm
-			reduce(58), // ./, reduce: MuldivTerm
-			reduce(58), // .//, reduce: MuldivTerm
+			reduce(57), // ?, reduce: AddsubdotTerm
+			reduce(57), // :, reduce: AddsubdotTerm
+			reduce(57), // ||, reduce: AddsubdotTerm
+			reduce(57), // ^^, reduce: AddsubdotTerm
+			reduce(57), // &&, reduce: AddsubdotTerm
+			reduce(57), // =~, reduce: AddsubdotTerm
+			reduce(57), // !=~, reduce: AddsubdotTerm
+			reduce(57), // ==, reduce: AddsubdotTerm
+			reduce(57), // !=, reduce: AddsubdotTerm
+			reduce(57), // >, reduce: AddsubdotTerm
+			reduce(57), // >=, reduce: AddsubdotTerm
+			reduce(57), // <, reduce: AddsubdotTerm
+			reduce(57), // <=, reduce: AddsubdotTerm
+			reduce(57), // |, reduce: AddsubdotTerm
+			reduce(57), // ^, reduce: AddsubdotTerm
+			reduce(57), // &, reduce: AddsubdotTerm
+			reduce(57), // <<, reduce: AddsubdotTerm
+			reduce(57), // >>, reduce: AddsubdotTerm
+			reduce(57), // +, reduce: AddsubdotTerm
+			reduce(57), // -, reduce: AddsubdotTerm
+			reduce(57), // .+, reduce: AddsubdotTerm
+			reduce(57), // .-, reduce: AddsubdotTerm
+			reduce(57), // ., reduce: AddsubdotTerm
+			shift(423), // *
+			shift(424), // /
+			shift(425), // //
+			shift(426), // %
+			shift(427), // .*
+			shift(428), // ./
+			shift(429), // .//
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -39034,36 +39034,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: PowTerm
-			reduce(73), // :, reduce: PowTerm
-			reduce(73), // ||, reduce: PowTerm
-			reduce(73), // ^^, reduce: PowTerm
-			reduce(73), // &&, reduce: PowTerm
-			reduce(73), // =~, reduce: PowTerm
-			reduce(73), // !=~, reduce: PowTerm
-			reduce(73), // ==, reduce: PowTerm
-			reduce(73), // !=, reduce: PowTerm
-			reduce(73), // >, reduce: PowTerm
-			reduce(73), // >=, reduce: PowTerm
-			reduce(73), // <, reduce: PowTerm
-			reduce(73), // <=, reduce: PowTerm
-			reduce(73), // |, reduce: PowTerm
-			reduce(73), // ^, reduce: PowTerm
-			reduce(73), // &, reduce: PowTerm
-			reduce(73), // <<, reduce: PowTerm
-			reduce(73), // >>, reduce: PowTerm
-			reduce(73), // +, reduce: PowTerm
-			reduce(73), // -, reduce: PowTerm
-			reduce(73), // .+, reduce: PowTerm
-			reduce(73), // .-, reduce: PowTerm
-			reduce(73), // ., reduce: PowTerm
-			reduce(73), // *, reduce: PowTerm
-			reduce(73), // /, reduce: PowTerm
-			reduce(73), // //, reduce: PowTerm
-			reduce(73), // %, reduce: PowTerm
-			reduce(73), // .*, reduce: PowTerm
-			reduce(73), // ./, reduce: PowTerm
-			reduce(73), // .//, reduce: PowTerm
+			reduce(65), // ?, reduce: MuldivTerm
+			reduce(65), // :, reduce: MuldivTerm
+			reduce(65), // ||, reduce: MuldivTerm
+			reduce(65), // ^^, reduce: MuldivTerm
+			reduce(65), // &&, reduce: MuldivTerm
+			reduce(65), // =~, reduce: MuldivTerm
+			reduce(65), // !=~, reduce: MuldivTerm
+			reduce(65), // ==, reduce: MuldivTerm
+			reduce(65), // !=, reduce: MuldivTerm
+			reduce(65), // >, reduce: MuldivTerm
+			reduce(65), // >=, reduce: MuldivTerm
+			reduce(65), // <, reduce: MuldivTerm
+			reduce(65), // <=, reduce: MuldivTerm
+			reduce(65), // |, reduce: MuldivTerm
+			reduce(65), // ^, reduce: MuldivTerm
+			reduce(65), // &, reduce: MuldivTerm
+			reduce(65), // <<, reduce: MuldivTerm
+			reduce(65), // >>, reduce: MuldivTerm
+			reduce(65), // +, reduce: MuldivTerm
+			reduce(65), // -, reduce: MuldivTerm
+			reduce(65), // .+, reduce: MuldivTerm
+			reduce(65), // .-, reduce: MuldivTerm
+			reduce(65), // ., reduce: MuldivTerm
+			reduce(65), // *, reduce: MuldivTerm
+			reduce(65), // /, reduce: MuldivTerm
+			reduce(65), // //, reduce: MuldivTerm
+			reduce(65), // %, reduce: MuldivTerm
+			reduce(65), // .*, reduce: MuldivTerm
+			reduce(65), // ./, reduce: MuldivTerm
+			reduce(65), // .//, reduce: MuldivTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -39112,39 +39112,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(75), // ?, reduce: AtomOrFunction
-			reduce(75), // :, reduce: AtomOrFunction
-			reduce(75), // ||, reduce: AtomOrFunction
-			reduce(75), // ^^, reduce: AtomOrFunction
-			reduce(75), // &&, reduce: AtomOrFunction
-			reduce(75), // =~, reduce: AtomOrFunction
-			reduce(75), // !=~, reduce: AtomOrFunction
-			reduce(75), // ==, reduce: AtomOrFunction
-			reduce(75), // !=, reduce: AtomOrFunction
-			reduce(75), // >, reduce: AtomOrFunction
-			reduce(75), // >=, reduce: AtomOrFunction
-			reduce(75), // <, reduce: AtomOrFunction
-			reduce(75), // <=, reduce: AtomOrFunction
-			reduce(75), // |, reduce: AtomOrFunction
-			reduce(75), // ^, reduce: AtomOrFunction
-			reduce(75), // &, reduce: AtomOrFunction
-			reduce(75), // <<, reduce: AtomOrFunction
-			reduce(75), // >>, reduce: AtomOrFunction
-			reduce(75), // +, reduce: AtomOrFunction
-			reduce(75), // -, reduce: AtomOrFunction
-			reduce(75), // .+, reduce: AtomOrFunction
-			reduce(75), // .-, reduce: AtomOrFunction
-			reduce(75), // ., reduce: AtomOrFunction
-			reduce(75), // *, reduce: AtomOrFunction
-			reduce(75), // /, reduce: AtomOrFunction
-			reduce(75), // //, reduce: AtomOrFunction
-			reduce(75), // %, reduce: AtomOrFunction
-			reduce(75), // .*, reduce: AtomOrFunction
-			reduce(75), // ./, reduce: AtomOrFunction
-			reduce(75), // .//, reduce: AtomOrFunction
+			reduce(74), // ?, reduce: PowTerm
+			reduce(74), // :, reduce: PowTerm
+			reduce(74), // ||, reduce: PowTerm
+			reduce(74), // ^^, reduce: PowTerm
+			reduce(74), // &&, reduce: PowTerm
+			reduce(74), // =~, reduce: PowTerm
+			reduce(74), // !=~, reduce: PowTerm
+			reduce(74), // ==, reduce: PowTerm
+			reduce(74), // !=, reduce: PowTerm
+			reduce(74), // >, reduce: PowTerm
+			reduce(74), // >=, reduce: PowTerm
+			reduce(74), // <, reduce: PowTerm
+			reduce(74), // <=, reduce: PowTerm
+			reduce(74), // |, reduce: PowTerm
+			reduce(74), // ^, reduce: PowTerm
+			reduce(74), // &, reduce: PowTerm
+			reduce(74), // <<, reduce: PowTerm
+			reduce(74), // >>, reduce: PowTerm
+			reduce(74), // +, reduce: PowTerm
+			reduce(74), // -, reduce: PowTerm
+			reduce(74), // .+, reduce: PowTerm
+			reduce(74), // .-, reduce: PowTerm
+			reduce(74), // ., reduce: PowTerm
+			reduce(74), // *, reduce: PowTerm
+			reduce(74), // /, reduce: PowTerm
+			reduce(74), // //, reduce: PowTerm
+			reduce(74), // %, reduce: PowTerm
+			reduce(74), // .*, reduce: PowTerm
+			reduce(74), // ./, reduce: PowTerm
+			reduce(74), // .//, reduce: PowTerm
 			nil,        // !
 			nil,        // ~
-			reduce(75), // **, reduce: AtomOrFunction
+			nil,        // **
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -39190,39 +39190,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(80), // ?, reduce: IndirectFieldName
-			reduce(80), // :, reduce: IndirectFieldName
-			reduce(80), // ||, reduce: IndirectFieldName
-			reduce(80), // ^^, reduce: IndirectFieldName
-			reduce(80), // &&, reduce: IndirectFieldName
-			reduce(80), // =~, reduce: IndirectFieldName
-			reduce(80), // !=~, reduce: IndirectFieldName
-			reduce(80), // ==, reduce: IndirectFieldName
-			reduce(80), // !=, reduce: IndirectFieldName
-			reduce(80), // >, reduce: IndirectFieldName
-			reduce(80), // >=, reduce: IndirectFieldName
-			reduce(80), // <, reduce: IndirectFieldName
-			reduce(80), // <=, reduce: IndirectFieldName
-			reduce(80), // |, reduce: IndirectFieldName
-			reduce(80), // ^, reduce: IndirectFieldName
-			reduce(80), // &, reduce: IndirectFieldName
-			reduce(80), // <<, reduce: IndirectFieldName
-			reduce(80), // >>, reduce: IndirectFieldName
-			reduce(80), // +, reduce: IndirectFieldName
-			reduce(80), // -, reduce: IndirectFieldName
-			reduce(80), // .+, reduce: IndirectFieldName
-			reduce(80), // .-, reduce: IndirectFieldName
-			reduce(80), // ., reduce: IndirectFieldName
-			reduce(80), // *, reduce: IndirectFieldName
-			reduce(80), // /, reduce: IndirectFieldName
-			reduce(80), // //, reduce: IndirectFieldName
-			reduce(80), // %, reduce: IndirectFieldName
-			reduce(80), // .*, reduce: IndirectFieldName
-			reduce(80), // ./, reduce: IndirectFieldName
-			reduce(80), // .//, reduce: IndirectFieldName
+			reduce(76), // ?, reduce: AtomOrFunction
+			reduce(76), // :, reduce: AtomOrFunction
+			reduce(76), // ||, reduce: AtomOrFunction
+			reduce(76), // ^^, reduce: AtomOrFunction
+			reduce(76), // &&, reduce: AtomOrFunction
+			reduce(76), // =~, reduce: AtomOrFunction
+			reduce(76), // !=~, reduce: AtomOrFunction
+			reduce(76), // ==, reduce: AtomOrFunction
+			reduce(76), // !=, reduce: AtomOrFunction
+			reduce(76), // >, reduce: AtomOrFunction
+			reduce(76), // >=, reduce: AtomOrFunction
+			reduce(76), // <, reduce: AtomOrFunction
+			reduce(76), // <=, reduce: AtomOrFunction
+			reduce(76), // |, reduce: AtomOrFunction
+			reduce(76), // ^, reduce: AtomOrFunction
+			reduce(76), // &, reduce: AtomOrFunction
+			reduce(76), // <<, reduce: AtomOrFunction
+			reduce(76), // >>, reduce: AtomOrFunction
+			reduce(76), // +, reduce: AtomOrFunction
+			reduce(76), // -, reduce: AtomOrFunction
+			reduce(76), // .+, reduce: AtomOrFunction
+			reduce(76), // .-, reduce: AtomOrFunction
+			reduce(76), // ., reduce: AtomOrFunction
+			reduce(76), // *, reduce: AtomOrFunction
+			reduce(76), // /, reduce: AtomOrFunction
+			reduce(76), // //, reduce: AtomOrFunction
+			reduce(76), // %, reduce: AtomOrFunction
+			reduce(76), // .*, reduce: AtomOrFunction
+			reduce(76), // ./, reduce: AtomOrFunction
+			reduce(76), // .//, reduce: AtomOrFunction
 			nil,        // !
 			nil,        // ~
-			reduce(80), // **, reduce: IndirectFieldName
+			reduce(76), // **, reduce: AtomOrFunction
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_field_name
@@ -39268,6 +39268,84 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
+			reduce(81), // ?, reduce: IndirectFieldName
+			reduce(81), // :, reduce: IndirectFieldName
+			reduce(81), // ||, reduce: IndirectFieldName
+			reduce(81), // ^^, reduce: IndirectFieldName
+			reduce(81), // &&, reduce: IndirectFieldName
+			reduce(81), // =~, reduce: IndirectFieldName
+			reduce(81), // !=~, reduce: IndirectFieldName
+			reduce(81), // ==, reduce: IndirectFieldName
+			reduce(81), // !=, reduce: IndirectFieldName
+			reduce(81), // >, reduce: IndirectFieldName
+			reduce(81), // >=, reduce: IndirectFieldName
+			reduce(81), // <, reduce: IndirectFieldName
+			reduce(81), // <=, reduce: IndirectFieldName
+			reduce(81), // |, reduce: IndirectFieldName
+			reduce(81), // ^, reduce: IndirectFieldName
+			reduce(81), // &, reduce: IndirectFieldName
+			reduce(81), // <<, reduce: IndirectFieldName
+			reduce(81), // >>, reduce: IndirectFieldName
+			reduce(81), // +, reduce: IndirectFieldName
+			reduce(81), // -, reduce: IndirectFieldName
+			reduce(81), // .+, reduce: IndirectFieldName
+			reduce(81), // .-, reduce: IndirectFieldName
+			reduce(81), // ., reduce: IndirectFieldName
+			reduce(81), // *, reduce: IndirectFieldName
+			reduce(81), // /, reduce: IndirectFieldName
+			reduce(81), // //, reduce: IndirectFieldName
+			reduce(81), // %, reduce: IndirectFieldName
+			reduce(81), // .*, reduce: IndirectFieldName
+			reduce(81), // ./, reduce: IndirectFieldName
+			reduce(81), // .//, reduce: IndirectFieldName
+			nil,        // !
+			nil,        // ~
+			reduce(81), // **, reduce: IndirectFieldName
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S504
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -39286,10 +39364,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			shift(184), // +
-			shift(186), // -
-			shift(187), // .+
-			shift(188), // .-
+			shift(185), // +
+			shift(187), // -
+			shift(188), // .+
+			shift(189), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -39298,37 +39376,37 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			shift(191), // !
-			shift(192), // ~
+			shift(192), // !
+			shift(193), // ~
 			nil,        // **
-			shift(194), // (
+			shift(195), // (
 			nil,        // )
-			shift(197), // md_token_field_name
-			shift(198), // $[
+			shift(198), // md_token_field_name
+			shift(199), // $[
 			nil,        // ]
-			shift(199), // md_token_string_literal
-			shift(200), // md_token_int_literal
-			shift(201), // md_token_float_literal
-			shift(202), // md_token_boolean_literal
-			shift(204), // md_token_IPS
-			shift(205), // md_token_IFS
-			shift(206), // md_token_IRS
-			shift(207), // md_token_OPS
-			shift(208), // md_token_OFS
-			shift(209), // md_token_ORS
-			shift(210), // md_token_NF
-			shift(211), // md_token_NR
-			shift(212), // md_token_FNR
-			shift(213), // md_token_FILENAME
-			shift(214), // md_token_FILENUM
+			shift(200), // md_token_string_literal
+			shift(201), // md_token_int_literal
+			shift(202), // md_token_float_literal
+			shift(203), // md_token_boolean_literal
+			shift(205), // md_token_IPS
+			shift(206), // md_token_IFS
+			shift(207), // md_token_IRS
+			shift(208), // md_token_OPS
+			shift(209), // md_token_OFS
+			shift(210), // md_token_ORS
+			shift(211), // md_token_NF
+			shift(212), // md_token_NR
+			shift(213), // md_token_FNR
+			shift(214), // md_token_FILENAME
+			shift(215), // md_token_FILENUM
 		},
 	},
-	actionRow{ // S504
+	actionRow{ // S505
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(25), // $, reduce: TernaryTerm
-			reduce(25), // ;, reduce: TernaryTerm
+			reduce(26), // $, reduce: TernaryTerm
+			reduce(26), // ;, reduce: TernaryTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -39399,84 +39477,6 @@ var actionTab = actionTable{
 			nil,        // md_token_FNR
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
-		},
-	},
-	actionRow{ // S505
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			nil,        // ?
-			nil,        // :
-			nil,        // ||
-			nil,        // ^^
-			nil,        // &&
-			nil,        // =~
-			nil,        // !=~
-			nil,        // ==
-			nil,        // !=
-			nil,        // >
-			nil,        // >=
-			nil,        // <
-			nil,        // <=
-			nil,        // |
-			nil,        // ^
-			nil,        // &
-			nil,        // <<
-			nil,        // >>
-			shift(266), // +
-			shift(268), // -
-			shift(269), // .+
-			shift(270), // .-
-			nil,        // .
-			nil,        // *
-			nil,        // /
-			nil,        // //
-			nil,        // %
-			nil,        // .*
-			nil,        // ./
-			nil,        // .//
-			shift(273), // !
-			shift(274), // ~
-			nil,        // **
-			shift(276), // (
-			nil,        // )
-			shift(279), // md_token_field_name
-			shift(280), // $[
-			nil,        // ]
-			shift(281), // md_token_string_literal
-			shift(282), // md_token_int_literal
-			shift(283), // md_token_float_literal
-			shift(284), // md_token_boolean_literal
-			shift(286), // md_token_IPS
-			shift(287), // md_token_IFS
-			shift(288), // md_token_IRS
-			shift(289), // md_token_OPS
-			shift(290), // md_token_OFS
-			shift(291), // md_token_ORS
-			shift(292), // md_token_NF
-			shift(293), // md_token_NR
-			shift(294), // md_token_FNR
-			shift(295), // md_token_FILENAME
-			shift(296), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S506
@@ -39520,10 +39520,10 @@ var actionTab = actionTable{
 			nil,        // &
 			nil,        // <<
 			nil,        // >>
-			nil,        // +
-			nil,        // -
-			nil,        // .+
-			nil,        // .-
+			shift(267), // +
+			shift(269), // -
+			shift(270), // .+
+			shift(271), // .-
 			nil,        // .
 			nil,        // *
 			nil,        // /
@@ -39532,29 +39532,29 @@ var actionTab = actionTable{
 			nil,        // .*
 			nil,        // ./
 			nil,        // .//
-			nil,        // !
-			nil,        // ~
+			shift(274), // !
+			shift(275), // ~
 			nil,        // **
-			nil,        // (
-			reduce(25), // ), reduce: TernaryTerm
-			nil,        // md_token_field_name
-			nil,        // $[
+			shift(277), // (
+			nil,        // )
+			shift(280), // md_token_field_name
+			shift(281), // $[
 			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
+			shift(282), // md_token_string_literal
+			shift(283), // md_token_int_literal
+			shift(284), // md_token_float_literal
+			shift(285), // md_token_boolean_literal
+			shift(287), // md_token_IPS
+			shift(288), // md_token_IFS
+			shift(289), // md_token_IRS
+			shift(290), // md_token_OPS
+			shift(291), // md_token_OFS
+			shift(292), // md_token_ORS
+			shift(293), // md_token_NF
+			shift(294), // md_token_NR
+			shift(295), // md_token_FNR
+			shift(296), // md_token_FILENAME
+			shift(297), // md_token_FILENUM
 		},
 	},
 	actionRow{ // S507
@@ -39581,7 +39581,85 @@ var actionTab = actionTable{
 			nil,        // %=
 			nil,        // **=
 			nil,        // ?
-			reduce(25), // :, reduce: TernaryTerm
+			nil,        // :
+			nil,        // ||
+			nil,        // ^^
+			nil,        // &&
+			nil,        // =~
+			nil,        // !=~
+			nil,        // ==
+			nil,        // !=
+			nil,        // >
+			nil,        // >=
+			nil,        // <
+			nil,        // <=
+			nil,        // |
+			nil,        // ^
+			nil,        // &
+			nil,        // <<
+			nil,        // >>
+			nil,        // +
+			nil,        // -
+			nil,        // .+
+			nil,        // .-
+			nil,        // .
+			nil,        // *
+			nil,        // /
+			nil,        // //
+			nil,        // %
+			nil,        // .*
+			nil,        // ./
+			nil,        // .//
+			nil,        // !
+			nil,        // ~
+			nil,        // **
+			nil,        // (
+			reduce(26), // ), reduce: TernaryTerm
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+		},
+	},
+	actionRow{ // S508
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			nil,        // ?
+			reduce(26), // :, reduce: TernaryTerm
 			nil,        // ||
 			nil,        // ^^
 			nil,        // &&

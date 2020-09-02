@@ -9,6 +9,7 @@ import (
 	"miller/clitypes"
 	"miller/containers"
 	"miller/dsl"
+	"miller/dsl/cst"
 	"miller/mapping"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
@@ -113,31 +114,38 @@ func mapperPutUsage(
 
 // ----------------------------------------------------------------
 type MapperPut struct {
-	ast         *dsl.AST
-	interpreter *dsl.Interpreter
+	astRoot     *dsl.AST
+	cstRoot     *cst.Root
+	interpreter *dsl.Interpreter // xxx temp
 }
 
 func NewMapperPut(
 	dslString string,
 	verbose bool,
 ) (*MapperPut, error) {
-	ast, err := NewASTFromString(dslString)
+	astRoot, err := NewASTFromString(dslString)
 	if err != nil {
 		return nil, err
 	}
 	if verbose {
 		fmt.Println("RAW AST:")
-		ast.Print()
+		astRoot.Print()
 		fmt.Println()
 	}
+	cstRoot, err := cst.Build(astRoot)
+	if err != nil {
+		return nil, err
+	}
+
 	return &MapperPut{
-		ast:         ast,
+		astRoot:     astRoot,
+		cstRoot:     cstRoot,
 		interpreter: dsl.NewInterpreter(),
 	}, nil
 }
 
 // xxx note (package cycle) why not a dsl.AST constructor :(
-// xxx maybe split out dsl into two package ... and/or put the ast.go into miller/parsing -- ?
+// xxx maybe split out dsl into two package ... and/or put the astRoot.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
 func NewASTFromString(dslString string) (*dsl.AST, error) {
 	theLexer := lexer.NewLexer([]byte(dslString))
@@ -146,8 +154,8 @@ func NewASTFromString(dslString string) (*dsl.AST, error) {
 	if err != nil {
 		return nil, err
 	}
-	ast := interfaceAST.(*dsl.AST)
-	return ast, nil
+	astRoot := interfaceAST.(*dsl.AST)
+	return astRoot, nil
 }
 
 func (this *MapperPut) Map(
@@ -157,17 +165,20 @@ func (this *MapperPut) Map(
 	inrec := inrecAndContext.Lrec
 	context := inrecAndContext.Context
 	if inrec != nil {
-		// xxx maybe ast -> interpreter ctor
-		outrec, err := this.interpreter.InterpretOnInputRecord(inrec, &context, this.ast)
-		if err != nil {
-			// need echan or what?
-			fmt.Println(err)
-		} else {
-			outrecsAndContexts <- containers.NewLrecAndContext(
-				outrec,
-				&context,
-			)
-		}
+		//		outrec, err := this.interpreter.InterpretOnInputRecord(inrec, &context, this.astRoot)
+		//		if err != nil {
+		//			// need echan or what?
+		//			fmt.Println(err)
+		//			os.Exit(1)
+		//		}
+
+		cstState := cst.NewState(inrec, &context)
+		outrec := this.cstRoot.Execute(cstState)
+
+		outrecsAndContexts <- containers.NewLrecAndContext(
+			outrec,
+			&context,
+		)
 	} else {
 		outrecsAndContexts <- containers.NewLrecAndContext(
 			nil, // signals end of input record stream

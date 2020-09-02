@@ -1,9 +1,83 @@
 package cst
 
 import (
-	"miller/containers"
+	"errors"
+
+	"miller/dsl"
 	"miller/lib"
 )
+
+// ----------------------------------------------------------------
+func NewEvaluableLeafNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	if astNode.Children != nil {
+		return nil, errors.New("Internal coding error detected")
+	}
+
+	sval := string(astNode.Token.Lit)
+	if astNode.Children != nil {
+		return nil, errors.New("Internal coding error detected")
+	}
+
+	switch astNode.Type {
+	case dsl.NodeTypeStringLiteral:
+		return NewStringLiteral(sval), nil
+		break
+	case dsl.NodeTypeIntLiteral:
+		return NewIntLiteral(sval), nil
+		break
+	case dsl.NodeTypeFloatLiteral:
+		return NewBoolLiteral(sval), nil
+		break
+	case dsl.NodeTypeBoolLiteral:
+		return NewBoolLiteral(sval), nil
+		break
+
+		// xxx more
+
+		//	case NodeTypeDirectFieldName:
+		//		fieldName := sval[1:] // xxx temp -- fix this in the grammar or ast-insert?
+		//		fieldValue := inrec.Get(&fieldName)
+		//		if fieldValue == nil {
+		//			return lib.MlrvalFromAbsent(), nil
+		//		} else {
+		//			return *fieldValue, nil
+		//		}
+		//		break
+		//	case NodeTypeIndirectFieldName:
+		//		return lib.MlrvalFromError(), errors.New("unhandled1")
+		//		break
+		//
+		//	case NodeTypeStatementBlock:
+		//		return lib.MlrvalFromError(), errors.New("unhandled2")
+		//		break
+		//	case NodeTypeAssignment:
+		//		return lib.MlrvalFromError(), errors.New("unhandled3")
+		//		break
+		//	case NodeTypeOperator:
+		//		node.checkArity(2) // xxx temp -- binary-only for now
+		//		return this.evaluateBinaryOperatorNode(node, node.Children[0], node.Children[1],
+		//			inrec, context)
+		//		break
+		//	case NodeTypeContextVariable:
+		//		return this.evaluateContextVariableNode(node, context)
+		//		break
+		//
+
+	}
+
+	return nil, errors.New("CST builder: unhandled AST leaf node" + string(astNode.Type))
+}
+
+// xxx
+//NewBoolLiteral(literal bool) *BoolLiteral {
+//
+//NewFILENAME() *FILENAME {
+//NewFILENUM() *FILENUM {
+//NewNF() *NF {
+//NewNR() *NR {
+//NewFNR() *FNR {
 
 // ----------------------------------------------------------------
 type StringLiteral struct {
@@ -24,9 +98,9 @@ type IntLiteral struct {
 	literal lib.Mlrval
 }
 
-func NewIntLiteral(literal int64) *IntLiteral {
+func NewIntLiteral(literal string) *IntLiteral {
 	return &IntLiteral{
-		literal: lib.MlrvalFromInt64(literal),
+		literal: lib.MlrvalFromInt64String(literal),
 	}
 }
 func (this *IntLiteral) Evaluate(state *State) lib.Mlrval {
@@ -38,9 +112,9 @@ type FloatLiteral struct {
 	literal lib.Mlrval
 }
 
-func NewFloatLiteral(literal float64) *FloatLiteral {
+func NewFloatLiteral(literal string) *FloatLiteral {
 	return &FloatLiteral{
-		literal: lib.MlrvalFromFloat64(literal),
+		literal: lib.MlrvalFromFloat64String(literal),
 	}
 }
 func (this *FloatLiteral) Evaluate(state *State) lib.Mlrval {
@@ -52,14 +126,65 @@ type BoolLiteral struct {
 	literal lib.Mlrval
 }
 
-func NewBoolLiteral(literal bool) *BoolLiteral {
+func NewBoolLiteral(literal string) *BoolLiteral {
 	return &BoolLiteral{
-		literal: lib.MlrvalFromBool(literal),
+		literal: lib.MlrvalFromBoolString(literal),
 	}
 }
 func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
 	return this.literal
 }
+
+// ----------------------------------------------------------------
+//func (this *Interpreter) evaluateContextVariableNode(
+//	node *ASTNode,
+//	context *containers.Context,
+//) (lib.Mlrval, error) {
+//	if node.Token == nil {
+//		return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
+//	}
+//	sval := string(node.Token.Lit)
+//	switch sval {
+//	case "FILENAME":
+//		return lib.MlrvalFromString(context.FILENAME), nil
+//		break
+//	case "FILENUM":
+//		return lib.MlrvalFromInt64(context.FILENUM), nil
+//		break
+//	case "NF":
+//		return lib.MlrvalFromInt64(context.NF), nil
+//		break
+//	case "NR":
+//		return lib.MlrvalFromInt64(context.NR), nil
+//		break
+//	case "FNR":
+//		return lib.MlrvalFromInt64(context.FNR), nil
+//		break
+//
+//	case "IPS":
+//		return lib.MlrvalFromString(context.IPS), nil
+//		break
+//	case "IFS":
+//		return lib.MlrvalFromString(context.IFS), nil
+//		break
+//	case "IRS":
+//		return lib.MlrvalFromString(context.IRS), nil
+//		break
+//
+//	case "OPS":
+//		return lib.MlrvalFromString(context.OPS), nil
+//		break
+//	case "OFS":
+//		return lib.MlrvalFromString(context.OFS), nil
+//		break
+//	case "ORS":
+//		return lib.MlrvalFromString(context.ORS), nil
+//		break
+//
+//		break
+//	}
+//	return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
+//}
 
 // ----------------------------------------------------------------
 type FILENAME struct {
@@ -68,7 +193,7 @@ type FILENAME struct {
 func NewFILENAME() *FILENAME {
 	return &FILENAME{}
 }
-func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *FILENAME) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.FILENAME)
 }
 
@@ -79,7 +204,7 @@ type FILENUM struct {
 func NewFILENUM() *FILENUM {
 	return &FILENUM{}
 }
-func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *FILENUM) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.FILENUM)
 }
 
@@ -90,7 +215,7 @@ type NF struct {
 func NewNF() *NF {
 	return &NF{}
 }
-func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *NF) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.NF)
 }
 
@@ -101,7 +226,7 @@ type NR struct {
 func NewNR() *NR {
 	return &NR{}
 }
-func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *NR) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.NR)
 }
 
@@ -112,6 +237,6 @@ type FNR struct {
 func NewFNR() *FNR {
 	return &FNR{}
 }
-func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *FNR) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.FNR)
 }

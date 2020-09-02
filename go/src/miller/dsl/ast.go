@@ -1,7 +1,9 @@
 package dsl
 
 import (
+	"errors"
 	"fmt"
+
 	"miller/parsing/token"
 )
 
@@ -16,10 +18,10 @@ const (
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"
 
-	NodeTypeStatementBlock  = "StatementBlock"
-	NodeTypeAssignment      = "Assignment"
-	NodeTypeOperator        = "Operator"
-	NodeTypeContextVariable = "ContextVariable"
+	NodeTypeStatementBlock       = "StatementBlock"
+	NodeTypeSrecDirectAssignment = "SrecDirectAssignment"
+	NodeTypeOperator             = "Operator"
+	NodeTypeContextVariable      = "ContextVariable"
 )
 
 // ----------------------------------------------------------------
@@ -52,7 +54,7 @@ func (this *AST) Print() {
 // ----------------------------------------------------------------
 type ASTNode struct {
 	Token    *token.Token // Nil for tokenless/structural nodes
-	NodeType TNodeType
+	Type     TNodeType
 	Children []*ASTNode
 
 	// xxx sketch:
@@ -81,7 +83,7 @@ func (this *ASTNode) Print(depth int) {
 		fmt.Print("    ")
 	}
 	tok := this.Token
-	fmt.Print("* " + this.NodeType)
+	fmt.Print("* " + this.Type)
 
 	if tok != nil {
 		fmt.Printf(" \"%s\" \"%s\"",
@@ -175,4 +177,19 @@ func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 		parent.Children = append(parent.Children, child.(*ASTNode))
 	}
 	return parent, nil
+}
+
+func (this *ASTNode) CheckArity(
+	arity int,
+) error {
+	if len(this.Children) != arity {
+		return errors.New(
+			fmt.Sprintf(
+				"AST node arity %d, expected %d",
+				len(this.Children), arity,
+			),
+		)
+	} else {
+		return nil
+	}
 }
