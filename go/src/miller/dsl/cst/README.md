@@ -9,7 +9,7 @@ See [go/src/miller/dsl/README.md](https://github.com/johnkerl/miller/blob/master
 
 ## Notes
 
-Go is a strongly typed languages, but the AST is polymorphic. This results in if/else or switch statemens as an AST is walked.
+Go is a strongly typed language, but the AST is polymorphic. This results in if/else or switch statemens as an AST is walked.
 
 Also, when we modify code, there can be changes in the [BNF grammar](https://github.com/johnkerl/miller/blob/master/go/src/miller/parsing/mlr.bnf) not yet reflected in the [AST](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/ast.go). Likewise, there can be AST changes not yet reflected here. (Example: you are partway through adding a new binary operator to the grammar.)
 
