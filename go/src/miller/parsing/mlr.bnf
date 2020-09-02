@@ -1,7 +1,8 @@
 // ================================================================
 // MILLER DSL GRAMMAR
 //
-// This is the Miller DSL's BNF grammar, using the gocc tool framework.
+// This is the Miller DSL's BNF grammar, using the awesome GOCC tool framework
+// from https://github.com/goccmack/gocc.
 //
 // The first section is lexical elements and the second section is syntactical
 // elements. These are the analogs of lex and yacc, respectively, using a

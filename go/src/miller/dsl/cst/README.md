@@ -19,4 +19,4 @@ During CST build from an AST, one starts from the AST root and walks down throug
 
 Different builder methods are invoked for leaves, operators, etc. There is also, redundantly, a precondition assertion within each builder method: the leaf-builder method checks to make sure it's given an AST leaf node to build from; the operator-builder method checks to make sure it's given an AST operator node to build from; etc. The caller and the callee are doing the same kinds of check, which might seem redundant. The callees return Go `error` in case there is something new in the caller which has not yet been implemented in the callee.
 
-This is all done to make development more happy: when you see things like `CST build: AST unary operator node unhandled.` you can check the code here and see what you need to do next to continue development.
+This is all done to make development more happy: when you see things like `CST build: AST unary operator node unhandled` you can check the code here and see what you need to do next to continue development.

@@ -22,6 +22,23 @@ Note: in some sense Go-Miller is *less* efficient but in a way that doesn't sign
 
 Even commodity hardware has multiple CPUs these days -- and the Go code is *much* easier to read than the C code -- so I'll call this a net win for Go.
 
+# Source-code goals
+
+Donald Knuth famously said: *Programs are meant to be read by humans and only incidentally for computers to execute.*
+
+During the coding of Miller, I've been guided by the following:
+
+* *Miller should be fun to read.*
+  * `README.md` files throughout the directory tree are intended to give you a sense of what is where, what to read first and and what doesn't need reading right away, and so on -- so you spend a minimum of time being confused or frustrated.
+  * Names of files, variables, functions, etc. should be fully spelled out (e.g. `NewEvaluableLeafNode`), except for a small number of most-used names where a longer name would cause unnecessary line-wraps (e.g. `Mlrval` instead of `MillerValue` since this appears very very often).
+  * Code should not be too clever. This includes some reasonable amounts of code duplication from time to time, to keep things inline, rather than lasagna code.
+  * Things should be transparent.  For example, `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
+  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as `mlr.go`, `mlr.bnf`, `stream.go`, etc.
+* *Miller should be fun to write.*
+  * It should be quick to find out if you've made a mistake -- hence the `reg_test/run` regression script.
+  * It should be quick to find out what to do next as you iteratively develop -- see for example [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md).
+  * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward to read, and fun to write. I hope you enjoy it as much as I have.
+
 # Directory structure
 
 Information here is for the benefit of anyone reading/using the Miller Go code. To use the Miller tool at the command line, you don't need to know any of this if you don't want to. :)
