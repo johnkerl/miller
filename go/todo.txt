@@ -1,6 +1,14 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 * README.md at various levels
+* widen CLI coverage
+  o --c2x et al.
+* widen DSL coverage
+  o begin/end blocks
+  o indirect field names, at LHS and RHS
+  o hex inputs
+  o bitwise/int operators
+  o support the filter verb
 * widen reader coverage
   o TSV/ASV
   o XTAB
@@ -20,10 +28,8 @@ TOP OF LIST:
   o repeat
   o head/tail
   o sort
+  o filter
 * implement mlrrc
-* widen DSL coverage
-  o begin/end blocks
-  o indirect field names, at LHS and RHS
 ----------------------------------------------------------------
 
 general plan:

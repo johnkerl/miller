@@ -25,7 +25,7 @@ for ifmt in csv dkvp nidx json; do
     $fnr=FNR;
     $filename=FILENAME;
     $filenum=FILENUM;
-  ' s.$ifmt t.$ifmt
+  ' u/s.$ifmt u/t.$ifmt
   echo
 done
 
@@ -42,6 +42,6 @@ for ofmt in pprint csv dkvp nidx json; do
     $fnr=FNR;
     $filename=FILENAME;
     $filenum=FILENUM;
-  ' s.$ifmt t.$ifmt
+  ' u/s.$ifmt u/t.$ifmt
   echo
 done

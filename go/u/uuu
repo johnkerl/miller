@@ -1,7 +1,7 @@
 echo ================================================================
-mlr --idkvp --opprint cat then tac s.dkvp t.dkvp
+mlr --idkvp --opprint cat then tac u/s.dkvp u/t.dkvp
 echo ================================================================
-mlr --idkvp --opprint cat -n then tac s.dkvp t.dkvp
+mlr --idkvp --opprint cat -n then tac u/s.dkvp u/t.dkvp
 echo ================================================================
-mlr --idkvp --opprint cat -n then tac then cat -n s.dkvp t.dkvp
+mlr --idkvp --opprint cat -n then tac then cat -n u/s.dkvp u/t.dkvp
 echo ================================================================
