@@ -16,7 +16,7 @@ func ChannelWriter(
 		lrecAndContext := <-outrecsAndContexts
 		lrec := lrecAndContext.Lrec
 		recordWriter.Write(lrec)
-		if lrec == nil {
+		if lrec == nil { // end of record stream
 			done <- true
 			break
 		}
