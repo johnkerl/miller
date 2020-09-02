@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
-! mlr put -f !
+k mlr put -f !
 * widen reader coverage
   o TSV/ASV
   o XTAB
@@ -22,7 +22,7 @@ TOP OF LIST:
   o sort
 * implement mlrrc
 * widen DSL coverage
-* move from AST+interpreter to CST, or decorated CST ...
+k move from AST+interpreter to CST, or decorated CST ...
 ----------------------------------------------------------------
 
 general plan:
@@ -51,6 +51,7 @@ also:
 * type up a why-go part:
   o 100% vs 240% CPU
   o incorporate go/README.md notes
+* run the profiler on a more complex put
 
 long-term:
 k srecs as string -> mlrvals
