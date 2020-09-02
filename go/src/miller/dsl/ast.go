@@ -107,8 +107,8 @@ func NewASTNodeStripDollarPlease(itok interface{}, nodeType TNodeType) (*ASTNode
 	oldToken := itok.(*token.Token)
 	newToken := &token.Token{
 		Type: oldToken.Type,
-		Lit: oldToken.Lit[1:],
-		Pos: oldToken.Pos,
+		Lit:  oldToken.Lit[1:],
+		Pos:  oldToken.Pos,
 	}
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
@@ -122,8 +122,8 @@ func NewASTNodeStripDoubleQuotePairPlease(
 	n := len(oldToken.Lit)
 	newToken := &token.Token{
 		Type: oldToken.Type,
-		Lit: oldToken.Lit[1:n-1],
-		Pos: oldToken.Pos,
+		Lit:  oldToken.Lit[1 : n-1],
+		Pos:  oldToken.Pos,
 	}
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
