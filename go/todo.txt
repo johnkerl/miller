@@ -1,7 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
-* split up mlrcli.go
-* split up mlrval.go
+* reg_test/run iterate
 * widen CLI coverage
   o --c2x et al.
 * widen DSL coverage

@@ -34,11 +34,19 @@ func mapperCatParseCLI(
 
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
+
 	pDoCounters := flagSet.Bool(
 		"n",
 		false,
 		"Prepend field \"n\" to each record with record-counter starting at 1",
 	)
+
+	pCounterFieldName := flagSet.String(
+		"N",
+		"unused",
+		"Prepend field {name} to each record with record-counter starting at 1",
+	)
+
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -95,7 +103,7 @@ func mapperCatParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	mapper, _ := NewMapperCat(*pDoCounters)
+	mapper, _ := NewMapperCat(*pDoCounters, pCounterFieldName)
 
 	*pargi = argi
 	return mapper
@@ -119,13 +127,25 @@ func mapperCatUsage(
 type MapperCat struct {
 	doCounters bool
 
-	counter int64
+	counter          int64
+	counterFieldName string
 }
 
-func NewMapperCat(doCounters bool) (*MapperCat, error) {
+func NewMapperCat(
+	doCounters bool,
+	pCounterFieldName *string,
+) (*MapperCat, error) {
+
+	counterFieldName := "n"
+	if pCounterFieldName != nil {
+		counterFieldName = *pCounterFieldName
+		doCounters = true
+	}
+
 	return &MapperCat{
-		doCounters: doCounters,
-		counter:    0,
+		doCounters:       doCounters,
+		counter:          0,
+		counterFieldName: counterFieldName,
 	}, nil
 }
 
@@ -137,7 +157,7 @@ func (this *MapperCat) Map(
 	if lrec != nil { // not end of record stream
 		if this.doCounters {
 			this.counter++
-			key := "n"
+			key := this.counterFieldName
 			value := lib.MlrvalFromInt64(this.counter)
 			lrec.Prepend(&key, &value)
 		}
