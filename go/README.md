@@ -81,13 +81,15 @@ I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` u
 
 Through out the code, records are passed by reference (as are most things, for
 that matter, to reduce unnecessary data copies). In particular, records can be
-nil through the reader/mapper/writer sequence>
+nil through the reader/mapper/writer sequence.
 
 * Record-readers produce a nil lrec-pointer to signify end of input stream.
 * Each mapper takes an lrec-pointer as input and produces a sequence of zero or more rec-pointers.
+  * Many mappers, such as `cat`, `cut`, `rename`, etc. produce one output record per input record.
   * The `filter` mapper produces one or zero output records per input record depending on whether the record passed the filter.
   * The `nothing` mapper produces zero output records.
   * The `sort` and `tac` mappers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-lrec end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-lrec end-of-stream marker.
+  * Many mappers such as `stats1` and `count` also retain input records, then produce output once there is no more input to them.
 * A null lrec-pointer at end of stream is passed to lrec writers so that they may produce final output
   * Most writers produce their output one record at a time.
   * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
