@@ -84,13 +84,13 @@ that matter, to reduce unnecessary data copies). In particular, records can be
 nil through the reader/mapper/writer sequence.
 
 * Record-readers produce a nil lrec-pointer to signify end of input stream.
-* Each mapper takes an lrec-pointer as input and produces a sequence of zero or more rec-pointers.
+* Each mapper takes an lrec-pointer as input and produces a sequence of zero or more lrec-pointers.
   * Many mappers, such as `cat`, `cut`, `rename`, etc. produce one output record per input record.
   * The `filter` mapper produces one or zero output records per input record depending on whether the record passed the filter.
   * The `nothing` mapper produces zero output records.
   * The `sort` and `tac` mappers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-lrec end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-lrec end-of-stream marker.
   * Many mappers such as `stats1` and `count` also retain input records, then produce output once there is no more input to them.
-* A null lrec-pointer at end of stream is passed to lrec writers so that they may produce final output
+* A null lrec-pointer at end of stream is passed to lrec writers so that they may produce final output.
   * Most writers produce their output one record at a time.
   * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
 
@@ -98,9 +98,9 @@ nil through the reader/mapper/writer sequence.
 
 `Mlrval` is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
 
-* Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type.
-* Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`.
-* Miller's `error` type is for things like doing type-uncoerced addition of strings.
+* Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type. Nothing is written to the `$out` field in this case. See also [here](http://johnkerl.org/miller/doc/reference.html#Null_data:_empty_and_absent) for more information.
+* Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`. This is an overlap with `string` type, since a void value looks like an empty string. I've gone back and forth on this (including when I was writing the C implementation) -- whether to retain `void` as a distinct type from empty-string, or not. I ended up keeping it as it made the `Mlrval` logic easier to understand.
+* Miller's `error` type is for things like doing type-uncoerced addition of strings. Data-dependent errors are intended to result in `(error)`-valued output, rather than crashing Miller. See also [here](http://johnkerl.org/miller/doc/reference.html#Data_types) for more information.
 * Miller's number handling makes auto-overflow from int to float transparent, while preserving the possibility of 64-bit bitwise arithmetic.
   * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
   * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
