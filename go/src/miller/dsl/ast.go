@@ -113,6 +113,21 @@ func NewASTNodeStripDollarPlease(itok interface{}, nodeType TNodeType) (*ASTNode
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
 
+// Likewise for the leading/trailing double quotes on string literals.
+func NewASTNodeStripDoubleQuotePairPlease(
+	itok interface{},
+	nodeType TNodeType,
+) (*ASTNode, error) {
+	oldToken := itok.(*token.Token)
+	n := len(oldToken.Lit)
+	newToken := &token.Token{
+		Type: oldToken.Type,
+		Lit: oldToken.Lit[1:n-1],
+		Pos: oldToken.Pos,
+	}
+	return NewASTNodeNestable(newToken, nodeType), nil
+}
+
 // xxx comment why grammar use
 func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 	var tok *token.Token = nil

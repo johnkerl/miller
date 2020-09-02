@@ -258,6 +258,10 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 
 // Note: the parser depends on the dollar sign being here. If this is changed,
 // that needs to be changed as well.
+//
+// Also note: if we omit the '$' here and include it in the parser section
+// below as "$", then we get an LR-1 conflict. So this must be dealt with at
+// the AST level.
 md_token_field_name : '$' _idchar { _idchar } ;
 
 //\$\* {
@@ -2543,6 +2547,11 @@ FieldName
   // ...
 ;
 
+// Note: the field name is "$field" not "field" since md_token_field_name
+// includes the '$'.  If we omit the '$' there and include it in the parser
+// section here as "$", then we get an LR-1 conflict. So this must be dealt
+// with at the AST level. Hence the NewASTNodeStripDollarPlease.
+
 DirectFieldName
   : md_token_field_name
     << dsl.NewASTNodeStripDollarPlease($0, dsl.NodeTypeDirectFieldName) >>
@@ -2641,8 +2650,14 @@ IndirectFieldName
 // xxx split out node-type string vs number so we can track parsed-type through
 // to the lrecs, with mlrvals there! :)
 
+// As with '$' on md_token_field_name, so too for md_token_string_literal
+// we get LR-1 conflicts if we attempt to put the double quotes here.
+// Hence the quote-stripper AST method.
 AtomOrFunction
-  : md_token_string_literal  << dsl.NewASTNode($0, dsl.NodeTypeStringLiteral) >>
+  : md_token_string_literal  << dsl.NewASTNodeStripDoubleQuotePairPlease(
+    $0,
+    dsl.NodeTypeStringLiteral,
+  ) >>
   | md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
   | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
   | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
