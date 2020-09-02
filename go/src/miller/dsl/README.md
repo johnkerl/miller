@@ -42,6 +42,48 @@ Note the following about the AST:
 * Parentheses, commas, semicolons, line endings, whitespace are all stripped away
 * Variable names and literal values remain as leaf nodes of the AST
 * Operators like `=` `+` `-` `*` `/` `**`, function names, and so on remain as non-leaf nodes of the AST
+* Operator precedence is clear from the tree structure
+
+Operator-precedence examples:
+
+```
+$ mlr -n put -v '$x = 1 + 2 * 3'
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "+" "+"
+            * IntLiteral "md_token_int_literal" "1"
+            * Operator "*" "*"
+                * IntLiteral "md_token_int_literal" "2"
+                * IntLiteral "md_token_int_literal" "3"
+```
+
+```
+$ mlr -n put -v '$x = 1 * 2 + 3'
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "+" "+"
+            * Operator "*" "*"
+                * IntLiteral "md_token_int_literal" "1"
+                * IntLiteral "md_token_int_literal" "2"
+            * IntLiteral "md_token_int_literal" "3"
+```
+
+```
+$ mlr -n put -v '$x = 1 * (2 + 3)'
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "*" "*"
+            * IntLiteral "md_token_int_literal" "1"
+            * Operator "+" "+"
+                * IntLiteral "md_token_int_literal" "2"
+                * IntLiteral "md_token_int_literal" "3"
+```
 
 # CST representation
 
@@ -56,4 +98,4 @@ tree is executed once on every data record.
 # Source directories/files
 
 * The AST logic is in `src/miller/dsl/ast.go`.  I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* The CST logic in `src/miller/dsl/cst` Please see `cst/README.md` for more information.
+* The CST logic in `src/miller/dsl/cst` Please see [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md) for more information.
