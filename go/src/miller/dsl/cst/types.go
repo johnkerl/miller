@@ -90,5 +90,4 @@ type StatementBlock struct {
 // ================================================================
 type IEvaluable interface {
 	Evaluate(state *State) lib.Mlrval
-	// Needs an Evaluate which takes context and produces a mlrval
 }
