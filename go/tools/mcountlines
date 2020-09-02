@@ -1,0 +1,5 @@
+#!/bin/bash
+
+wc -l $(find src/miller -name \*.go | grep -v src/miller/parsing) | sort -n | grep -v total
+echo
+wc -l src/miller/parsing/mlr.bnf

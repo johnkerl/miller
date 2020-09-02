@@ -1,6 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
-* README.md at various levels
+* split up mlrcli.go
+* split up mlrval.go
 * widen CLI coverage
   o --c2x et al.
 * widen DSL coverage
@@ -55,10 +56,7 @@ bonuses:
 * non-lite dkvp as easy extension of golib CSV reader :D
 
 also:
-* type up a why-go part:
-  o 100% vs 240% CPU
-  o incorporate go/README.md notes
-* run the profiler on a more complex put
+* update whyc.html with efficiency notes from go/README.md
 
 long-term:
 k srecs as string -> mlrvals
@@ -75,14 +73,12 @@ gocc upstreams:
 ----------------------------------------------------------------
 nits:
 * split up mlrcli
-* AST post-processing: strip '$' and '"' ... '"'; etc
 * "...\"..." into string-literal parsing ...
-* all manner of xxx
+* address all manner of xxx and TODO comments
 * support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 * lrec -> srec everywhere
-* comment precisely where context pointers -> copy and why
 * mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?
-* cst/README.md re caller-side and callee-side conditions, and why checked on both sides
+* godoc ...
