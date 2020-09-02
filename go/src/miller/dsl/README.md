@@ -98,4 +98,4 @@ tree is executed once on every data record.
 # Source directories/files
 
 * The AST logic is in `src/miller/dsl/ast.go`.  I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* The CST logic in `src/miller/dsl/cst` Please see [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md) for more information.
+* The CST logic is in `src/miller/dsl/cst`. Please see [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md) for more information.
