@@ -8,6 +8,10 @@ import (
 )
 
 // ================================================================
+// CST build/execute for AST operator nodes
+// ================================================================
+
+// ================================================================
 func NewOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	if astNode.Type != dsl.NodeTypeOperator {
 		return nil, errors.New("Internal coding error detected") // xxx libify

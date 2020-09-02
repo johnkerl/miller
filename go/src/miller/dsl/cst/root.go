@@ -7,6 +7,11 @@ import (
 	"miller/dsl"
 )
 
+// ================================================================
+// Top-level entry point for building a CST from an AST at parse time, and for
+// executing the CST at runtime.
+// ================================================================
+
 // ----------------------------------------------------------------
 func NewRoot() *Root {
 	return &Root{

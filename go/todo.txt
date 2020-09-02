@@ -1,6 +1,5 @@
 ----------------------------------------------------------------
 TOP OF LIST:
-!!! $-trim and "..."-trim in AST builder (manual side)
 * widen reader coverage
   o TSV/ASV
   o XTAB
@@ -77,3 +76,4 @@ nits:
 * mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?
+* cst/README.md re caller-side and callee-side conditions, and why checked on both sides

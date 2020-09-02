@@ -4,6 +4,11 @@ import (
 	"miller/dsl"
 )
 
+// ================================================================
+// CST build/execute for statements: assignments, bare booleans,
+// break/continue/return, etc.
+// ================================================================
+
 // ----------------------------------------------------------------
 func NewSrecDirectFieldAssignment(
 	astNode *dsl.ASTNode,

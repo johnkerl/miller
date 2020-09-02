@@ -5,6 +5,10 @@ import (
 	"miller/lib"
 )
 
+// ================================================================
+// Main type definitions for CST build/execute
+// ================================================================
+
 // ----------------------------------------------------------------
 // There are three CST roots: begin-block, body-block, and end-block.
 //
