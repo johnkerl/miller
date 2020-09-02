@@ -133,10 +133,10 @@ func ParseCommandLine(args []string) (
 
 	filenames = args[argi:]
 
-	//	if (options.no_input) {
-	//		slls_free(options.filenames);
-	//		options.filenames = nil;
-	//	}
+	// E.g. mlr -n put -v '...'
+	if options.NoInput {
+		filenames = nil
+	}
 
 	//	if (options.do_in_place && (options.filenames == nil || options.filenames.length == 0)) {
 	//		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", os.Args[0]);
@@ -2355,59 +2355,59 @@ func handleMiscOptions(
 
 	argi := *pargi
 	oargi := argi
-	//
-	//	if args[argi] == "-I" {
-	//		options.do_in_place = true;
-	//		argi += 1;
-	//
-	//	} else if args[argi] == "-n" {
-	//		options.no_input = true;
-	//		argi += 1;
-	//
-	//	} else if args[argi] == "--from" {
-	//		checkArgCount(args, argi, argc, 2);
-	//		slls_append(options.filenames, args[argi+1], NO_FREE);
-	//		argi += 2;
-	//
-	//	} else if args[argi] == "--ofmt" {
-	//		checkArgCount(args, argi, argc, 2);
-	//		options.ofmt = args[argi+1];
-	//		argi += 2;
-	//
-	//	} else if args[argi] == "--nr-progress-mod" {
-	//		checkArgCount(args, argi, argc, 2);
-	//		if (sscanf(args[argi+1], "%lld", &options.nr_progress_mod) != 1) {
-	//			fmt.Fprintf(os.Stderr,
-	//				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-	//				os.Args[0], args[argi+1]);
-	//			mainUsageShort()
-	//			os.Exit(1);
-	//		}
-	//		if (options.nr_progress_mod <= 0) {
-	//			fmt.Fprintf(os.Stderr,
-	//				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-	//				os.Args[0], args[argi+1]);
-	//			mainUsageShort()
-	//			os.Exit(1);
-	//		}
-	//		argi += 2;
-	//
-	//	} else if args[argi] == "--seed" {
-	//		checkArgCount(args, argi, argc, 2);
-	//		if (sscanf(args[argi+1], "0x%x", &options.rand_seed) == 1) {
-	//			options.have_rand_seed = true;
-	//		} else if (sscanf(args[argi+1], "%u", &options.rand_seed) == 1) {
-	//			options.have_rand_seed = true;
-	//		} else {
-	//			fmt.Fprintf(os.Stderr,
-	//				"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
-	//				os.Args[0], args[argi+1]);
-	//			mainUsageShort()
-	//			os.Exit(1);
-	//		}
-	//		argi += 2;
-	//
-	//	}
+
+	if args[argi] == "-n" {
+		options.NoInput = true
+		argi += 1
+
+		//	} else if args[argi] == "-I" {
+		//		options.do_in_place = true;
+		//		argi += 1;
+		//
+		//	} else if args[argi] == "--from" {
+		//		checkArgCount(args, argi, argc, 2);
+		//		slls_append(options.filenames, args[argi+1], NO_FREE);
+		//		argi += 2;
+		//
+		//	} else if args[argi] == "--ofmt" {
+		//		checkArgCount(args, argi, argc, 2);
+		//		options.ofmt = args[argi+1];
+		//		argi += 2;
+		//
+		//	} else if args[argi] == "--nr-progress-mod" {
+		//		checkArgCount(args, argi, argc, 2);
+		//		if (sscanf(args[argi+1], "%lld", &options.nr_progress_mod) != 1) {
+		//			fmt.Fprintf(os.Stderr,
+		//				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+		//				os.Args[0], args[argi+1]);
+		//			mainUsageShort()
+		//			os.Exit(1);
+		//		}
+		//		if (options.nr_progress_mod <= 0) {
+		//			fmt.Fprintf(os.Stderr,
+		//				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+		//				os.Args[0], args[argi+1]);
+		//			mainUsageShort()
+		//			os.Exit(1);
+		//		}
+		//		argi += 2;
+		//
+		//	} else if args[argi] == "--seed" {
+		//		checkArgCount(args, argi, argc, 2);
+		//		if (sscanf(args[argi+1], "0x%x", &options.rand_seed) == 1) {
+		//			options.have_rand_seed = true;
+		//		} else if (sscanf(args[argi+1], "%u", &options.rand_seed) == 1) {
+		//			options.have_rand_seed = true;
+		//		} else {
+		//			fmt.Fprintf(os.Stderr,
+		//				"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+		//				os.Args[0], args[argi+1]);
+		//			mainUsageShort()
+		//			os.Exit(1);
+		//		}
+		//		argi += 2;
+
+	}
 	*pargi = argi
 	return argi != oargi
 }

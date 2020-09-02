@@ -107,8 +107,10 @@ md_token_float_literal
 ;
 
 // Notes on boolean literals:
-// * true and false should be defined here rather than as string-literals within
-//   the grammar -- this forces them to be keywords, not legal as variable names.
+// * true and false should be defined here rather than as "true" / "false"
+//   within the grammar below -- this forces them to be keywords, not legal as
+//   variable names. We want them as keywords -- we don't want to allow things
+//   like 'true = 3'.
 _md_token_true : 't' 'r' 'u' 'e' ;
 _md_token_false : 'f' 'a' 'l' 's' 'e';
 md_token_boolean_literal : ( _md_token_true | _md_token_false );
@@ -116,11 +118,6 @@ md_token_boolean_literal : ( _md_token_true | _md_token_false );
 // ----------------------------------------------------------------
 // MILLER CONTEXT VARIABLES
 // ----------------------------------------------------------------
-
-//\"([^\\\"]|\\.)*\" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
-//	return md_token_string_literal;
-//}
 
 md_token_IPS : 'I' 'P' 'S' ;
 md_token_IFS : 'I' 'F' 'S' ;
@@ -269,11 +266,6 @@ md_token_field_name : '$' _idchar { _idchar } ;
 //	return md_token_full_srec;
 //}
 
-//\$ {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_dollar_sign;
-//}
-
 //\$\{([^\}]|\\.)*\} {
 //	// Note: the parser depends on the dollar sign being here. If this is changed,
 //	// that needs to be changed as well.
@@ -300,31 +292,31 @@ md_token_field_name : '$' _idchar { _idchar } ;
 
 //"map" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_map;
+//	return md_token_map_type;
 //}
 //"var" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_var;
+//	return md_token_var_type;
 //}
 //"num" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
-//	return md_token_numeric;
+//	return md_token_numeric_type;
 //}
 //"int" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION);
-//	return md_token_int;
+//	return md_token_int_type;
 //}
 //"float" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
-//	return md_token_float;
+//	return md_token_float_type;
 //}
 //"bool" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
-//	return md_token_boolean;
+//	return md_token_boolean_type;
 //}
 //"str" {
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
-//	return md_token_string_literal;
+//	return md_token_string_literal_type;
 //}
 
 //[a-zA-Z_][a-zA-Z_0-9]* {
@@ -339,30 +331,43 @@ md_token_field_name : '$' _idchar { _idchar } ;
 // ================================================================
 
 // ================================================================
-// AST:
-// * Parentheses, commas, semicolons, line endings, whitespace are all stripped away
-// * Variable names and literal values remain as leaf nodes of the AST
-// * = + - * / ** {function names} remain as non-leaf nodes of the AST
+// Parsing goes through three formats:
 //
-// CST: See mlr_dsl_cst.c
+// (1) Source code which is a string of characters.
+//
+// (2) Abstract syntax tree (AST):
+//
+//    * Parentheses, commas, semicolons, line endings, whitespace are all stripped away
+//    * Variable names and literal values remain as leaf nodes of the AST
+//    * = + - * / ** {function names} remain as non-leaf nodes of the AST
+//
+// (3) Concrete syntax tree (CST): a reshaping of the AST with pre-processed
+//     setup of function pointers to handle each type of statement on a
+//     per-record basis. The if/else and/or switch statements to decide what to
+//     do with each AST node are done at CST-build time, so they don't need to
+//     be re-done when the syntax tree is executed once on every data record.
+//
+// The job of this parser is to turn (1) into (2).
 //
 // Note: This parser accepts many things that are invalid, e.g.
 // * begin{end{}} -- begin/end not at top level
-// * begin{$x=1} -- references to stream records at begin/end
+// * begin{$x=1} -- references to stream records at begin/end (there is no $x when
+//   there is no input record yet)
 // * break/continue outside of for/while/do-while
 // * return outside of a function definition
 // * $x=x -- boundvars outside of for-loop variable bindings
 //
 // All of the above are enforced by the CST builder's semantic-analysis logic,
 // which takes this parser's output AST as input.  This is done (a) to keep
-// this grammar from being overly complex, and (b) so we can get much more
-// informative error messages in C than in Lemon ('syntax error').
+// this grammar from being overly complex, and (b) so we can get more
+// informative error messages.
 //
-// The parser hooks all build up an abstract syntax tree specifically for the
-// CST builder.  For clearer visuals on what the ASTs look like:
-// * See mlr_dsl_cst.c
-// * See reg_test/run's filter -v and put -v outputs, e.g. in reg_test/expected/out
-// * Do "mlr -n put -v 'your expression goes here'"
+// For clearer visuals on what the ASTs look like, you can do 
+/
+//   mlr -n put -v 'your expression goes here'
+//
+// Also see reg_test/run's filter -v and put -v outputs, e.g. in
+// reg_test/expected/out.
 // ================================================================
 
 // Import the AST/ASTNode types and functions
@@ -2647,8 +2652,7 @@ IndirectFieldName
 //}
 
 // ----------------------------------------------------------------
-// xxx split out node-type string vs number so we can track parsed-type through
-// to the lrecs, with mlrvals there! :)
+// STRING/INT/FLOAT/BOOL LITERALS
 
 // As with '$' on md_token_field_name, so too for md_token_string_literal
 // we get LR-1 conflicts if we attempt to put the double quotes here.
@@ -2667,6 +2671,7 @@ AtomOrFunction
 //	A = B;
 //}
 
+// ----------------------------------------------------------------
 //AtomOrFunction(A) ::= NonindexedLocalVariable(B). {
 //	A = B;
 //}
@@ -2737,6 +2742,7 @@ AtomOrFunction
 //	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
 //}
 
+// ----------------------------------------------------------------
 AtomOrFunction : ContextVariable ;
 
 ContextVariable
@@ -2756,6 +2762,7 @@ ContextVariable
   | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 ;
 
+// ----------------------------------------------------------------
 //AtomOrFunction(A) ::= EnvIndex(B). {
 //	A = B;
 //}

@@ -82,7 +82,8 @@ type TOptions struct {
 	//
 	//	do_in_place bool;
 	//
-	//	no_input bool;
+	NoInput bool // mlr -n
+
 	//	have_rand_seed bool;
 	//	rand_seed uint32;
 }
@@ -92,6 +93,8 @@ func DefaultOptions() TOptions {
 	return TOptions{
 		ReaderOptions: DefaultReaderOptions(),
 		WriterOptions: DefaultWriterOptions(),
+
+		NoInput: false,
 	}
 }
 

@@ -1,5 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
+* mlr -n -- ?
 * widen reader coverage
   o TSV/ASV
   o XTAB
@@ -21,6 +22,9 @@ TOP OF LIST:
   o sort
 * implement mlrrc
 * widen DSL coverage
+  o begin/end blocks
+  o indirect field names, at LHS and RHS
+* README.md at various levels
 ----------------------------------------------------------------
 
 general plan:
