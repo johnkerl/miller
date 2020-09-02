@@ -54,8 +54,8 @@ So, in broad overview, the key packages are:
   * `src/github.com/goccmack`
     * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
     * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs. And, GOCC is a joy to use. :)
-
-I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` uses this directory path, and is nice enough to also create `bin/gocc` for me -- so I thought I would just let it continue to do that. :)
+    * I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` uses this directory path, and is nice enough to also create `bin/gocc` for me -- so I thought I would just let it continue to do that. :)
+* I kept these locally so I could source-control them with Miller and guarantee their stability. They are used on the terms of the open-source licenses within their respective directories.
 
 ### Miller per se
 
@@ -67,7 +67,6 @@ I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` u
   * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a mapper chain of `put` then `filter`, and a JSON record-writer.
 * `src/miller/clitypes` contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
-
 * `src/miller/stream` is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-mappers, to record-writing/formatting, to terminal standard output.
 * `src/miller/input` is as above -- one record-reader type per supported input file format, and a factory method.
 * `src/miller/output` is as above -- one record-writer type per supported output file format, and a factory method.
