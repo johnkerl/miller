@@ -14,62 +14,64 @@
 
 # Directory structure
 
-Miller is a multi-format record-stream processor, where a *record* is a
-sequence of key-value pairs. The basic *stream* operation is:
+Information here is for the benefit of anyone reading/using the Miller Go code. To use Miller, you don't need to know any of this if you don't want to. :)
 
-* *read* records in some specified file format;
-* *map* the input records to output records in some user-specified way, using a *chain* of *verbs* (sort, filter, cut, put, etc.);
-* *write* the records in some specified file format.
+Miller is a multi-format record-stream processor, where a **record** is a
+sequence of key-value pairs. The basic **stream** operation is:
+
+* **read** records in some specified file format;
+* **map** the input records to output records in some user-specified way, using a **chain** of **verbs** (sort, filter, cut, put, etc.);
+* **write** the records in some specified file format.
 
 ## Directory-structure overview
 
 So, in broad overview, the key packages are:
 
-```
-src/miller/stream   -- connect input -> mapping -> output via Go channels
-src/miller/input    -- read input records
-src/miller/mapping  -- map input records to output records
-src/miller/output   -- write output records
-```
+* `src/miller/stream`   -- connect input -> mapping -> output via Go channels
+* `src/miller/input`    -- read input records
+* `src/miller/mapping`  -- map input records to output records
+* `src/miller/output`   -- write output records
+* The rest are details to support this
 
 ## Directory-structure details
 
 ### Dependencies
 
 * Miller dependencies are all in the Go standard library, except a couple local ones:
-  * Insertion-ordered (order-preserving) maps from [gitlab.com/c0b/go-ordered-json](https://gitlab.com/c0b/go-ordered-json):
+  * `src/localdeps/ordered`
+    * Insertion-ordered (order-preserving) maps from [gitlab.com/c0b/go-ordered-json](https://gitlab.com/c0b/go-ordered-json):
     * If you have a JSON data record `{"x":3,"y":4,"z":5}` then the keys `x,y,z` should stay that way. This package makes that happen.
-  * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
+  * `src/github.com/goccmack`
+    * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
     * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs. And, GOCC is a joy to use. :)
 
+I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` uses this directory path, and is nice enough to also create `bin/gocc` for me -- so I thought I would just let it continue to do that. :)
 
-```
-src/localdeps/ordered
-src/github.com/goccmack
-src/miller
-```
+### Miller per se
 
-### More
+* Main entry point in `mlr.go`; everything else in `src/miller`
+* `src/miller/lib`
+  * `Mlrval` which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
+* `src/miller/containers`
+  * `Lrec` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `lrec.go` for more details.
+  * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
+* `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a mapper chain of `put` then `filter`, and a JSON record-writer.
+* `src/miller/clitypes` contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
 
-```
-mlr.go
-src/miller/lib
-src/miller/containers
+* `src/miller/stream` is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-mappers, to record-writing/formatting, to terminal standard output.
+* `src/miller/input` is as above -- one record-reader type per supported input file format, and a factory method.
+* `src/miller/output` is as above -- one record-writer type per supported output file format, and a factory method.
+* `src/miller/mapping` contains the abstract record-mapper interface datatype, as well as the Go-channel chaining mechanism for piping one mapper into the next.
+* `src/miller/mappers` is all the concreate record-mappers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `mapping`, so all files in `mappers` would be of the same type.
+* `src/miller/parsing` contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
+* `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
+* `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.
 
-src/miller/cli
-src/miller/clitypes
-src/miller/stream
-src/miller/input
-src/miller/mapping
-src/miller/output
 
-src/miller/mappers
-src/miller/parsing
-src/miller/parsing/token
-src/miller/parsing/util
-src/miller/parsing/lexer
-src/miller/parsing/parser
-src/miller/parsing/errors
-src/miller/dsl
-src/miller/dsl/cst
-```
+### More about mlrvals
+
+`Mlrval` is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
+
+* Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type.
+* Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`.
+* Miller's `error` type is for things like doing type-uncoerced addition of strings.
