@@ -21,6 +21,12 @@ func NewEvaluableLeafNode(
 	}
 
 	switch astNode.Type {
+
+	case dsl.NodeTypeDirectFieldName:
+		// xxx move $-stripper to AST-build
+		return NewSrecDirectFieldRead(sval[1:]), nil
+		break
+
 	case dsl.NodeTypeStringLiteral:
 		return NewStringLiteral(sval), nil
 		break
@@ -28,56 +34,43 @@ func NewEvaluableLeafNode(
 		return NewIntLiteral(sval), nil
 		break
 	case dsl.NodeTypeFloatLiteral:
-		return NewBoolLiteral(sval), nil
+		return NewFloatLiteral(sval), nil
 		break
 	case dsl.NodeTypeBoolLiteral:
 		return NewBoolLiteral(sval), nil
 		break
+	case dsl.NodeTypeContextVariable:
+		return NewContextVariable(astNode)
+		break
 
 		// xxx more
-
-		//	case NodeTypeDirectFieldName:
-		//		fieldName := sval[1:] // xxx temp -- fix this in the grammar or ast-insert?
-		//		fieldValue := inrec.Get(&fieldName)
-		//		if fieldValue == nil {
-		//			return lib.MlrvalFromAbsent(), nil
-		//		} else {
-		//			return *fieldValue, nil
-		//		}
-		//		break
 		//	case NodeTypeIndirectFieldName:
 		//		return lib.MlrvalFromError(), errors.New("unhandled1")
 		//		break
-		//
-		//	case NodeTypeStatementBlock:
-		//		return lib.MlrvalFromError(), errors.New("unhandled2")
-		//		break
-		//	case NodeTypeAssignment:
-		//		return lib.MlrvalFromError(), errors.New("unhandled3")
-		//		break
-		//	case NodeTypeOperator:
-		//		node.checkArity(2) // xxx temp -- binary-only for now
-		//		return this.evaluateBinaryOperatorNode(node, node.Children[0], node.Children[1],
-		//			inrec, context)
-		//		break
-		//	case NodeTypeContextVariable:
-		//		return this.evaluateContextVariableNode(node, context)
-		//		break
-		//
 
 	}
 
-	return nil, errors.New("CST builder: unhandled AST leaf node" + string(astNode.Type))
+	return nil, errors.New("CST builder: unhandled AST leaf node " + string(astNode.Type))
 }
 
-// xxx
-//NewBoolLiteral(literal bool) *BoolLiteral {
-//
-//NewFILENAME() *FILENAME {
-//NewFILENUM() *FILENUM {
-//NewNF() *NF {
-//NewNR() *NR {
-//NewFNR() *FNR {
+// ----------------------------------------------------------------
+type SrecDirectFieldRead struct {
+	fieldName string
+}
+
+func NewSrecDirectFieldRead(fieldName string) *SrecDirectFieldRead {
+	return &SrecDirectFieldRead {
+		fieldName: fieldName,
+	}
+}
+func (this *SrecDirectFieldRead) Evaluate(state *State) lib.Mlrval {
+	value := state.Inrec.Get(&this.fieldName)
+	if value == nil {
+		return lib.MlrvalFromAbsent()
+	} else {
+		return *value
+	}
+}
 
 // ----------------------------------------------------------------
 type StringLiteral struct {
@@ -135,56 +128,61 @@ func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
 	return this.literal
 }
 
-// ----------------------------------------------------------------
-//func (this *Interpreter) evaluateContextVariableNode(
-//	node *ASTNode,
-//	context *containers.Context,
-//) (lib.Mlrval, error) {
-//	if node.Token == nil {
-//		return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
-//	}
-//	sval := string(node.Token.Lit)
-//	switch sval {
-//	case "FILENAME":
-//		return lib.MlrvalFromString(context.FILENAME), nil
-//		break
-//	case "FILENUM":
-//		return lib.MlrvalFromInt64(context.FILENUM), nil
-//		break
-//	case "NF":
-//		return lib.MlrvalFromInt64(context.NF), nil
-//		break
-//	case "NR":
-//		return lib.MlrvalFromInt64(context.NR), nil
-//		break
-//	case "FNR":
-//		return lib.MlrvalFromInt64(context.FNR), nil
-//		break
-//
-//	case "IPS":
-//		return lib.MlrvalFromString(context.IPS), nil
-//		break
-//	case "IFS":
-//		return lib.MlrvalFromString(context.IFS), nil
-//		break
-//	case "IRS":
-//		return lib.MlrvalFromString(context.IRS), nil
-//		break
-//
-//	case "OPS":
-//		return lib.MlrvalFromString(context.OPS), nil
-//		break
-//	case "OFS":
-//		return lib.MlrvalFromString(context.OFS), nil
-//		break
-//	case "ORS":
-//		return lib.MlrvalFromString(context.ORS), nil
-//		break
-//
-//		break
-//	}
-//	return lib.MlrvalFromError(), errors.New("internal coding error") // xxx libify
-//}
+// ================================================================
+func NewContextVariable(astNode *dsl.ASTNode) (IEvaluable, error) {
+	if astNode.Token == nil {
+		return nil, errors.New("internal coding error")
+	}
+	sval := string(astNode.Token.Lit)
+
+	switch sval {
+
+	case "FILENAME":
+		return NewFILENAME(), nil
+		break
+
+	case "FILENUM":
+		return NewFILENUM(), nil
+		break
+
+	case "NF":
+		return NewNF(), nil
+		break
+
+	case "NR":
+		return NewNR(), nil
+		break
+
+	case "FNR":
+		return NewFNR(), nil
+		break
+
+		// xxx more
+		//
+		//	case "IPS":
+		//		return lib.MlrvalFromString(context.IPS), nil
+		//		break
+		//	case "IFS":
+		//		return lib.MlrvalFromString(context.IFS), nil
+		//		break
+		//	case "IRS":
+		//		return lib.MlrvalFromString(context.IRS), nil
+		//		break
+		//
+		//	case "OPS":
+		//		return lib.MlrvalFromString(context.OPS), nil
+		//		break
+		//	case "OFS":
+		//		return lib.MlrvalFromString(context.OFS), nil
+		//		break
+		//	case "ORS":
+		//		return lib.MlrvalFromString(context.ORS), nil
+		//		break
+
+	}
+
+	return nil, errors.New("CST builder: unhandled context variable " + sval)
+}
 
 // ----------------------------------------------------------------
 type FILENAME struct {

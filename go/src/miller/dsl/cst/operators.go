@@ -53,7 +53,7 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	if err != nil {
 		return nil, err
 	}
-	rightCSTChild , err:= NewEvaluable(rightASTChild)
+	rightCSTChild, err := NewEvaluable(rightASTChild)
 	if err != nil {
 		return nil, err
 	}
@@ -75,15 +75,16 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case "/":
 		return NewDivideOperator(leftCSTChild, rightCSTChild), nil
 		break
+	case "//":
+		return NewIntDivideOperator(leftCSTChild, rightCSTChild), nil
+		break
 
-		//	case "//":
-		//		return NewIntDivideOperator(leftCSTChild, rightCSTChild)
-		//		break
-
-		//		// xxx continue ...
+		// xxx continue ...
 	}
 
-	return nil, errors.New("CST build: AST binary operator node unhandled.")
+	return nil, errors.New(
+		"CST build: unandled AST binary operator node \"" + sop + "\"",
+	)
 }
 
 // ----------------------------------------------------------------
@@ -158,4 +159,16 @@ func (this *DivideOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDivide(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type IntDivideOperator struct{ a, b IEvaluable }
+
+func NewIntDivideOperator(a, b IEvaluable) *IntDivideOperator {
+	return &IntDivideOperator{a: a, b: b}
+}
+func (this *IntDivideOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalIntDivide(&aout, &bout)
 }

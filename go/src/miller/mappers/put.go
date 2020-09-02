@@ -134,6 +134,7 @@ func NewMapperPut(
 	}
 	cstRoot, err := cst.Build(astRoot)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
 

@@ -2335,7 +2335,13 @@ func handleReaderWriterOptions(
 }
 
 // Returns true if the current flag was handled.
-func handleMiscOptions(args []string, argc int, pargi *int, options *clitypes.TOptions) bool {
+func handleMiscOptions(
+	args []string,
+	argc int,
+	pargi *int,
+	options *clitypes.TOptions,
+) bool {
+
 	argi := *pargi
 	oargi := argi
 	//

@@ -2,23 +2,23 @@
 
 set -euo pipefail
 
-echo; mlr parse '$y = 1 || 2'
-echo; mlr parse '$y = 1 || 2 || 3'
-echo; mlr parse '$y = 1 || 2 && 3'
-echo; mlr parse '$y = 1 && 2 || 3'
-echo; mlr parse '$y = 1 ? 2 : 3'
-echo; mlr parse '$y = $a + $b * $c'
-echo; mlr parse '$y = $a * $b * $c'
-echo; mlr parse '$y = $a ** $b ** $c'
-echo; mlr parse '$[2] = 3'
-echo; mlr parse '$[$y] = 4'
-#echo; mlr parse '${1} = 4'
-echo; mlr parse '$x = "abc"'
-echo; mlr parse '$["abc"] = "def"'
-echo; mlr parse '$[FILENAME] = FNR'
-echo; mlr parse '$x = $a + $b + $c'
-echo; mlr parse '$x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c'
-echo; mlr parse '$x = 2 * $a + $b . $c'
-echo; mlr parse '$x = 2 * $a + ($b . $c)'
-echo; mlr parse '$x = (NF + NR) * 7; $y = OFS . $y . "hello"'
-echo; mlr parse '$x = 123. + 1e-2 / .2e3 + 1.e-3'
+echo; mlr put -v '$y = 1 || 2' /dev/null
+echo; mlr null put -v '$y = 1 || 2 || 3' /dev/null
+echo; mlr null put -v '$y = 1 || 2 && 3' /dev/null
+echo; mlr null put -v '$y = 1 && 2 || 3' /dev/null
+echo; mlr null put -v '$y = 1 ? 2 : 3' /dev/null
+echo; mlr null put -v '$y = $a + $b * $c' /dev/null
+echo; mlr null put -v '$y = $a * $b * $c' /dev/null
+echo; mlr null put -v '$y = $a ** $b ** $c' /dev/null
+echo; mlr null put -v '$[2] = 3' /dev/null
+echo; mlr null put -v '$[$y] = 4' /dev/null
+#echo; mlr null put -v '${1} = 4' /dev/null
+echo; mlr null put -v '$x = "abc"' /dev/null
+echo; mlr null put -v '$["abc"] = "def"' /dev/null
+echo; mlr null put -v '$[FILENAME] = FNR' /dev/null
+echo; mlr null put -v '$x = $a + $b + $c' /dev/null
+echo; mlr null put -v '$x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c' /dev/null
+echo; mlr null put -v '$x = 2 * $a + $b . $c' /dev/null
+echo; mlr null put -v '$x = 2 * $a + ($b . $c)' /dev/null
+echo; mlr null put -v '$x = (NF + NR) * 7; $y = OFS . $y . "hello"' /dev/null
+echo; mlr null put -v '$x = 123. + 1e-2 / .2e3 + 1.e-3' /dev/null

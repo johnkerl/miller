@@ -18,5 +18,5 @@ func NewEvaluable(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	// xxx more
 
-	return nil, errors.New("CST builder: unhandled AST node type" + string(astNode.Type))
+	return nil, errors.New("CST builder: unhandled AST node type " + string(astNode.Type))
 }
