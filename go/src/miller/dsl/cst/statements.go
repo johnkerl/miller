@@ -17,9 +17,7 @@ func NewSrecDirectFieldAssignment(
 	lhsASTNode := astNode.Children[0]
 	rhsASTNode := astNode.Children[1]
 
-	// strip off leading '$'.
-	// TODO: move into the AST-builder
-	lhsFieldName := string(lhsASTNode.Token.Lit)[1:]
+	lhsFieldName := string(lhsASTNode.Token.Lit)
 	rhs, err := NewEvaluable(rhsASTNode)
 	if err != nil {
 		return nil, err

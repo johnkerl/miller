@@ -101,6 +101,18 @@ func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return NewASTNodeNestable(itok, nodeType), nil
 }
 
+// Strips the leading '$' from field names. Not done in the parser itself due
+// to LR-1 conflicts.
+func NewASTNodeStripDollarPlease(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+	oldToken := itok.(*token.Token)
+	newToken := &token.Token{
+		Type: oldToken.Type,
+		Lit: oldToken.Lit[1:],
+		Pos: oldToken.Pos,
+	}
+	return NewASTNodeNestable(newToken, nodeType), nil
+}
+
 // xxx comment why grammar use
 func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 	var tok *token.Token = nil

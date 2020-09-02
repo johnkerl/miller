@@ -23,8 +23,7 @@ func NewEvaluableLeafNode(
 	switch astNode.Type {
 
 	case dsl.NodeTypeDirectFieldName:
-		// xxx move $-stripper to AST-build
-		return NewSrecDirectFieldRead(sval[1:]), nil
+		return NewSrecDirectFieldRead(sval), nil
 		break
 
 	case dsl.NodeTypeStringLiteral:

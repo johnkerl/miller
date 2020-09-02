@@ -2545,7 +2545,7 @@ FieldName
 
 DirectFieldName
   : md_token_field_name
-    << dsl.NewASTNode($0, dsl.NodeTypeDirectFieldName) >>
+    << dsl.NewASTNodeStripDollarPlease($0, dsl.NodeTypeDirectFieldName) >>
 ;
 
 IndirectFieldName

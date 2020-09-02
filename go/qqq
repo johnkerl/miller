@@ -19,13 +19,13 @@ set -euo pipefail
 ofmt=pprint
 for ifmt in csv dkvp nidx json; do
   echo ---------------------------------------------------------------- $ifmt $ofmt
-  mlr $ifmt put '
+  mlr --i$ifmt --o$ofmt put '
     $nf=NF;
     $nr=NR;
     $fnr=FNR;
     $filename=FILENAME;
     $filenum=FILENUM;
-  ' $ofmt s.$ifmt t.$ifmt
+  ' s.$ifmt t.$ifmt
   echo
 done
 
@@ -36,12 +36,12 @@ echo
 ifmt=dkvp
 for ofmt in pprint csv dkvp nidx json; do
   echo ---------------------------------------------------------------- $ifmt $ofmt
-  mlr $ifmt put '
+  mlr --i$ifmt --o$ofmt put '
     $nf=NF;
     $nr=NR;
     $fnr=FNR;
     $filename=FILENAME;
     $filenum=FILENUM;
-  ' $ofmt s.$ifmt t.$ifmt
+  ' s.$ifmt t.$ifmt
   echo
 done

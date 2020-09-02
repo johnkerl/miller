@@ -821,13 +821,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeDirectFieldName) >>`,
+		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNodeStripDollarPlease(X[0], dsl.NodeTypeDirectFieldName) >>`,
 		Id:         "DirectFieldName",
 		NTType:     24,
 		Index:      80,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNode(X[0], dsl.NodeTypeDirectFieldName)
+			return dsl.NewASTNodeStripDollarPlease(X[0], dsl.NodeTypeDirectFieldName)
 		},
 	},
 	ProdTabEntry{

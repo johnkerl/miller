@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
-k mlr put -f !
+!!! $-trim and "..."-trim in AST builder (manual side)
 * widen reader coverage
   o TSV/ASV
   o XTAB
@@ -22,7 +22,6 @@ k mlr put -f !
   o sort
 * implement mlrrc
 * widen DSL coverage
-k move from AST+interpreter to CST, or decorated CST ...
 ----------------------------------------------------------------
 
 general plan:
