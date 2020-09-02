@@ -2,9 +2,7 @@ package input
 
 import (
 	"encoding/json"
-	//"fmt"
 	"os"
-	//"reflect"
 
 	"localdeps/ordered"
 
