@@ -1,4 +1,4 @@
-This contains the implementation of the `lib.Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL.
+This contains the implementation of the `lib.Mlrval` datatype which is used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL.
 
 The `lib.Mlrval` structure includes **string, int, float, boolean, void, absent, and error** types (not unlike PHP's `zval`) as well as type-conversion logic for various operators.
 
