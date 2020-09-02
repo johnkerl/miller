@@ -63,13 +63,18 @@ func ParseCommandLine(args []string) (
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if args[argi][0] != '-' {
 			break // No more flag options to process
+		} else if args[argi] == "--cpuprofile" {
+			// Already handled in main(); ignore here.
+			checkArgCount(args, argi, argc, 1)
+			argi += 2
 		} else if handleTerminalUsage(args, argc, argi) {
 			os.Exit(0)
 		} else if handleReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 			// handled
 		} else if handleWriterOptions(args, argc, &argi, &options.WriterOptions) {
 			// handled
-		} else if handleReaderWriterOptions(args, argc, &argi, &options.ReaderOptions, &options.WriterOptions) {
+		} else if handleReaderWriterOptions(args, argc, &argi,
+			&options.ReaderOptions, &options.WriterOptions) {
 			// handled
 		} else if handleMiscOptions(args, argc, &argi, &options) {
 			// handled
@@ -151,7 +156,13 @@ func ParseCommandLine(args []string) (
 // Returns a list of mappers, from the starting point in args given by *pargi.
 // Bumps *pargi to point to remaining post-mapper-setup args, i.e. filenames.
 
-func parseMappers(args []string, pargi *int, argc int, options *clitypes.TOptions) ([]mapping.IRecordMapper, error) {
+func parseMappers(
+	args []string,
+	pargi *int,
+	argc int,
+	options *clitypes.TOptions,
+) ([]mapping.IRecordMapper, error) {
+
 	mapperList := make([]mapping.IRecordMapper, 0)
 	argi := *pargi
 
@@ -2413,21 +2424,3 @@ func handleMiscOptions(
 //	MLR_INTERNAL_CODING_ERROR_UNLESS(lhmsll_has_key(pmap, key));
 //	return lhmsll_get(pmap, key);
 //}
-
-//	cpuprofile := flag.String("cpuprofile", "", "Write CPU profile to `file`")
-//// ----------------------------------------------------------------
-//func maybeProfile(cpuprofile *string) {
-//	// to do: move to method
-//	// go tool pprof mlr foo.prof
-//	//   top10
-//	if *cpuprofile != "" {
-//		f, err := os.Create(*cpuprofile)
-//		if err != nil {
-//			fmt.Fprintln(os.Stderr, os.Args[0], ": ", "Could not start CPU profile: ", err)
-//		}
-//		defer f.Close()
-//		if err := pprof.StartCPUProfile(f); err != nil {
-//			fmt.Fprintln(os.Stderr, os.Args[0], ": ", "Could not start CPU profile: ", err)
-//		}
-//		defer pprof.StopCPUProfile()
-//	}
