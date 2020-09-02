@@ -52,7 +52,7 @@ func Build(ast *dsl.AST) (*Root, error) {
 // ----------------------------------------------------------------
 func (this *Root) Execute(state *State) *containers.Lrec {
 
-	for _, statement := range(this.executables) {
+	for _, statement := range this.executables {
 		statement.Execute(state)
 	}
 

@@ -1,4 +1,5 @@
-package cst 
+package cst
+
 import (
 	"miller/dsl"
 )

@@ -114,9 +114,8 @@ func mapperPutUsage(
 
 // ----------------------------------------------------------------
 type MapperPut struct {
-	astRoot     *dsl.AST
-	cstRoot     *cst.Root
-	interpreter *dsl.Interpreter // xxx temp
+	astRoot *dsl.AST
+	cstRoot *cst.Root
 }
 
 func NewMapperPut(
@@ -139,9 +138,8 @@ func NewMapperPut(
 	}
 
 	return &MapperPut{
-		astRoot:     astRoot,
-		cstRoot:     cstRoot,
-		interpreter: dsl.NewInterpreter(),
+		astRoot: astRoot,
+		cstRoot: cstRoot,
 	}, nil
 }
 
@@ -166,12 +164,6 @@ func (this *MapperPut) Map(
 	inrec := inrecAndContext.Lrec
 	context := inrecAndContext.Context
 	if inrec != nil {
-		//		outrec, err := this.interpreter.InterpretOnInputRecord(inrec, &context, this.astRoot)
-		//		if err != nil {
-		//			// need echan or what?
-		//			fmt.Println(err)
-		//			os.Exit(1)
-		//		}
 
 		cstState := cst.NewState(inrec, &context)
 		outrec := this.cstRoot.Execute(cstState)

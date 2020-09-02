@@ -59,7 +59,7 @@ type SrecDirectFieldRead struct {
 }
 
 func NewSrecDirectFieldRead(fieldName string) *SrecDirectFieldRead {
-	return &SrecDirectFieldRead {
+	return &SrecDirectFieldRead{
 		fieldName: fieldName,
 	}
 }
