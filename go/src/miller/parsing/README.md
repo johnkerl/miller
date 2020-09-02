@@ -1,1 +1,3 @@
-`src/miller/parsing` contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
+This directory contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework.
+
+All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`. They are nonetheless committed to source control, since running GOCC takes quite a bit longer than the `go build mlr.go` does, and the BNF file doesn't often change. See the top-level `miller/go` build scripts for how to rerun GOCC. As of this writing, it's `bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf` as invoked from the `miller/go` base directory.
