@@ -12,9 +12,21 @@
   * The code will be easier to read and, I hope, easier for others to contribute to.
 * In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
 
+# Efficiency of the Go port
+
+As I wrote [here](http://johnkerl.org/miller/doc/whyc.html) back in 2015 I couldn't get Rust or Go (or any other language I tried) to do some test-case processing as quickly as C, so I stuck with C. 
+
+Either Go has improved since 2015, or I'm a better Go programmer than I used to be, or both -- but as of 2020 I can get Go-Miller to process data about as quickly as C-Miller. 
+
+Note: in some sense Go-Miller is *less* efficient but in a way that doesn't significantly affect wall time. Namely, doing `mlr cat` on a million-record data file on my bargain-value MacBook Pro, the C version takes about 2.5 seconds and the Go version takes about 3 seconds.  But using `htop` (while processing an even larger file, to see the steady-state resource consumption) shows that the C version -- which is purely single-threaded -- is taking 100% CPU, while the Go version -- which uses concurrency and channels and `MAXPROCS=4`, with reader/mapper/writer each on their own CPU -- is taking about 240% CPU. So Go-Miller is taking up quite a bit more CPU, but does more work in parallel -- to finish the job in about the same amount of time. 
+
+Even commodity hardware has multiple CPUs these days -- and the Go code is *much* easier to read than the C code -- so I'll call this a net win for Go.
+
 # Directory structure
 
-Information here is for the benefit of anyone reading/using the Miller Go code. To use Miller, you don't need to know any of this if you don't want to. :)
+Information here is for the benefit of anyone reading/using the Miller Go code. To use the Miller tool at the command line, you don't need to know any of this if you don't want to. :)
+
+## Directory-structure overview
 
 Miller is a multi-format record-stream processor, where a **record** is a
 sequence of key-value pairs. The basic **stream** operation is:
@@ -23,15 +35,13 @@ sequence of key-value pairs. The basic **stream** operation is:
 * **map** the input records to output records in some user-specified way, using a **chain** of **verbs** (sort, filter, cut, put, etc.);
 * **write** the records in some specified file format.
 
-## Directory-structure overview
-
 So, in broad overview, the key packages are:
 
 * `src/miller/stream`   -- connect input -> mapping -> output via Go channels
 * `src/miller/input`    -- read input records
 * `src/miller/mapping`  -- map input records to output records
 * `src/miller/output`   -- write output records
-* The rest are details to support this
+* The rest are details to support this.
 
 ## Directory-structure details
 
@@ -49,10 +59,10 @@ I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` u
 
 ### Miller per se
 
-* Main entry point in `mlr.go`; everything else in `src/miller`
-* `src/miller/lib`
-  * `Mlrval` which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
-* `src/miller/containers`
+* Main entry point is `mlr.go`; everything else in `src/miller`.
+* `src/miller/lib`:
+  * Implementation of the `Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
+* `src/miller/containers`:
   * `Lrec` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `lrec.go` for more details.
   * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a mapper chain of `put` then `filter`, and a JSON record-writer.
@@ -75,3 +85,7 @@ I didn't put GOCC into `src/localdeps` since `go get github.com/goccmack/gocc` u
 * Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type.
 * Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`.
 * Miller's `error` type is for things like doing type-uncoerced addition of strings.
+* Miller's number handling makes auto-overflow from int to float transparent, while preserving the possibility of 64-bit bitwise arithmetic.
+  * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
+  * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
+  * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the `Mlrval` class implements.
