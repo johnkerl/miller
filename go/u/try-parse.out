@@ -1,253 +1,275 @@
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "||" "||"
-            * IntLiteral "md_token_int_literal" "1"
-            * IntLiteral "md_token_int_literal" "2"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "||"
+            * IntLiteral "1"
+            * IntLiteral "2"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "||" "||"
-            * Operator "||" "||"
-                * IntLiteral "md_token_int_literal" "1"
-                * IntLiteral "md_token_int_literal" "2"
-            * IntLiteral "md_token_int_literal" "3"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "||"
+            * Operator "||"
+                * IntLiteral "1"
+                * IntLiteral "2"
+            * IntLiteral "3"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "||" "||"
-            * IntLiteral "md_token_int_literal" "1"
-            * Operator "&&" "&&"
-                * IntLiteral "md_token_int_literal" "2"
-                * IntLiteral "md_token_int_literal" "3"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "||"
+            * IntLiteral "1"
+            * Operator "&&"
+                * IntLiteral "2"
+                * IntLiteral "3"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "||" "||"
-            * Operator "&&" "&&"
-                * IntLiteral "md_token_int_literal" "1"
-                * IntLiteral "md_token_int_literal" "2"
-            * IntLiteral "md_token_int_literal" "3"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "||"
+            * Operator "&&"
+                * IntLiteral "1"
+                * IntLiteral "2"
+            * IntLiteral "3"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "?" "?:"
-            * IntLiteral "md_token_int_literal" "1"
-            * IntLiteral "md_token_int_literal" "2"
-            * IntLiteral "md_token_int_literal" "3"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "?:"
+            * IntLiteral "1"
+            * IntLiteral "2"
+            * IntLiteral "3"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "+" "+"
-            * DirectFieldName "md_token_field_name" "a"
-            * Operator "*" "*"
-                * DirectFieldName "md_token_field_name" "b"
-                * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "+"
+            * DirectFieldName "a"
+            * Operator "*"
+                * DirectFieldName "b"
+                * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "*" "*"
-            * Operator "*" "*"
-                * DirectFieldName "md_token_field_name" "a"
-                * DirectFieldName "md_token_field_name" "b"
-            * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "*"
+            * Operator "*"
+                * DirectFieldName "a"
+                * DirectFieldName "b"
+            * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "**" "**"
-            * DirectFieldName "md_token_field_name" "a"
-            * Operator "**" "**"
-                * DirectFieldName "md_token_field_name" "b"
-                * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "**"
+            * DirectFieldName "a"
+            * Operator "**"
+                * DirectFieldName "b"
+                * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * IndirectFieldName "$[" "$["
-            * IntLiteral "md_token_int_literal" "2"
-        * IntLiteral "md_token_int_literal" "3"
+    * SrecDirectAssignment "="
+        * IndirectFieldName "$["
+            * IntLiteral "2"
+        * IntLiteral "3"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * IndirectFieldName "$[" "$["
-            * DirectFieldName "md_token_field_name" "y"
-        * IntLiteral "md_token_int_literal" "4"
+    * SrecDirectAssignment "="
+        * IndirectFieldName "$["
+            * DirectFieldName "y"
+        * IntLiteral "4"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * StringLiteral "md_token_string_literal" "abc"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * StringLiteral "abc"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * IndirectFieldName "$[" "$["
-            * StringLiteral "md_token_string_literal" "abc"
-        * StringLiteral "md_token_string_literal" "def"
+    * SrecDirectAssignment "="
+        * IndirectFieldName "$["
+            * StringLiteral "abc"
+        * StringLiteral "def"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * IndirectFieldName "$[" "$["
-            * ContextVariable "md_token_FILENAME" "FILENAME"
-        * ContextVariable "md_token_FNR" "FNR"
+    * SrecDirectAssignment "="
+        * IndirectFieldName "$["
+            * ContextVariable "FILENAME"
+        * ContextVariable "FNR"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * Operator "+" "+"
-            * Operator "+" "+"
-                * DirectFieldName "md_token_field_name" "a"
-                * DirectFieldName "md_token_field_name" "b"
-            * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * Operator "+"
+            * Operator "+"
+                * DirectFieldName "a"
+                * DirectFieldName "b"
+            * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * Operator "+" "+"
-            * Operator "+" "+"
-                * DirectFieldName "md_token_field_name" "a"
-                * DirectFieldName "md_token_field_name" "b"
-            * DirectFieldName "md_token_field_name" "c"
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "+" "+"
-            * DirectFieldName "md_token_field_name" "a"
-            * Operator "+" "+"
-                * DirectFieldName "md_token_field_name" "b"
-                * DirectFieldName "md_token_field_name" "c"
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "z"
-        * Operator "+" "+"
-            * Operator "+" "+"
-                * DirectFieldName "md_token_field_name" "a"
-                * DirectFieldName "md_token_field_name" "b"
-            * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * Operator "+"
+            * Operator "+"
+                * DirectFieldName "a"
+                * DirectFieldName "b"
+            * DirectFieldName "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "+"
+            * DirectFieldName "a"
+            * Operator "+"
+                * DirectFieldName "b"
+                * DirectFieldName "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * Operator "+"
+            * Operator "+"
+                * DirectFieldName "a"
+                * DirectFieldName "b"
+            * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * Operator "." "."
-            * Operator "+" "+"
-                * Operator "*" "*"
-                    * IntLiteral "md_token_int_literal" "2"
-                    * DirectFieldName "md_token_field_name" "a"
-                * DirectFieldName "md_token_field_name" "b"
-            * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * Operator "."
+            * Operator "+"
+                * Operator "*"
+                    * IntLiteral "2"
+                    * DirectFieldName "a"
+                * DirectFieldName "b"
+            * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * Operator "+" "+"
-            * Operator "*" "*"
-                * IntLiteral "md_token_int_literal" "2"
-                * DirectFieldName "md_token_field_name" "a"
-            * Operator "." "."
-                * DirectFieldName "md_token_field_name" "b"
-                * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * Operator "+"
+            * Operator "*"
+                * IntLiteral "2"
+                * DirectFieldName "a"
+            * Operator "."
+                * DirectFieldName "b"
+                * DirectFieldName "c"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * Operator "*" "*"
-            * Operator "+" "+"
-                * ContextVariable "md_token_NF" "NF"
-                * ContextVariable "md_token_NR" "NR"
-            * IntLiteral "md_token_int_literal" "7"
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "y"
-        * Operator "." "."
-            * Operator "." "."
-                * ContextVariable "md_token_OFS" "OFS"
-                * DirectFieldName "md_token_field_name" "y"
-            * StringLiteral "md_token_string_literal" "hello"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * Operator "*"
+            * Operator "+"
+                * ContextVariable "NF"
+                * ContextVariable "NR"
+            * IntLiteral "7"
+    * SrecDirectAssignment "="
+        * DirectFieldName "y"
+        * Operator "."
+            * Operator "."
+                * ContextVariable "OFS"
+                * DirectFieldName "y"
+            * StringLiteral "hello"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "x"
-        * Operator "+" "+"
-            * Operator "+" "+"
-                * FloatLiteral "md_token_float_literal" "123."
-                * Operator "/" "/"
-                    * FloatLiteral "md_token_float_literal" "1e-2"
-                    * FloatLiteral "md_token_float_literal" ".2e3"
-            * FloatLiteral "md_token_float_literal" "1.e-3"
+    * SrecDirectAssignment "="
+        * DirectFieldName "x"
+        * Operator "+"
+            * Operator "+"
+                * FloatLiteral "123."
+                * Operator "/"
+                    * FloatLiteral "1e-2"
+                    * FloatLiteral ".2e3"
+            * FloatLiteral "1.e-3"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "z"
-        * Operator "+" "+"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * Operator "+"
+            * IntLiteral "0x7fffffffffffffff"
+            * IntLiteral "0x7fffffffffffffff"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "z"
-        * Operator ".+" ".+"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * Operator ".+"
+            * IntLiteral "0x7fffffffffffffff"
+            * IntLiteral "0x7fffffffffffffff"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "z"
-        * Operator "*" "*"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * Operator "*"
+            * IntLiteral "0x7fffffffffffffff"
+            * IntLiteral "0x7fffffffffffffff"
 
 
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "=" "="
-        * DirectFieldName "md_token_field_name" "z"
-        * Operator ".*" ".*"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
-            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * Operator ".*"
+            * IntLiteral "0x7fffffffffffffff"
+            * IntLiteral "0x7fffffffffffffff"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayLiteral "[]"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayLiteral "[]"
+            * IntLiteral "1"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * MapLiteral "{}"
 

@@ -3,6 +3,9 @@ TOP OF LIST:
 
 * reg_test/run iterate
 
+* array/map
+  o fix token display in AST print
+
 * SUMMARY:
   o easy: most verbs
   o easy: full cli

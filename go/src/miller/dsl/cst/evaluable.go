@@ -22,7 +22,14 @@ func NewEvaluable(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return NewOperatorNode(astNode)
 	}
 
-	// xxx array
+	if astNode.Type == dsl.NodeTypeArrayLiteral {
+		return NewArrayLiteralNode(astNode)
+	}
+
+	if astNode.Type == dsl.NodeTypeMapLiteral {
+		return NewMapLiteralNode(astNode)
+	}
+
 	// xxx map
 	// xxx if/while/etc
 	// xxx function

@@ -93,8 +93,9 @@ func (this *ASTNode) Print(depth int) {
 	fmt.Print("* " + this.Type)
 
 	if tok != nil {
-		fmt.Printf(" \"%s\" \"%s\"",
-			token.TokMap.Id(tok.Type), string(tok.Lit))
+		//fmt.Printf(" \"%s\" \"%s\"",
+		//	token.TokMap.Id(tok.Type), string(tok.Lit))
+		fmt.Printf(" \"%s\"", string(tok.Lit))
 	}
 	fmt.Println()
 	if this.Children != nil {
