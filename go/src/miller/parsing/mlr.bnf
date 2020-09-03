@@ -2526,6 +2526,9 @@ PowTerm
   | MlrvalOrFunction
 ;
 
+// Please Excuse My Dear Aunt Sally! :) We've gotten to the 'P' so we're done
+// with the operator-precedence chain. :)
+
 MlrvalOrFunction
   : "(" RHS ")"
   << dsl.Nestable($1) >>
@@ -2900,6 +2903,21 @@ ArrayLiteralElements
 // ----------------------------------------------------------------
 ArrayLiteralElement
   : RHS
+;
+
+// ----------------------------------------------------------------
+// For Array or Map -- which one, to be determined at runtime.
+
+MlrvalOrFunction : ArrayOrMapIndexAccess ;
+
+ArrayOrMapIndexAccess
+  : MlrvalOrFunction "[" RHS "]" 
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NodeTypeArrayOrMapIndexAccess,
+    )>>
 ;
 
 // ================================================================

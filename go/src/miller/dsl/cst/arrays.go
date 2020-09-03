@@ -17,6 +17,8 @@ func BuildArrayLiteralNode(
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayLiteral)
 
+	// xxx assert children not nil (0-length non-nil ok, nil not ok)
+
 	// xxx temp
 	return BuildPanicNode(), nil
 
@@ -25,14 +27,15 @@ func BuildArrayLiteralNode(
 
 //// ----------------------------------------------------------------
 //type ArrayLiteralNode struct {
-//	literal lib.Mlrval
+//	elements []IEvaluable
 //}
 //
-//func BuildArrayLiteralNode(literal string) *ArrayLiteralNode {
-//	return &ArrayLiteral{
-//		literal: lib.MlrvalFromString(literal),
+//func BuildArrayLiteralNode(astChildren []*dsl.ASTNode) *ArrayLiteralNode {
+//	...
+//	return &ArrayLiteralNode{
+//		elements: ...
 //	}
 //}
 //func (this *ArrayLiteralNode) Evaluate(state *State) lib.Mlrval {
-//	return this.literal
+//	return ...
 //}

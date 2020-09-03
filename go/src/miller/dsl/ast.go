@@ -17,6 +17,7 @@ const (
 	NodeTypeArrayLiteral                     = "ArrayLiteral"
 	NodeTypeMapLiteral                       = "MapLiteral"
 	NodeTypeMapLiteralKeyValuePair           = "MapLiteralKeyValuePair"
+	NodeTypeArrayOrMapIndexAccess            = "ArrayOrMapIndexAccess"
 
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"

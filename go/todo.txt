@@ -3,8 +3,11 @@ TOP OF LIST:
 
 * reg_test/run iterate
 
+! makefile for build-dsl: if $bnf newer than productionstable.go
 * array/map
   o iterate on CST build
+  o string index access -- ? if i support this people will want ranges ...
+    better to maybe give them that. or [m:n] slices ...
   o ??? on CST execute
     - not much to really do with them until/unless RHS-indexing
 
