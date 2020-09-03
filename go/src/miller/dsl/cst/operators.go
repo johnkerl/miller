@@ -98,6 +98,9 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case "//":
 		return NewIntDivideOperator(leftCSTChild, rightCSTChild), nil
 		break
+	case "**":
+		return NewPowOperator(leftCSTChild, rightCSTChild), nil
+		break
 
 	case ".+":
 		return NewDotPlusOperator(leftCSTChild, rightCSTChild), nil
@@ -289,6 +292,18 @@ func (this *IntDivideOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalIntDivide(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type PowOperator struct{ a, b IEvaluable }
+
+func NewPowOperator(a, b IEvaluable) *PowOperator {
+	return &PowOperator{a: a, b: b}
+}
+func (this *PowOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalPow(&aout, &bout)
 }
 
 // ----------------------------------------------------------------

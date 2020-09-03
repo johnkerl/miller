@@ -83,3 +83,122 @@ RAW AST:
                 * DirectFieldName "md_token_field_name" "b"
                 * DirectFieldName "md_token_field_name" "c"
 
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * IndirectFieldName "$[" "$["
+            * IntLiteral "md_token_int_literal" "2"
+        * IntLiteral "md_token_int_literal" "3"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * IndirectFieldName "$[" "$["
+            * DirectFieldName "md_token_field_name" "y"
+        * IntLiteral "md_token_int_literal" "4"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * StringLiteral "md_token_string_literal" "abc"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * IndirectFieldName "$[" "$["
+            * StringLiteral "md_token_string_literal" "abc"
+        * StringLiteral "md_token_string_literal" "def"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * IndirectFieldName "$[" "$["
+            * ContextVariable "md_token_FILENAME" "FILENAME"
+        * ContextVariable "md_token_FNR" "FNR"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "+" "+"
+            * Operator "+" "+"
+                * DirectFieldName "md_token_field_name" "a"
+                * DirectFieldName "md_token_field_name" "b"
+            * DirectFieldName "md_token_field_name" "c"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "+" "+"
+            * Operator "+" "+"
+                * DirectFieldName "md_token_field_name" "a"
+                * DirectFieldName "md_token_field_name" "b"
+            * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "y"
+        * Operator "+" "+"
+            * DirectFieldName "md_token_field_name" "a"
+            * Operator "+" "+"
+                * DirectFieldName "md_token_field_name" "b"
+                * DirectFieldName "md_token_field_name" "c"
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "z"
+        * Operator "+" "+"
+            * Operator "+" "+"
+                * DirectFieldName "md_token_field_name" "a"
+                * DirectFieldName "md_token_field_name" "b"
+            * DirectFieldName "md_token_field_name" "c"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "." "."
+            * Operator "+" "+"
+                * Operator "*" "*"
+                    * IntLiteral "md_token_int_literal" "2"
+                    * DirectFieldName "md_token_field_name" "a"
+                * DirectFieldName "md_token_field_name" "b"
+            * DirectFieldName "md_token_field_name" "c"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "+" "+"
+            * Operator "*" "*"
+                * IntLiteral "md_token_int_literal" "2"
+                * DirectFieldName "md_token_field_name" "a"
+            * Operator "." "."
+                * DirectFieldName "md_token_field_name" "b"
+                * DirectFieldName "md_token_field_name" "c"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "*" "*"
+            * Operator "+" "+"
+                * ContextVariable "md_token_NF" "NF"
+                * ContextVariable "md_token_NR" "NR"
+            * IntLiteral "md_token_int_literal" "7"
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "y"
+        * Operator "." "."
+            * Operator "." "."
+                * ContextVariable "md_token_OFS" "OFS"
+                * DirectFieldName "md_token_field_name" "y"
+            * StringLiteral "md_token_string_literal" "hello"
+

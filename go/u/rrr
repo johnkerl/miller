@@ -60,3 +60,5 @@ echo; mlr --idkvp --opprint put '$z= $i >= 2' u/s.dkvp
 echo; mlr --idkvp --opprint put '$z= $i <  2' u/s.dkvp
 echo; mlr --idkvp --opprint put '$z= $i >= 2' u/s.dkvp
 echo; mlr --idkvp --opprint put '$z = $i < 5 ? "low" : "high"' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z = $i ** 3' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z = $x ** 0.5' u/s.dkvp

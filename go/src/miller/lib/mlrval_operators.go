@@ -207,16 +207,6 @@ func MlrvalDot(ma, mb *Mlrval) Mlrval {
 // Addition with auto-overflow from int to float when necessary.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
-func plus_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval + float64(mb.intval))
-}
-func plus_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(float64(ma.intval) + mb.floatval)
-}
-func plus_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval + mb.floatval)
-}
-
 // Auto-overflows up to float.  Additions & subtractions overflow by at most
 // one bit so it suffices to check sign-changes.
 func plus_n_ii(ma, mb *Mlrval) Mlrval {
@@ -242,6 +232,16 @@ func plus_n_ii(ma, mb *Mlrval) Mlrval {
 	}
 }
 
+func plus_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(float64(ma.intval) + mb.floatval)
+}
+func plus_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval + float64(mb.intval))
+}
+func plus_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval + mb.floatval)
+}
+
 var plus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -260,16 +260,6 @@ func MlrvalPlus(ma, mb *Mlrval) Mlrval {
 // ================================================================
 // Subtraction with auto-overflow from int to float when necessary.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
-
-func minus_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval - mb.floatval)
-}
-func minus_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval - float64(mb.intval))
-}
-func minus_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(float64(ma.intval) - mb.floatval)
-}
 
 // Adds & subtracts overflow by at most one bit so it suffices to check
 // sign-changes.
@@ -296,6 +286,16 @@ func minus_n_ii(ma, mb *Mlrval) Mlrval {
 	}
 }
 
+func minus_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(float64(ma.intval) - mb.floatval)
+}
+func minus_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval - float64(mb.intval))
+}
+func minus_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval - mb.floatval)
+}
+
 var minus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -314,16 +314,6 @@ func MlrvalMinus(ma, mb *Mlrval) Mlrval {
 // ================================================================
 // Multiplication with auto-overflow from int to float when necessary.  See
 // also http://johnkerl.org/miller/doc/reference.html#Arithmetic.
-
-func times_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval * float64(mb.intval))
-}
-func times_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(float64(ma.intval) * mb.floatval)
-}
-func times_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval * mb.floatval)
-}
 
 // Auto-overflows up to float.
 //
@@ -366,6 +356,16 @@ func times_n_ii(ma, mb *Mlrval) Mlrval {
 	}
 }
 
+func times_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(float64(ma.intval) * mb.floatval)
+}
+func times_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval * float64(mb.intval))
+}
+func times_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval * mb.floatval)
+}
+
 var times_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -398,16 +398,6 @@ func MlrvalTimes(ma, mb *Mlrval) Mlrval {
 //   $ echo 'x=1e-300,y=1e300' | mlr put '$z=$y/$x'
 //   x=1e-300,y=1e300,z=+Inf
 
-func divide_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval / float64(mb.intval))
-}
-func divide_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(float64(ma.intval) / mb.floatval)
-}
-func divide_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval / mb.floatval)
-}
-
 func divide_n_ii(ma, mb *Mlrval) Mlrval {
 	a := ma.intval
 	b := mb.intval
@@ -433,6 +423,16 @@ func divide_n_ii(ma, mb *Mlrval) Mlrval {
 	}
 }
 
+func divide_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(float64(ma.intval) / mb.floatval)
+}
+func divide_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval / float64(mb.intval))
+}
+func divide_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval / mb.floatval)
+}
+
 var divide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -451,16 +451,6 @@ func MlrvalDivide(ma, mb *Mlrval) Mlrval {
 // ================================================================
 // Integer division: DSL operator '//' as in Python.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
-
-func int_divide_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Floor(ma.floatval / float64(mb.intval)))
-}
-func int_divide_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Floor(float64(ma.intval) / mb.floatval))
-}
-func int_divide_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Floor(ma.floatval / mb.floatval))
-}
 
 func int_divide_n_ii(ma, mb *Mlrval) Mlrval {
 	a := ma.intval
@@ -490,6 +480,16 @@ func int_divide_n_ii(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromInt64(q)
 }
 
+func int_divide_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Floor(float64(ma.intval) / mb.floatval))
+}
+func int_divide_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Floor(ma.floatval / float64(mb.intval)))
+}
+func int_divide_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Floor(ma.floatval / mb.floatval))
+}
+
 var int_divide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -506,23 +506,52 @@ func MlrvalIntDivide(ma, mb *Mlrval) Mlrval {
 }
 
 // ================================================================
+// Exponentiation: DSL operator '**'.  See also
+// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+
+func pow_f_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Pow(float64(ma.intval), float64(mb.intval)))
+}
+func pow_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Pow(float64(ma.intval), mb.floatval))
+}
+func pow_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Pow(ma.floatval, float64(mb.intval)))
+}
+func pow_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Pow(ma.floatval, mb.floatval))
+}
+
+var pow_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, pow_f_ii, pow_f_if, _erro},
+	/*FLOAT  */ {_erro, _1___, _void, _erro, pow_f_fi, pow_f_ff, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalPow(ma, mb *Mlrval) Mlrval {
+	return pow_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+
+// ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
-func dotplus_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval + mb.floatval)
+func dotplus_i_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromInt64(ma.intval + mb.intval)
 }
-
-func dotplus_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval + float64(mb.intval))
-}
-
 func dotplus_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) + mb.floatval)
 }
-
-func dotplus_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval + mb.intval)
+func dotplus_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval + float64(mb.intval))
+}
+func dotplus_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval + mb.floatval)
 }
 
 var dot_plus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
@@ -544,20 +573,17 @@ func MlrvalDotPlus(ma, mb *Mlrval) Mlrval {
 // Non-auto-overflowing subtraction: DSL operator '.-'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
-func dotminus_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval - mb.floatval)
+func dotminus_i_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromInt64(ma.intval - mb.intval)
 }
-
-func dotminus_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval - float64(mb.intval))
-}
-
 func dotminus_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) - mb.floatval)
 }
-
-func dotminus_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval - mb.intval)
+func dotminus_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval - float64(mb.intval))
+}
+func dotminus_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval - mb.floatval)
 }
 
 var dotminus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
@@ -579,20 +605,17 @@ func MlrvalDotMinus(ma, mb *Mlrval) Mlrval {
 // Non-auto-overflowing multiplication: DSL operator '.*'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
-func dottimes_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval * mb.floatval)
+func dottimes_i_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromInt64(ma.intval * mb.intval)
 }
-
-func dottimes_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval * float64(mb.intval))
-}
-
 func dottimes_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) * mb.floatval)
 }
-
-func dottimes_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval * mb.intval)
+func dottimes_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval * float64(mb.intval))
+}
+func dottimes_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval * mb.floatval)
 }
 
 var dottimes_dispositions = [MT_DIM][MT_DIM]binaryFunc{
@@ -614,20 +637,17 @@ func MlrvalDotTimes(ma, mb *Mlrval) Mlrval {
 // 64-bit integer division: DSL operator './'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
-func dotdivide_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval / mb.floatval)
+func dotdivide_i_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromInt64(ma.intval / mb.intval)
 }
-
-func dotdivide_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(ma.floatval / float64(mb.intval))
-}
-
 func dotdivide_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) / mb.floatval)
 }
-
-func dotdivide_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval / mb.intval)
+func dotdivide_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval / float64(mb.intval))
+}
+func dotdivide_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(ma.floatval / mb.floatval)
 }
 
 var dotdivide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
@@ -648,18 +668,6 @@ func MlrvalDotDivide(ma, mb *Mlrval) Mlrval {
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
-
-func dotidivide_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Floor(ma.floatval / mb.floatval))
-}
-
-func dotidivide_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Floor(ma.floatval / float64(mb.intval)))
-}
-
-func dotidivide_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Floor(float64(ma.intval) / mb.floatval))
-}
 
 func dotidivide_i_ii(ma, mb *Mlrval) Mlrval {
 	a := ma.intval
@@ -689,6 +697,16 @@ func dotidivide_i_ii(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromInt64(q)
 }
 
+func dotidivide_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Floor(float64(ma.intval) / mb.floatval))
+}
+func dotidivide_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Floor(ma.floatval / float64(mb.intval)))
+}
+func dotidivide_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Floor(ma.floatval / mb.floatval))
+}
+
 var dotidivide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -706,24 +724,6 @@ func MlrvalDotIntDivide(ma, mb *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // Modulus
-
-func modulus_f_ff(ma, mb *Mlrval) Mlrval {
-	a := ma.floatval
-	b := mb.floatval
-	return MlrvalFromFloat64(a - b*math.Floor(a/b))
-}
-
-func modulus_f_fi(ma, mb *Mlrval) Mlrval {
-	a := ma.floatval
-	b := float64(mb.intval)
-	return MlrvalFromFloat64(a - b*math.Floor(a/b))
-}
-
-func modulus_f_if(ma, mb *Mlrval) Mlrval {
-	a := float64(ma.intval)
-	b := mb.floatval
-	return MlrvalFromFloat64(a - b*math.Floor(a/b))
-}
 
 func modulus_i_ii(ma, mb *Mlrval) Mlrval {
 	a := ma.intval
@@ -747,6 +747,24 @@ func modulus_i_ii(ma, mb *Mlrval) Mlrval {
 	}
 
 	return MlrvalFromInt64(m)
+}
+
+func modulus_f_fi(ma, mb *Mlrval) Mlrval {
+	a := ma.floatval
+	b := float64(mb.intval)
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+}
+
+func modulus_f_if(ma, mb *Mlrval) Mlrval {
+	a := float64(ma.intval)
+	b := mb.floatval
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+}
+
+func modulus_f_ff(ma, mb *Mlrval) Mlrval {
+	a := ma.floatval
+	b := mb.floatval
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
 }
 
 var modulus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
@@ -935,23 +953,23 @@ func le_b_ii(ma, mb *Mlrval) Mlrval {
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(ma.floatval == mb.floatval)
+func eq_b_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(ma.intval) == mb.floatval)
 }
-func ne_b_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(ma.floatval != mb.floatval)
+func ne_b_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(ma.intval) != mb.floatval)
 }
-func gt_b_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(ma.floatval > mb.floatval)
+func gt_b_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(ma.intval) > mb.floatval)
 }
-func ge_b_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(ma.floatval >= mb.floatval)
+func ge_b_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(ma.intval) >= mb.floatval)
 }
-func lt_b_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(ma.floatval < mb.floatval)
+func lt_b_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(ma.intval) < mb.floatval)
 }
-func le_b_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(ma.floatval <= mb.floatval)
+func le_b_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(ma.intval) <= mb.floatval)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -975,23 +993,23 @@ func le_b_fi(ma, mb *Mlrval) Mlrval {
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(ma.intval) == mb.floatval)
+func eq_b_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.floatval == mb.floatval)
 }
-func ne_b_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(ma.intval) != mb.floatval)
+func ne_b_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.floatval != mb.floatval)
 }
-func gt_b_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(ma.intval) > mb.floatval)
+func gt_b_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.floatval > mb.floatval)
 }
-func ge_b_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(ma.intval) >= mb.floatval)
+func ge_b_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.floatval >= mb.floatval)
 }
-func lt_b_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(ma.intval) < mb.floatval)
+func lt_b_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.floatval < mb.floatval)
 }
-func le_b_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(ma.intval) <= mb.floatval)
+func le_b_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.floatval <= mb.floatval)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1124,35 +1142,35 @@ func MlrvalLogicalNOT(ma *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // For qsort support in C
-//
+
 //static int eq_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval == mb.intval; }
 //static int ne_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval != mb.intval; }
 //static int gt_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval >  mb.intval; }
 //static int ge_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval >= mb.intval; }
 //static int lt_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval <  mb.intval; }
 //static int le_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval <= mb.intval; }
-//
-//static int eq_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval == mb.floatval; }
-//static int ne_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval != mb.floatval; }
-//static int gt_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval >  mb.floatval; }
-//static int ge_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval >= mb.floatval; }
-//static int lt_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval <  mb.floatval; }
-//static int le_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval <= mb.floatval; }
-//
-//static int eq_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval == mb.intval; }
-//static int ne_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval != mb.intval; }
-//static int gt_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval >  mb.intval; }
-//static int ge_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval >= mb.intval; }
-//static int lt_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval <  mb.intval; }
-//static int le_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval <= mb.intval; }
-//
+
 //static int eq_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval == mb.floatval; }
 //static int ne_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval != mb.floatval; }
 //static int gt_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval >  mb.floatval; }
 //static int ge_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval >= mb.floatval; }
 //static int lt_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval <  mb.floatval; }
 //static int le_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval <= mb.floatval; }
-//
+
+//static int eq_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval == mb.intval; }
+//static int ne_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval != mb.intval; }
+//static int gt_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval >  mb.intval; }
+//static int ge_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval >= mb.intval; }
+//static int lt_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval <  mb.intval; }
+//static int le_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval <= mb.intval; }
+
+//static int eq_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval == mb.floatval; }
+//static int ne_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval != mb.floatval; }
+//static int gt_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval >  mb.floatval; }
+//static int ge_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval >= mb.floatval; }
+//static int lt_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval <  mb.floatval; }
+//static int le_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval <= mb.floatval; }
+
 //static mv_i_nn_comparator_func_t* ieq_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
 //	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
