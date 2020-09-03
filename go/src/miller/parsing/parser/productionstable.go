@@ -611,7 +611,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "*" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "*" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      59,
@@ -621,7 +621,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "/" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "/" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      60,
@@ -631,7 +631,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "//" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "//" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      61,
@@ -641,7 +641,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "%!"(MISSING) UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "%!"(MISSING) UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      62,
@@ -651,7 +651,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm ".*" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm ".*" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      63,
@@ -661,7 +661,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm "./" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm "./" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      64,
@@ -671,7 +671,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : MuldivTerm ".//" UnaryBitwiseOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `MuldivTerm : MuldivTerm ".//" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      65,
@@ -681,7 +681,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MuldivTerm : UnaryBitwiseOpTerm	<<  >>`,
+		String: `MuldivTerm : UnaryOpTerm	<<  >>`,
 		Id:         "MuldivTerm",
 		NTType:     19,
 		Index:      66,
@@ -691,8 +691,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : "+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      67,
 		NumSymbols: 2,
@@ -701,8 +701,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : "-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      68,
 		NumSymbols: 2,
@@ -711,8 +711,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : ".+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : ".+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      69,
 		NumSymbols: 2,
@@ -721,8 +721,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : ".-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : ".-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      70,
 		NumSymbols: 2,
@@ -731,8 +731,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "!" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : "!" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      71,
 		NumSymbols: 2,
@@ -741,8 +741,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : "~" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : "~" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      72,
 		NumSymbols: 2,
@@ -751,8 +751,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UnaryBitwiseOpTerm : PowTerm	<<  >>`,
-		Id:         "UnaryBitwiseOpTerm",
+		String: `UnaryOpTerm : PowTerm	<<  >>`,
+		Id:         "UnaryOpTerm",
 		NTType:     20,
 		Index:      73,
 		NumSymbols: 1,
@@ -851,9 +851,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeStripDoubleQuotePairPlease(
-				X[0],
-				dsl.NodeTypeStringLiteral,
-			)
+    X[0],
+    dsl.NodeTypeStringLiteral,
+  )
 		},
 	},
 	ProdTabEntry{

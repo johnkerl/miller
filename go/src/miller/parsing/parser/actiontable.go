@@ -3856,36 +3856,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // |, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(73), // +, reduce: UnaryBitwiseOpTerm
-			reduce(73), // -, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ., reduce: UnaryBitwiseOpTerm
-			reduce(73), // *, reduce: UnaryBitwiseOpTerm
-			reduce(73), // /, reduce: UnaryBitwiseOpTerm
-			reduce(73), // //, reduce: UnaryBitwiseOpTerm
-			reduce(73), // %, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ||, reduce: UnaryOpTerm
+			reduce(73), // ^^, reduce: UnaryOpTerm
+			reduce(73), // &&, reduce: UnaryOpTerm
+			reduce(73), // =~, reduce: UnaryOpTerm
+			reduce(73), // !=~, reduce: UnaryOpTerm
+			reduce(73), // ==, reduce: UnaryOpTerm
+			reduce(73), // !=, reduce: UnaryOpTerm
+			reduce(73), // >, reduce: UnaryOpTerm
+			reduce(73), // >=, reduce: UnaryOpTerm
+			reduce(73), // <, reduce: UnaryOpTerm
+			reduce(73), // <=, reduce: UnaryOpTerm
+			reduce(73), // |, reduce: UnaryOpTerm
+			reduce(73), // ^, reduce: UnaryOpTerm
+			reduce(73), // &, reduce: UnaryOpTerm
+			reduce(73), // <<, reduce: UnaryOpTerm
+			reduce(73), // >>, reduce: UnaryOpTerm
+			reduce(73), // +, reduce: UnaryOpTerm
+			reduce(73), // -, reduce: UnaryOpTerm
+			reduce(73), // .+, reduce: UnaryOpTerm
+			reduce(73), // .-, reduce: UnaryOpTerm
+			reduce(73), // ., reduce: UnaryOpTerm
+			reduce(73), // *, reduce: UnaryOpTerm
+			reduce(73), // /, reduce: UnaryOpTerm
+			reduce(73), // //, reduce: UnaryOpTerm
+			reduce(73), // %, reduce: UnaryOpTerm
+			reduce(73), // .*, reduce: UnaryOpTerm
+			reduce(73), // ./, reduce: UnaryOpTerm
+			reduce(73), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -3893,7 +3893,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(73), // ], reduce: UnaryBitwiseOpTerm
+			reduce(73), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -7347,8 +7347,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(73), // $, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(73), // $, reduce: UnaryOpTerm
+			reduce(73), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -7366,36 +7366,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // |, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(73), // +, reduce: UnaryBitwiseOpTerm
-			reduce(73), // -, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ., reduce: UnaryBitwiseOpTerm
-			reduce(73), // *, reduce: UnaryBitwiseOpTerm
-			reduce(73), // /, reduce: UnaryBitwiseOpTerm
-			reduce(73), // //, reduce: UnaryBitwiseOpTerm
-			reduce(73), // %, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ||, reduce: UnaryOpTerm
+			reduce(73), // ^^, reduce: UnaryOpTerm
+			reduce(73), // &&, reduce: UnaryOpTerm
+			reduce(73), // =~, reduce: UnaryOpTerm
+			reduce(73), // !=~, reduce: UnaryOpTerm
+			reduce(73), // ==, reduce: UnaryOpTerm
+			reduce(73), // !=, reduce: UnaryOpTerm
+			reduce(73), // >, reduce: UnaryOpTerm
+			reduce(73), // >=, reduce: UnaryOpTerm
+			reduce(73), // <, reduce: UnaryOpTerm
+			reduce(73), // <=, reduce: UnaryOpTerm
+			reduce(73), // |, reduce: UnaryOpTerm
+			reduce(73), // ^, reduce: UnaryOpTerm
+			reduce(73), // &, reduce: UnaryOpTerm
+			reduce(73), // <<, reduce: UnaryOpTerm
+			reduce(73), // >>, reduce: UnaryOpTerm
+			reduce(73), // +, reduce: UnaryOpTerm
+			reduce(73), // -, reduce: UnaryOpTerm
+			reduce(73), // .+, reduce: UnaryOpTerm
+			reduce(73), // .-, reduce: UnaryOpTerm
+			reduce(73), // ., reduce: UnaryOpTerm
+			reduce(73), // *, reduce: UnaryOpTerm
+			reduce(73), // /, reduce: UnaryOpTerm
+			reduce(73), // //, reduce: UnaryOpTerm
+			reduce(73), // %, reduce: UnaryOpTerm
+			reduce(73), // .*, reduce: UnaryOpTerm
+			reduce(73), // ./, reduce: UnaryOpTerm
+			reduce(73), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -12358,36 +12358,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(67), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(67), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(67), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // |, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(67), // +, reduce: UnaryBitwiseOpTerm
-			reduce(67), // -, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ., reduce: UnaryBitwiseOpTerm
-			reduce(67), // *, reduce: UnaryBitwiseOpTerm
-			reduce(67), // /, reduce: UnaryBitwiseOpTerm
-			reduce(67), // //, reduce: UnaryBitwiseOpTerm
-			reduce(67), // %, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ||, reduce: UnaryOpTerm
+			reduce(67), // ^^, reduce: UnaryOpTerm
+			reduce(67), // &&, reduce: UnaryOpTerm
+			reduce(67), // =~, reduce: UnaryOpTerm
+			reduce(67), // !=~, reduce: UnaryOpTerm
+			reduce(67), // ==, reduce: UnaryOpTerm
+			reduce(67), // !=, reduce: UnaryOpTerm
+			reduce(67), // >, reduce: UnaryOpTerm
+			reduce(67), // >=, reduce: UnaryOpTerm
+			reduce(67), // <, reduce: UnaryOpTerm
+			reduce(67), // <=, reduce: UnaryOpTerm
+			reduce(67), // |, reduce: UnaryOpTerm
+			reduce(67), // ^, reduce: UnaryOpTerm
+			reduce(67), // &, reduce: UnaryOpTerm
+			reduce(67), // <<, reduce: UnaryOpTerm
+			reduce(67), // >>, reduce: UnaryOpTerm
+			reduce(67), // +, reduce: UnaryOpTerm
+			reduce(67), // -, reduce: UnaryOpTerm
+			reduce(67), // .+, reduce: UnaryOpTerm
+			reduce(67), // .-, reduce: UnaryOpTerm
+			reduce(67), // ., reduce: UnaryOpTerm
+			reduce(67), // *, reduce: UnaryOpTerm
+			reduce(67), // /, reduce: UnaryOpTerm
+			reduce(67), // //, reduce: UnaryOpTerm
+			reduce(67), // %, reduce: UnaryOpTerm
+			reduce(67), // .*, reduce: UnaryOpTerm
+			reduce(67), // ./, reduce: UnaryOpTerm
+			reduce(67), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -12395,7 +12395,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(67), // ], reduce: UnaryBitwiseOpTerm
+			reduce(67), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -12982,36 +12982,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(68), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(68), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(68), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // |, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(68), // +, reduce: UnaryBitwiseOpTerm
-			reduce(68), // -, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ., reduce: UnaryBitwiseOpTerm
-			reduce(68), // *, reduce: UnaryBitwiseOpTerm
-			reduce(68), // /, reduce: UnaryBitwiseOpTerm
-			reduce(68), // //, reduce: UnaryBitwiseOpTerm
-			reduce(68), // %, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ||, reduce: UnaryOpTerm
+			reduce(68), // ^^, reduce: UnaryOpTerm
+			reduce(68), // &&, reduce: UnaryOpTerm
+			reduce(68), // =~, reduce: UnaryOpTerm
+			reduce(68), // !=~, reduce: UnaryOpTerm
+			reduce(68), // ==, reduce: UnaryOpTerm
+			reduce(68), // !=, reduce: UnaryOpTerm
+			reduce(68), // >, reduce: UnaryOpTerm
+			reduce(68), // >=, reduce: UnaryOpTerm
+			reduce(68), // <, reduce: UnaryOpTerm
+			reduce(68), // <=, reduce: UnaryOpTerm
+			reduce(68), // |, reduce: UnaryOpTerm
+			reduce(68), // ^, reduce: UnaryOpTerm
+			reduce(68), // &, reduce: UnaryOpTerm
+			reduce(68), // <<, reduce: UnaryOpTerm
+			reduce(68), // >>, reduce: UnaryOpTerm
+			reduce(68), // +, reduce: UnaryOpTerm
+			reduce(68), // -, reduce: UnaryOpTerm
+			reduce(68), // .+, reduce: UnaryOpTerm
+			reduce(68), // .-, reduce: UnaryOpTerm
+			reduce(68), // ., reduce: UnaryOpTerm
+			reduce(68), // *, reduce: UnaryOpTerm
+			reduce(68), // /, reduce: UnaryOpTerm
+			reduce(68), // //, reduce: UnaryOpTerm
+			reduce(68), // %, reduce: UnaryOpTerm
+			reduce(68), // .*, reduce: UnaryOpTerm
+			reduce(68), // ./, reduce: UnaryOpTerm
+			reduce(68), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -13019,7 +13019,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(68), // ], reduce: UnaryBitwiseOpTerm
+			reduce(68), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -13060,36 +13060,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(69), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(69), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(69), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // |, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(69), // +, reduce: UnaryBitwiseOpTerm
-			reduce(69), // -, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ., reduce: UnaryBitwiseOpTerm
-			reduce(69), // *, reduce: UnaryBitwiseOpTerm
-			reduce(69), // /, reduce: UnaryBitwiseOpTerm
-			reduce(69), // //, reduce: UnaryBitwiseOpTerm
-			reduce(69), // %, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ||, reduce: UnaryOpTerm
+			reduce(69), // ^^, reduce: UnaryOpTerm
+			reduce(69), // &&, reduce: UnaryOpTerm
+			reduce(69), // =~, reduce: UnaryOpTerm
+			reduce(69), // !=~, reduce: UnaryOpTerm
+			reduce(69), // ==, reduce: UnaryOpTerm
+			reduce(69), // !=, reduce: UnaryOpTerm
+			reduce(69), // >, reduce: UnaryOpTerm
+			reduce(69), // >=, reduce: UnaryOpTerm
+			reduce(69), // <, reduce: UnaryOpTerm
+			reduce(69), // <=, reduce: UnaryOpTerm
+			reduce(69), // |, reduce: UnaryOpTerm
+			reduce(69), // ^, reduce: UnaryOpTerm
+			reduce(69), // &, reduce: UnaryOpTerm
+			reduce(69), // <<, reduce: UnaryOpTerm
+			reduce(69), // >>, reduce: UnaryOpTerm
+			reduce(69), // +, reduce: UnaryOpTerm
+			reduce(69), // -, reduce: UnaryOpTerm
+			reduce(69), // .+, reduce: UnaryOpTerm
+			reduce(69), // .-, reduce: UnaryOpTerm
+			reduce(69), // ., reduce: UnaryOpTerm
+			reduce(69), // *, reduce: UnaryOpTerm
+			reduce(69), // /, reduce: UnaryOpTerm
+			reduce(69), // //, reduce: UnaryOpTerm
+			reduce(69), // %, reduce: UnaryOpTerm
+			reduce(69), // .*, reduce: UnaryOpTerm
+			reduce(69), // ./, reduce: UnaryOpTerm
+			reduce(69), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -13097,7 +13097,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(69), // ], reduce: UnaryBitwiseOpTerm
+			reduce(69), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -13138,36 +13138,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(70), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(70), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(70), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // |, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(70), // +, reduce: UnaryBitwiseOpTerm
-			reduce(70), // -, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ., reduce: UnaryBitwiseOpTerm
-			reduce(70), // *, reduce: UnaryBitwiseOpTerm
-			reduce(70), // /, reduce: UnaryBitwiseOpTerm
-			reduce(70), // //, reduce: UnaryBitwiseOpTerm
-			reduce(70), // %, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ||, reduce: UnaryOpTerm
+			reduce(70), // ^^, reduce: UnaryOpTerm
+			reduce(70), // &&, reduce: UnaryOpTerm
+			reduce(70), // =~, reduce: UnaryOpTerm
+			reduce(70), // !=~, reduce: UnaryOpTerm
+			reduce(70), // ==, reduce: UnaryOpTerm
+			reduce(70), // !=, reduce: UnaryOpTerm
+			reduce(70), // >, reduce: UnaryOpTerm
+			reduce(70), // >=, reduce: UnaryOpTerm
+			reduce(70), // <, reduce: UnaryOpTerm
+			reduce(70), // <=, reduce: UnaryOpTerm
+			reduce(70), // |, reduce: UnaryOpTerm
+			reduce(70), // ^, reduce: UnaryOpTerm
+			reduce(70), // &, reduce: UnaryOpTerm
+			reduce(70), // <<, reduce: UnaryOpTerm
+			reduce(70), // >>, reduce: UnaryOpTerm
+			reduce(70), // +, reduce: UnaryOpTerm
+			reduce(70), // -, reduce: UnaryOpTerm
+			reduce(70), // .+, reduce: UnaryOpTerm
+			reduce(70), // .-, reduce: UnaryOpTerm
+			reduce(70), // ., reduce: UnaryOpTerm
+			reduce(70), // *, reduce: UnaryOpTerm
+			reduce(70), // /, reduce: UnaryOpTerm
+			reduce(70), // //, reduce: UnaryOpTerm
+			reduce(70), // %, reduce: UnaryOpTerm
+			reduce(70), // .*, reduce: UnaryOpTerm
+			reduce(70), // ./, reduce: UnaryOpTerm
+			reduce(70), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -13175,7 +13175,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(70), // ], reduce: UnaryBitwiseOpTerm
+			reduce(70), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -13216,36 +13216,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(71), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(71), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(71), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // |, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(71), // +, reduce: UnaryBitwiseOpTerm
-			reduce(71), // -, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ., reduce: UnaryBitwiseOpTerm
-			reduce(71), // *, reduce: UnaryBitwiseOpTerm
-			reduce(71), // /, reduce: UnaryBitwiseOpTerm
-			reduce(71), // //, reduce: UnaryBitwiseOpTerm
-			reduce(71), // %, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ||, reduce: UnaryOpTerm
+			reduce(71), // ^^, reduce: UnaryOpTerm
+			reduce(71), // &&, reduce: UnaryOpTerm
+			reduce(71), // =~, reduce: UnaryOpTerm
+			reduce(71), // !=~, reduce: UnaryOpTerm
+			reduce(71), // ==, reduce: UnaryOpTerm
+			reduce(71), // !=, reduce: UnaryOpTerm
+			reduce(71), // >, reduce: UnaryOpTerm
+			reduce(71), // >=, reduce: UnaryOpTerm
+			reduce(71), // <, reduce: UnaryOpTerm
+			reduce(71), // <=, reduce: UnaryOpTerm
+			reduce(71), // |, reduce: UnaryOpTerm
+			reduce(71), // ^, reduce: UnaryOpTerm
+			reduce(71), // &, reduce: UnaryOpTerm
+			reduce(71), // <<, reduce: UnaryOpTerm
+			reduce(71), // >>, reduce: UnaryOpTerm
+			reduce(71), // +, reduce: UnaryOpTerm
+			reduce(71), // -, reduce: UnaryOpTerm
+			reduce(71), // .+, reduce: UnaryOpTerm
+			reduce(71), // .-, reduce: UnaryOpTerm
+			reduce(71), // ., reduce: UnaryOpTerm
+			reduce(71), // *, reduce: UnaryOpTerm
+			reduce(71), // /, reduce: UnaryOpTerm
+			reduce(71), // //, reduce: UnaryOpTerm
+			reduce(71), // %, reduce: UnaryOpTerm
+			reduce(71), // .*, reduce: UnaryOpTerm
+			reduce(71), // ./, reduce: UnaryOpTerm
+			reduce(71), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -13253,7 +13253,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(71), // ], reduce: UnaryBitwiseOpTerm
+			reduce(71), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -13294,36 +13294,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ||, reduce: UnaryOpTerm
+			reduce(72), // ^^, reduce: UnaryOpTerm
+			reduce(72), // &&, reduce: UnaryOpTerm
+			reduce(72), // =~, reduce: UnaryOpTerm
+			reduce(72), // !=~, reduce: UnaryOpTerm
+			reduce(72), // ==, reduce: UnaryOpTerm
+			reduce(72), // !=, reduce: UnaryOpTerm
+			reduce(72), // >, reduce: UnaryOpTerm
+			reduce(72), // >=, reduce: UnaryOpTerm
+			reduce(72), // <, reduce: UnaryOpTerm
+			reduce(72), // <=, reduce: UnaryOpTerm
+			reduce(72), // |, reduce: UnaryOpTerm
+			reduce(72), // ^, reduce: UnaryOpTerm
+			reduce(72), // &, reduce: UnaryOpTerm
+			reduce(72), // <<, reduce: UnaryOpTerm
+			reduce(72), // >>, reduce: UnaryOpTerm
+			reduce(72), // +, reduce: UnaryOpTerm
+			reduce(72), // -, reduce: UnaryOpTerm
+			reduce(72), // .+, reduce: UnaryOpTerm
+			reduce(72), // .-, reduce: UnaryOpTerm
+			reduce(72), // ., reduce: UnaryOpTerm
+			reduce(72), // *, reduce: UnaryOpTerm
+			reduce(72), // /, reduce: UnaryOpTerm
+			reduce(72), // //, reduce: UnaryOpTerm
+			reduce(72), // %, reduce: UnaryOpTerm
+			reduce(72), // .*, reduce: UnaryOpTerm
+			reduce(72), // ./, reduce: UnaryOpTerm
+			reduce(72), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -13331,7 +13331,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(72), // ], reduce: UnaryBitwiseOpTerm
+			reduce(72), // ], reduce: UnaryOpTerm
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -14932,41 +14932,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // |, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(73), // +, reduce: UnaryBitwiseOpTerm
-			reduce(73), // -, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ., reduce: UnaryBitwiseOpTerm
-			reduce(73), // *, reduce: UnaryBitwiseOpTerm
-			reduce(73), // /, reduce: UnaryBitwiseOpTerm
-			reduce(73), // //, reduce: UnaryBitwiseOpTerm
-			reduce(73), // %, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ||, reduce: UnaryOpTerm
+			reduce(73), // ^^, reduce: UnaryOpTerm
+			reduce(73), // &&, reduce: UnaryOpTerm
+			reduce(73), // =~, reduce: UnaryOpTerm
+			reduce(73), // !=~, reduce: UnaryOpTerm
+			reduce(73), // ==, reduce: UnaryOpTerm
+			reduce(73), // !=, reduce: UnaryOpTerm
+			reduce(73), // >, reduce: UnaryOpTerm
+			reduce(73), // >=, reduce: UnaryOpTerm
+			reduce(73), // <, reduce: UnaryOpTerm
+			reduce(73), // <=, reduce: UnaryOpTerm
+			reduce(73), // |, reduce: UnaryOpTerm
+			reduce(73), // ^, reduce: UnaryOpTerm
+			reduce(73), // &, reduce: UnaryOpTerm
+			reduce(73), // <<, reduce: UnaryOpTerm
+			reduce(73), // >>, reduce: UnaryOpTerm
+			reduce(73), // +, reduce: UnaryOpTerm
+			reduce(73), // -, reduce: UnaryOpTerm
+			reduce(73), // .+, reduce: UnaryOpTerm
+			reduce(73), // .-, reduce: UnaryOpTerm
+			reduce(73), // ., reduce: UnaryOpTerm
+			reduce(73), // *, reduce: UnaryOpTerm
+			reduce(73), // /, reduce: UnaryOpTerm
+			reduce(73), // //, reduce: UnaryOpTerm
+			reduce(73), // %, reduce: UnaryOpTerm
+			reduce(73), // .*, reduce: UnaryOpTerm
+			reduce(73), // ./, reduce: UnaryOpTerm
+			reduce(73), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(73), // ), reduce: UnaryBitwiseOpTerm
+			reduce(73), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -18657,8 +18657,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(67), // $, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(67), // $, reduce: UnaryOpTerm
+			reduce(67), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -18676,36 +18676,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(67), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(67), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(67), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // |, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(67), // +, reduce: UnaryBitwiseOpTerm
-			reduce(67), // -, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ., reduce: UnaryBitwiseOpTerm
-			reduce(67), // *, reduce: UnaryBitwiseOpTerm
-			reduce(67), // /, reduce: UnaryBitwiseOpTerm
-			reduce(67), // //, reduce: UnaryBitwiseOpTerm
-			reduce(67), // %, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ||, reduce: UnaryOpTerm
+			reduce(67), // ^^, reduce: UnaryOpTerm
+			reduce(67), // &&, reduce: UnaryOpTerm
+			reduce(67), // =~, reduce: UnaryOpTerm
+			reduce(67), // !=~, reduce: UnaryOpTerm
+			reduce(67), // ==, reduce: UnaryOpTerm
+			reduce(67), // !=, reduce: UnaryOpTerm
+			reduce(67), // >, reduce: UnaryOpTerm
+			reduce(67), // >=, reduce: UnaryOpTerm
+			reduce(67), // <, reduce: UnaryOpTerm
+			reduce(67), // <=, reduce: UnaryOpTerm
+			reduce(67), // |, reduce: UnaryOpTerm
+			reduce(67), // ^, reduce: UnaryOpTerm
+			reduce(67), // &, reduce: UnaryOpTerm
+			reduce(67), // <<, reduce: UnaryOpTerm
+			reduce(67), // >>, reduce: UnaryOpTerm
+			reduce(67), // +, reduce: UnaryOpTerm
+			reduce(67), // -, reduce: UnaryOpTerm
+			reduce(67), // .+, reduce: UnaryOpTerm
+			reduce(67), // .-, reduce: UnaryOpTerm
+			reduce(67), // ., reduce: UnaryOpTerm
+			reduce(67), // *, reduce: UnaryOpTerm
+			reduce(67), // /, reduce: UnaryOpTerm
+			reduce(67), // //, reduce: UnaryOpTerm
+			reduce(67), // %, reduce: UnaryOpTerm
+			reduce(67), // .*, reduce: UnaryOpTerm
+			reduce(67), // ./, reduce: UnaryOpTerm
+			reduce(67), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -19281,8 +19281,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(68), // $, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(68), // $, reduce: UnaryOpTerm
+			reduce(68), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -19300,36 +19300,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(68), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(68), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(68), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // |, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(68), // +, reduce: UnaryBitwiseOpTerm
-			reduce(68), // -, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ., reduce: UnaryBitwiseOpTerm
-			reduce(68), // *, reduce: UnaryBitwiseOpTerm
-			reduce(68), // /, reduce: UnaryBitwiseOpTerm
-			reduce(68), // //, reduce: UnaryBitwiseOpTerm
-			reduce(68), // %, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ||, reduce: UnaryOpTerm
+			reduce(68), // ^^, reduce: UnaryOpTerm
+			reduce(68), // &&, reduce: UnaryOpTerm
+			reduce(68), // =~, reduce: UnaryOpTerm
+			reduce(68), // !=~, reduce: UnaryOpTerm
+			reduce(68), // ==, reduce: UnaryOpTerm
+			reduce(68), // !=, reduce: UnaryOpTerm
+			reduce(68), // >, reduce: UnaryOpTerm
+			reduce(68), // >=, reduce: UnaryOpTerm
+			reduce(68), // <, reduce: UnaryOpTerm
+			reduce(68), // <=, reduce: UnaryOpTerm
+			reduce(68), // |, reduce: UnaryOpTerm
+			reduce(68), // ^, reduce: UnaryOpTerm
+			reduce(68), // &, reduce: UnaryOpTerm
+			reduce(68), // <<, reduce: UnaryOpTerm
+			reduce(68), // >>, reduce: UnaryOpTerm
+			reduce(68), // +, reduce: UnaryOpTerm
+			reduce(68), // -, reduce: UnaryOpTerm
+			reduce(68), // .+, reduce: UnaryOpTerm
+			reduce(68), // .-, reduce: UnaryOpTerm
+			reduce(68), // ., reduce: UnaryOpTerm
+			reduce(68), // *, reduce: UnaryOpTerm
+			reduce(68), // /, reduce: UnaryOpTerm
+			reduce(68), // //, reduce: UnaryOpTerm
+			reduce(68), // %, reduce: UnaryOpTerm
+			reduce(68), // .*, reduce: UnaryOpTerm
+			reduce(68), // ./, reduce: UnaryOpTerm
+			reduce(68), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -19359,8 +19359,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(69), // $, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(69), // $, reduce: UnaryOpTerm
+			reduce(69), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -19378,36 +19378,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(69), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(69), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(69), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // |, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(69), // +, reduce: UnaryBitwiseOpTerm
-			reduce(69), // -, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ., reduce: UnaryBitwiseOpTerm
-			reduce(69), // *, reduce: UnaryBitwiseOpTerm
-			reduce(69), // /, reduce: UnaryBitwiseOpTerm
-			reduce(69), // //, reduce: UnaryBitwiseOpTerm
-			reduce(69), // %, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ||, reduce: UnaryOpTerm
+			reduce(69), // ^^, reduce: UnaryOpTerm
+			reduce(69), // &&, reduce: UnaryOpTerm
+			reduce(69), // =~, reduce: UnaryOpTerm
+			reduce(69), // !=~, reduce: UnaryOpTerm
+			reduce(69), // ==, reduce: UnaryOpTerm
+			reduce(69), // !=, reduce: UnaryOpTerm
+			reduce(69), // >, reduce: UnaryOpTerm
+			reduce(69), // >=, reduce: UnaryOpTerm
+			reduce(69), // <, reduce: UnaryOpTerm
+			reduce(69), // <=, reduce: UnaryOpTerm
+			reduce(69), // |, reduce: UnaryOpTerm
+			reduce(69), // ^, reduce: UnaryOpTerm
+			reduce(69), // &, reduce: UnaryOpTerm
+			reduce(69), // <<, reduce: UnaryOpTerm
+			reduce(69), // >>, reduce: UnaryOpTerm
+			reduce(69), // +, reduce: UnaryOpTerm
+			reduce(69), // -, reduce: UnaryOpTerm
+			reduce(69), // .+, reduce: UnaryOpTerm
+			reduce(69), // .-, reduce: UnaryOpTerm
+			reduce(69), // ., reduce: UnaryOpTerm
+			reduce(69), // *, reduce: UnaryOpTerm
+			reduce(69), // /, reduce: UnaryOpTerm
+			reduce(69), // //, reduce: UnaryOpTerm
+			reduce(69), // %, reduce: UnaryOpTerm
+			reduce(69), // .*, reduce: UnaryOpTerm
+			reduce(69), // ./, reduce: UnaryOpTerm
+			reduce(69), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -19437,8 +19437,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(70), // $, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(70), // $, reduce: UnaryOpTerm
+			reduce(70), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -19456,36 +19456,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(70), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(70), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(70), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // |, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(70), // +, reduce: UnaryBitwiseOpTerm
-			reduce(70), // -, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ., reduce: UnaryBitwiseOpTerm
-			reduce(70), // *, reduce: UnaryBitwiseOpTerm
-			reduce(70), // /, reduce: UnaryBitwiseOpTerm
-			reduce(70), // //, reduce: UnaryBitwiseOpTerm
-			reduce(70), // %, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ||, reduce: UnaryOpTerm
+			reduce(70), // ^^, reduce: UnaryOpTerm
+			reduce(70), // &&, reduce: UnaryOpTerm
+			reduce(70), // =~, reduce: UnaryOpTerm
+			reduce(70), // !=~, reduce: UnaryOpTerm
+			reduce(70), // ==, reduce: UnaryOpTerm
+			reduce(70), // !=, reduce: UnaryOpTerm
+			reduce(70), // >, reduce: UnaryOpTerm
+			reduce(70), // >=, reduce: UnaryOpTerm
+			reduce(70), // <, reduce: UnaryOpTerm
+			reduce(70), // <=, reduce: UnaryOpTerm
+			reduce(70), // |, reduce: UnaryOpTerm
+			reduce(70), // ^, reduce: UnaryOpTerm
+			reduce(70), // &, reduce: UnaryOpTerm
+			reduce(70), // <<, reduce: UnaryOpTerm
+			reduce(70), // >>, reduce: UnaryOpTerm
+			reduce(70), // +, reduce: UnaryOpTerm
+			reduce(70), // -, reduce: UnaryOpTerm
+			reduce(70), // .+, reduce: UnaryOpTerm
+			reduce(70), // .-, reduce: UnaryOpTerm
+			reduce(70), // ., reduce: UnaryOpTerm
+			reduce(70), // *, reduce: UnaryOpTerm
+			reduce(70), // /, reduce: UnaryOpTerm
+			reduce(70), // //, reduce: UnaryOpTerm
+			reduce(70), // %, reduce: UnaryOpTerm
+			reduce(70), // .*, reduce: UnaryOpTerm
+			reduce(70), // ./, reduce: UnaryOpTerm
+			reduce(70), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -19515,8 +19515,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(71), // $, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(71), // $, reduce: UnaryOpTerm
+			reduce(71), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -19534,36 +19534,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(71), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(71), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(71), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // |, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(71), // +, reduce: UnaryBitwiseOpTerm
-			reduce(71), // -, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ., reduce: UnaryBitwiseOpTerm
-			reduce(71), // *, reduce: UnaryBitwiseOpTerm
-			reduce(71), // /, reduce: UnaryBitwiseOpTerm
-			reduce(71), // //, reduce: UnaryBitwiseOpTerm
-			reduce(71), // %, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ||, reduce: UnaryOpTerm
+			reduce(71), // ^^, reduce: UnaryOpTerm
+			reduce(71), // &&, reduce: UnaryOpTerm
+			reduce(71), // =~, reduce: UnaryOpTerm
+			reduce(71), // !=~, reduce: UnaryOpTerm
+			reduce(71), // ==, reduce: UnaryOpTerm
+			reduce(71), // !=, reduce: UnaryOpTerm
+			reduce(71), // >, reduce: UnaryOpTerm
+			reduce(71), // >=, reduce: UnaryOpTerm
+			reduce(71), // <, reduce: UnaryOpTerm
+			reduce(71), // <=, reduce: UnaryOpTerm
+			reduce(71), // |, reduce: UnaryOpTerm
+			reduce(71), // ^, reduce: UnaryOpTerm
+			reduce(71), // &, reduce: UnaryOpTerm
+			reduce(71), // <<, reduce: UnaryOpTerm
+			reduce(71), // >>, reduce: UnaryOpTerm
+			reduce(71), // +, reduce: UnaryOpTerm
+			reduce(71), // -, reduce: UnaryOpTerm
+			reduce(71), // .+, reduce: UnaryOpTerm
+			reduce(71), // .-, reduce: UnaryOpTerm
+			reduce(71), // ., reduce: UnaryOpTerm
+			reduce(71), // *, reduce: UnaryOpTerm
+			reduce(71), // /, reduce: UnaryOpTerm
+			reduce(71), // //, reduce: UnaryOpTerm
+			reduce(71), // %, reduce: UnaryOpTerm
+			reduce(71), // .*, reduce: UnaryOpTerm
+			reduce(71), // ./, reduce: UnaryOpTerm
+			reduce(71), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -19593,8 +19593,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(72), // $, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ;, reduce: UnaryBitwiseOpTerm
+			reduce(72), // $, reduce: UnaryOpTerm
+			reduce(72), // ;, reduce: UnaryOpTerm
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -19612,36 +19612,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ||, reduce: UnaryOpTerm
+			reduce(72), // ^^, reduce: UnaryOpTerm
+			reduce(72), // &&, reduce: UnaryOpTerm
+			reduce(72), // =~, reduce: UnaryOpTerm
+			reduce(72), // !=~, reduce: UnaryOpTerm
+			reduce(72), // ==, reduce: UnaryOpTerm
+			reduce(72), // !=, reduce: UnaryOpTerm
+			reduce(72), // >, reduce: UnaryOpTerm
+			reduce(72), // >=, reduce: UnaryOpTerm
+			reduce(72), // <, reduce: UnaryOpTerm
+			reduce(72), // <=, reduce: UnaryOpTerm
+			reduce(72), // |, reduce: UnaryOpTerm
+			reduce(72), // ^, reduce: UnaryOpTerm
+			reduce(72), // &, reduce: UnaryOpTerm
+			reduce(72), // <<, reduce: UnaryOpTerm
+			reduce(72), // >>, reduce: UnaryOpTerm
+			reduce(72), // +, reduce: UnaryOpTerm
+			reduce(72), // -, reduce: UnaryOpTerm
+			reduce(72), // .+, reduce: UnaryOpTerm
+			reduce(72), // .-, reduce: UnaryOpTerm
+			reduce(72), // ., reduce: UnaryOpTerm
+			reduce(72), // *, reduce: UnaryOpTerm
+			reduce(72), // /, reduce: UnaryOpTerm
+			reduce(72), // //, reduce: UnaryOpTerm
+			reduce(72), // %, reduce: UnaryOpTerm
+			reduce(72), // .*, reduce: UnaryOpTerm
+			reduce(72), // ./, reduce: UnaryOpTerm
+			reduce(72), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -21328,36 +21328,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(73), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(73), // :, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(73), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(73), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(73), // |, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(73), // &, reduce: UnaryBitwiseOpTerm
-			reduce(73), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(73), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(73), // +, reduce: UnaryBitwiseOpTerm
-			reduce(73), // -, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ., reduce: UnaryBitwiseOpTerm
-			reduce(73), // *, reduce: UnaryBitwiseOpTerm
-			reduce(73), // /, reduce: UnaryBitwiseOpTerm
-			reduce(73), // //, reduce: UnaryBitwiseOpTerm
-			reduce(73), // %, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(73), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(73), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(73), // ?, reduce: UnaryOpTerm
+			reduce(73), // :, reduce: UnaryOpTerm
+			reduce(73), // ||, reduce: UnaryOpTerm
+			reduce(73), // ^^, reduce: UnaryOpTerm
+			reduce(73), // &&, reduce: UnaryOpTerm
+			reduce(73), // =~, reduce: UnaryOpTerm
+			reduce(73), // !=~, reduce: UnaryOpTerm
+			reduce(73), // ==, reduce: UnaryOpTerm
+			reduce(73), // !=, reduce: UnaryOpTerm
+			reduce(73), // >, reduce: UnaryOpTerm
+			reduce(73), // >=, reduce: UnaryOpTerm
+			reduce(73), // <, reduce: UnaryOpTerm
+			reduce(73), // <=, reduce: UnaryOpTerm
+			reduce(73), // |, reduce: UnaryOpTerm
+			reduce(73), // ^, reduce: UnaryOpTerm
+			reduce(73), // &, reduce: UnaryOpTerm
+			reduce(73), // <<, reduce: UnaryOpTerm
+			reduce(73), // >>, reduce: UnaryOpTerm
+			reduce(73), // +, reduce: UnaryOpTerm
+			reduce(73), // -, reduce: UnaryOpTerm
+			reduce(73), // .+, reduce: UnaryOpTerm
+			reduce(73), // .-, reduce: UnaryOpTerm
+			reduce(73), // ., reduce: UnaryOpTerm
+			reduce(73), // *, reduce: UnaryOpTerm
+			reduce(73), // /, reduce: UnaryOpTerm
+			reduce(73), // //, reduce: UnaryOpTerm
+			reduce(73), // %, reduce: UnaryOpTerm
+			reduce(73), // .*, reduce: UnaryOpTerm
+			reduce(73), // ./, reduce: UnaryOpTerm
+			reduce(73), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -27334,41 +27334,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(67), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(67), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(67), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // |, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(67), // +, reduce: UnaryBitwiseOpTerm
-			reduce(67), // -, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ., reduce: UnaryBitwiseOpTerm
-			reduce(67), // *, reduce: UnaryBitwiseOpTerm
-			reduce(67), // /, reduce: UnaryBitwiseOpTerm
-			reduce(67), // //, reduce: UnaryBitwiseOpTerm
-			reduce(67), // %, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ||, reduce: UnaryOpTerm
+			reduce(67), // ^^, reduce: UnaryOpTerm
+			reduce(67), // &&, reduce: UnaryOpTerm
+			reduce(67), // =~, reduce: UnaryOpTerm
+			reduce(67), // !=~, reduce: UnaryOpTerm
+			reduce(67), // ==, reduce: UnaryOpTerm
+			reduce(67), // !=, reduce: UnaryOpTerm
+			reduce(67), // >, reduce: UnaryOpTerm
+			reduce(67), // >=, reduce: UnaryOpTerm
+			reduce(67), // <, reduce: UnaryOpTerm
+			reduce(67), // <=, reduce: UnaryOpTerm
+			reduce(67), // |, reduce: UnaryOpTerm
+			reduce(67), // ^, reduce: UnaryOpTerm
+			reduce(67), // &, reduce: UnaryOpTerm
+			reduce(67), // <<, reduce: UnaryOpTerm
+			reduce(67), // >>, reduce: UnaryOpTerm
+			reduce(67), // +, reduce: UnaryOpTerm
+			reduce(67), // -, reduce: UnaryOpTerm
+			reduce(67), // .+, reduce: UnaryOpTerm
+			reduce(67), // .-, reduce: UnaryOpTerm
+			reduce(67), // ., reduce: UnaryOpTerm
+			reduce(67), // *, reduce: UnaryOpTerm
+			reduce(67), // /, reduce: UnaryOpTerm
+			reduce(67), // //, reduce: UnaryOpTerm
+			reduce(67), // %, reduce: UnaryOpTerm
+			reduce(67), // .*, reduce: UnaryOpTerm
+			reduce(67), // ./, reduce: UnaryOpTerm
+			reduce(67), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(67), // ), reduce: UnaryBitwiseOpTerm
+			reduce(67), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -27958,41 +27958,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(68), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(68), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(68), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // |, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(68), // +, reduce: UnaryBitwiseOpTerm
-			reduce(68), // -, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ., reduce: UnaryBitwiseOpTerm
-			reduce(68), // *, reduce: UnaryBitwiseOpTerm
-			reduce(68), // /, reduce: UnaryBitwiseOpTerm
-			reduce(68), // //, reduce: UnaryBitwiseOpTerm
-			reduce(68), // %, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ||, reduce: UnaryOpTerm
+			reduce(68), // ^^, reduce: UnaryOpTerm
+			reduce(68), // &&, reduce: UnaryOpTerm
+			reduce(68), // =~, reduce: UnaryOpTerm
+			reduce(68), // !=~, reduce: UnaryOpTerm
+			reduce(68), // ==, reduce: UnaryOpTerm
+			reduce(68), // !=, reduce: UnaryOpTerm
+			reduce(68), // >, reduce: UnaryOpTerm
+			reduce(68), // >=, reduce: UnaryOpTerm
+			reduce(68), // <, reduce: UnaryOpTerm
+			reduce(68), // <=, reduce: UnaryOpTerm
+			reduce(68), // |, reduce: UnaryOpTerm
+			reduce(68), // ^, reduce: UnaryOpTerm
+			reduce(68), // &, reduce: UnaryOpTerm
+			reduce(68), // <<, reduce: UnaryOpTerm
+			reduce(68), // >>, reduce: UnaryOpTerm
+			reduce(68), // +, reduce: UnaryOpTerm
+			reduce(68), // -, reduce: UnaryOpTerm
+			reduce(68), // .+, reduce: UnaryOpTerm
+			reduce(68), // .-, reduce: UnaryOpTerm
+			reduce(68), // ., reduce: UnaryOpTerm
+			reduce(68), // *, reduce: UnaryOpTerm
+			reduce(68), // /, reduce: UnaryOpTerm
+			reduce(68), // //, reduce: UnaryOpTerm
+			reduce(68), // %, reduce: UnaryOpTerm
+			reduce(68), // .*, reduce: UnaryOpTerm
+			reduce(68), // ./, reduce: UnaryOpTerm
+			reduce(68), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(68), // ), reduce: UnaryBitwiseOpTerm
+			reduce(68), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -28036,41 +28036,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(69), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(69), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(69), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // |, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(69), // +, reduce: UnaryBitwiseOpTerm
-			reduce(69), // -, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ., reduce: UnaryBitwiseOpTerm
-			reduce(69), // *, reduce: UnaryBitwiseOpTerm
-			reduce(69), // /, reduce: UnaryBitwiseOpTerm
-			reduce(69), // //, reduce: UnaryBitwiseOpTerm
-			reduce(69), // %, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ||, reduce: UnaryOpTerm
+			reduce(69), // ^^, reduce: UnaryOpTerm
+			reduce(69), // &&, reduce: UnaryOpTerm
+			reduce(69), // =~, reduce: UnaryOpTerm
+			reduce(69), // !=~, reduce: UnaryOpTerm
+			reduce(69), // ==, reduce: UnaryOpTerm
+			reduce(69), // !=, reduce: UnaryOpTerm
+			reduce(69), // >, reduce: UnaryOpTerm
+			reduce(69), // >=, reduce: UnaryOpTerm
+			reduce(69), // <, reduce: UnaryOpTerm
+			reduce(69), // <=, reduce: UnaryOpTerm
+			reduce(69), // |, reduce: UnaryOpTerm
+			reduce(69), // ^, reduce: UnaryOpTerm
+			reduce(69), // &, reduce: UnaryOpTerm
+			reduce(69), // <<, reduce: UnaryOpTerm
+			reduce(69), // >>, reduce: UnaryOpTerm
+			reduce(69), // +, reduce: UnaryOpTerm
+			reduce(69), // -, reduce: UnaryOpTerm
+			reduce(69), // .+, reduce: UnaryOpTerm
+			reduce(69), // .-, reduce: UnaryOpTerm
+			reduce(69), // ., reduce: UnaryOpTerm
+			reduce(69), // *, reduce: UnaryOpTerm
+			reduce(69), // /, reduce: UnaryOpTerm
+			reduce(69), // //, reduce: UnaryOpTerm
+			reduce(69), // %, reduce: UnaryOpTerm
+			reduce(69), // .*, reduce: UnaryOpTerm
+			reduce(69), // ./, reduce: UnaryOpTerm
+			reduce(69), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(69), // ), reduce: UnaryBitwiseOpTerm
+			reduce(69), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -28114,41 +28114,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(70), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(70), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(70), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // |, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(70), // +, reduce: UnaryBitwiseOpTerm
-			reduce(70), // -, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ., reduce: UnaryBitwiseOpTerm
-			reduce(70), // *, reduce: UnaryBitwiseOpTerm
-			reduce(70), // /, reduce: UnaryBitwiseOpTerm
-			reduce(70), // //, reduce: UnaryBitwiseOpTerm
-			reduce(70), // %, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ||, reduce: UnaryOpTerm
+			reduce(70), // ^^, reduce: UnaryOpTerm
+			reduce(70), // &&, reduce: UnaryOpTerm
+			reduce(70), // =~, reduce: UnaryOpTerm
+			reduce(70), // !=~, reduce: UnaryOpTerm
+			reduce(70), // ==, reduce: UnaryOpTerm
+			reduce(70), // !=, reduce: UnaryOpTerm
+			reduce(70), // >, reduce: UnaryOpTerm
+			reduce(70), // >=, reduce: UnaryOpTerm
+			reduce(70), // <, reduce: UnaryOpTerm
+			reduce(70), // <=, reduce: UnaryOpTerm
+			reduce(70), // |, reduce: UnaryOpTerm
+			reduce(70), // ^, reduce: UnaryOpTerm
+			reduce(70), // &, reduce: UnaryOpTerm
+			reduce(70), // <<, reduce: UnaryOpTerm
+			reduce(70), // >>, reduce: UnaryOpTerm
+			reduce(70), // +, reduce: UnaryOpTerm
+			reduce(70), // -, reduce: UnaryOpTerm
+			reduce(70), // .+, reduce: UnaryOpTerm
+			reduce(70), // .-, reduce: UnaryOpTerm
+			reduce(70), // ., reduce: UnaryOpTerm
+			reduce(70), // *, reduce: UnaryOpTerm
+			reduce(70), // /, reduce: UnaryOpTerm
+			reduce(70), // //, reduce: UnaryOpTerm
+			reduce(70), // %, reduce: UnaryOpTerm
+			reduce(70), // .*, reduce: UnaryOpTerm
+			reduce(70), // ./, reduce: UnaryOpTerm
+			reduce(70), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(70), // ), reduce: UnaryBitwiseOpTerm
+			reduce(70), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -28192,41 +28192,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(71), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(71), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(71), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // |, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(71), // +, reduce: UnaryBitwiseOpTerm
-			reduce(71), // -, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ., reduce: UnaryBitwiseOpTerm
-			reduce(71), // *, reduce: UnaryBitwiseOpTerm
-			reduce(71), // /, reduce: UnaryBitwiseOpTerm
-			reduce(71), // //, reduce: UnaryBitwiseOpTerm
-			reduce(71), // %, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ||, reduce: UnaryOpTerm
+			reduce(71), // ^^, reduce: UnaryOpTerm
+			reduce(71), // &&, reduce: UnaryOpTerm
+			reduce(71), // =~, reduce: UnaryOpTerm
+			reduce(71), // !=~, reduce: UnaryOpTerm
+			reduce(71), // ==, reduce: UnaryOpTerm
+			reduce(71), // !=, reduce: UnaryOpTerm
+			reduce(71), // >, reduce: UnaryOpTerm
+			reduce(71), // >=, reduce: UnaryOpTerm
+			reduce(71), // <, reduce: UnaryOpTerm
+			reduce(71), // <=, reduce: UnaryOpTerm
+			reduce(71), // |, reduce: UnaryOpTerm
+			reduce(71), // ^, reduce: UnaryOpTerm
+			reduce(71), // &, reduce: UnaryOpTerm
+			reduce(71), // <<, reduce: UnaryOpTerm
+			reduce(71), // >>, reduce: UnaryOpTerm
+			reduce(71), // +, reduce: UnaryOpTerm
+			reduce(71), // -, reduce: UnaryOpTerm
+			reduce(71), // .+, reduce: UnaryOpTerm
+			reduce(71), // .-, reduce: UnaryOpTerm
+			reduce(71), // ., reduce: UnaryOpTerm
+			reduce(71), // *, reduce: UnaryOpTerm
+			reduce(71), // /, reduce: UnaryOpTerm
+			reduce(71), // //, reduce: UnaryOpTerm
+			reduce(71), // %, reduce: UnaryOpTerm
+			reduce(71), // .*, reduce: UnaryOpTerm
+			reduce(71), // ./, reduce: UnaryOpTerm
+			reduce(71), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(71), // ), reduce: UnaryBitwiseOpTerm
+			reduce(71), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -28270,41 +28270,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ?, reduce: UnaryOpTerm
 			nil,        // :
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ||, reduce: UnaryOpTerm
+			reduce(72), // ^^, reduce: UnaryOpTerm
+			reduce(72), // &&, reduce: UnaryOpTerm
+			reduce(72), // =~, reduce: UnaryOpTerm
+			reduce(72), // !=~, reduce: UnaryOpTerm
+			reduce(72), // ==, reduce: UnaryOpTerm
+			reduce(72), // !=, reduce: UnaryOpTerm
+			reduce(72), // >, reduce: UnaryOpTerm
+			reduce(72), // >=, reduce: UnaryOpTerm
+			reduce(72), // <, reduce: UnaryOpTerm
+			reduce(72), // <=, reduce: UnaryOpTerm
+			reduce(72), // |, reduce: UnaryOpTerm
+			reduce(72), // ^, reduce: UnaryOpTerm
+			reduce(72), // &, reduce: UnaryOpTerm
+			reduce(72), // <<, reduce: UnaryOpTerm
+			reduce(72), // >>, reduce: UnaryOpTerm
+			reduce(72), // +, reduce: UnaryOpTerm
+			reduce(72), // -, reduce: UnaryOpTerm
+			reduce(72), // .+, reduce: UnaryOpTerm
+			reduce(72), // .-, reduce: UnaryOpTerm
+			reduce(72), // ., reduce: UnaryOpTerm
+			reduce(72), // *, reduce: UnaryOpTerm
+			reduce(72), // /, reduce: UnaryOpTerm
+			reduce(72), // //, reduce: UnaryOpTerm
+			reduce(72), // %, reduce: UnaryOpTerm
+			reduce(72), // .*, reduce: UnaryOpTerm
+			reduce(72), // ./, reduce: UnaryOpTerm
+			reduce(72), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(72), // ), reduce: UnaryBitwiseOpTerm
+			reduce(72), // ), reduce: UnaryOpTerm
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -32950,36 +32950,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(67), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(67), // :, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(67), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(67), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(67), // |, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(67), // &, reduce: UnaryBitwiseOpTerm
-			reduce(67), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(67), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(67), // +, reduce: UnaryBitwiseOpTerm
-			reduce(67), // -, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ., reduce: UnaryBitwiseOpTerm
-			reduce(67), // *, reduce: UnaryBitwiseOpTerm
-			reduce(67), // /, reduce: UnaryBitwiseOpTerm
-			reduce(67), // //, reduce: UnaryBitwiseOpTerm
-			reduce(67), // %, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(67), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(67), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(67), // ?, reduce: UnaryOpTerm
+			reduce(67), // :, reduce: UnaryOpTerm
+			reduce(67), // ||, reduce: UnaryOpTerm
+			reduce(67), // ^^, reduce: UnaryOpTerm
+			reduce(67), // &&, reduce: UnaryOpTerm
+			reduce(67), // =~, reduce: UnaryOpTerm
+			reduce(67), // !=~, reduce: UnaryOpTerm
+			reduce(67), // ==, reduce: UnaryOpTerm
+			reduce(67), // !=, reduce: UnaryOpTerm
+			reduce(67), // >, reduce: UnaryOpTerm
+			reduce(67), // >=, reduce: UnaryOpTerm
+			reduce(67), // <, reduce: UnaryOpTerm
+			reduce(67), // <=, reduce: UnaryOpTerm
+			reduce(67), // |, reduce: UnaryOpTerm
+			reduce(67), // ^, reduce: UnaryOpTerm
+			reduce(67), // &, reduce: UnaryOpTerm
+			reduce(67), // <<, reduce: UnaryOpTerm
+			reduce(67), // >>, reduce: UnaryOpTerm
+			reduce(67), // +, reduce: UnaryOpTerm
+			reduce(67), // -, reduce: UnaryOpTerm
+			reduce(67), // .+, reduce: UnaryOpTerm
+			reduce(67), // .-, reduce: UnaryOpTerm
+			reduce(67), // ., reduce: UnaryOpTerm
+			reduce(67), // *, reduce: UnaryOpTerm
+			reduce(67), // /, reduce: UnaryOpTerm
+			reduce(67), // //, reduce: UnaryOpTerm
+			reduce(67), // %, reduce: UnaryOpTerm
+			reduce(67), // .*, reduce: UnaryOpTerm
+			reduce(67), // ./, reduce: UnaryOpTerm
+			reduce(67), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -33574,36 +33574,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(68), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(68), // :, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(68), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(68), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(68), // |, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(68), // &, reduce: UnaryBitwiseOpTerm
-			reduce(68), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(68), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(68), // +, reduce: UnaryBitwiseOpTerm
-			reduce(68), // -, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ., reduce: UnaryBitwiseOpTerm
-			reduce(68), // *, reduce: UnaryBitwiseOpTerm
-			reduce(68), // /, reduce: UnaryBitwiseOpTerm
-			reduce(68), // //, reduce: UnaryBitwiseOpTerm
-			reduce(68), // %, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(68), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(68), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(68), // ?, reduce: UnaryOpTerm
+			reduce(68), // :, reduce: UnaryOpTerm
+			reduce(68), // ||, reduce: UnaryOpTerm
+			reduce(68), // ^^, reduce: UnaryOpTerm
+			reduce(68), // &&, reduce: UnaryOpTerm
+			reduce(68), // =~, reduce: UnaryOpTerm
+			reduce(68), // !=~, reduce: UnaryOpTerm
+			reduce(68), // ==, reduce: UnaryOpTerm
+			reduce(68), // !=, reduce: UnaryOpTerm
+			reduce(68), // >, reduce: UnaryOpTerm
+			reduce(68), // >=, reduce: UnaryOpTerm
+			reduce(68), // <, reduce: UnaryOpTerm
+			reduce(68), // <=, reduce: UnaryOpTerm
+			reduce(68), // |, reduce: UnaryOpTerm
+			reduce(68), // ^, reduce: UnaryOpTerm
+			reduce(68), // &, reduce: UnaryOpTerm
+			reduce(68), // <<, reduce: UnaryOpTerm
+			reduce(68), // >>, reduce: UnaryOpTerm
+			reduce(68), // +, reduce: UnaryOpTerm
+			reduce(68), // -, reduce: UnaryOpTerm
+			reduce(68), // .+, reduce: UnaryOpTerm
+			reduce(68), // .-, reduce: UnaryOpTerm
+			reduce(68), // ., reduce: UnaryOpTerm
+			reduce(68), // *, reduce: UnaryOpTerm
+			reduce(68), // /, reduce: UnaryOpTerm
+			reduce(68), // //, reduce: UnaryOpTerm
+			reduce(68), // %, reduce: UnaryOpTerm
+			reduce(68), // .*, reduce: UnaryOpTerm
+			reduce(68), // ./, reduce: UnaryOpTerm
+			reduce(68), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -33652,36 +33652,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(69), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(69), // :, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(69), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(69), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(69), // |, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(69), // &, reduce: UnaryBitwiseOpTerm
-			reduce(69), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(69), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(69), // +, reduce: UnaryBitwiseOpTerm
-			reduce(69), // -, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ., reduce: UnaryBitwiseOpTerm
-			reduce(69), // *, reduce: UnaryBitwiseOpTerm
-			reduce(69), // /, reduce: UnaryBitwiseOpTerm
-			reduce(69), // //, reduce: UnaryBitwiseOpTerm
-			reduce(69), // %, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(69), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(69), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(69), // ?, reduce: UnaryOpTerm
+			reduce(69), // :, reduce: UnaryOpTerm
+			reduce(69), // ||, reduce: UnaryOpTerm
+			reduce(69), // ^^, reduce: UnaryOpTerm
+			reduce(69), // &&, reduce: UnaryOpTerm
+			reduce(69), // =~, reduce: UnaryOpTerm
+			reduce(69), // !=~, reduce: UnaryOpTerm
+			reduce(69), // ==, reduce: UnaryOpTerm
+			reduce(69), // !=, reduce: UnaryOpTerm
+			reduce(69), // >, reduce: UnaryOpTerm
+			reduce(69), // >=, reduce: UnaryOpTerm
+			reduce(69), // <, reduce: UnaryOpTerm
+			reduce(69), // <=, reduce: UnaryOpTerm
+			reduce(69), // |, reduce: UnaryOpTerm
+			reduce(69), // ^, reduce: UnaryOpTerm
+			reduce(69), // &, reduce: UnaryOpTerm
+			reduce(69), // <<, reduce: UnaryOpTerm
+			reduce(69), // >>, reduce: UnaryOpTerm
+			reduce(69), // +, reduce: UnaryOpTerm
+			reduce(69), // -, reduce: UnaryOpTerm
+			reduce(69), // .+, reduce: UnaryOpTerm
+			reduce(69), // .-, reduce: UnaryOpTerm
+			reduce(69), // ., reduce: UnaryOpTerm
+			reduce(69), // *, reduce: UnaryOpTerm
+			reduce(69), // /, reduce: UnaryOpTerm
+			reduce(69), // //, reduce: UnaryOpTerm
+			reduce(69), // %, reduce: UnaryOpTerm
+			reduce(69), // .*, reduce: UnaryOpTerm
+			reduce(69), // ./, reduce: UnaryOpTerm
+			reduce(69), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -33730,36 +33730,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(70), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(70), // :, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(70), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(70), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(70), // |, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(70), // &, reduce: UnaryBitwiseOpTerm
-			reduce(70), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(70), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(70), // +, reduce: UnaryBitwiseOpTerm
-			reduce(70), // -, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ., reduce: UnaryBitwiseOpTerm
-			reduce(70), // *, reduce: UnaryBitwiseOpTerm
-			reduce(70), // /, reduce: UnaryBitwiseOpTerm
-			reduce(70), // //, reduce: UnaryBitwiseOpTerm
-			reduce(70), // %, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(70), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(70), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(70), // ?, reduce: UnaryOpTerm
+			reduce(70), // :, reduce: UnaryOpTerm
+			reduce(70), // ||, reduce: UnaryOpTerm
+			reduce(70), // ^^, reduce: UnaryOpTerm
+			reduce(70), // &&, reduce: UnaryOpTerm
+			reduce(70), // =~, reduce: UnaryOpTerm
+			reduce(70), // !=~, reduce: UnaryOpTerm
+			reduce(70), // ==, reduce: UnaryOpTerm
+			reduce(70), // !=, reduce: UnaryOpTerm
+			reduce(70), // >, reduce: UnaryOpTerm
+			reduce(70), // >=, reduce: UnaryOpTerm
+			reduce(70), // <, reduce: UnaryOpTerm
+			reduce(70), // <=, reduce: UnaryOpTerm
+			reduce(70), // |, reduce: UnaryOpTerm
+			reduce(70), // ^, reduce: UnaryOpTerm
+			reduce(70), // &, reduce: UnaryOpTerm
+			reduce(70), // <<, reduce: UnaryOpTerm
+			reduce(70), // >>, reduce: UnaryOpTerm
+			reduce(70), // +, reduce: UnaryOpTerm
+			reduce(70), // -, reduce: UnaryOpTerm
+			reduce(70), // .+, reduce: UnaryOpTerm
+			reduce(70), // .-, reduce: UnaryOpTerm
+			reduce(70), // ., reduce: UnaryOpTerm
+			reduce(70), // *, reduce: UnaryOpTerm
+			reduce(70), // /, reduce: UnaryOpTerm
+			reduce(70), // //, reduce: UnaryOpTerm
+			reduce(70), // %, reduce: UnaryOpTerm
+			reduce(70), // .*, reduce: UnaryOpTerm
+			reduce(70), // ./, reduce: UnaryOpTerm
+			reduce(70), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -33808,36 +33808,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(71), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(71), // :, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(71), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(71), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(71), // |, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(71), // &, reduce: UnaryBitwiseOpTerm
-			reduce(71), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(71), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(71), // +, reduce: UnaryBitwiseOpTerm
-			reduce(71), // -, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ., reduce: UnaryBitwiseOpTerm
-			reduce(71), // *, reduce: UnaryBitwiseOpTerm
-			reduce(71), // /, reduce: UnaryBitwiseOpTerm
-			reduce(71), // //, reduce: UnaryBitwiseOpTerm
-			reduce(71), // %, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(71), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(71), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(71), // ?, reduce: UnaryOpTerm
+			reduce(71), // :, reduce: UnaryOpTerm
+			reduce(71), // ||, reduce: UnaryOpTerm
+			reduce(71), // ^^, reduce: UnaryOpTerm
+			reduce(71), // &&, reduce: UnaryOpTerm
+			reduce(71), // =~, reduce: UnaryOpTerm
+			reduce(71), // !=~, reduce: UnaryOpTerm
+			reduce(71), // ==, reduce: UnaryOpTerm
+			reduce(71), // !=, reduce: UnaryOpTerm
+			reduce(71), // >, reduce: UnaryOpTerm
+			reduce(71), // >=, reduce: UnaryOpTerm
+			reduce(71), // <, reduce: UnaryOpTerm
+			reduce(71), // <=, reduce: UnaryOpTerm
+			reduce(71), // |, reduce: UnaryOpTerm
+			reduce(71), // ^, reduce: UnaryOpTerm
+			reduce(71), // &, reduce: UnaryOpTerm
+			reduce(71), // <<, reduce: UnaryOpTerm
+			reduce(71), // >>, reduce: UnaryOpTerm
+			reduce(71), // +, reduce: UnaryOpTerm
+			reduce(71), // -, reduce: UnaryOpTerm
+			reduce(71), // .+, reduce: UnaryOpTerm
+			reduce(71), // .-, reduce: UnaryOpTerm
+			reduce(71), // ., reduce: UnaryOpTerm
+			reduce(71), // *, reduce: UnaryOpTerm
+			reduce(71), // /, reduce: UnaryOpTerm
+			reduce(71), // //, reduce: UnaryOpTerm
+			reduce(71), // %, reduce: UnaryOpTerm
+			reduce(71), // .*, reduce: UnaryOpTerm
+			reduce(71), // ./, reduce: UnaryOpTerm
+			reduce(71), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **
@@ -33886,36 +33886,36 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(72), // ?, reduce: UnaryBitwiseOpTerm
-			reduce(72), // :, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ||, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &&, reduce: UnaryBitwiseOpTerm
-			reduce(72), // =~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=~, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ==, reduce: UnaryBitwiseOpTerm
-			reduce(72), // !=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <=, reduce: UnaryBitwiseOpTerm
-			reduce(72), // |, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ^, reduce: UnaryBitwiseOpTerm
-			reduce(72), // &, reduce: UnaryBitwiseOpTerm
-			reduce(72), // <<, reduce: UnaryBitwiseOpTerm
-			reduce(72), // >>, reduce: UnaryBitwiseOpTerm
-			reduce(72), // +, reduce: UnaryBitwiseOpTerm
-			reduce(72), // -, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .+, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .-, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ., reduce: UnaryBitwiseOpTerm
-			reduce(72), // *, reduce: UnaryBitwiseOpTerm
-			reduce(72), // /, reduce: UnaryBitwiseOpTerm
-			reduce(72), // //, reduce: UnaryBitwiseOpTerm
-			reduce(72), // %, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .*, reduce: UnaryBitwiseOpTerm
-			reduce(72), // ./, reduce: UnaryBitwiseOpTerm
-			reduce(72), // .//, reduce: UnaryBitwiseOpTerm
+			reduce(72), // ?, reduce: UnaryOpTerm
+			reduce(72), // :, reduce: UnaryOpTerm
+			reduce(72), // ||, reduce: UnaryOpTerm
+			reduce(72), // ^^, reduce: UnaryOpTerm
+			reduce(72), // &&, reduce: UnaryOpTerm
+			reduce(72), // =~, reduce: UnaryOpTerm
+			reduce(72), // !=~, reduce: UnaryOpTerm
+			reduce(72), // ==, reduce: UnaryOpTerm
+			reduce(72), // !=, reduce: UnaryOpTerm
+			reduce(72), // >, reduce: UnaryOpTerm
+			reduce(72), // >=, reduce: UnaryOpTerm
+			reduce(72), // <, reduce: UnaryOpTerm
+			reduce(72), // <=, reduce: UnaryOpTerm
+			reduce(72), // |, reduce: UnaryOpTerm
+			reduce(72), // ^, reduce: UnaryOpTerm
+			reduce(72), // &, reduce: UnaryOpTerm
+			reduce(72), // <<, reduce: UnaryOpTerm
+			reduce(72), // >>, reduce: UnaryOpTerm
+			reduce(72), // +, reduce: UnaryOpTerm
+			reduce(72), // -, reduce: UnaryOpTerm
+			reduce(72), // .+, reduce: UnaryOpTerm
+			reduce(72), // .-, reduce: UnaryOpTerm
+			reduce(72), // ., reduce: UnaryOpTerm
+			reduce(72), // *, reduce: UnaryOpTerm
+			reduce(72), // /, reduce: UnaryOpTerm
+			reduce(72), // //, reduce: UnaryOpTerm
+			reduce(72), // %, reduce: UnaryOpTerm
+			reduce(72), // .*, reduce: UnaryOpTerm
+			reduce(72), // ./, reduce: UnaryOpTerm
+			reduce(72), // .//, reduce: UnaryOpTerm
 			nil,        // !
 			nil,        // ~
 			nil,        // **

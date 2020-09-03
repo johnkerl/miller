@@ -31,7 +31,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		7,  // FieldName
@@ -60,7 +60,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -89,7 +89,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -118,7 +118,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -147,7 +147,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -176,7 +176,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -205,7 +205,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -234,7 +234,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -263,7 +263,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -292,7 +292,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -321,7 +321,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -350,7 +350,7 @@ var gotoTab = gotoTable{
 		41, // BitwiseShiftTerm
 		42, // AddsubdotTerm
 		44, // MuldivTerm
-		48, // UnaryBitwiseOpTerm
+		48, // UnaryOpTerm
 		49, // PowTerm
 		52, // AtomOrFunction
 		30, // FieldName
@@ -379,7 +379,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		7,  // FieldName
@@ -408,7 +408,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -437,7 +437,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -466,7 +466,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -495,7 +495,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -524,7 +524,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -553,7 +553,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -582,7 +582,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -611,7 +611,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -640,7 +640,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -669,7 +669,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -698,7 +698,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -727,7 +727,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -756,7 +756,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -785,7 +785,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -814,7 +814,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -843,7 +843,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -872,7 +872,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -901,7 +901,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -930,7 +930,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -959,7 +959,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -988,7 +988,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1017,7 +1017,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1046,7 +1046,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1075,7 +1075,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1104,7 +1104,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1133,7 +1133,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1162,7 +1162,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1191,7 +1191,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1220,7 +1220,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1249,7 +1249,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1278,7 +1278,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		158, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1307,7 +1307,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1336,7 +1336,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		166, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1365,7 +1365,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		167, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1394,7 +1394,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		168, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1423,7 +1423,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1452,7 +1452,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1481,7 +1481,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		169, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1510,7 +1510,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		170, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1539,7 +1539,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1568,7 +1568,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -1597,7 +1597,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1626,7 +1626,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1655,7 +1655,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1684,7 +1684,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -1713,7 +1713,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1742,7 +1742,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1771,7 +1771,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1800,7 +1800,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1829,7 +1829,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1858,7 +1858,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1887,7 +1887,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1916,7 +1916,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1945,7 +1945,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -1974,7 +1974,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2003,7 +2003,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2032,7 +2032,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2061,7 +2061,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2090,7 +2090,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2119,7 +2119,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2148,7 +2148,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2177,7 +2177,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2206,7 +2206,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2235,7 +2235,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2264,7 +2264,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2293,7 +2293,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2322,7 +2322,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2351,7 +2351,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2380,7 +2380,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2409,7 +2409,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2438,7 +2438,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2467,7 +2467,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2496,7 +2496,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2525,7 +2525,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2554,7 +2554,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2583,7 +2583,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		239, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -2612,7 +2612,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2641,7 +2641,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		247, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -2670,7 +2670,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		248, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -2699,7 +2699,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		249, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -2728,7 +2728,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2757,7 +2757,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2786,7 +2786,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		250, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -2815,7 +2815,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		251, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -2844,7 +2844,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2873,7 +2873,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -2902,7 +2902,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2931,7 +2931,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2960,7 +2960,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -2989,7 +2989,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -3018,7 +3018,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3047,7 +3047,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3076,7 +3076,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3105,7 +3105,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3134,7 +3134,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3163,7 +3163,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3192,7 +3192,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3221,7 +3221,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3250,7 +3250,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3279,7 +3279,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3308,7 +3308,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3337,7 +3337,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3366,7 +3366,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3395,7 +3395,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3424,7 +3424,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3453,7 +3453,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3482,7 +3482,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3511,7 +3511,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3540,7 +3540,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3569,7 +3569,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3598,7 +3598,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3627,7 +3627,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3656,7 +3656,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3685,7 +3685,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3714,7 +3714,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3743,7 +3743,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3772,7 +3772,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3801,7 +3801,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3830,7 +3830,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3859,7 +3859,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3888,7 +3888,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3917,7 +3917,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3946,7 +3946,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -3975,7 +3975,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -4004,7 +4004,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4033,7 +4033,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4062,7 +4062,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4091,7 +4091,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4120,7 +4120,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4149,7 +4149,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4178,7 +4178,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4207,7 +4207,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4236,7 +4236,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4265,7 +4265,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4294,7 +4294,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4323,7 +4323,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4352,7 +4352,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4381,7 +4381,7 @@ var gotoTab = gotoTable{
 		311, // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4410,7 +4410,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		312, // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4439,7 +4439,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		313, // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4468,7 +4468,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		314, // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4497,7 +4497,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		315, // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4526,7 +4526,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		316, // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4555,7 +4555,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		317, // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4584,7 +4584,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		318, // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4613,7 +4613,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -4642,7 +4642,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		319, // UnaryBitwiseOpTerm
+		319, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4671,7 +4671,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		320, // UnaryBitwiseOpTerm
+		320, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4700,7 +4700,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		321, // UnaryBitwiseOpTerm
+		321, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4729,7 +4729,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		322, // UnaryBitwiseOpTerm
+		322, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4758,7 +4758,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		323, // UnaryBitwiseOpTerm
+		323, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4787,7 +4787,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		324, // UnaryBitwiseOpTerm
+		324, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4816,7 +4816,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		325, // UnaryBitwiseOpTerm
+		325, // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -4845,7 +4845,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -4874,7 +4874,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -4903,7 +4903,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -4932,7 +4932,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -4961,7 +4961,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -4990,7 +4990,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		326, // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -5019,7 +5019,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5048,7 +5048,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5077,7 +5077,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5106,7 +5106,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5135,7 +5135,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5164,7 +5164,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5193,7 +5193,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5222,7 +5222,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5251,7 +5251,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5280,7 +5280,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5309,7 +5309,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5338,7 +5338,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5367,7 +5367,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5396,7 +5396,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		350, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5425,7 +5425,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5454,7 +5454,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		358, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5483,7 +5483,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		359, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5512,7 +5512,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		360, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5541,7 +5541,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5570,7 +5570,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5599,7 +5599,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		361, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5628,7 +5628,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		362, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5657,7 +5657,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5686,7 +5686,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -5715,7 +5715,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5744,7 +5744,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5773,7 +5773,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5802,7 +5802,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -5831,7 +5831,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5860,7 +5860,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5889,7 +5889,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5918,7 +5918,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5947,7 +5947,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -5976,7 +5976,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6005,7 +6005,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6034,7 +6034,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6063,7 +6063,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6092,7 +6092,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6121,7 +6121,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6150,7 +6150,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6179,7 +6179,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6208,7 +6208,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6237,7 +6237,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6266,7 +6266,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6295,7 +6295,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6324,7 +6324,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -6353,7 +6353,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6382,7 +6382,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6411,7 +6411,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6440,7 +6440,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6469,7 +6469,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6498,7 +6498,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6527,7 +6527,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6556,7 +6556,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6585,7 +6585,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6614,7 +6614,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6643,7 +6643,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6672,7 +6672,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6701,7 +6701,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6730,7 +6730,7 @@ var gotoTab = gotoTable{
 		381, // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6759,7 +6759,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		382, // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6788,7 +6788,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		383, // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6817,7 +6817,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		384, // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6846,7 +6846,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		385, // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6875,7 +6875,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		386, // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6904,7 +6904,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		387, // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6933,7 +6933,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		388, // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -6962,7 +6962,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -6991,7 +6991,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		389, // UnaryBitwiseOpTerm
+		389, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7020,7 +7020,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		390, // UnaryBitwiseOpTerm
+		390, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7049,7 +7049,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		391, // UnaryBitwiseOpTerm
+		391, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7078,7 +7078,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		392, // UnaryBitwiseOpTerm
+		392, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7107,7 +7107,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		393, // UnaryBitwiseOpTerm
+		393, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7136,7 +7136,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		394, // UnaryBitwiseOpTerm
+		394, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7165,7 +7165,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		395, // UnaryBitwiseOpTerm
+		395, // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7194,7 +7194,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7223,7 +7223,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7252,7 +7252,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7281,7 +7281,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7310,7 +7310,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7339,7 +7339,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		396, // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -7368,7 +7368,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7397,7 +7397,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7426,7 +7426,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7455,7 +7455,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7484,7 +7484,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7513,7 +7513,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7542,7 +7542,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7571,7 +7571,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7600,7 +7600,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7629,7 +7629,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7658,7 +7658,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7687,7 +7687,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7716,7 +7716,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7745,7 +7745,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7774,7 +7774,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		422, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -7803,7 +7803,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7832,7 +7832,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		430, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -7861,7 +7861,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		431, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -7890,7 +7890,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		432, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -7919,7 +7919,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7948,7 +7948,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -7977,7 +7977,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		433, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -8006,7 +8006,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		434, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -8035,7 +8035,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8064,7 +8064,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -8093,7 +8093,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8122,7 +8122,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8151,7 +8151,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8180,7 +8180,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -8209,7 +8209,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8238,7 +8238,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8267,7 +8267,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8296,7 +8296,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8325,7 +8325,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8354,7 +8354,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8383,7 +8383,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8412,7 +8412,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8441,7 +8441,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8470,7 +8470,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8499,7 +8499,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8528,7 +8528,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8557,7 +8557,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8586,7 +8586,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8615,7 +8615,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8644,7 +8644,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8673,7 +8673,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8702,7 +8702,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8731,7 +8731,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8760,7 +8760,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8789,7 +8789,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8818,7 +8818,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8847,7 +8847,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8876,7 +8876,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8905,7 +8905,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8934,7 +8934,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8963,7 +8963,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -8992,7 +8992,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9021,7 +9021,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9050,7 +9050,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9079,7 +9079,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9108,7 +9108,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9137,7 +9137,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9166,7 +9166,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9195,7 +9195,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9224,7 +9224,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9253,7 +9253,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9282,7 +9282,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9311,7 +9311,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9340,7 +9340,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9369,7 +9369,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9398,7 +9398,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9427,7 +9427,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9456,7 +9456,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9485,7 +9485,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9514,7 +9514,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -9543,7 +9543,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -9572,7 +9572,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9601,7 +9601,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9630,7 +9630,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9659,7 +9659,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9688,7 +9688,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9717,7 +9717,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9746,7 +9746,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9775,7 +9775,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9804,7 +9804,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9833,7 +9833,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9862,7 +9862,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9891,7 +9891,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9920,7 +9920,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9949,7 +9949,7 @@ var gotoTab = gotoTable{
 		452, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -9978,7 +9978,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		453, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10007,7 +10007,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		454, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10036,7 +10036,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		455, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10065,7 +10065,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		456, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10094,7 +10094,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		457, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10123,7 +10123,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		458, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10152,7 +10152,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		459, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10181,7 +10181,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10210,7 +10210,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		460, // UnaryBitwiseOpTerm
+		460, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10239,7 +10239,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		461, // UnaryBitwiseOpTerm
+		461, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10268,7 +10268,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		462, // UnaryBitwiseOpTerm
+		462, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10297,7 +10297,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		463, // UnaryBitwiseOpTerm
+		463, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10326,7 +10326,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		464, // UnaryBitwiseOpTerm
+		464, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10355,7 +10355,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		465, // UnaryBitwiseOpTerm
+		465, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10384,7 +10384,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		466, // UnaryBitwiseOpTerm
+		466, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10413,7 +10413,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10442,7 +10442,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10471,7 +10471,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10500,7 +10500,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10529,7 +10529,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10558,7 +10558,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		467, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -10587,7 +10587,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10616,7 +10616,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10645,7 +10645,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10674,7 +10674,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10703,7 +10703,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10732,7 +10732,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10761,7 +10761,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10790,7 +10790,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10819,7 +10819,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10848,7 +10848,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10877,7 +10877,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10906,7 +10906,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10935,7 +10935,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10964,7 +10964,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -10993,7 +10993,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11022,7 +11022,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11051,7 +11051,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11080,7 +11080,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11109,7 +11109,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11138,7 +11138,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11167,7 +11167,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11196,7 +11196,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11225,7 +11225,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11254,7 +11254,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11283,7 +11283,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11312,7 +11312,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11341,7 +11341,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11370,7 +11370,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11399,7 +11399,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11428,7 +11428,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11457,7 +11457,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11486,7 +11486,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11515,7 +11515,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11544,7 +11544,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11573,7 +11573,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -11602,7 +11602,7 @@ var gotoTab = gotoTable{
 		41,  // BitwiseShiftTerm
 		42,  // AddsubdotTerm
 		44,  // MuldivTerm
-		48,  // UnaryBitwiseOpTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // AtomOrFunction
 		30,  // FieldName
@@ -11631,7 +11631,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11660,7 +11660,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11689,7 +11689,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11718,7 +11718,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11747,7 +11747,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11776,7 +11776,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11805,7 +11805,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11834,7 +11834,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11863,7 +11863,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11892,7 +11892,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11921,7 +11921,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11950,7 +11950,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -11979,7 +11979,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12008,7 +12008,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12037,7 +12037,7 @@ var gotoTab = gotoTable{
 		486, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12066,7 +12066,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		487, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12095,7 +12095,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		488, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12124,7 +12124,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		489, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12153,7 +12153,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		490, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12182,7 +12182,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		491, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12211,7 +12211,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		492, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12240,7 +12240,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		493, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12269,7 +12269,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12298,7 +12298,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		494, // UnaryBitwiseOpTerm
+		494, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12327,7 +12327,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		495, // UnaryBitwiseOpTerm
+		495, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12356,7 +12356,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		496, // UnaryBitwiseOpTerm
+		496, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12385,7 +12385,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		497, // UnaryBitwiseOpTerm
+		497, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12414,7 +12414,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		498, // UnaryBitwiseOpTerm
+		498, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12443,7 +12443,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		499, // UnaryBitwiseOpTerm
+		499, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12472,7 +12472,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		500, // UnaryBitwiseOpTerm
+		500, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12501,7 +12501,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12530,7 +12530,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12559,7 +12559,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12588,7 +12588,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12617,7 +12617,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12646,7 +12646,7 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryBitwiseOpTerm
+		-1,  // UnaryOpTerm
 		501, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -12675,7 +12675,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12704,7 +12704,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12733,7 +12733,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12762,7 +12762,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12791,7 +12791,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12820,7 +12820,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12849,7 +12849,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12878,7 +12878,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12907,7 +12907,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12936,7 +12936,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12965,7 +12965,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -12994,7 +12994,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13023,7 +13023,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13052,7 +13052,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13081,7 +13081,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13110,7 +13110,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13139,7 +13139,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13168,7 +13168,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13197,7 +13197,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13226,7 +13226,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13255,7 +13255,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13284,7 +13284,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13313,7 +13313,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13342,7 +13342,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13371,7 +13371,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13400,7 +13400,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13429,7 +13429,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13458,7 +13458,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13487,7 +13487,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13516,7 +13516,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13545,7 +13545,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13574,7 +13574,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13603,7 +13603,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13632,7 +13632,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13661,7 +13661,7 @@ var gotoTab = gotoTable{
 		86,  // BitwiseShiftTerm
 		87,  // AddsubdotTerm
 		89,  // MuldivTerm
-		93,  // UnaryBitwiseOpTerm
+		93,  // UnaryOpTerm
 		94,  // PowTerm
 		97,  // AtomOrFunction
 		75,  // FieldName
@@ -13690,7 +13690,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13719,7 +13719,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13748,7 +13748,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13777,7 +13777,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13806,7 +13806,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13835,7 +13835,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13864,7 +13864,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13893,7 +13893,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13922,7 +13922,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13951,7 +13951,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -13980,7 +13980,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14009,7 +14009,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14038,7 +14038,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14067,7 +14067,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14096,7 +14096,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14125,7 +14125,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14154,7 +14154,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14183,7 +14183,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14212,7 +14212,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14241,7 +14241,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14270,7 +14270,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14299,7 +14299,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14328,7 +14328,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14357,7 +14357,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14386,7 +14386,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14415,7 +14415,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14444,7 +14444,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14473,7 +14473,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14502,7 +14502,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14531,7 +14531,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14560,7 +14560,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14589,7 +14589,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14618,7 +14618,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14647,7 +14647,7 @@ var gotoTab = gotoTable{
 		183, // BitwiseShiftTerm
 		184, // AddsubdotTerm
 		186, // MuldivTerm
-		190, // UnaryBitwiseOpTerm
+		190, // UnaryOpTerm
 		191, // PowTerm
 		194, // AtomOrFunction
 		172, // FieldName
@@ -14676,7 +14676,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14705,7 +14705,7 @@ var gotoTab = gotoTable{
 		265, // BitwiseShiftTerm
 		266, // AddsubdotTerm
 		268, // MuldivTerm
-		272, // UnaryBitwiseOpTerm
+		272, // UnaryOpTerm
 		273, // PowTerm
 		276, // AtomOrFunction
 		255, // FieldName
@@ -14734,7 +14734,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName
@@ -14763,7 +14763,7 @@ var gotoTab = gotoTable{
 		-1, // BitwiseShiftTerm
 		-1, // AddsubdotTerm
 		-1, // MuldivTerm
-		-1, // UnaryBitwiseOpTerm
+		-1, // UnaryOpTerm
 		-1, // PowTerm
 		-1, // AtomOrFunction
 		-1, // FieldName

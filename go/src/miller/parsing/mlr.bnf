@@ -364,7 +364,7 @@ md_token_field_name : '$' _idchar { _idchar } ;
 // informative error messages.
 //
 // For clearer visuals on what the ASTs look like, you can do 
-/
+//
 //   mlr -n put -v 'your expression goes here'
 //
 // Also see reg_test/run's filter -v and put -v outputs, e.g. in
