@@ -2522,11 +2522,11 @@ UnaryOpTerm
 ;
 
 PowTerm
-  : AtomOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AtomOrFunction
+  : MlrvalOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MlrvalOrFunction
 ;
 
-AtomOrFunction
+MlrvalOrFunction
   : "(" RHS ")"
   << dsl.Nestable($1) >>
 ;
@@ -2543,7 +2543,7 @@ AtomOrFunction
 // lexer to give us field names with leading "$" so we can confidently strip it
 // off here.
 
-AtomOrFunction
+MlrvalOrFunction
   : FieldName
 ;
 
@@ -2580,7 +2580,7 @@ IndirectFieldName
 //    ) >>
 //;
 
-//AtomOrFunction(A) ::= PositionalSrecName(B). {
+//MlrvalOrFunction(A) ::= PositionalSrecName(B). {
 //	A = B;
 //}
 //PositionalSrecName(A) ::= "$[[" RHS "]]"
@@ -2592,7 +2592,7 @@ IndirectFieldName
 
 //// '$value = $[[[3]]]' is shorthand for '$value = $[ $[[3]] ]'.
 //// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
-//AtomOrFunction(A) ::= PositionalSrecValue(B). {
+//MlrvalOrFunction(A) ::= PositionalSrecValue(B). {
 //	A = B;
 //}
 //PositionalSrecValue(A) ::= "$"
@@ -2611,7 +2611,7 @@ IndirectFieldName
 //}
 
 //// ----------------------------------------------------------------
-//AtomOrFunction(A) ::= OosvarKeylist(B). {
+//MlrvalOrFunction(A) ::= OosvarKeylist(B). {
 //	A = B;
 //}
 
@@ -2660,7 +2660,7 @@ IndirectFieldName
 // As with '$' on md_token_field_name, so too for md_token_string_literal
 // we get LR-1 conflicts if we attempt to put the double quotes here.
 // Hence the quote-stripper AST method.
-AtomOrFunction
+MlrvalOrFunction
   : md_token_string_literal  << dsl.NewASTNodeStripDoubleQuotePairPlease(
     $0,
     dsl.NodeTypeStringLiteral,
@@ -2671,16 +2671,16 @@ AtomOrFunction
   | md_token_panic           << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
 ;
 
-//AtomOrFunction(A) ::= md_regexi(B). {
+//MlrvalOrFunction(A) ::= md_regexi(B). {
 //	A = B;
 //}
 
 // ----------------------------------------------------------------
-//AtomOrFunction(A) ::= NonindexedLocalVariable(B). {
+//MlrvalOrFunction(A) ::= NonindexedLocalVariable(B). {
 //	A = B;
 //}
 
-//AtomOrFunction(A) ::= IndexedLocalVariable(B). {
+//MlrvalOrFunction(A) ::= IndexedLocalVariable(B). {
 //	A = B;
 //}
 
@@ -2696,7 +2696,7 @@ AtomOrFunction
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
-//AtomOrFunction(A) ::= IndexedFunctionCall(B). {
+//MlrvalOrFunction(A) ::= IndexedFunctionCall(B). {
 //	A = B;
 //}
 
@@ -2747,7 +2747,7 @@ AtomOrFunction
 //}
 
 // ----------------------------------------------------------------
-AtomOrFunction : ContextVariable ;
+MlrvalOrFunction : ContextVariable ;
 
 ContextVariable
   : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
@@ -2767,7 +2767,7 @@ ContextVariable
 ;
 
 // ----------------------------------------------------------------
-//AtomOrFunction(A) ::= EnvIndex(B). {
+//MlrvalOrFunction(A) ::= EnvIndex(B). {
 //	A = B;
 //}
 
@@ -2775,7 +2775,7 @@ ContextVariable
 //	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 //}
 
-//AtomOrFunction(A) ::= FcnOrSubrCall(B). {
+//MlrvalOrFunction(A) ::= FcnOrSubrCall(B). {
 //	A = B;
 //}
 
@@ -2835,20 +2835,35 @@ ContextVariable
 // ----------------------------------------------------------------
 // Array literals in Miller are JSON-ish.
 
-AtomOrFunction : ArrayLiteral ;
+MlrvalOrFunction : ArrayLiteral ;
 
+// xxx temp
 ArrayLiteral
   : "[" "]"
-    << dsl.NewASTNodeZary(dsl.NewASTToken("[]", $0), dsl.NodeTypeArrayLiteral) >>
+    << dsl.NewASTNodeZary(
+      dsl.NewASTToken("[]", $0),
+      dsl.NodeTypeArrayLiteral,
+    ) >>
+
+  | "[" RHS "]"
+    << dsl.NewASTNodeUnary(
+      dsl.NewASTToken("[]", $0),
+      $1,
+      dsl.NodeTypeArrayLiteral,
+    ) >>
 ;
 
 // ----------------------------------------------------------------
 // Map literals in Miller are JSON-ish.
 
-AtomOrFunction : MapLiteral ;
+MlrvalOrFunction : MapLiteral ;
+
+// xxx temp
 MapLiteral
   : "{" "}"
     << dsl.NewASTNodeZary(dsl.NewASTToken("{}", $0), dsl.NodeTypeMapLiteral) >>
+  //| "{" RHS : RHS "}"
+    //<< dsl.NewASTNodeZary(dsl.NewASTToken("{}", $0), dsl.NodeTypeMapLiteral) >>
 ;
 
 // ----------------------------------------------------------------

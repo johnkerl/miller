@@ -22,6 +22,10 @@ func NewEvaluable(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return NewOperatorNode(astNode)
 	}
 
+	// xxx array
+	// xxx map
+	// xxx if/while/etc
+	// xxx function
 	// xxx more
 
 	return nil, errors.New("CST builder: unhandled AST node type " + string(astNode.Type))

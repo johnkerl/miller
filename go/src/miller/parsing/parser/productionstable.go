@@ -761,7 +761,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PowTerm : AtomOrFunction "**" PowTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `PowTerm : MlrvalOrFunction "**" PowTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "PowTerm",
 		NTType:     21,
 		Index:      74,
@@ -771,7 +771,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PowTerm : AtomOrFunction	<<  >>`,
+		String: `PowTerm : MlrvalOrFunction	<<  >>`,
 		Id:         "PowTerm",
 		NTType:     21,
 		Index:      75,
@@ -781,8 +781,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : "(" RHS ")"	<< dsl.Nestable(X[1]) >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : "(" RHS ")"	<< dsl.Nestable(X[1]) >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      76,
 		NumSymbols: 3,
@@ -791,8 +791,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : FieldName	<<  >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : FieldName	<<  >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      77,
 		NumSymbols: 1,
@@ -841,11 +841,11 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_string_literal	<< dsl.NewASTNodeStripDoubleQuotePairPlease(
+		String: `MlrvalOrFunction : md_token_string_literal	<< dsl.NewASTNodeStripDoubleQuotePairPlease(
     X[0],
     dsl.NodeTypeStringLiteral,
   ) >>`,
-		Id:         "AtomOrFunction",
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      82,
 		NumSymbols: 1,
@@ -857,8 +857,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : md_token_int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      83,
 		NumSymbols: 1,
@@ -867,8 +867,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : md_token_float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      84,
 		NumSymbols: 1,
@@ -877,8 +877,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : md_token_boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      85,
 		NumSymbols: 1,
@@ -887,8 +887,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : md_token_panic	<< dsl.NewASTNode(X[0], dsl.NodeTypePanic) >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : md_token_panic	<< dsl.NewASTNode(X[0], dsl.NodeTypePanic) >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      86,
 		NumSymbols: 1,
@@ -897,8 +897,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : ContextVariable	<<  >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : ContextVariable	<<  >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      87,
 		NumSymbols: 1,
@@ -1017,8 +1017,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : ArrayLiteral	<<  >>`,
-		Id:         "AtomOrFunction",
+		String: `MlrvalOrFunction : ArrayLiteral	<<  >>`,
+		Id:         "MlrvalOrFunction",
 		NTType:     22,
 		Index:      99,
 		NumSymbols: 1,
@@ -1027,20 +1027,44 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteral : "[" "]"	<< dsl.NewASTNodeZary(dsl.NewASTToken("[]", X[0]), dsl.NodeTypeArrayLiteral) >>`,
+		String: `ArrayLiteral : "[" "]"	<< dsl.NewASTNodeZary(
+      dsl.NewASTToken("[]", X[0]),
+      dsl.NodeTypeArrayLiteral,
+    ) >>`,
 		Id:         "ArrayLiteral",
 		NTType:     27,
 		Index:      100,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeZary(dsl.NewASTToken("[]", X[0]), dsl.NodeTypeArrayLiteral)
+			return dsl.NewASTNodeZary(
+				dsl.NewASTToken("[]", X[0]),
+				dsl.NodeTypeArrayLiteral,
+			)
 		},
 	},
 	ProdTabEntry{
-		String: `AtomOrFunction : MapLiteral	<<  >>`,
-		Id:         "AtomOrFunction",
-		NTType:     22,
+		String: `ArrayLiteral : "[" RHS "]"	<< dsl.NewASTNodeUnary(
+      dsl.NewASTToken("[]", X[0]),
+      X[1],
+      dsl.NodeTypeArrayLiteral,
+    ) >>`,
+		Id:         "ArrayLiteral",
+		NTType:     27,
 		Index:      101,
+		NumSymbols: 3,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(
+				dsl.NewASTToken("[]", X[0]),
+				X[1],
+				dsl.NodeTypeArrayLiteral,
+			)
+		},
+	},
+	ProdTabEntry{
+		String: `MlrvalOrFunction : MapLiteral	<<  >>`,
+		Id:         "MlrvalOrFunction",
+		NTType:     22,
+		Index:      102,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return X[0], nil
@@ -1050,7 +1074,7 @@ var productionsTable = ProdTab{
 		String: `MapLiteral : "{" "}"	<< dsl.NewASTNodeZary(dsl.NewASTToken("{}", X[0]), dsl.NodeTypeMapLiteral) >>`,
 		Id:         "MapLiteral",
 		NTType:     28,
-		Index:      102,
+		Index:      103,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(dsl.NewASTToken("{}", X[0]), dsl.NodeTypeMapLiteral)
