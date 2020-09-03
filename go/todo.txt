@@ -1,7 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-!! c/mvfuncs _err -> _erro et al.
+!! logical AND OR etc
+  o look into short-circuiting in the evaluator
 
 * reg_test/run iterate
 

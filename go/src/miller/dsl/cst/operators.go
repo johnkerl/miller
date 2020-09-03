@@ -52,6 +52,9 @@ func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case "~":
 		return NewBitwiseNOTOperator(cstChild), nil
 		break
+	case "!":
+		return NewLogicalNOTOperator(cstChild), nil
+		break
 	}
 
 	return nil, errors.New("CST build: AST unary operator node unhandled.")
@@ -121,6 +124,17 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		break
 	case "^":
 		return NewBitwiseXOROperator(leftCSTChild, rightCSTChild), nil
+		break
+
+	// TO DO: implement short-circuiting for these, as special cases.
+	case "&&":
+		return NewLogicalANDOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "||":
+		return NewLogicalOROperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "^^":
+		return NewLogicalXOROperator(leftCSTChild, rightCSTChild), nil
 		break
 
 	case "==":
@@ -361,6 +375,53 @@ func NewBitwiseNOTOperator(a IEvaluable) *BitwiseNOTOperator {
 func (this *BitwiseNOTOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	return lib.MlrvalBitwiseNOT(&aout)
+}
+
+// ----------------------------------------------------------------
+type LogicalANDOperator struct{ a, b IEvaluable }
+
+func NewLogicalANDOperator(a, b IEvaluable) *LogicalANDOperator {
+	return &LogicalANDOperator{a: a, b: b}
+}
+func (this *LogicalANDOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalLogicalAND(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type LogicalOROperator struct{ a, b IEvaluable }
+
+func NewLogicalOROperator(a, b IEvaluable) *LogicalOROperator {
+	return &LogicalOROperator{a: a, b: b}
+}
+func (this *LogicalOROperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalLogicalOR(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type LogicalXOROperator struct{ a, b IEvaluable }
+
+func NewLogicalXOROperator(a, b IEvaluable) *LogicalXOROperator {
+	return &LogicalXOROperator{a: a, b: b}
+}
+func (this *LogicalXOROperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalLogicalXOR(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type LogicalNOTOperator struct{ a IEvaluable }
+
+func NewLogicalNOTOperator(a IEvaluable) *LogicalNOTOperator {
+	return &LogicalNOTOperator{a: a}
+}
+func (this *LogicalNOTOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	return lib.MlrvalLogicalNOT(&aout)
 }
 
 // ----------------------------------------------------------------

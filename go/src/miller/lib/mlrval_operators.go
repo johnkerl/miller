@@ -1080,6 +1080,39 @@ func MlrvalLessThanOrEquals(val1, val2 *Mlrval) Mlrval {
 	return le_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
+// ----------------------------------------------------------------
+func MlrvalLogicalAND(val1, val2 *Mlrval) Mlrval {
+	if val1.mvtype == MT_BOOL && val2.mvtype == MT_BOOL {
+		return MlrvalFromBool(val1.boolval && val2.boolval)
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+func MlrvalLogicalOR(val1, val2 *Mlrval) Mlrval {
+	if val1.mvtype == MT_BOOL && val2.mvtype == MT_BOOL {
+		return MlrvalFromBool(val1.boolval || val2.boolval)
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+func MlrvalLogicalXOR(val1, val2 *Mlrval) Mlrval {
+	if val1.mvtype == MT_BOOL && val2.mvtype == MT_BOOL {
+		return MlrvalFromBool(val1.boolval != val2.boolval)
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+func MlrvalLogicalNOT(val1 *Mlrval) Mlrval {
+	if val1.mvtype == MT_BOOL {
+		return MlrvalFromBool(!val1.boolval)
+	} else {
+		return MlrvalFromError()
+	}
+}
+
 //// ----------------------------------------------------------------
 //int mv_equals_si(val1 *Mlrval, val2 *Mlrval) Mlrval {
 //	if (pa->type == MT_INT) Mlrval {
