@@ -116,7 +116,7 @@ func upos_f_f(val1 *Mlrval) Mlrval {
 	return *val1
 }
 
-var uposDispositions = [MT_DIM]unaryFunc{
+var upos_dispositions = [MT_DIM]unaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
 	/*EMPTY  */ _void1,
@@ -127,7 +127,7 @@ var uposDispositions = [MT_DIM]unaryFunc{
 }
 
 func MlrvalUnaryPlus(val1 *Mlrval) Mlrval {
-	return uposDispositions[val1.mvtype](val1)
+	return upos_dispositions[val1.mvtype](val1)
 }
 
 // ================================================================
@@ -141,7 +141,7 @@ func uneg_f_f(val1 *Mlrval) Mlrval {
 	return MlrvalFromFloat64(-val1.floatval)
 }
 
-var unegDispositions = [MT_DIM]unaryFunc{
+var uneg_dispositions = [MT_DIM]unaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
 	/*EMPTY  */ _void1,
@@ -152,7 +152,7 @@ var unegDispositions = [MT_DIM]unaryFunc{
 }
 
 func MlrvalUnaryMinus(val1 *Mlrval) Mlrval {
-	return unegDispositions[val1.mvtype](val1)
+	return uneg_dispositions[val1.mvtype](val1)
 }
 
 // ================================================================
@@ -173,7 +173,7 @@ func dot_s_xx(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromString(val1.String() + val2.String())
 }
 
-var dotDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var dot_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//       ERROR ABSENT  EMPTY  STRING INT       FLOAT     BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _void, _2___, _s2__, _s2__, _s2__},
@@ -185,7 +185,7 @@ var dotDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalDot(val1, val2 *Mlrval) Mlrval {
-	return dotDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return dot_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -227,7 +227,7 @@ func plus_n_ii(val1, val2 *Mlrval) Mlrval {
 	}
 }
 
-var plusDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var plus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -239,7 +239,7 @@ var plusDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalPlus(val1, val2 *Mlrval) Mlrval {
-	return plusDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return plus_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -281,7 +281,7 @@ func minus_n_ii(val1, val2 *Mlrval) Mlrval {
 	}
 }
 
-var minusDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var minus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -293,7 +293,7 @@ var minusDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalMinus(val1, val2 *Mlrval) Mlrval {
-	return minusDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return minus_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -351,7 +351,7 @@ func times_n_ii(val1, val2 *Mlrval) Mlrval {
 	}
 }
 
-var timesDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var times_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -363,7 +363,7 @@ var timesDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalTimes(val1, val2 *Mlrval) Mlrval {
-	return timesDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return times_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -418,7 +418,7 @@ func divide_n_ii(val1, val2 *Mlrval) Mlrval {
 	}
 }
 
-var divideDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var divide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro},
@@ -430,7 +430,7 @@ var divideDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalDivide(val1, val2 *Mlrval) Mlrval {
-	return divideDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return divide_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -475,7 +475,7 @@ func int_divide_n_ii(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromInt64(q)
 }
 
-var int_divideDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var int_divide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro},
@@ -487,7 +487,7 @@ var int_divideDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalIntDivide(val1, val2 *Mlrval) Mlrval {
-	return int_divideDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return int_divide_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -510,7 +510,7 @@ func dotplus_i_ii(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromInt64(val1.intval + val2.intval)
 }
 
-var dotPlusDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var dot_plus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//       ERROR ABSENT  EMPTY  STRING INT    FLOAT         BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -522,7 +522,7 @@ var dotPlusDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalDotPlus(val1, val2 *Mlrval) Mlrval {
-	return dotPlusDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return dot_plus_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ================================================================
@@ -545,7 +545,7 @@ func dotminus_i_ii(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromInt64(val1.intval - val2.intval)
 }
 
-var dotMinusDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var dotminus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//       ERROR ABSENT  EMPTY  STRING INT    FLOAT         BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -557,7 +557,7 @@ var dotMinusDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalDotMinus(val1, val2 *Mlrval) Mlrval {
-	return dotMinusDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return dotminus_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ----------------------------------------------------------------
@@ -580,7 +580,7 @@ func dottimes_i_ii(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromInt64(val1.intval * val2.intval)
 }
 
-var dotTimesDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var dottimes_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//       ERROR ABSENT  EMPTY  STRING INT    FLOAT         BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -592,7 +592,7 @@ var dotTimesDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalDotTimes(val1, val2 *Mlrval) Mlrval {
-	return dotTimesDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return dottimes_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ----------------------------------------------------------------
@@ -615,7 +615,7 @@ func dotdivide_i_ii(val1, val2 *Mlrval) Mlrval {
 	return MlrvalFromInt64(val1.intval / val2.intval)
 }
 
-var dotDivideDispositions = [MT_DIM][MT_DIM]binaryFunc{
+var dotdivide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 	//       ERROR ABSENT  EMPTY  STRING INT    FLOAT         BOOL
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
@@ -627,12 +627,46 @@ var dotDivideDispositions = [MT_DIM][MT_DIM]binaryFunc{
 }
 
 func MlrvalDotDivide(val1, val2 *Mlrval) Mlrval {
-	return dotDivideDispositions[val1.mvtype][val2.mvtype](val1, val2)
+	return dotdivide_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+
+func dotidivide_f_ff(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromFloat64(val1.floatval / val2.floatval)
+}
+
+func dotidivide_f_fi(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromFloat64(val1.floatval / float64(val2.intval))
+}
+
+func dotidivide_f_if(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromFloat64(float64(val1.intval) / val2.floatval)
+}
+
+func dotidivide_i_ii(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromInt64(val1.intval / val2.intval)
+}
+
+var dotidivide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//       ERROR ABSENT  EMPTY  STRING INT    FLOAT         BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, dotidivide_i_ii, dotidivide_f_if, _erro},
+	/*FLOAT  */ {_erro, _1___, _void, _erro, dotidivide_f_fi, dotidivide_f_ff, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalDotIntDivide(val1, val2 *Mlrval) Mlrval {
+	return dotidivide_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+
+
+
 
 //static mv_t oidiv_f_ff(mv_t* pa, mv_t* pb) {
 //	double a = pa->u.fltv;

@@ -48,3 +48,7 @@ echo; mlr --idkvp --opprint put '$z=100.4'     u/s.dkvp
 echo; mlr --idkvp --opprint put '$z=1.2'       u/s.dkvp
 echo; mlr --idkvp --opprint put '$z=100.0/$i'  u/s.dkvp
 echo; mlr --idkvp --opprint put '$z=100.0//$i' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff  + 0x7fffffffffffffff' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff  * 0x7fffffffffffffff' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff .* 0x7fffffffffffffff' u/s.dkvp

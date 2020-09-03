@@ -22,3 +22,7 @@ echo; mlr -n put -v '$x = 2 * $a + $b . $c'
 echo; mlr -n put -v '$x = 2 * $a + ($b . $c)'
 echo; mlr -n put -v '$x = (NF + NR) * 7; $y = OFS . $y . "hello"'
 echo; mlr -n put -v '$x = 123. + 1e-2 / .2e3 + 1.e-3'
+echo; mlr -n put -v '$z=0x7fffffffffffffff  + 0x7fffffffffffffff' s
+echo; mlr -n put -v '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff' s
+echo; mlr -n put -v '$z=0x7fffffffffffffff  * 0x7fffffffffffffff' s
+echo; mlr -n put -v '$z=0x7fffffffffffffff .* 0x7fffffffffffffff' s

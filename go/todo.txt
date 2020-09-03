@@ -20,7 +20,6 @@ TOP OF LIST:
 * widen DSL coverage
   o begin/end blocks
   o indirect field names, at LHS and RHS
-  o hex inputs
   o bitwise/int operators
   o support the filter verb
 
