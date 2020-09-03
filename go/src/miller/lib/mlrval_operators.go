@@ -828,47 +828,6 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 }
 
 //// ----------------------------------------------------------------
-//static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }
-//static mv_t boolean_b_f(mv_t* pa) { return mv_from_bool((pa->u.fltv == 0.0) ? FALSE : TRUE); }
-//static mv_t boolean_b_i(mv_t* pa) { return mv_from_bool((pa->u.intv == 0LL) ? FALSE : TRUE); }
-//static mv_t boolean_b_s(mv_t* pa) { return mv_from_bool((streq(pa->u.strv, "true") || streq(pa->u.strv, "TRUE")) ? TRUE : FALSE);}
-//
-//static mv_unary_func_t* boolean_dispositions[MT_DIM] = {
-//	/*ERROR*/  _err1,
-//	/*ABSENT*/ _a1,
-//	/*EMPTY*/  _emt1,
-//	/*STRING*/ boolean_b_s,
-//	/*INT*/    boolean_b_i,
-//	/*FLOAT*/  boolean_b_f,
-//	/*BOOL*/   boolean_b_b,
-//};
-//
-//mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(pval1); }
-
-//// ----------------------------------------------------------------
-//static mv_t string_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"true":"false"); }
-//static mv_t string_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)); }
-//static mv_t string_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_ll(pa->u.intv)); }
-//static mv_t string_s_s(mv_t* pa) {
-//	char free_flags = pa->free_flags;
-//	pa->free_flags = NO_FREE;
-//	return mv_from_string(pa->u.strv, free_flags);
-//}
-//
-//static mv_unary_func_t* string_dispositions[MT_DIM] = {
-//	/*ERROR*/  _err1,
-//	/*ABSENT*/ _a1,
-//	/*EMPTY*/  _emt1,
-//	/*STRING*/ string_s_s,
-//	/*INT*/    string_s_i,
-//	/*FLOAT*/  string_s_f,
-//	/*BOOL*/   string_s_b,
-//};
-//
-//mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pval1); }
-//
-
-//// ----------------------------------------------------------------
 //static mv_t eq_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv == pb->u.intv); }
 //static mv_t ne_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv != pb->u.intv); }
 //static mv_t gt_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >  pb->u.intv); }
@@ -896,7 +855,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //static mv_t ge_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >= pb->u.fltv); }
 //static mv_t lt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb->u.fltv); }
 //static mv_t le_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.fltv); }
-//
+
 //static mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
 //	char free_flags;
 //	char* sa = mv_format_val(pa, &free_flags);
@@ -1057,70 +1016,70 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //}
 //
 //static mv_binary_func_t* eq_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
-//	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _a},
-//	/*EMPTY*/  {_err, _a,    eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _err},
-//	/*STRING*/ {_err, _a,    eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _err},
-//	/*INT*/    {_err, _a,    eq_b_xs, eq_b_xs, eq_b_ii, eq_b_if, _err},
-//	/*FLOAT*/  {_err, _a,    eq_b_xs, eq_b_xs, eq_b_fi, eq_b_ff, _err},
-//	/*BOOL*/   {_err, _err,  _a,      _err,    _err,    _err,    _err},
-//};
+//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
+//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
+//	/*EMPTY*/  {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro},
+//	/*STRING*/ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro},
+//	/*INT*/    {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_ii, eq_b_if, _erro},
+//	/*FLOAT*/  {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_fi, eq_b_ff, _erro},
+//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
+//	};
 //
 //static mv_binary_func_t* ne_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
-//	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _a},
-//	/*EMPTY*/  {_err, _a,    ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _err},
-//	/*STRING*/ {_err, _a,    ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _err},
-//	/*INT*/    {_err, _a,    ne_b_xs, ne_b_xs, ne_b_ii, ne_b_if, _err},
-//	/*FLOAT*/  {_err, _a,    ne_b_xs, ne_b_xs, ne_b_fi, ne_b_ff, _err},
-//	/*BOOL*/   {_err, _err,  _a,      _err,    _err,    _err,    _err},
-//};
+//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
+//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
+//	/*EMPTY*/  {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro},
+//	/*STRING*/ {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro},
+//	/*INT*/    {_erro, _absn, ne_b_xs, ne_b_xs, ne_b_ii, ne_b_if, _erro},
+//	/*FLOAT*/  {_erro, _absn, ne_b_xs, ne_b_xs, ne_b_fi, ne_b_ff, _erro},
+//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
+//	};
 //
 //static mv_binary_func_t* gt_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
-//	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _a},
-//	/*EMPTY*/  {_err, _a,    gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _err},
-//	/*STRING*/ {_err, _a,    gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _err},
-//	/*INT*/    {_err, _a,    gt_b_xs, gt_b_xs, gt_b_ii, gt_b_if, _err},
-//	/*FLOAT*/  {_err, _a,    gt_b_xs, gt_b_xs, gt_b_fi, gt_b_ff, _err},
-//	/*BOOL*/   {_err, _err,  _a,      _err,    _err,    _err,    _err},
-//};
+//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
+//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
+//	/*EMPTY*/  {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro},
+//	/*STRING*/ {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro},
+//	/*INT*/    {_erro, _absn, gt_b_xs, gt_b_xs, gt_b_ii, gt_b_if, _erro},
+//	/*FLOAT*/  {_erro, _absn, gt_b_xs, gt_b_xs, gt_b_fi, gt_b_ff, _erro},
+//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
+//	};
 //
 //static mv_binary_func_t* ge_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
-//	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _a},
-//	/*EMPTY*/  {_err, _a,    ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _err},
-//	/*STRING*/ {_err, _a,    ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _err},
-//	/*INT*/    {_err, _a,    ge_b_xs, ge_b_xs, ge_b_ii, ge_b_if, _err},
-//	/*FLOAT*/  {_err, _a,    ge_b_xs, ge_b_xs, ge_b_fi, ge_b_ff, _err},
-//	/*BOOL*/   {_err, _err,  _a,      _err,    _err,    _err,    _err},
-//};
+//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
+//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
+//	/*EMPTY*/  {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro},
+//	/*STRING*/ {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro},
+//	/*INT*/    {_erro, _absn, ge_b_xs, ge_b_xs, ge_b_ii, ge_b_if, _erro},
+//	/*FLOAT*/  {_erro, _absn, ge_b_xs, ge_b_xs, ge_b_fi, ge_b_ff, _erro},
+//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
+//	};
 //
 //static mv_binary_func_t* lt_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
-//	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _a},
-//	/*EMPTY*/  {_err, _a,    lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _err},
-//	/*STRING*/ {_err, _a,    lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _err},
-//	/*INT*/    {_err, _a,    lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _err},
-//	/*FLOAT*/  {_err, _a,    lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _err},
-//	/*BOOL*/   {_err, _err,  _a,      _err,    _err,    _err,    _err},
-//};
+//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
+//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
+//	/*EMPTY*/  {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro},
+//	/*STRING*/ {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro},
+//	/*INT*/    {_erro, _absn, lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _erro},
+//	/*FLOAT*/  {_erro, _absn, lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _erro},
+//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
+//	};
 //
 //static mv_binary_func_t* le_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
-//	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _a},
-//	/*EMPTY*/  {_err, _a,    le_b_ss, le_b_ss, le_b_sx, le_b_sx, _err},
-//	/*STRING*/ {_err, _a,    le_b_ss, le_b_ss, le_b_sx, le_b_sx, _err},
-//	/*INT*/    {_err, _a,    le_b_xs, le_b_xs, le_b_ii, le_b_if, _err},
-//	/*FLOAT*/  {_err, _a,    le_b_xs, le_b_xs, le_b_fi, le_b_ff, _err},
-//	/*BOOL*/   {_err, _err,  _a,      _err,    _err,    _err,    _err},
-//};
+//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
+//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
+//	/*EMPTY*/  {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro},
+//	/*STRING*/ {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro},
+//	/*INT*/    {_erro, _absn, le_b_xs, le_b_xs, le_b_ii, le_b_if, _erro},
+//	/*FLOAT*/  {_erro, _absn, le_b_xs, le_b_xs, le_b_fi, le_b_ff, _erro},
+//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
+//	};
 //
 //mv_t eq_op_func(mv_t* pval1, mv_t* pval2) { return (eq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 //mv_t ne_op_func(mv_t* pval1, mv_t* pval2) { return (ne_dispositions[pval1->type][pval2->type])(pval1, pval2); }
@@ -1128,7 +1087,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //mv_t ge_op_func(mv_t* pval1, mv_t* pval2) { return (ge_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 //mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 //mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//
+
 //// ----------------------------------------------------------------
 //int mv_equals_si(mv_t* pa, mv_t* pb) {
 //	if (pa->type == MT_INT) {
@@ -1176,7 +1135,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*INT*/    {NULL, NULL,  NULL, NULL,  eq_i_ii, eq_i_if, NULL},
 //	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  eq_i_fi, eq_i_ff, NULL},
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
-//};
+//	};
 //
 //static mv_i_nn_comparator_func_t* ine_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
@@ -1187,7 +1146,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*INT*/    {NULL, NULL,  NULL, NULL,  ne_i_ii, ne_i_if, NULL},
 //	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  ne_i_fi, ne_i_ff, NULL},
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
-//};
+//	};
 //
 //static mv_i_nn_comparator_func_t* igt_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
@@ -1198,7 +1157,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*INT*/    {NULL, NULL,  NULL, NULL,  gt_i_ii, gt_i_if, NULL},
 //	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  gt_i_fi, gt_i_ff, NULL},
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
-//};
+//	};
 //
 //static mv_i_nn_comparator_func_t* ige_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
@@ -1209,7 +1168,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*INT*/    {NULL, NULL,  NULL, NULL,  ge_i_ii, ge_i_if, NULL},
 //	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  ge_i_fi, ge_i_ff, NULL},
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
-//};
+//	};
 //
 //static mv_i_nn_comparator_func_t* ilt_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
@@ -1220,7 +1179,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*INT*/    {NULL, NULL,  NULL, NULL,  lt_i_ii, lt_i_if, NULL},
 //	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  lt_i_fi, lt_i_ff, NULL},
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
-//};
+//	};
 //
 //static mv_i_nn_comparator_func_t* ile_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
@@ -1231,7 +1190,7 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*INT*/    {NULL, NULL,  NULL, NULL,  le_i_ii, le_i_if, NULL},
 //	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  le_i_fi, le_i_ff, NULL},
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
-//};
+//	};
 //
 //int mv_i_nn_eq(mv_t* pval1, mv_t* pval2) { return (ieq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 //int mv_i_nn_ne(mv_t* pval1, mv_t* pval2) { return (ine_dispositions[pval1->type][pval2->type])(pval1, pval2); }
@@ -1239,4 +1198,3 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //int mv_i_nn_ge(mv_t* pval1, mv_t* pval2) { return (ige_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 //int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) { return (ilt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
 //int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//
