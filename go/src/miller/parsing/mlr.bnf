@@ -2853,12 +2853,14 @@ ArrayLiteral
     ) >>
 ;
 
-// ----------------------------------------------------------------
+// ================================================================
 // Map literals in Miller are JSON-ish.
 
 MlrvalOrFunction : MapLiteral ;
 
+// ----------------------------------------------------------------
 MapLiteral
+
   : "{" "}"
     << dsl.NewASTNodeZary(
       dsl.NewASTToken("{}", $0),
@@ -2866,14 +2868,37 @@ MapLiteral
     ) >>
 
   | "{" MapLiteralKeyValuePairs "}"
-    // xxx temp -- needs to adopt children
-    << dsl.NewASTNodeUnary(
-      dsl.NewASTToken("{}", $0),
+    // As parsed there's an intermediate node between MapLiteral
+    // and the children. Now we can remove it.
+    //
+    // Before:
+    // * MapLiteral "{}"
+    //     * MapLiteral
+    //         * MapLiteralKeyValuePair ":"
+    //             * StringLiteral "a"
+    //             * StringLiteral "1"
+    //         * MapLiteralKeyValuePair ":"
+    //             * StringLiteral "b"
+    //             * IntLiteral "2"
+    //
+    // After:
+    // * MapLiteral "{}"
+    //     * MapLiteralKeyValuePair ":"
+    //         * StringLiteral "a"
+    //         * StringLiteral "1"
+    //     * MapLiteralKeyValuePair ":"
+    //         * StringLiteral "b"
+    //         * IntLiteral "2"
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        dsl.NewASTToken("{}", $0),
+        dsl.NodeTypeMapLiteral,
+      ),
       $1,
-      dsl.NodeTypeMapLiteral,
     ) >>
 ;
 
+// ----------------------------------------------------------------
 MapLiteralKeyValuePairs
 
   : MapLiteralKeyValuePair
@@ -2894,15 +2919,14 @@ MapLiteralKeyValuePairs
   // xxx temp -- needs to adopt children
   // Allow trailing final comma, especially for multiline map literals
   | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
-    << dsl.NewASTNodeBinary(
-      nil,
-      $0,
+    << dsl.PrependChild(
       $2,
-      dsl.NodeTypeMapLiteral,
+      $0,
     ) >>
 
 ;
 
+// ----------------------------------------------------------------
 MapLiteralKeyValuePair
   : RHS ":" RHS
     << dsl.NewASTNodeBinary(

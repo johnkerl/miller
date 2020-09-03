@@ -187,6 +187,7 @@ func convertToZary(iparent interface{}) {
 	parent.Children = children
 }
 
+// xxx inline this. can be a one-liner.
 func convertToUnary(iparent interface{}, childA interface{}) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 1)
@@ -211,6 +212,17 @@ func convertToTernary(iparent interface{}, childA, childB, childC interface{}) {
 	parent.Children = children
 }
 
+func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
+	child := ichild.(*ASTNode)
+	if parent.Children == nil {
+		convertToUnary(iparent, ichild)
+	} else {
+		parent.Children = append([]*ASTNode{child}, parent.Children...)
+	}
+	return parent, nil
+}
+
 func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	if parent.Children == nil {
@@ -218,6 +230,14 @@ func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 	} else {
 		parent.Children = append(parent.Children, child.(*ASTNode))
 	}
+	return parent, nil
+}
+
+func AdoptChildren(iparent interface{}, ichild interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
+	child := ichild.(*ASTNode)
+	parent.Children = child.Children
+	child.Children = nil
 	return parent, nil
 }
 
