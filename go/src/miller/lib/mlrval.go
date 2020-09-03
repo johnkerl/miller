@@ -40,6 +40,12 @@ type Mlrval struct {
 	intval        int64
 	floatval      float64
 	boolval       bool
+
+	// TODO:
+	// arrayval []*Mlrval
+
+	// TODO:
+	// mapval []OrderedMap[string]*Mlrval
 }
 
 // Enumeration for mlrval types
@@ -77,10 +83,14 @@ const (
 
 	MT_BOOL = 6
 
+	MT_ARRAY = 7
+
+	MT_MAP = 8
+
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM = 7
+	MT_DIM = 9
 )

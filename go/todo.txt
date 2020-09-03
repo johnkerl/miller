@@ -1,11 +1,15 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* mlrval to own package, not lib?
-
-!! ordered map impl for JSON parse
-
 * reg_test/run iterate
+
+* SUMMARY:
+  o easy: most verbs
+  o easy: full cli
+  o easy: readers/writers including TSV/ASV, and CSV heterogeneity
+  o medium: sort/stats1/join
+  o will take time: array/map mlrval
+  o will take time: full DSL including functions, mapvals, etc
 
 * widen verb coverage
   o label
@@ -17,14 +21,11 @@ TOP OF LIST:
   o head/tail
   o sort
   o filter
+  o focus on calendar/DST/TZ improvements
 
 * widen CLI coverage
   o --c2x et al.
-
-* widen DSL coverage
-  o begin/end blocks
-  o indirect field names, at LHS and RHS
-  o support the filter verb
+  o implement mlrrc
 
 * widen reader coverage
   o TSV/ASV
@@ -38,52 +39,34 @@ TOP OF LIST:
   o --allow-ragged-csv-input|--ragged
   o --implicit-csv-header
   o --headerless-csv-output
+  o new non-lite DKVP reader/writer
 
-* non-lite DKVP reader/writer
+* widen DSL coverage
+  o begin/end blocks
+  o indirect field names, at LHS and RHS
+  o support the filter verb
 
-* implement mlrrc
+* array/map mlrval:
+  k srecs as string -> mlrvals
+  o then add MT_ARRAY and MT_MAP to mlrval
+  o support full JSON read/write of nested objects
+    - only requirement is that top-level be sequence of string-valued objects ...
+    - JSON-to-JSON cat-mapping should be identical
+    - JSON-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}
+  o implement json.Unmarshaler and json.Marshaler directly for Mlrval
+  o implement json.Unmarshaler and json.Marshaler directly for Lrec
+  i type Unmarshaler interface { UnmarshalJSON([]byte) error }
+  i type Marshaler   interface { MarshalJSON() ([]byte, error) }
+
 ----------------------------------------------------------------
+GOCC UPSTREAMS:
 
-general plan:
-* lots of trivial things are just a matter of keystroking
-* defer them while focusing on what's hard (and maybe most worthwhile about the Go port)
-
-harder / more worthy:
-~ streaming JSON reader
-  -> w/ and w/o enclosing [...] !
-~ streaming RFC-compliant CSV reader
-k srec with mlrval values
-  k solve the JIT issue for formatting of numeric values
-* sort
-* stats1
-* calendar/DST/TZ
-~ DSL
-
-easier:
-* most of the verbs
-* most of the file formats
-
-bonuses:
-* non-lite dkvp as easy extension of golib CSV reader :D
-
-also:
-* update whyc.html with efficiency notes from go/README.md
-
-long-term:
-k srecs as string -> mlrvals
-* then srecs as string -> (mlrval | mlhmmv)
-* support full json read/write
-  o only requirement is that top-level be sequence of string-valued objects ...
-  o json-to-json cat-mapping should be identical
-  o json-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}
-
-gocc upstreams:
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
 * research customization of error-handling ... line numbers in particular ...
 
 ----------------------------------------------------------------
-nits:
-* split up mlrcli
+NITS:
+
 * "...\"..." into string-literal parsing ...
 * address all manner of xxx and TODO comments
 * support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
@@ -93,4 +76,5 @@ nits:
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?
 * godoc ...
-* val1,val2 -> a,b in mfvuncs, after port complete
+* mlrdoc false && 4, true || 4 because of short-circuiting requirement
+* update whyc.html with efficiency notes from go/README.md
