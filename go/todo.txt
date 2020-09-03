@@ -2,7 +2,7 @@
 TOP OF LIST:
 
 !! logical AND OR etc
-  o look into short-circuiting in the evaluator
+  o implement short-circuiting in the opeartor-evaluator
 
 * reg_test/run iterate
 
@@ -23,7 +23,6 @@ TOP OF LIST:
 * widen DSL coverage
   o begin/end blocks
   o indirect field names, at LHS and RHS
-  o bitwise/int operators
   o support the filter verb
 
 * widen reader coverage
@@ -93,3 +92,4 @@ nits:
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?
 * godoc ...
+* val1,val2 -> a,b in mfvuncs, after port complete

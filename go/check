@@ -1,0 +1,6 @@
+#!/bin/bash
+
+u/ppp > u/ppp.out
+u/qqq > u/qqq.out
+u/rrr > u/rrr.out
+u/uuu > u/uuu.out
