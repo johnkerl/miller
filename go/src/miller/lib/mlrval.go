@@ -28,6 +28,9 @@ type Mlrval struct {
 	// In the String() method the printrep is computed from the intval/floatval
 	// and printrepValid is set back to true.
 	//
+	// Note that for MT_STRING, the printrep is always valid since it is the
+	// only payload for the mlrval.
+	//
 	// Thus we (a) keep user-specific input-formatting when possible, for the
 	// principle of least surprise; (b) avoid reformatting strings during
 	// intermediate arithmetic expressions; (c) resync arithmetic results to

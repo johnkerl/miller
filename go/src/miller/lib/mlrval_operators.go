@@ -26,6 +26,29 @@ import (
 // sense only for pairs of strings and nothing else, it makes sense for the
 // implementing method to return an MT_STRING result if both arguments are
 // MT_STRING, or MT_ERROR otherwise.
+//
+// Naming conventions: since these functions fit into disposition matrices, the
+// names are kept quite short. Many are of the form 'plus_f_fi', 'eq_b_xs',
+// etc. The conventions are:
+//
+// * The 'plus_', 'eq_', etc is for the name of the operator.
+//
+// * For binary operators, things like _f_fi indicate the type of the return
+//   value (e.g. 'f') and the types of the two arguments (e.g. 'fi').
+//
+// * For unary operators, things like _i_i indicate the type of the return
+//   value and the type of the argument.
+//
+// * Type names:
+//   's' for string
+//   'i' for int64
+//   'f' for float64
+//   'n' for number return types -- e.g. the auto-overflow from
+//       int to float plus_n_ii returns MT_INT if integer-additio overflow
+//       didn't happen, or MT_FLOAT if it did.
+//   'b' for boolean
+//   'x' for don't-care slots, e.g. eq_b_sx for comparing MT_STRING
+//       ('s') to anything else ('x').
 // ================================================================
 
 // Function-pointer type for unary-operator disposition vectors.
@@ -762,6 +785,7 @@ var bitwise_and_dispositions = [MT_DIM][MT_DIM]binaryFunc{
 func MlrvalBitwiseAND(val1, val2 *Mlrval) Mlrval {
 	return bitwise_and_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
+
 // ----------------------------------------------------------------
 // Bitwise OR
 
@@ -810,7 +834,7 @@ func MlrvalBitwiseXOR(val1, val2 *Mlrval) Mlrval {
 // Bitwise NOT
 
 func bitwise_not_i_i(val1 *Mlrval) Mlrval {
-	return MlrvalFromInt64(^ val1.intval)
+	return MlrvalFromInt64(^val1.intval)
 }
 
 var bitwise_not_dispositions = [MT_DIM]unaryFunc{
@@ -827,304 +851,274 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 	return bitwise_not_dispositions[val1.mvtype](val1)
 }
 
-//// ----------------------------------------------------------------
-//static mv_t eq_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv == pb->u.intv); }
-//static mv_t ne_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv != pb->u.intv); }
-//static mv_t gt_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >  pb->u.intv); }
-//static mv_t ge_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >= pb->u.intv); }
-//static mv_t lt_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb->u.intv); }
-//static mv_t le_b_ii(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.intv); }
-//
-//static mv_t eq_b_ff(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv == pb->u.fltv); }
-//static mv_t ne_b_ff(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv != pb->u.fltv); }
-//static mv_t gt_b_ff(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv >  pb->u.fltv); }
-//static mv_t ge_b_ff(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv >= pb->u.fltv); }
-//static mv_t lt_b_ff(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv <  pb->u.fltv); }
-//static mv_t le_b_ff(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv <= pb->u.fltv); }
-//
-//static mv_t eq_b_fi(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv == pb->u.intv); }
-//static mv_t ne_b_fi(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv != pb->u.intv); }
-//static mv_t gt_b_fi(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv >  pb->u.intv); }
-//static mv_t ge_b_fi(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv >= pb->u.intv); }
-//static mv_t lt_b_fi(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv <  pb->u.intv); }
-//static mv_t le_b_fi(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.fltv <= pb->u.intv); }
-//
-//static mv_t eq_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv == pb->u.fltv); }
-//static mv_t ne_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv != pb->u.fltv); }
-//static mv_t gt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >  pb->u.fltv); }
-//static mv_t ge_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv >= pb->u.fltv); }
-//static mv_t lt_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <  pb->u.fltv); }
-//static mv_t le_b_if(mv_t* pa, mv_t* pb) { return mv_from_bool(pa->u.intv <= pb->u.fltv); }
+// ----------------------------------------------------------------
+// Boolean expressions for ==, !=, >, >=, <, <=
 
-//static mv_t eq_b_xs(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sa = mv_format_val(pa, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) == 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sa);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t ne_b_xs(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sa = mv_format_val(pa, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) != 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sa);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t gt_b_xs(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sa = mv_format_val(pa, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) > 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sa);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t ge_b_xs(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sa = mv_format_val(pa, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) >= 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sa);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t lt_b_xs(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sa = mv_format_val(pa, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) < 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sa);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t le_b_xs(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sa = mv_format_val(pa, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(sa, pb->u.strv) <= 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sa);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//
-//static mv_t eq_b_sx(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sb = mv_format_val(pb, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) == 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sb);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t ne_b_sx(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sb = mv_format_val(pb, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) != 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sb);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t gt_b_sx(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sb = mv_format_val(pb, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) > 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sb);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t ge_b_sx(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sb = mv_format_val(pb, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) >= 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sb);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t lt_b_sx(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sb = mv_format_val(pb, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) < 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sb);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t le_b_sx(mv_t* pa, mv_t* pb) {
-//	char free_flags;
-//	char* sb = mv_format_val(pb, &free_flags);
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, sb) <= 0);
-//	if (free_flags & FREE_ENTRY_VALUE)
-//		free(sb);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//
-//static mv_t eq_b_ss(mv_t*pa, mv_t*pb) {
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) == 0);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t ne_b_ss(mv_t*pa, mv_t*pb) {
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) != 0);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t gt_b_ss(mv_t*pa, mv_t*pb) {
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) >  0);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t ge_b_ss(mv_t*pa, mv_t*pb) {
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) >= 0);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t lt_b_ss(mv_t*pa, mv_t*pb) {
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) <  0);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//static mv_t le_b_ss(mv_t*pa, mv_t*pb) {
-//	mv_t rv = mv_from_bool(strcmp(pa->u.strv, pb->u.strv) <= 0);
-//	mv_free(pa);
-//	mv_free(pb);
-//	return rv;
-//}
-//
-//static mv_binary_func_t* eq_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*EMPTY*/  {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro},
-//	/*STRING*/ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro},
-//	/*INT*/    {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_ii, eq_b_if, _erro},
-//	/*FLOAT*/  {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_fi, eq_b_ff, _erro},
-//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
-//	};
-//
-//static mv_binary_func_t* ne_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*EMPTY*/  {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro},
-//	/*STRING*/ {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro},
-//	/*INT*/    {_erro, _absn, ne_b_xs, ne_b_xs, ne_b_ii, ne_b_if, _erro},
-//	/*FLOAT*/  {_erro, _absn, ne_b_xs, ne_b_xs, ne_b_fi, ne_b_ff, _erro},
-//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
-//	};
-//
-//static mv_binary_func_t* gt_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*EMPTY*/  {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro},
-//	/*STRING*/ {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro},
-//	/*INT*/    {_erro, _absn, gt_b_xs, gt_b_xs, gt_b_ii, gt_b_if, _erro},
-//	/*FLOAT*/  {_erro, _absn, gt_b_xs, gt_b_xs, gt_b_fi, gt_b_ff, _erro},
-//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
-//	};
-//
-//static mv_binary_func_t* ge_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*EMPTY*/  {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro},
-//	/*STRING*/ {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro},
-//	/*INT*/    {_erro, _absn, ge_b_xs, ge_b_xs, ge_b_ii, ge_b_if, _erro},
-//	/*FLOAT*/  {_erro, _absn, ge_b_xs, ge_b_xs, ge_b_fi, ge_b_ff, _erro},
-//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
-//	};
-//
-//static mv_binary_func_t* lt_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*EMPTY*/  {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro},
-//	/*STRING*/ {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro},
-//	/*INT*/    {_erro, _absn, lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _erro},
-//	/*FLOAT*/  {_erro, _absn, lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _erro},
-//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
-//	};
-//
-//static mv_binary_func_t* le_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
-//	/*ERROR*/  {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT*/ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*EMPTY*/  {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro},
-//	/*STRING*/ {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro},
-//	/*INT*/    {_erro, _absn, le_b_xs, le_b_xs, le_b_ii, le_b_if, _erro},
-//	/*FLOAT*/  {_erro, _absn, le_b_xs, le_b_xs, le_b_fi, le_b_ff, _erro},
-//	/*BOOL*/   {_erro, _erro, _absn,   _erro,   _erro,   _erro,   _erro},
-//	};
-//
-//mv_t eq_op_func(mv_t* pval1, mv_t* pval2) { return (eq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//mv_t ne_op_func(mv_t* pval1, mv_t* pval2) { return (ne_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//mv_t gt_op_func(mv_t* pval1, mv_t* pval2) { return (gt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//mv_t ge_op_func(mv_t* pval1, mv_t* pval2) { return (ge_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//mv_t lt_op_func(mv_t* pval1, mv_t* pval2) { return (lt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//mv_t le_op_func(mv_t* pval1, mv_t* pval2) { return (le_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_ss(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep == val2.printrep)
+}
+func ne_b_ss(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep != val2.printrep)
+}
+func gt_b_ss(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep > val2.printrep)
+}
+func ge_b_ss(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep >= val2.printrep)
+}
+func lt_b_ss(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep < val2.printrep)
+}
+func le_b_ss(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep <= val2.printrep)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_xs(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.String() == val2.printrep)
+}
+func ne_b_xs(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.String() != val2.printrep)
+}
+func gt_b_xs(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.String() > val2.printrep)
+}
+func ge_b_xs(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.String() >= val2.printrep)
+}
+func lt_b_xs(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.String() < val2.printrep)
+}
+func le_b_xs(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.String() <= val2.printrep)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_sx(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep == val2.String())
+}
+func ne_b_sx(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep != val2.String())
+}
+func gt_b_sx(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep > val2.String())
+}
+func ge_b_sx(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep >= val2.String())
+}
+func lt_b_sx(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep < val2.String())
+}
+func le_b_sx(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.printrep <= val2.String())
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_ii(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.intval == val2.intval)
+}
+func ne_b_ii(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.intval != val2.intval)
+}
+func gt_b_ii(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.intval > val2.intval)
+}
+func ge_b_ii(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.intval >= val2.intval)
+}
+func lt_b_ii(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.intval < val2.intval)
+}
+func le_b_ii(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.intval <= val2.intval)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_ff(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval == val2.floatval)
+}
+func ne_b_ff(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval != val2.floatval)
+}
+func gt_b_ff(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval > val2.floatval)
+}
+func ge_b_ff(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval >= val2.floatval)
+}
+func lt_b_ff(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval < val2.floatval)
+}
+func le_b_ff(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval <= val2.floatval)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_fi(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval == float64(val2.intval))
+}
+func ne_b_fi(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval != float64(val2.intval))
+}
+func gt_b_fi(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval > float64(val2.intval))
+}
+func ge_b_fi(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval >= float64(val2.intval))
+}
+func lt_b_fi(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval < float64(val2.intval))
+}
+func le_b_fi(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(val1.floatval <= float64(val2.intval))
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_if(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(val1.intval) == val2.floatval)
+}
+func ne_b_if(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(val1.intval) != val2.floatval)
+}
+func gt_b_if(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(val1.intval) > val2.floatval)
+}
+func ge_b_if(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(val1.intval) >= val2.floatval)
+}
+func lt_b_if(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(val1.intval) < val2.floatval)
+}
+func le_b_if(val1 *Mlrval, val2 *Mlrval) Mlrval {
+	return MlrvalFromBool(float64(val1.intval) <= val2.floatval)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var eq_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT*/ {_erro, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*EMPTY*/ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro},
+	/*STRING*/ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro},
+	/*INT*/ {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_ii, eq_b_if, _erro},
+	/*FLOAT*/ {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_fi, eq_b_ff, _erro},
+	/*BOOL*/ {_erro, _erro, _absn, _erro, _erro, _erro, _erro},
+}
+
+var ne_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT*/ {_erro, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*EMPTY*/ {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro},
+	/*STRING*/ {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro},
+	/*INT*/ {_erro, _absn, ne_b_xs, ne_b_xs, ne_b_ii, ne_b_if, _erro},
+	/*FLOAT*/ {_erro, _absn, ne_b_xs, ne_b_xs, ne_b_fi, ne_b_ff, _erro},
+	/*BOOL*/ {_erro, _erro, _absn, _erro, _erro, _erro, _erro},
+}
+
+var gt_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT*/ {_erro, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*EMPTY*/ {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro},
+	/*STRING*/ {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro},
+	/*INT*/ {_erro, _absn, gt_b_xs, gt_b_xs, gt_b_ii, gt_b_if, _erro},
+	/*FLOAT*/ {_erro, _absn, gt_b_xs, gt_b_xs, gt_b_fi, gt_b_ff, _erro},
+	/*BOOL*/ {_erro, _erro, _absn, _erro, _erro, _erro, _erro},
+}
+
+var ge_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT*/ {_erro, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*EMPTY*/ {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro},
+	/*STRING*/ {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro},
+	/*INT*/ {_erro, _absn, ge_b_xs, ge_b_xs, ge_b_ii, ge_b_if, _erro},
+	/*FLOAT*/ {_erro, _absn, ge_b_xs, ge_b_xs, ge_b_fi, ge_b_ff, _erro},
+	/*BOOL*/ {_erro, _erro, _absn, _erro, _erro, _erro, _erro},
+}
+
+var lt_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT*/ {_erro, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*EMPTY*/ {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro},
+	/*STRING*/ {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro},
+	/*INT*/ {_erro, _absn, lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _erro},
+	/*FLOAT*/ {_erro, _absn, lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _erro},
+	/*BOOL*/ {_erro, _erro, _absn, _erro, _erro, _erro, _erro},
+}
+
+var le_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//         ERROR   ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT*/ {_erro, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*EMPTY*/ {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro},
+	/*STRING*/ {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro},
+	/*INT*/ {_erro, _absn, le_b_xs, le_b_xs, le_b_ii, le_b_if, _erro},
+	/*FLOAT*/ {_erro, _absn, le_b_xs, le_b_xs, le_b_fi, le_b_ff, _erro},
+	/*BOOL*/ {_erro, _erro, _absn, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalEquals(val1, val2 *Mlrval) Mlrval {
+	return eq_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+func MlrvalNotEquals(val1, val2 *Mlrval) Mlrval {
+	return ne_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+func MlrvalGreaterThan(val1, val2 *Mlrval) Mlrval {
+	return gt_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+func MlrvalGreaterThanOrEquals(val1, val2 *Mlrval) Mlrval {
+	return ge_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+func MlrvalLessThan(val1, val2 *Mlrval) Mlrval {
+	return lt_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+func MlrvalLessThanOrEquals(val1, val2 *Mlrval) Mlrval {
+	return le_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
 
 //// ----------------------------------------------------------------
-//int mv_equals_si(mv_t* pa, mv_t* pb) {
-//	if (pa->type == MT_INT) {
-//		return (pb->type == MT_INT) ? pa->u.intv == pb->u.intv : FALSE;
+//int mv_equals_si(val1 *Mlrval, val2 *Mlrval) Mlrval {
+//	if (pa->type == MT_INT) Mlrval {
+//		return (pb->type == MT_INT) ? val1.intval == val2.intval : FALSE;
 //	} else {
 //		return (pb->type == MT_STRING) ? streq(pa->u.strv, pb->u.strv) : FALSE;
 //	}
 //}
+
+// ----------------------------------------------------------------
+// For qsort support in C
 //
-//// ----------------------------------------------------------------
-//static int eq_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv == pb->u.intv; }
-//static int ne_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv != pb->u.intv; }
-//static int gt_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv >  pb->u.intv; }
-//static int ge_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv >= pb->u.intv; }
-//static int lt_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv <  pb->u.intv; }
-//static int le_i_ii(mv_t* pa, mv_t* pb) { return  pa->u.intv <= pb->u.intv; }
+//static int eq_i_ii(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval == val2.intval; }
+//static int ne_i_ii(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval != val2.intval; }
+//static int gt_i_ii(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval >  val2.intval; }
+//static int ge_i_ii(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval >= val2.intval; }
+//static int lt_i_ii(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval <  val2.intval; }
+//static int le_i_ii(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval <= val2.intval; }
 //
-//static int eq_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv == pb->u.fltv; }
-//static int ne_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv != pb->u.fltv; }
-//static int gt_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv >  pb->u.fltv; }
-//static int ge_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv >= pb->u.fltv; }
-//static int lt_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv <  pb->u.fltv; }
-//static int le_i_ff(mv_t* pa, mv_t* pb) { return  pa->u.fltv <= pb->u.fltv; }
+//static int eq_i_ff(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval == val2.floatval; }
+//static int ne_i_ff(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval != val2.floatval; }
+//static int gt_i_ff(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval >  val2.floatval; }
+//static int ge_i_ff(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval >= val2.floatval; }
+//static int lt_i_ff(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval <  val2.floatval; }
+//static int le_i_ff(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval <= val2.floatval; }
 //
-//static int eq_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv == pb->u.intv; }
-//static int ne_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv != pb->u.intv; }
-//static int gt_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv >  pb->u.intv; }
-//static int ge_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv >= pb->u.intv; }
-//static int lt_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv <  pb->u.intv; }
-//static int le_i_fi(mv_t* pa, mv_t* pb) { return  pa->u.fltv <= pb->u.intv; }
+//static int eq_i_fi(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval == val2.intval; }
+//static int ne_i_fi(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval != val2.intval; }
+//static int gt_i_fi(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval >  val2.intval; }
+//static int ge_i_fi(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval >= val2.intval; }
+//static int lt_i_fi(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval <  val2.intval; }
+//static int le_i_fi(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.floatval <= val2.intval; }
 //
-//static int eq_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv == pb->u.fltv; }
-//static int ne_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv != pb->u.fltv; }
-//static int gt_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv >  pb->u.fltv; }
-//static int ge_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv >= pb->u.fltv; }
-//static int lt_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv <  pb->u.fltv; }
-//static int le_i_if(mv_t* pa, mv_t* pb) { return  pa->u.intv <= pb->u.fltv; }
+//static int eq_i_if(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval == val2.floatval; }
+//static int ne_i_if(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval != val2.floatval; }
+//static int gt_i_if(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval >  val2.floatval; }
+//static int ge_i_if(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval >= val2.floatval; }
+//static int lt_i_if(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval <  val2.floatval; }
+//static int le_i_if(val1 *Mlrval, val2 *Mlrval) Mlrval { return  val1.intval <= val2.floatval; }
 //
 //static mv_i_nn_comparator_func_t* ieq_dispositions[MT_DIM][MT_DIM] = {
 //	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
@@ -1192,9 +1186,9 @@ func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
 //	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL},
 //	};
 //
-//int mv_i_nn_eq(mv_t* pval1, mv_t* pval2) { return (ieq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_ne(mv_t* pval1, mv_t* pval2) { return (ine_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_gt(mv_t* pval1, mv_t* pval2) { return (igt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_ge(mv_t* pval1, mv_t* pval2) { return (ige_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) { return (ilt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//int mv_i_nn_eq(mv_t* pval1, mv_t* pval2) Mlrval { return (ieq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//int mv_i_nn_ne(mv_t* pval1, mv_t* pval2) Mlrval { return (ine_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//int mv_i_nn_gt(mv_t* pval1, mv_t* pval2) Mlrval { return (igt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//int mv_i_nn_ge(mv_t* pval1, mv_t* pval2) Mlrval { return (ige_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) Mlrval { return (ilt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
+//int mv_i_nn_le(mv_t* pval1, mv_t* pval2) Mlrval { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }

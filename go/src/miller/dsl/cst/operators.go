@@ -123,6 +123,25 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return NewBitwiseXOROperator(leftCSTChild, rightCSTChild), nil
 		break
 
+	case "==":
+		return NewEqualsOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "!=":
+		return NewNotEqualsOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case ">":
+		return NewGreaterThanOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case ">=":
+		return NewGreaterThanOrEqualsOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "<":
+		return NewLessThanOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "<=":
+		return NewLessThanOrEqualsOperator(leftCSTChild, rightCSTChild), nil
+		break
+
 		// xxx continue ...
 	}
 
@@ -342,4 +361,76 @@ func NewBitwiseNOTOperator(a IEvaluable) *BitwiseNOTOperator {
 func (this *BitwiseNOTOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	return lib.MlrvalBitwiseNOT(&aout)
+}
+
+// ----------------------------------------------------------------
+type EqualsOperator struct{ a, b IEvaluable }
+
+func NewEqualsOperator(a, b IEvaluable) *EqualsOperator {
+	return &EqualsOperator{a: a, b: b}
+}
+func (this *EqualsOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalEquals(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type NotEqualsOperator struct{ a, b IEvaluable }
+
+func NewNotEqualsOperator(a, b IEvaluable) *NotEqualsOperator {
+	return &NotEqualsOperator{a: a, b: b}
+}
+func (this *NotEqualsOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalNotEquals(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type GreaterThanOperator struct{ a, b IEvaluable }
+
+func NewGreaterThanOperator(a, b IEvaluable) *GreaterThanOperator {
+	return &GreaterThanOperator{a: a, b: b}
+}
+func (this *GreaterThanOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalGreaterThan(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type GreaterThanOrEqualsOperator struct{ a, b IEvaluable }
+
+func NewGreaterThanOrEqualsOperator(a, b IEvaluable) *GreaterThanOrEqualsOperator {
+	return &GreaterThanOrEqualsOperator{a: a, b: b}
+}
+func (this *GreaterThanOrEqualsOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalGreaterThanOrEquals(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type LessThanOperator struct{ a, b IEvaluable }
+
+func NewLessThanOperator(a, b IEvaluable) *LessThanOperator {
+	return &LessThanOperator{a: a, b: b}
+}
+func (this *LessThanOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalLessThan(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type LessThanOrEqualsOperator struct{ a, b IEvaluable }
+
+func NewLessThanOrEqualsOperator(a, b IEvaluable) *LessThanOrEqualsOperator {
+	return &LessThanOrEqualsOperator{a: a, b: b}
+}
+func (this *LessThanOrEqualsOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalLessThanOrEquals(&aout, &bout)
 }

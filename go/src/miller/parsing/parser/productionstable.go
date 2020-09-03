@@ -851,9 +851,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeStripDoubleQuotePairPlease(
-    X[0],
-    dsl.NodeTypeStringLiteral,
-  )
+				X[0],
+				dsl.NodeTypeStringLiteral,
+			)
 		},
 	},
 	ProdTabEntry{
