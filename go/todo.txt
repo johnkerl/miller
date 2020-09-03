@@ -5,6 +5,8 @@ TOP OF LIST:
 
 * array/map
   o fix token display in AST print
+  ? --verbose ASTBuilder?
+  ? --verbose CSTBuilder?
 
 * SUMMARY:
   o easy: most verbs
@@ -67,6 +69,15 @@ GOCC UPSTREAMS:
 
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
 * research customization of error-handling ... line numbers in particular ...
+
+----------------------------------------------------------------
+DEV NOTES:
+
+* build-dsl
+* build
+* check, and git diff to see what changed
+* fmter
+* commit
 
 ----------------------------------------------------------------
 NITS:

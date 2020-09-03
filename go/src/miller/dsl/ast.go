@@ -10,12 +10,13 @@ import (
 type TNodeType string
 
 const (
-	NodeTypeStringLiteral TNodeType = "StringLiteral"
-	NodeTypeIntLiteral              = "IntLiteral"
-	NodeTypeFloatLiteral            = "FloatLiteral"
-	NodeTypeBoolLiteral             = "BoolLiteral"
-	NodeTypeArrayLiteral            = "ArrayLiteral"
-	NodeTypeMapLiteral              = "MapLiteral"
+	NodeTypeStringLiteral          TNodeType = "StringLiteral"
+	NodeTypeIntLiteral                       = "IntLiteral"
+	NodeTypeFloatLiteral                     = "FloatLiteral"
+	NodeTypeBoolLiteral                      = "BoolLiteral"
+	NodeTypeArrayLiteral                     = "ArrayLiteral"
+	NodeTypeMapLiteral                       = "MapLiteral"
+	NodeTypeMapLiteralKeyValuePair           = "MapLiteralKeyValuePair"
 
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"

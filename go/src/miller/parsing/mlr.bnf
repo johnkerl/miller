@@ -2858,51 +2858,57 @@ ArrayLiteral
 
 MlrvalOrFunction : MapLiteral ;
 
-// xxx temp
 MapLiteral
   : "{" "}"
-    << dsl.NewASTNodeZary(dsl.NewASTToken("{}", $0), dsl.NodeTypeMapLiteral) >>
-  //| "{" RHS : RHS "}"
-    //<< dsl.NewASTNodeZary(dsl.NewASTToken("{}", $0), dsl.NodeTypeMapLiteral) >>
+    << dsl.NewASTNodeZary(
+      dsl.NewASTToken("{}", $0),
+      dsl.NodeTypeMapLiteral,
+    ) >>
+
+  | "{" MapLiteralKeyValuePairs "}"
+    // xxx temp -- needs to adopt children
+    << dsl.NewASTNodeUnary(
+      dsl.NewASTToken("{}", $0),
+      $1,
+      dsl.NodeTypeMapLiteral,
+    ) >>
 ;
 
-// ----------------------------------------------------------------
-//	A = mlr_dsl_ast_node_alloc_zary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL);
-//}
+MapLiteralKeyValuePairs
 
-//MapLiteral(A) ::= "{" "}". {
-//	A = mlr_dsl_ast_node_alloc_zary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL);
-//}
+  : MapLiteralKeyValuePair
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeMapLiteral,
+    ) >>
 
-//MapLiteral(A) ::= "{" MapLiteralKeyValuePairs(B) "}". {
-//	A = B;
-//}
-//MapLiteralKeyValuePairs(A) ::= MapLiteralKeyValuePair(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL, B);
-//}
-//// Allow trailing final comma, especially for multiline map literals
-//MapLiteralKeyValuePairs(A) ::= MapLiteralKeyValuePair(B) ",". {
-//	A = mlr_dsl_ast_node_alloc_unary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL, B);
-//}
-//MapLiteralKeyValuePairs(A) ::= MapLiteralKeyValuePair(B) "," MapLiteralKeyValuePairs(C). {
-//	A = mlr_dsl_ast_node_prepend_arg(C, B);
-//}
+  // Allow trailing final comma, especially for multiline map literals
+  | MapLiteralKeyValuePair ","
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeMapLiteral,
+    ) >>
 
-//MapLiteralKeyValuePair(A) ::= MapLiteralKey(B) ":" MapLiteralValue(C). {
-//	A = mlr_dsl_ast_node_alloc_binary("mappair", MD_AST_NODE_TYPE_MAP_LITERAL_PAIR, B, C);
-//}
-//MapLiteralKey(A) ::= RHS(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("mapkey", MD_AST_NODE_TYPE_MAP_LITERAL_KEY, B);
-//}
-//MapLiteralValue(A) ::= RHS(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
-//}
-//MapLiteralValue(A) ::= MapLiteral(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
-//}
-//MapLiteralValue(A) ::= md_token_full_srec(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
-//}
-//MapLiteralValue(A) ::= md_token_full_oosvar(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
-//}
+  // xxx temp -- needs to adopt children
+  // Allow trailing final comma, especially for multiline map literals
+  | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
+    << dsl.NewASTNodeBinary(
+      nil,
+      $0,
+      $2,
+      dsl.NodeTypeMapLiteral,
+    ) >>
+
+;
+
+MapLiteralKeyValuePair
+  : RHS ":" RHS
+    << dsl.NewASTNodeBinary(
+      $1,
+      $0,
+      $2,
+      dsl.NodeTypeMapLiteralKeyValuePair,
+    ) >>
+;

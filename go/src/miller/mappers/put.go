@@ -127,6 +127,8 @@ func NewMapperPut(
 		return nil, err
 	}
 	if verbose {
+		fmt.Println("DSL EXPRESSION:")
+		fmt.Println(dslString)
 		fmt.Println("RAW AST:")
 		astRoot.Print()
 		fmt.Println()

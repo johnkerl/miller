@@ -196,6 +196,7 @@ var TokMap = TokenMap{
 		"[",
 		"{",
 		"}",
+		",",
 	},
 
 	idMap: map[string]Type{
@@ -276,5 +277,6 @@ var TokMap = TokenMap{
 		"[":                        74,
 		"{":                        75,
 		"}":                        76,
+		",":                        77,
 	},
 }
