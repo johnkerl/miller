@@ -872,11 +872,6 @@ static void main_usage_compressed_data_options(FILE* o, char* argv0) {
 	fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
 		argv0);
 	fprintf(o, "\n");
-	fprintf(o, "  There are shorthands --prepipe-zcat and --prepipe-gunzip which are\n");
-	fprintf(o, "  valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc\n");
-	fprintf(o, "  files since that would put execution of the prepipe command under \n");
-	fprintf(o, "  control of the .mlrrc file.\n");
-	fprintf(o, "\n");
 	fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
 	fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
 	fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n");
@@ -893,6 +888,11 @@ static void main_usage_compressed_data_options(FILE* o, char* argv0) {
 	fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
 	fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
 	fprintf(o, "    %s ... | {your compression command}\n", argv0);
+	fprintf(o, "\n");
+	fprintf(o, "  There are shorthands --prepipe-zcat and --prepipe-gunzip which are\n");
+	fprintf(o, "  valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc\n");
+	fprintf(o, "  files since that would put execution of the prepipe command under \n");
+	fprintf(o, "  control of the .mlrrc file.\n");
 }
 
 static void main_usage_separator_options(FILE* o, char* argv0) {

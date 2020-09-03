@@ -333,11 +333,6 @@ OPTIONS
 	 --prepipe {command} This allows Miller to handle compressed inputs. You can do
 	 without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".
 
-	 There are shorthands --prepipe-zcat and --prepipe-gunzip which are
-	 valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc
-	 files since that would put execution of the prepipe command under
-	 control of the .mlrrc file.
-
 	 However, when multiple input files are present, between-file separations are
 	 lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
 	 specify an action to be taken on each input file. This pre-pipe command must
@@ -354,6 +349,11 @@ OPTIONS
 	 utilities. You can use it to apply per-file filters of your choice.
 	 For output compression (or other) utilities, simply pipe the output:
 	   mlr ... | {your compression command}
+
+	 There are shorthands --prepipe-zcat and --prepipe-gunzip which are
+	 valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc
+	 files since that would put execution of the prepipe command under
+	 control of the .mlrrc file.
 
    SEPARATORS
 	 --rs	  --irs     --ors	       Record separators, e.g. 'lf' or '\r\n'
