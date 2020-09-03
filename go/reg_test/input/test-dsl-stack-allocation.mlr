@@ -1,0 +1,164 @@
+# ================================================================
+# See comments in test_dsl_stack.c for details what is being tested here.
+# ================================================================
+
+# ----------------------------------------------------------------
+func f(a,b,c) {
+    @v[NR] = NR*1000;
+    true {
+        var val = nonesuch;
+        while (1 == 1) {
+            if (NR == 1) {
+                for (k, v in $*) {
+                    val = v.":".a.":".b.":".c;
+                    print "f:1:val:".val;
+                }
+            } elif (NR == 2) {
+                for (k in @v) {
+                    print "f:2:k:".k;
+                }
+            } elif (NR == 3) {
+                for (k, v in @v) {
+                    print "f:3:k:".k."v:".v;
+                }
+            } elif (NR == 4) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
+                        sum += i*j;
+                    }
+                }
+                val = sum;
+                print "f:val:".val;
+            }
+            break;
+        }
+    }
+}
+
+# ----------------------------------------------------------------
+subr s(a,b,c) {
+    @v[NR] = NR*2000;
+    true {
+        var val = nonesuch;
+        while (1 == 1) {
+            if (NR == 1) {
+                for (k, v in $*) {
+                    val = v.":".a.":".b.":".c;
+                    print "s:1:val:".val;
+                }
+            } elif (NR == 2) {
+                for (k in @v) {
+                    print "s:2:k:".k;
+                }
+            } elif (NR == 3) {
+                for (k, v in @v) {
+                    print "s:3:k:".k."v:".v;
+                }
+            } elif (NR == 4) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
+                        sum += i*j;
+                    }
+                }
+                val = sum;
+                print "s:val:".val;
+            }
+            break;
+        }
+    }
+}
+
+# ----------------------------------------------------------------
+begin {
+    print "BEGIN";
+    @v[0] = 456;
+    true {
+        var val = nonesuch;
+        for (var idx = 1; idx <= 4; idx += 1) {
+            if (idx == 2) {
+                for (k in @v) {
+                    print "b:2:k:".k;
+                }
+            } elif (idx == 3) {
+                for (k, v in @v) {
+                    print "b:3:k:".k."v:".v;
+                }
+            } elif (idx == 4) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
+                        sum += i*j;
+                    }
+                }
+                val = sum;
+                print "b:val:".val;
+            }
+        }
+    }
+}
+
+# ----------------------------------------------------------------
+print "MAIN";
+@v[NR] = NR*4000;
+true {
+    var val = nonesuch;
+    while (1 == 1) {
+        if (NR == 1) {
+            for (k, v in $*) {
+                val = v;
+                print "m:1:val:".val;
+            }
+        } elif (NR == 2) {
+            for (k in @v) {
+                print "m:2:k:".k;
+            }
+        } elif (NR == 3) {
+            for (k, v in @v) {
+                print "m:3:k:".k."v:".v;
+            }
+        } elif (NR == 4) {
+            var sum = 0;
+            for (var i = 1; i <= 10; i += 1) {
+                for (var j = 1; j <= 10; j += 1) {
+                    sum += i*j;
+                }
+            }
+            val = sum;
+            print "m:val:".val;
+        }
+        break;
+    }
+}
+$o = f(NR, $a, $y);
+call s($b, NR, $i**2);
+
+# ----------------------------------------------------------------
+end {
+    print "END";
+    @v[100] = 789;
+    true {
+        var val = nonesuch;
+        for (var idx = 1; idx <= 4; idx += 1) {
+            if (idx == 2) {
+                for (k in @v) {
+                    print "e:2:k:".k;
+                }
+            } elif (idx == 3) {
+                for (k, v in @v) {
+                    print "e:3:k:".k."v:".v;
+                }
+            } elif (idx == 4) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
+                        sum += i*j;
+                    }
+                }
+                val = sum;
+                print "e:val:".val;
+            }
+        }
+    }
+}

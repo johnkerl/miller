@@ -1,0 +1,123 @@
+#!/bin/sh
+
+# ================================================================
+# This is similar to reg_test/run except that this one is only ever run
+# manually, not automatically as part of the build. It can be used to iterate on
+# as-yet-unreleased features (in particular, features whose definition isn't
+# finalized) without breaking the build.
+# ================================================================
+set -e
+
+ourdir=`dirname $0`
+srcdir=$ourdir/../..
+pwd=`pwd`
+
+try1=$pwd/../mlr    # For autoconf builds, in-tree or out-of-tree
+try2=$srcdir/c/mlr  # For non-autoconf builds
+if [ -x "$try1" ]; then
+  path_to_mlr=$try1
+elif [ -x "$try2" ]; then
+  path_to_mlr=$try2
+else
+  echo "$0: Could not find path to mlr executable." 1>&2
+  echo "Try 1: $try1" 1>&2
+  echo "Try 2: $try2" 1>&2
+  exit 1
+fi
+do_diff="true"
+
+for arg; do
+  if [ "$1" = "--valgrind" ]; then
+    # Leak-check the test suite. Needs 'make mlrg' first.
+    # ../tools/clean-valg can be used to filter the output.
+    path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g"
+  elif [ "$1" = "--nodiff" ]; then
+    do_diff="false"
+  fi
+done
+echo Using mlr executable $path_to_mlr
+
+indir=$ourdir/input
+expdir=$ourdir/expected
+outdir=$pwd/output-regtest
+reloutdir=./output-regtest
+outfile=$outdir/out
+expfile=$expdir/out
+mkdir -p $outdir
+
+rm -rvf $outdir
+mkdir -p $outdir
+touch $outfile
+echo
+
+num_passed=0
+
+announce() {
+	echo >> $outfile
+	echo "================================================================" >> $outfile
+	echo "$@" >> $outfile
+	echo >> $outfile
+}
+
+mention() {
+	echo >> $outfile
+	echo ---------------------------------------------------------------- "$@" >> $outfile
+}
+
+run_mlr() {
+  # Use just "mlr" for info messages
+	echo mlr "$@"
+	echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+	$path_to_mlr "$@" >> $outfile
+	echo >> $outfile
+	# since set -e
+	num_passed=`expr $num_passed + 1`
+}
+
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+	echo mlr "$@"
+	echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+    set +e
+	$path_to_mlr "$@" >> $outfile 2>&1
+    status=$?
+    if [ $status -ne 1 ]; then
+        echo "Exit status was $status; expected 1."
+        echo "Exit status was $status; expected 1." >> $outfile
+    fi
+    set -e
+	echo >> $outfile
+    test $status -eq 1
+	# since set -e
+	num_passed=`expr $num_passed + 1`
+}
+
+# ================================================================
+announce FUNC PROHIBITS
+
+mlr_expect_fail --from $indir/abixy put '
+  func f(x,y,z) {
+    return $a # cannot reference srecs from functions
+  }
+'
+
+mlr_expect_fail --from $indir/abixy put '
+  func f(x,y,z) {
+    return $[x] # cannot reference srecs from functions
+  }
+'
+
+run_mlr -n put ''
+
+# ================================================================
+cat $outfile
+
+if [ "$do_diff" = "true" ]; then
+  echo
+  diff -I '^mlr ' -C5 $expfile $outfile
+  echo diff OK # since set -e
+  echo ALL REGRESSION TESTS PASSED
+  echo Tests completed: $num_passed
+fi
