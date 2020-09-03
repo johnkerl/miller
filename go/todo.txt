@@ -48,7 +48,7 @@ TOP OF LIST:
 
 * array/map mlrval:
   k srecs as string -> mlrvals
-  o then add MT_ARRAY and MT_MAP to mlrval
+  o add MT_ARRAY and MT_MAP to mlrval
   o support full JSON read/write of nested objects
     - only requirement is that top-level be sequence of string-valued objects ...
     - JSON-to-JSON cat-mapping should be identical
@@ -57,6 +57,7 @@ TOP OF LIST:
   o implement json.Unmarshaler and json.Marshaler directly for Lrec
   i type Unmarshaler interface { UnmarshalJSON([]byte) error }
   i type Marshaler   interface { MarshalJSON() ([]byte, error) }
+  o flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
 
 ----------------------------------------------------------------
 GOCC UPSTREAMS:

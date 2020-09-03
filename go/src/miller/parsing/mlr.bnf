@@ -2832,12 +2832,33 @@ ContextVariable
 //	A = B;
 //}
 
-//// ----------------------------------------------------------------
-//// Map-literals in Miller are JSON-ish.
+// ----------------------------------------------------------------
+// Array literals in Miller are JSON-ish.
+
+AtomOrFunction : ArrayLiteral ;
+
+ArrayLiteral
+  : "[" "]"
+    << dsl.NewASTNodeZary(dsl.NewASTToken("[]", $0), dsl.NodeTypeArrayLiteral) >>
+;
+
+// ----------------------------------------------------------------
+// Map literals in Miller are JSON-ish.
+
+AtomOrFunction : MapLiteral ;
+MapLiteral
+  : "{" "}"
+    << dsl.NewASTNodeZary(dsl.NewASTToken("{}", $0), dsl.NodeTypeMapLiteral) >>
+;
+
+// ----------------------------------------------------------------
+//	A = mlr_dsl_ast_node_alloc_zary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL);
+//}
 
 //MapLiteral(A) ::= "{" "}". {
 //	A = mlr_dsl_ast_node_alloc_zary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL);
 //}
+
 //MapLiteral(A) ::= "{" MapLiteralKeyValuePairs(B) "}". {
 //	A = B;
 //}

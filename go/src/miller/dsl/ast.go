@@ -14,6 +14,8 @@ const (
 	NodeTypeIntLiteral              = "IntLiteral"
 	NodeTypeFloatLiteral            = "FloatLiteral"
 	NodeTypeBoolLiteral             = "BoolLiteral"
+	NodeTypeArrayLiteral            = "ArrayLiteral"
+	NodeTypeMapLiteral              = "MapLiteral"
 
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"
@@ -144,6 +146,12 @@ func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 		nodeType,
 		nil,
 	}
+}
+
+func NewASTNodeZary(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+	parent := NewASTNodeNestable(itok, nodeType)
+	convertToZary(parent)
+	return parent, nil
 }
 
 func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, error) {

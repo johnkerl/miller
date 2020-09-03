@@ -1016,4 +1016,44 @@ var productionsTable = ProdTab{
 			return dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable)
 		},
 	},
+	ProdTabEntry{
+		String: `AtomOrFunction : ArrayLiteral	<<  >>`,
+		Id:         "AtomOrFunction",
+		NTType:     22,
+		Index:      99,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
+		String: `ArrayLiteral : "[" "]"	<< dsl.NewASTNodeZary(dsl.NewASTToken("[]", X[0]), dsl.NodeTypeArrayLiteral) >>`,
+		Id:         "ArrayLiteral",
+		NTType:     27,
+		Index:      100,
+		NumSymbols: 2,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeZary(dsl.NewASTToken("[]", X[0]), dsl.NodeTypeArrayLiteral)
+		},
+	},
+	ProdTabEntry{
+		String: `AtomOrFunction : MapLiteral	<<  >>`,
+		Id:         "AtomOrFunction",
+		NTType:     22,
+		Index:      101,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
+		String: `MapLiteral : "{" "}"	<< dsl.NewASTNodeZary(dsl.NewASTToken("{}", X[0]), dsl.NodeTypeMapLiteral) >>`,
+		Id:         "MapLiteral",
+		NTType:     28,
+		Index:      102,
+		NumSymbols: 2,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeZary(dsl.NewASTToken("{}", X[0]), dsl.NodeTypeMapLiteral)
+		},
+	},
 }
