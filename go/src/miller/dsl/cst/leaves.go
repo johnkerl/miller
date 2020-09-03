@@ -12,7 +12,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func NewEvaluableLeafNode(
+func BuildEvaluableLeafNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Children != nil)
@@ -21,27 +21,27 @@ func NewEvaluableLeafNode(
 	switch astNode.Type {
 
 	case dsl.NodeTypeDirectFieldName:
-		return NewSrecDirectFieldRead(sval), nil
+		return BuildSrecDirectFieldReadNode(sval), nil
 		break
 
 	case dsl.NodeTypeStringLiteral:
-		return NewStringLiteral(sval), nil
+		return BuildStringLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeIntLiteral:
-		return NewIntLiteral(sval), nil
+		return BuildIntLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeFloatLiteral:
-		return NewFloatLiteral(sval), nil
+		return BuildFloatLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeBoolLiteral:
-		return NewBoolLiteral(sval), nil
+		return BuildBoolLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeContextVariable:
-		return NewContextVariable(astNode)
+		return BuildContextVariableNode(astNode)
 		break
 
 	case dsl.NodeTypePanic:
-		return NewPanic(), nil
+		return BuildPanicNode(), nil
 		break
 
 		// xxx more
@@ -55,16 +55,16 @@ func NewEvaluableLeafNode(
 }
 
 // ----------------------------------------------------------------
-type SrecDirectFieldRead struct {
+type SrecDirectFieldReadNode struct {
 	fieldName string
 }
 
-func NewSrecDirectFieldRead(fieldName string) *SrecDirectFieldRead {
-	return &SrecDirectFieldRead{
+func BuildSrecDirectFieldReadNode(fieldName string) *SrecDirectFieldReadNode {
+	return &SrecDirectFieldReadNode{
 		fieldName: fieldName,
 	}
 }
-func (this *SrecDirectFieldRead) Evaluate(state *State) lib.Mlrval {
+func (this *SrecDirectFieldReadNode) Evaluate(state *State) lib.Mlrval {
 	value := state.Inrec.Get(&this.fieldName)
 	if value == nil {
 		return lib.MlrvalFromAbsent()
@@ -74,103 +74,103 @@ func (this *SrecDirectFieldRead) Evaluate(state *State) lib.Mlrval {
 }
 
 // ----------------------------------------------------------------
-type StringLiteral struct {
+type StringLiteralNode struct {
 	literal lib.Mlrval
 }
 
-func NewStringLiteral(literal string) *StringLiteral {
-	return &StringLiteral{
+func BuildStringLiteralNode(literal string) *StringLiteralNode {
+	return &StringLiteralNode{
 		literal: lib.MlrvalFromString(literal),
 	}
 }
-func (this *StringLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *StringLiteralNode) Evaluate(state *State) lib.Mlrval {
 	return this.literal
 }
 
 // ----------------------------------------------------------------
-type IntLiteral struct {
+type IntLiteralNode struct {
 	literal lib.Mlrval
 }
 
-func NewIntLiteral(literal string) *IntLiteral {
-	return &IntLiteral{
+func BuildIntLiteralNode(literal string) *IntLiteralNode {
+	return &IntLiteralNode{
 		literal: lib.MlrvalFromInt64String(literal),
 	}
 }
-func (this *IntLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *IntLiteralNode) Evaluate(state *State) lib.Mlrval {
 	return this.literal
 }
 
 // ----------------------------------------------------------------
-type FloatLiteral struct {
+type FloatLiteralNode struct {
 	literal lib.Mlrval
 }
 
-func NewFloatLiteral(literal string) *FloatLiteral {
-	return &FloatLiteral{
+func BuildFloatLiteralNode(literal string) *FloatLiteralNode {
+	return &FloatLiteralNode{
 		literal: lib.MlrvalFromFloat64String(literal),
 	}
 }
-func (this *FloatLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *FloatLiteralNode) Evaluate(state *State) lib.Mlrval {
 	return this.literal
 }
 
 // ----------------------------------------------------------------
-type BoolLiteral struct {
+type BoolLiteralNode struct {
 	literal lib.Mlrval
 }
 
-func NewBoolLiteral(literal string) *BoolLiteral {
-	return &BoolLiteral{
+func BuildBoolLiteralNode(literal string) *BoolLiteralNode {
+	return &BoolLiteralNode{
 		literal: lib.MlrvalFromBoolString(literal),
 	}
 }
-func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
+func (this *BoolLiteralNode) Evaluate(state *State) lib.Mlrval {
 	return this.literal
 }
 
 // ================================================================
-func NewContextVariable(astNode *dsl.ASTNode) (IEvaluable, error) {
+func BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	sval := string(astNode.Token.Lit)
 
 	switch sval {
 
 	case "FILENAME":
-		return NewFILENAME(), nil
+		return BuildFILENAMENode(), nil
 		break
 	case "FILENUM":
-		return NewFILENUM(), nil
+		return BuildFILENUMNode(), nil
 		break
 
 	case "NF":
-		return NewNF(), nil
+		return BuildNFNode(), nil
 		break
 	case "NR":
-		return NewNR(), nil
+		return BuildNRNode(), nil
 		break
 	case "FNR":
-		return NewFNR(), nil
+		return BuildFNRNode(), nil
 		break
 
 	case "IRS":
-		return NewIRS(), nil
+		return BuildIRSNode(), nil
 		break
 	case "IFS":
-		return NewIFS(), nil
+		return BuildIFSNode(), nil
 		break
 	case "IPS":
-		return NewIPS(), nil
+		return BuildIPSNode(), nil
 		break
 
 	case "ORS":
-		return NewORS(), nil
+		return BuildORSNode(), nil
 		break
 	case "OFS":
-		return NewOFS(), nil
+		return BuildOFSNode(), nil
 		break
 	case "OPS":
-		return NewOPS(), nil
+		return BuildOPSNode(), nil
 		break
 
 	}
@@ -179,123 +179,123 @@ func NewContextVariable(astNode *dsl.ASTNode) (IEvaluable, error) {
 }
 
 // ----------------------------------------------------------------
-type FILENAME struct {
+type FILENAMENode struct {
 }
 
-func NewFILENAME() *FILENAME {
-	return &FILENAME{}
+func BuildFILENAMENode() *FILENAMENode {
+	return &FILENAMENode{}
 }
-func (this *FILENAME) Evaluate(state *State) lib.Mlrval {
+func (this *FILENAMENode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.FILENAME)
 }
 
 // ----------------------------------------------------------------
-type FILENUM struct {
+type FILENUMNode struct {
 }
 
-func NewFILENUM() *FILENUM {
-	return &FILENUM{}
+func BuildFILENUMNode() *FILENUMNode {
+	return &FILENUMNode{}
 }
-func (this *FILENUM) Evaluate(state *State) lib.Mlrval {
+func (this *FILENUMNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.FILENUM)
 }
 
 // ----------------------------------------------------------------
-type NF struct {
+type NFNode struct {
 }
 
-func NewNF() *NF {
-	return &NF{}
+func BuildNFNode() *NFNode {
+	return &NFNode{}
 }
-func (this *NF) Evaluate(state *State) lib.Mlrval {
+func (this *NFNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.NF)
 }
 
 // ----------------------------------------------------------------
-type NR struct {
+type NRNode struct {
 }
 
-func NewNR() *NR {
-	return &NR{}
+func BuildNRNode() *NRNode {
+	return &NRNode{}
 }
-func (this *NR) Evaluate(state *State) lib.Mlrval {
+func (this *NRNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.NR)
 }
 
 // ----------------------------------------------------------------
-type FNR struct {
+type FNRNode struct {
 }
 
-func NewFNR() *FNR {
-	return &FNR{}
+func BuildFNRNode() *FNRNode {
+	return &FNRNode{}
 }
-func (this *FNR) Evaluate(state *State) lib.Mlrval {
+func (this *FNRNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.FNR)
 }
 
 // ----------------------------------------------------------------
-type IRS struct {
+type IRSNode struct {
 }
 
-func NewIRS() *IRS {
-	return &IRS{}
+func BuildIRSNode() *IRSNode {
+	return &IRSNode{}
 }
-func (this *IRS) Evaluate(state *State) lib.Mlrval {
+func (this *IRSNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.IRS)
 }
 
 // ----------------------------------------------------------------
-type IFS struct {
+type IFSNode struct {
 }
 
-func NewIFS() *IFS {
-	return &IFS{}
+func BuildIFSNode() *IFSNode {
+	return &IFSNode{}
 }
-func (this *IFS) Evaluate(state *State) lib.Mlrval {
+func (this *IFSNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.IFS)
 }
 
 // ----------------------------------------------------------------
-type IPS struct {
+type IPSNode struct {
 }
 
-func NewIPS() *IPS {
-	return &IPS{}
+func BuildIPSNode() *IPSNode {
+	return &IPSNode{}
 }
-func (this *IPS) Evaluate(state *State) lib.Mlrval {
+func (this *IPSNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.IPS)
 }
 
 // ----------------------------------------------------------------
-type ORS struct {
+type ORSNode struct {
 }
 
-func NewORS() *ORS {
-	return &ORS{}
+func BuildORSNode() *ORSNode {
+	return &ORSNode{}
 }
-func (this *ORS) Evaluate(state *State) lib.Mlrval {
+func (this *ORSNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.ORS)
 }
 
 // ----------------------------------------------------------------
-type OFS struct {
+type OFSNode struct {
 }
 
-func NewOFS() *OFS {
-	return &OFS{}
+func BuildOFSNode() *OFSNode {
+	return &OFSNode{}
 }
-func (this *OFS) Evaluate(state *State) lib.Mlrval {
+func (this *OFSNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.OFS)
 }
 
 // ----------------------------------------------------------------
-type OPS struct {
+type OPSNode struct {
 }
 
-func NewOPS() *OPS {
-	return &OPS{}
+func BuildOPSNode() *OPSNode {
+	return &OPSNode{}
 }
-func (this *OPS) Evaluate(state *State) lib.Mlrval {
+func (this *OPSNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromString(state.Context.OPS)
 }
 
@@ -304,13 +304,13 @@ func (this *OPS) Evaluate(state *State) lib.Mlrval {
 // This is for testing that AND/OR short-circuiting is implemented correctly:
 // output = input1 || panic should NOT panic the process when input1 is true.
 
-type Panic struct {
+type PanicNode struct {
 }
 
-func NewPanic() *Panic {
-	return &Panic{}
+func BuildPanicNode() *PanicNode {
+	return &PanicNode{}
 }
-func (this *Panic) Evaluate(state *State) lib.Mlrval {
+func (this *PanicNode) Evaluate(state *State) lib.Mlrval {
 	lib.InternalCodingErrorPanic("Panic token was evaluated, not short-circuited.")
 	return lib.MlrvalFromError() // not reached
 }

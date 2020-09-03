@@ -13,7 +13,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func NewRoot() *Root {
+func BuildRoot() *Root {
 	return &Root{
 		make([]IExecutable, 0),
 	}
@@ -34,7 +34,7 @@ func Build(ast *dsl.AST) (*Root, error) {
 	}
 	astChildren := ast.Root.Children
 
-	cstRoot := NewRoot()
+	cstRoot := BuildRoot()
 
 	// For this very early stub, only process statement nodes (which is all the
 	// grammar produces at this point ...)
@@ -43,7 +43,7 @@ func Build(ast *dsl.AST) (*Root, error) {
 			return nil, errors.New("Non-assignment AST node unhandled")
 		}
 
-		statement, err := NewSrecDirectFieldAssignment(astChild)
+		statement, err := BuildSrecDirectFieldAssignmentNode(astChild)
 		if err != nil {
 			return nil, err
 		}

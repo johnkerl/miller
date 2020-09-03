@@ -10,9 +10,9 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func NewSrecDirectFieldAssignment(
+func BuildSrecDirectFieldAssignmentNode(
 	astNode *dsl.ASTNode,
-) (*SrecDirectFieldAssignment, error) {
+) (*SrecDirectFieldAssignmentNode, error) {
 
 	err := astNode.CheckArity(2)
 	if err != nil {
@@ -23,18 +23,18 @@ func NewSrecDirectFieldAssignment(
 	rhsASTNode := astNode.Children[1]
 
 	lhsFieldName := string(lhsASTNode.Token.Lit)
-	rhs, err := NewEvaluable(rhsASTNode)
+	rhs, err := BuildEvaluableNode(rhsASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	return &SrecDirectFieldAssignment{
+	return &SrecDirectFieldAssignmentNode{
 		lhsFieldName: lhsFieldName,
 		rhs:          rhs,
 	}, nil
 }
 
-func (this *SrecDirectFieldAssignment) Execute(state *State) {
+func (this *SrecDirectFieldAssignmentNode) Execute(state *State) {
 	value := this.rhs.Evaluate(state)
 	if !value.IsAbsent() {
 		state.Inrec.Put(&this.lhsFieldName, &value)

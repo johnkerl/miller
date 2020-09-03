@@ -13,24 +13,23 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func NewEvaluable(astNode *dsl.ASTNode) (IEvaluable, error) {
+func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	if astNode.Children == nil {
-		return NewEvaluableLeafNode(astNode)
+		return BuildEvaluableLeafNode(astNode)
 	}
 
 	if astNode.Type == dsl.NodeTypeOperator {
-		return NewOperatorNode(astNode)
+		return BuildOperatorNode(astNode)
 	}
 
 	if astNode.Type == dsl.NodeTypeArrayLiteral {
-		return NewArrayLiteralNode(astNode)
+		return BuildArrayLiteralNode(astNode)
 	}
 
 	if astNode.Type == dsl.NodeTypeMapLiteral {
-		return NewMapLiteralNode(astNode)
+		return BuildMapLiteralNode(astNode)
 	}
 
-	// xxx map
 	// xxx if/while/etc
 	// xxx function
 	// xxx more

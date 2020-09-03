@@ -69,19 +69,19 @@ type Root struct {
 }
 
 // ----------------------------------------------------------------
-type SrecDirectFieldAssignment struct {
+type SrecDirectFieldAssignmentNode struct {
 	lhsFieldName string
 	rhs          IEvaluable
 }
 
-type IndirectSrecFieldAssignment struct {
+type IndirectSrecFieldAssignmentNode struct {
 	lhsFieldName IEvaluable
 	rhs          IEvaluable
 }
 
 // xxx implement IExecutable
 
-type StatementBlock struct {
+type StatementBlockNode struct {
 	// list of statement
 }
 

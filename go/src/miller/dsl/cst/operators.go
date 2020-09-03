@@ -12,31 +12,31 @@ import (
 // ================================================================
 
 // ================================================================
-func NewOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func BuildOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeOperator)
 
 	arity := len(astNode.Children)
 	switch arity {
 	case 1:
-		return NewUnaryOperatorNode(astNode)
+		return BuildUnaryOperatorNode(astNode)
 		break
 	case 2:
-		return NewBinaryOperatorNode(astNode)
+		return BuildBinaryOperatorNode(astNode)
 		break
 	case 3:
-		return NewTernaryOperatorNode(astNode)
+		return BuildTernaryOperatorNode(astNode)
 		break
 	}
 	return nil, errors.New("CST build: AST operator node unhandled.")
 }
 
 // ----------------------------------------------------------------
-func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func BuildUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
 	lib.InternalCodingErrorIf(arity != 1)
 	astChild := astNode.Children[0]
 
-	cstChild, err := NewEvaluable(astChild)
+	cstChild, err := BuildEvaluableNode(astChild)
 	if err != nil {
 		return nil, err
 	}
@@ -44,16 +44,16 @@ func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	sop := string(astNode.Token.Lit)
 	switch sop {
 	case "+":
-		return NewUnaryPlusOperator(cstChild), nil
+		return BuildUnaryPlusOperatorNode(cstChild), nil
 		break
 	case "-":
-		return NewUnaryMinusOperator(cstChild), nil
+		return BuildUnaryMinusOperatorNode(cstChild), nil
 		break
 	case "~":
-		return NewBitwiseNOTOperator(cstChild), nil
+		return BuildBitwiseNOTOperatorNode(cstChild), nil
 		break
 	case "!":
-		return NewLogicalNOTOperator(cstChild), nil
+		return BuildLogicalNOTOperatorNode(cstChild), nil
 		break
 	}
 
@@ -61,18 +61,18 @@ func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 }
 
 // ----------------------------------------------------------------
-func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func BuildBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
 	lib.InternalCodingErrorIf(arity != 2)
 
 	leftASTChild := astNode.Children[0]
 	rightASTChild := astNode.Children[1]
 
-	leftCSTChild, err := NewEvaluable(leftASTChild)
+	leftCSTChild, err := BuildEvaluableNode(leftASTChild)
 	if err != nil {
 		return nil, err
 	}
-	rightCSTChild, err := NewEvaluable(rightASTChild)
+	rightCSTChild, err := BuildEvaluableNode(rightASTChild)
 	if err != nil {
 		return nil, err
 	}
@@ -80,83 +80,83 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	sop := string(astNode.Token.Lit)
 	switch sop {
 	case ".":
-		return NewDotOperator(leftCSTChild, rightCSTChild), nil
+		return BuildDotOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 	case "+":
-		return NewPlusOperator(leftCSTChild, rightCSTChild), nil
+		return BuildPlusOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "-":
-		return NewMinusOperator(leftCSTChild, rightCSTChild), nil
+		return BuildMinusOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "*":
-		return NewTimesOperator(leftCSTChild, rightCSTChild), nil
+		return BuildTimesOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "/":
-		return NewDivideOperator(leftCSTChild, rightCSTChild), nil
+		return BuildDivideOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "//":
-		return NewIntDivideOperator(leftCSTChild, rightCSTChild), nil
+		return BuildIntDivideOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "**":
-		return NewPowOperator(leftCSTChild, rightCSTChild), nil
+		return BuildPowOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 	case ".+":
-		return NewDotPlusOperator(leftCSTChild, rightCSTChild), nil
+		return BuildDotPlusOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case ".-":
-		return NewDotMinusOperator(leftCSTChild, rightCSTChild), nil
+		return BuildDotMinusOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case ".*":
-		return NewDotTimesOperator(leftCSTChild, rightCSTChild), nil
+		return BuildDotTimesOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "./":
-		return NewDotDivideOperator(leftCSTChild, rightCSTChild), nil
+		return BuildDotDivideOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 	case "%":
-		return NewModulusOperator(leftCSTChild, rightCSTChild), nil
+		return BuildModulusOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 	case "&":
-		return NewBitwiseANDOperator(leftCSTChild, rightCSTChild), nil
+		return BuildBitwiseANDOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "|":
-		return NewBitwiseOROperator(leftCSTChild, rightCSTChild), nil
+		return BuildBitwiseOROperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "^":
-		return NewBitwiseXOROperator(leftCSTChild, rightCSTChild), nil
+		return BuildBitwiseXOROperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 	// TO DO: implement short-circuiting for these, as special cases.
 	case "&&":
-		return NewLogicalANDOperator(leftCSTChild, rightCSTChild), nil
+		return BuildLogicalANDOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "||":
-		return NewLogicalOROperator(leftCSTChild, rightCSTChild), nil
+		return BuildLogicalOROperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "^^":
-		return NewLogicalXOROperator(leftCSTChild, rightCSTChild), nil
+		return BuildLogicalXOROperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 	case "==":
-		return NewEqualsOperator(leftCSTChild, rightCSTChild), nil
+		return BuildEqualsOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "!=":
-		return NewNotEqualsOperator(leftCSTChild, rightCSTChild), nil
+		return BuildNotEqualsOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case ">":
-		return NewGreaterThanOperator(leftCSTChild, rightCSTChild), nil
+		return BuildGreaterThanOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case ">=":
-		return NewGreaterThanOrEqualsOperator(leftCSTChild, rightCSTChild), nil
+		return BuildGreaterThanOrEqualsOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "<":
-		return NewLessThanOperator(leftCSTChild, rightCSTChild), nil
+		return BuildLessThanOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 	case "<=":
-		return NewLessThanOrEqualsOperator(leftCSTChild, rightCSTChild), nil
+		return BuildLessThanOrEqualsOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
 		// xxx continue ...
@@ -169,7 +169,7 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 // ----------------------------------------------------------------
 // TODO: Look into short-circuiting
-func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func BuildTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
 	lib.InternalCodingErrorIf(arity != 3)
 
@@ -177,15 +177,15 @@ func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	middleASTChild := astNode.Children[1]
 	rightASTChild := astNode.Children[2]
 
-	leftCSTChild, err := NewEvaluable(leftASTChild)
+	leftCSTChild, err := BuildEvaluableNode(leftASTChild)
 	if err != nil {
 		return nil, err
 	}
-	middleCSTChild, err := NewEvaluable(middleASTChild)
+	middleCSTChild, err := BuildEvaluableNode(middleASTChild)
 	if err != nil {
 		return nil, err
 	}
-	rightCSTChild, err := NewEvaluable(rightASTChild)
+	rightCSTChild, err := BuildEvaluableNode(rightASTChild)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +193,7 @@ func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	sop := string(astNode.Token.Lit)
 	switch sop {
 	case "?:":
-		return NewTernaryOperator(leftCSTChild, middleCSTChild, rightCSTChild), nil
+		return BuildStandardTernaryOperatorNode(leftCSTChild, middleCSTChild, rightCSTChild), nil
 		break
 	}
 
@@ -201,223 +201,223 @@ func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 }
 
 // ================================================================
-type UnaryPlusOperator struct{ a IEvaluable }
+type UnaryPlusOperatorNode struct{ a IEvaluable }
 
-func NewUnaryPlusOperator(a IEvaluable) *UnaryPlusOperator {
-	return &UnaryPlusOperator{a: a}
+func BuildUnaryPlusOperatorNode(a IEvaluable) *UnaryPlusOperatorNode {
+	return &UnaryPlusOperatorNode{a: a}
 }
-func (this *UnaryPlusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *UnaryPlusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	return lib.MlrvalUnaryPlus(&aout)
 }
 
 // ----------------------------------------------------------------
-type UnaryMinusOperator struct{ a IEvaluable }
+type UnaryMinusOperatorNode struct{ a IEvaluable }
 
-func NewUnaryMinusOperator(a IEvaluable) *UnaryMinusOperator {
-	return &UnaryMinusOperator{a: a}
+func BuildUnaryMinusOperatorNode(a IEvaluable) *UnaryMinusOperatorNode {
+	return &UnaryMinusOperatorNode{a: a}
 }
-func (this *UnaryMinusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *UnaryMinusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	return lib.MlrvalUnaryMinus(&aout)
 }
 
 // ================================================================
-type DotOperator struct{ a, b IEvaluable }
+type DotOperatorNode struct{ a, b IEvaluable }
 
-func NewDotOperator(a, b IEvaluable) *DotOperator {
-	return &DotOperator{a: a, b: b}
+func BuildDotOperatorNode(a, b IEvaluable) *DotOperatorNode {
+	return &DotOperatorNode{a: a, b: b}
 }
-func (this *DotOperator) Evaluate(state *State) lib.Mlrval {
+func (this *DotOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDot(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type PlusOperator struct{ a, b IEvaluable }
+type PlusOperatorNode struct{ a, b IEvaluable }
 
-func NewPlusOperator(a, b IEvaluable) *PlusOperator {
-	return &PlusOperator{a: a, b: b}
+func BuildPlusOperatorNode(a, b IEvaluable) *PlusOperatorNode {
+	return &PlusOperatorNode{a: a, b: b}
 }
-func (this *PlusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *PlusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalPlus(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type MinusOperator struct{ a, b IEvaluable }
+type MinusOperatorNode struct{ a, b IEvaluable }
 
-func NewMinusOperator(a, b IEvaluable) *MinusOperator {
-	return &MinusOperator{a: a, b: b}
+func BuildMinusOperatorNode(a, b IEvaluable) *MinusOperatorNode {
+	return &MinusOperatorNode{a: a, b: b}
 }
-func (this *MinusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *MinusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalMinus(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type TimesOperator struct{ a, b IEvaluable }
+type TimesOperatorNode struct{ a, b IEvaluable }
 
-func NewTimesOperator(a, b IEvaluable) *TimesOperator {
-	return &TimesOperator{a: a, b: b}
+func BuildTimesOperatorNode(a, b IEvaluable) *TimesOperatorNode {
+	return &TimesOperatorNode{a: a, b: b}
 }
-func (this *TimesOperator) Evaluate(state *State) lib.Mlrval {
+func (this *TimesOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalTimes(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type DivideOperator struct{ a, b IEvaluable }
+type DivideOperatorNode struct{ a, b IEvaluable }
 
-func NewDivideOperator(a, b IEvaluable) *DivideOperator {
-	return &DivideOperator{a: a, b: b}
+func BuildDivideOperatorNode(a, b IEvaluable) *DivideOperatorNode {
+	return &DivideOperatorNode{a: a, b: b}
 }
-func (this *DivideOperator) Evaluate(state *State) lib.Mlrval {
+func (this *DivideOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDivide(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type IntDivideOperator struct{ a, b IEvaluable }
+type IntDivideOperatorNode struct{ a, b IEvaluable }
 
-func NewIntDivideOperator(a, b IEvaluable) *IntDivideOperator {
-	return &IntDivideOperator{a: a, b: b}
+func BuildIntDivideOperatorNode(a, b IEvaluable) *IntDivideOperatorNode {
+	return &IntDivideOperatorNode{a: a, b: b}
 }
-func (this *IntDivideOperator) Evaluate(state *State) lib.Mlrval {
+func (this *IntDivideOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalIntDivide(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type PowOperator struct{ a, b IEvaluable }
+type PowOperatorNode struct{ a, b IEvaluable }
 
-func NewPowOperator(a, b IEvaluable) *PowOperator {
-	return &PowOperator{a: a, b: b}
+func BuildPowOperatorNode(a, b IEvaluable) *PowOperatorNode {
+	return &PowOperatorNode{a: a, b: b}
 }
-func (this *PowOperator) Evaluate(state *State) lib.Mlrval {
+func (this *PowOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalPow(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type DotPlusOperator struct{ a, b IEvaluable }
+type DotPlusOperatorNode struct{ a, b IEvaluable }
 
-func NewDotPlusOperator(a, b IEvaluable) *DotPlusOperator {
-	return &DotPlusOperator{a: a, b: b}
+func BuildDotPlusOperatorNode(a, b IEvaluable) *DotPlusOperatorNode {
+	return &DotPlusOperatorNode{a: a, b: b}
 }
-func (this *DotPlusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *DotPlusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDotPlus(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type DotMinusOperator struct{ a, b IEvaluable }
+type DotMinusOperatorNode struct{ a, b IEvaluable }
 
-func NewDotMinusOperator(a, b IEvaluable) *DotMinusOperator {
-	return &DotMinusOperator{a: a, b: b}
+func BuildDotMinusOperatorNode(a, b IEvaluable) *DotMinusOperatorNode {
+	return &DotMinusOperatorNode{a: a, b: b}
 }
-func (this *DotMinusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *DotMinusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDotMinus(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type DotTimesOperator struct{ a, b IEvaluable }
+type DotTimesOperatorNode struct{ a, b IEvaluable }
 
-func NewDotTimesOperator(a, b IEvaluable) *DotTimesOperator {
-	return &DotTimesOperator{a: a, b: b}
+func BuildDotTimesOperatorNode(a, b IEvaluable) *DotTimesOperatorNode {
+	return &DotTimesOperatorNode{a: a, b: b}
 }
-func (this *DotTimesOperator) Evaluate(state *State) lib.Mlrval {
+func (this *DotTimesOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDotTimes(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type DotDivideOperator struct{ a, b IEvaluable }
+type DotDivideOperatorNode struct{ a, b IEvaluable }
 
-func NewDotDivideOperator(a, b IEvaluable) *DotDivideOperator {
-	return &DotDivideOperator{a: a, b: b}
+func BuildDotDivideOperatorNode(a, b IEvaluable) *DotDivideOperatorNode {
+	return &DotDivideOperatorNode{a: a, b: b}
 }
-func (this *DotDivideOperator) Evaluate(state *State) lib.Mlrval {
+func (this *DotDivideOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDotDivide(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type ModulusOperator struct{ a, b IEvaluable }
+type ModulusOperatorNode struct{ a, b IEvaluable }
 
-func NewModulusOperator(a, b IEvaluable) *ModulusOperator {
-	return &ModulusOperator{a: a, b: b}
+func BuildModulusOperatorNode(a, b IEvaluable) *ModulusOperatorNode {
+	return &ModulusOperatorNode{a: a, b: b}
 }
-func (this *ModulusOperator) Evaluate(state *State) lib.Mlrval {
+func (this *ModulusOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalModulus(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type BitwiseANDOperator struct{ a, b IEvaluable }
+type BitwiseANDOperatorNode struct{ a, b IEvaluable }
 
-func NewBitwiseANDOperator(a, b IEvaluable) *BitwiseANDOperator {
-	return &BitwiseANDOperator{a: a, b: b}
+func BuildBitwiseANDOperatorNode(a, b IEvaluable) *BitwiseANDOperatorNode {
+	return &BitwiseANDOperatorNode{a: a, b: b}
 }
-func (this *BitwiseANDOperator) Evaluate(state *State) lib.Mlrval {
+func (this *BitwiseANDOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalBitwiseAND(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type BitwiseOROperator struct{ a, b IEvaluable }
+type BitwiseOROperatorNode struct{ a, b IEvaluable }
 
-func NewBitwiseOROperator(a, b IEvaluable) *BitwiseOROperator {
-	return &BitwiseOROperator{a: a, b: b}
+func BuildBitwiseOROperatorNode(a, b IEvaluable) *BitwiseOROperatorNode {
+	return &BitwiseOROperatorNode{a: a, b: b}
 }
-func (this *BitwiseOROperator) Evaluate(state *State) lib.Mlrval {
+func (this *BitwiseOROperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalBitwiseOR(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type BitwiseXOROperator struct{ a, b IEvaluable }
+type BitwiseXOROperatorNode struct{ a, b IEvaluable }
 
-func NewBitwiseXOROperator(a, b IEvaluable) *BitwiseXOROperator {
-	return &BitwiseXOROperator{a: a, b: b}
+func BuildBitwiseXOROperatorNode(a, b IEvaluable) *BitwiseXOROperatorNode {
+	return &BitwiseXOROperatorNode{a: a, b: b}
 }
-func (this *BitwiseXOROperator) Evaluate(state *State) lib.Mlrval {
+func (this *BitwiseXOROperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalBitwiseXOR(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type BitwiseNOTOperator struct{ a IEvaluable }
+type BitwiseNOTOperatorNode struct{ a IEvaluable }
 
-func NewBitwiseNOTOperator(a IEvaluable) *BitwiseNOTOperator {
-	return &BitwiseNOTOperator{a: a}
+func BuildBitwiseNOTOperatorNode(a IEvaluable) *BitwiseNOTOperatorNode {
+	return &BitwiseNOTOperatorNode{a: a}
 }
-func (this *BitwiseNOTOperator) Evaluate(state *State) lib.Mlrval {
+func (this *BitwiseNOTOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	return lib.MlrvalBitwiseNOT(&aout)
 }
 
 // ----------------------------------------------------------------
-type LogicalANDOperator struct{ a, b IEvaluable }
+type LogicalANDOperatorNode struct{ a, b IEvaluable }
 
-func NewLogicalANDOperator(a, b IEvaluable) *LogicalANDOperator {
-	return &LogicalANDOperator{a: a, b: b}
+func BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
+	return &LogicalANDOperatorNode{a: a, b: b}
 }
 
 // This is different from most of the evaluator functions in that it does
@@ -456,7 +456,7 @@ func NewLogicalANDOperator(a, b IEvaluable) *LogicalANDOperator {
 // * If b is absent: return absent
 // * Return a && b
 
-func (this *LogicalANDOperator) Evaluate(state *State) lib.Mlrval {
+func (this *LogicalANDOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
@@ -485,10 +485,10 @@ func (this *LogicalANDOperator) Evaluate(state *State) lib.Mlrval {
 }
 
 // ----------------------------------------------------------------
-type LogicalOROperator struct{ a, b IEvaluable }
+type LogicalOROperatorNode struct{ a, b IEvaluable }
 
-func NewLogicalOROperator(a, b IEvaluable) *LogicalOROperator {
-	return &LogicalOROperator{a: a, b: b}
+func BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
+	return &LogicalOROperatorNode{a: a, b: b}
 }
 
 // This is different from most of the evaluator functions in that it does
@@ -496,7 +496,7 @@ func NewLogicalOROperator(a, b IEvaluable) *LogicalOROperator {
 // if the first argumeent is false.
 //
 // See the disposition-matrix discussion for LogicalANDOperator.
-func (this *LogicalOROperator) Evaluate(state *State) lib.Mlrval {
+func (this *LogicalOROperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
@@ -525,107 +525,107 @@ func (this *LogicalOROperator) Evaluate(state *State) lib.Mlrval {
 }
 
 // ----------------------------------------------------------------
-type LogicalXOROperator struct{ a, b IEvaluable }
+type LogicalXOROperatorNode struct{ a, b IEvaluable }
 
-func NewLogicalXOROperator(a, b IEvaluable) *LogicalXOROperator {
-	return &LogicalXOROperator{a: a, b: b}
+func BuildLogicalXOROperatorNode(a, b IEvaluable) *LogicalXOROperatorNode {
+	return &LogicalXOROperatorNode{a: a, b: b}
 }
-func (this *LogicalXOROperator) Evaluate(state *State) lib.Mlrval {
+func (this *LogicalXOROperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalLogicalXOR(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type LogicalNOTOperator struct{ a IEvaluable }
+type LogicalNOTOperatorNode struct{ a IEvaluable }
 
-func NewLogicalNOTOperator(a IEvaluable) *LogicalNOTOperator {
-	return &LogicalNOTOperator{a: a}
+func BuildLogicalNOTOperatorNode(a IEvaluable) *LogicalNOTOperatorNode {
+	return &LogicalNOTOperatorNode{a: a}
 }
-func (this *LogicalNOTOperator) Evaluate(state *State) lib.Mlrval {
+func (this *LogicalNOTOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	return lib.MlrvalLogicalNOT(&aout)
 }
 
 // ----------------------------------------------------------------
-type EqualsOperator struct{ a, b IEvaluable }
+type EqualsOperatorNode struct{ a, b IEvaluable }
 
-func NewEqualsOperator(a, b IEvaluable) *EqualsOperator {
-	return &EqualsOperator{a: a, b: b}
+func BuildEqualsOperatorNode(a, b IEvaluable) *EqualsOperatorNode {
+	return &EqualsOperatorNode{a: a, b: b}
 }
-func (this *EqualsOperator) Evaluate(state *State) lib.Mlrval {
+func (this *EqualsOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalEquals(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type NotEqualsOperator struct{ a, b IEvaluable }
+type NotEqualsOperatorNode struct{ a, b IEvaluable }
 
-func NewNotEqualsOperator(a, b IEvaluable) *NotEqualsOperator {
-	return &NotEqualsOperator{a: a, b: b}
+func BuildNotEqualsOperatorNode(a, b IEvaluable) *NotEqualsOperatorNode {
+	return &NotEqualsOperatorNode{a: a, b: b}
 }
-func (this *NotEqualsOperator) Evaluate(state *State) lib.Mlrval {
+func (this *NotEqualsOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalNotEquals(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type GreaterThanOperator struct{ a, b IEvaluable }
+type GreaterThanOperatorNode struct{ a, b IEvaluable }
 
-func NewGreaterThanOperator(a, b IEvaluable) *GreaterThanOperator {
-	return &GreaterThanOperator{a: a, b: b}
+func BuildGreaterThanOperatorNode(a, b IEvaluable) *GreaterThanOperatorNode {
+	return &GreaterThanOperatorNode{a: a, b: b}
 }
-func (this *GreaterThanOperator) Evaluate(state *State) lib.Mlrval {
+func (this *GreaterThanOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalGreaterThan(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type GreaterThanOrEqualsOperator struct{ a, b IEvaluable }
+type GreaterThanOrEqualsOperatorNode struct{ a, b IEvaluable }
 
-func NewGreaterThanOrEqualsOperator(a, b IEvaluable) *GreaterThanOrEqualsOperator {
-	return &GreaterThanOrEqualsOperator{a: a, b: b}
+func BuildGreaterThanOrEqualsOperatorNode(a, b IEvaluable) *GreaterThanOrEqualsOperatorNode {
+	return &GreaterThanOrEqualsOperatorNode{a: a, b: b}
 }
-func (this *GreaterThanOrEqualsOperator) Evaluate(state *State) lib.Mlrval {
+func (this *GreaterThanOrEqualsOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalGreaterThanOrEquals(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type LessThanOperator struct{ a, b IEvaluable }
+type LessThanOperatorNode struct{ a, b IEvaluable }
 
-func NewLessThanOperator(a, b IEvaluable) *LessThanOperator {
-	return &LessThanOperator{a: a, b: b}
+func BuildLessThanOperatorNode(a, b IEvaluable) *LessThanOperatorNode {
+	return &LessThanOperatorNode{a: a, b: b}
 }
-func (this *LessThanOperator) Evaluate(state *State) lib.Mlrval {
+func (this *LessThanOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalLessThan(&aout, &bout)
 }
 
 // ----------------------------------------------------------------
-type LessThanOrEqualsOperator struct{ a, b IEvaluable }
+type LessThanOrEqualsOperatorNode struct{ a, b IEvaluable }
 
-func NewLessThanOrEqualsOperator(a, b IEvaluable) *LessThanOrEqualsOperator {
-	return &LessThanOrEqualsOperator{a: a, b: b}
+func BuildLessThanOrEqualsOperatorNode(a, b IEvaluable) *LessThanOrEqualsOperatorNode {
+	return &LessThanOrEqualsOperatorNode{a: a, b: b}
 }
-func (this *LessThanOrEqualsOperator) Evaluate(state *State) lib.Mlrval {
+func (this *LessThanOrEqualsOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalLessThanOrEquals(&aout, &bout)
 }
 
 // ================================================================
-type TernaryOperator struct{ a, b, c IEvaluable }
+type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
 
-func NewTernaryOperator(a, b, c IEvaluable) *TernaryOperator {
-	return &TernaryOperator{a: a, b: b, c: c}
+func BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
+	return &StandardTernaryOperatorNode{a: a, b: b, c: c}
 }
-func (this *TernaryOperator) Evaluate(state *State) lib.Mlrval {
+func (this *StandardTernaryOperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 
 	boolValue, isBoolean := aout.GetBoolValue()
