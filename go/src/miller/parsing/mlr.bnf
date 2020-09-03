@@ -2499,17 +2499,17 @@ AddsubdotTerm
 ;
 
 MuldivTerm
-  : MuldivTerm "*"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "/"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "//"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "%"   UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".*"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "./"  UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".//" UnaryBitwiseOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | UnaryBitwiseOpTerm
+  : MuldivTerm "*"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "/"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "//"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "%"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".*"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "./"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".//" UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | UnaryOpTerm
 ;
 
-UnaryBitwiseOpTerm
+UnaryOpTerm
   : "+"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
   | "-"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
   | ".+" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>

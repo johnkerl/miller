@@ -49,6 +49,9 @@ func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case "-":
 		return NewUnaryMinusOperator(cstChild), nil
 		break
+	case "~":
+		return NewBitwiseNOTOperator(cstChild), nil
+		break
 	}
 
 	return nil, errors.New("CST build: AST unary operator node unhandled.")
@@ -104,6 +107,20 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		break
 	case "./":
 		return NewDotDivideOperator(leftCSTChild, rightCSTChild), nil
+		break
+
+	case "%":
+		return NewModulusOperator(leftCSTChild, rightCSTChild), nil
+		break
+
+	case "&":
+		return NewBitwiseANDOperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "|":
+		return NewBitwiseOROperator(leftCSTChild, rightCSTChild), nil
+		break
+	case "^":
+		return NewBitwiseXOROperator(leftCSTChild, rightCSTChild), nil
 		break
 
 		// xxx continue ...
@@ -266,4 +283,63 @@ func (this *DotDivideOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalDotDivide(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type ModulusOperator struct{ a, b IEvaluable }
+
+func NewModulusOperator(a, b IEvaluable) *ModulusOperator {
+	return &ModulusOperator{a: a, b: b}
+}
+func (this *ModulusOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalModulus(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type BitwiseANDOperator struct{ a, b IEvaluable }
+
+func NewBitwiseANDOperator(a, b IEvaluable) *BitwiseANDOperator {
+	return &BitwiseANDOperator{a: a, b: b}
+}
+func (this *BitwiseANDOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalBitwiseAND(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type BitwiseOROperator struct{ a, b IEvaluable }
+
+func NewBitwiseOROperator(a, b IEvaluable) *BitwiseOROperator {
+	return &BitwiseOROperator{a: a, b: b}
+}
+func (this *BitwiseOROperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalBitwiseOR(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type BitwiseXOROperator struct{ a, b IEvaluable }
+
+func NewBitwiseXOROperator(a, b IEvaluable) *BitwiseXOROperator {
+	return &BitwiseXOROperator{a: a, b: b}
+}
+func (this *BitwiseXOROperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalBitwiseXOR(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type BitwiseNOTOperator struct{ a IEvaluable }
+
+func NewBitwiseNOTOperator(a IEvaluable) *BitwiseNOTOperator {
+	return &BitwiseNOTOperator{a: a}
+}
+func (this *BitwiseNOTOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	return lib.MlrvalBitwiseNOT(&aout)
 }

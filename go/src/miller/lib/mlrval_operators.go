@@ -108,14 +108,6 @@ func _f0__(val1, val2 *Mlrval) Mlrval {
 // ================================================================
 // Unary plus operator
 
-func upos_i_i(val1 *Mlrval) Mlrval {
-	return *val1
-}
-
-func upos_f_f(val1 *Mlrval) Mlrval {
-	return *val1
-}
-
 var upos_dispositions = [MT_DIM]unaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
@@ -635,19 +627,43 @@ func MlrvalDotDivide(val1, val2 *Mlrval) Mlrval {
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
 func dotidivide_f_ff(val1, val2 *Mlrval) Mlrval {
-	return MlrvalFromFloat64(val1.floatval / val2.floatval)
+	return MlrvalFromFloat64(math.Floor(val1.floatval / val2.floatval))
 }
 
 func dotidivide_f_fi(val1, val2 *Mlrval) Mlrval {
-	return MlrvalFromFloat64(val1.floatval / float64(val2.intval))
+	return MlrvalFromFloat64(math.Floor(val1.floatval / float64(val2.intval)))
 }
 
 func dotidivide_f_if(val1, val2 *Mlrval) Mlrval {
-	return MlrvalFromFloat64(float64(val1.intval) / val2.floatval)
+	return MlrvalFromFloat64(math.Floor(float64(val1.intval) / val2.floatval))
 }
 
 func dotidivide_i_ii(val1, val2 *Mlrval) Mlrval {
-	return MlrvalFromInt64(val1.intval / val2.intval)
+	a := val1.intval
+	b := val2.intval
+
+	if b == 0 {
+		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
+		return MlrvalFromFloat64(float64(a) / float64(b))
+	}
+
+	// Pythonic division, not C division.
+	q := a / b
+	r := a % b
+	if a < 0 {
+		if b > 0 {
+			if r != 0 {
+				q--
+			}
+		}
+	} else {
+		if b < 0 {
+			if r != 0 {
+				q--
+			}
+		}
+	}
+	return MlrvalFromInt64(q)
 }
 
 var dotidivide_dispositions = [MT_DIM][MT_DIM]binaryFunc{
@@ -665,167 +681,156 @@ func MlrvalDotIntDivide(val1, val2 *Mlrval) Mlrval {
 	return dotidivide_dispositions[val1.mvtype][val2.mvtype](val1, val2)
 }
 
+// ----------------------------------------------------------------
+// Modulus
 
+func modulus_f_ff(val1, val2 *Mlrval) Mlrval {
+	a := val1.floatval
+	b := val2.floatval
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+}
 
+func modulus_f_fi(val1, val2 *Mlrval) Mlrval {
+	a := val1.floatval
+	b := float64(val2.intval)
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+}
 
-//static mv_t oidiv_f_ff(mv_t* pa, mv_t* pb) {
-//	double a = pa->u.fltv;
-//	double b = pb->u.fltv;
-//	return mv_from_float(floor(a / b));
-//}
-//static mv_t oidiv_f_fi(mv_t* pa, mv_t* pb) {
-//	double a = pa->u.fltv;
-//	double b = (double)pb->u.intv;
-//	return mv_from_float(floor(a / b));
-//}
-//static mv_t oidiv_f_if(mv_t* pa, mv_t* pb) {
-//	double a = (double)pa->u.intv;
-//	double b = pb->u.fltv;
-//	return mv_from_float(floor(a / b));
-//}
-//static mv_t oidiv_i_ii(mv_t* pa, mv_t* pb) {
-//	long long a = pa->u.intv;
-//	long long b = pb->u.intv;
-//
-//	// Pythonic division, not C division.
-//	long long q = a / b;
-//	long long r = a % b;
-//	if (a < 0) {
-//		if (b > 0) {
-//			if (r != 0)
-//				q--;
-//		}
-//	} else {
-//		if (b < 0) {
-//			if (r != 0)
-//				q--;
-//		}
-//	}
-//	return mv_from_int(q);
-//}
-//
-//static mv_binary_func_t* oidiv_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT         FLOAT       BOOL
-//	/*ERROR*/  {_erro, _erro,  _erro, _erro,  _erro,       _erro,       _erro},
-//	/*ABSENT*/ {_erro, _a,    _a,   _erro,  _i0,        _f0,        _erro},
-//	/*EMPTY*/  {_erro, _a,    _void, _erro,  _void,       _void,       _erro},
-//	/*STRING*/ {_erro, _erro,  _erro, _erro,  _erro,       _erro,       _erro},
-//	/*INT*/    {_erro, _1,    _void, _erro,  oidiv_i_ii, oidiv_f_if, _erro},
-//	/*FLOAT*/  {_erro, _1,    _void, _erro,  oidiv_f_fi, oidiv_f_ff, _erro},
-//	/*BOOL*/   {_erro, _erro,  _erro, _erro,  _erro,       _erro,       _erro},
-//};
-//
-//mv_t x_xx_int_odivide_func(mv_t* pval1, mv_t* pval2) {
-//	return (oidiv_dispositions[pval1->type][pval2->type])(pval1,pval2);
-//}
+func modulus_f_if(val1, val2 *Mlrval) Mlrval {
+	a := float64(val1.intval)
+	b := val2.floatval
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+}
 
-//
-//// ================================================================
-//static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
-//	double a = pa->u.fltv;
-//	double b = pb->u.fltv;
-//	return mv_from_float(a - b * floor(a / b));
-//}
-//static mv_t mod_f_fi(mv_t* pa, mv_t* pb) {
-//	double a = pa->u.fltv;
-//	double b = (double)pb->u.intv;
-//	return mv_from_float(a - b * floor(a / b));
-//}
-//static mv_t mod_f_if(mv_t* pa, mv_t* pb) {
-//	double a = (double)pa->u.intv;
-//	double b = pb->u.fltv;
-//	return mv_from_float(a - b * floor(a / b));
-//}
-//static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
-//	long long a = pa->u.intv;
-//	long long b = pb->u.intv;
-//	if (b == 0LL) { // Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-//		return mv_from_float((double)a / (double)b);
-//	}
-//	long long u = a % b;
-//	// Pythonic division, not C division.
-//	if (a >= 0LL) {
-//		if (b < 0LL) {
-//			u += b;
-//		}
-//	} else {
-//		if (b >= 0LL) {
-//			u += b;
-//		}
-//	}
-//	return mv_from_int(u);
-//}
-//
-//static mv_binary_func_t* mod_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT       FLOAT     BOOL
-//	/*ERROR*/  {_err, _err,  _err, _err,  _err,     _err,     _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _i0,      _f0,      _err},
-//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,     _emt,     _err},
-//	/*STRING*/ {_err, _err,  _err, _err,  _err,     _err,     _err},
-//	/*INT*/    {_err, _1,    _emt, _err,  mod_i_ii, mod_f_if, _err},
-//	/*FLOAT*/  {_err, _1,    _emt, _err,  mod_f_fi, mod_f_ff, _err},
-//	/*BOOL*/   {_err, _err,  _err, _err,  _err,     _err,     _err},
-//};
-//
-//mv_t x_xx_mod_func(mv_t* pval1, mv_t* pval2) {
-//	return (mod_dispositions[pval1->type][pval2->type])(pval1,pval2);
-//}
+func modulus_i_ii(val1, val2 *Mlrval) Mlrval {
+	a := val1.intval
+	b := val2.intval
 
-//
-//// ----------------------------------------------------------------
-//static mv_t band_i_ii(mv_t* pa, mv_t* pb) {
-//	return mv_from_int(pa->u.intv & pb->u.intv);
-//}
-//
-//static mv_binary_func_t* band_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT        FLOAT BOOL
-//	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err, _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,        _err, _err},
-//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt, _err},
-//	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err, _err},
-//	/*INT*/    {_err, _1,    _emt, _err,  band_i_ii, _err, _err},
-//	/*FLOAT*/  {_err, _err,  _emt, _err,  _err,      _err, _err},
-//	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err, _err},
-//};
-//
-//mv_t x_xx_band_func(mv_t* pval1, mv_t* pval2) { return (band_dispositions[pval1->type][pval2->type])(pval1,pval2); }
-//
-//// ----------------------------------------------------------------
-//static mv_t bor_i_ii(mv_t* pa, mv_t* pb) {
-//	return mv_from_int(pa->u.intv | pb->u.intv);
-//}
-//
-//static mv_binary_func_t* bor_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT       FLOAT BOOL
-//	/*ERROR*/  {_err, _err,  _err, _err,  _err,     _err, _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,       _err, _err},
-//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,     _emt, _err},
-//	/*STRING*/ {_err, _err,  _err, _err,  _err,     _err, _err},
-//	/*INT*/    {_err, _1,    _emt, _err,  bor_i_ii, _err, _err},
-//	/*FLOAT*/  {_err, _err,  _emt, _err,  _err,     _err, _err},
-//	/*BOOL*/   {_err, _err,  _err, _err,  _err,     _err, _err},
-//};
-//
-//mv_t x_xx_bor_func(mv_t* pval1, mv_t* pval2) { return (bor_dispositions[pval1->type][pval2->type])(pval1,pval2); }
-//
-//// ----------------------------------------------------------------
-//static mv_t bxor_i_ii(mv_t* pa, mv_t* pb) {
-//	return mv_from_int(pa->u.intv ^ pb->u.intv);
-//}
-//
-//static mv_binary_func_t* bxor_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT        FLOAT BOOL
-//	/*ERROR*/  {_err, _err,  _err, _err,  _err,      _err, _err},
-//	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,        _err, _err},
-//	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,      _emt, _err},
-//	/*STRING*/ {_err, _err,  _err, _err,  _err,      _err, _err},
-//	/*INT*/    {_err, _1,    _emt, _err,  bxor_i_ii, _err, _err},
-//	/*FLOAT*/  {_err, _err,  _emt, _err,  _err,      _err, _err},
-//	/*BOOL*/   {_err, _err,  _err, _err,  _err,      _err, _err},
-//};
-//
-//mv_t x_xx_bxor_func(mv_t* pval1, mv_t* pval2) { return (bxor_dispositions[pval1->type][pval2->type])(pval1,pval2); }
-//
+	if b == 0 {
+		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
+		return MlrvalFromFloat64(float64(a) / float64(b))
+	}
+
+	// Pythonic division, not C division.
+	m := a % b
+	if a >= 0 {
+		if b < 0 {
+			m += b
+		}
+	} else {
+		if b >= 0 {
+			m += b
+		}
+	}
+
+	return MlrvalFromInt64(m)
+}
+
+var modulus_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//       ERROR ABSENT  EMPTY  STRING INT    FLOAT         BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, modulus_i_ii, modulus_f_if, _erro},
+	/*FLOAT  */ {_erro, _1___, _void, _erro, modulus_f_fi, modulus_f_ff, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalModulus(val1, val2 *Mlrval) Mlrval {
+	return modulus_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+
+// ----------------------------------------------------------------
+// Bitwise AND
+
+func bitwise_and_i_ii(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromInt64(val1.intval & val2.intval)
+}
+
+var bitwise_and_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//          ERROR  ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, bitwise_and_i_ii, _erro, _erro},
+	/*FLOAT  */ {_erro, _erro, _void, _erro, _erro, _erro, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalBitwiseAND(val1, val2 *Mlrval) Mlrval {
+	return bitwise_and_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+// ----------------------------------------------------------------
+// Bitwise OR
+
+func bitwise_or_i_ii(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromInt64(val1.intval | val2.intval)
+}
+
+var bitwise_or_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//          ERROR  ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, bitwise_or_i_ii, _erro, _erro},
+	/*FLOAT  */ {_erro, _erro, _void, _erro, _erro, _erro, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalBitwiseOR(val1, val2 *Mlrval) Mlrval {
+	return bitwise_or_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+
+// ----------------------------------------------------------------
+// Bitwise XOR
+
+func bitwise_xor_i_ii(val1, val2 *Mlrval) Mlrval {
+	return MlrvalFromInt64(val1.intval ^ val2.intval)
+}
+
+var bitwise_xor_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//          ERROR  ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _1___, _void, _erro, bitwise_xor_i_ii, _erro, _erro},
+	/*FLOAT  */ {_erro, _erro, _void, _erro, _erro, _erro, _erro},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalBitwiseXOR(val1, val2 *Mlrval) Mlrval {
+	return bitwise_xor_dispositions[val1.mvtype][val2.mvtype](val1, val2)
+}
+
+// ================================================================
+// Bitwise NOT
+
+func bitwise_not_i_i(val1 *Mlrval) Mlrval {
+	return *val1
+}
+
+func bitwise_not_f_f(val1 *Mlrval) Mlrval {
+	return *val1
+}
+
+var bitwise_not_dispositions = [MT_DIM]unaryFunc{
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*EMPTY  */ _void1,
+	/*STRING */ _erro1,
+	/*INT    */ bitwise_not_i_i,
+	/*FLOAT  */ bitwise_not_f_f,
+	/*BOOL   */ _erro1,
+}
+
+func MlrvalBitwiseNOT(val1 *Mlrval) Mlrval {
+	return bitwise_not_dispositions[val1.mvtype](val1)
+}
+
 //// ----------------------------------------------------------------
 //static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }
 //static mv_t boolean_b_f(mv_t* pa) { return mv_from_bool((pa->u.fltv == 0.0) ? FALSE : TRUE); }
@@ -843,7 +848,7 @@ func MlrvalDotIntDivide(val1, val2 *Mlrval) Mlrval {
 //};
 //
 //mv_t b_x_boolean_func(mv_t* pval1) { return (boolean_dispositions[pval1->type])(pval1); }
-//
+
 //// ----------------------------------------------------------------
 //static mv_t string_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"true":"false"); }
 //static mv_t string_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_string_from_double(pa->u.fltv, MLR_GLOBALS.ofmt)); }

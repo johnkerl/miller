@@ -1,6 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+!! c/mvfuncs _err -> _erro et al.
+
 * reg_test/run iterate
 
 * widen verb coverage
