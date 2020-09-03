@@ -15,14 +15,8 @@ import (
 func NewEvaluableLeafNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
-	if astNode.Children != nil {
-		return nil, errors.New("Internal coding error detected")
-	}
-
+	lib.InternalCodingErrorIf(astNode.Children != nil)
 	sval := string(astNode.Token.Lit)
-	if astNode.Children != nil {
-		return nil, errors.New("Internal coding error detected")
-	}
 
 	switch astNode.Type {
 
@@ -133,9 +127,7 @@ func (this *BoolLiteral) Evaluate(state *State) lib.Mlrval {
 
 // ================================================================
 func NewContextVariable(astNode *dsl.ASTNode) (IEvaluable, error) {
-	if astNode.Token == nil {
-		return nil, errors.New("internal coding error")
-	}
+	lib.InternalCodingErrorIf(astNode.Token == nil)
 	sval := string(astNode.Token.Lit)
 
 	switch sval {

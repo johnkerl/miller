@@ -13,9 +13,7 @@ import (
 
 // ================================================================
 func NewOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
-	if astNode.Type != dsl.NodeTypeOperator {
-		return nil, errors.New("Internal coding error detected") // xxx libify
-	}
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeOperator)
 
 	arity := len(astNode.Children)
 	switch arity {
@@ -35,9 +33,7 @@ func NewOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 // ----------------------------------------------------------------
 func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
-	if arity != 1 {
-		return nil, errors.New("Internal coding error detected") // xxx libify
-	}
+	lib.InternalCodingErrorIf(arity != 1)
 	astChild := astNode.Children[0]
 
 	cstChild, err := NewEvaluable(astChild)
@@ -61,9 +57,7 @@ func NewUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 // ----------------------------------------------------------------
 func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
-	if arity != 2 {
-		return nil, errors.New("Internal coding error detected") // xxx libify
-	}
+	lib.InternalCodingErrorIf(arity != 2)
 
 	leftASTChild := astNode.Children[0]
 	rightASTChild := astNode.Children[1]
@@ -123,9 +117,7 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 // ----------------------------------------------------------------
 func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
-	if arity != 3 {
-		return nil, errors.New("Internal coding error detected") // xxx libify
-	}
+	lib.InternalCodingErrorIf(arity != 3)
 
 	//leftASTChild := astNode.Children[0]
 	//middleASTChild := astNode.Children[1]

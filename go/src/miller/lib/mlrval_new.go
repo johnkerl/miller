@@ -1,8 +1,6 @@
 package lib
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -48,11 +46,7 @@ func MlrvalFromString(input string) Mlrval {
 func MlrvalFromInt64String(input string) Mlrval {
 	ival, ok := tryInt64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
-	if !ok {
-		// xxx get file/line info here .......
-		fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
-		os.Exit(1)
-	}
+	InternalCodingErrorIf(!ok)
 	return Mlrval{
 		MT_INT,
 		input,
@@ -74,9 +68,9 @@ func MlrvalFromInt64(input int64) Mlrval {
 	}
 }
 
+// Tries decimal, hex, octal, and binary.
 func tryInt64FromString(input string) (int64, bool) {
-	// xxx need to handle octal, hex, ......
-	ival, err := strconv.ParseInt(input, 10, 64)
+	ival, err := strconv.ParseInt(input, 0 /* check all*/, 64)
 	if err == nil {
 		return ival, true
 	} else {
@@ -89,11 +83,7 @@ func tryInt64FromString(input string) (int64, bool) {
 func MlrvalFromFloat64String(input string) Mlrval {
 	fval, ok := tryFloat64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
-	if !ok {
-		// xxx get file/line info here .......
-		fmt.Fprintf(os.Stderr, "Internal coding error detected\n")
-		os.Exit(1)
-	}
+	InternalCodingErrorIf(!ok)
 	return Mlrval{
 		MT_FLOAT,
 		input,
