@@ -51,6 +51,9 @@ type Mlrval struct {
 
 type MVType int
 
+// Important: the values of these enums are used to index into disposition
+// matrices. If they are changed, it will break the disposition matrices, or
+// they will all need manual re-indexing.
 const (
 	// E.g. error encountered in one eval & it propagates up the AST at
 	// evaluation time.  Various runtime errors, such as file-not-found, result

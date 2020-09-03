@@ -1,13 +1,9 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* logical AND OR etc
-  o implement short-circuiting in the opeartor-evaluator
-  o likewise ternary
+* mlrval to own package, not lib?
 
 !! ordered map impl for JSON parse
-
-* --from
 
 * reg_test/run iterate
 

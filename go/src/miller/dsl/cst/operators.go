@@ -419,9 +419,68 @@ type LogicalANDOperator struct{ a, b IEvaluable }
 func NewLogicalANDOperator(a, b IEvaluable) *LogicalANDOperator {
 	return &LogicalANDOperator{a: a, b: b}
 }
+
+// This is different from most of the evaluator functions in that it does
+// short-circuiting: since is logical AND, the second argument is not evaluated
+// if the first argument is false.
+//
+// Disposition matrix:
+//
+//       {
+//a      b  ERROR   ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+//ERROR  :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
+//ABSENT :  {ERROR, absent, ERROR, ERROR, ERROR, ERROR, absent},
+//EMPTY  :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
+//STRING :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
+//INT    :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
+//FLOAT  :  {ERROR, ERROR,  ERROR, ERROR, ERROR, ERROR, ERROR},
+//BOOL   :  {ERROR, absent, ERROR, ERROR, ERROR, ERROR, a&&b},
+//       }
+//
+// which without the all-error rows/columns reduces to
+//
+//       {
+//a      b  ABSENT   BOOL
+//ABSENT :  {absent, absent},
+//BOOL   :  {absent, a&&b},
+//       }
+//
+// So:
+// * Evaluate a
+// * If a is not absent or bool: return error
+// * If a is absent: return absent
+// * If a is false: return a
+// * Now a is boolean true
+// * Evaluate b
+// * If b is not absent or bool: return error
+// * If b is absent: return absent
+// * Return a && b
+
 func (this *LogicalANDOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
+	atype := aout.GetType()
+	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
+		return lib.MlrvalFromError()
+	}
+	if atype == lib.MT_ABSENT {
+		return aout
+	}
+	if aout.IsFalse() {
+		// This means false && bogus type evaluates to true, which is sad but
+		// which we MUST do in order to not violate the short-circuiting
+		// property.  We would have to evaluate b to know if it were error or
+		// not.
+		return aout
+	}
+
 	bout := this.b.Evaluate(state)
+	btype := bout.GetType()
+	if !(btype == lib.MT_ABSENT || btype == lib.MT_BOOL) {
+		return lib.MlrvalFromError()
+	}
+	if btype == lib.MT_ABSENT {
+		return bout
+	}
 	return lib.MlrvalLogicalAND(&aout, &bout)
 }
 
@@ -431,9 +490,37 @@ type LogicalOROperator struct{ a, b IEvaluable }
 func NewLogicalOROperator(a, b IEvaluable) *LogicalOROperator {
 	return &LogicalOROperator{a: a, b: b}
 }
+
+// This is different from most of the evaluator functions in that it does
+// short-circuiting: since is logical OR, the second argument is not evaluated
+// if the first argumeent is false.
+//
+// See the disposition-matrix discussion for LogicalANDOperator.
 func (this *LogicalOROperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
+	atype := aout.GetType()
+	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
+		return lib.MlrvalFromError()
+	}
+	if atype == lib.MT_ABSENT {
+		return aout
+	}
+	if aout.IsTrue() {
+		// This means true || bogus type evaluates to true, which is sad but
+		// which we MUST do in order to not violate the short-circuiting
+		// property.  We would have to evaluate b to know if it were error or
+		// not.
+		return aout
+	}
+
 	bout := this.b.Evaluate(state)
+	btype := bout.GetType()
+	if !(btype == lib.MT_ABSENT || btype == lib.MT_BOOL) {
+		return lib.MlrvalFromError()
+	}
+	if btype == lib.MT_ABSENT {
+		return bout
+	}
 	return lib.MlrvalLogicalOR(&aout, &bout)
 }
 
@@ -540,19 +627,16 @@ func NewTernaryOperator(a, b, c IEvaluable) *TernaryOperator {
 }
 func (this *TernaryOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
-	bout := this.b.Evaluate(state)
-	cout := this.c.Evaluate(state)
-
-	// '$z = $i < 5 ? "low" : "high"'
 
 	boolValue, isBoolean := aout.GetBoolValue()
 	if !isBoolean {
 		return lib.MlrvalFromError()
 	}
 
+	// Short-circuit: defer evaluation unless needed
 	if boolValue == true {
-		return bout
+		return this.b.Evaluate(state)
 	} else {
-		return cout
+		return this.c.Evaluate(state)
 	}
 }

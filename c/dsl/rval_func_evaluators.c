@@ -102,8 +102,8 @@ typedef struct _rval_evaluator_b_bb_state_t {
 	rval_evaluator_t* parg2;
 } rval_evaluator_b_bb_state_t;
 
-// This is different from most of the lrec-evaluator functions in that it does short-circuiting:
-// since is logical AND, the LHS is not evaluated if the RHS is false.
+// This is different from most of the lrec-evaluator functions in that it does short-circuiting: since is logical AND,
+// the second argument is not evaluated if the first argument is false.
 static mv_t rval_evaluator_b_bb_and_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
@@ -127,8 +127,8 @@ static mv_t rval_evaluator_b_bb_and_func(void* pvstate, variables_t* pvars) {
 	}
 }
 
-// This is different from most of the lrec-evaluator functions in that it does short-circuiting:
-// since is logical OR, the LHS is not evaluated if the RHS is true.
+// This is different from most of the lrec-evaluator functions in that it does short-circuiting: since is logical OR,
+// the second argument is not evaluated if the first argument is true.
 static mv_t rval_evaluator_b_bb_or_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_b_bb_state_t* pstate = pvstate;
 
