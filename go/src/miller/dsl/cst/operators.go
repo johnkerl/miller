@@ -165,13 +165,34 @@ func NewBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 }
 
 // ----------------------------------------------------------------
+// TODO: Look into short-circuiting
 func NewTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	arity := len(astNode.Children)
 	lib.InternalCodingErrorIf(arity != 3)
 
-	//leftASTChild := astNode.Children[0]
-	//middleASTChild := astNode.Children[1]
-	//rightASTChild := astNode.Children[2]
+	leftASTChild := astNode.Children[0]
+	middleASTChild := astNode.Children[1]
+	rightASTChild := astNode.Children[2]
+
+	leftCSTChild, err := NewEvaluable(leftASTChild)
+	if err != nil {
+		return nil, err
+	}
+	middleCSTChild, err := NewEvaluable(middleASTChild)
+	if err != nil {
+		return nil, err
+	}
+	rightCSTChild, err := NewEvaluable(rightASTChild)
+	if err != nil {
+		return nil, err
+	}
+
+	sop := string(astNode.Token.Lit)
+	switch sop {
+	case "?:":
+		return NewTernaryOperator(leftCSTChild, middleCSTChild, rightCSTChild), nil
+		break
+	}
 
 	return nil, errors.New("CST build: AST ternary operator node unhandled.")
 }
@@ -494,4 +515,29 @@ func (this *LessThanOrEqualsOperator) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalLessThanOrEquals(&aout, &bout)
+}
+
+// ================================================================
+type TernaryOperator struct{ a, b, c IEvaluable }
+
+func NewTernaryOperator(a, b, c IEvaluable) *TernaryOperator {
+	return &TernaryOperator{a: a, b: b, c: c}
+}
+func (this *TernaryOperator) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	cout := this.c.Evaluate(state)
+
+	// '$z = $i < 5 ? "low" : "high"'
+
+	boolValue, isBoolean := aout.GetBoolValue()
+	if !isBoolean {
+		return lib.MlrvalFromError()
+	}
+
+	if boolValue == true {
+		return bout
+	} else {
+		return cout
+	}
 }

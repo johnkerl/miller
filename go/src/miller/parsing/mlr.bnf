@@ -2427,10 +2427,9 @@ SrecDirectAssignment
 
 RHS : TernaryTerm ;
 
-// to do: how to pass a "?:" token ...
 TernaryTerm
   : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
-    << dsl.NewASTNodeTernary($1, $0, $2, $4, dsl.NodeTypeOperator) >>
+    << dsl.NewASTNodeTernary(dsl.NewASTToken("?:", $1), $0, $2, $4, dsl.NodeTypeOperator) >>
   | LogicalOrTerm
 ;
 

@@ -45,8 +45,41 @@ RAW AST:
 * StatementBlock
     * SrecDirectAssignment "=" "="
         * DirectFieldName "md_token_field_name" "y"
-        * Operator "?" "?"
+        * Operator "?" "?:"
             * IntLiteral "md_token_int_literal" "1"
             * IntLiteral "md_token_int_literal" "2"
             * IntLiteral "md_token_int_literal" "3"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "y"
+        * Operator "+" "+"
+            * DirectFieldName "md_token_field_name" "a"
+            * Operator "*" "*"
+                * DirectFieldName "md_token_field_name" "b"
+                * DirectFieldName "md_token_field_name" "c"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "y"
+        * Operator "*" "*"
+            * Operator "*" "*"
+                * DirectFieldName "md_token_field_name" "a"
+                * DirectFieldName "md_token_field_name" "b"
+            * DirectFieldName "md_token_field_name" "c"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "y"
+        * Operator "**" "**"
+            * DirectFieldName "md_token_field_name" "a"
+            * Operator "**" "**"
+                * DirectFieldName "md_token_field_name" "b"
+                * DirectFieldName "md_token_field_name" "c"
 

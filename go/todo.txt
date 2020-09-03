@@ -4,6 +4,8 @@ TOP OF LIST:
 !! logical AND OR etc
   o implement short-circuiting in the opeartor-evaluator
 
+* --from
+
 * reg_test/run iterate
 
 * widen verb coverage

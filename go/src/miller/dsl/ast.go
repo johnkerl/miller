@@ -220,3 +220,16 @@ func (this *ASTNode) CheckArity(
 		return nil
 	}
 }
+
+// Tokens are produced by GOCC. However there is an exception: for the ternary
+// operator I want the AST to have a "?:" token, which GOCC doesn't produce
+// since nothing is actually spelled like that in the DSL.
+func NewASTToken(iliteral interface{}, iclonee interface{}) *token.Token {
+	literal := iliteral.(string)
+	clonee := iclonee.(*token.Token)
+	return &token.Token{
+		Type: clonee.Type,
+		Lit:  []byte(literal),
+		Pos:  clonee.Pos,
+	}
+}
