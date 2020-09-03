@@ -258,6 +258,7 @@ OPTIONS
    COMPRESSED I/O
 	 --prepipe {command} This allows Miller to handle compressed inputs. You can do
 	 without this for single input files, e.g. "gunzip < myfile.csv.gz | mlr ...".
+
 	 However, when multiple input files are present, between-file separations are
 	 lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
 	 specify an action to be taken on each input file. This pre-pipe command must
@@ -268,10 +269,17 @@ OPTIONS
 	   mlr --prepipe 'zcat -cf'
 	   mlr --prepipe 'xz -cd'
 	   mlr --prepipe cat
+	   mlr --prepipe-gunzip
+	   mlr --prepipe-zcat
 	 Note that this feature is quite general and is not limited to decompression
 	 utilities. You can use it to apply per-file filters of your choice.
 	 For output compression (or other) utilities, simply pipe the output:
 	   mlr ... | {your compression command}
+
+	 There are shorthands --prepipe-zcat and --prepipe-gunzip which are
+	 valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc
+	 files since that would put execution of the prepipe command under
+	 control of the .mlrrc file.
 
    SEPARATORS
 	 --rs	  --irs     --ors	       Record separators, e.g. 'lf' or '\r\n'
@@ -921,7 +929,7 @@ VERBS
        See also mlr reshape.
 
    nothing
-       Usage: mlr nothing [options]
+       Usage: mlr nothing
        Drops all input records. Useful for testing, or after tee/print/etc. have
        produced other output.
 
@@ -2348,4 +2356,4 @@ SEE ALSO
 
 
 
-				  2020-08-31			     MILLER(1)
+				  2020-09-03			     MILLER(1)
