@@ -82,3 +82,10 @@ push2
 data/.gitignore
 doc/jkopush
 doc/push2
+
+c/mlr.static
+miller-*.src.rpm
+mlr.exe
+mlr.linux.x86_64
+mlr.macosx
+msys-2.0.dll
