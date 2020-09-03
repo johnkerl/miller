@@ -325,7 +325,10 @@ md_token_field_name : '$' _idchar { _idchar } ;
 //	return md_token_non_sigil_name;
 //}
 
-
+// This is for testing short-circuiting of "&&", "||", etc in the CST.  The
+// sole job of the CST evaluator for this token is to panic the process -- so
+// we'll know if we're evaluating something we should not.
+md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 
 // ================================================================
 // SYNTAX ELEMENTS
@@ -2665,6 +2668,7 @@ AtomOrFunction
   | md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
   | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
   | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
+  | md_token_panic           << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
 ;
 
 //AtomOrFunction(A) ::= md_regexi(B). {

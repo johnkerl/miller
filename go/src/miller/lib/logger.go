@@ -30,3 +30,27 @@ func InternalCodingErrorIf(condition bool) {
 	}
 	os.Exit(1)
 }
+
+func InternalCodingErrorPanic(message string) {
+	_, fileName, fileLine, ok := runtime.Caller(1)
+	if ok {
+		panic(
+			fmt.Sprintf(
+				"Internal coding error detected at file %s line %d: %s\n",
+				fileName,
+				fileLine,
+				message,
+			),
+		)
+	} else {
+		panic(
+			fmt.Sprintf(
+				"Internal coding error detected at file %s line %s: %s\n",
+				"(unknown)",
+				"(unknown)",
+				message,
+			),
+		)
+	}
+	os.Exit(1)
+}

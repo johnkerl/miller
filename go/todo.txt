@@ -1,7 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* exponentiation operator
 * logical AND OR etc
   o implement short-circuiting in the opeartor-evaluator
   o likewise ternary

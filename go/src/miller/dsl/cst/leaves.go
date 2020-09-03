@@ -40,6 +40,10 @@ func NewEvaluableLeafNode(
 		return NewContextVariable(astNode)
 		break
 
+	case dsl.NodeTypePanic:
+		return NewPanic(), nil
+		break
+
 		// xxx more
 		//	case NodeTypeIndirectFieldName:
 		//		return lib.MlrvalFromError(), errors.New("unhandled1")
@@ -232,4 +236,20 @@ func NewFNR() *FNR {
 }
 func (this *FNR) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromInt64(state.Context.FNR)
+}
+
+// ----------------------------------------------------------------
+// The panic token is a special token which causes a panic when evaluated.
+// This is for testing that AND/OR short-circuiting is implemented correctly:
+// output = input1 || panic should NOT panic the process when input1 is true.
+type Panic struct {
+}
+
+func NewPanic() *Panic {
+	return &Panic{
+	}
+}
+func (this *Panic) Evaluate(state *State) lib.Mlrval {
+	lib.InternalCodingErrorPanic("Panic token was evaluated, not short-circuited.")
+	return lib.MlrvalFromError() // not reached
 }
