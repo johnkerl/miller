@@ -1043,28 +1043,94 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayLiteral : "[" RHS "]"	<< dsl.NewASTNodeUnary(
-      dsl.NewASTToken("[]", X[0]),
+		String: `ArrayLiteral : "[" ArrayLiteralElements "]"	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        dsl.NewASTToken("[]", X[0]),
+        dsl.NodeTypeArrayLiteral,
+      ),
       X[1],
-      dsl.NodeTypeArrayLiteral,
     ) >>`,
 		Id:         "ArrayLiteral",
 		NTType:     27,
 		Index:      101,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(
-				dsl.NewASTToken("[]", X[0]),
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					dsl.NewASTToken("[]", X[0]),
+					dsl.NodeTypeArrayLiteral,
+				),
 				X[1],
+			)
+		},
+	},
+	ProdTabEntry{
+		String: `ArrayLiteralElements : ArrayLiteralElement	<< dsl.NewASTNodeUnary(
+      nil,
+      X[0],
+      dsl.NodeTypeArrayLiteral,
+    ) >>`,
+		Id:         "ArrayLiteralElements",
+		NTType:     28,
+		Index:      102,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(
+				nil,
+				X[0],
 				dsl.NodeTypeArrayLiteral,
 			)
+		},
+	},
+	ProdTabEntry{
+		String: `ArrayLiteralElements : ArrayLiteralElement ","	<< dsl.NewASTNodeUnary(
+      nil,
+      X[0],
+      dsl.NodeTypeArrayLiteral,
+    ) >>`,
+		Id:         "ArrayLiteralElements",
+		NTType:     28,
+		Index:      103,
+		NumSymbols: 2,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(
+				nil,
+				X[0],
+				dsl.NodeTypeArrayLiteral,
+			)
+		},
+	},
+	ProdTabEntry{
+		String: `ArrayLiteralElements : ArrayLiteralElement "," ArrayLiteralElements	<< dsl.PrependChild(
+      X[2],
+      X[0],
+    ) >>`,
+		Id:         "ArrayLiteralElements",
+		NTType:     28,
+		Index:      104,
+		NumSymbols: 3,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.PrependChild(
+				X[2],
+				X[0],
+			)
+		},
+	},
+	ProdTabEntry{
+		String: `ArrayLiteralElement : RHS	<<  >>`,
+		Id:         "ArrayLiteralElement",
+		NTType:     29,
+		Index:      105,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
 		},
 	},
 	ProdTabEntry{
 		String: `MlrvalOrFunction : MapLiteral	<<  >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     22,
-		Index:      102,
+		Index:      106,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return X[0], nil
@@ -1076,8 +1142,8 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteral,
     ) >>`,
 		Id:         "MapLiteral",
-		NTType:     28,
-		Index:      103,
+		NTType:     30,
+		Index:      107,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(
@@ -1095,8 +1161,8 @@ var productionsTable = ProdTab{
       X[1],
     ) >>`,
 		Id:         "MapLiteral",
-		NTType:     28,
-		Index:      104,
+		NTType:     30,
+		Index:      108,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.AdoptChildren(
@@ -1115,8 +1181,8 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteral,
     ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
-		NTType:     29,
-		Index:      105,
+		NTType:     31,
+		Index:      109,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(
@@ -1133,8 +1199,8 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteral,
     ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
-		NTType:     29,
-		Index:      106,
+		NTType:     31,
+		Index:      110,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(
@@ -1150,8 +1216,8 @@ var productionsTable = ProdTab{
       X[0],
     ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
-		NTType:     29,
-		Index:      107,
+		NTType:     31,
+		Index:      111,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.PrependChild(
@@ -1168,8 +1234,8 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteralKeyValuePair,
     ) >>`,
 		Id:         "MapLiteralKeyValuePair",
-		NTType:     30,
-		Index:      108,
+		NTType:     32,
+		Index:      112,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeBinary(

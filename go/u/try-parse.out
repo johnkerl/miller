@@ -308,13 +308,59 @@ RAW AST:
 
 
 DSL EXPRESSION:
-$z = [1]
+$z = [1,]
 RAW AST:
 * StatementBlock
     * SrecDirectAssignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
+
+
+DSL EXPRESSION:
+$z = [1,2]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayLiteral "[]"
+            * IntLiteral "1"
+            * IntLiteral "2"
+
+
+DSL EXPRESSION:
+$z = [1,2,]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayLiteral "[]"
+            * IntLiteral "1"
+            * IntLiteral "2"
+
+
+DSL EXPRESSION:
+$z = [1,2,3]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayLiteral "[]"
+            * IntLiteral "1"
+            * IntLiteral "2"
+            * IntLiteral "3"
+
+
+DSL EXPRESSION:
+$z = [1,2,3,]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayLiteral "[]"
+            * IntLiteral "1"
+            * IntLiteral "2"
+            * IntLiteral "3"
 
 
 DSL EXPRESSION:

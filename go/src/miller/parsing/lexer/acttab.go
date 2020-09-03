@@ -65,7 +65,7 @@ var ActTab = ActionTable{
 		Ignore: "",
 	},
 	ActionRow{ // S11
-		Accept: 77,
+		Accept: 75,
 		Ignore: "",
 	},
 	ActionRow{ // S12
@@ -149,7 +149,7 @@ var ActTab = ActionTable{
 		Ignore: "",
 	},
 	ActionRow{ // S32
-		Accept: 75,
+		Accept: 76,
 		Ignore: "",
 	},
 	ActionRow{ // S33
@@ -157,7 +157,7 @@ var ActTab = ActionTable{
 		Ignore: "",
 	},
 	ActionRow{ // S34
-		Accept: 76,
+		Accept: 77,
 		Ignore: "",
 	},
 	ActionRow{ // S35

@@ -194,9 +194,9 @@ var TokMap = TokenMap{
 		"md_token_FILENAME",
 		"md_token_FILENUM",
 		"[",
+		",",
 		"{",
 		"}",
-		",",
 	},
 
 	idMap: map[string]Type{
@@ -275,8 +275,8 @@ var TokMap = TokenMap{
 		"md_token_FILENAME":        72,
 		"md_token_FILENUM":         73,
 		"[":                        74,
-		"{":                        75,
-		"}":                        76,
-		",":                        77,
+		",":                        75,
+		"{":                        76,
+		"}":                        77,
 	},
 }
