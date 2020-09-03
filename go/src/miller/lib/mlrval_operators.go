@@ -810,11 +810,7 @@ func MlrvalBitwiseXOR(val1, val2 *Mlrval) Mlrval {
 // Bitwise NOT
 
 func bitwise_not_i_i(val1 *Mlrval) Mlrval {
-	return *val1
-}
-
-func bitwise_not_f_f(val1 *Mlrval) Mlrval {
-	return *val1
+	return MlrvalFromInt64(^ val1.intval)
 }
 
 var bitwise_not_dispositions = [MT_DIM]unaryFunc{
@@ -823,7 +819,7 @@ var bitwise_not_dispositions = [MT_DIM]unaryFunc{
 	/*EMPTY  */ _void1,
 	/*STRING */ _erro1,
 	/*INT    */ bitwise_not_i_i,
-	/*FLOAT  */ bitwise_not_f_f,
+	/*FLOAT  */ _erro1,
 	/*BOOL   */ _erro1,
 }
 

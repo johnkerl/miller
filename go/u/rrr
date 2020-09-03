@@ -52,3 +52,4 @@ echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff  + 0x7fffffffffffffff' u/
 echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff' u/s.dkvp
 echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff  * 0x7fffffffffffffff' u/s.dkvp
 echo; mlr --idkvp --opprint put '$z=0x7fffffffffffffff .* 0x7fffffffffffffff' u/s.dkvp
+echo; mlr --idkvp --opprint put '$z= (~ $i) + 1' u/s.dkvp
