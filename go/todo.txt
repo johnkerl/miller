@@ -4,7 +4,8 @@ TOP OF LIST:
 * logical AND OR etc
   o implement short-circuiting in the opeartor-evaluator
   o likewise ternary
-  ? maybe a panic-token for testing short-circuiting?
+
+!! ordered map impl for JSON parse
 
 * --from
 

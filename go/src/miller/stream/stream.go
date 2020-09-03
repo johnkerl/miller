@@ -29,7 +29,6 @@ import (
 func Stream(
 	options clitypes.TOptions,
 	recordMappers []mapping.IRecordMapper,
-	filenames []string,
 ) error {
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
@@ -61,7 +60,7 @@ func Stream(
 	// Start the reader, mapper, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
-	go recordReader.Read(filenames, *initialContext, inrecs, echan)
+	go recordReader.Read(options.FileNames, *initialContext, inrecs, echan)
 	go mapping.ChainMapper(inrecs, recordMappers, outrecs)
 	go output.ChannelWriter(outrecs, recordWriter, donechan, os.Stdout)
 

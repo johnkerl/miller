@@ -57,14 +57,14 @@ func main() {
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Start of Miller main per se
-	options, recordMappers, filenames, err := cli.ParseCommandLine(os.Args)
+	options, recordMappers, err := cli.ParseCommandLine(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 		os.Exit(1)
 	}
 
-	if filenames != nil { // nil if mlr -n
-		err = stream.Stream(options, recordMappers, filenames)
+	if options.FileNames != nil { // nil if mlr -n
+		err = stream.Stream(options, recordMappers)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 			os.Exit(1)

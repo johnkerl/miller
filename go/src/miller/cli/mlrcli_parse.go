@@ -14,7 +14,6 @@ import (
 func ParseCommandLine(args []string) (
 	options clitypes.TOptions,
 	recordMappers []mapping.IRecordMapper,
-	filenames []string,
 	err error,
 ) {
 	options = clitypes.DefaultOptions()
@@ -98,17 +97,21 @@ func ParseCommandLine(args []string) (
 	//	*ppmapper_list = cli_parse_mappers(options.non_in_place_argv, &argi, argc, popts);
 	recordMappers, err = parseMappers(args, &argi, argc, &options)
 	if err != nil {
-		return options, recordMappers, filenames, err
+		return options, recordMappers, err
 	}
 
-	filenames = args[argi:]
+	// There may already be one or more because of --from on the command line,
+	// so append.
+	for _, arg := range args[argi:] {
+		options.FileNames = append(options.FileNames, arg)
+	}
 
 	// E.g. mlr -n put -v '...'
 	if options.NoInput {
-		filenames = nil
+		options.FileNames = nil
 	}
 
-	//	if (options.do_in_place && (options.filenames == nil || options.filenames.length == 0)) {
+	//	if (options.do_in_place && (options.FileNames == nil || options.FileNames.length == 0)) {
 	//		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", os.Args[0]);
 	//		os.Exit(1);
 	//	}
@@ -119,7 +122,7 @@ func ParseCommandLine(args []string) (
 	//		mtrand_init_default();
 	//	}
 
-	return options, recordMappers, filenames, nil
+	return options, recordMappers, nil
 }
 
 // ----------------------------------------------------------------
@@ -1101,11 +1104,11 @@ func parseMiscOptions(
 		//		options.do_in_place = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--from" {
-		//		checkArgCount(args, argi, argc, 2);
-		//		slls_append(options.filenames, args[argi+1], NO_FREE);
-		//		argi += 2;
-		//
+	} else if args[argi] == "--from" {
+		checkArgCount(args, argi, argc, 2)
+		options.FileNames = append(options.FileNames, args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--ofmt" {
 		//		checkArgCount(args, argi, argc, 2);
 		//		options.ofmt = args[argi+1];

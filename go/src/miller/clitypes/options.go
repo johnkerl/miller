@@ -65,6 +65,8 @@ type TOptions struct {
 	ReaderOptions TReaderOptions
 	WriterOptions TWriterOptions
 
+	FileNames []string
+
 	// These are used to construct the mapper list. In particular, for in-place mode
 	// they're reconstructed for each file.  We make copies since each pass through a
 	// CLI-parser operates destructively, principally by running strtok over
@@ -75,7 +77,6 @@ type TOptions struct {
 	//	int     argc;
 	//	int     mapper_argb;
 	//
-	//	filenames []string;
 	//
 	//	char* ofmt;
 	//	nr_progress_mod int64u;

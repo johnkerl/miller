@@ -139,7 +139,6 @@ func NewContextVariable(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case "FILENAME":
 		return NewFILENAME(), nil
 		break
-
 	case "FILENUM":
 		return NewFILENUM(), nil
 		break
@@ -147,36 +146,32 @@ func NewContextVariable(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case "NF":
 		return NewNF(), nil
 		break
-
 	case "NR":
 		return NewNR(), nil
 		break
-
 	case "FNR":
 		return NewFNR(), nil
 		break
 
-		// xxx more
-		//
-		//	case "IPS":
-		//		return lib.MlrvalFromString(context.IPS), nil
-		//		break
-		//	case "IFS":
-		//		return lib.MlrvalFromString(context.IFS), nil
-		//		break
-		//	case "IRS":
-		//		return lib.MlrvalFromString(context.IRS), nil
-		//		break
-		//
-		//	case "OPS":
-		//		return lib.MlrvalFromString(context.OPS), nil
-		//		break
-		//	case "OFS":
-		//		return lib.MlrvalFromString(context.OFS), nil
-		//		break
-		//	case "ORS":
-		//		return lib.MlrvalFromString(context.ORS), nil
-		//		break
+	case "IRS":
+		return NewIRS(), nil
+		break
+	case "IFS":
+		return NewIFS(), nil
+		break
+	case "IPS":
+		return NewIPS(), nil
+		break
+
+	case "ORS":
+		return NewORS(), nil
+		break
+	case "OFS":
+		return NewOFS(), nil
+		break
+	case "OPS":
+		return NewOPS(), nil
+		break
 
 	}
 
@@ -239,15 +234,81 @@ func (this *FNR) Evaluate(state *State) lib.Mlrval {
 }
 
 // ----------------------------------------------------------------
+type IRS struct {
+}
+
+func NewIRS() *IRS {
+	return &IRS{}
+}
+func (this *IRS) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromString(state.Context.IRS)
+}
+
+// ----------------------------------------------------------------
+type IFS struct {
+}
+
+func NewIFS() *IFS {
+	return &IFS{}
+}
+func (this *IFS) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromString(state.Context.IFS)
+}
+
+// ----------------------------------------------------------------
+type IPS struct {
+}
+
+func NewIPS() *IPS {
+	return &IPS{}
+}
+func (this *IPS) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromString(state.Context.IPS)
+}
+
+// ----------------------------------------------------------------
+type ORS struct {
+}
+
+func NewORS() *ORS {
+	return &ORS{}
+}
+func (this *ORS) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromString(state.Context.ORS)
+}
+
+// ----------------------------------------------------------------
+type OFS struct {
+}
+
+func NewOFS() *OFS {
+	return &OFS{}
+}
+func (this *OFS) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromString(state.Context.OFS)
+}
+
+// ----------------------------------------------------------------
+type OPS struct {
+}
+
+func NewOPS() *OPS {
+	return &OPS{}
+}
+func (this *OPS) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromString(state.Context.OPS)
+}
+
+// ----------------------------------------------------------------
 // The panic token is a special token which causes a panic when evaluated.
 // This is for testing that AND/OR short-circuiting is implemented correctly:
 // output = input1 || panic should NOT panic the process when input1 is true.
+
 type Panic struct {
 }
 
 func NewPanic() *Panic {
-	return &Panic{
-	}
+	return &Panic{}
 }
 func (this *Panic) Evaluate(state *State) lib.Mlrval {
 	lib.InternalCodingErrorPanic("Panic token was evaluated, not short-circuited.")

@@ -202,3 +202,52 @@ RAW AST:
                 * DirectFieldName "md_token_field_name" "y"
             * StringLiteral "md_token_string_literal" "hello"
 
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "x"
+        * Operator "+" "+"
+            * Operator "+" "+"
+                * FloatLiteral "md_token_float_literal" "123."
+                * Operator "/" "/"
+                    * FloatLiteral "md_token_float_literal" "1e-2"
+                    * FloatLiteral "md_token_float_literal" ".2e3"
+            * FloatLiteral "md_token_float_literal" "1.e-3"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "z"
+        * Operator "+" "+"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "z"
+        * Operator ".+" ".+"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "z"
+        * Operator "*" "*"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+
+
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "=" "="
+        * DirectFieldName "md_token_field_name" "z"
+        * Operator ".*" ".*"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+            * IntLiteral "md_token_int_literal" "0x7fffffffffffffff"
+
