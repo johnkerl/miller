@@ -23,7 +23,7 @@ func NewRecordWriterDKVP(writerOptions *clitypes.TWriterOptions) *RecordWriterDK
 }
 
 func (this *RecordWriterDKVP) Write(
-	outrec *lib.Lrec,
+	outrec *lib.Mlrmap,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

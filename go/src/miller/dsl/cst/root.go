@@ -55,7 +55,7 @@ func Build(ast *dsl.AST) (*Root, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *Root) Execute(state *State) *lib.Lrec {
+func (this *Root) Execute(state *State) (outrec *lib.Mlrmap) {
 
 	for _, statement := range this.executables {
 		statement.Execute(state)

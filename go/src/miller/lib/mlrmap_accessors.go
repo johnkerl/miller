@@ -1,11 +1,11 @@
 package lib
 
 // ----------------------------------------------------------------
-func (this *Lrec) Has(key *string) bool {
+func (this *Mlrmap) Has(key *string) bool {
 	return this.findEntry(key) != nil
 }
 
-func (this *Lrec) findEntry(key *string) *lrecEntry {
+func (this *Mlrmap) findEntry(key *string) *mlrmapEntry {
 	if this.keysToEntries != nil {
 		return this.keysToEntries[*key]
 	} else {
@@ -19,10 +19,10 @@ func (this *Lrec) findEntry(key *string) *lrecEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Put(key *string, value *Mlrval) {
+func (this *Mlrmap) Put(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
-		pe = newLrecEntry(key, value)
+		pe = newMlrmapEntry(key, value)
 		if this.Head == nil {
 			this.Head = pe
 			this.Tail = pe
@@ -43,10 +43,10 @@ func (this *Lrec) Put(key *string, value *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Prepend(key *string, value *Mlrval) {
+func (this *Mlrmap) Prepend(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
-		pe = newLrecEntry(key, value)
+		pe = newMlrmapEntry(key, value)
 		if this.Tail == nil {
 			this.Head = pe
 			this.Tail = pe
@@ -67,7 +67,7 @@ func (this *Lrec) Prepend(key *string, value *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Get(key *string) *Mlrval {
+func (this *Mlrmap) Get(key *string) *Mlrval {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return nil
@@ -77,7 +77,7 @@ func (this *Lrec) Get(key *string) *Mlrval {
 	return nil
 }
 
-func (this *Lrec) Clear() {
+func (this *Mlrmap) Clear() {
 	this.FieldCount = 0
 	// Assuming everything unreferenced is getting GC'ed by the Go runtime
 	this.Head = nil
@@ -86,8 +86,8 @@ func (this *Lrec) Clear() {
 
 // ----------------------------------------------------------------
 // TODO: needs to be a deepcopy -- Mlrval needs its own Copy method.
-func (this *Lrec) Copy() *Lrec {
-	that := NewLrec()
+func (this *Mlrmap) Copy() *Mlrmap {
+	that := NewMlrmap()
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		that.Put(pe.Key, pe.Value)
 	}
@@ -96,7 +96,7 @@ func (this *Lrec) Copy() *Lrec {
 
 // ----------------------------------------------------------------
 // Returns true if it was found and removed
-func (this *Lrec) Remove(key *string) bool {
+func (this *Mlrmap) Remove(key *string) bool {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return false
@@ -107,7 +107,7 @@ func (this *Lrec) Remove(key *string) bool {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) unlink(pe *lrecEntry) {
+func (this *Mlrmap) unlink(pe *mlrmapEntry) {
 	if pe == this.Head {
 		if pe == this.Tail {
 			this.Head = nil
@@ -130,8 +130,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 	this.FieldCount--
 }
 
-//lrecEntry* lrec_put_after(Lrec* prec, lrecEntry* pd, char* key, char* value, char free_flags) {
-//	lrecEntry* pe = lrec_find_entry(prec, key);
+//mlrmapEntry* lrec_put_after(Mlrmap* prec, mlrmapEntry* pd, char* key, char* value, char free_flags) {
+//	mlrmapEntry* pe = lrec_find_entry(prec, key);
 //
 //	if (pe != NULL) { // Overwrite
 //		if (pe->free_flags & FREE_ENTRY_VALUE) {
@@ -142,7 +142,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //		if (free_flags & FREE_ENTRY_VALUE)
 //			pe->free_flags |= FREE_ENTRY_VALUE;
 //	} else { // Insert after specified entry
-//		pe = mlr_malloc_or_die(sizeof(lrecEntry));
+//		pe = mlr_malloc_or_die(sizeof(mlrmapEntry));
 //		pe->key         = key;
 //		pe->value       = value;
 //		pe->free_flags  = free_flags;
@@ -155,7 +155,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //			prec->Tail = pe;
 //
 //		} else {
-//			lrecEntry* pf = pd->Next;
+//			mlrmapEntry* pf = pd->Next;
 //			pd->Next = pe;
 //			pf->Prev = pe;
 //			pe->Prev = pd;
@@ -167,8 +167,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //	return pe;
 //}
 
-//char* lrec_get_ext(Lrec* prec, char* key, lrecEntry** ppentry) {
-//	lrecEntry* pe = lrec_find_entry(prec, key);
+//char* lrec_get_ext(Mlrmap* prec, char* key, mlrmapEntry** ppentry) {
+//	mlrmapEntry* pe = lrec_find_entry(prec, key);
 //	if (pe != NULL) {
 //		*ppentry = pe;
 //		return pe->value;
@@ -179,13 +179,13 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //}
 
 //// ----------------------------------------------------------------
-//lrecEntry* lrec_get_pair_by_position(Lrec* prec, int position) { // 1-up not 0-up
+//mlrmapEntry* lrec_get_pair_by_position(Mlrmap* prec, int position) { // 1-up not 0-up
 //	if (position <= 0 || position > prec->field_count) {
 //		return NULL;
 //	}
 //	int sought_index = position - 1;
 //	int found_index = 0;
-//	lrecEntry* pe = NULL;
+//	mlrmapEntry* pe = NULL;
 //	for (
 //		found_index = 0, pe = prec->Head;
 //		pe != NULL;
@@ -200,8 +200,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //	exit(1);
 //}
 
-//char* lrec_get_key_by_position(Lrec* prec, int position) { // 1-up not 0-up
-//	lrecEntry* pe = lrec_get_pair_by_position(prec, position);
+//char* lrec_get_key_by_position(Mlrmap* prec, int position) { // 1-up not 0-up
+//	mlrmapEntry* pe = lrec_get_pair_by_position(prec, position);
 //	if (pe == NULL) {
 //		return NULL;
 //	} else {
@@ -209,8 +209,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //	}
 //}
 
-//char* lrec_get_value_by_position(Lrec* prec, int position) { // 1-up not 0-up
-//	lrecEntry* pe = lrec_get_pair_by_position(prec, position);
+//char* lrec_get_value_by_position(Mlrmap* prec, int position) { // 1-up not 0-up
+//	mlrmapEntry* pe = lrec_get_pair_by_position(prec, position);
 //	if (pe == NULL) {
 //		return NULL;
 //	} else {
@@ -219,8 +219,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //}
 
 //// ----------------------------------------------------------------
-//void lrec_remove_by_position(Lrec* prec, int position) { // 1-up not 0-up
-//	lrecEntry* pe = lrec_get_pair_by_position(prec, position);
+//void lrec_remove_by_position(Mlrmap* prec, int position) { // 1-up not 0-up
+//	mlrmapEntry* pe = lrec_get_pair_by_position(prec, position);
 //	if (pe == NULL)
 //		return;
 //
@@ -247,11 +247,11 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //   "x" => "3"
 //   "z" => "4"
 //
-//void lrec_rename(Lrec* prec, char* old_key, char* new_key, int new_needs_freeing) {
+//void lrec_rename(Mlrmap* prec, char* old_key, char* new_key, int new_needs_freeing) {
 //
-//	lrecEntry* pold = lrec_find_entry(prec, old_key);
+//	mlrmapEntry* pold = lrec_find_entry(prec, old_key);
 //	if (pold != NULL) {
-//		lrecEntry* pnew = lrec_find_entry(prec, new_key);
+//		mlrmapEntry* pnew = lrec_find_entry(prec, new_key);
 //
 //		if (pnew == NULL) { // E.g. rename "x" to "y" when "y" is not present
 //			if (pold->free_flags & FREE_ENTRY_KEY) {
@@ -288,8 +288,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 // 1. Rename field at position 3 from "x" to "y when "y" does not exist elsewhere in the srec
 // 2. Rename field at position 3 from "x" to "y when "y" does     exist elsewhere in the srec
 // Note: position is 1-up not 0-up
-//void  lrec_rename_at_position(Lrec* prec, int position, char* new_key, int new_needs_freeing){
-//	lrecEntry* pe = lrec_get_pair_by_position(prec, position);
+//void  lrec_rename_at_position(Mlrmap* prec, int position, char* new_key, int new_needs_freeing){
+//	mlrmapEntry* pe = lrec_get_pair_by_position(prec, position);
 //	if (pe == NULL) {
 //		if (new_needs_freeing) {
 //			free(new_key);
@@ -297,7 +297,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //		return;
 //	}
 //
-//	lrecEntry* pother = lrec_find_entry(prec, new_key);
+//	mlrmapEntry* pother = lrec_find_entry(prec, new_key);
 //
 //	if (pe->free_flags & FREE_ENTRY_KEY) {
 //		free(pe->key);
@@ -315,8 +315,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //}
 
 //// ----------------------------------------------------------------
-//void lrec_move_to_head(Lrec* prec, char* key) {
-//	lrecEntry* pe = lrec_find_entry(prec, key);
+//void lrec_move_to_head(Mlrmap* prec, char* key) {
+//	mlrmapEntry* pe = lrec_find_entry(prec, key);
 //	if (pe == NULL)
 //		return;
 //
@@ -324,8 +324,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //	lrec_link_at_head(prec, pe);
 //}
 
-//void lrec_move_to_tail(Lrec* prec, char* key) {
-//	lrecEntry* pe = lrec_find_entry(prec, key);
+//void lrec_move_to_tail(Mlrmap* prec, char* key) {
+//	mlrmapEntry* pe = lrec_find_entry(prec, key);
 //	if (pe == NULL)
 //		return;
 //
@@ -351,8 +351,8 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //   - We then construct the invalid "d,x,f,d,e" -- we need to detect and unset
 //     the second 'd' field.
 
-//void  lrec_label(Lrec* prec, slls_t* pnames_as_list, hss_t* pnames_as_set) {
-//	lrecEntry* pe = prec->Head;
+//void  lrec_label(Mlrmap* prec, slls_t* pnames_as_list, hss_t* pnames_as_set) {
+//	mlrmapEntry* pe = prec->Head;
 //	sllse_t* pn = pnames_as_list->Head;
 //
 //	// Process the labels list
@@ -370,7 +370,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //	for ( ; pe != NULL; ) {
 //		char* name = pe->key;
 //		if (hss_has(pnames_as_set, name)) {
-//			lrecEntry* Next = pe->Next;
+//			mlrmapEntry* Next = pe->Next;
 //			if (pe->free_flags & FREE_ENTRY_KEY) {
 //				free(pe->key);
 //			}
@@ -387,7 +387,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //}
 
 //// ----------------------------------------------------------------
-//void lrece_update_value(lrecEntry* pe, char* new_value, int new_needs_freeing) {
+//void lrece_update_value(mlrmapEntry* pe, char* new_value, int new_needs_freeing) {
 //	if (pe == NULL) {
 //		return;
 //	}
@@ -402,7 +402,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //}
 
 //// ----------------------------------------------------------------
-//static void lrec_link_at_head(Lrec* prec, lrecEntry* pe) {
+//static void lrec_link_at_head(Mlrmap* prec, mlrmapEntry* pe) {
 //
 //	if (prec->Head == NULL) {
 //		pe->Prev   = NULL;
@@ -419,7 +419,7 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //	prec->field_count++;
 //}
 
-//static void lrec_link_at_tail(Lrec* prec, lrecEntry* pe) {
+//static void lrec_link_at_tail(Mlrmap* prec, mlrmapEntry* pe) {
 //
 //	if (prec->Head == NULL) {
 //		pe->Prev   = NULL;
@@ -436,29 +436,29 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 //}
 
 //// ----------------------------------------------------------------
-//Lrec* lrec_literal_1(char* k1, char* v1) {
-//	Lrec* prec = lrec_unbacked_alloc();
+//Mlrmap* lrec_literal_1(char* k1, char* v1) {
+//	Mlrmap* prec = lrec_unbacked_alloc();
 //	lrec_put(prec, k1, v1, NO_FREE);
 //	return prec;
 //}
 
-//Lrec* lrec_literal_2(char* k1, char* v1, char* k2, char* v2) {
-//	Lrec* prec = lrec_unbacked_alloc();
+//Mlrmap* lrec_literal_2(char* k1, char* v1, char* k2, char* v2) {
+//	Mlrmap* prec = lrec_unbacked_alloc();
 //	lrec_put(prec, k1, v1, NO_FREE);
 //	lrec_put(prec, k2, v2, NO_FREE);
 //	return prec;
 //}
 
-//Lrec* lrec_literal_3(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3) {
-//	Lrec* prec = lrec_unbacked_alloc();
+//Mlrmap* lrec_literal_3(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3) {
+//	Mlrmap* prec = lrec_unbacked_alloc();
 //	lrec_put(prec, k1, v1, NO_FREE);
 //	lrec_put(prec, k2, v2, NO_FREE);
 //	lrec_put(prec, k3, v3, NO_FREE);
 //	return prec;
 //}
 
-//Lrec* lrec_literal_4(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3, char* k4, char* v4) {
-//	Lrec* prec = lrec_unbacked_alloc();
+//Mlrmap* lrec_literal_4(char* k1, char* v1, char* k2, char* v2, char* k3, char* v3, char* k4, char* v4) {
+//	Mlrmap* prec = lrec_unbacked_alloc();
 //	lrec_put(prec, k1, v1, NO_FREE);
 //	lrec_put(prec, k2, v2, NO_FREE);
 //	lrec_put(prec, k3, v3, NO_FREE);

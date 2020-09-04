@@ -23,7 +23,7 @@ import (
 // * Record-writes don't need them (OPS et al. are already in the
 //   writer-options struct). However, we have chained mappers using the 'then'
 //   command-line syntax. This means a given mapper might be piping its output
-//   to a record-writer, or another mapper. So, the lrec-and-context pair goes
+//   to a record-writer, or another mapper. So, the record-and-context pair goes
 //   to the record-writers even though they don't need the contexts.
 
 func Stream(
@@ -48,8 +48,8 @@ func Stream(
 	}
 
 	// Set up the reader-to-mapper and mapper-to-writer channels.
-	inrecs := make(chan *lib.LrecAndContext, 10)
-	outrecs := make(chan *lib.LrecAndContext, 1)
+	inrecs := make(chan *lib.RecordAndContext, 10)
+	outrecs := make(chan *lib.RecordAndContext, 1)
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use

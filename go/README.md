@@ -85,7 +85,7 @@ So, in broad overview, the key packages are:
 * Main entry point is `mlr.go`; everything else in `src/miller`.
 * `src/miller/lib`:
   * Implementation of the `Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
-  * `Lrec` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `lrec.go` for more details.
+  * `Mlrmap` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `mlrmap.go` for more details.
   * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a mapper chain of `put` then `filter`, and a JSON record-writer.
 * `src/miller/clitypes` contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
@@ -98,20 +98,20 @@ So, in broad overview, the key packages are:
 * `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.
 
-### Nil-lrec conventions
+### Nil-record conventions
 
 Through out the code, records are passed by reference (as are most things, for
 that matter, to reduce unnecessary data copies). In particular, records can be
 nil through the reader/mapper/writer sequence.
 
-* Record-readers produce a nil lrec-pointer to signify end of input stream.
-* Each mapper takes an lrec-pointer as input and produces a sequence of zero or more lrec-pointers.
+* Record-readers produce a nil record-pointer to signify end of input stream.
+* Each mapper takes a record-pointer as input and produces a sequence of zero or more record-pointers.
   * Many mappers, such as `cat`, `cut`, `rename`, etc. produce one output record per input record.
   * The `filter` mapper produces one or zero output records per input record depending on whether the record passed the filter.
   * The `nothing` mapper produces zero output records.
-  * The `sort` and `tac` mappers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-lrec end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-lrec end-of-stream marker.
+  * The `sort` and `tac` mappers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-record end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-record end-of-stream marker.
   * Many mappers such as `stats1` and `count` also retain input records, then produce output once there is no more input to them.
-* A null lrec-pointer at end of stream is passed to lrec writers so that they may produce final output.
+* A null record-pointer at end of stream is passed to record-writers so that they may produce final output.
   * Most writers produce their output one record at a time.
   * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
 

@@ -54,32 +54,32 @@
 package lib
 
 // ----------------------------------------------------------------
-type Lrec struct {
+type Mlrmap struct {
 	FieldCount int64
-	Head       *lrecEntry
-	Tail       *lrecEntry
+	Head       *mlrmapEntry
+	Tail       *mlrmapEntry
 
 	// Surprisingly, using this costs about 25% for cat/cut/etc tests
 	// on million-line data files (CSV, DKVP) with a dozen or so columns.
 	// So, the constructor allows callsites to use it, or not.
-	keysToEntries map[string]*lrecEntry
+	keysToEntries map[string]*mlrmapEntry
 }
 
-type lrecEntry struct {
+type mlrmapEntry struct {
 	Key   *string
 	Value *Mlrval
-	Prev  *lrecEntry
-	Next  *lrecEntry
+	Prev  *mlrmapEntry
+	Next  *mlrmapEntry
 }
 
 // ----------------------------------------------------------------
-func NewLrec() *Lrec {
-	return NewLrecNoMap()
+func NewMlrmap() *Mlrmap {
+	return NewMlrmapNoMap()
 }
 
 // Faster on record-stream data as noted above.
-func NewLrecNoMap() *Lrec {
-	return &Lrec{
+func NewMlrmapNoMap() *Mlrmap {
+	return &Mlrmap{
 		FieldCount:    0,
 		Head:          nil,
 		Tail:          nil,
@@ -87,20 +87,20 @@ func NewLrecNoMap() *Lrec {
 	}
 }
 
-func NewLrecMap() *Lrec {
-	return &Lrec{
+func NewMlrmapMap() *Mlrmap {
+	return &Mlrmap{
 		FieldCount:    0,
 		Head:          nil,
 		Tail:          nil,
-		keysToEntries: make(map[string]*lrecEntry),
+		keysToEntries: make(map[string]*mlrmapEntry),
 	}
 }
 
 // ----------------------------------------------------------------
-func newLrecEntry(key *string, value *Mlrval) *lrecEntry {
+func newMlrmapEntry(key *string, value *Mlrval) *mlrmapEntry {
 	kcopy := *key
 	vcopy := *value
-	return &lrecEntry{
+	return &mlrmapEntry{
 		&kcopy,
 		&vcopy,
 		nil,

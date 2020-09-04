@@ -6,5 +6,5 @@ import (
 
 // Convention: nil outrec signifies end of record stream
 type IRecordWriter interface {
-	Write(outrec *lib.Lrec)
+	Write(outrec *lib.Mlrmap)
 }

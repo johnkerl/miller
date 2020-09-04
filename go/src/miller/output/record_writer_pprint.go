@@ -10,31 +10,31 @@ import (
 
 // ostream *os.File in constructors/factory
 type RecordWriterPPRINT struct {
-	lrecs *list.List
+	records *list.List
 }
 
 func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriterPPRINT {
 	return &RecordWriterPPRINT{
-		lrecs: list.New(),
+		records: list.New(),
 	}
 }
 
 // xxx this is very naive at present -- needs copy from the C version.
 func (this *RecordWriterPPRINT) Write(
-	outrec *lib.Lrec,
+	outrec *lib.Mlrmap,
 ) {
 	// No output until end of record stream, since we need to find out max
 	// width down each column.
 	if outrec != nil {
-		this.lrecs.PushBack(outrec)
+		this.records.PushBack(outrec)
 		return
 	}
 
 	// TODO: heterogeneity. keep previous header and reset if need.
 	maxWidths := make(map[string]int)
 
-	for e := this.lrecs.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*lib.Lrec)
+	for e := this.records.Front(); e != nil; e = e.Next() {
+		outrec := e.Value.(*lib.Mlrmap)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			width := len(pe.Value.String())
 			oldMaxWidth := maxWidths[*pe.Key]
@@ -53,8 +53,8 @@ func (this *RecordWriterPPRINT) Write(
 	}
 
 	onFirst := true
-	for e := this.lrecs.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*lib.Lrec)
+	for e := this.records.Front(); e != nil; e = e.Next() {
+		outrec := e.Value.(*lib.Mlrmap)
 
 		// Print header line
 		if onFirst {

@@ -25,7 +25,7 @@ func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV
 func (this *RecordReaderCSV) Read(
 	filenames []string,
 	context lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -42,7 +42,7 @@ func (this *RecordReaderCSV) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- lib.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,7 +52,7 @@ func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
 	context *lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -64,7 +64,7 @@ func (this *RecordReaderCSV) processHandle(
 	for {
 		if needHeader {
 			// TODO: make this a helper function
-			record, err := csvReader.Read()
+			csvRecord, err := csvReader.Read()
 			if err == io.EOF {
 				break
 			}
@@ -72,12 +72,12 @@ func (this *RecordReaderCSV) processHandle(
 				echan <- err
 				return
 			}
-			header = record
+			header = csvRecord
 
 			needHeader = false
 		}
 
-		record, err := csvReader.Read()
+		csvRecord, err := csvReader.Read()
 		if err == io.EOF {
 			break
 		}
@@ -86,20 +86,20 @@ func (this *RecordReaderCSV) processHandle(
 			return
 		}
 
-		lrec := lib.NewLrec()
+		record := lib.NewMlrmap()
 
 		// TODO: check for length mismatches
 		n := len(header)
 		for i := 0; i < n; i++ {
 			key := header[i]
-			value := lib.MlrvalFromInferredType(record[i])
+			value := lib.MlrvalFromInferredType(csvRecord[i])
 			// to do: avoid re-walk ...
-			lrec.Put(&key, &value)
+			record.Put(&key, &value)
 		}
-		context.UpdateForInputRecord(lrec)
+		context.UpdateForInputRecord(record)
 
-		inrecsAndContexts <- lib.NewLrecAndContext(
-			lrec,
+		inrecsAndContexts <- lib.NewRecordAndContext(
+			record,
 			context,
 		)
 	}

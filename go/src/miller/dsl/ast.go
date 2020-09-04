@@ -76,7 +76,6 @@ type ASTNode struct {
 	// * what about evaluator-state ?
 	// * outrec := node.Evaluator.Evaluate(inrec, state) ?
 	// * state:
-	//   o lhmsmv_t*        ptyped_overlay; -- get rid of, w/ mlrval keys directly in the lrecs?
 	//   o string_array_t** ppregex_captures;
 	//   o mlhmmv_root_t*   poosvars;
 	//   o context_t*       pctx;

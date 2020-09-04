@@ -27,7 +27,7 @@ func NewRecordReaderNIDX(readerOptions *clitypes.TReaderOptions) *RecordReaderNI
 func (this *RecordReaderNIDX) Read(
 	filenames []string,
 	context lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -44,7 +44,7 @@ func (this *RecordReaderNIDX) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- lib.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -54,7 +54,7 @@ func (this *RecordReaderNIDX) processHandle(
 	handle *os.File,
 	filename string,
 	context *lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -72,11 +72,11 @@ func (this *RecordReaderNIDX) processHandle(
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
-			lrec := lrecFromNIDXLine(&line)
+			record := recordFromNIDXLine(&line)
 
-			context.UpdateForInputRecord(lrec)
-			inrecsAndContexts <- lib.NewLrecAndContext(
-				lrec,
+			context.UpdateForInputRecord(record)
+			inrecsAndContexts <- lib.NewRecordAndContext(
+				record,
 				context,
 			)
 		}
@@ -84,10 +84,10 @@ func (this *RecordReaderNIDX) processHandle(
 }
 
 // ----------------------------------------------------------------
-func lrecFromNIDXLine(
+func recordFromNIDXLine(
 	line *string,
-) *lib.Lrec {
-	lrec := lib.NewLrec()
+) *lib.Mlrmap {
+	record := lib.NewMlrmap()
 	values := strings.Split(*line, " ") // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {
@@ -95,7 +95,7 @@ func lrecFromNIDXLine(
 		key := strconv.FormatInt(i, 10)
 		// to do: avoid re-walk ...
 		mval := lib.MlrvalFromInferredType(value)
-		lrec.Put(&key, &mval)
+		record.Put(&key, &mval)
 	}
-	return lrec
+	return record
 }

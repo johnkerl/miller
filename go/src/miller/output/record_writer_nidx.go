@@ -22,7 +22,7 @@ func NewRecordWriterNIDX(writerOptions *clitypes.TWriterOptions) *RecordWriterNI
 }
 
 func (this *RecordWriterNIDX) Write(
-	outrec *lib.Lrec,
+	outrec *lib.Mlrmap,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

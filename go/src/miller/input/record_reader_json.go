@@ -20,7 +20,7 @@ func NewRecordReaderJSON(readerOptions *clitypes.TReaderOptions) *RecordReaderJS
 func (this *RecordReaderJSON) Read(
 	filenames []string,
 	context lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -37,7 +37,7 @@ func (this *RecordReaderJSON) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- lib.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -47,7 +47,7 @@ func (this *RecordReaderJSON) processHandle(
 	handle *os.File,
 	filename string,
 	context *lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -69,7 +69,7 @@ func (this *RecordReaderJSON) processHandle(
 
 	for jsonDecoder.More() {
 
-		lrec := lib.NewLrec()
+		record := lib.NewMlrmap()
 
 		var om *ordered.OrderedMap = ordered.NewOrderedMap()
 		err := jsonDecoder.Decode(om)
@@ -100,22 +100,22 @@ func (this *RecordReaderJSON) processHandle(
 				// If it's double-quoted, leave it as a string, even if it
 				// looks like something parseable as int or float.
 				mval := lib.MlrvalFromString(sval)
-				lrec.Put(&key, &mval)
+				record.Put(&key, &mval)
 			} else {
 				nval, ok := value.(json.Number)
 				if ok {
 					// xxx look deeper into input-format-preserving operations ...
 					sval = nval.String()
 					mval := lib.MlrvalFromInferredType(sval)
-					lrec.Put(&key, &mval)
+					record.Put(&key, &mval)
 				}
 			}
 		}
 
-		context.UpdateForInputRecord(lrec)
+		context.UpdateForInputRecord(record)
 
-		inrecsAndContexts <- lib.NewLrecAndContext(
-			lrec,
+		inrecsAndContexts <- lib.NewRecordAndContext(
+			record,
 			context,
 		)
 	}

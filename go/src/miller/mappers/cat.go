@@ -149,16 +149,16 @@ func NewMapperCat(
 }
 
 func (this *MapperCat) Map(
-	inrecAndContext *lib.LrecAndContext,
-	outrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecAndContext *lib.RecordAndContext,
+	outrecsAndContexts chan<- *lib.RecordAndContext,
 ) {
-	lrec := inrecAndContext.Lrec
-	if lrec != nil { // not end of record stream
+	record := inrecAndContext.Record
+	if record != nil { // not end of record stream
 		if this.doCounters {
 			this.counter++
 			key := this.counterFieldName
 			value := lib.MlrvalFromInt64(this.counter)
-			lrec.Prepend(&key, &value)
+			record.Prepend(&key, &value)
 		}
 	}
 	outrecsAndContexts <- inrecAndContext

@@ -40,14 +40,14 @@ import (
 
 // ----------------------------------------------------------------
 type State struct {
-	Inrec   *lib.Lrec
+	Inrec   *lib.Mlrmap
 	Context *lib.Context
 	// oosvars too
 	// stack frames will go into individual statement-block nodes
 }
 
 func NewState(
-	inrec *lib.Lrec,
+	inrec *lib.Mlrmap,
 	context *lib.Context,
 ) *State {
 	return &State{

@@ -72,27 +72,27 @@ func mapperTacUsage(
 
 // ----------------------------------------------------------------
 type MapperTac struct {
-	lrecsAndContexts *list.List
+	recordsAndContexts *list.List
 }
 
 func NewMapperTac() (*MapperTac, error) {
 	return &MapperTac{
-		lrecsAndContexts: list.New(),
+		recordsAndContexts: list.New(),
 	}, nil
 }
 
 func (this *MapperTac) Map(
-	inrecAndContext *lib.LrecAndContext,
-	outrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecAndContext *lib.RecordAndContext,
+	outrecsAndContexts chan<- *lib.RecordAndContext,
 ) {
-	if inrecAndContext.Lrec != nil {
-		this.lrecsAndContexts.PushFront(inrecAndContext)
+	if inrecAndContext.Record != nil {
+		this.recordsAndContexts.PushFront(inrecAndContext)
 	} else {
 		// end of stream
-		for e := this.lrecsAndContexts.Front(); e != nil; e = e.Next() {
-			outrecsAndContexts <- e.Value.(*lib.LrecAndContext)
+		for e := this.recordsAndContexts.Front(); e != nil; e = e.Next() {
+			outrecsAndContexts <- e.Value.(*lib.RecordAndContext)
 		}
-		outrecsAndContexts <- lib.NewLrecAndContext(
+		outrecsAndContexts <- lib.NewRecordAndContext(
 			nil, // signals end of input record stream
 			&inrecAndContext.Context,
 		)

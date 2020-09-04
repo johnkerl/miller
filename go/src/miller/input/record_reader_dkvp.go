@@ -25,7 +25,7 @@ func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDK
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
 	context lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -42,7 +42,7 @@ func (this *RecordReaderDKVP) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- lib.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,7 +52,7 @@ func (this *RecordReaderDKVP) processHandle(
 	handle *os.File,
 	filename string,
 	context *lib.Context,
-	inrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecsAndContexts chan<- *lib.RecordAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -69,10 +69,10 @@ func (this *RecordReaderDKVP) processHandle(
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
-			lrec := lrecFromDKVPLine(&line, &this.ifs, &this.ips)
-			context.UpdateForInputRecord(lrec)
-			inrecsAndContexts <- lib.NewLrecAndContext(
-				lrec,
+			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
+			context.UpdateForInputRecord(record)
+			inrecsAndContexts <- lib.NewRecordAndContext(
+				record,
 				context,
 			)
 		}
@@ -80,12 +80,12 @@ func (this *RecordReaderDKVP) processHandle(
 }
 
 // ----------------------------------------------------------------
-func lrecFromDKVPLine(
+func recordFromDKVPLine(
 	line *string,
 	ifs *string,
 	ips *string,
-) *lib.Lrec {
-	lrec := lib.NewLrec()
+) *lib.Mlrmap {
+	record := lib.NewMlrmap()
 	pairs := strings.Split(*line, *ifs)
 	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)
@@ -93,7 +93,7 @@ func lrecFromDKVPLine(
 		key := kv[0]
 		value := lib.MlrvalFromInferredType(kv[1])
 		// to do: avoid re-walk ...
-		lrec.Put(&key, &value)
+		record.Put(&key, &value)
 	}
-	return lrec
+	return record
 }

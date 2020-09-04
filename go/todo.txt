@@ -1,10 +1,15 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! rename lrec.go et al.
+  o files
+
+* check all struct-initialized to make sure they're all using colon syntax
+
 * reg_test/run iterate
 
 * neaten/error-proof:
-  o lrecEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
+  o mlrmapEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
     or remove. (keeping pointers allows nil-check which is good.)
   o inrec *lib.Lrec is good for default no-copy across channels ... needs
     a big red flag though for things like the repeat verb (maybe *only* that one ...)
@@ -16,8 +21,6 @@ TOP OF LIST:
   o mlrval Go Copy method and DSL copy function ... or, better, pass by
     reference throughout RHS but always copy on assignment. (don't
     want references to $* trashing the UX.)
-  ? lrec with OrderedMap? profile it ... if perf ok, this would make the code
-    *much* simpler -- $* itself would be a mlrval.
 
 * SUMMARY:
   o easy: most verbs
@@ -104,7 +107,6 @@ NITS:
 * address all manner of xxx and TODO comments
 * support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
-* lrec -> srec everywhere
 * mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?

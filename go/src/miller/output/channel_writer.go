@@ -7,16 +7,16 @@ import (
 )
 
 func ChannelWriter(
-	outrecsAndContexts <-chan *lib.LrecAndContext,
+	outrecsAndContexts <-chan *lib.RecordAndContext,
 	recordWriter IRecordWriter,
 	done chan<- bool,
 	ostream *os.File,
 ) {
 	for {
-		lrecAndContext := <-outrecsAndContexts
-		lrec := lrecAndContext.Lrec
-		recordWriter.Write(lrec)
-		if lrec == nil { // end of record stream
+		recordAndContext := <-outrecsAndContexts
+		record := recordAndContext.Record
+		recordWriter.Write(record)
+		if record == nil { // end of record stream
 			done <- true
 			break
 		}

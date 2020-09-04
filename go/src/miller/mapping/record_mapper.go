@@ -9,8 +9,8 @@ import (
 
 type IRecordMapper interface {
 	Map(
-		inrecAndContext *lib.LrecAndContext,
-		outrecsAndContexts chan<- *lib.LrecAndContext,
+		inrecAndContext *lib.RecordAndContext,
+		outrecsAndContexts chan<- *lib.RecordAndContext,
 	)
 }
 

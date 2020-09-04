@@ -6,10 +6,10 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Lrec) Print() {
+func (this *Mlrmap) Print() {
 	this.Fprint(os.Stdout)
 }
-func (this *Lrec) Fprint(file *os.File) {
+func (this *Mlrmap) Fprint(file *os.File) {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
@@ -24,18 +24,18 @@ func (this *Lrec) Fprint(file *os.File) {
 }
 
 //// ----------------------------------------------------------------
-//void lrec_dump(Lrec* prec) {
+//void lrec_dump(Mlrmap* prec) {
 //	lrec_dump_fp(prec, stdout);
 //}
 
-//void lrec_dump_fp(Lrec* prec, FILE* fp) {
+//void lrec_dump_fp(Mlrmap* prec, FILE* fp) {
 //	if (prec == NULL) {
 //		fprintf(fp, "NULL\n");
 //		return;
 //	}
 //	fprintf(fp, "field_count = %d\n", prec->field_count);
 //	fprintf(fp, "| Head: %16p | Tail %16p\n", prec->Head, prec->Tail);
-//	for (lrecEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
+//	for (mlrmapEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
 //		const char* key_string = (pe == NULL) ? "none" :
 //			pe->key == NULL ? "null" :
 //			pe->key;
@@ -49,13 +49,13 @@ func (this *Lrec) Fprint(file *os.File) {
 //	}
 //}
 
-//void lrec_dump_titled(char* msg, Lrec* prec) {
+//void lrec_dump_titled(char* msg, Mlrmap* prec) {
 //	printf("%s:\n", msg);
 //	lrec_dump(prec);
 //	printf("\n");
 //}
 
-//void lrec_print(Lrec* prec) {
+//void lrec_print(Mlrmap* prec) {
 //	FILE* output_stream = stdout;
 //	char ors = '\n';
 //	char ofs = ',';
@@ -66,7 +66,7 @@ func (this *Lrec) Fprint(file *os.File) {
 //		return;
 //	}
 //	int nf = 0;
-//	for (lrecEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
+//	for (mlrmapEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
 //		if (nf > 0)
 //			fputc(ofs, output_stream);
 //		fputs(pe->key, output_stream);
@@ -77,13 +77,13 @@ func (this *Lrec) Fprint(file *os.File) {
 //	fputc(ors, output_stream);
 //}
 
-//char* lrec_sprint(Lrec* prec, char* ors, char* ofs, char* ops) {
+//char* lrec_sprint(Mlrmap* prec, char* ors, char* ofs, char* ops) {
 //	string_builder_t* psb = sb_alloc(SB_ALLOC_LENGTH);
 //	if (prec == NULL) {
 //		sb_append_string(psb, "NULL");
 //	} else {
 //		int nf = 0;
-//		for (lrecEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
+//		for (mlrmapEntry* pe = prec->Head; pe != NULL; pe = pe->Next) {
 //			if (nf > 0)
 //				sb_append_string(psb, ofs);
 //			sb_append_string(psb, pe->key);

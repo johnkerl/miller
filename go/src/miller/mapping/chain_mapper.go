@@ -5,16 +5,16 @@ import (
 )
 
 func ChainMapper(
-	inrecsAndContexts <-chan *lib.LrecAndContext,
+	inrecsAndContexts <-chan *lib.RecordAndContext,
 	recordMappers []IRecordMapper, // not *recordMapper since this is an interface
-	outrecsAndContexts chan<- *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.RecordAndContext,
 ) {
 	i := 0
 	n := len(recordMappers)
 
-	intermediateChannels := make([]chan *lib.LrecAndContext, n-1)
+	intermediateChannels := make([]chan *lib.RecordAndContext, n-1)
 	for i = 0; i < n-1; i++ {
-		intermediateChannels[i] = make(chan *lib.LrecAndContext, 1)
+		intermediateChannels[i] = make(chan *lib.RecordAndContext, 1)
 	}
 
 	// r M0 w
@@ -42,14 +42,14 @@ func ChainMapper(
 }
 
 func runSingleMapper(
-	inrecsAndContexts <-chan *lib.LrecAndContext,
+	inrecsAndContexts <-chan *lib.RecordAndContext,
 	recordMapper IRecordMapper,
-	outrecsAndContexts chan<- *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.RecordAndContext,
 ) {
 	for {
-		lrecAndContext := <-inrecsAndContexts
-		recordMapper.Map(lrecAndContext, outrecsAndContexts)
-		if lrecAndContext.Lrec == nil { // end of stream
+		recordAndContext := <-inrecsAndContexts
+		recordMapper.Map(recordAndContext, outrecsAndContexts)
+		if recordAndContext.Record == nil { // end of stream
 			break
 		}
 	}

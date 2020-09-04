@@ -3,17 +3,17 @@ package lib
 // Since Go is concurrent, the context struct (AWK-like variables such as
 // FILENAME, NF, NF, FNR, etc.) needs to be duplicated and passed through the
 // channels along with each record.
-type LrecAndContext struct {
-	Lrec    *Lrec
+type RecordAndContext struct {
+	Record  *Mlrmap
 	Context Context
 }
 
-func NewLrecAndContext(
-	lrec *Lrec,
+func NewRecordAndContext(
+	record *Mlrmap,
 	context *Context,
-) *LrecAndContext {
-	return &LrecAndContext{
-		Lrec: lrec,
+) *RecordAndContext {
+	return &RecordAndContext{
+		Record: record,
 		// Since Go is concurrent, the context struct needs to be duplicated and
 		// passed through the channels along with each record. Here is where
 		// the copy happens, via the '*' in *context.
@@ -41,20 +41,20 @@ type Context struct {
 
 func NewContext() *Context {
 	return &Context{
-		"(stdin)",
-		0,
+		FILENAME: "(stdin)",
+		FILENUM:  0,
 
-		0,
-		0,
-		0,
+		NF:  0,
+		NR:  0,
+		FNR: 0,
 
-		"=",
-		",",
-		"\n",
+		IPS: "=",
+		IFS: ",",
+		IRS: "\n",
 
-		"=",
-		",",
-		"\n",
+		OPS: "=",
+		OFS: ",",
+		ORS: "\n",
 	}
 }
 
@@ -66,7 +66,7 @@ func (this *Context) UpdateForStartOfFile(filename string) {
 }
 
 // For the record-readers to update their initial context as each new record is read.
-func (this *Context) UpdateForInputRecord(inrec *Lrec) {
+func (this *Context) UpdateForInputRecord(inrec *Mlrmap) {
 	if inrec != nil { // do not count the end-of-stream marker which is a nil record pointer
 		this.NF = inrec.FieldCount
 		this.NR++

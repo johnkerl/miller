@@ -18,9 +18,9 @@ The `lib.Mlrval` structure includes **string, int, float, boolean, array-of-mlrv
   * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the `Mlrval` class implements.
 * Since a Mlrval can be of type array-of-mlrval or map-string-to-mlrval, a Mlrval is suited for JSON decoding/encoding.
 
-# Lrec
+# Mlrmap
 
-`lib.Lrec` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `lrec.go` for more details.
+`lib.Mlrmap` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `mlrmap.go` for more details.
 
 It's also an ordered map structure, with string keys and Mlrval values. This is used within Mlrval itself.
 

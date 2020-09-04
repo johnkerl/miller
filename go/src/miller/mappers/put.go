@@ -160,22 +160,22 @@ func NewASTFromString(dslString string) (*dsl.AST, error) {
 }
 
 func (this *MapperPut) Map(
-	inrecAndContext *lib.LrecAndContext,
-	outrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecAndContext *lib.RecordAndContext,
+	outrecsAndContexts chan<- *lib.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Lrec
+	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
 	if inrec != nil {
 
 		cstState := cst.NewState(inrec, &context)
 		outrec := this.cstRoot.Execute(cstState)
 
-		outrecsAndContexts <- lib.NewLrecAndContext(
+		outrecsAndContexts <- lib.NewRecordAndContext(
 			outrec,
 			&context,
 		)
 	} else {
-		outrecsAndContexts <- lib.NewLrecAndContext(
+		outrecsAndContexts <- lib.NewRecordAndContext(
 			nil, // signals end of input record stream
 			&context,
 		)

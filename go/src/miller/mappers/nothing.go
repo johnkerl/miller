@@ -80,10 +80,10 @@ func NewMapperNothing() (*MapperNothing, error) {
 }
 
 func (this *MapperNothing) Map(
-	inrecAndContext *lib.LrecAndContext,
-	outrecsAndContexts chan<- *lib.LrecAndContext,
+	inrecAndContext *lib.RecordAndContext,
+	outrecsAndContexts chan<- *lib.RecordAndContext,
 ) {
-	if inrecAndContext.Lrec == nil { // end of stream
+	if inrecAndContext.Record == nil { // end of stream
 		outrecsAndContexts <- inrecAndContext
 	}
 }
