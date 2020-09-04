@@ -1,13 +1,23 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! json unmarshal/marshal at mlrval
+  o support full JSON read/write of nested objects
+    - only requirement is that top-level be sequence of string-valued objects ...
+    - JSON-to-JSON cat-mapping should be identical
+    - JSON-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}
+  o implement json.Unmarshaler and json.Marshaler directly for Mlrval
+  o implement json.Unmarshaler and json.Marshaler directly for Lrec
+  i type Unmarshaler interface { UnmarshalJSON([]byte) error }
+  i type Marshaler   interface { MarshalJSON() ([]byte, error) }
+  o flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
+
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
   o printreps for array/map
   o mlrval Go Copy method and DSL copy function ... or, better, pass by
     reference throughout RHS but always copy on assignment. (don't
     want references to $* trashing the UX.)
-* json unmarshal/marshal at mlrval
 
 * SUMMARY:
   o easy: most verbs
@@ -51,19 +61,6 @@ TOP OF LIST:
   o begin/end blocks
   o indirect field names, at LHS and RHS
   o support the filter verb
-
-* array/map mlrval:
-  k srecs as string -> mlrvals
-  o add MT_ARRAY and MT_MAP to mlrval
-  o support full JSON read/write of nested objects
-    - only requirement is that top-level be sequence of string-valued objects ...
-    - JSON-to-JSON cat-mapping should be identical
-    - JSON-like accessor syntax in the grammar: $field.foo[3].bar{"bar"}
-  o implement json.Unmarshaler and json.Marshaler directly for Mlrval
-  o implement json.Unmarshaler and json.Marshaler directly for Lrec
-  i type Unmarshaler interface { UnmarshalJSON([]byte) error }
-  i type Marshaler   interface { MarshalJSON() ([]byte, error) }
-  o flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
 
 ----------------------------------------------------------------
 MAYBE:

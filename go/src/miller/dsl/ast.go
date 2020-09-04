@@ -147,8 +147,8 @@ func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 		tok = itok.(*token.Token)
 	}
 	return &ASTNode{
-		Token: tok,
-		Type: nodeType,
+		Token:    tok,
+		Type:     nodeType,
 		Children: nil,
 	}
 }

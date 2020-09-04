@@ -2,6 +2,7 @@ package output
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 
 	"miller/clitypes"
@@ -45,16 +46,18 @@ func (this *RecordWriterJSON) Write(
 		// Write the key which is necessarily string-valued in Miller
 		buffer.WriteString("  \"")
 		buffer.WriteString(*pe.Key)
+		buffer.WriteString("\": ")
 
 		// Write the value which is a mlrval
-		sval, needsQuote := pe.Value.StringWithQuoteInfo()
-		buffer.WriteString("\": ")
-		if needsQuote {
-			buffer.WriteString("\"")
+		valueBytes, err := pe.Value.MarshalJSON()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
-		buffer.WriteString(sval)
-		if needsQuote {
-			buffer.WriteString("\"")
+		_, err = buffer.Write(valueBytes)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 
 		if pe.Next != nil {
