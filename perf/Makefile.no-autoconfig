@@ -22,3 +22,7 @@ cutgo: cutgo.go
 	go build cutgo.go
 cutnim: cutnim.nim
 	nim compile cutnim.nim
+
+
+clean:
+	-@rm -f catc catc0 catm catrust catgo catnim cutgo cutnim catd cutd

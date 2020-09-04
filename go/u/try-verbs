@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -euo pipefail
+
+run_mlr() {
+  # Use just "mlr" for info messages
+  echo
+  echo ----------------------------------------------------------------
+  echo mlr "$@"
+  mlr "$@"
+}
+
+run_mlr --opprint cut    -f x,a u/s.dkvp
+run_mlr --opprint cut -o -f x,a u/s.dkvp
+run_mlr --opprint cut -x -f x,a u/s.dkvp
