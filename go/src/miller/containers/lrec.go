@@ -6,13 +6,15 @@
 //
 // * It keeps a doubly-linked list of key-value pairs.
 //
-// * No hash functions are computed when the map is written to or read from.
+// * By default, no hash functions are computed when the map is written to or
+//   read from.
 //
 // * Gets are implemented by sequential scan through the list: given a key,
 //   the key-value pairs are scanned through until a match is (or is not) found.
 //
-// * Performance improvement of 10-15% percent over lhmss was found in the C
-//   impleentation (for test data).
+// * Performance improvement of 25% percent over hash-mapping from key to entry
+//   was found in the Go implementation. Test data was million-line CSV and
+//   DKVP, with a dozen columns or so.
 //
 // Motivation:
 //
@@ -38,9 +40,10 @@
 // * Added benefit: the field-rename operation (preserving field order) becomes
 //   trivial.
 //
-// Notes:
-// * nil key is not supported.
-// * nil value is not supported.
+// Note however that an auxiliary constructor is provided which does use
+// a key-to-entry hashmap in place of linear search for get/put/has/delete.
+// This may be useful in certain contexts, even though it's not the default
+// chosen for stream-records.
 // ================================================================
 
 package containers
@@ -57,6 +60,11 @@ type Lrec struct {
 	FieldCount int64
 	Head       *lrecEntry
 	Tail       *lrecEntry
+
+	// Surprisingly, using this costs about 25% for cat/cut/etc tests
+	// on million-line data files (CSV, DKVP) with a dozen or so columns.
+	// So, the constructor allows callsites to use it, or not.
+	keysToEntries map[string]*lrecEntry
 }
 
 type lrecEntry struct {
@@ -68,10 +76,26 @@ type lrecEntry struct {
 
 // ----------------------------------------------------------------
 func NewLrec() *Lrec {
+	return NewLrecNoMap()
+	//return NewLrecMap()
+}
+
+// Faster on record-stream data as noted above.
+func NewLrecNoMap() *Lrec {
 	return &Lrec{
-		0,
-		nil,
-		nil,
+		FieldCount:    0,
+		Head:          nil,
+		Tail:          nil,
+		keysToEntries: nil,
+	}
+}
+
+func NewLrecMap() *Lrec {
+	return &Lrec{
+		FieldCount:    0,
+		Head:          nil,
+		Tail:          nil,
+		keysToEntries: make(map[string]*lrecEntry),
 	}
 }
 
@@ -110,14 +134,17 @@ func (this *Lrec) Has(key *string) bool {
 	return this.findEntry(key) != nil
 }
 
-// ----------------------------------------------------------------
 func (this *Lrec) findEntry(key *string) *lrecEntry {
-	for pe := this.Head; pe != nil; pe = pe.Next {
-		if *pe.Key == *key {
-			return pe
+	if this.keysToEntries != nil {
+		return this.keysToEntries[*key]
+	} else {
+		for pe := this.Head; pe != nil; pe = pe.Next {
+			if *pe.Key == *key {
+				return pe
+			}
 		}
+		return nil
 	}
-	return nil
 }
 
 // ----------------------------------------------------------------
@@ -133,6 +160,9 @@ func (this *Lrec) Put(key *string, value *lib.Mlrval) {
 			pe.Next = nil
 			this.Tail.Next = pe
 			this.Tail = pe
+		}
+		if this.keysToEntries != nil {
+			this.keysToEntries[*key] = pe
 		}
 		this.FieldCount++
 	} else {
@@ -154,6 +184,9 @@ func (this *Lrec) Prepend(key *string, value *lib.Mlrval) {
 			pe.Next = this.Head
 			this.Head.Prev = pe
 			this.Head = pe
+		}
+		if this.keysToEntries != nil {
+			this.keysToEntries[*key] = pe
 		}
 		this.FieldCount++
 	} else {
@@ -218,6 +251,9 @@ func (this *Lrec) unlink(pe *lrecEntry) {
 		} else {
 			pe.Next.Prev = pe.Prev
 		}
+	}
+	if this.keysToEntries != nil {
+		delete(this.keysToEntries, *pe.Key)
 	}
 	this.FieldCount--
 }
