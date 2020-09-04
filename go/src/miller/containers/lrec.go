@@ -94,11 +94,12 @@ func (this *Lrec) Fprint(file *os.File) {
 }
 
 // ----------------------------------------------------------------
-func lrecEntryAlloc(key *string, value *lib.Mlrval) *lrecEntry {
-	copy := *value
+func newLrecEntry(key *string, value *lib.Mlrval) *lrecEntry {
+	kcopy := *key
+	vcopy := *value
 	return &lrecEntry{
-		key,
-		&copy,
+		&kcopy,
+		&vcopy,
 		nil,
 		nil,
 	}
@@ -123,7 +124,7 @@ func (this *Lrec) findEntry(key *string) *lrecEntry {
 func (this *Lrec) Put(key *string, value *lib.Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
-		pe = lrecEntryAlloc(key, value)
+		pe = newLrecEntry(key, value)
 		if this.Head == nil {
 			this.Head = pe
 			this.Tail = pe
@@ -144,7 +145,7 @@ func (this *Lrec) Put(key *string, value *lib.Mlrval) {
 func (this *Lrec) Prepend(key *string, value *lib.Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
-		pe = lrecEntryAlloc(key, value)
+		pe = newLrecEntry(key, value)
 		if this.Tail == nil {
 			this.Head = pe
 			this.Tail = pe
