@@ -14,13 +14,15 @@
 
 # Efficiency of the Go port
 
-As I wrote [here](http://johnkerl.org/miller/doc/whyc.html) back in 2015 I couldn't get Rust or Go (or any other language I tried) to do some test-case processing as quickly as C, so I stuck with C. 
+As I wrote [here](http://johnkerl.org/miller/doc/whyc.html) back in 2015 I couldn't get Rust or Go (or any other language I tried) to do some test-case processing as quickly as C, so I stuck with C.
 
-Either Go has improved since 2015, or I'm a better Go programmer than I used to be, or both -- but as of 2020 I can get Go-Miller to process data about as quickly as C-Miller. 
+Either Go has improved since 2015, or I'm a better Go programmer than I used to be, or both -- but as of 2020 I can get Go-Miller to process data about as quickly as C-Miller.
 
-Note: in some sense Go-Miller is *less* efficient but in a way that doesn't significantly affect wall time. Namely, doing `mlr cat` on a million-record data file on my bargain-value MacBook Pro, the C version takes about 2.5 seconds and the Go version takes about 3 seconds.  But using `htop` (while processing an even larger file, to see the steady-state resource consumption) shows that the C version -- which is purely single-threaded -- is taking 100% CPU, while the Go version -- which uses concurrency and channels and `MAXPROCS=4`, with reader/mapper/writer each on their own CPU -- is taking about 240% CPU. So Go-Miller is taking up quite a bit more CPU, but does more work in parallel -- to finish the job in about the same amount of time. 
+Note: in some sense Go-Miller is *less* efficient but in a way that doesn't significantly affect wall time. Namely, doing `mlr cat` on a million-record data file on my bargain-value MacBook Pro, the C version takes about 2.5 seconds and the Go version takes about 3 seconds. So in terms of wall time -- which is what we care most about, how long we have to wait -- it's about the same.
 
-Even commodity hardware has multiple CPUs these days -- and the Go code is *much* easier to read than the C code -- so I'll call this a net win for Go.
+A way to look a little deeper at resource usage is to run `htop`, while processing a 10x larger file, so it'll take 25 or 30 seconds rather than 2.5 or 3. This way we can look at the steady-state resource consumption. I found that the C version -- which is purely single-threaded -- is taking 100% CPU. And the Go version, which uses concurrency and channels and `MAXPROCS=4`, with reader/mapper/writer each on their own CPU, is taking about 240% CPU. So Go-Miller is taking up not just a little more CPU, but a lot more -- yet, it does more work in parallel, and finishes the job in about the same amount of time.
+
+Even commodity hardware has multiple CPUs these days -- and the Go code is *much* easier to read, extend, and improve than the C code -- so I'll call this a net win for Miller.
 
 # Source-code goals
 

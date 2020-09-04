@@ -24,7 +24,7 @@ func main() {
 	// results in a zero-length pprof file.
 	//
 	// Usage:
-	// * mlr --cpuprofile cpu.pprof put -f example.mlr then nothing ~/tmp/huge > /dev/null
+	// * mlr --cpuprofile cpu.pprof put -f u/example.mlr then nothing ~/tmp/huge > /dev/null
 	// * go tool pprof mlr cpu.pprof
 	//   top10
 	// * go tool pprof --pdf mlr cpu.pprof > mlr-call-graph.pdf

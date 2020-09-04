@@ -5,3 +5,11 @@ u/try-chain > u/try-chain.out
 u/try-verbs > u/try-verbs.out
 u/try-parse > u/try-parse.out
 u/try-cst   > u/try-cst.out
+
+git diff \
+  u/try-io.out \
+  u/try-chain.out \
+  u/try-verbs.out \
+  u/try-parse.out \
+  u/try-cst.out
+
