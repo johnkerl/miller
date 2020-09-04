@@ -14,33 +14,28 @@ import (
 
 // ----------------------------------------------------------------
 func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+
 	if astNode.Children == nil {
-		return BuildEvaluableLeafNode(astNode)
+		return BuildLeafNode(astNode)
 	}
 
-	if astNode.Type == dsl.NodeTypeOperator {
+	switch astNode.Type {
+
+	case dsl.NodeTypeOperator:
 		return BuildOperatorNode(astNode)
-	}
 
-	if astNode.Type == dsl.NodeTypeArrayLiteral {
+	case dsl.NodeTypeArrayLiteral:
 		return BuildArrayLiteralNode(astNode)
-	}
 
-	if astNode.Type == dsl.NodeTypeMapLiteral {
+	case dsl.NodeTypeMapLiteral:
 		return BuildMapLiteralNode(astNode)
-	}
 
-	if astNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
+	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return BuildPanicNode(), nil // xxx temp
-	}
-	if astNode.Type == dsl.NodeTypeArraySliceAccess {
-		return BuildPanicNode(), nil // xxx temp
-	}
-	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
-		return BuildPanicNode(), nil // xxx temp
-	}
-	if astNode.Type == dsl.NodeTypeArraySliceEmptyUpperIndex {
-		return BuildPanicNode(), nil // xxx temp
+
+	case dsl.NodeTypeArraySliceAccess:
+		return BuildArraySliceAccessNode(astNode)
+
 	}
 
 	// xxx if/while/etc

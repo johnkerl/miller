@@ -12,7 +12,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildEvaluableLeafNode(
+func BuildLeafNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Children != nil)

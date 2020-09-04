@@ -472,3 +472,84 @@ RAW AST:
             * DirectFieldName "a"
             * IntLiteral "1"
 
+
+DSL EXPRESSION:
+$z = $a["index"]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayOrMapIndexAccess "[]"
+            * DirectFieldName "a"
+            * StringLiteral "index"
+
+
+DSL EXPRESSION:
+$z = "abcde"[1]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayOrMapIndexAccess "[]"
+            * StringLiteral "abcde"
+            * IntLiteral "1"
+
+
+DSL EXPRESSION:
+$z = "abcde"["index"]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayOrMapIndexAccess "[]"
+            * StringLiteral "abcde"
+            * StringLiteral "index"
+
+
+DSL EXPRESSION:
+$z = $a[1:2]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArraySliceAccess "[]"
+            * DirectFieldName "a"
+            * IntLiteral "1"
+            * IntLiteral "2"
+
+
+DSL EXPRESSION:
+$z = $a[:2]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArraySliceAccess "[]"
+            * DirectFieldName "a"
+            * ArraySliceEmptyLowerIndex ":"
+            * IntLiteral "2"
+
+
+DSL EXPRESSION:
+$z = $a[1:]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArraySliceAccess "[]"
+            * DirectFieldName "a"
+            * IntLiteral "1"
+            * ArraySliceEmptyUpperIndex ":"
+
+
+DSL EXPRESSION:
+$z = $a[:]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArraySliceAccess "[]"
+            * DirectFieldName "a"
+            * ArraySliceEmptyLowerIndex ":"
+            * ArraySliceEmptyUpperIndex ":"
+
