@@ -1,8 +1,6 @@
 package cst
 
 import (
-	"errors"
-
 	"miller/dsl"
 	"miller/lib"
 )
@@ -13,15 +11,75 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
+type ArrayLiteralNode struct {
+	evaluables []IEvaluable
+}
+
 func BuildArrayLiteralNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayLiteral)
+	// An empty array should have non-nil zero-length children, not nil
+	// children
+	lib.InternalCodingErrorIf(astNode.Children == nil)
 
-	// xxx assert children not nil (0-length non-nil ok, nil not ok)
+	evaluables := make([]IEvaluable, 0)
 
-	// xxx temp
-	return BuildPanicNode(), nil
+	for _, astChild := range astNode.Children {
+		element, err := BuildEvaluableNode(astChild)
+		if err != nil {
+			return nil, err
+		}
+		evaluables = append(evaluables, element)
+	}
+
+	return &ArrayLiteralNode{evaluables: evaluables}, nil
+}
+
+func (this *ArrayLiteralNode) Evaluate(state *State) lib.Mlrval {
+	mlrvals := make([]lib.Mlrval, 0)
+	for _, evaluable := range this.evaluables {
+		mlrval := evaluable.Evaluate(state)
+		mlrvals = append(mlrvals, mlrval)
+	}
+	return lib.MlrvalFromArrayLiteral(mlrvals)
+}
+
+// ----------------------------------------------------------------
+type ArrayOrMapIndexAccessNode struct {
+	baseEvaluable  IEvaluable
+	indexEvaluable IEvaluable
+}
+
+func BuildArrayOrMapIndexAccessNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+
+	baseASTNode := astNode.Children[0]
+	indexASTNode := astNode.Children[1]
+
+	baseEvaluable, err := BuildEvaluableNode(baseASTNode)
+	if err != nil {
+		return nil, err
+	}
+	indexEvaluable, err := BuildEvaluableNode(indexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ArrayOrMapIndexAccessNode{
+		baseEvaluable:  baseEvaluable,
+		indexEvaluable: indexEvaluable,
+	}, nil
+}
+
+func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) lib.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	indexMlrval := this.indexEvaluable.Evaluate(state)
+	// Base-is-array and index-is-int will be checked there
+	return baseMlrval.GetArrayIndex(&indexMlrval)
 }
 
 // ----------------------------------------------------------------
@@ -30,40 +88,37 @@ func BuildArraySliceAccessNode(
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceAccess)
 
-	// xxx temp
+	// TODO
+
 	return BuildPanicNode(), nil
 }
 
-//// ----------------------------------------------------------------
-//type ArrayLiteralNode struct {
-//	elements []IEvaluable
-//}
-//
-//func BuildArrayLiteralNode(astChildren []*dsl.ASTNode) *ArrayLiteralNode {
-//	...
-//	return &ArrayLiteralNode{
-//		elements: ...
+//	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
+//		return BuildPanicNode(), nil // xxx temp
 //	}
-//}
-//func (this *ArrayLiteralNode) Evaluate(state *State) lib.Mlrval {
-//	return ...
-//}
-
-////	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
-////		return BuildPanicNode(), nil // xxx temp
-////	}
-////	if astNode.Type == dsl.NodeTypeArraySliceEmptyUpperIndex {
-////		return BuildPanicNode(), nil // xxx temp
-////	}
+//	if astNode.Type == dsl.NodeTypeArraySliceEmptyUpperIndex {
+//		return BuildPanicNode(), nil // xxx temp
+//	}
 
 // ----------------------------------------------------------------
+type MapLiteralNode struct {
+	// needs array of key/value Mlrval pairs
+}
+
 func BuildMapLiteralNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeMapLiteral)
+	// An empty array should have non-nil zero-length children, not nil
+	// children
+	lib.InternalCodingErrorIf(astNode.Children == nil)
 
-	// xxx temp
-	return BuildPanicNode(), nil
+	// TODO
 
-	return nil, errors.New("CST builder: unhandled AST array node " + string(astNode.Type))
+	return &MapLiteralNode{
+	}, nil
+}
+
+func (this *MapLiteralNode) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromError() // xxx temp
 }

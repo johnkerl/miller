@@ -7,6 +7,8 @@ TOP OF LIST:
 * array/map
   o iterate on CST build
   o array literals and map literals
+  o printreps for array/map
+  ! defer maps until ordered-map impl
   o indexes and slices
     - string index access -- ? along with slices ...
   o mlrval Go Copy method and DSL copy function ... or, pass by

@@ -31,7 +31,7 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return BuildMapLiteralNode(astNode)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
-		return BuildPanicNode(), nil // xxx temp
+		return BuildArrayOrMapIndexAccessNode(astNode)
 
 	case dsl.NodeTypeArraySliceAccess:
 		return BuildArraySliceAccessNode(astNode)

@@ -8,37 +8,49 @@ import (
 
 func MlrvalFromError() Mlrval {
 	return Mlrval{
-		MT_ERROR,
-		"(error)", // xxx const somewhere
-		true,
-		0, 0.0, false,
+		mvtype:        MT_ERROR,
+		printrep:      "(error)", // xxx const somewhere
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
 func MlrvalFromAbsent() Mlrval {
 	return Mlrval{
-		MT_ABSENT,
-		"(absent)",
-		true,
-		0, 0.0, false,
+		mvtype:        MT_ABSENT,
+		printrep:      "(absent)",
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
 func MlrvalFromVoid() Mlrval {
 	return Mlrval{
-		MT_VOID,
-		"(void)",
-		true,
-		0, 0.0, false,
+		mvtype:        MT_VOID,
+		printrep:      "(void)",
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
 func MlrvalFromString(input string) Mlrval {
 	return Mlrval{
-		MT_STRING,
-		input,
-		true,
-		0, 0.0, false,
+		mvtype:        MT_STRING,
+		printrep:      input,
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
@@ -48,23 +60,25 @@ func MlrvalFromInt64String(input string) Mlrval {
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	InternalCodingErrorIf(!ok)
 	return Mlrval{
-		MT_INT,
-		input,
-		true,
-		ival,
-		0.0,
-		false,
+		mvtype:        MT_INT,
+		printrep:      input,
+		printrepValid: true,
+		intval:        ival,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
 func MlrvalFromInt64(input int64) Mlrval {
 	return Mlrval{
-		MT_INT,
-		"(bug-if-you-see-this)",
-		false,
-		input,
-		0.0,
-		false,
+		mvtype:        MT_INT,
+		printrep:      "(bug-if-you-see-this)",
+		printrepValid: false,
+		intval:        input,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
@@ -85,23 +99,25 @@ func MlrvalFromFloat64String(input string) Mlrval {
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	InternalCodingErrorIf(!ok)
 	return Mlrval{
-		MT_FLOAT,
-		input,
-		true,
-		0,
-		fval,
-		false,
+		mvtype:        MT_FLOAT,
+		printrep:      input,
+		printrepValid: true,
+		intval:        0,
+		floatval:      fval,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
 func MlrvalFromFloat64(input float64) Mlrval {
 	return Mlrval{
-		MT_FLOAT,
-		"(bug-if-you-see-this)",
-		false,
-		0,
-		input,
-		false,
+		mvtype:        MT_FLOAT,
+		printrep:      "(bug-if-you-see-this)",
+		printrepValid: false,
+		intval:        0,
+		floatval:      input,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
@@ -116,23 +132,25 @@ func tryFloat64FromString(input string) (float64, bool) {
 
 func MlrvalFromTrue() Mlrval {
 	return Mlrval{
-		MT_BOOL,
-		"true",
-		true,
-		0,
-		0.0,
-		true,
+		mvtype:        MT_BOOL,
+		printrep:      "true",
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       true,
+		arrayval:      nil,
 	}
 }
 
 func MlrvalFromFalse() Mlrval {
 	return Mlrval{
-		MT_BOOL,
-		"false",
-		true,
-		0,
-		0.0,
-		false,
+		mvtype:        MT_BOOL,
+		printrep:      "false",
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
 	}
 }
 
@@ -183,4 +201,17 @@ func MlrvalFromInferredType(input string) Mlrval {
 	}
 
 	return MlrvalFromString(input)
+}
+
+// xxx copy or no? needs a Mlrval.Copy() (deep) if so.
+func MlrvalFromArrayLiteral(input []Mlrval) Mlrval {
+	return Mlrval{
+		mvtype:        MT_ARRAY,
+		printrep:      "(bug-if-you-see-this)",
+		printrepValid: false,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      input,
+	}
 }

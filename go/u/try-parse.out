@@ -553,3 +553,19 @@ RAW AST:
             * ArraySliceEmptyLowerIndex ":"
             * ArraySliceEmptyUpperIndex ":"
 
+
+DSL EXPRESSION:
+$z = [5,6,7,8,9][1]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayOrMapIndexAccess "[]"
+            * ArrayLiteral "[]"
+                * IntLiteral "5"
+                * IntLiteral "6"
+                * IntLiteral "7"
+                * IntLiteral "8"
+                * IntLiteral "9"
+            * IntLiteral "1"
+

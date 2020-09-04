@@ -41,8 +41,7 @@ type Mlrval struct {
 	floatval      float64
 	boolval       bool
 
-	// TODO:
-	// arrayval []*Mlrval
+	arrayval []Mlrval
 
 	// TODO:
 	// mapval []OrderedMap[string]*Mlrval

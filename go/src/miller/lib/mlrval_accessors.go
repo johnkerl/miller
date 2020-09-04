@@ -38,3 +38,28 @@ func (this *Mlrval) IsTrue() bool {
 func (this *Mlrval) IsFalse() bool {
 	return this.mvtype == MT_BOOL && this.boolval == false
 }
+
+func (this *Mlrval) IsArray() bool {
+	return this.mvtype == MT_ARRAY
+}
+
+func (this *Mlrval) GetArrayIndex(index *Mlrval) Mlrval {
+	if this.mvtype != MT_ARRAY {
+		return MlrvalFromError()
+	}
+	if index.mvtype != MT_INT {
+		return MlrvalFromError()
+	}
+	i := index.intval
+	n := int64(len(this.arrayval))
+
+	// TODO: document this (pythonic)
+	if i < 0 && i > -n {
+		i += n
+	}
+
+	if i < 0 || i >= n {
+		return MlrvalFromError()
+	}
+	return this.arrayval[i]
+}
