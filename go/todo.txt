@@ -92,8 +92,9 @@ DEV NOTES:
 
 * build-dsl
 * build
-* check, and git diff to see what changed
 * fmter
+* check
+* git diff to see what changed
 * commit
 
 ----------------------------------------------------------------
