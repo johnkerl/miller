@@ -3,16 +3,15 @@ TOP OF LIST:
 
 * reg_test/run iterate
 
-! makefile for build-dsl: if $bnf newer than productionstable.go
 * array/map
-  o iterate on CST build
-  o array literals and map literals
+  o map literals & index-accessing
   o printreps for array/map
   ! defer maps until ordered-map impl
-  o indexes and slices
-    - string index access -- ? along with slices ...
-  o mlrval Go Copy method and DSL copy function ... or, pass by
-    reference throughout RHS but always copy on assignment?
+  o mlrval Go Copy method and DSL copy function ... or, better, pass by
+    reference throughout RHS but always copy on assignment. (don't
+    want references to $* trashing the UX.)
+  ? lrec with OrderedMap? profile it ... if perf ok, this would make the code
+    *much* simpler -- $* itself would be a mlrval.
 
 * SUMMARY:
   o easy: most verbs
@@ -71,6 +70,12 @@ TOP OF LIST:
   o flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
 
 ----------------------------------------------------------------
+MAYBE:
+
+* string index/slice access
+* string/array slices on assignment LHS -- ?
+
+----------------------------------------------------------------
 GOCC UPSTREAMS:
 
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
@@ -99,3 +104,4 @@ NITS:
 * godoc ...
 * mlrdoc false && 4, true || 4 because of short-circuiting requirement
 * update whyc.html with efficiency notes from go/README.md
+? makefile for build-dsl: if $bnf newer than productionstable.go
