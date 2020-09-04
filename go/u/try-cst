@@ -101,3 +101,6 @@ echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][-1]'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][NR]'
 
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = {"a":$a,"b":$b,"i":$i,"x":$x,"y":$y}["b"]'
+
+
+echo; run_mlr --from u/s.dkvp --from u/t.dkvp --ojson put '$z=[1,2,[NR,[FILENAME,5],$x*$y]]' 
