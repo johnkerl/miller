@@ -1,24 +1,13 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* check all struct-initializers to make sure they're all using colon syntax
-
-* reg_test/run iterate
-
-* neaten/error-proof:
-  o mlrmapEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
-    or remove. (keeping pointers allows nil-check which is good.)
-  o inrec *lib.Lrec is good for default no-copy across channels ... needs
-    a big red flag though for things like the repeat verb (maybe *only* that one ...)
-
 * array/map
-  o map literals & index-accessing
-  o err-return for array/map get/put if incorrect types
+  o err-return for array/map get/put if incorrect types ... currently go-void ...
   o printreps for array/map
-  ! defer maps until ordered-map impl
   o mlrval Go Copy method and DSL copy function ... or, better, pass by
     reference throughout RHS but always copy on assignment. (don't
     want references to $* trashing the UX.)
+* json unmarshal/marshal at mlrval
 
 * SUMMARY:
   o easy: most verbs
@@ -99,7 +88,7 @@ DEV NOTES:
 * commit
 
 ----------------------------------------------------------------
-NITS:
+NITS/NON-IMMEDIATE:
 
 * "...\"..." into string-literal parsing ...
 * address all manner of xxx and TODO comments
@@ -113,3 +102,10 @@ NITS:
 * update whyc.html with efficiency notes from go/README.md
 ? makefile for build-dsl: if $bnf newer than productionstable.go
 * I/O perf delta between C & Go is smaller for CSV, middle for DKVP, large for JSON -- debug
+* neaten/error-proof:
+  o mlrmapEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
+    or remove. (keeping pointers allows nil-check which is good.)
+  o inrec *lib.Mlrmap is good for default no-copy across channels ... needs
+    a big red flag though for things like the repeat verb (maybe *only* that one ...)
+! clean up the AST API. ish! :^/
+* defer reg_test/run until there is quite a bit more verb/dsl/io expansion

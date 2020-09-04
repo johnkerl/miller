@@ -2,94 +2,102 @@
 
 set -euo pipefail
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$x'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$x'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$y'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=$x*1e6'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=$x+1e6'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=$x+1'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=FILENAME'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=FILENUM'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=NF'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$y=NR'
+run_mlr() {
+  # Use just "mlr" for info messages
+  echo
+  echo ----------------------------------------------------------------
+  echo mlr "$@"
+  mlr "$@"
+}
 
-echo; mlr --idkvp --opprint put '$y=FNR'       u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$y=NR'        u/s.dkvp u/t.dkvp
-echo; mlr --icsv  --opprint put '$y=FNR'       u/s.csv  u/t.csv
-echo; mlr --idkvp --opprint put '$y=FNR+1'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$y=FNR+$i'    u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$y=FNR+3'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$y=FNR+3+$i'  u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$y=$i+$y'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$y=$i+$x'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=$x+$y'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=$x+$i'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=NR+$i'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=NR-$i'     u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=4-1'       u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=NR'        u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=$i'        u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=100*NR-$i' u/s.dkvp u/t.dkvp
-echo; mlr --idkvp --opprint put '$z=100*$i+$x' u/s.dkvp u/t.dkvp
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$x'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$x'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$y'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=$x*1e6'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=$x+1e6'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=$x+1'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=FILENAME'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=FILENUM'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=NF'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y=NR'
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100*$i+$x'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100*$i/$x'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=NR/$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100/$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100//$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100//$x'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0//$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0//$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0/$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.4'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=1.2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0/$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0//$i'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff  + 0x7fffffffffffffff'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff  * 0x7fffffffffffffff'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff .* 0x7fffffffffffffff'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= (~ $i) + 1'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= $i == 2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= $i != 2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= $i >  2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= $i >= 2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= $i <  2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z= $i >= 2'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = $i < 5 ? "low" : "high"'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = $i ** 3'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = $x ** 0.5'
+echo; run_mlr --idkvp --opprint put '$y=FNR'       u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$y=NR'        u/s.dkvp u/t.dkvp
+echo; run_mlr --icsv  --opprint put '$y=FNR'       u/s.csv  u/t.csv
+echo; run_mlr --idkvp --opprint put '$y=FNR+1'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$y=FNR+$i'    u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$y=FNR+3'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$y=FNR+3+$i'  u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$y=$i+$y'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$y=$i+$x'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=$x+$y'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=$x+$i'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=NR+$i'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=NR-$i'     u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=4-1'       u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=NR'        u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=$i'        u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=100*NR-$i' u/s.dkvp u/t.dkvp
+echo; run_mlr --idkvp --opprint put '$z=100*$i+$x' u/s.dkvp u/t.dkvp
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  && true'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  && false'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false && true'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false && false'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  && 4'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false && 4'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     && true'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     && false'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false && %%%panic%%%'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100*$i+$x'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100*$i/$x'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=NR/$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100/$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100//$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100//$x'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0//$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0//$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0/$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.4'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=1.2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0/$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=100.0//$i'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff  + 0x7fffffffffffffff'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff  * 0x7fffffffffffffff'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z=0x7fffffffffffffff .* 0x7fffffffffffffff'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= (~ $i) + 1'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= $i == 2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= $i != 2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= $i >  2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= $i >= 2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= $i <  2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z= $i >= 2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = $i < 5 ? "low" : "high"'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = $i ** 3'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = $x ** 0.5'
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || true'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || false'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false || true'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false || false'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || 4'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false || 4'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     || true'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     || false'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || %%%panic%%%'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  && true'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  && false'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false && true'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false && false'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  && 4'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false && 4'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     && true'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     && false'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false && %%%panic%%%'
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = true  ? 4 : %%%panic%%%'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false ? %%%panic%%% : 5'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || true'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || false'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false || true'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false || false'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || 4'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false || 4'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     || true'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = 4     || false'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || %%%panic%%%'
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][1]'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][-1]'
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][NR]'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  ? 4 : %%%panic%%%'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false ? %%%panic%%% : 5'
 
-echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = {"a":$a,"b":$b,"i":$i,"x":$x,"y":$y}["b"]'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][1]'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][-1]'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][NR]'
+
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = {"a":$a,"b":$b,"i":$i,"x":$x,"y":$y}["b"]'

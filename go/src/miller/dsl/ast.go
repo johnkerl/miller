@@ -55,7 +55,7 @@ type AST struct {
 // This is for the GOCC/BNF parser, which produces an AST
 func NewAST(root interface{}) (*AST, error) {
 	return &AST{
-		root.(*ASTNode),
+		Root: root.(*ASTNode),
 	}, nil
 }
 
@@ -147,9 +147,9 @@ func NewASTNodeNestable(itok interface{}, nodeType TNodeType) *ASTNode {
 		tok = itok.(*token.Token)
 	}
 	return &ASTNode{
-		tok,
-		nodeType,
-		nil,
+		Token: tok,
+		Type: nodeType,
+		Children: nil,
 	}
 }
 

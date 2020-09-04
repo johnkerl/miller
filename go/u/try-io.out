@@ -1,4 +1,13 @@
 ---------------------------------------------------------------- csv pprint
+
+----------------------------------------------------------------
+mlr --icsv --opprint put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.csv u/t.csv
 a   b   i x                   y                   nf nr fnr filename filenum
 pan pan 1 0.3467901443380824  0.7268028627434533  5  1  1   u/s.csv  1
 eks pan 2 0.7586799647899636  0.5221511083334797  5  2  2   u/s.csv  1
@@ -9,6 +18,15 @@ zee pan 6 0.5271261600918548  0.49322128674835697 5  6  2   u/t.csv  2
 eks zee 7 0.6117840605678454  0.1878849191181694  5  7  3   u/t.csv  2
 
 ---------------------------------------------------------------- dkvp pprint
+
+----------------------------------------------------------------
+mlr --idkvp --opprint put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.dkvp u/t.dkvp
 a   b   i x                   y                   nf nr fnr filename filenum
 pan pan 1 0.3467901443380824  0.7268028627434533  5  1  1   u/s.dkvp 1
 eks pan 2 0.7586799647899636  0.5221511083334797  5  2  2   u/s.dkvp 1
@@ -19,6 +37,15 @@ zee pan 6 0.5271261600918548  0.49322128674835697 5  6  2   u/t.dkvp 2
 eks zee 7 0.6117840605678454  0.1878849191181694  5  7  3   u/t.dkvp 2
 
 ---------------------------------------------------------------- nidx pprint
+
+----------------------------------------------------------------
+mlr --inidx --opprint put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.nidx u/t.nidx
 1   2   3 4                   5                   nf nr fnr filename filenum
 pan pan 1 0.3467901443380824  0.7268028627434533  5  1  1   u/s.nidx 1
 eks pan 2 0.7586799647899636  0.5221511083334797  5  2  2   u/s.nidx 1
@@ -29,6 +56,15 @@ zee pan 6 0.5271261600918548  0.49322128674835697 5  6  2   u/t.nidx 2
 eks zee 7 0.6117840605678454  0.1878849191181694  5  7  3   u/t.nidx 2
 
 ---------------------------------------------------------------- json pprint
+
+----------------------------------------------------------------
+mlr --ijson --opprint put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.json u/t.json
 a   b   i x                   y                   nf nr fnr filename filenum
 pan pan 1 0.3467901443380824  0.7268028627434533  5  1  1   u/s.json 1
 eks pan 2 0.7586799647899636  0.5221511083334797  5  2  2   u/s.json 1
@@ -42,6 +78,15 @@ eks zee 7 0.6117840605678454  0.1878849191181694  5  7  3   u/t.json 2
 
 
 ---------------------------------------------------------------- dkvp pprint
+
+----------------------------------------------------------------
+mlr --idkvp --opprint put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.dkvp u/t.dkvp
 a   b   i x                   y                   nf nr fnr filename filenum
 pan pan 1 0.3467901443380824  0.7268028627434533  5  1  1   u/s.dkvp 1
 eks pan 2 0.7586799647899636  0.5221511083334797  5  2  2   u/s.dkvp 1
@@ -52,6 +97,15 @@ zee pan 6 0.5271261600918548  0.49322128674835697 5  6  2   u/t.dkvp 2
 eks zee 7 0.6117840605678454  0.1878849191181694  5  7  3   u/t.dkvp 2
 
 ---------------------------------------------------------------- dkvp csv
+
+----------------------------------------------------------------
+mlr --idkvp --ocsv put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.dkvp u/t.dkvp
 a,b,i,x,y,nf,nr,fnr,filename,filenum
 pan,pan,1,0.3467901443380824,0.7268028627434533,5,1,1,u/s.dkvp,1
 eks,pan,2,0.7586799647899636,0.5221511083334797,5,2,2,u/s.dkvp,1
@@ -62,6 +116,15 @@ zee,pan,6,0.5271261600918548,0.49322128674835697,5,6,2,u/t.dkvp,2
 eks,zee,7,0.6117840605678454,0.1878849191181694,5,7,3,u/t.dkvp,2
 
 ---------------------------------------------------------------- dkvp dkvp
+
+----------------------------------------------------------------
+mlr --idkvp --odkvp put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.dkvp u/t.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nf=5,nr=1,fnr=1,filename=u/s.dkvp,filenum=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nf=5,nr=2,fnr=2,filename=u/s.dkvp,filenum=1
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nf=5,nr=3,fnr=3,filename=u/s.dkvp,filenum=1
@@ -71,6 +134,15 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,nf=5,nr=6,fnr=2,filen
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,nf=5,nr=7,fnr=3,filename=u/t.dkvp,filenum=2
 
 ---------------------------------------------------------------- dkvp nidx
+
+----------------------------------------------------------------
+mlr --idkvp --onidx put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.dkvp u/t.dkvp
 pan,pan,1,0.3467901443380824,0.7268028627434533,5,1,1,u/s.dkvp,1
 eks,pan,2,0.7586799647899636,0.5221511083334797,5,2,2,u/s.dkvp,1
 wye,wye,3,0.20460330576630303,0.33831852551664776,5,3,3,u/s.dkvp,1
@@ -80,6 +152,15 @@ zee,pan,6,0.5271261600918548,0.49322128674835697,5,6,2,u/t.dkvp,2
 eks,zee,7,0.6117840605678454,0.1878849191181694,5,7,3,u/t.dkvp,2
 
 ---------------------------------------------------------------- dkvp json
+
+----------------------------------------------------------------
+mlr --idkvp --ojson put 
+    $nf=NF;
+    $nr=NR;
+    $fnr=FNR;
+    $filename=FILENAME;
+    $filenum=FILENUM;
+   u/s.dkvp u/t.dkvp
 {
   "a": "pan",
   "b": "pan",

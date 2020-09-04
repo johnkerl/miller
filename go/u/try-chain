@@ -1,7 +1,16 @@
+
+run_mlr() {
+  # Use just "mlr" for info messages
+  echo
+  echo ----------------------------------------------------------------
+  echo mlr "$@"
+  mlr "$@"
+}
+
 echo ================================================================
-mlr --idkvp --opprint cat then tac u/s.dkvp u/t.dkvp
+run_mlr --idkvp --opprint cat then tac u/s.dkvp u/t.dkvp
 echo ================================================================
-mlr --idkvp --opprint cat -n then tac u/s.dkvp u/t.dkvp
+run_mlr --idkvp --opprint cat -n then tac u/s.dkvp u/t.dkvp
 echo ================================================================
-mlr --idkvp --opprint cat -n then tac then cat -n u/s.dkvp u/t.dkvp
+run_mlr --idkvp --opprint cat -n then tac then cat -n u/s.dkvp u/t.dkvp
 echo ================================================================

@@ -15,7 +15,7 @@ import (
 // ----------------------------------------------------------------
 func BuildRoot() *Root {
 	return &Root{
-		make([]IExecutable, 0),
+		executables: make([]IExecutable, 0),
 	}
 }
 

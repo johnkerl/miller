@@ -1,4 +1,7 @@
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = 1 || 2
 DSL EXPRESSION:
 $y = 1 || 2
 RAW AST:
@@ -10,6 +13,9 @@ RAW AST:
             * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = 1 || 2 || 3
 DSL EXPRESSION:
 $y = 1 || 2 || 3
 RAW AST:
@@ -23,6 +29,9 @@ RAW AST:
             * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = 1 || 2 && 3
 DSL EXPRESSION:
 $y = 1 || 2 && 3
 RAW AST:
@@ -36,6 +45,9 @@ RAW AST:
                 * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = 1 && 2 || 3
 DSL EXPRESSION:
 $y = 1 && 2 || 3
 RAW AST:
@@ -49,6 +61,9 @@ RAW AST:
             * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = 1 ? 2 : 3
 DSL EXPRESSION:
 $y = 1 ? 2 : 3
 RAW AST:
@@ -61,6 +76,9 @@ RAW AST:
             * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = $a + $b * $c
 DSL EXPRESSION:
 $y = $a + $b * $c
 RAW AST:
@@ -74,6 +92,9 @@ RAW AST:
                 * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = $a * $b * $c
 DSL EXPRESSION:
 $y = $a * $b * $c
 RAW AST:
@@ -87,6 +108,9 @@ RAW AST:
             * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $y = $a ** $b ** $c
 DSL EXPRESSION:
 $y = $a ** $b ** $c
 RAW AST:
@@ -100,6 +124,9 @@ RAW AST:
                 * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $[2] = 3
 DSL EXPRESSION:
 $[2] = 3
 RAW AST:
@@ -110,6 +137,9 @@ RAW AST:
         * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $[$y] = 4
 DSL EXPRESSION:
 $[$y] = 4
 RAW AST:
@@ -120,6 +150,9 @@ RAW AST:
         * IntLiteral "4"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = "abc"
 DSL EXPRESSION:
 $x = "abc"
 RAW AST:
@@ -129,6 +162,9 @@ RAW AST:
         * StringLiteral "abc"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $["abc"] = "def"
 DSL EXPRESSION:
 $["abc"] = "def"
 RAW AST:
@@ -139,6 +175,9 @@ RAW AST:
         * StringLiteral "def"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $[FILENAME] = FNR
 DSL EXPRESSION:
 $[FILENAME] = FNR
 RAW AST:
@@ -149,6 +188,9 @@ RAW AST:
         * ContextVariable "FNR"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = $a + $b + $c
 DSL EXPRESSION:
 $x = $a + $b + $c
 RAW AST:
@@ -162,6 +204,9 @@ RAW AST:
             * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 DSL EXPRESSION:
 $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 RAW AST:
@@ -189,6 +234,9 @@ RAW AST:
             * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = 2 * $a + $b . $c
 DSL EXPRESSION:
 $x = 2 * $a + $b . $c
 RAW AST:
@@ -204,6 +252,9 @@ RAW AST:
             * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = 2 * $a + ($b . $c)
 DSL EXPRESSION:
 $x = 2 * $a + ($b . $c)
 RAW AST:
@@ -219,6 +270,9 @@ RAW AST:
                 * DirectFieldName "c"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 DSL EXPRESSION:
 $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 RAW AST:
@@ -239,6 +293,9 @@ RAW AST:
             * StringLiteral "hello"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $x = 123. + 1e-2 / .2e3 + 1.e-3
 DSL EXPRESSION:
 $x = 123. + 1e-2 / .2e3 + 1.e-3
 RAW AST:
@@ -254,6 +311,9 @@ RAW AST:
             * FloatLiteral "1.e-3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 RAW AST:
@@ -265,6 +325,9 @@ RAW AST:
             * IntLiteral "0x7fffffffffffffff"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
 RAW AST:
@@ -276,6 +339,9 @@ RAW AST:
             * IntLiteral "0x7fffffffffffffff"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z=0x7fffffffffffffff  * 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff  * 0x7fffffffffffffff
 RAW AST:
@@ -287,6 +353,9 @@ RAW AST:
             * IntLiteral "0x7fffffffffffffff"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z=0x7fffffffffffffff .* 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff .* 0x7fffffffffffffff
 RAW AST:
@@ -298,6 +367,9 @@ RAW AST:
             * IntLiteral "0x7fffffffffffffff"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = []
 DSL EXPRESSION:
 $z = []
 RAW AST:
@@ -307,6 +379,9 @@ RAW AST:
         * ArrayLiteral "[]"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = [1,]
 DSL EXPRESSION:
 $z = [1,]
 RAW AST:
@@ -317,6 +392,9 @@ RAW AST:
             * IntLiteral "1"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = [1,2]
 DSL EXPRESSION:
 $z = [1,2]
 RAW AST:
@@ -328,6 +406,9 @@ RAW AST:
             * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = [1,2,]
 DSL EXPRESSION:
 $z = [1,2,]
 RAW AST:
@@ -339,6 +420,9 @@ RAW AST:
             * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = [1,2,3]
 DSL EXPRESSION:
 $z = [1,2,3]
 RAW AST:
@@ -351,6 +435,9 @@ RAW AST:
             * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = [1,2,3,]
 DSL EXPRESSION:
 $z = [1,2,3,]
 RAW AST:
@@ -363,6 +450,9 @@ RAW AST:
             * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {}
 DSL EXPRESSION:
 $z = {}
 RAW AST:
@@ -372,6 +462,9 @@ RAW AST:
         * MapLiteral "{}"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":"1"}
 DSL EXPRESSION:
 $z = {"a":"1"}
 RAW AST:
@@ -384,6 +477,9 @@ RAW AST:
                 * StringLiteral "1"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":"1",}
 DSL EXPRESSION:
 $z = {"a":"1",}
 RAW AST:
@@ -396,6 +492,9 @@ RAW AST:
                 * StringLiteral "1"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":"1", "b":2}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2}
 RAW AST:
@@ -411,6 +510,9 @@ RAW AST:
                 * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":"1", "b":2,}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2,}
 RAW AST:
@@ -426,6 +528,9 @@ RAW AST:
                 * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":"1", "b":2, "c":3}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3}
 RAW AST:
@@ -444,6 +549,9 @@ RAW AST:
                 * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":"1", "b":2, "c":3,}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3,}
 RAW AST:
@@ -462,6 +570,9 @@ RAW AST:
                 * IntLiteral "3"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = $a[1]
 DSL EXPRESSION:
 $z = $a[1]
 RAW AST:
@@ -473,6 +584,9 @@ RAW AST:
             * IntLiteral "1"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = $a["index"]
 DSL EXPRESSION:
 $z = $a["index"]
 RAW AST:
@@ -484,6 +598,9 @@ RAW AST:
             * StringLiteral "index"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = "abcde"[1]
 DSL EXPRESSION:
 $z = "abcde"[1]
 RAW AST:
@@ -495,6 +612,9 @@ RAW AST:
             * IntLiteral "1"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = "abcde"["index"]
 DSL EXPRESSION:
 $z = "abcde"["index"]
 RAW AST:
@@ -506,6 +626,9 @@ RAW AST:
             * StringLiteral "index"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = $a[1:2]
 DSL EXPRESSION:
 $z = $a[1:2]
 RAW AST:
@@ -518,6 +641,9 @@ RAW AST:
             * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = $a[:2]
 DSL EXPRESSION:
 $z = $a[:2]
 RAW AST:
@@ -530,6 +656,9 @@ RAW AST:
             * IntLiteral "2"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = $a[1:]
 DSL EXPRESSION:
 $z = $a[1:]
 RAW AST:
@@ -542,6 +671,9 @@ RAW AST:
             * ArraySliceEmptyUpperIndex ":"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = $a[:]
 DSL EXPRESSION:
 $z = $a[:]
 RAW AST:
@@ -554,6 +686,9 @@ RAW AST:
             * ArraySliceEmptyUpperIndex ":"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = [5,6,7,8,9][1]
 DSL EXPRESSION:
 $z = [5,6,7,8,9][1]
 RAW AST:
@@ -570,6 +705,9 @@ RAW AST:
             * IntLiteral "1"
 
 
+
+----------------------------------------------------------------
+mlr -n put -v $z = {"a":1, "b":2, "c":3}["b"]
 DSL EXPRESSION:
 $z = {"a":1, "b":2, "c":3}["b"]
 RAW AST:
