@@ -104,7 +104,6 @@ func (this *RecordReaderJSON) processHandle(
 			} else {
 				nval, ok := value.(json.Number)
 				if ok {
-					// xxx look deeper into input-format-preserving operations ...
 					sval = nval.String()
 					mval := lib.MlrvalFromInferredType(sval)
 					record.Put(&key, &mval)

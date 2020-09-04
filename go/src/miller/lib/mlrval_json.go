@@ -20,35 +20,7 @@ import (
 
 // ================================================================
 func (this *Mlrval) UnmarshalJSON(bytes []byte) error {
-	switch this.mvtype {
-	case MT_ABSENT:
-		return this.unmarshalJSONAbsent(bytes)
-		break
-	case MT_VOID:
-		return this.unmarshalJSONVoid(bytes)
-		break
-	case MT_STRING:
-		return this.unmarshalJSONString(bytes)
-		break
-	case MT_INT:
-		return this.unmarshalJSONInt(bytes)
-		break
-	case MT_FLOAT:
-		return this.unmarshalJSONFloat(bytes)
-		break
-	case MT_BOOL:
-		return this.unmarshalJSONBool(bytes)
-		break
-	case MT_ARRAY:
-		return this.unmarshalJSONArray(bytes)
-		break
-	case MT_MAP:
-		return this.unmarshalJSONMap(bytes)
-		break
-	case MT_DIM: // MT_DIM is one past the last valid type
-		return errors.New("internal coding error detected")
-	}
-	return errors.New("internal coding error detected")
+	return errors.New("unimplemented")
 }
 
 // ================================================================
@@ -82,57 +54,6 @@ func (this *Mlrval) MarshalJSON() ([]byte, error) {
 		return nil, errors.New("internal coding error detected")
 	}
 	return nil, errors.New("internal coding error detected")
-}
-
-// ================================================================
-// TYPE-SPECIFIC UNMARSHALERS
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONAbsent(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_ABSENT)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONVoid(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_VOID)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONString(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_STRING)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONInt(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_INT)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONFloat(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_FLOAT)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONBool(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_BOOL)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONArray(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_ARRAY)
-	return errors.New("unimplemented")
-}
-
-// ----------------------------------------------------------------
-func (this *Mlrval) unmarshalJSONMap(bytes []byte) error {
-	InternalCodingErrorIf(this.mvtype != MT_MAP)
-	return errors.New("unimplemented")
 }
 
 // ================================================================

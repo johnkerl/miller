@@ -2,6 +2,7 @@
 TOP OF LIST:
 
 !! stdin read broken! put in checker.
+* fmt.Errorf etc -- w/o explicit reference to os.Stderr
 
 ! json unmarshal/marshal at mlrval
   o support full JSON read/write of nested objects
@@ -13,6 +14,8 @@ TOP OF LIST:
   i type Unmarshaler interface { UnmarshalJSON([]byte) error }
   i type Marshaler   interface { MarshalJSON() ([]byte, error) }
   o flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
+  o make sure .3 as well as 0.3 is handled for floats ... (tolerate mildly out-of-spec data here)
+  o other formats: use JSON marshaler for collection types, maybe double-quoted
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
@@ -85,6 +88,13 @@ DEV NOTES:
 * check
 * git diff to see what changed
 * commit
+
+----------------------------------------------------------------
+PARSER/LEXER PLAN:
+
+* grok ch25
+* grok pike-lexer slides
+* alsu at ... what level ?
 
 ----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
