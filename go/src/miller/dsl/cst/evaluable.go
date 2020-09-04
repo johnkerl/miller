@@ -30,6 +30,19 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return BuildMapLiteralNode(astNode)
 	}
 
+	if astNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
+		return BuildPanicNode(), nil // xxx temp
+	}
+	if astNode.Type == dsl.NodeTypeArraySliceAccess {
+		return BuildPanicNode(), nil // xxx temp
+	}
+	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
+		return BuildPanicNode(), nil // xxx temp
+	}
+	if astNode.Type == dsl.NodeTypeArraySliceEmptyUpperIndex {
+		return BuildPanicNode(), nil // xxx temp
+	}
+
 	// xxx if/while/etc
 	// xxx function
 	// xxx more

@@ -461,3 +461,14 @@ RAW AST:
                 * StringLiteral "c"
                 * IntLiteral "3"
 
+
+DSL EXPRESSION:
+$z = $a[1]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayOrMapIndexAccess "[]"
+            * DirectFieldName "a"
+            * IntLiteral "1"
+

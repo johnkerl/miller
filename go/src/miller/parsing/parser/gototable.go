@@ -2,7 +2,7 @@
 
 package parser
 
-const numNTSymbols = 34
+const numNTSymbols = 35
 
 type (
 	gotoTable [numStates]gotoRow
@@ -42,6 +42,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -78,6 +79,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -114,6 +116,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -150,6 +153,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -186,6 +190,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -222,6 +227,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -258,6 +264,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -294,6 +301,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -330,6 +338,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -366,6 +375,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -402,6 +412,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -438,7 +449,8 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		77, // ArrayOrMapIndexAccess
-		78, // MapLiteral
+		78, // ArraySliceAccess
+		79, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
@@ -446,7 +458,7 @@ var gotoTab = gotoTable{
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
-		80, // Statement
+		81, // Statement
 		4,  // StatementInBody
 		5,  // SrecAssignment
 		6,  // SrecDirectAssignment
@@ -474,6 +486,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -486,31 +499,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		82,  // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		83,  // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -522,31 +536,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		131, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		133, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -558,31 +573,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		132, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		134, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -594,31 +610,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		133, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		135, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -630,31 +647,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		134, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		136, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -666,31 +684,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		135, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		137, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -702,31 +721,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		136, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		138, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -738,31 +758,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		137, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		139, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -774,31 +795,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		138, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		140, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -810,31 +832,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		139, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		141, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -846,31 +869,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		140, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		142, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -882,31 +906,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		141, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		143, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -918,31 +943,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		142, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		144, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -954,31 +980,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		143, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		145, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -990,31 +1017,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		144, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		146, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1026,31 +1054,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		145, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		147, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1062,31 +1091,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		146, // RHS
-		83,  // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		148, // RHS
+		84,  // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1122,6 +1152,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1158,6 +1189,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1194,6 +1226,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1230,6 +1263,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1266,6 +1300,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1302,6 +1337,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1338,6 +1374,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1374,6 +1411,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1410,6 +1448,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1446,6 +1485,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1482,6 +1522,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1518,6 +1559,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1554,6 +1596,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1580,7 +1623,7 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		170, // PowTerm
+		172, // PowTerm
 		52,  // MlrvalOrFunction
 		30,  // FieldName
 		54,  // DirectFieldName
@@ -1590,7 +1633,8 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1626,83 +1670,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S45
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		178, // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S46
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		179, // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S47
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -1734,7 +1707,82 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S46
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		181, // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S47
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		182, // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1770,6 +1818,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1806,6 +1855,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1832,7 +1882,7 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		181, // PowTerm
+		183, // PowTerm
 		52,  // MlrvalOrFunction
 		30,  // FieldName
 		54,  // DirectFieldName
@@ -1842,7 +1892,8 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1868,7 +1919,7 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		182, // PowTerm
+		184, // PowTerm
 		52,  // MlrvalOrFunction
 		30,  // FieldName
 		54,  // DirectFieldName
@@ -1878,7 +1929,8 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1914,6 +1966,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -1926,31 +1979,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		186, // RHS
-		187, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		188, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -1986,6 +2040,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2022,6 +2077,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2058,6 +2114,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2070,7 +2127,7 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		235, // RHS
+		238, // RHS
 		32,  // TernaryTerm
 		33,  // LogicalOrTerm
 		34,  // LogicalXORTerm
@@ -2094,7 +2151,8 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -2130,6 +2188,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2166,6 +2225,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2202,6 +2262,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2238,6 +2299,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2274,6 +2336,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2310,6 +2373,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2346,6 +2410,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2382,6 +2447,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2418,6 +2484,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2454,6 +2521,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2490,6 +2558,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2526,6 +2595,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2562,6 +2632,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2598,6 +2669,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2634,6 +2706,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2670,6 +2743,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2706,6 +2780,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2742,6 +2817,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2754,31 +2830,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		284, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		287, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -2814,6 +2891,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2850,47 +2928,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S79
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		340, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S80
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -2922,9 +2965,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S80
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		345, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S81
 		-1, // S'
@@ -2958,6 +3039,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -2994,6 +3076,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3030,6 +3113,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3066,6 +3150,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3102,6 +3187,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3138,6 +3224,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3174,6 +3261,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3210,6 +3298,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3246,6 +3335,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3282,6 +3372,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3318,6 +3409,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3354,6 +3446,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3390,47 +3483,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S94
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		364, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S95
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -3462,11 +3520,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S96
+	gotoRow{ // S95
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -3488,19 +3547,57 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		372, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		369, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S96
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S97
 		-1,  // S'
@@ -3524,17 +3621,18 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		373, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		377, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -3560,55 +3658,57 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		374, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		378, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S99
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		379, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S100
 		-1, // S'
@@ -3642,45 +3742,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S101
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		375, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S102
 		-1,  // S'
@@ -3704,57 +3806,22 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		376, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		380, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S103
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S104
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -3762,35 +3829,36 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		379, // RHS
-		187, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		381, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S105
+	gotoRow{ // S104
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -3822,9 +3890,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S105
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		384, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S106
 		-1, // S'
@@ -3858,6 +3964,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -3894,47 +4001,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S108
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		380, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S109
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -3966,9 +4038,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S109
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		385, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S110
 		-1, // S'
@@ -4002,6 +4112,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4038,6 +4149,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4074,6 +4186,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4110,6 +4223,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4146,6 +4260,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4182,6 +4297,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4218,6 +4334,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4254,6 +4371,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4290,6 +4408,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4326,6 +4445,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4362,6 +4482,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4398,6 +4519,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4434,6 +4556,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4470,6 +4593,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4506,6 +4630,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4542,6 +4667,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4578,47 +4704,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S127
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		382, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S128
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -4650,9 +4741,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S128
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		387, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S129
 		-1, // S'
@@ -4686,45 +4815,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S130
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		384, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S131
 		-1, // S'
@@ -4758,45 +4889,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S132
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		389, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S133
 		-1, // S'
@@ -4830,6 +4963,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4866,6 +5000,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4902,6 +5037,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4938,6 +5074,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -4974,6 +5111,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5010,6 +5148,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5046,6 +5185,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5082,6 +5222,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5118,6 +5259,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5154,6 +5296,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5190,6 +5333,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5226,6 +5370,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5262,6 +5407,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5298,6 +5444,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -5334,803 +5481,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S148
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		385, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S149
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		386, // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S150
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		387, // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S151
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		388, // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S152
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		389, // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S153
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		390, // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S154
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		391, // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S155
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		392, // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S156
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		393, // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S157
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		394, // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S158
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		395, // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S159
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		396, // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S160
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		397, // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S161
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		398, // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S162
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		399, // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S163
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		400, // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S164
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		401, // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S165
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		402, // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S166
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		403, // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S167
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		404, // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S168
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		405, // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S169
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		406, // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S170
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -6162,9 +5518,824 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S149
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S150
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		390, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S151
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		391, // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S152
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		392, // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S153
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		393, // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S154
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		394, // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S155
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		395, // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S156
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		396, // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S157
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		397, // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S158
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		398, // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S159
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		399, // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S160
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		400, // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S161
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		401, // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S162
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		402, // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S163
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		403, // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S164
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		404, // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S165
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		405, // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S166
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		406, // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S167
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		407, // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S168
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		408, // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S169
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		409, // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S170
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		410, // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S171
 		-1,  // S'
@@ -6186,8 +6357,8 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		407, // UnaryOpTerm
+		411, // MuldivTerm
+		48,  // UnaryOpTerm
 		49,  // PowTerm
 		52,  // MlrvalOrFunction
 		30,  // FieldName
@@ -6198,155 +6369,49 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S172
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		408, // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S173
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		409, // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S174
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		410, // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S175
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		411, // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S176
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -6378,11 +6443,12 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S177
+	gotoRow{ // S174
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -6414,81 +6480,195 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S175
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		414, // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S176
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		415, // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S177
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		416, // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S178
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		417, // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S179
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		418, // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S180
 		-1, // S'
@@ -6522,6 +6702,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6558,6 +6739,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6594,11 +6776,86 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S183
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S184
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S185
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -6620,7 +6877,7 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		414, // PowTerm
+		419, // PowTerm
 		52,  // MlrvalOrFunction
 		30,  // FieldName
 		54,  // DirectFieldName
@@ -6630,11 +6887,12 @@ var gotoTab = gotoTable{
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
 		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S184
+	gotoRow{ // S186
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -6642,105 +6900,34 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		415, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
+		421, // RHS
+		422, // TernaryTerm
+		423, // LogicalOrTerm
+		425, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S185
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S186
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S187
 		-1, // S'
@@ -6774,6 +6961,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6810,6 +6998,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6846,6 +7035,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6882,6 +7072,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6918,6 +7109,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6954,6 +7146,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -6990,6 +7183,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7026,6 +7220,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7062,6 +7257,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7098,6 +7294,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7134,45 +7331,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S198
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		439, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S199
 		-1, // S'
@@ -7206,6 +7405,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7232,55 +7432,57 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		447, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		495, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S201
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		448, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S202
 		-1,  // S'
@@ -7304,165 +7506,96 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		449, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		503, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S203
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		504, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S204
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		505, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S205
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		450, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S206
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		451, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S207
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -7494,9 +7627,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S206
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S207
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		506, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S208
 		-1,  // S'
@@ -7506,31 +7714,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		454, // RHS
-		187, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		507, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -7566,45 +7775,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S210
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		510, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S211
 		-1, // S'
@@ -7638,45 +7849,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S212
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		455, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S213
 		-1, // S'
@@ -7710,45 +7923,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S214
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		511, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S215
 		-1, // S'
@@ -7782,6 +7997,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7818,6 +8034,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7854,6 +8071,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7890,6 +8108,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7926,6 +8145,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7962,6 +8182,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -7998,6 +8219,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8034,6 +8256,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8070,6 +8293,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8106,6 +8330,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8142,6 +8367,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8178,6 +8404,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8214,6 +8441,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8250,6 +8478,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8286,6 +8515,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8322,45 +8552,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S231
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		457, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S232
 		-1, // S'
@@ -8394,11 +8626,49 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S233
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		513, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S234
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -8430,45 +8700,10 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S234
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		459, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S235
 		-1, // S'
@@ -8502,6 +8737,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8538,45 +8774,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S237
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		515, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S238
 		-1, // S'
@@ -8610,6 +8848,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8646,6 +8885,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8682,6 +8922,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8718,6 +8959,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8754,6 +8996,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8790,6 +9033,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8826,6 +9070,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8862,6 +9107,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8898,6 +9144,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8934,6 +9181,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -8970,45 +9218,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S249
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		483, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S250
 		-1, // S'
@@ -9042,45 +9292,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S251
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		491, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S252
 		-1,  // S'
@@ -9104,21 +9356,59 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		492, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		539, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S253
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S254
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -9140,91 +9430,57 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		493, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		547, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S254
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
 	gotoRow{ // S255
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		548, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S256
 		-1,  // S'
@@ -9248,55 +9504,57 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		494, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		549, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S257
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		495, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S258
 		-1, // S'
@@ -9330,6 +9588,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9342,69 +9601,71 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		498, // RHS
-		187, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		550, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S260
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		551, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S261
 		-1, // S'
@@ -9438,11 +9699,49 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S262
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		554, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S263
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -9474,45 +9773,10 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S263
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		499, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S264
 		-1, // S'
@@ -9546,6 +9810,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9582,45 +9847,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S266
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		555, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S267
 		-1, // S'
@@ -9654,6 +9921,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9690,6 +9958,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9726,6 +9995,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9762,6 +10032,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9798,6 +10069,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9834,6 +10106,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9870,6 +10143,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9906,6 +10180,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9942,6 +10217,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -9978,6 +10254,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10014,6 +10291,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10050,6 +10328,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10086,6 +10365,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10122,6 +10402,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10158,6 +10439,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10194,45 +10476,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S283
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		501, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S284
 		-1, // S'
@@ -10266,6 +10550,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10302,45 +10587,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S286
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		557, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S287
 		-1, // S'
@@ -10374,45 +10661,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S288
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		505, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S289
 		-1, // S'
@@ -10446,6 +10735,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10482,6 +10772,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10518,45 +10809,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S292
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		561, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S293
 		-1, // S'
@@ -10590,6 +10883,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10626,6 +10920,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10662,6 +10957,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10698,6 +10994,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10734,6 +11031,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10770,6 +11068,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10806,6 +11105,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10842,6 +11142,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -10878,45 +11179,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S302
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		529, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S303
 		-1, // S'
@@ -10950,81 +11253,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S304
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		537, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S305
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		538, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S306
 		-1,  // S'
@@ -11048,17 +11354,18 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		539, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		585, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -11094,45 +11401,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S308
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		593, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S309
 		-1,  // S'
@@ -11156,17 +11465,18 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		540, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		594, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -11192,17 +11502,18 @@ var gotoTab = gotoTable{
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
 		-1,  // UnaryOpTerm
-		541, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		595, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -11238,11 +11549,49 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S312
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S313
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -11250,105 +11599,71 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		544, // RHS
-		187, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		596, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S313
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
 	gotoRow{ // S314
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		597, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S315
 		-1, // S'
@@ -11382,6 +11697,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11394,31 +11710,32 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		545, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
+		600, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -11454,6 +11771,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11490,6 +11808,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11526,45 +11845,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S320
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		601, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S321
 		-1, // S'
@@ -11598,6 +11919,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11634,6 +11956,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11670,6 +11993,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11706,6 +12030,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11742,6 +12067,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11778,6 +12104,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11814,6 +12141,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11850,6 +12178,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11886,6 +12215,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11922,6 +12252,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11958,6 +12289,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -11994,6 +12326,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -12030,6 +12363,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -12066,45 +12400,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S335
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		547, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S336
 		-1, // S'
@@ -12138,6 +12474,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -12174,47 +12511,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S338
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		549, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S339
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -12246,9 +12548,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S339
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		603, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S340
 		-1, // S'
@@ -12282,6 +12622,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -12318,803 +12659,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S342
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		552, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S343
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		553, // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S344
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		554, // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S345
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		555, // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S346
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		556, // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S347
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		557, // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S348
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		558, // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S349
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		559, // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S350
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		560, // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S351
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		561, // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S352
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		562, // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S353
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		563, // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S354
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		564, // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S355
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		565, // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S356
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		566, // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S357
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		567, // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S358
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		568, // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S359
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		569, // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S360
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		570, // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S361
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		571, // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S362
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		572, // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S363
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		573, // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S364
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -13146,9 +12696,824 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S343
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		605, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S344
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S345
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S346
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S347
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		608, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S348
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		609, // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S349
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		610, // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S350
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		611, // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S351
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		612, // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S352
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		613, // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S353
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		614, // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S354
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		615, // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S355
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		616, // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S356
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		617, // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S357
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		618, // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S358
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		619, // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S359
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		620, // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S360
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		621, // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S361
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		622, // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S362
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		623, // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S363
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		624, // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S364
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		625, // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S365
 		-1,  // S'
@@ -13170,19 +13535,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		574, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		626, // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -13206,19 +13572,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		575, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		627, // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -13242,19 +13609,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		576, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		628, // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -13278,57 +13646,59 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		577, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		629, // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S369
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		578, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S370
 		-1,  // S'
@@ -13351,18 +13721,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		579, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		630, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -13387,202 +13758,23 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		580, // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		631, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S372
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S373
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S374
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S375
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S376
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S377
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -13603,22 +13795,23 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		581, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
+		632, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S378
+	gotoRow{ // S373
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -13626,33 +13819,219 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		582, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		633, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S374
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		634, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S375
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		635, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S376
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		636, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S377
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S378
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S379
 		-1, // S'
@@ -13686,6 +14065,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -13722,6 +14102,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -13758,81 +14139,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S382
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		637, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S383
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		638, // RHS
+		422, // TernaryTerm
+		423, // LogicalOrTerm
+		425, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S384
 		-1, // S'
@@ -13866,6 +14250,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -13902,6 +14287,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -13938,6 +14324,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -13974,6 +14361,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14010,6 +14398,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14046,6 +14435,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14082,6 +14472,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14118,6 +14509,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14154,6 +14546,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14190,6 +14583,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14226,6 +14620,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14262,6 +14657,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14298,6 +14694,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14334,6 +14731,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14370,6 +14768,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14406,6 +14805,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14442,6 +14842,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14478,6 +14879,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14514,6 +14916,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14550,6 +14953,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14586,6 +14990,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14622,6 +15027,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14658,6 +15064,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14694,6 +15101,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14730,6 +15138,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14766,6 +15175,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14802,6 +15212,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14838,6 +15249,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14874,6 +15286,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14910,6 +15323,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14946,6 +15360,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -14982,6 +15397,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -15018,261 +15434,269 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S417
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		589, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S418
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		590, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S419
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		591, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S420
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		592, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S421
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		593, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S422
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		594, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S423
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		595, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S424
 		-1,  // S'
@@ -15282,357 +15706,367 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		596, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		649, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S425
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		597, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S426
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		598, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S427
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		599, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S428
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		600, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S429
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		601, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S430
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		602, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S431
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		603, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S432
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		604, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S433
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		605, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S434
 		-1,  // S'
@@ -15654,57 +16088,59 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		606, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		671, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S435
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		607, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S436
 		-1,  // S'
@@ -15726,19 +16162,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		608, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		679, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -15762,19 +16199,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		609, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		680, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -15798,19 +16236,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		610, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		681, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -15846,45 +16285,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S440
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		611, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S441
 		-1,  // S'
@@ -15907,18 +16348,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		612, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		682, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -15943,56 +16385,58 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		613, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		683, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S443
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		614, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S444
 		-1,  // S'
@@ -16002,105 +16446,108 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		615, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		686, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S445
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		616, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S446
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		617, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S447
 		-1, // S'
@@ -16134,45 +16581,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S448
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		687, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S449
 		-1, // S'
@@ -16206,6 +16655,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16242,6 +16692,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16278,81 +16729,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S452
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		618, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S453
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		619, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S454
 		-1, // S'
@@ -16386,6 +16840,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16422,6 +16877,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16458,6 +16914,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16494,6 +16951,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16530,6 +16988,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16566,6 +17025,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -16602,803 +17062,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S461
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		624, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S462
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		625, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S463
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		626, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S464
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		627, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S465
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		628, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S466
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		629, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S467
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		630, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S468
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		631, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S469
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		632, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S470
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		633, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S471
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		634, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S472
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		635, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S473
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		636, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S474
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		637, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S475
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		638, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S476
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		639, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S477
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		640, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S478
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		641, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S479
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		642, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S480
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		643, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S481
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		644, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S482
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		645, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S483
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -17430,9 +17099,824 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S462
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S463
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S464
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S465
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S466
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S467
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		689, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S468
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S469
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S470
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S471
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		691, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S472
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S473
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		692, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S474
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		693, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S475
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		694, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S476
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		695, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S477
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		696, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S478
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		697, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S479
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		698, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S480
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		699, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S481
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		700, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S482
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		701, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S483
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		702, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S484
 		-1,  // S'
@@ -17449,24 +17933,25 @@ var gotoTab = gotoTable{
 		-1,  // LogicalAndTerm
 		-1,  // EqneTerm
 		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		646, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		703, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17486,23 +17971,24 @@ var gotoTab = gotoTable{
 		-1,  // EqneTerm
 		-1,  // CmpTerm
 		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		647, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		704, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17523,22 +18009,23 @@ var gotoTab = gotoTable{
 		-1,  // CmpTerm
 		-1,  // BitwiseORTerm
 		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		648, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		705, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17560,21 +18047,22 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseORTerm
 		-1,  // BitwiseXORTerm
 		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		649, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		706, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17597,20 +18085,21 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseXORTerm
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		650, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		707, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17633,20 +18122,21 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseXORTerm
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		651, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		708, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17670,165 +18160,170 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		652, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		709, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S491
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		710, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S492
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		711, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S493
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		712, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S494
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		713, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S495
 		-1, // S'
@@ -17862,6 +18357,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -17887,18 +18383,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		653, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
+		714, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -17910,215 +18407,36 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		654, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		715, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S498
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S499
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S500
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S501
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S502
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S503
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -18126,33 +18444,219 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		658, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		716, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S499
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		717, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S500
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		718, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S501
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		719, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S502
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		720, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S503
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S504
 		-1, // S'
@@ -18186,6 +18690,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -18222,839 +18727,12 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S506
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		661, // RHS
-		662, // TernaryTerm
-		663, // LogicalOrTerm
-		664, // LogicalXORTerm
-		665, // LogicalAndTerm
-		666, // EqneTerm
-		667, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S507
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		710, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S508
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		711, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S509
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		712, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S510
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		713, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S511
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		714, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S512
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		715, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S513
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		716, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S514
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		717, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S515
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		718, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S516
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		719, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S517
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		720, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S518
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		721, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S519
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		722, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S520
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		723, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S521
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		724, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S522
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		725, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S523
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		726, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S524
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		727, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S525
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		728, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S526
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		729, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S527
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		730, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S528
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		731, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S529
 		-1, // S'
 		-1, // Root
 		-1, // StatementBlock
@@ -19086,11 +18764,49 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S530
+	gotoRow{ // S507
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S508
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -19111,18 +18827,833 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		732, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		721, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S509
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		722, // RHS
+		422, // TernaryTerm
+		423, // LogicalOrTerm
+		425, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S510
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S511
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S512
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S513
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S514
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S515
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S516
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S517
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		728, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S518
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		729, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S519
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		730, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S520
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		731, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S521
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		732, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S522
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		733, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S523
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		734, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S524
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		735, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S525
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		736, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S526
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		737, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S527
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		738, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S528
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		739, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S529
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		740, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S530
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		741, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19144,21 +19675,22 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseORTerm
 		-1,  // BitwiseXORTerm
 		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		733, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		742, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19181,20 +19713,21 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseXORTerm
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		734, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		743, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19217,20 +19750,21 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseXORTerm
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		735, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		744, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19254,19 +19788,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		736, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		745, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19290,19 +19825,20 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		737, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		746, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19326,93 +19862,96 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseANDTerm
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		738, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		747, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S537
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		748, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S538
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		749, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S539
 		-1, // S'
@@ -19446,81 +19985,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S540
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		750, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S541
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		751, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S542
 		-1,  // S'
@@ -19543,18 +20085,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		739, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		752, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -19566,141 +20109,145 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		740, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		753, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S544
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		754, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S545
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		755, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S546
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		756, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S547
 		-1, // S'
@@ -19734,6 +20281,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -19770,6 +20318,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -19806,6 +20355,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -19842,11 +20392,49 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S551
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S552
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -19854,105 +20442,71 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		757, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		745, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
-	},
-	gotoRow{ // S552
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S553
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		758, // RHS
+		422, // TernaryTerm
+		423, // LogicalOrTerm
+		425, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S554
 		-1, // S'
@@ -19986,6 +20540,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -20022,6 +20577,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -20058,6 +20614,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -20094,6 +20651,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -20130,45 +20688,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S559
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		763, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S560
 		-1, // S'
@@ -20202,6 +20762,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -20238,837 +20799,861 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S562
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		766, // RHS
+		767, // TernaryTerm
+		768, // LogicalOrTerm
+		769, // LogicalXORTerm
+		770, // LogicalAndTerm
+		771, // EqneTerm
+		772, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S563
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		816, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S564
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		817, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S565
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		818, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S566
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		819, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S567
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		820, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S568
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		821, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S569
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		822, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S570
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		823, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S571
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		824, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S572
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		825, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S573
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		826, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S574
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		827, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S575
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		828, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S576
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		829, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S577
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		830, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S578
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		831, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S579
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		832, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S580
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		833, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S581
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		834, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S582
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		835, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S583
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		836, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S584
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		837, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S585
 		-1, // S'
@@ -21102,45 +21687,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S586
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		838, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S587
 		-1,  // S'
@@ -21151,212 +21738,218 @@ var gotoTab = gotoTable{
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
 		-1,  // RHS
-		748, // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		839, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S588
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		840, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S589
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		841, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S590
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		842, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S591
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		843, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S592
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		844, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S593
 		-1, // S'
@@ -21390,6 +21983,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21426,6 +22020,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21462,6 +22057,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21498,6 +22094,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21534,81 +22131,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S598
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		845, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S599
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		846, // RHS
+		422, // TernaryTerm
+		423, // LogicalOrTerm
+		425, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S600
 		-1, // S'
@@ -21642,6 +22242,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21678,6 +22279,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21714,6 +22316,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21750,6 +22353,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21786,6 +22390,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21822,6 +22427,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21858,45 +22464,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S607
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		852, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S608
 		-1, // S'
@@ -21930,6 +22538,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -21966,6 +22575,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22002,6 +22612,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22038,6 +22649,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22074,6 +22686,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22110,6 +22723,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22146,6 +22760,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22182,6 +22797,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22218,6 +22834,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22254,6 +22871,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22290,6 +22908,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22326,6 +22945,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22362,6 +22982,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22398,6 +23019,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22434,6 +23056,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22470,6 +23093,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22506,6 +23130,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22542,6 +23167,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22578,6 +23204,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22614,6 +23241,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22650,6 +23278,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22686,6 +23315,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22722,6 +23352,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22758,6 +23389,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22794,6 +23426,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22830,6 +23463,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22866,6 +23500,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22902,6 +23537,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22938,6 +23574,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -22974,6 +23611,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -23010,45 +23648,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S639
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		856, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S640
 		-1, // S'
@@ -23082,6 +23722,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -23118,6 +23759,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -23154,6 +23796,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -23190,81 +23833,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S644
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		858, // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S645
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		859, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S646
 		-1, // S'
@@ -23298,81 +23944,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S647
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		861, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S648
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		862, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S649
 		-1, // S'
@@ -23406,6 +24055,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -23442,729 +24092,750 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S651
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		864, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S652
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		865, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S653
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		866, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S654
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		867, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S655
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		868, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S656
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		869, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S657
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		870, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S658
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		871, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S659
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		872, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S660
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		873, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S661
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		874, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S662
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		875, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S663
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		876, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S664
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		877, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S665
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		878, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S666
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		879, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S667
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		880, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S668
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		881, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S669
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		882, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S670
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		883, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S671
 		-1, // S'
@@ -24198,45 +24869,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S672
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		884, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S673
 		-1,  // S'
@@ -24259,56 +24932,58 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		775, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		885, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S674
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		886, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S675
 		-1,  // S'
@@ -24331,18 +25006,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		783, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		887, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -24367,18 +25043,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		784, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		888, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -24403,56 +25080,58 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		785, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		889, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S678
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		890, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S679
 		-1, // S'
@@ -24486,81 +25165,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S680
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		786, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S681
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		787, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S682
 		-1, // S'
@@ -24594,11 +25276,49 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S683
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S684
 		-1,  // S'
 		-1,  // Root
 		-1,  // StatementBlock
@@ -24606,105 +25326,71 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		790, // RHS
-		187, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		891, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
-	gotoRow{ // S684
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
-	},
 	gotoRow{ // S685
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		892, // RHS
+		422, // TernaryTerm
+		423, // LogicalOrTerm
+		425, // LogicalXORTerm
+		426, // LogicalAndTerm
+		427, // EqneTerm
+		428, // CmpTerm
+		429, // BitwiseORTerm
+		430, // BitwiseXORTerm
+		431, // BitwiseANDTerm
+		432, // BitwiseShiftTerm
+		433, // AddsubdotTerm
+		435, // MuldivTerm
+		439, // UnaryOpTerm
+		440, // PowTerm
+		443, // MlrvalOrFunction
+		420, // FieldName
+		445, // DirectFieldName
+		446, // IndirectFieldName
+		454, // ContextVariable
+		466, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		468, // ArrayOrMapIndexAccess
+		469, // ArraySliceAccess
+		470, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S686
 		-1, // S'
@@ -24738,45 +25424,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S687
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		791, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S688
 		-1, // S'
@@ -24810,6 +25498,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -24846,6 +25535,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -24882,6 +25572,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -24918,6 +25609,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -24954,6 +25646,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -24990,6 +25683,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25026,6 +25720,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25062,6 +25757,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25098,6 +25794,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25134,6 +25831,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25170,6 +25868,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25206,6 +25905,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25242,6 +25942,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25278,6 +25979,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25314,6 +26016,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25350,6 +26053,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25386,6 +26090,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25422,45 +26127,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S706
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		237, // RHS
-		238, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		793, // ArrayLiteralElements
-		285, // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S707
 		-1, // S'
@@ -25494,6 +26201,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25530,45 +26238,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S709
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		290, // RHS
-		291, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		795, // MapLiteralKeyValuePairs
-		341, // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S710
 		-1, // S'
@@ -25602,6 +26312,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25638,6 +26349,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25674,6 +26386,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25710,6 +26423,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25746,6 +26460,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25782,6 +26497,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25818,6 +26534,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25854,6 +26571,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25890,6 +26608,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25926,6 +26645,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25962,6 +26682,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -25998,6 +26719,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26034,45 +26756,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S723
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		901, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S724
 		-1, // S'
@@ -26106,6 +26830,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26142,6 +26867,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26178,6 +26904,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26214,6 +26941,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26250,6 +26978,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26286,6 +27015,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26322,6 +27052,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26358,6 +27089,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26394,6 +27126,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26430,6 +27163,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26466,6 +27200,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26502,6 +27237,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26538,6 +27274,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26574,6 +27311,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26610,6 +27348,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26646,6 +27385,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26682,6 +27422,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26718,6 +27459,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26754,6 +27496,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26790,6 +27533,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26826,6 +27570,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26862,45 +27607,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S746
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		798, // TernaryTerm
-		84,  // LogicalOrTerm
-		85,  // LogicalXORTerm
-		86,  // LogicalAndTerm
-		87,  // EqneTerm
-		88,  // CmpTerm
-		89,  // BitwiseORTerm
-		90,  // BitwiseXORTerm
-		91,  // BitwiseANDTerm
-		92,  // BitwiseShiftTerm
-		93,  // AddsubdotTerm
-		95,  // MuldivTerm
-		99,  // UnaryOpTerm
-		100, // PowTerm
-		103, // MlrvalOrFunction
-		81,  // FieldName
-		105, // DirectFieldName
-		106, // IndirectFieldName
-		114, // ContextVariable
-		126, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		128, // ArrayOrMapIndexAccess
-		129, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S747
 		-1, // S'
@@ -26934,6 +27681,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -26970,45 +27718,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S749
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		799, // TernaryTerm
-		188, // LogicalOrTerm
-		189, // LogicalXORTerm
-		190, // LogicalAndTerm
-		191, // EqneTerm
-		192, // CmpTerm
-		193, // BitwiseORTerm
-		194, // BitwiseXORTerm
-		195, // BitwiseANDTerm
-		196, // BitwiseShiftTerm
-		197, // AddsubdotTerm
-		199, // MuldivTerm
-		203, // UnaryOpTerm
-		204, // PowTerm
-		207, // MlrvalOrFunction
-		185, // FieldName
-		209, // DirectFieldName
-		210, // IndirectFieldName
-		218, // ContextVariable
-		230, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		232, // ArrayOrMapIndexAccess
-		233, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S750
 		-1, // S'
@@ -27042,45 +27792,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S751
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		800, // TernaryTerm
-		239, // LogicalOrTerm
-		240, // LogicalXORTerm
-		241, // LogicalAndTerm
-		242, // EqneTerm
-		243, // CmpTerm
-		244, // BitwiseORTerm
-		245, // BitwiseXORTerm
-		246, // BitwiseANDTerm
-		247, // BitwiseShiftTerm
-		248, // AddsubdotTerm
-		250, // MuldivTerm
-		254, // UnaryOpTerm
-		255, // PowTerm
-		258, // MlrvalOrFunction
-		236, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
-		270, // ContextVariable
-		282, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		286, // ArrayOrMapIndexAccess
-		287, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S752
 		-1, // S'
@@ -27114,225 +27866,232 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S753
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		801, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S754
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		802, // LogicalXORTerm
-		665, // LogicalAndTerm
-		666, // EqneTerm
-		667, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S755
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		803, // LogicalAndTerm
-		666, // EqneTerm
-		667, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S756
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		804, // EqneTerm
-		667, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S757
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		805, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S758
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		806, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S759
 		-1,  // S'
@@ -27342,573 +28101,589 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		807, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		906, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S760
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		808, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S761
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		809, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S762
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		810, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S763
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		811, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S764
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		812, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S765
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		813, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S766
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		814, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S767
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		815, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S768
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		816, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S769
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		817, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S770
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		818, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S771
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		819, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S772
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		820, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S773
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		821, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S774
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		822, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S775
 		-1, // S'
@@ -27942,81 +28717,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S776
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		823, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S777
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		824, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S778
 		-1,  // S'
@@ -28039,56 +28817,58 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		825, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		930, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S779
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		826, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S780
 		-1,  // S'
@@ -28111,18 +28891,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		827, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		938, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -28147,18 +28928,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		828, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		939, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -28183,18 +28965,19 @@ var gotoTab = gotoTable{
 		-1,  // BitwiseShiftTerm
 		-1,  // AddsubdotTerm
 		-1,  // MuldivTerm
-		829, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		-1,  // UnaryOpTerm
+		940, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
@@ -28230,6 +29013,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28266,81 +29050,84 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S785
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		941, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S786
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		-1,  // UnaryOpTerm
+		942, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S787
 		-1, // S'
@@ -28374,6 +29161,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28386,69 +29174,71 @@ var gotoTab = gotoTable{
 		-1,  // StatementInBody
 		-1,  // SrecAssignment
 		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		-1,  // TernaryTerm
-		-1,  // LogicalOrTerm
-		-1,  // LogicalXORTerm
-		-1,  // LogicalAndTerm
-		-1,  // EqneTerm
-		-1,  // CmpTerm
-		-1,  // BitwiseORTerm
-		-1,  // BitwiseXORTerm
-		-1,  // BitwiseANDTerm
-		-1,  // BitwiseShiftTerm
-		-1,  // AddsubdotTerm
-		-1,  // MuldivTerm
-		-1,  // UnaryOpTerm
-		830, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
+		945, // RHS
+		189, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
 		-1,  // ArrayLiteralElements
 		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
 		-1,  // MapLiteralKeyValuePairs
 		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S789
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		831, // RHS
-		32,  // TernaryTerm
-		33,  // LogicalOrTerm
-		34,  // LogicalXORTerm
-		35,  // LogicalAndTerm
-		36,  // EqneTerm
-		37,  // CmpTerm
-		38,  // BitwiseORTerm
-		39,  // BitwiseXORTerm
-		40,  // BitwiseANDTerm
-		41,  // BitwiseShiftTerm
-		42,  // AddsubdotTerm
-		44,  // MuldivTerm
-		48,  // UnaryOpTerm
-		49,  // PowTerm
-		52,  // MlrvalOrFunction
-		30,  // FieldName
-		54,  // DirectFieldName
-		55,  // IndirectFieldName
-		63,  // ContextVariable
-		75,  // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		77,  // ArrayOrMapIndexAccess
-		78,  // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S790
 		-1, // S'
@@ -28482,6 +29272,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28518,45 +29309,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S792
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		946, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S793
 		-1, // S'
@@ -28590,6 +29383,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28626,6 +29420,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28662,45 +29457,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S796
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		836, // TernaryTerm
-		292, // LogicalOrTerm
-		293, // LogicalXORTerm
-		294, // LogicalAndTerm
-		295, // EqneTerm
-		296, // CmpTerm
-		297, // BitwiseORTerm
-		298, // BitwiseXORTerm
-		299, // BitwiseANDTerm
-		300, // BitwiseShiftTerm
-		301, // AddsubdotTerm
-		303, // MuldivTerm
-		307, // UnaryOpTerm
-		308, // PowTerm
-		311, // MlrvalOrFunction
-		289, // FieldName
-		313, // DirectFieldName
-		314, // IndirectFieldName
-		322, // ContextVariable
-		334, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		336, // ArrayOrMapIndexAccess
-		337, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S797
 		-1, // S'
@@ -28734,6 +29531,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28770,6 +29568,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28806,6 +29605,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28842,6 +29642,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28878,6 +29679,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28914,6 +29716,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28950,6 +29753,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -28986,6 +29790,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29022,6 +29827,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29058,6 +29864,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29094,6 +29901,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29130,6 +29938,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29166,6 +29975,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29202,45 +30012,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S811
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		240, // RHS
+		241, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		948, // ArrayLiteralElements
+		288, // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S812
 		-1, // S'
@@ -29274,6 +30086,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29310,6 +30123,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29346,45 +30160,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S815
-		-1, // S'
-		-1, // Root
-		-1, // StatementBlock
-		-1, // Statement
-		-1, // StatementInBody
-		-1, // SrecAssignment
-		-1, // SrecDirectAssignment
-		-1, // RHS
-		-1, // TernaryTerm
-		-1, // LogicalOrTerm
-		-1, // LogicalXORTerm
-		-1, // LogicalAndTerm
-		-1, // EqneTerm
-		-1, // CmpTerm
-		-1, // BitwiseORTerm
-		-1, // BitwiseXORTerm
-		-1, // BitwiseANDTerm
-		-1, // BitwiseShiftTerm
-		-1, // AddsubdotTerm
-		-1, // MuldivTerm
-		-1, // UnaryOpTerm
-		-1, // PowTerm
-		-1, // MlrvalOrFunction
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
-		-1, // ContextVariable
-		-1, // ArrayLiteral
-		-1, // ArrayLiteralElements
-		-1, // ArrayLiteralElement
-		-1, // ArrayOrMapIndexAccess
-		-1, // MapLiteral
-		-1, // MapLiteralKeyValuePairs
-		-1, // MapLiteralKeyValuePair
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		294, // RHS
+		295, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		950, // MapLiteralKeyValuePairs
+		346, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S816
 		-1, // S'
@@ -29418,6 +30234,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29454,6 +30271,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29490,6 +30308,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29526,6 +30345,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29562,6 +30382,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29598,6 +30419,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29634,6 +30456,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29670,6 +30493,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29706,6 +30530,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29742,6 +30567,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29778,6 +30604,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29814,6 +30641,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29850,6 +30678,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29886,6 +30715,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29922,6 +30752,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29958,6 +30789,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -29994,6 +30826,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -30030,6 +30863,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -30066,6 +30900,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -30102,6 +30937,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -30138,45 +30974,47 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S837
-		-1,  // S'
-		-1,  // Root
-		-1,  // StatementBlock
-		-1,  // Statement
-		-1,  // StatementInBody
-		-1,  // SrecAssignment
-		-1,  // SrecDirectAssignment
-		-1,  // RHS
-		839, // TernaryTerm
-		663, // LogicalOrTerm
-		664, // LogicalXORTerm
-		665, // LogicalAndTerm
-		666, // EqneTerm
-		667, // CmpTerm
-		668, // BitwiseORTerm
-		669, // BitwiseXORTerm
-		670, // BitwiseANDTerm
-		671, // BitwiseShiftTerm
-		672, // AddsubdotTerm
-		674, // MuldivTerm
-		678, // UnaryOpTerm
-		679, // PowTerm
-		682, // MlrvalOrFunction
-		660, // FieldName
-		684, // DirectFieldName
-		685, // IndirectFieldName
-		693, // ContextVariable
-		705, // ArrayLiteral
-		-1,  // ArrayLiteralElements
-		-1,  // ArrayLiteralElement
-		707, // ArrayOrMapIndexAccess
-		708, // MapLiteral
-		-1,  // MapLiteralKeyValuePairs
-		-1,  // MapLiteralKeyValuePair
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
 	},
 	gotoRow{ // S838
 		-1, // S'
@@ -30210,6 +31048,7 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair
@@ -30246,6 +31085,7148 @@ var gotoTab = gotoTable{
 		-1, // ArrayLiteralElements
 		-1, // ArrayLiteralElement
 		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S840
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S841
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S842
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S843
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S844
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S845
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S846
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S847
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		954, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S848
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S849
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S850
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S851
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S852
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S853
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		956, // TernaryTerm
+		85,  // LogicalOrTerm
+		86,  // LogicalXORTerm
+		87,  // LogicalAndTerm
+		88,  // EqneTerm
+		89,  // CmpTerm
+		90,  // BitwiseORTerm
+		91,  // BitwiseXORTerm
+		92,  // BitwiseANDTerm
+		93,  // BitwiseShiftTerm
+		94,  // AddsubdotTerm
+		96,  // MuldivTerm
+		100, // UnaryOpTerm
+		101, // PowTerm
+		104, // MlrvalOrFunction
+		82,  // FieldName
+		106, // DirectFieldName
+		107, // IndirectFieldName
+		115, // ContextVariable
+		127, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		129, // ArrayOrMapIndexAccess
+		130, // ArraySliceAccess
+		131, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S854
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		957, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S855
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S856
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S857
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S858
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S859
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S860
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S861
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S862
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S863
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S864
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S865
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S866
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S867
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S868
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S869
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S870
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S871
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S872
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S873
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S874
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S875
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S876
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S877
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S878
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S879
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S880
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S881
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S882
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S883
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S884
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S885
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S886
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S887
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S888
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S889
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S890
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S891
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S892
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S893
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		964, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S894
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S895
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S896
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S897
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S898
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		966, // TernaryTerm
+		190, // LogicalOrTerm
+		191, // LogicalXORTerm
+		192, // LogicalAndTerm
+		193, // EqneTerm
+		194, // CmpTerm
+		195, // BitwiseORTerm
+		196, // BitwiseXORTerm
+		197, // BitwiseANDTerm
+		198, // BitwiseShiftTerm
+		199, // AddsubdotTerm
+		201, // MuldivTerm
+		205, // UnaryOpTerm
+		206, // PowTerm
+		209, // MlrvalOrFunction
+		187, // FieldName
+		211, // DirectFieldName
+		212, // IndirectFieldName
+		220, // ContextVariable
+		232, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		234, // ArrayOrMapIndexAccess
+		235, // ArraySliceAccess
+		236, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S899
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		967, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S900
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S901
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S902
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S903
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		970, // TernaryTerm
+		242, // LogicalOrTerm
+		243, // LogicalXORTerm
+		244, // LogicalAndTerm
+		245, // EqneTerm
+		246, // CmpTerm
+		247, // BitwiseORTerm
+		248, // BitwiseXORTerm
+		249, // BitwiseANDTerm
+		250, // BitwiseShiftTerm
+		251, // AddsubdotTerm
+		253, // MuldivTerm
+		257, // UnaryOpTerm
+		258, // PowTerm
+		261, // MlrvalOrFunction
+		239, // FieldName
+		263, // DirectFieldName
+		264, // IndirectFieldName
+		273, // ContextVariable
+		285, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		289, // ArrayOrMapIndexAccess
+		290, // ArraySliceAccess
+		291, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S904
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		971, // RHS
+		32,  // TernaryTerm
+		33,  // LogicalOrTerm
+		34,  // LogicalXORTerm
+		35,  // LogicalAndTerm
+		36,  // EqneTerm
+		37,  // CmpTerm
+		38,  // BitwiseORTerm
+		39,  // BitwiseXORTerm
+		40,  // BitwiseANDTerm
+		41,  // BitwiseShiftTerm
+		42,  // AddsubdotTerm
+		44,  // MuldivTerm
+		48,  // UnaryOpTerm
+		49,  // PowTerm
+		52,  // MlrvalOrFunction
+		30,  // FieldName
+		54,  // DirectFieldName
+		55,  // IndirectFieldName
+		63,  // ContextVariable
+		75,  // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		77,  // ArrayOrMapIndexAccess
+		78,  // ArraySliceAccess
+		79,  // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S905
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S906
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S907
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S908
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		974, // TernaryTerm
+		296, // LogicalOrTerm
+		297, // LogicalXORTerm
+		298, // LogicalAndTerm
+		299, // EqneTerm
+		300, // CmpTerm
+		301, // BitwiseORTerm
+		302, // BitwiseXORTerm
+		303, // BitwiseANDTerm
+		304, // BitwiseShiftTerm
+		305, // AddsubdotTerm
+		307, // MuldivTerm
+		311, // UnaryOpTerm
+		312, // PowTerm
+		315, // MlrvalOrFunction
+		293, // FieldName
+		317, // DirectFieldName
+		318, // IndirectFieldName
+		326, // ContextVariable
+		338, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		340, // ArrayOrMapIndexAccess
+		341, // ArraySliceAccess
+		342, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S909
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		975, // LogicalXORTerm
+		770, // LogicalAndTerm
+		771, // EqneTerm
+		772, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S910
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		976, // LogicalAndTerm
+		771, // EqneTerm
+		772, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S911
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		977, // EqneTerm
+		772, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S912
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		978, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S913
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		979, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S914
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		980, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S915
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		981, // CmpTerm
+		773, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S916
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		982, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S917
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		983, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S918
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		984, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S919
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		985, // BitwiseORTerm
+		774, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S920
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		986, // BitwiseXORTerm
+		775, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S921
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		987, // BitwiseANDTerm
+		776, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S922
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		988, // BitwiseShiftTerm
+		777, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S923
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		989, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S924
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		990, // AddsubdotTerm
+		779, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S925
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		991, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S926
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		992, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S927
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		993, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S928
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		994, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S929
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		995, // MuldivTerm
+		783, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S930
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S931
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		996, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S932
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		997, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S933
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		998, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S934
+		-1,  // S'
+		-1,  // Root
+		-1,  // StatementBlock
+		-1,  // Statement
+		-1,  // StatementInBody
+		-1,  // SrecAssignment
+		-1,  // SrecDirectAssignment
+		-1,  // RHS
+		-1,  // TernaryTerm
+		-1,  // LogicalOrTerm
+		-1,  // LogicalXORTerm
+		-1,  // LogicalAndTerm
+		-1,  // EqneTerm
+		-1,  // CmpTerm
+		-1,  // BitwiseORTerm
+		-1,  // BitwiseXORTerm
+		-1,  // BitwiseANDTerm
+		-1,  // BitwiseShiftTerm
+		-1,  // AddsubdotTerm
+		-1,  // MuldivTerm
+		999, // UnaryOpTerm
+		784, // PowTerm
+		787, // MlrvalOrFunction
+		765, // FieldName
+		789, // DirectFieldName
+		790, // IndirectFieldName
+		798, // ContextVariable
+		810, // ArrayLiteral
+		-1,  // ArrayLiteralElements
+		-1,  // ArrayLiteralElement
+		812, // ArrayOrMapIndexAccess
+		813, // ArraySliceAccess
+		814, // MapLiteral
+		-1,  // MapLiteralKeyValuePairs
+		-1,  // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S935
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		-1,   // TernaryTerm
+		-1,   // LogicalOrTerm
+		-1,   // LogicalXORTerm
+		-1,   // LogicalAndTerm
+		-1,   // EqneTerm
+		-1,   // CmpTerm
+		-1,   // BitwiseORTerm
+		-1,   // BitwiseXORTerm
+		-1,   // BitwiseANDTerm
+		-1,   // BitwiseShiftTerm
+		-1,   // AddsubdotTerm
+		-1,   // MuldivTerm
+		1000, // UnaryOpTerm
+		784,  // PowTerm
+		787,  // MlrvalOrFunction
+		765,  // FieldName
+		789,  // DirectFieldName
+		790,  // IndirectFieldName
+		798,  // ContextVariable
+		810,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		812,  // ArrayOrMapIndexAccess
+		813,  // ArraySliceAccess
+		814,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S936
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		-1,   // TernaryTerm
+		-1,   // LogicalOrTerm
+		-1,   // LogicalXORTerm
+		-1,   // LogicalAndTerm
+		-1,   // EqneTerm
+		-1,   // CmpTerm
+		-1,   // BitwiseORTerm
+		-1,   // BitwiseXORTerm
+		-1,   // BitwiseANDTerm
+		-1,   // BitwiseShiftTerm
+		-1,   // AddsubdotTerm
+		-1,   // MuldivTerm
+		1001, // UnaryOpTerm
+		784,  // PowTerm
+		787,  // MlrvalOrFunction
+		765,  // FieldName
+		789,  // DirectFieldName
+		790,  // IndirectFieldName
+		798,  // ContextVariable
+		810,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		812,  // ArrayOrMapIndexAccess
+		813,  // ArraySliceAccess
+		814,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S937
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		-1,   // TernaryTerm
+		-1,   // LogicalOrTerm
+		-1,   // LogicalXORTerm
+		-1,   // LogicalAndTerm
+		-1,   // EqneTerm
+		-1,   // CmpTerm
+		-1,   // BitwiseORTerm
+		-1,   // BitwiseXORTerm
+		-1,   // BitwiseANDTerm
+		-1,   // BitwiseShiftTerm
+		-1,   // AddsubdotTerm
+		-1,   // MuldivTerm
+		1002, // UnaryOpTerm
+		784,  // PowTerm
+		787,  // MlrvalOrFunction
+		765,  // FieldName
+		789,  // DirectFieldName
+		790,  // IndirectFieldName
+		798,  // ContextVariable
+		810,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		812,  // ArrayOrMapIndexAccess
+		813,  // ArraySliceAccess
+		814,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S938
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S939
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S940
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S941
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S942
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S943
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		-1,   // TernaryTerm
+		-1,   // LogicalOrTerm
+		-1,   // LogicalXORTerm
+		-1,   // LogicalAndTerm
+		-1,   // EqneTerm
+		-1,   // CmpTerm
+		-1,   // BitwiseORTerm
+		-1,   // BitwiseXORTerm
+		-1,   // BitwiseANDTerm
+		-1,   // BitwiseShiftTerm
+		-1,   // AddsubdotTerm
+		-1,   // MuldivTerm
+		-1,   // UnaryOpTerm
+		1003, // PowTerm
+		787,  // MlrvalOrFunction
+		765,  // FieldName
+		789,  // DirectFieldName
+		790,  // IndirectFieldName
+		798,  // ContextVariable
+		810,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		812,  // ArrayOrMapIndexAccess
+		813,  // ArraySliceAccess
+		814,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S944
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		1004, // RHS
+		422,  // TernaryTerm
+		423,  // LogicalOrTerm
+		425,  // LogicalXORTerm
+		426,  // LogicalAndTerm
+		427,  // EqneTerm
+		428,  // CmpTerm
+		429,  // BitwiseORTerm
+		430,  // BitwiseXORTerm
+		431,  // BitwiseANDTerm
+		432,  // BitwiseShiftTerm
+		433,  // AddsubdotTerm
+		435,  // MuldivTerm
+		439,  // UnaryOpTerm
+		440,  // PowTerm
+		443,  // MlrvalOrFunction
+		420,  // FieldName
+		445,  // DirectFieldName
+		446,  // IndirectFieldName
+		454,  // ContextVariable
+		466,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		468,  // ArrayOrMapIndexAccess
+		469,  // ArraySliceAccess
+		470,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S945
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S946
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S947
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S948
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S949
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S950
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S951
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		1010, // TernaryTerm
+		296,  // LogicalOrTerm
+		297,  // LogicalXORTerm
+		298,  // LogicalAndTerm
+		299,  // EqneTerm
+		300,  // CmpTerm
+		301,  // BitwiseORTerm
+		302,  // BitwiseXORTerm
+		303,  // BitwiseANDTerm
+		304,  // BitwiseShiftTerm
+		305,  // AddsubdotTerm
+		307,  // MuldivTerm
+		311,  // UnaryOpTerm
+		312,  // PowTerm
+		315,  // MlrvalOrFunction
+		293,  // FieldName
+		317,  // DirectFieldName
+		318,  // IndirectFieldName
+		326,  // ContextVariable
+		338,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		340,  // ArrayOrMapIndexAccess
+		341,  // ArraySliceAccess
+		342,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S952
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		1011, // RHS
+		32,   // TernaryTerm
+		33,   // LogicalOrTerm
+		34,   // LogicalXORTerm
+		35,   // LogicalAndTerm
+		36,   // EqneTerm
+		37,   // CmpTerm
+		38,   // BitwiseORTerm
+		39,   // BitwiseXORTerm
+		40,   // BitwiseANDTerm
+		41,   // BitwiseShiftTerm
+		42,   // AddsubdotTerm
+		44,   // MuldivTerm
+		48,   // UnaryOpTerm
+		49,   // PowTerm
+		52,   // MlrvalOrFunction
+		30,   // FieldName
+		54,   // DirectFieldName
+		55,   // IndirectFieldName
+		63,   // ContextVariable
+		75,   // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		77,   // ArrayOrMapIndexAccess
+		78,   // ArraySliceAccess
+		79,   // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S953
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S954
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S955
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S956
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S957
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S958
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S959
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S960
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S961
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		1015, // TernaryTerm
+		423,  // LogicalOrTerm
+		425,  // LogicalXORTerm
+		426,  // LogicalAndTerm
+		427,  // EqneTerm
+		428,  // CmpTerm
+		429,  // BitwiseORTerm
+		430,  // BitwiseXORTerm
+		431,  // BitwiseANDTerm
+		432,  // BitwiseShiftTerm
+		433,  // AddsubdotTerm
+		435,  // MuldivTerm
+		439,  // UnaryOpTerm
+		440,  // PowTerm
+		443,  // MlrvalOrFunction
+		420,  // FieldName
+		445,  // DirectFieldName
+		446,  // IndirectFieldName
+		454,  // ContextVariable
+		466,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		468,  // ArrayOrMapIndexAccess
+		469,  // ArraySliceAccess
+		470,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S962
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		1016, // RHS
+		32,   // TernaryTerm
+		33,   // LogicalOrTerm
+		34,   // LogicalXORTerm
+		35,   // LogicalAndTerm
+		36,   // EqneTerm
+		37,   // CmpTerm
+		38,   // BitwiseORTerm
+		39,   // BitwiseXORTerm
+		40,   // BitwiseANDTerm
+		41,   // BitwiseShiftTerm
+		42,   // AddsubdotTerm
+		44,   // MuldivTerm
+		48,   // UnaryOpTerm
+		49,   // PowTerm
+		52,   // MlrvalOrFunction
+		30,   // FieldName
+		54,   // DirectFieldName
+		55,   // IndirectFieldName
+		63,   // ContextVariable
+		75,   // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		77,   // ArrayOrMapIndexAccess
+		78,   // ArraySliceAccess
+		79,   // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S963
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S964
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S965
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S966
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S967
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S968
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S969
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S970
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S971
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S972
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S973
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S974
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S975
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S976
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S977
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S978
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S979
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S980
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S981
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S982
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S983
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S984
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S985
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S986
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S987
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S988
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S989
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S990
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S991
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S992
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S993
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S994
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S995
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S996
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S997
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S998
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S999
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1000
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1001
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1002
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1003
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1004
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1005
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		1024, // RHS
+		32,   // TernaryTerm
+		33,   // LogicalOrTerm
+		34,   // LogicalXORTerm
+		35,   // LogicalAndTerm
+		36,   // EqneTerm
+		37,   // CmpTerm
+		38,   // BitwiseORTerm
+		39,   // BitwiseXORTerm
+		40,   // BitwiseANDTerm
+		41,   // BitwiseShiftTerm
+		42,   // AddsubdotTerm
+		44,   // MuldivTerm
+		48,   // UnaryOpTerm
+		49,   // PowTerm
+		52,   // MlrvalOrFunction
+		30,   // FieldName
+		54,   // DirectFieldName
+		55,   // IndirectFieldName
+		63,   // ContextVariable
+		75,   // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		77,   // ArrayOrMapIndexAccess
+		78,   // ArraySliceAccess
+		79,   // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1006
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1007
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1008
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1009
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1010
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1011
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1012
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1013
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1014
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1015
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1016
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1017
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1018
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1019
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1020
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1021
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		-1,   // RHS
+		1028, // TernaryTerm
+		768,  // LogicalOrTerm
+		769,  // LogicalXORTerm
+		770,  // LogicalAndTerm
+		771,  // EqneTerm
+		772,  // CmpTerm
+		773,  // BitwiseORTerm
+		774,  // BitwiseXORTerm
+		775,  // BitwiseANDTerm
+		776,  // BitwiseShiftTerm
+		777,  // AddsubdotTerm
+		779,  // MuldivTerm
+		783,  // UnaryOpTerm
+		784,  // PowTerm
+		787,  // MlrvalOrFunction
+		765,  // FieldName
+		789,  // DirectFieldName
+		790,  // IndirectFieldName
+		798,  // ContextVariable
+		810,  // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		812,  // ArrayOrMapIndexAccess
+		813,  // ArraySliceAccess
+		814,  // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1022
+		-1,   // S'
+		-1,   // Root
+		-1,   // StatementBlock
+		-1,   // Statement
+		-1,   // StatementInBody
+		-1,   // SrecAssignment
+		-1,   // SrecDirectAssignment
+		1029, // RHS
+		32,   // TernaryTerm
+		33,   // LogicalOrTerm
+		34,   // LogicalXORTerm
+		35,   // LogicalAndTerm
+		36,   // EqneTerm
+		37,   // CmpTerm
+		38,   // BitwiseORTerm
+		39,   // BitwiseXORTerm
+		40,   // BitwiseANDTerm
+		41,   // BitwiseShiftTerm
+		42,   // AddsubdotTerm
+		44,   // MuldivTerm
+		48,   // UnaryOpTerm
+		49,   // PowTerm
+		52,   // MlrvalOrFunction
+		30,   // FieldName
+		54,   // DirectFieldName
+		55,   // IndirectFieldName
+		63,   // ContextVariable
+		75,   // ArrayLiteral
+		-1,   // ArrayLiteralElements
+		-1,   // ArrayLiteralElement
+		77,   // ArrayOrMapIndexAccess
+		78,   // ArraySliceAccess
+		79,   // MapLiteral
+		-1,   // MapLiteralKeyValuePairs
+		-1,   // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1023
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1024
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1025
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1026
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1027
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1028
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1029
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1030
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1031
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
+		-1, // MapLiteral
+		-1, // MapLiteralKeyValuePairs
+		-1, // MapLiteralKeyValuePair
+	},
+	gotoRow{ // S1032
+		-1, // S'
+		-1, // Root
+		-1, // StatementBlock
+		-1, // Statement
+		-1, // StatementInBody
+		-1, // SrecAssignment
+		-1, // SrecDirectAssignment
+		-1, // RHS
+		-1, // TernaryTerm
+		-1, // LogicalOrTerm
+		-1, // LogicalXORTerm
+		-1, // LogicalAndTerm
+		-1, // EqneTerm
+		-1, // CmpTerm
+		-1, // BitwiseORTerm
+		-1, // BitwiseXORTerm
+		-1, // BitwiseANDTerm
+		-1, // BitwiseShiftTerm
+		-1, // AddsubdotTerm
+		-1, // MuldivTerm
+		-1, // UnaryOpTerm
+		-1, // PowTerm
+		-1, // MlrvalOrFunction
+		-1, // FieldName
+		-1, // DirectFieldName
+		-1, // IndirectFieldName
+		-1, // ContextVariable
+		-1, // ArrayLiteral
+		-1, // ArrayLiteralElements
+		-1, // ArrayLiteralElement
+		-1, // ArrayOrMapIndexAccess
+		-1, // ArraySliceAccess
 		-1, // MapLiteral
 		-1, // MapLiteralKeyValuePairs
 		-1, // MapLiteralKeyValuePair

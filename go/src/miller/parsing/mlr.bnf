@@ -2920,6 +2920,60 @@ ArrayOrMapIndexAccess
     )>>
 ;
 
+MlrvalOrFunction : ArraySliceAccess ;
+
+ArraySliceAccess
+
+  : MlrvalOrFunction "[" RHS ":" RHS "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      $4,
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" ":" RHS "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      $3,
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" RHS ":" "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NewASTNodeNestable(
+        $3,
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" ":" "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+;
+
 // ================================================================
 // Map literals in Miller are JSON-ish.
 
