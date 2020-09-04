@@ -40,7 +40,7 @@ During the coding of Miller, I've been guided by the following:
   * Things should be transparent.  For example, `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
   * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as `mlr.go`, `mlr.bnf`, `stream.go`, etc.
 * *Miller should be pleasant to write.*
-  * It should be quick to find out if you've made a mistake -- hence the `reg_test/run` regression script.
+  * It should be quick to answer the question *Did I just break anything?* -- hence the `build` and `reg_test/run` regression scripts.
   * It should be quick to find out what to do next as you iteratively develop -- see for example [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md).
 * *The language should be an asset, not a liability.*
   * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward, and fun.  I hope you enjoy it as much as I have.

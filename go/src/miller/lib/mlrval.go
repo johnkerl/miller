@@ -41,7 +41,7 @@ type Mlrval struct {
 	floatval      float64
 	boolval       bool
 	arrayval      []Mlrval
-	mapval        *Mlrval
+	mapval        *Mlrmap
 }
 
 // Enumeration for mlrval types

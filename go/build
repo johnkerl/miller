@@ -9,7 +9,6 @@ fi
 set -euo pipefail
 
 ./build-go
-./fmter
 check $verbose
 
 echo OK

@@ -13,6 +13,7 @@ TOP OF LIST:
 
 * array/map
   o map literals & index-accessing
+  o err-return for array/map get/put if incorrect types
   o printreps for array/map
   ! defer maps until ordered-map impl
   o mlrval Go Copy method and DSL copy function ... or, better, pass by

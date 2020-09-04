@@ -73,12 +73,15 @@ type mlrmapEntry struct {
 }
 
 // ----------------------------------------------------------------
+func NewMlrmapAsRecord() *Mlrmap {
+	return newMlrmapUnhashed()
+}
 func NewMlrmap() *Mlrmap {
-	return NewMlrmapNoMap()
+	return newMlrmapHashed()
 }
 
 // Faster on record-stream data as noted above.
-func NewMlrmapNoMap() *Mlrmap {
+func newMlrmapUnhashed() *Mlrmap {
 	return &Mlrmap{
 		FieldCount:    0,
 		Head:          nil,
@@ -87,13 +90,27 @@ func NewMlrmapNoMap() *Mlrmap {
 	}
 }
 
-func NewMlrmapMap() *Mlrmap {
+// Intended for use in DSL expressions wherein the access-to-construct ratio
+// might be higher (although this needs profiling over a variety of use-cases).
+func newMlrmapHashed() *Mlrmap {
 	return &Mlrmap{
 		FieldCount:    0,
 		Head:          nil,
 		Tail:          nil,
 		keysToEntries: make(map[string]*mlrmapEntry),
 	}
+}
+
+func NewMlrmapMaybeHashed(wantHashing bool) *Mlrmap {
+	if wantHashing {
+		return newMlrmapHashed()
+	} else {
+		return newMlrmapUnhashed()
+	}
+}
+
+func (this *Mlrmap) isHashed() bool {
+	return this.keysToEntries != nil
 }
 
 // ----------------------------------------------------------------

@@ -226,3 +226,16 @@ func MlrvalFromArrayLiteral(input []Mlrval) Mlrval {
 		mapval:        nil,
 	}
 }
+
+func NewMlrvalEmptyMap() Mlrval {
+	return Mlrval{
+		mvtype:        MT_MAP,
+		printrep:      "(bug-if-you-see-this)",
+		printrepValid: false,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
+		mapval:        NewMlrmap(),
+	}
+}

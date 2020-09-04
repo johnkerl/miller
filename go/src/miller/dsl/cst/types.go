@@ -39,11 +39,14 @@ import (
 // ----------------------------------------------------------------
 
 // ----------------------------------------------------------------
+// When we do mlr put '...DSL expression here...', this state is what is needed
+// to execute the expression. That includes the current record, AWK-like variables
+// such as FILENAME and NR, and out-of-stream variables.
 type State struct {
 	Inrec   *lib.Mlrmap
 	Context *lib.Context
-	// oosvars too
-	// stack frames will go into individual statement-block nodes
+	// TODO: oosvars too
+	// TODO: stack frames will go into individual statement-block nodes
 }
 
 func NewState(
@@ -57,13 +60,14 @@ func NewState(
 }
 
 // ----------------------------------------------------------------
+// This is for all statements and statemnt blocks within the CST.
 type IExecutable interface {
 	Execute(state *State)
 }
 
 // ----------------------------------------------------------------
 type Root struct {
-	// array of statements/blocks
+	// Statements/blocks
 	executables []IExecutable
 }
 
@@ -78,15 +82,29 @@ type IndirectSrecFieldAssignmentNode struct {
 	rhs          IEvaluable
 }
 
-// xxx implement IExecutable
-
 type StatementBlockNode struct {
-	// list of statement
+	// TODO: list of statement
 }
 
-// xxx implement IExecutable
-
 // ================================================================
+// This is for any right-hand side (RHS) of an assignment statement.  Also, for
+// computed field names on the left-hand side, like '$a . $b' in mlr put '$[$a
+// . $b]' = $x + $y'.
 type IEvaluable interface {
 	Evaluate(state *State) lib.Mlrval
+}
+
+// This is for computing map entries at runtime. For example, in mlr put 'mymap
+// = {"sum": $x + $y, "diff": $x - $y}; ...', the first pair would have key
+// being string-literal "sum" and value being the evaluable expression '$x + $y'.
+type EvaluablePair struct {
+	Key   IEvaluable
+	Value IEvaluable
+}
+
+func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
+	return &EvaluablePair{
+		Key:   key,
+		Value: value,
+	}
 }

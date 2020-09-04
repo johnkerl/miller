@@ -79,7 +79,13 @@ func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) lib.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 	// Base-is-array and index-is-int will be checked there
-	return baseMlrval.GetArrayIndex(&indexMlrval)
+	if baseMlrval.IsArray() {
+		return baseMlrval.ArrayGet(&indexMlrval)
+	} else if baseMlrval.IsMap() {
+		return baseMlrval.MapGet(&indexMlrval)
+	} else {
+		return lib.MlrvalFromError()
+	}
 }
 
 // ----------------------------------------------------------------
@@ -102,6 +108,7 @@ func BuildArraySliceAccessNode(
 
 // ----------------------------------------------------------------
 type MapLiteralNode struct {
+	evaluablePairs []EvaluablePair
 	// needs array of key/value Mlrval pairs
 }
 
@@ -113,11 +120,37 @@ func BuildMapLiteralNode(
 	// children
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 
-	// TODO
+	evaluablePairs := make([]EvaluablePair, 0)
+	for _, astChild := range astNode.Children {
+		lib.InternalCodingErrorIf(astChild.Children == nil)
+		lib.InternalCodingErrorIf(len(astChild.Children) != 2)
+		astKey := astChild.Children[0]
+		astValue := astChild.Children[1]
 
-	return &MapLiteralNode{}, nil
+		cstKey, err := BuildEvaluableNode(astKey)
+		if err != nil {
+			return nil, err
+		}
+		cstValue, err := BuildEvaluableNode(astValue)
+		if err != nil {
+			return nil, err
+		}
+
+		evaluablePair := NewEvaluablePair(cstKey, cstValue)
+		evaluablePairs = append(evaluablePairs, *evaluablePair)
+	}
+	return &MapLiteralNode{evaluablePairs: evaluablePairs}, nil
 }
 
 func (this *MapLiteralNode) Evaluate(state *State) lib.Mlrval {
-	return lib.MlrvalFromError() // xxx temp
+	mlrval := lib.NewMlrvalEmptyMap()
+
+	for _, evaluablePair := range this.evaluablePairs {
+		mkey := evaluablePair.Key.Evaluate(state)
+		mvalue := evaluablePair.Value.Evaluate(state)
+
+		mlrval.MapPut(&mkey, &mvalue)
+	}
+
+	return mlrval
 }

@@ -87,7 +87,7 @@ func (this *Mlrmap) Clear() {
 // ----------------------------------------------------------------
 // TODO: needs to be a deepcopy -- Mlrval needs its own Copy method.
 func (this *Mlrmap) Copy() *Mlrmap {
-	that := NewMlrmap()
+	that := NewMlrmapMaybeHashed(this.isHashed())
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		that.Put(pe.Key, pe.Value)
 	}
