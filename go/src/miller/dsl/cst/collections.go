@@ -115,8 +115,7 @@ func BuildMapLiteralNode(
 
 	// TODO
 
-	return &MapLiteralNode{
-	}, nil
+	return &MapLiteralNode{}, nil
 }
 
 func (this *MapLiteralNode) Evaluate(state *State) lib.Mlrval {

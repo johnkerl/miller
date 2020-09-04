@@ -87,7 +87,7 @@ func (this *RecordReaderCSV) processHandle(
 			return
 		}
 
-		lrec := containers.LrecAlloc()
+		lrec := containers.NewLrec()
 
 		// TODO: check for length mismatches
 		n := len(header)

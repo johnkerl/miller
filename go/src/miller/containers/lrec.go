@@ -67,7 +67,7 @@ type lrecEntry struct {
 }
 
 // ----------------------------------------------------------------
-func LrecAlloc() *Lrec {
+func NewLrec() *Lrec {
 	return &Lrec{
 		0,
 		nil,
@@ -76,7 +76,10 @@ func LrecAlloc() *Lrec {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Print(file *os.File) {
+func (this *Lrec) Print() {
+	this.Fprint(os.Stdout)
+}
+func (this *Lrec) Fprint(file *os.File) {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
@@ -99,6 +102,11 @@ func lrecEntryAlloc(key *string, value *lib.Mlrval) *lrecEntry {
 		nil,
 		nil,
 	}
+}
+
+// ----------------------------------------------------------------
+func (this *Lrec) Has(key *string) bool {
+	return this.findEntry(key) != nil
 }
 
 // ----------------------------------------------------------------
@@ -171,14 +179,49 @@ func (this *Lrec) Clear() {
 	this.Tail = nil
 }
 
+// ----------------------------------------------------------------
 func (this *Lrec) Copy() *Lrec {
-	that := LrecAlloc()
+	that := NewLrec()
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		that.Put(pe.Key, pe.Value)
 	}
 	return that
 }
 
+// ----------------------------------------------------------------
+// Returns true if it was found and removed
+func (this *Lrec) Remove(key *string) bool {
+	pe := this.findEntry(key)
+	if pe == nil {
+		return false
+	} else {
+		this.unlink(pe)
+		return true
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *Lrec) unlink(pe *lrecEntry) {
+	if pe == this.Head {
+		if pe == this.Tail {
+			this.Head = nil
+			this.Tail = nil
+		} else {
+			this.Head = pe.Next
+			pe.Next.Prev = nil
+		}
+	} else {
+		pe.Prev.Next = pe.Next
+		if pe == this.Tail {
+			this.Tail = pe.Prev
+		} else {
+			pe.Next.Prev = pe.Prev
+		}
+	}
+	this.FieldCount--
+}
+
+// ----------------------------------------------------------------
 //void lrec_prepend(Lrec* prec, char* key, char* value, char free_flags) {
 //	lrecEntry* pe = lrec_find_entry(prec, key);
 //
@@ -499,27 +542,6 @@ func (this *Lrec) Copy() *Lrec {
 //		pe->free_flags |= FREE_ENTRY_VALUE;
 //	else
 //		pe->free_flags &= ~FREE_ENTRY_VALUE;
-//}
-
-//// ----------------------------------------------------------------
-//void lrec_unlink(Lrec* prec, lrecEntry* pe) {
-//	if (pe == prec->Head) {
-//		if (pe == prec->Tail) {
-//			prec->Head = NULL;
-//			prec->Tail = NULL;
-//		} else {
-//			prec->Head = pe->Next;
-//			pe->Next->Prev = NULL;
-//		}
-//	} else {
-//		pe->Prev->Next = pe->Next;
-//		if (pe == prec->Tail) {
-//			prec->Tail = pe->Prev;
-//		} else {
-//			pe->Next->Prev = pe->Prev;
-//		}
-//	}
-//	prec->field_count--;
 //}
 
 //// ----------------------------------------------------------------

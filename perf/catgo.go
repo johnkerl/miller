@@ -10,14 +10,13 @@ import (
 // ----------------------------------------------------------------
 func main() {
 	args := os.Args[1:]
-	includeFields := []string {"a", "x"};
 
 	ok := true
 	if len(args) == 0 {
-		ok = handle("-", includeFields) && ok
+		ok = handle("-") && ok
 	} else {
 		for _, arg := range args {
-			ok = handle(arg, includeFields) && ok
+			ok = handle(arg) && ok
 		}
 	}
 	if ok {
@@ -28,7 +27,7 @@ func main() {
 }
 
 // ----------------------------------------------------------------
-func handle(fileName string, includeFields []string) (ok bool) {
+func handle(fileName string) (ok bool) {
 	inputStream := os.Stdin
 	if fileName != "-" {
 		var err error

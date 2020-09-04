@@ -86,7 +86,7 @@ func lrecFromDKVPLine(
 	ifs *string,
 	ips *string,
 ) *containers.Lrec {
-	lrec := containers.LrecAlloc()
+	lrec := containers.NewLrec()
 	pairs := strings.Split(*line, *ifs)
 	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)

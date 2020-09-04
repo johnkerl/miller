@@ -466,16 +466,16 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		//		readerOptions.allow_repeat_ifs = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--mmap" {
-		//		// No-op as of 5.6.3 (mmap is being abandoned) but don't break
-		//		// the command-line user experience.
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--no-mmap" {
-		//		// No-op as of 5.6.3 (mmap is being abandoned) but don't break
-		//		// the command-line user experience.
-		//		argi += 1;
-		//
+	} else if args[argi] == "--mmap" {
+		// No-op as of 5.6.3 (mmap is being abandoned) but don't break
+		// the command-line user experience.
+		argi += 1
+
+	} else if args[argi] == "--no-mmap" {
+		// No-op as of 5.6.3 (mmap is being abandoned) but don't break
+		// the command-line user experience.
+		argi += 1
+
 		//	} else if args[argi] == "--prepipe" {
 		//		checkArgCount(args, argi, argc, 2);
 		//		readerOptions.prepipe = args[argi+1];

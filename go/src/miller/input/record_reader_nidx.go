@@ -88,7 +88,7 @@ func (this *RecordReaderNIDX) processHandle(
 func lrecFromNIDXLine(
 	line *string,
 ) *containers.Lrec {
-	lrec := containers.LrecAlloc()
+	lrec := containers.NewLrec()
 	values := strings.Split(*line, " ") // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {

@@ -70,7 +70,7 @@ func (this *RecordReaderJSON) processHandle(
 
 	for jsonDecoder.More() {
 
-		lrec := containers.LrecAlloc()
+		lrec := containers.NewLrec()
 
 		var om *ordered.OrderedMap = ordered.NewOrderedMap()
 		err := jsonDecoder.Decode(om)
