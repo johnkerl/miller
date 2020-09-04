@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 )
 
 // ostream *os.File in constructors/factory
@@ -20,7 +20,7 @@ func NewRecordWriterJSON(writerOptions *clitypes.TWriterOptions) *RecordWriterJS
 }
 
 func (this *RecordWriterJSON) Write(
-	outrec *containers.Lrec,
+	outrec *lib.Lrec,
 ) {
 	// End of record stream
 	if outrec == nil {

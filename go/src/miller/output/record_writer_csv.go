@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 )
 
 // ostream *os.File in constructors/factory
@@ -22,7 +22,7 @@ func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV
 }
 
 func (this *RecordWriterCSV) Write(
-	outrec *containers.Lrec,
+	outrec *lib.Lrec,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

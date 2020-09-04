@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 )
 
 type RecordWriterDKVP struct {
@@ -23,7 +23,7 @@ func NewRecordWriterDKVP(writerOptions *clitypes.TWriterOptions) *RecordWriterDK
 }
 
 func (this *RecordWriterDKVP) Write(
-	outrec *containers.Lrec,
+	outrec *lib.Lrec,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

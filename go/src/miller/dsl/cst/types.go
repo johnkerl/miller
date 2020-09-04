@@ -1,7 +1,6 @@
 package cst
 
 import (
-	"miller/containers"
 	"miller/lib"
 )
 
@@ -41,15 +40,15 @@ import (
 
 // ----------------------------------------------------------------
 type State struct {
-	Inrec   *containers.Lrec
-	Context *containers.Context
+	Inrec   *lib.Lrec
+	Context *lib.Context
 	// oosvars too
 	// stack frames will go into individual statement-block nodes
 }
 
 func NewState(
-	inrec *containers.Lrec,
-	context *containers.Context,
+	inrec *lib.Lrec,
+	context *lib.Context,
 ) *State {
 	return &State{
 		Inrec:   inrec,

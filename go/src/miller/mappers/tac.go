@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 	"miller/mapping"
 )
 
@@ -82,17 +82,17 @@ func NewMapperTac() (*MapperTac, error) {
 }
 
 func (this *MapperTac) Map(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	if inrecAndContext.Lrec != nil {
 		this.lrecsAndContexts.PushFront(inrecAndContext)
 	} else {
 		// end of stream
 		for e := this.lrecsAndContexts.Front(); e != nil; e = e.Next() {
-			outrecsAndContexts <- e.Value.(*containers.LrecAndContext)
+			outrecsAndContexts <- e.Value.(*lib.LrecAndContext)
 		}
-		outrecsAndContexts <- containers.NewLrecAndContext(
+		outrecsAndContexts <- lib.NewLrecAndContext(
 			nil, // signals end of input record stream
 			&inrecAndContext.Context,
 		)

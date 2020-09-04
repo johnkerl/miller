@@ -4,13 +4,13 @@ import (
 	"flag"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 )
 
 type IRecordMapper interface {
 	Map(
-		inrecAndContext *containers.LrecAndContext,
-		outrecsAndContexts chan<- *containers.LrecAndContext,
+		inrecAndContext *lib.LrecAndContext,
+		outrecsAndContexts chan<- *lib.LrecAndContext,
 	)
 }
 

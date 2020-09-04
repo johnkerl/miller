@@ -1,20 +1,20 @@
 package mapping
 
 import (
-	"miller/containers"
+	"miller/lib"
 )
 
 func ChainMapper(
-	inrecsAndContexts <-chan *containers.LrecAndContext,
+	inrecsAndContexts <-chan *lib.LrecAndContext,
 	recordMappers []IRecordMapper, // not *recordMapper since this is an interface
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	i := 0
 	n := len(recordMappers)
 
-	intermediateChannels := make([]chan *containers.LrecAndContext, n-1)
+	intermediateChannels := make([]chan *lib.LrecAndContext, n-1)
 	for i = 0; i < n-1; i++ {
-		intermediateChannels[i] = make(chan *containers.LrecAndContext, 1)
+		intermediateChannels[i] = make(chan *lib.LrecAndContext, 1)
 	}
 
 	// r M0 w
@@ -42,9 +42,9 @@ func ChainMapper(
 }
 
 func runSingleMapper(
-	inrecsAndContexts <-chan *containers.LrecAndContext,
+	inrecsAndContexts <-chan *lib.LrecAndContext,
 	recordMapper IRecordMapper,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	for {
 		lrecAndContext := <-inrecsAndContexts

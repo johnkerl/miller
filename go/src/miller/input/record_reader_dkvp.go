@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/containers"
 	"miller/lib"
 )
 
@@ -25,8 +24,8 @@ func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDK
 
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
-	context containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -43,7 +42,7 @@ func (this *RecordReaderDKVP) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- containers.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewLrecAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,8 +51,8 @@ func (this *RecordReaderDKVP) Read(
 func (this *RecordReaderDKVP) processHandle(
 	handle *os.File,
 	filename string,
-	context *containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context *lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -72,7 +71,7 @@ func (this *RecordReaderDKVP) processHandle(
 			line = strings.TrimRight(line, "\n")
 			lrec := lrecFromDKVPLine(&line, &this.ifs, &this.ips)
 			context.UpdateForInputRecord(lrec)
-			inrecsAndContexts <- containers.NewLrecAndContext(
+			inrecsAndContexts <- lib.NewLrecAndContext(
 				lrec,
 				context,
 			)
@@ -85,8 +84,8 @@ func lrecFromDKVPLine(
 	line *string,
 	ifs *string,
 	ips *string,
-) *containers.Lrec {
-	lrec := containers.NewLrec()
+) *lib.Lrec {
+	lrec := lib.NewLrec()
 	pairs := strings.Split(*line, *ifs)
 	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)

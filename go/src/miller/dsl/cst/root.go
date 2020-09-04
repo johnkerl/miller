@@ -3,8 +3,8 @@ package cst
 import (
 	"errors"
 
-	"miller/containers"
 	"miller/dsl"
+	"miller/lib"
 )
 
 // ================================================================
@@ -55,7 +55,7 @@ func Build(ast *dsl.AST) (*Root, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *Root) Execute(state *State) *containers.Lrec {
+func (this *Root) Execute(state *State) *lib.Lrec {
 
 	for _, statement := range this.executables {
 		statement.Execute(state)

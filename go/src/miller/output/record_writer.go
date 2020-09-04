@@ -1,10 +1,10 @@
 package output
 
 import (
-	"miller/containers"
+	"miller/lib"
 )
 
 // Convention: nil outrec signifies end of record stream
 type IRecordWriter interface {
-	Write(outrec *containers.Lrec)
+	Write(outrec *lib.Lrec)
 }

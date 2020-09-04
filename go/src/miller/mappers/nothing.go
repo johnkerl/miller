@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 	"miller/mapping"
 )
 
@@ -80,8 +80,8 @@ func NewMapperNothing() (*MapperNothing, error) {
 }
 
 func (this *MapperNothing) Map(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	if inrecAndContext.Lrec == nil { // end of stream
 		outrecsAndContexts <- inrecAndContext

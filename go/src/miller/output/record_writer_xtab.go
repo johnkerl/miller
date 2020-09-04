@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 )
 
 // ostream *os.File in constructors/factory
@@ -20,7 +20,7 @@ func NewRecordWriterXTAB(writerOptions *clitypes.TWriterOptions) *RecordWriterXT
 }
 
 func (this *RecordWriterXTAB) Write(
-	outrec *containers.Lrec,
+	outrec *lib.Lrec,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

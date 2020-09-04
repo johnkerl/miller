@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 	"miller/mapping"
 )
 
@@ -176,8 +176,8 @@ func NewMapperCut(
 
 // ----------------------------------------------------------------
 func (this *MapperCut) Map(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	if !this.doComplement {
 		if !this.doArgOrder {
@@ -193,12 +193,12 @@ func (this *MapperCut) Map(
 // ----------------------------------------------------------------
 // mlr cut -f a,b,c
 func (this *MapperCut) includeWithInputOrder(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	inrec := inrecAndContext.Lrec
 	if inrec != nil { // not end of record stream
-		outrec := containers.NewLrec()
+		outrec := lib.NewLrec()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			fieldName := *pe.Key
 			_, wanted := this.fieldNameSet[fieldName]
@@ -206,7 +206,7 @@ func (this *MapperCut) includeWithInputOrder(
 				outrec.Put(&fieldName, pe.Value) // inrec will be GC'ed
 			}
 		}
-		outrecAndContext := containers.NewLrecAndContext(outrec, &inrecAndContext.Context)
+		outrecAndContext := lib.NewLrecAndContext(outrec, &inrecAndContext.Context)
 		outrecsAndContexts <- outrecAndContext
 	} else {
 		outrecsAndContexts <- inrecAndContext
@@ -216,19 +216,19 @@ func (this *MapperCut) includeWithInputOrder(
 // ----------------------------------------------------------------
 // mlr cut -o -f a,b,c
 func (this *MapperCut) includeWithArgOrder(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	inrec := inrecAndContext.Lrec
 	if inrec != nil { // not end of record stream
-		outrec := containers.NewLrec()
+		outrec := lib.NewLrec()
 		for _, fieldName := range this.fieldNameList {
 			value := inrec.Get(&fieldName)
 			if value != nil {
 				outrec.Put(&fieldName, value)
 			}
 		}
-		outrecAndContext := containers.NewLrecAndContext(outrec, &inrecAndContext.Context)
+		outrecAndContext := lib.NewLrecAndContext(outrec, &inrecAndContext.Context)
 		outrecsAndContexts <- outrecAndContext
 	} else {
 		outrecsAndContexts <- inrecAndContext
@@ -238,8 +238,8 @@ func (this *MapperCut) includeWithArgOrder(
 // ----------------------------------------------------------------
 // mlr cut -x -f a,b,c
 func (this *MapperCut) exclude(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	inrec := inrecAndContext.Lrec
 	if inrec != nil { // not end of record stream

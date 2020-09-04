@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
 	"miller/lib"
 )
 
@@ -25,8 +24,8 @@ func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV
 
 func (this *RecordReaderCSV) Read(
 	filenames []string,
-	context containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -43,7 +42,7 @@ func (this *RecordReaderCSV) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- containers.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewLrecAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,8 +51,8 @@ func (this *RecordReaderCSV) Read(
 func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
-	context *containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context *lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -87,7 +86,7 @@ func (this *RecordReaderCSV) processHandle(
 			return
 		}
 
-		lrec := containers.NewLrec()
+		lrec := lib.NewLrec()
 
 		// TODO: check for length mismatches
 		n := len(header)
@@ -99,7 +98,7 @@ func (this *RecordReaderCSV) processHandle(
 		}
 		context.UpdateForInputRecord(lrec)
 
-		inrecsAndContexts <- containers.NewLrecAndContext(
+		inrecsAndContexts <- lib.NewLrecAndContext(
 			lrec,
 			context,
 		)

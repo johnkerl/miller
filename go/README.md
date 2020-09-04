@@ -29,7 +29,7 @@ Donald Knuth famously said: *Programs are meant to be read by humans and only in
 During the coding of Miller, I've been guided by the following:
 
 * *Miller should be pleasant to read.*
-  * If you want to fix a bug, you should be able to quickly and confidently find out where an how.
+  * If you want to fix a bug, you should be able to quickly and confidently find out where and how.
   * If you want to learn something about Go channels, or lexing/parsing in Go -- especially if you don't already know much about them -- the comments should help you learn what you want to.
   * If you're the kind of person who reads other people's code for fun, well, the code should be fun, as well as readable.
   * `README.md` files throughout the directory tree are intended to give you a sense of what is where, what to read first and and what doesn't need reading right away, and so on -- so you spend a minimum of time being confused or frustrated.
@@ -41,7 +41,7 @@ During the coding of Miller, I've been guided by the following:
   * It should be quick to find out if you've made a mistake -- hence the `reg_test/run` regression script.
   * It should be quick to find out what to do next as you iteratively develop -- see for example [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md).
 * *The language should be an asset, not a liability.*
-  * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward to read, and fun to write.  I hope you enjoy it as much as I have.
+  * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward, and fun.  I hope you enjoy it as much as I have.
 
 # Directory structure
 
@@ -83,7 +83,6 @@ So, in broad overview, the key packages are:
 * Main entry point is `mlr.go`; everything else in `src/miller`.
 * `src/miller/lib`:
   * Implementation of the `Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
-* `src/miller/containers`:
   * `Lrec` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `lrec.go` for more details.
   * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a mapper chain of `put` then `filter`, and a JSON record-writer.

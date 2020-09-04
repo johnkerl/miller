@@ -6,7 +6,7 @@ TOP OF LIST:
 * neaten/error-proof:
   o lrecEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
     or remove. (keeping pointers allows nil-check which is good.)
-  o inrec *containers.Lrec is good for default no-copy across channels ... needs
+  o inrec *lib.Lrec is good for default no-copy across channels ... needs
     a big red flag though for things like the repeat verb (maybe *only* that one ...)
 
 * array/map

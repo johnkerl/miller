@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
 	"miller/lib"
 	"miller/mapping"
 )
@@ -150,8 +149,8 @@ func NewMapperCat(
 }
 
 func (this *MapperCat) Map(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	lrec := inrecAndContext.Lrec
 	if lrec != nil { // not end of record stream

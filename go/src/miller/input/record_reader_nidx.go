@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/containers"
 	"miller/lib"
 )
 
@@ -27,8 +26,8 @@ func NewRecordReaderNIDX(readerOptions *clitypes.TReaderOptions) *RecordReaderNI
 
 func (this *RecordReaderNIDX) Read(
 	filenames []string,
-	context containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -45,7 +44,7 @@ func (this *RecordReaderNIDX) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- containers.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewLrecAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -54,8 +53,8 @@ func (this *RecordReaderNIDX) Read(
 func (this *RecordReaderNIDX) processHandle(
 	handle *os.File,
 	filename string,
-	context *containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context *lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -76,7 +75,7 @@ func (this *RecordReaderNIDX) processHandle(
 			lrec := lrecFromNIDXLine(&line)
 
 			context.UpdateForInputRecord(lrec)
-			inrecsAndContexts <- containers.NewLrecAndContext(
+			inrecsAndContexts <- lib.NewLrecAndContext(
 				lrec,
 				context,
 			)
@@ -87,8 +86,8 @@ func (this *RecordReaderNIDX) processHandle(
 // ----------------------------------------------------------------
 func lrecFromNIDXLine(
 	line *string,
-) *containers.Lrec {
-	lrec := containers.NewLrec()
+) *lib.Lrec {
+	lrec := lib.NewLrec()
 	values := strings.Split(*line, " ") // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {

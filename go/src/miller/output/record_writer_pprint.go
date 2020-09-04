@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"miller/clitypes"
-	"miller/containers"
+	"miller/lib"
 )
 
 // ostream *os.File in constructors/factory
@@ -21,7 +21,7 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 
 // xxx this is very naive at present -- needs copy from the C version.
 func (this *RecordWriterPPRINT) Write(
-	outrec *containers.Lrec,
+	outrec *lib.Lrec,
 ) {
 	// No output until end of record stream, since we need to find out max
 	// width down each column.
@@ -34,7 +34,7 @@ func (this *RecordWriterPPRINT) Write(
 	maxWidths := make(map[string]int)
 
 	for e := this.lrecs.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*containers.Lrec)
+		outrec := e.Value.(*lib.Lrec)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			width := len(pe.Value.String())
 			oldMaxWidth := maxWidths[*pe.Key]
@@ -54,7 +54,7 @@ func (this *RecordWriterPPRINT) Write(
 
 	onFirst := true
 	for e := this.lrecs.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*containers.Lrec)
+		outrec := e.Value.(*lib.Lrec)
 
 		// Print header line
 		if onFirst {

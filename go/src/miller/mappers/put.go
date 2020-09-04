@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/containers"
 	"miller/dsl"
 	"miller/dsl/cst"
+	"miller/lib"
 	"miller/mapping"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
@@ -160,8 +160,8 @@ func NewASTFromString(dslString string) (*dsl.AST, error) {
 }
 
 func (this *MapperPut) Map(
-	inrecAndContext *containers.LrecAndContext,
-	outrecsAndContexts chan<- *containers.LrecAndContext,
+	inrecAndContext *lib.LrecAndContext,
+	outrecsAndContexts chan<- *lib.LrecAndContext,
 ) {
 	inrec := inrecAndContext.Lrec
 	context := inrecAndContext.Context
@@ -170,12 +170,12 @@ func (this *MapperPut) Map(
 		cstState := cst.NewState(inrec, &context)
 		outrec := this.cstRoot.Execute(cstState)
 
-		outrecsAndContexts <- containers.NewLrecAndContext(
+		outrecsAndContexts <- lib.NewLrecAndContext(
 			outrec,
 			&context,
 		)
 	} else {
-		outrecsAndContexts <- containers.NewLrecAndContext(
+		outrecsAndContexts <- lib.NewLrecAndContext(
 			nil, // signals end of input record stream
 			&context,
 		)

@@ -1,8 +1,12 @@
 // ================================================================
-// This is a hashless implementation of insertion-ordered key-value pairs for
-// Miller's fundamental record data structure.
+// ORDERED MAP FROM STRING TO MLRVAL
 //
-// Design:
+// It is an optionally hashless implementation of insertion-ordered key-value
+// pairs for Miller's fundamental record data structure. It's also an
+// ordered-map data structure, suitable for Miller JSON decode/encode.
+//
+// ----------------------------------------------------------------
+// DESIGN
 //
 // * It keeps a doubly-linked list of key-value pairs.
 //
@@ -16,7 +20,13 @@
 //   was found in the Go implementation. Test data was million-line CSV and
 //   DKVP, with a dozen columns or so.
 //
-// Motivation:
+// Note however that an auxiliary constructor is provided which does use
+// a key-to-entry hashmap in place of linear search for get/put/has/delete.
+// This may be useful in certain contexts, even though it's not the default
+// chosen for stream-records.
+//
+// ----------------------------------------------------------------
+// MOTIVATION
 //
 // * The use case for records in Miller is that *all* fields are read from
 //   strings & written to strings (split/join), while only *some* fields are
@@ -39,20 +49,13 @@
 //
 // * Added benefit: the field-rename operation (preserving field order) becomes
 //   trivial.
-//
-// Note however that an auxiliary constructor is provided which does use
-// a key-to-entry hashmap in place of linear search for get/put/has/delete.
-// This may be useful in certain contexts, even though it's not the default
-// chosen for stream-records.
 // ================================================================
 
-package containers
+package lib
 
 import (
 	"bytes"
 	"os"
-
-	"miller/lib"
 )
 
 // ----------------------------------------------------------------
@@ -69,7 +72,7 @@ type Lrec struct {
 
 type lrecEntry struct {
 	Key   *string
-	Value *lib.Mlrval
+	Value *Mlrval
 	Prev  *lrecEntry
 	Next  *lrecEntry
 }
@@ -77,7 +80,6 @@ type lrecEntry struct {
 // ----------------------------------------------------------------
 func NewLrec() *Lrec {
 	return NewLrecNoMap()
-	//return NewLrecMap()
 }
 
 // Faster on record-stream data as noted above.
@@ -118,7 +120,7 @@ func (this *Lrec) Fprint(file *os.File) {
 }
 
 // ----------------------------------------------------------------
-func newLrecEntry(key *string, value *lib.Mlrval) *lrecEntry {
+func newLrecEntry(key *string, value *Mlrval) *lrecEntry {
 	kcopy := *key
 	vcopy := *value
 	return &lrecEntry{
@@ -148,7 +150,7 @@ func (this *Lrec) findEntry(key *string) *lrecEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Put(key *string, value *lib.Mlrval) {
+func (this *Lrec) Put(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newLrecEntry(key, value)
@@ -172,7 +174,7 @@ func (this *Lrec) Put(key *string, value *lib.Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Prepend(key *string, value *lib.Mlrval) {
+func (this *Lrec) Prepend(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newLrecEntry(key, value)
@@ -196,7 +198,7 @@ func (this *Lrec) Prepend(key *string, value *lib.Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func (this *Lrec) Get(key *string) *lib.Mlrval {
+func (this *Lrec) Get(key *string) *Mlrval {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return nil

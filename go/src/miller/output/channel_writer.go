@@ -3,11 +3,11 @@ package output
 import (
 	"os"
 
-	"miller/containers"
+	"miller/lib"
 )
 
 func ChannelWriter(
-	outrecsAndContexts <-chan *containers.LrecAndContext,
+	outrecsAndContexts <-chan *lib.LrecAndContext,
 	recordWriter IRecordWriter,
 	done chan<- bool,
 	ostream *os.File,

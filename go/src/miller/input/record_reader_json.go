@@ -7,7 +7,6 @@ import (
 	"localdeps/ordered"
 
 	"miller/clitypes"
-	"miller/containers"
 	"miller/lib"
 )
 
@@ -20,8 +19,8 @@ func NewRecordReaderJSON(readerOptions *clitypes.TReaderOptions) *RecordReaderJS
 
 func (this *RecordReaderJSON) Read(
 	filenames []string,
-	context containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -38,7 +37,7 @@ func (this *RecordReaderJSON) Read(
 			}
 		}
 	}
-	inrecsAndContexts <- containers.NewLrecAndContext(
+	inrecsAndContexts <- lib.NewLrecAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -47,8 +46,8 @@ func (this *RecordReaderJSON) Read(
 func (this *RecordReaderJSON) processHandle(
 	handle *os.File,
 	filename string,
-	context *containers.Context,
-	inrecsAndContexts chan<- *containers.LrecAndContext,
+	context *lib.Context,
+	inrecsAndContexts chan<- *lib.LrecAndContext,
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -70,7 +69,7 @@ func (this *RecordReaderJSON) processHandle(
 
 	for jsonDecoder.More() {
 
-		lrec := containers.NewLrec()
+		lrec := lib.NewLrec()
 
 		var om *ordered.OrderedMap = ordered.NewOrderedMap()
 		err := jsonDecoder.Decode(om)
@@ -115,7 +114,7 @@ func (this *RecordReaderJSON) processHandle(
 
 		context.UpdateForInputRecord(lrec)
 
-		inrecsAndContexts <- containers.NewLrecAndContext(
+		inrecsAndContexts <- lib.NewLrecAndContext(
 			lrec,
 			context,
 		)

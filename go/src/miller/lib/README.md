@@ -1,6 +1,8 @@
 This contains the implementation of the `lib.Mlrval` datatype which is used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL.
 
-The `lib.Mlrval` structure includes **string, int, float, boolean, void, absent, and error** types (not unlike PHP's `zval`) as well as type-conversion logic for various operators.
+## Mlrval
+
+The `lib.Mlrval` structure includes **string, int, float, boolean, array-of-mlrval, map-string-to-mlrval, void, absent, and error** types as well as type-conversion logic for various operators.
 
 * Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type. Nothing is written to the `$out` field in this case. See also [here](http://johnkerl.org/miller/doc/reference.html#Null_data:_empty_and_absent) for more information.
 * Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`. This is an overlap with `string` type, since a void value looks like an empty string. I've gone back and forth on this (including when I was writing the C implementation) -- whether to retain `void` as a distinct type from empty-string, or not. I ended up keeping it as it made the `Mlrval` logic easier to understand.
@@ -14,3 +16,14 @@ The `lib.Mlrval` structure includes **string, int, float, boolean, void, absent,
     * The auto-overflowing math operators `+`, `*`, etc. map ints to ints unless they overflow in which case float is produced.
     * The int-preserving math operators `.+`, `.*`, etc. map ints to ints even if they overflow.
   * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the `Mlrval` class implements.
+* Since a Mlrval can be of type array-of-mlrval or map-string-to-mlrval, a Mlrval is suited for JSON decoding/encoding.
+
+# Lrec
+
+`lib.Lrec` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `lrec.go` for more details.
+
+It's also an ordered map structure, with string keys and Mlrval values. This is used within Mlrval itself.
+
+# Context
+
+`lib.Context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
