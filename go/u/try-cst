@@ -91,3 +91,5 @@ echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = false ? %%%panic%%% : 5'
 echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][1]'
 echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][-1]'
 echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][NR]'
+
+echo; mlr --from u/s.dkvp --idkvp --opprint put '$z = {"a":$a,"b":$b,"i":$i,"x":$x,"y":$y}["b"]'

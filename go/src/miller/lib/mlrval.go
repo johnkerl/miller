@@ -40,11 +40,8 @@ type Mlrval struct {
 	intval        int64
 	floatval      float64
 	boolval       bool
-
-	arrayval []Mlrval
-
-	// TODO:
-	// mapval []OrderedMap[string]*Mlrval
+	arrayval      []Mlrval
+	mapval        *Mlrval
 }
 
 // Enumeration for mlrval types

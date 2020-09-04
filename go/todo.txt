@@ -1,10 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! rename lrec.go et al.
-  o files
-
-* check all struct-initialized to make sure they're all using colon syntax
+* check all struct-initializers to make sure they're all using colon syntax
 
 * reg_test/run iterate
 

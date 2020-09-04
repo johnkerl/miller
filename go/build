@@ -1,0 +1,15 @@
+#!/bin/bash
+
+verbose=""
+if [ "$1" = "-v" ]; then
+  set -x
+  verbose="-v"
+fi
+
+set -euo pipefail
+
+./build-go
+./fmter
+check $verbose
+
+echo OK

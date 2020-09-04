@@ -1,10 +1,18 @@
 #!/bin/bash
 
-u/try-io    > u/try-io.out
-u/try-chain > u/try-chain.out
-u/try-verbs > u/try-verbs.out
-u/try-parse > u/try-parse.out
-u/try-cst   > u/try-cst.out
+runner="sh"
+if [ "$1" = "-v" ]; then
+  set -x
+  runner="sh -x"
+fi
+
+set -euo pipefail
+
+$runner u/try-io    > u/try-io.out
+$runner u/try-chain > u/try-chain.out
+$runner u/try-verbs > u/try-verbs.out
+$runner u/try-parse > u/try-parse.out
+$runner u/try-cst   > u/try-cst.out
 
 git diff \
   u/try-io.out \
@@ -12,4 +20,3 @@ git diff \
   u/try-verbs.out \
   u/try-parse.out \
   u/try-cst.out
-

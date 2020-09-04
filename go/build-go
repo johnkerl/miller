@@ -1,5 +1,4 @@
 #!/bin/bash
 
 export GOPATH=$(pwd)
-#./build-dsl
 go build mlr.go

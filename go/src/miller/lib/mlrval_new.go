@@ -15,6 +15,7 @@ func MlrvalFromError() Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -27,6 +28,7 @@ func MlrvalFromAbsent() Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -39,6 +41,7 @@ func MlrvalFromVoid() Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -51,6 +54,7 @@ func MlrvalFromString(input string) Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -67,6 +71,7 @@ func MlrvalFromInt64String(input string) Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -79,6 +84,7 @@ func MlrvalFromInt64(input int64) Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -106,6 +112,7 @@ func MlrvalFromFloat64String(input string) Mlrval {
 		floatval:      fval,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -118,6 +125,7 @@ func MlrvalFromFloat64(input float64) Mlrval {
 		floatval:      input,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -139,6 +147,7 @@ func MlrvalFromTrue() Mlrval {
 		floatval:      0.0,
 		boolval:       true,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -151,6 +160,7 @@ func MlrvalFromFalse() Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      nil,
+		mapval:        nil,
 	}
 }
 
@@ -213,5 +223,6 @@ func MlrvalFromArrayLiteral(input []Mlrval) Mlrval {
 		floatval:      0.0,
 		boolval:       false,
 		arrayval:      input,
+		mapval:        nil,
 	}
 }

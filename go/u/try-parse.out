@@ -569,3 +569,23 @@ RAW AST:
                 * IntLiteral "9"
             * IntLiteral "1"
 
+
+DSL EXPRESSION:
+$z = {"a":1, "b":2, "c":3}["b"]
+RAW AST:
+* StatementBlock
+    * SrecDirectAssignment "="
+        * DirectFieldName "z"
+        * ArrayOrMapIndexAccess "[]"
+            * MapLiteral "{}"
+                * MapLiteralKeyValuePair ":"
+                    * StringLiteral "a"
+                    * IntLiteral "1"
+                * MapLiteralKeyValuePair ":"
+                    * StringLiteral "b"
+                    * IntLiteral "2"
+                * MapLiteralKeyValuePair ":"
+                    * StringLiteral "c"
+                    * IntLiteral "3"
+            * StringLiteral "b"
+
