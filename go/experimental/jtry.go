@@ -4,18 +4,19 @@ import (
 	"fmt"
 	"os"
 
+	"encoding/json"
+
 	"miller/lib"
 )
 
 // ----------------------------------------------------------------
 func main() {
-	for _, arg := range(os.Args[1:]) {
-		mlrval := lib.MlrvalFromPending()
-		err := mlrval.UnmarshalJSON([]byte(arg))
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println(mlrval)
-		}
+	decoder := json.NewDecoder(os.Stdin)
+
+	mlrval, err := lib.MlrvalDecodeFromJSON(decoder)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
+	fmt.Println(mlrval)
 }
