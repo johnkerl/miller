@@ -49,6 +49,14 @@ func (this *Mlrval) IsArray() bool {
 func (this *Mlrval) IsMap() bool {
 	return this.mvtype == MT_MAP
 }
+
+func (this *Mlrval) GetArray() []Mlrval {
+	if this.mvtype == MT_ARRAY {
+		return this.arrayval
+	} else {
+		return nil
+	}
+}
 func (this *Mlrval) GetMap() *Mlrmap {
 	if this.mvtype == MT_MAP {
 		return this.mapval

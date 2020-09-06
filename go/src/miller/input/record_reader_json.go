@@ -69,6 +69,7 @@ func (this *RecordReaderJSON) processHandle(
 		// * Non-collection types are valid but unmillerable JSON.
 
 		if mlrval.IsMap() {
+			// TODO: make a helper method
 			record := mlrval.GetMap()
 			if record == nil {
 				echan <- errors.New("Internal coding error detected in JSON record-reader")
@@ -79,7 +80,35 @@ func (this *RecordReaderJSON) processHandle(
 				record,
 				context,
 			)
+		} else if mlrval.IsArray() {
+			records := mlrval.GetArray()
+			if records == nil {
+				echan <- errors.New("Internal coding error detected in JSON record-reader")
+				return
+			}
+			for _, mlrval := range records {
+				if !mlrval.IsMap() {
+					// TODO: more context
+					echan <- errors.New("Valid but unmillerable JSON")
+					return
+				}
+				record := mlrval.GetMap()
+				if record == nil {
+					echan <- errors.New("Internal coding error detected in JSON record-reader")
+					return
+				}
+				context.UpdateForInputRecord(record)
+				inrecsAndContexts <- lib.NewRecordAndContext(
+					record,
+					context,
+				)
+
+			}
+
 		} else {
+			// TODO: more context
+			echan <- errors.New("Valid but unmillerable JSON")
+			return
 		}
 	}
 }
