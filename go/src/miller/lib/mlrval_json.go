@@ -57,12 +57,45 @@ import (
 // * Number, for JSON numbers
 // * string, for JSON string literals
 // * nil, for JSON null
+//
+// ----------------------------------------------------------------
+// Note: we accept a sequence of valid JSON items, not just a JSON item.
+// E.g. either
+//
+//   {
+//     "a": 1,
+//     "b": 2
+//   }
+//   {
+//     "a": 3,
+//     "b": 4
+//   }
+//
+// or
+//
+//   [
+//     {
+//       "a": 1,
+//       "b": 2
+//     },
+//     {
+//       "a": 3,
+//       "b": 4
+//     }
+//   ]
+//
+// This is so the Miller JSON record-reader can be streaming, not needing to
+// ingest all records at once, and operable within a tail -f context.
+// ================================================================
 
 // ----------------------------------------------------------------
 func (this *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 	*this = MlrvalFromPending()
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
-	mlrval, err := MlrvalDecodeFromJSON(decoder)
+	mlrval, eof, err := MlrvalDecodeFromJSON(decoder)
+	if eof {
+		return errors.New("Miller JSON parser: unexpected premature EOF.")
+	}
 	if err != nil {
 		return err
 	}
@@ -71,45 +104,45 @@ func (this *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 }
 
 // ----------------------------------------------------------------
-func MlrvalDecodeFromJSON(decoder *json.Decoder) (*Mlrval, error) {
+func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err error) {
 	// Causes the decoder to unmarshal a number into an interface{} as a Number
 	// instead of as a float64.
 	decoder.UseNumber()
 
 	startToken, err := decoder.Token()
 	if err == io.EOF {
-		return nil, errors.New("Miller JSON reader: Unexpected end of file")
+		return nil, true, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	delimiter, isDelim := startToken.(json.Delim)
 	if !isDelim {
 		if startToken == nil {
 			mlrval := MlrvalFromVoid()
-			return &mlrval, nil
+			return &mlrval, false, nil
 		}
 
 		sval, ok := startToken.(string)
 		if ok {
 			mlrval := MlrvalFromString(sval)
-			return &mlrval, nil
+			return &mlrval, false, nil
 		}
 
 		bval, ok := startToken.(bool)
 		if ok {
 			mlrval := MlrvalFromBool(bval)
-			return &mlrval, nil
+			return &mlrval, false, nil
 		}
 
 		nval, ok := startToken.(json.Number)
 		if ok {
 			mlrval := MlrvalFromInferredType(nval.String())
-			return &mlrval, nil
+			return &mlrval, false, nil
 		}
 
-		return nil, errors.New(
+		return nil, false, errors.New(
 			"Miller JSON reader: internal coding error: non-delimiter token unhandled",
 		)
 
@@ -127,7 +160,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (*Mlrval, error) {
 			expectedClosingDelimiter = '}'
 			collectionType = "JSON object`"
 		} else {
-			return nil, errors.New(
+			return nil, false, errors.New(
 				"Miller JSON reader: Unhandled opening delimiter \"" + string(delimiter) + "\"",
 			)
 		}
@@ -137,9 +170,13 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (*Mlrval, error) {
 			mlrval = MlrvalEmptyArray()
 
 			for decoder.More() {
-				element, err := MlrvalDecodeFromJSON(decoder)
+				element, eof, err := MlrvalDecodeFromJSON(decoder)
+				if eof {
+					// xxx constify
+					return nil, false, errors.New("Miller JSON parser: unexpected premature EOF.")
+				}
 				if err != nil {
-					return nil, err
+					return nil, false, err
 				}
 				mlrval.ArrayExtend(element)
 			}
@@ -148,20 +185,28 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (*Mlrval, error) {
 			mlrval = MlrvalEmptyMap()
 
 			for decoder.More() {
-				key, err := MlrvalDecodeFromJSON(decoder)
+				key, eof, err := MlrvalDecodeFromJSON(decoder)
+				if eof {
+					// xxx constify
+					return nil, false, errors.New("Miller JSON parser: unexpected premature EOF.")
+				}
 				if err != nil {
-					return nil, err
+					return nil, false, err
 				}
 				if !key.IsString() {
-					return nil, errors.New(
+					return nil, false, errors.New(
 						// TODO: print out what was gotten
 						"Miller JSON reader: obejct keys must be string-valued.",
 					)
 				}
 
-				value, err := MlrvalDecodeFromJSON(decoder)
+				value, eof, err := MlrvalDecodeFromJSON(decoder)
+				if eof {
+					// xxx constify
+					return nil, false, errors.New("Miller JSON parser: unexpected premature EOF.")
+				}
 				if err != nil {
-					return nil, err
+					return nil, false, err
 				}
 
 				// xxx check here string-valued key
@@ -178,23 +223,23 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (*Mlrval, error) {
 
 		endToken, err := decoder.Token()
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 		if endToken == nil {
-			return nil, imbalanceError
+			return nil, false, imbalanceError
 		}
 		dval, ok := endToken.(json.Delim)
 		if !ok {
-			return nil, imbalanceError
+			return nil, false, imbalanceError
 		}
 		if rune(dval) != expectedClosingDelimiter {
-			return nil, imbalanceError
+			return nil, false, imbalanceError
 		}
 
-		return &mlrval, nil
+		return &mlrval, false, nil
 	}
 
-	return nil, errors.New("unimplemented")
+	return nil, false, errors.New("unimplemented")
 }
 
 // ================================================================

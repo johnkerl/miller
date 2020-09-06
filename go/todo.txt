@@ -4,12 +4,14 @@ TOP OF LIST:
 !! stdin read broken! put in checker.
 * echan -> errorChannel throughout
 * inrecsAndContexts -> inputChannel; likewise output
+* fix panic in 'mlr --dkvp cat u/s.json'
 
 ! json unmarshal/marshal at mlrval
   * need nesting-aware json printer
   * thorough UT for json mlrval-parser
   * handle EOF better: '[1,2,3'
-  * how necessary is UnmarshalJSON
+  * how necessary is UnmarshalJSON -- UT only i think ...
+  * doc re no jlistwrap on input to get streaming input
   o support full JSON read/write of nested objects
     - only requirement is that top-level be sequence of string-valued objects ...
     - JSON-to-JSON cat-mapping should be identical

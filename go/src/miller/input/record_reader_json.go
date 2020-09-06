@@ -1,10 +1,10 @@
 package input
 
 import (
-	"encoding/json"
+	"errors"
 	"os"
 
-	"localdeps/ordered"
+	"encoding/json"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -51,88 +51,35 @@ func (this *RecordReaderJSON) processHandle(
 	echan chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
+	decoder := json.NewDecoder(handle)
 
-	jsonDecoder := json.NewDecoder(handle)
-
-	// TODO:
-	// mlrval, err lib.MlrvalDecodeFromJSON(decoder)
-	// if err != nil {
-	// 	...
-	// }
-	// if it's an object: ichan it
-	// else if it's an array: loop over & ichan each if each is an object
-	// else echan
-
-	//	// Read opening bracket
-	//	t, err := jsonDecoder.Token()
-	//	if err != nil {
-	//		echan <- err
-	//		return
-	//	}
-	//	fmt.Printf("%T: %v\n", t, t)
-
-	// Ordered-map idea from:
-	//   https://gitlab.com/c0b/go-ordered-json
-	// found via
-	//   https://github.com/golang/go/issues/27179
-
-	for jsonDecoder.More() {
-
-		record := lib.NewMlrmap()
-
-		var om *ordered.OrderedMap = ordered.NewOrderedMap()
-		err := jsonDecoder.Decode(om)
+	for {
+		mlrval, eof, err := lib.MlrvalDecodeFromJSON(decoder)
+		if eof {
+			break
+		}
 		if err != nil {
 			echan <- err
 			return
 		}
 
-		// Use an iterator func to loop over all key-value pairs.  It is OK to call Set
-		// append-modify new key-value pairs, but not safe to call Delete during
-		// iteration.
-		iter := om.EntriesIter()
-		for {
-			pair, ok := iter()
-			if !ok {
-				break
+		// Find out what we got.
+		// * Map is an input record: deliver it.
+		// * Array is OK if it's array of input record: deliver them.
+		// * Non-collection types are valid but unmillerable JSON.
+
+		if mlrval.IsMap() {
+			record := mlrval.GetMap()
+			if record == nil {
+				echan <- errors.New("Internal coding error detected in JSON record-reader")
+				return
 			}
-
-			key := pair.Key // copy
-			value := pair.Value
-			// TODO: handle object values
-
-			//fmt.Println("value is a ", reflect.TypeOf(value))
-
-			// xxx make helper functions
-			sval, ok := value.(string)
-			if ok {
-				// If it's double-quoted, leave it as a string, even if it
-				// looks like something parseable as int or float.
-				mval := lib.MlrvalFromString(sval)
-				record.Put(&key, &mval)
-			} else {
-				nval, ok := value.(json.Number)
-				if ok {
-					sval = nval.String()
-					mval := lib.MlrvalFromInferredType(sval)
-					record.Put(&key, &mval)
-				}
-			}
+			context.UpdateForInputRecord(record)
+			inrecsAndContexts <- lib.NewRecordAndContext(
+				record,
+				context,
+			)
+		} else {
 		}
-
-		context.UpdateForInputRecord(record)
-
-		inrecsAndContexts <- lib.NewRecordAndContext(
-			record,
-			context,
-		)
 	}
-
-	//	// Read closing bracket
-	//	t, err = jsonDecoder.Token()
-	//	if err != nil {
-	//		echan <- err
-	//		return
-	//	}
-	//	fmt.Printf("%T: %v\n", t, t)
 }
