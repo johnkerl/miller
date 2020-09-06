@@ -54,6 +54,15 @@ func (this *RecordReaderJSON) processHandle(
 
 	jsonDecoder := json.NewDecoder(handle)
 
+	// TODO:
+	// mlrval, err lib.MlrvalDecodeFromJSON(decoder)
+	// if err != nil {
+	// 	...
+	// }
+	// if it's an object: ichan it
+	// else if it's an array: loop over & ichan each if each is an object
+	// else echan
+
 	//	// Read opening bracket
 	//	t, err := jsonDecoder.Token()
 	//	if err != nil {
