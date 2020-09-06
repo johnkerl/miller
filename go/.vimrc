@@ -1,1 +1,1 @@
-map \f :w<C-m>:!build<C-m>
+map \f :w<C-m>:!clear;echo Building ...; echo; build<C-m>

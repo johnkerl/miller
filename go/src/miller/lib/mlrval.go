@@ -57,13 +57,16 @@ type MVType int
 // matrices. If they are changed, it will break the disposition matrices, or
 // they will all need manual re-indexing.
 const (
+	// Type not yet determined, during JSON decode.
+	MT_PENDING MVType = -1
+
 	// E.g. error encountered in one eval & it propagates up the AST at
 	// evaluation time.  Various runtime errors, such as file-not-found, result
 	// in a message to stderr and os.Exit(1). But errors in user-provided data
 	// are intended to result in "(error)"-valued output rather than a crash.
 	// This is analogous to the way that IEEE-754 arithmetic carries around
 	// Inf and NaN through computation chains.
-	MT_ERROR MVType = 0
+	MT_ERROR = 0
 
 	// Key not present in input record, e.g. 'foo = $nosuchkey'
 	MT_ABSENT = 1

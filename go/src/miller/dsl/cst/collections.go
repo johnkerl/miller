@@ -143,7 +143,7 @@ func BuildMapLiteralNode(
 }
 
 func (this *MapLiteralNode) Evaluate(state *State) lib.Mlrval {
-	mlrval := lib.NewMlrvalEmptyMap()
+	mlrval := lib.MlrvalEmptyMap()
 
 	for _, evaluablePair := range this.evaluablePairs {
 		mkey := evaluablePair.Key.Evaluate(state)

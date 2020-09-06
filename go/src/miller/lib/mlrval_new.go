@@ -6,6 +6,19 @@ import (
 
 // Constructors
 
+func MlrvalFromPending() Mlrval {
+	return Mlrval{
+		mvtype:        MT_PENDING,
+		printrep:      "(bug-if-you-see-this-pending-type)",
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
+		mapval:        nil,
+	}
+}
+
 func MlrvalFromError() Mlrval {
 	return Mlrval{
 		mvtype:        MT_ERROR,
@@ -35,7 +48,7 @@ func MlrvalFromAbsent() Mlrval {
 func MlrvalFromVoid() Mlrval {
 	return Mlrval{
 		mvtype:        MT_VOID,
-		printrep:      "(void)",
+		printrep:      "",
 		printrepValid: true,
 		intval:        0,
 		floatval:      0.0,
@@ -78,7 +91,7 @@ func MlrvalFromInt64String(input string) Mlrval {
 func MlrvalFromInt64(input int64) Mlrval {
 	return Mlrval{
 		mvtype:        MT_INT,
-		printrep:      "(bug-if-you-see-this)",
+		printrep:      "(bug-if-you-see-this-int-type)",
 		printrepValid: false,
 		intval:        input,
 		floatval:      0.0,
@@ -119,7 +132,7 @@ func MlrvalFromFloat64String(input string) Mlrval {
 func MlrvalFromFloat64(input float64) Mlrval {
 	return Mlrval{
 		mvtype:        MT_FLOAT,
-		printrep:      "(bug-if-you-see-this)",
+		printrep:      "(bug-if-you-see-this-float-type)",
 		printrepValid: false,
 		intval:        0,
 		floatval:      input,
@@ -217,7 +230,7 @@ func MlrvalFromInferredType(input string) Mlrval {
 func MlrvalFromArrayLiteral(input []Mlrval) Mlrval {
 	return Mlrval{
 		mvtype:        MT_ARRAY,
-		printrep:      "(bug-if-you-see-this)",
+		printrep:      "(bug-if-you-see-this-array-type)",
 		printrepValid: false,
 		intval:        0,
 		floatval:      0.0,
@@ -227,10 +240,23 @@ func MlrvalFromArrayLiteral(input []Mlrval) Mlrval {
 	}
 }
 
-func NewMlrvalEmptyMap() Mlrval {
+func MlrvalEmptyArray() Mlrval {
+	return Mlrval{
+		mvtype:        MT_ARRAY,
+		printrep:      "(bug-if-you-see-this-array-type)",
+		printrepValid: false,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      make([]Mlrval, 0),
+		mapval:        nil,
+	}
+}
+
+func MlrvalEmptyMap() Mlrval {
 	return Mlrval{
 		mvtype:        MT_MAP,
-		printrep:      "(bug-if-you-see-this)",
+		printrep:      "(bug-if-you-see-this-map-type)",
 		printrepValid: false,
 		intval:        0,
 		floatval:      0.0,

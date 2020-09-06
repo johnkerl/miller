@@ -20,6 +20,10 @@ func (this *Mlrval) IsErrorOrVoid() bool {
 	return this.mvtype == MT_ERROR || this.mvtype == MT_VOID
 }
 
+func (this *Mlrval) IsString() bool {
+	return this.mvtype == MT_STRING
+}
+
 func (this *Mlrval) IsBool() bool {
 	return this.mvtype == MT_BOOL
 }

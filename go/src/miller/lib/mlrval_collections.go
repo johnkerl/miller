@@ -50,6 +50,17 @@ func (this *Mlrval) ArrayPut(index *Mlrval, value *Mlrval) {
 }
 
 // ----------------------------------------------------------------
+// TODO: thinking about capacity-resizing
+func (this *Mlrval) ArrayExtend(value *Mlrval) {
+	if this.mvtype != MT_ARRAY {
+		// TODO: need to be careful about semantics here.
+		// Silent no-ops are not good UX ...
+		return
+	}
+	this.arrayval = append(this.arrayval, *value)
+}
+
+// ----------------------------------------------------------------
 func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if this.mvtype != MT_MAP {
 		return MlrvalFromError()

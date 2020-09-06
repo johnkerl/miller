@@ -5,6 +5,10 @@ TOP OF LIST:
 * fmt.Errorf etc -- w/o explicit reference to os.Stderr
 
 ! json unmarshal/marshal at mlrval
+  * make a verbose-parse flag
+  * thorough UT for json mlrval-parser
+  * handle EOF better: '[1,2,3'
+  * how necessary is UnmarshalJSON
   o support full JSON read/write of nested objects
     - only requirement is that top-level be sequence of string-valued objects ...
     - JSON-to-JSON cat-mapping should be identical
