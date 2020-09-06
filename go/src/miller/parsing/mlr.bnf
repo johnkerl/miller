@@ -430,7 +430,7 @@ Statement : StatementInBody ;
 //StatementInBody(A) ::= IndexedLocalAssignment(B).    { A = B; }
 
 //// For user-defined functions
-//StatementInBody(A) ::= md_token_return RHS(B). {
+//StatementInBody(A) ::= md_token_return Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
 //StatementInBody(A) ::= md_token_return MapLiteral(B). {
@@ -624,7 +624,7 @@ StatementInBody : SrecAssignment ;
 //}
 
 //// ----------------------------------------------------------------
-//CondBlock(A) ::= RHS(B) "{" StatementBlock(C) "}". {
+//CondBlock(A) ::= Rvalue(B) "{" StatementBlock(C) "}". {
 //	mlr_dsl_ast_node_replace_text(C, "cond_block");
 //	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
 //}
@@ -632,7 +632,7 @@ StatementInBody : SrecAssignment ;
 //// ----------------------------------------------------------------
 //WhileBlock(A) ::=
 //	md_token_while(O)
-//		"(" RHS(B) ")"
+//		"(" Rvalue(B) ")"
 //		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "while_block");
@@ -644,7 +644,7 @@ StatementInBody : SrecAssignment ;
 //	MD_TOKEN_DO(O)
 //		"{" StatementBlock(B) "}"
 //	md_token_while
-//		"(" RHS(C) ")".
+//		"(" Rvalue(C) ")".
 //{
 //	mlr_dsl_ast_node_replace_text(B, "do_while_block");
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DO_WHILE, B, C);
@@ -1190,7 +1190,7 @@ StatementInBody : SrecAssignment ;
 
 //IfBlock(A) ::=
 //	md_token_if(O)
-//		"(" RHS(B) ")"
+//		"(" Rvalue(B) ")"
 //		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "if_block");
@@ -1199,7 +1199,7 @@ StatementInBody : SrecAssignment ;
 
 //ElifBlock(A) ::=
 //	md_token_elif(O)
-//		"(" RHS(B) ")"
+//		"(" Rvalue(B) ")"
 //		"{" StatementBlock(C) "}".
 //{
 //	mlr_dsl_ast_node_replace_text(C, "elif_block");
@@ -1215,17 +1215,17 @@ StatementInBody : SrecAssignment ;
 //}
 
 //// ----------------------------------------------------------------
-//BareBoolean(A) ::= RHS(B). {
+//BareBoolean(A) ::= Rvalue(B). {
 //	A = B;
 //}
 
 //// ----------------------------------------------------------------
-//md_filter(A) ::= md_token_filter(O) RHS(B). {
+//md_filter(A) ::= md_token_filter(O) Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 //}
 
 //// ----------------------------------------------------------------
-//UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
 //}
 //UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" md_token_full_srec(B). {
@@ -1238,19 +1238,19 @@ StatementInBody : SrecAssignment ;
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
 //}
 
-//NumericLocalDefinition(A) ::= md_token_numeric(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//NumericLocalDefinition(A) ::= md_token_numeric(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION, N, B);
 //}
-//IntLocalDefinition(A) ::= md_token_int(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//IntLocalDefinition(A) ::= md_token_int(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION, N, B);
 //}
-//FloatLocalDefinition(A) ::= md_token_float(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//FloatLocalDefinition(A) ::= md_token_float(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION, N, B);
 //}
-//BooleanLocalDefinition(A) ::= md_token_boolean(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//BooleanLocalDefinition(A) ::= md_token_boolean(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION, N, B);
 //}
-//StringLocalDefinition(A) ::= md_token_string_literal(T) NonindexedLocalVariable(N) "=" RHS(B). {
+//StringLocalDefinition(A) ::= md_token_string_literal(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION, N, B);
 //}
 
@@ -1263,14 +1263,14 @@ StatementInBody : SrecAssignment ;
 //MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" md_token_full_oosvar(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
 //}
-//MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" RHS(C). {
+//MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
 //}
 
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) "="(O) RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) "="(O) Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) "="(O) RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) "="(O) Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
 //}
 
@@ -1301,12 +1301,12 @@ StatementInBody : SrecAssignment ;
 SrecAssignment : SrecDirectAssignment ;
 
 SrecDirectAssignment
-  : FieldName "=" RHS
+  : FieldName "=" Rvalue
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >> ;
 
 //SrecIndirectAssignment(A)  ::=
-//	"$[" RHS "]"
-//	"="(O) RHS(C).
+//	"$[" Rvalue "]"
+//	"="(O) Rvalue(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(
 //		O->text,
@@ -1317,9 +1317,9 @@ SrecDirectAssignment
 //}
 //SrecPositionalNameAssignment(A)  ::=
 //	"$[["
-//			RHS(B)
+//			Rvalue(B)
 //		"]]"
-//	"="(O) RHS(C).
+//	"="(O) Rvalue(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(
 //		O->text,
@@ -1332,9 +1332,9 @@ SrecDirectAssignment
 //// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
 //SrecPositionalValueAssignment(A)  ::=
 //	"$[[["
-//			RHS(B)
+//			Rvalue(B)
 //		"]]]"
-//	"="(O) RHS(C).
+//	"="(O) Rvalue(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(
 //		O->text,
@@ -1348,7 +1348,7 @@ SrecDirectAssignment
 //	);
 //}
 
-//OosvarAssignment(A)  ::= OosvarKeylist(B) "="(O) RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) "="(O) Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 //}
 
@@ -1360,7 +1360,7 @@ SrecDirectAssignment
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
 //}
 
-//FullOosvarAssignment(A)  ::= md_token_full_oosvar(B) "="(O) RHS(C). {
+//FullOosvarAssignment(A)  ::= md_token_full_oosvar(B) "="(O) Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT, B, C);
 //}
 
@@ -1384,7 +1384,7 @@ SrecDirectAssignment
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 //}
 
-//FullSrecAssignment(A)  ::= md_token_full_srec(B) "="(O) RHS(C). {
+//FullSrecAssignment(A)  ::= md_token_full_srec(B) "="(O) Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text,
 //		MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT, B, C);
 //}
@@ -1398,7 +1398,7 @@ SrecDirectAssignment
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT, B, C);
 //}
 
-//EnvAssignment(A)  ::= EnvIndex(B) "="(O) RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) "="(O) Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B, C);
 //}
 
@@ -1407,369 +1407,369 @@ SrecDirectAssignment
 // number of assignment operators times number of possible LHSes.
 
 SrecDirectAssignment
-  : FieldName "||=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "^^=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "&&=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "|="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "^="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "&="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "<<=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName ">>=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "+="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName ".="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "-="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "*="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "/="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "//=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "%="  RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
-  | FieldName "**=" RHS << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  : FieldName "||=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "^^=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "&&=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "|="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "^="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "&="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "<<=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName ">>=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "+="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName ".="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "-="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "*="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "/="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "//=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "%="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
+  | FieldName "**=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeSrecDirectAssignment) >>
 ;
 
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_or_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("||", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_xor_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_and_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_logical_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_or_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("|", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_xor_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_and_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_lsh_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_lsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("<<", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_rsh_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_bitwise_rsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_plus_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_plus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_minus_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_minus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) MD_TOKEN_DOT_EQUALS RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) MD_TOKEN_DOT_EQUALS Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_times_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_times_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_divide_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("/", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_int_divide_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_int_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_mod_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_mod_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_pow_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_pow_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_oplus_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_oplus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_ominus_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_ominus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_otimes_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_otimes_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_odivide_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_int_odivide_equals RHS(C). {
+//OosvarAssignment(A)  ::= OosvarKeylist(B) md_token_int_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_logical_or_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_logical_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("||", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_logical_xor_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_logical_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_logical_and_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_logical_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_or_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("|", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_xor_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_and_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_lsh_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_lsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("<<", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_rsh_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_bitwise_rsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_plus_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_plus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_minus_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_minus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) MD_TOKEN_DOT_EQUALS RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) MD_TOKEN_DOT_EQUALS Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_times_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_times_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_divide_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("/", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_int_divide_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_int_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_mod_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_mod_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_pow_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_pow_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_oplus_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_oplus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_ominus_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_ominus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_otimes_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_otimes_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_odivide_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_int_odivide_equals RHS(C). {
+//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) md_token_int_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_logical_or_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_logical_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("||", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_logical_xor_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_logical_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_logical_and_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_logical_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_or_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("|", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_xor_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_and_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_lsh_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_lsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("<<", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_rsh_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_bitwise_rsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_plus_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_plus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_minus_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_minus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) MD_TOKEN_DOT_EQUALS RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) MD_TOKEN_DOT_EQUALS Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_times_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_times_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_divide_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("/", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_int_divide_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_int_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_mod_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_mod_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_pow_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_pow_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_oplus_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_oplus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_ominus_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_ominus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_otimes_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_otimes_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_odivide_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_int_odivide_equals RHS(C). {
+//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) md_token_int_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
 //// ----------------------------------------------------------------
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_logical_or_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_logical_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("||", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_logical_xor_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_logical_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_logical_and_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_logical_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_or_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_or_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("|", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_xor_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_xor_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("^", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_and_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_and_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("&", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_lsh_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_lsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("<<", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_rsh_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_bitwise_rsh_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_plus_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_plus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_minus_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_minus_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) MD_TOKEN_DOT_EQUALS RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) MD_TOKEN_DOT_EQUALS Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_times_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_times_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_divide_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("/", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_int_divide_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_int_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_mod_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_mod_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_pow_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_pow_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
 
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_otimes_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_otimes_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_odivide_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_odivide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_oint_divide_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_oint_divide_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_omod_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_omod_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
-//EnvAssignment(A)  ::= EnvIndex(B) md_token_opow_equals RHS(C). {
+//EnvAssignment(A)  ::= EnvIndex(B) md_token_opow_equals Rvalue(C). {
 //	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 //		mlr_dsl_ast_node_alloc_binary(".**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 //}
@@ -1831,7 +1831,7 @@ SrecDirectAssignment
 //		M);
 //}
 
-//TeePipe(A) ::= md_token_tee(O) md_token_bitwise_or RHS(P) "," md_token_full_srec(M). {
+//TeePipe(A) ::= md_token_tee(O) md_token_bitwise_or Rvalue(P) "," md_token_full_srec(M). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_TEE,
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P),
 //		M);
@@ -1885,7 +1885,7 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
 //}
 
-//EmitfPipe(A) ::= md_token_emitf(O) md_token_bitwise_or RHS(P) "," EmitfArgs(B). {
+//EmitfPipe(A) ::= md_token_emitf(O) md_token_bitwise_or Rvalue(P) "," EmitfArgs(B). {
 //	B = mlr_dsl_ast_node_set_function_name(B, O->text);
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF, B,
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
@@ -1939,7 +1939,7 @@ SrecDirectAssignment
 //		F));
 //}
 
-//EmitpPipe(A) ::= md_token_emitp(O) md_token_bitwise_or RHS(P) ","
+//EmitpPipe(A) ::= md_token_emitp(O) md_token_bitwise_or Rvalue(P) ","
 //	Emittable(B).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
@@ -1947,7 +1947,7 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 //		P));
 //}
-//EmitpPipe(A) ::= md_token_emitp(O) md_token_bitwise_or RHS(P) ","
+//EmitpPipe(A) ::= md_token_emitp(O) md_token_bitwise_or Rvalue(P) ","
 //	Emittable(B) "," EmitpNamelist(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
@@ -1957,10 +1957,10 @@ SrecDirectAssignment
 //}
 
 //// ----------------------------------------------------------------
-//EmitpNamelist(A) ::= RHS(B). {
+//EmitpNamelist(A) ::= Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("emitp_namelist", MD_AST_NODE_TYPE_EMITP, B);
 //}
-//EmitpNamelist(A) ::= EmitpNamelist(B) "," RHS(C). {
+//EmitpNamelist(A) ::= EmitpNamelist(B) "," Rvalue(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2012,7 +2012,7 @@ SrecDirectAssignment
 //		F));
 //}
 
-//EmitPipe(A) ::= md_token_emit(O) md_token_bitwise_or RHS(P) ","
+//EmitPipe(A) ::= md_token_emit(O) md_token_bitwise_or Rvalue(P) ","
 //	Emittable(B).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
@@ -2020,7 +2020,7 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 //		P));
 //}
-//EmitPipe(A) ::= md_token_emit(O) md_token_bitwise_or RHS(P) ","
+//EmitPipe(A) ::= md_token_emit(O) md_token_bitwise_or Rvalue(P) ","
 //	Emittable(B) "," EmitNamelist(C).
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
@@ -2056,10 +2056,10 @@ SrecDirectAssignment
 //}
 
 //// ----------------------------------------------------------------
-//EmitNamelist(A) ::= RHS(B). {
+//EmitNamelist(A) ::= Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("emit_namelist", MD_AST_NODE_TYPE_EMIT, B);
 //}
-//EmitNamelist(A) ::= EmitNamelist(B) "," RHS(C). {
+//EmitNamelist(A) ::= EmitNamelist(B) "," Rvalue(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2112,14 +2112,14 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
 //}
 
-//EmitpLashedPipe(A) ::= md_token_emitp(O) md_token_bitwise_or RHS(P) ","
+//EmitpLashedPipe(A) ::= md_token_emitp(O) md_token_bitwise_or Rvalue(P) ","
 //	"(" EmitpLashedKeylists(B) ")".
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED,
 //		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B),
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
 //}
-//EmitpLashedPipe(A) ::= md_token_emitp(O) md_token_bitwise_or RHS(P) ","
+//EmitpLashedPipe(A) ::= md_token_emitp(O) md_token_bitwise_or Rvalue(P) ","
 //	"(" EmitpLashedKeylists(B) ")"
 //	"," EmitpLashedNamelist(C).
 //{
@@ -2137,10 +2137,10 @@ SrecDirectAssignment
 //}
 
 ////  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//EmitpLashedNamelist(A) ::= RHS(B). {
+//EmitpLashedNamelist(A) ::= Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("lashed_namelist", MD_AST_NODE_TYPE_EMITP_LASHED, B);
 //}
-//EmitpLashedNamelist(A) ::= EmitpLashedNamelist(B) "," RHS(C). {
+//EmitpLashedNamelist(A) ::= EmitpLashedNamelist(B) "," Rvalue(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2193,14 +2193,14 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
 //}
 
-//EmitLashedPipe(A) ::= md_token_emit(O) md_token_bitwise_or RHS(P) ","
+//EmitLashedPipe(A) ::= md_token_emit(O) md_token_bitwise_or Rvalue(P) ","
 //	"(" EmitLashedKeylists(B) ")".
 //{
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED,
 //		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B),
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
 //}
-//EmitLashedPipe(A) ::= md_token_emit(O) md_token_bitwise_or RHS(P) ","
+//EmitLashedPipe(A) ::= md_token_emit(O) md_token_bitwise_or Rvalue(P) ","
 //	"(" EmitLashedKeylists(B) ")"
 //	"," EmitLashedNamelist(C).
 //{
@@ -2218,10 +2218,10 @@ SrecDirectAssignment
 //}
 
 ////  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//EmitLashedNamelist(A) ::= RHS(B). {
+//EmitLashedNamelist(A) ::= Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("lashed_namelist", MD_AST_NODE_TYPE_EMIT_LASHED, B);
 //}
-//EmitLashedNamelist(A) ::= EmitLashedNamelist(B) "," RHS(C). {
+//EmitLashedNamelist(A) ::= EmitLashedNamelist(B) "," Rvalue(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2250,7 +2250,7 @@ SrecDirectAssignment
 //			F),
 //		mlr_dsl_ast_node_alloc("all", MD_AST_NODE_TYPE_FULL_OOSVAR));
 //}
-//DumpPipe(A) ::= md_token_dump(O) md_token_bitwise_or RHS(P). {
+//DumpPipe(A) ::= md_token_dump(O) md_token_bitwise_or Rvalue(P). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 //			P),
@@ -2281,7 +2281,7 @@ SrecDirectAssignment
 //			F),
 //		B);
 //}
-//DumpPipe(A) ::= md_token_dump(O) md_token_bitwise_or Dumpable(P) RHS(B). {
+//DumpPipe(A) ::= md_token_dump(O) md_token_bitwise_or Dumpable(P) Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 //			P),
@@ -2301,7 +2301,7 @@ SrecDirectAssignment
 //Dumpable(A) ::= MapLiteral(B). {
 //	A = B;
 //}
-//Dumpable(A) ::= RHS(B). {
+//Dumpable(A) ::= Rvalue(B). {
 //	A = B;
 //}
 
@@ -2327,7 +2327,7 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND,
 //			F));
 //}
-//PrintPipe(A) ::= md_token_print(O) md_token_bitwise_or RHS(P) "," Dumpable(C). {
+//PrintPipe(A) ::= md_token_print(O) md_token_bitwise_or Rvalue(P) "," Dumpable(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, C,
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 //			P));
@@ -2356,7 +2356,7 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_NUMERIC_LITERAL),
 //		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
 //}
-//PrintPipe(A) ::= md_token_print(O) md_token_bitwise_or RHS(P). {
+//PrintPipe(A) ::= md_token_print(O) md_token_bitwise_or Rvalue(P). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT,
 //		mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_NUMERIC_LITERAL),
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
@@ -2383,7 +2383,7 @@ SrecDirectAssignment
 //		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND,
 //			F));
 //}
-//PrintnPipe(A) ::= md_token_printn(O) md_token_bitwise_or RHS(P) "," Dumpable(C). {
+//PrintnPipe(A) ::= md_token_printn(O) md_token_bitwise_or Rvalue(P) "," Dumpable(C). {
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, C,
 //		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 //			P));
@@ -2420,15 +2420,15 @@ SrecDirectAssignment
 //}
 
 //// ----------------------------------------------------------------
-//OutputFile(A) ::= RHS(F).          { A = F; }
+//OutputFile(A) ::= Rvalue(F).          { A = F; }
 //OutputFile(A) ::= md_token_stdout(F). { A = F; }
 //OutputFile(A) ::= md_token_stderr(F). { A = F; }
 
 // ================================================================
-// Begin RHS operator-precedence chain
+// Begin Rvalue operator-precedence chain
 // ================================================================
 
-RHS : TernaryTerm ;
+Rvalue : TernaryTerm ;
 
 TernaryTerm
   : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
@@ -2530,12 +2530,12 @@ PowTerm
 // with the operator-precedence chain. :)
 
 MlrvalOrFunction
-  : "(" RHS ")"
+  : "(" Rvalue ")"
   << dsl.Nestable($1) >>
 ;
 
 // ================================================================
-// End RHS operator-precedence chain
+// End Rvalue operator-precedence chain
 // ================================================================
 
 // ----------------------------------------------------------------
@@ -2569,7 +2569,7 @@ DirectFieldName
 ;
 
 IndirectFieldName
-  : "$[" RHS "]"
+  : "$[" Rvalue "]"
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldName) >>
 ;
 
@@ -2586,7 +2586,7 @@ IndirectFieldName
 //MlrvalOrFunction(A) ::= PositionalSrecName(B). {
 //	A = B;
 //}
-//PositionalSrecName(A) ::= "$[[" RHS "]]"
+//PositionalSrecName(A) ::= "$[[" Rvalue "]]"
 //	A = mlr_dsl_ast_node_alloc_unary(
 //		"positional_srec_field_name",
 //		MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
@@ -2600,7 +2600,7 @@ IndirectFieldName
 //}
 //PositionalSrecValue(A) ::= "$"
 //	"[[["
-//		RHS(B)
+//		Rvalue(B)
 //	"]]].  {
 //	A = mlr_dsl_ast_node_alloc_unary(
 //		"indirect_field_name",
@@ -2621,7 +2621,7 @@ IndirectFieldName
 //OosvarKeylist(A) ::= OosvarBasename(B). {
 //	A = B;
 //}
-//OosvarKeylist(A) ::= OosvarKeylist(B) "[" RHS(C) "]". {
+//OosvarKeylist(A) ::= OosvarKeylist(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2646,14 +2646,14 @@ IndirectFieldName
 //}
 
 //// E.g. @["name"]
-//OosvarBasename(A) ::= md_token_at_sign "[" RHS(B) "]". {
+//OosvarBasename(A) ::= md_token_at_sign "[" Rvalue(B) "]". {
 //	A = mlr_dsl_ast_node_alloc_unary("oosvar_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST, B);
 //}
 
 //LocalMapKeylist(A) ::= NonindexedLocalVariable(B). {
 //	A = B;
 //}
-//LocalMapKeylist(A) ::= LocalMapKeylist(B) "[" RHS(C) "]". {
+//LocalMapKeylist(A) ::= LocalMapKeylist(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2691,11 +2691,11 @@ MlrvalOrFunction
 //	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 //}
 
-//IndexedLocalVariable(A) ::= NonindexedLocalVariable(B) "[" RHS(C) "]". {
+//IndexedLocalVariable(A) ::= NonindexedLocalVariable(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE, C);
 //	mlr_dsl_ast_node_free(B);
 //}
-//IndexedLocalVariable(A) ::= IndexedLocalVariable(B) "[" RHS(C) "]". {
+//IndexedLocalVariable(A) ::= IndexedLocalVariable(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 
@@ -2717,7 +2717,7 @@ MlrvalOrFunction
 ////     text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
 ////         text="4", type=NUMERIC_LITERAL.
 ////         text="5", type=NUMERIC_LITERAL.
-//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) "[" RHS(C) "]". {
+//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_binary(
 //		B->text,
 //		MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
@@ -2729,7 +2729,7 @@ MlrvalOrFunction
 //		)
 //	);
 //}
-//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) "[" RHS(C) "]". {
+//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) "[" Rvalue(C) "]". {
 //	// Append to second child node which is list of indexing expressions.
 //	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
 //}
@@ -2774,7 +2774,7 @@ ContextVariable
 //	A = B;
 //}
 
-//EnvIndex(A) ::= md_token_env(B) "[" RHS(C) "]". {
+//EnvIndex(A) ::= md_token_env(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 //}
 
@@ -2822,7 +2822,7 @@ ContextVariable
 //	A = mlr_dsl_ast_node_prepend_arg(C, B);
 //}
 
-//md_fcn_arg(A) ::= RHS(B). {
+//md_fcn_arg(A) ::= Rvalue(B). {
 //	A = B;
 //}
 //md_fcn_arg(A) ::= md_token_full_srec(B). {
@@ -2902,7 +2902,7 @@ ArrayLiteralElements
 
 // ----------------------------------------------------------------
 ArrayLiteralElement
-  : RHS
+  : Rvalue
 ;
 
 // ----------------------------------------------------------------
@@ -2911,7 +2911,7 @@ ArrayLiteralElement
 MlrvalOrFunction : ArrayOrMapIndexAccess ;
 
 ArrayOrMapIndexAccess
-  : MlrvalOrFunction "[" RHS "]" 
+  : MlrvalOrFunction "[" Rvalue "]" 
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -2924,7 +2924,7 @@ MlrvalOrFunction : ArraySliceAccess ;
 
 ArraySliceAccess
 
-  : MlrvalOrFunction "[" RHS ":" RHS "]" 
+  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]" 
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -2933,7 +2933,7 @@ ArraySliceAccess
       dsl.NodeTypeArraySliceAccess,
     )>>
 
-  | MlrvalOrFunction "[" ":" RHS "]" 
+  | MlrvalOrFunction "[" ":" Rvalue "]" 
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -2945,7 +2945,7 @@ ArraySliceAccess
       dsl.NodeTypeArraySliceAccess,
     )>>
 
-  | MlrvalOrFunction "[" RHS ":" "]" 
+  | MlrvalOrFunction "[" Rvalue ":" "]" 
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -3049,7 +3049,7 @@ MapLiteralKeyValuePairs
 
 // ----------------------------------------------------------------
 MapLiteralKeyValuePair
-  : RHS ":" RHS
+  : Rvalue ":" Rvalue
     << dsl.NewASTNodeBinary(
       $1,
       $0,

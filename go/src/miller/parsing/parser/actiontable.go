@@ -2727,7 +2727,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(25), // ], reduce: RHS
+			reduce(25), // ], reduce: Rvalue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -6987,8 +6987,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(25), // $, reduce: RHS
-			reduce(25), // ;, reduce: RHS
+			reduce(25), // $, reduce: Rvalue
+			reduce(25), // ;, reduce: Rvalue
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -15755,7 +15755,7 @@ var actionTab = actionTable{
 			nil,        // ~
 			nil,        // **
 			nil,        // (
-			reduce(25), // ), reduce: RHS
+			reduce(25), // ), reduce: Rvalue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // ]
@@ -20074,7 +20074,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(25), // ], reduce: RHS
+			reduce(25), // ], reduce: Rvalue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -20092,7 +20092,7 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
 			nil,        // [
-			reduce(25), // ,, reduce: RHS
+			reduce(25), // ,, reduce: Rvalue
 			nil,        // {
 			nil,        // }
 		},
@@ -24520,7 +24520,7 @@ var actionTab = actionTable{
 			nil,        // %=
 			nil,        // **=
 			nil,        // ?
-			reduce(25), // :, reduce: RHS
+			reduce(25), // :, reduce: Rvalue
 			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
@@ -35061,7 +35061,7 @@ var actionTab = actionTable{
 			nil,        // %=
 			nil,        // **=
 			nil,        // ?
-			reduce(25), // :, reduce: RHS
+			reduce(25), // :, reduce: Rvalue
 			nil,        // ||
 			nil,        // ^^
 			nil,        // &&
@@ -35097,7 +35097,7 @@ var actionTab = actionTable{
 			nil,        // )
 			nil,        // md_token_field_name
 			nil,        // $[
-			reduce(25), // ], reduce: RHS
+			reduce(25), // ], reduce: Rvalue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -63750,9 +63750,9 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
 			nil,        // [
-			reduce(25), // ,, reduce: RHS
+			reduce(25), // ,, reduce: Rvalue
 			nil,        // {
-			reduce(25), // }, reduce: RHS
+			reduce(25), // }, reduce: Rvalue
 		},
 	},
 	actionRow{ // S768
