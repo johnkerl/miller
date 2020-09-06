@@ -20,24 +20,24 @@ func NewRecordReaderJSON(readerOptions *clitypes.TReaderOptions) *RecordReaderJS
 func (this *RecordReaderJSON) Read(
 	filenames []string,
 	context lib.Context,
-	inrecsAndContexts chan<- *lib.RecordAndContext,
-	echan chan error,
+	inputChannel chan<- *lib.RecordAndContext,
+	errorChannel chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
 		handle := os.Stdin
-		this.processHandle(handle, "(stdin)", &context, inrecsAndContexts, echan)
+		this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 	} else {
 		for _, filename := range filenames {
 			handle, err := os.Open(filename)
 			if err != nil {
-				echan <- err
+				errorChannel <- err
 			} else {
-				this.processHandle(handle, filename, &context, inrecsAndContexts, echan)
+				this.processHandle(handle, filename, &context, inputChannel, errorChannel)
 				handle.Close()
 			}
 		}
 	}
-	inrecsAndContexts <- lib.NewRecordAndContext(
+	inputChannel <- lib.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -47,8 +47,8 @@ func (this *RecordReaderJSON) processHandle(
 	handle *os.File,
 	filename string,
 	context *lib.Context,
-	inrecsAndContexts chan<- *lib.RecordAndContext,
-	echan chan error,
+	inputChannel chan<- *lib.RecordAndContext,
+	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
 	decoder := json.NewDecoder(handle)
@@ -59,7 +59,7 @@ func (this *RecordReaderJSON) processHandle(
 			break
 		}
 		if err != nil {
-			echan <- err
+			errorChannel <- err
 			return
 		}
 
@@ -72,33 +72,33 @@ func (this *RecordReaderJSON) processHandle(
 			// TODO: make a helper method
 			record := mlrval.GetMap()
 			if record == nil {
-				echan <- errors.New("Internal coding error detected in JSON record-reader")
+				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 				return
 			}
 			context.UpdateForInputRecord(record)
-			inrecsAndContexts <- lib.NewRecordAndContext(
+			inputChannel <- lib.NewRecordAndContext(
 				record,
 				context,
 			)
 		} else if mlrval.IsArray() {
 			records := mlrval.GetArray()
 			if records == nil {
-				echan <- errors.New("Internal coding error detected in JSON record-reader")
+				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 				return
 			}
 			for _, mlrval := range records {
 				if !mlrval.IsMap() {
 					// TODO: more context
-					echan <- errors.New("Valid but unmillerable JSON")
+					errorChannel <- errors.New("Valid but unmillerable JSON")
 					return
 				}
 				record := mlrval.GetMap()
 				if record == nil {
-					echan <- errors.New("Internal coding error detected in JSON record-reader")
+					errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 					return
 				}
 				context.UpdateForInputRecord(record)
-				inrecsAndContexts <- lib.NewRecordAndContext(
+				inputChannel <- lib.NewRecordAndContext(
 					record,
 					context,
 				)
@@ -107,7 +107,7 @@ func (this *RecordReaderJSON) processHandle(
 
 		} else {
 			// TODO: more context
-			echan <- errors.New("Valid but unmillerable JSON")
+			errorChannel <- errors.New("Valid but unmillerable JSON")
 			return
 		}
 	}

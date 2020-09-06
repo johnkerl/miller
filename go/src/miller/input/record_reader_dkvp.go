@@ -25,24 +25,24 @@ func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDK
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
 	context lib.Context,
-	inrecsAndContexts chan<- *lib.RecordAndContext,
-	echan chan error,
+	inputChannel chan<- *lib.RecordAndContext,
+	errorChannel chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
 		handle := os.Stdin
-		this.processHandle(handle, "(stdin)", &context, inrecsAndContexts, echan)
+		this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 	} else {
 		for _, filename := range filenames {
 			handle, err := os.Open(filename)
 			if err != nil {
-				echan <- err
+				errorChannel <- err
 			} else {
-				this.processHandle(handle, filename, &context, inrecsAndContexts, echan)
+				this.processHandle(handle, filename, &context, inputChannel, errorChannel)
 				handle.Close()
 			}
 		}
 	}
-	inrecsAndContexts <- lib.NewRecordAndContext(
+	inputChannel <- lib.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,8 +52,8 @@ func (this *RecordReaderDKVP) processHandle(
 	handle *os.File,
 	filename string,
 	context *lib.Context,
-	inrecsAndContexts chan<- *lib.RecordAndContext,
-	echan chan error,
+	inputChannel chan<- *lib.RecordAndContext,
+	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
 
@@ -65,13 +65,13 @@ func (this *RecordReaderDKVP) processHandle(
 			err = nil
 			eof = true
 		} else if err != nil {
-			echan <- err
+			errorChannel <- err
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
 			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
 			context.UpdateForInputRecord(record)
-			inrecsAndContexts <- lib.NewRecordAndContext(
+			inputChannel <- lib.NewRecordAndContext(
 				record,
 				context,
 			)

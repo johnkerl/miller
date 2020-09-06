@@ -5,9 +5,9 @@ import (
 )
 
 func ChainMapper(
-	inrecsAndContexts <-chan *lib.RecordAndContext,
+	inputChannel <-chan *lib.RecordAndContext,
 	recordMappers []IRecordMapper, // not *recordMapper since this is an interface
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	i := 0
 	n := len(recordMappers)
@@ -23,8 +23,8 @@ func ChainMapper(
 	// r M0 i0 M1 i1 M2 i2 M3 w
 
 	for i, recordMapper := range recordMappers {
-		ichan := inrecsAndContexts
-		ochan := outrecsAndContexts
+		ichan := inputChannel
+		ochan := outputChannel
 
 		if i > 0 {
 			ichan = intermediateChannels[i-1]
@@ -42,13 +42,13 @@ func ChainMapper(
 }
 
 func runSingleMapper(
-	inrecsAndContexts <-chan *lib.RecordAndContext,
+	inputChannel <-chan *lib.RecordAndContext,
 	recordMapper IRecordMapper,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	for {
-		recordAndContext := <-inrecsAndContexts
-		recordMapper.Map(recordAndContext, outrecsAndContexts)
+		recordAndContext := <-inputChannel
+		recordMapper.Map(recordAndContext, outputChannel)
 		if recordAndContext.Record == nil { // end of stream
 			break
 		}

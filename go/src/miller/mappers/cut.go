@@ -177,16 +177,16 @@ func NewMapperCut(
 // ----------------------------------------------------------------
 func (this *MapperCut) Map(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	if !this.doComplement {
 		if !this.doArgOrder {
-			this.includeWithInputOrder(inrecAndContext, outrecsAndContexts)
+			this.includeWithInputOrder(inrecAndContext, outputChannel)
 		} else {
-			this.includeWithArgOrder(inrecAndContext, outrecsAndContexts)
+			this.includeWithArgOrder(inrecAndContext, outputChannel)
 		}
 	} else {
-		this.exclude(inrecAndContext, outrecsAndContexts)
+		this.exclude(inrecAndContext, outputChannel)
 	}
 }
 
@@ -194,7 +194,7 @@ func (this *MapperCut) Map(
 // mlr cut -f a,b,c
 func (this *MapperCut) includeWithInputOrder(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
@@ -207,9 +207,9 @@ func (this *MapperCut) includeWithInputOrder(
 			}
 		}
 		outrecAndContext := lib.NewRecordAndContext(outrec, &inrecAndContext.Context)
-		outrecsAndContexts <- outrecAndContext
+		outputChannel <- outrecAndContext
 	} else {
-		outrecsAndContexts <- inrecAndContext
+		outputChannel <- inrecAndContext
 	}
 }
 
@@ -217,7 +217,7 @@ func (this *MapperCut) includeWithInputOrder(
 // mlr cut -o -f a,b,c
 func (this *MapperCut) includeWithArgOrder(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
@@ -229,9 +229,9 @@ func (this *MapperCut) includeWithArgOrder(
 			}
 		}
 		outrecAndContext := lib.NewRecordAndContext(outrec, &inrecAndContext.Context)
-		outrecsAndContexts <- outrecAndContext
+		outputChannel <- outrecAndContext
 	} else {
-		outrecsAndContexts <- inrecAndContext
+		outputChannel <- inrecAndContext
 	}
 }
 
@@ -239,7 +239,7 @@ func (this *MapperCut) includeWithArgOrder(
 // mlr cut -x -f a,b,c
 func (this *MapperCut) exclude(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
@@ -249,7 +249,7 @@ func (this *MapperCut) exclude(
 			}
 		}
 	}
-	outrecsAndContexts <- inrecAndContext
+	outputChannel <- inrecAndContext
 }
 
 //// ----------------------------------------------------------------

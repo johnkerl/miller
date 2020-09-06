@@ -83,16 +83,16 @@ func NewMapperTac() (*MapperTac, error) {
 
 func (this *MapperTac) Map(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	if inrecAndContext.Record != nil {
 		this.recordsAndContexts.PushFront(inrecAndContext)
 	} else {
 		// end of stream
 		for e := this.recordsAndContexts.Front(); e != nil; e = e.Next() {
-			outrecsAndContexts <- e.Value.(*lib.RecordAndContext)
+			outputChannel <- e.Value.(*lib.RecordAndContext)
 		}
-		outrecsAndContexts <- lib.NewRecordAndContext(
+		outputChannel <- lib.NewRecordAndContext(
 			nil, // signals end of input record stream
 			&inrecAndContext.Context,
 		)

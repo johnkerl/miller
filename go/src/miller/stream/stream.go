@@ -54,23 +54,23 @@ func Stream(
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
 	// channels to communicate both of these conditions.
-	echan := make(chan error, 1)
-	donechan := make(chan bool, 1)
+	errorChannel := make(chan error, 1)
+	doneChannel := make(chan bool, 1)
 
 	// Start the reader, mapper, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
-	go recordReader.Read(options.FileNames, *initialContext, inrecs, echan)
+	go recordReader.Read(options.FileNames, *initialContext, inrecs, errorChannel)
 	go mapping.ChainMapper(inrecs, recordMappers, outrecs)
-	go output.ChannelWriter(outrecs, recordWriter, donechan, os.Stdout)
+	go output.ChannelWriter(outrecs, recordWriter, doneChannel, os.Stdout)
 
 	done := false
 	for !done {
 		select {
-		case err := <-echan:
+		case err := <-errorChannel:
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 			os.Exit(1)
-		case _ = <-donechan:
+		case _ = <-doneChannel:
 			done = true
 			break
 		}

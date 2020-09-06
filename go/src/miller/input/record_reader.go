@@ -14,7 +14,7 @@ type IRecordReader interface {
 	Read(
 		filenames []string,
 		initialContext lib.Context,
-		inrecsAndContexts chan<- *lib.RecordAndContext,
-		echan chan error,
+		inputChannel chan<- *lib.RecordAndContext,
+		errorChannel chan error,
 	)
 }

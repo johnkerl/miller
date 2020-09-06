@@ -150,7 +150,7 @@ func NewMapperCat(
 
 func (this *MapperCat) Map(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	record := inrecAndContext.Record
 	if record != nil { // not end of record stream
@@ -161,5 +161,5 @@ func (this *MapperCat) Map(
 			record.Prepend(&key, &value)
 		}
 	}
-	outrecsAndContexts <- inrecAndContext
+	outputChannel <- inrecAndContext
 }

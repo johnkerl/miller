@@ -81,9 +81,9 @@ func NewMapperNothing() (*MapperNothing, error) {
 
 func (this *MapperNothing) Map(
 	inrecAndContext *lib.RecordAndContext,
-	outrecsAndContexts chan<- *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
 ) {
 	if inrecAndContext.Record == nil { // end of stream
-		outrecsAndContexts <- inrecAndContext
+		outputChannel <- inrecAndContext
 	}
 }

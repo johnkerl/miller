@@ -10,7 +10,7 @@ import (
 type IRecordMapper interface {
 	Map(
 		inrecAndContext *lib.RecordAndContext,
-		outrecsAndContexts chan<- *lib.RecordAndContext,
+		outputChannel chan<- *lib.RecordAndContext,
 	)
 }
 
