@@ -89,11 +89,15 @@ func recordFromDKVPLine(
 	pairs := strings.Split(*line, *ifs)
 	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)
-		// xxx range-check
 		key := kv[0]
-		value := lib.MlrvalFromInferredType(kv[1])
-		// to do: avoid re-walk ...
-		record.Put(&key, &value)
+		// xxx check length 0. also, check input is empty since "".split() -> [""] not []
+		if len(kv) == 1 {
+			value := lib.MlrvalFromVoid()
+			record.Put(&key, &value)
+		} else {
+			value := lib.MlrvalFromInferredType(kv[1])
+			record.Put(&key, &value)
+		}
 	}
 	return record
 }

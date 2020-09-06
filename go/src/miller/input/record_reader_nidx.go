@@ -93,7 +93,6 @@ func recordFromNIDXLine(
 	for _, value := range values {
 		i++
 		key := strconv.FormatInt(i, 10)
-		// to do: avoid re-walk ...
 		mval := lib.MlrvalFromInferredType(value)
 		record.Put(&key, &mval)
 	}

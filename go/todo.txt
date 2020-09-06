@@ -1,8 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* fix panic in 'mlr --dkvp cat u/s.json'
-
 ! json unmarshal/marshal at mlrval
   * need nesting-aware json printer
   * thorough UT for json mlrval-parser
