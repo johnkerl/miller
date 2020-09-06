@@ -95,7 +95,8 @@ func DefaultOptions() TOptions {
 		ReaderOptions: DefaultReaderOptions(),
 		WriterOptions: DefaultWriterOptions(),
 
-		NoInput: false,
+		FileNames: make([]string, 0),
+		NoInput:   false,
 	}
 }
 
