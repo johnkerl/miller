@@ -48,8 +48,8 @@ func Stream(
 	}
 
 	// Set up the reader-to-mapper and mapper-to-writer channels.
-	inrecs := make(chan *lib.RecordAndContext, 10)
-	outrecs := make(chan *lib.RecordAndContext, 1)
+	inputChannel := make(chan *lib.RecordAndContext, 10)
+	outputChannel := make(chan *lib.RecordAndContext, 1)
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
@@ -60,9 +60,9 @@ func Stream(
 	// Start the reader, mapper, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
-	go recordReader.Read(options.FileNames, *initialContext, inrecs, errorChannel)
-	go mapping.ChainMapper(inrecs, recordMappers, outrecs)
-	go output.ChannelWriter(outrecs, recordWriter, doneChannel, os.Stdout)
+	go recordReader.Read(options.FileNames, *initialContext, inputChannel, errorChannel)
+	go mapping.ChainMapper(inputChannel, recordMappers, outputChannel)
+	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, os.Stdout)
 
 	done := false
 	for !done {
