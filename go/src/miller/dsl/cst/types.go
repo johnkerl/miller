@@ -89,7 +89,7 @@ type StatementBlockNode struct {
 // ================================================================
 // This is for any right-hand side (RHS) of an assignment statement.  Also, for
 // computed field names on the left-hand side, like '$a . $b' in mlr put '$[$a
-// . $b]' = $x + $y'.
+// . $b]' = $x + $y'. Also known as an "Rvalue".
 type IEvaluable interface {
 	Evaluate(state *State) lib.Mlrval
 }
@@ -107,4 +107,11 @@ func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
 		Key:   key,
 		Value: value,
 	}
+}
+
+// ================================================================
+// This is for any left-hand side (LHS) of an assignment statement.
+// Also known as an "Lvalue".
+type IAssignable interface {
+	Assign(state *State, mlrval lib.Mlrval) error
 }

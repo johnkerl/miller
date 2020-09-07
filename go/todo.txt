@@ -58,6 +58,10 @@ TOP OF LIST:
   o --headerless-csv-output
   o new non-lite DKVP reader/writer
 
+* simplify the DSL
+  o Lvalue rule
+  o single assignment type with left-child implementing a new Assignable interface
+
 * widen DSL coverage
   o begin/end blocks
   o indirect field names, at LHS and RHS
@@ -68,6 +72,7 @@ MAYBE:
 
 * string index/slice access
 * string/array slices on assignment LHS -- ?
+* push/pop/shift/unshift subroutines
 
 ----------------------------------------------------------------
 GOCC UPSTREAMS:
@@ -114,3 +119,4 @@ NITS/NON-IMMEDIATE:
     a big red flag though for things like the repeat verb (maybe *only* that one ...)
 ! clean up the AST API. ish! :^/
 * defer reg_test/run until there is quite a bit more verb/dsl/io expansion
+* doc: no boolish truthy falsy

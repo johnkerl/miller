@@ -2,15 +2,19 @@
 
 * This is not necessarily a full Go port of Miller. At the moment, it's a little spot for some experimentation. Things are very rough and very iterative and very incomplete. I don't commit to finishing a Go port but I very much hope to.
 * One reason Miller exists is to be a useful tool for myself and others; another is it's fun to write. At bare minimum, I'll re-teach myself some Go.
-* In all likelihood, though, this will turn into a full port which will someday become Miller 6.0.
+* In all likelihood, though, this will turn into a full port which will someday become Miller 6.0. As noted below, this will be a win both at the source-code level, and for users of Miller.
 * I hope to retain backward compatibility at the command-line level as much as possible.
-* Benefits of porting to Go:
-  * The lack of a streaming (record-by-record) JSON reader in the C implementation ([issue 99](https://github.com/johnkerl/miller/issues/99)) is immediately solved in the Go implementation.
-  * The quoted-DKVP feature from [issue 266](https://github.com/johnkerl/miller/issues/266) will be easily addressed.
-  * String/number-formatting issues in [issue 211](https://github.com/johnkerl/miller/issues/211), [issue 178](https://github.com/johnkerl/miller/issues/178), [issue 151](https://github.com/johnkerl/miller/issues/151), and [issue 259](https://github.com/johnkerl/miller/issues/259) will be fixed during the Go port.
-  * I think some DST/timezone issues such as [issue 359](https://github.com/johnkerl/miller/issues/359) will be easier to fix using the Go datetime library than using the C datetime library
-  * The code will be easier to read and, I hope, easier for others to contribute to.
 * In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
+
+# Benefits of porting to Go
+
+* The [lack of a streaming (record-by-record) JSON reader](http://johnkerl.org/miller/doc/file-formats.html#JSON_non-streaming) in the C implementation ([issue 99](https://github.com/johnkerl/miller/issues/99)) is immediately solved in the Go implementation.
+* Previously [arrays were not supported in the DSL](http://johnkerl.org/miller/doc/file-formats.html#Arrays); now they will be.
+* [Flattening nested map structures to output records](http://johnkerl.org/miller/doc/file-formats.html#Formatting_JSON_options) was clumsy. Now, Miller will be a full JSON-to-JSON processor, if your inputs and outputs are both JSON; JSON input and output will be idiomatic.
+* The quoted-DKVP feature from [issue 266](https://github.com/johnkerl/miller/issues/266) will be easily addressed.
+* String/number-formatting issues in [issue 211](https://github.com/johnkerl/miller/issues/211), [issue 178](https://github.com/johnkerl/miller/issues/178), [issue 151](https://github.com/johnkerl/miller/issues/151), and [issue 259](https://github.com/johnkerl/miller/issues/259) will be fixed during the Go port.
+* I think some DST/timezone issues such as [issue 359](https://github.com/johnkerl/miller/issues/359) will be easier to fix using the Go datetime library than using the C datetime library
+* The code will be easier to read and, I hope, easier for others to contribute to.
 
 # Efficiency of the Go port
 
