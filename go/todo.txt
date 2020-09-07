@@ -1,7 +1,9 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-o indirect-field-name assignments, with BNF/Lvalue refactor
+* monday:
+  o indirect-field-name assignments, with BNF/Lvalue refactor
+  o ENV
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...

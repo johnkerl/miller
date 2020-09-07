@@ -135,18 +135,9 @@ md_token_FNR : 'F' 'N' 'R' ;
 md_token_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
 md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 
-//"M_PI" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"M_E" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
-//	return md_token_context_variable;
-//}
-//"ENV" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ENV);
-//	return md_token_env;
-//}
+// md_token_M_PI  : 'M' '_' 'P' 'I' `
+// md_token_M_E   : 'M' '_' 'E' ;`
+// md_token_ENV   : 'E' 'N' 'V' ;`
 
 // ----------------------------------------------------------------
 // MILLER KEYWORDS
@@ -157,98 +148,64 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 //   in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
 // * true and false (boolean literals) are also keywords, defined above.
 
-//md_token_if       : 'i' 'f' ;
+//md_token_all      : 'a' 'l' 'l' ;
+//md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
+//md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
+//md_token_call     : 'c' 'a' 'l' 'l' ;
+//md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
+//md_token_do       : 'd' 'o' ;
+//md_token_dump     : 'd' 'u' 'm' 'p' ;
+//md_token_edump    : 'e' 'd' 'u' 'm' 'p' ;
 //md_token_elif     : 'e' 'l' 'i' 'f' ;
 //md_token_else     : 'e' 'l' 's' 'e' ;
-//md_token_do       : 'd' 'o' ;
-//md_token_while    : 'w' 'h' 'i' 'l' 'e'  ;
+//md_token_emit     : 'e' 'm' 'i' 't' ;
+//md_token_emitf    : 'e' 'm' 'i' 't' 'f' ;
+//md_token_emitp    : 'e' 'm' 'i' 't' 'p' ;
+//md_token_end      : 'e' 'n' 'd' ;
+//md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
+//md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
+//md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 //md_token_for      : 'f' 'o' 'r' ;
+//md_token_func     : 'f' 'u' 'n' 'c' ;
+//md_token_if       : 'i' 'f' ;
 //md_token_in       : 'i' 'n' ;
-//md_token_break    : 'b' 'r' 'e' 'a' 'k';
-//md_token_continue : 'c' 'o' 'n' 't' 'i'  'n'  'u' 'e';
-//md_token_filter   : 'f' 'i' 'l' 't' 'e'  'r';
+//md_token_print    : 'p' 'r' 'i' 'n' 't' ;
+//md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+//md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
+//md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
+//md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
+//md_token_subr     : 's' 'u' 'b' 'r' ;
+//md_token_tee      : 't' 'e' 'e' ;
+//md_token_unset    : 'u' 'n' 's' 'e' 't' ;
+//md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
 
-//"unset" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_UNSET);
-//	return md_token_unset;
-//}
-//"tee" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_TEE);
-//	return md_token_tee;
-//}
-//"emitf" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EMITF);
-//	return md_token_emitf;
-//}
-//"emitp" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EMITP);
-//	return md_token_emitp;
-//}
-//"emit" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EMIT);
-//	return md_token_emit;
-//}
-//"dump" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_DUMP);
-//	return md_token_dump;
-//}
-//"edump" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EDUMP);
-//	return md_token_edump;
-//}
-//"print" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_PRINT);
-//	return md_token_print;
-//}
-//"printn" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_PRINTN);
-//	return md_token_printn;
-//}
-//"eprint" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EPRINT);
-//	return md_token_eprint;
-//}
-//"eprintn" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EPRINTN);
-//	return md_token_eprintn;
-//}
-//"stdout" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STDOUT);
-//	return md_token_stdout;
-//}
-//"stderr" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STDERR);
-//	return md_token_stderr;
-//}
+//	md_token_map_type;
+//  "map"
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 
-//"func" {
+//	md_token_var_type;
+//  "var"
 //	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_func_def;
-//}
-//"subr" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_subr_def;
-//}
-//"call" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_subr_call;
-//}
-//"return" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_return;
-//}
-//"begin" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_begin;
-//}
-//"end" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_end;
-//}
-//"all" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_ALL);
-//	return md_token_all;
-//}
+
+//	md_token_numeric_type;
+//  "num"
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
+
+//	md_token_int_type;
+//  "int"
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION);
+
+//	md_token_float_type;
+//  "float"
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
+
+//	md_token_boolean_type;
+//  "bool"
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
+
+//	md_token_string_literal_type;
+//  "str"
+//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -261,69 +218,16 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 // below as "$", then we get an LR-1 conflict. So this must be dealt with at
 // the AST level.
 md_token_field_name : '$' _idchar { _idchar } ;
+// md_token_braced_field_name: \$\{([^\}]|\\.)*\}
+// md_token_full_srec : '$' '*' ;
 
-//\$\* {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FULL_SREC);
-//	return md_token_full_srec;
-//}
+// md_token_oosvar_name : '@' _idchar { _idchar } ;
+// md_token_braced_oosvar_name @\{([^\}]|\\.)*\}
+// md_token_full_oosvar : '@' '*' ;
 
-//\$\{([^\}]|\\.)*\} {
-//	// Note: the parser depends on the dollar sign being here. If this is changed,
-//	// that needs to be changed as well.
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FIELD_NAME);
-//	return md_token_braced_field_name;
-//}
-
-//@[a-zA-Z_0-9]+ {
-//	// Note: the parser depends on the at-sign being here. If this is changed,
-//	// that needs to be changed as well.
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
-//	return md_token_unbraced_oosvar_name;
-//}
-//@\{([^\}]|\\.)*\} {
-//	// Note: the parser depends on the percent-sign being here. If this is changed,
-//	// that needs to be changed as well.
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
-//	return md_token_braced_oosvar_name;
-//}
-//\@\* {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FULL_OOSVAR);
-//	return md_token_full_oosvar;
-//}
-
-//"map" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_map_type;
-//}
-//"var" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-//	return md_token_var_type;
-//}
-//"num" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
-//	return md_token_numeric_type;
-//}
-//"int" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION);
-//	return md_token_int_type;
-//}
-//"float" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
-//	return md_token_float_type;
-//}
-//"bool" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
-//	return md_token_boolean_type;
-//}
-//"str" {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
-//	return md_token_string_literal_type;
-//}
-
-//[a-zA-Z_][a-zA-Z_0-9]* {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-//	return md_token_non_sigil_name;
-//}
+// ----------------------------------------------------------------
+// PANIC TOKEN
+// ----------------------------------------------------------------
 
 // This is for testing short-circuiting of "&&", "||", etc in the CST.  The
 // sole job of the CST evaluator for this token is to panic the process -- so

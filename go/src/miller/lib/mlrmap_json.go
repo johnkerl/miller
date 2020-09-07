@@ -24,7 +24,7 @@ func (this *Mlrmap) MarshalJSON() ([]byte, error) {
 // immediately after its closing curly brace, or a newline, and only the caller
 // can know that.
 //
-// element nesting depth is how deeply our element should be indented. Our
+// The element nesting depth is how deeply our element should be indented. Our
 // closing curly brace is indented one less than that. For example, a
 // root-level record '{"a":1,"b":2}' should be formatted as
 //
@@ -72,7 +72,7 @@ func (this *Mlrmap) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 
 	// Write empty map as '{}'.
 	if this.Head != nil {
-		for i := 0; i < elementNestingDepth - 1; i++ {
+		for i := 0; i < elementNestingDepth-1; i++ {
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
 	}
