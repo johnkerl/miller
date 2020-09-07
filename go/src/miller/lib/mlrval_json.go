@@ -16,6 +16,8 @@ import (
 	"strings"
 )
 
+const MLRVAL_JSON_INDENT_STRING string = "  "
+
 // ================================================================
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
 // nice. What we can have is:
@@ -143,7 +145,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err 
 		}
 
 		return nil, false, errors.New(
-			"Miller JSON reader: internal coding error: non-delimiter token unhandled",
+			"Miller JSON reader internal coding error: non-delimiter token unhandled",
 		)
 
 	} else {
@@ -247,6 +249,10 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err 
 
 // ================================================================
 func (this *Mlrval) MarshalJSON() ([]byte, error) {
+	return this.marshalJSONAux(1)
+}
+
+func (this *Mlrval) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 	switch this.mvtype {
 	case MT_PENDING:
 		return this.marshalJSONPending()
@@ -270,10 +276,10 @@ func (this *Mlrval) MarshalJSON() ([]byte, error) {
 		return this.marshalJSONBool()
 		break
 	case MT_ARRAY:
-		return this.marshalJSONArray()
+		return this.marshalJSONArray(elementNestingDepth)
 		break
 	case MT_MAP:
-		return this.marshalJSONMap()
+		return this.marshalJSONMap(elementNestingDepth)
 		break
 	case MT_DIM: // MT_DIM is one past the last valid type
 		return nil, errors.New("internal coding error detected")
@@ -288,7 +294,7 @@ func (this *Mlrval) MarshalJSON() ([]byte, error) {
 func (this *Mlrval) marshalJSONPending() ([]byte, error) {
 	InternalCodingErrorIf(this.mvtype != MT_PENDING)
 	return nil, errors.New(
-		"Miller: internal coding error: pending-values should not have been produced",
+		"Miller internal coding error: pending-values should not have been produced",
 	)
 }
 
@@ -296,7 +302,7 @@ func (this *Mlrval) marshalJSONPending() ([]byte, error) {
 func (this *Mlrval) marshalJSONAbsent() ([]byte, error) {
 	InternalCodingErrorIf(this.mvtype != MT_ABSENT)
 	return nil, errors.New(
-		"Miller: internal coding error: absent-values should not have been assigned",
+		"Miller internal coding error: absent-values should not have been assigned",
 	)
 }
 
@@ -335,14 +341,31 @@ func (this *Mlrval) marshalJSONBool() ([]byte, error) {
 }
 
 // ----------------------------------------------------------------
-// TODO: find out how to handle indentation in the nested-array/nested-map case ...
-func (this *Mlrval) marshalJSONArray() ([]byte, error) {
+func (this *Mlrval) marshalJSONArray(elementNestingDepth int) ([]byte, error) {
 	InternalCodingErrorIf(this.mvtype != MT_ARRAY)
+
+	// Put an array of all-terminal nodes all on one line, like '[1,2,3,4,5].
+	allTerminal := true
+	for _, element := range this.arrayval {
+		if element.IsArrayOrMap() {
+			allTerminal = false
+			break
+		}
+	}
+	if allTerminal {
+		return this.marshalJSONArraySingleLine(elementNestingDepth)
+	} else {
+		return this.marshalJSONArrayMultipleLines(elementNestingDepth)
+	}
+}
+
+func (this *Mlrval) marshalJSONArraySingleLine(elementNestingDepth int) ([]byte, error) {
 	n := len(this.arrayval)
 	var buffer bytes.Buffer
 	buffer.WriteByte('[')
+
 	for i, element := range this.arrayval {
-		elementBytes, err := element.MarshalJSON()
+		elementBytes, err := element.marshalJSONAux(elementNestingDepth + 1)
 		if err != nil {
 			return nil, err
 		}
@@ -355,10 +378,60 @@ func (this *Mlrval) marshalJSONArray() ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
+// The element nesting depth is how deeply our element should be indented. Our
+// closing bracket is indented one less than that. For example, a
+// record '{"a":1,"b":[3,[4,5],6]"c":7}' should be formatted as
+//
+// {
+//   "a": 1,
+//   "b": [    <-- root-level map element nesting depth is 1
+//     3,      <-- this array's element nesting depth is 2
+//     [4, 5],
+//     6
+//   ],        <-- this array's closing-bracket is 1, one less than its element nesting detph
+//   "c": 7
+// }
+
+func (this *Mlrval) marshalJSONArrayMultipleLines(elementNestingDepth int) ([]byte, error) {
+	n := len(this.arrayval)
+	var buffer bytes.Buffer
+
+	// Write empty array as '[]'
+	buffer.WriteByte('[')
+	if n > 0 {
+		buffer.WriteByte('\n')
+	}
+
+	for i, element := range this.arrayval {
+		elementBytes, err := element.marshalJSONAux(elementNestingDepth + 1)
+		if err != nil {
+			return nil, err
+		}
+		for i := 0; i < elementNestingDepth; i++ {
+			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
+		}
+		buffer.Write(elementBytes)
+		if i < n-1 {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("\n")
+	}
+
+	// Write empty array as '[]'
+	if n > 0 {
+		for i := 0; i < elementNestingDepth-1; i++ {
+			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
+		}
+	}
+
+	buffer.WriteByte(']')
+	return buffer.Bytes(), nil
+}
+
 // ----------------------------------------------------------------
-func (this *Mlrval) marshalJSONMap() ([]byte, error) {
+func (this *Mlrval) marshalJSONMap(elementNestingDepth int) ([]byte, error) {
 	InternalCodingErrorIf(this.mvtype != MT_MAP)
-	bytes, err := this.mapval.MarshalJSON()
+	bytes, err := this.mapval.marshalJSONAux(elementNestingDepth)
 	if err != nil {
 		return nil, err
 	}

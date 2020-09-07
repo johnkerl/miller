@@ -3,7 +3,6 @@ TOP OF LIST:
 
 * json:
   o thorough UT for json mlrval-parser
-  o need nesting-aware json printer
 
   * doc re no jlistwrap on input if they want get streaming input
   o UT JSON-to-JSON cat-mapping should be identical
