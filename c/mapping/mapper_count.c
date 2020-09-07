@@ -19,6 +19,7 @@ typedef struct _mapper_count_state_t {
 	slls_t*   pgroup_by_field_names;
 	long long ungrouped_count;
 	lhmslv_t* pcounts_by_group;
+	int show_counts_only;
 	char* output_field_name;
 } mapper_count_state_t;
 
@@ -38,6 +39,7 @@ static mapper_t* mapper_count_parse_cli(
 static mapper_t* mapper_count_alloc(
 	ap_state_t* pargp,
 	slls_t* pgroup_by_field_names,
+	int show_counts_only,
 	char* output_field_name);
 
 static void mapper_count_free(
@@ -73,7 +75,7 @@ static void mapper_count_usage(
 	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-g {a,b,c}    Field names for distinct count.\n");
-	fprintf(o, "-n            Show only the number of distinct values. Not compatible with -u.\n");
+	fprintf(o, "-n            Show only the number of distinct values. Not interesting without -g.\n");
 	fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", DEFAULT_OUTPUT_FIELD_NAME);
 }
 
@@ -87,25 +89,29 @@ static mapper_t* mapper_count_parse_cli(
 {
 	slls_t* pgroup_by_field_names = NULL;
 	char*   output_field_name = DEFAULT_OUTPUT_FIELD_NAME;
+	int     show_counts_only = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 	ap_define_string_flag(pstate,      "-o", &output_field_name);
+	ap_define_true_flag(pstate,        "-n", &show_counts_only);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_count_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	return mapper_count_alloc(pstate, pgroup_by_field_names, output_field_name);
+	return mapper_count_alloc(pstate, pgroup_by_field_names, show_counts_only,
+		output_field_name);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_count_alloc(
 	ap_state_t* pargp,
 	slls_t* pgroup_by_field_names,
+	int show_counts_only,
 	char* output_field_name)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
@@ -117,6 +123,7 @@ static mapper_t* mapper_count_alloc(
 	pstate->output_field_name     = output_field_name;
 	pstate->ungrouped_count       = 0LL;
 	pstate->pcounts_by_group      = lhmslv_alloc();
+	pstate->show_counts_only      = show_counts_only;
 
 	pmapper->pvstate = pstate;
 
@@ -206,22 +213,34 @@ static sllv_t* mapper_count_process_grouped(
 	} else { // end of record stream
 		sllv_t* poutrecs = sllv_alloc();
 
-		for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
+		if (pstate->show_counts_only) {
 			lrec_t* poutrec = lrec_unbacked_alloc();
 
-			slls_t* pgroup_by_field_values = pa->key;
-
-			sllse_t* pb = pstate->pgroup_by_field_names->phead;
-			sllse_t* pc =         pgroup_by_field_values->phead;
-			for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-				lrec_put(poutrec, pb->value, pc->value, NO_FREE);
-			}
-
-			unsigned long long* pcount = pa->pvvalue;
-			lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(*pcount), FREE_ENTRY_VALUE);
+			unsigned long long count = (unsigned long long)lhmslv_size(pstate->pcounts_by_group);
+			lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(count),
+				FREE_ENTRY_VALUE);
 
 			sllv_append(poutrecs, poutrec);
+		} else {
+			for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
+				lrec_t* poutrec = lrec_unbacked_alloc();
+
+				slls_t* pgroup_by_field_values = pa->key;
+
+				sllse_t* pb = pstate->pgroup_by_field_names->phead;
+				sllse_t* pc =         pgroup_by_field_values->phead;
+				for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
+					lrec_put(poutrec, pb->value, pc->value, NO_FREE);
+				}
+
+				unsigned long long* pcount = pa->pvvalue;
+				lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(*pcount),
+					FREE_ENTRY_VALUE);
+
+				sllv_append(poutrecs, poutrec);
+			}
 		}
+
 		sllv_append(poutrecs, NULL);
 		return poutrecs;
 

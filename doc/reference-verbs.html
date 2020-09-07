@@ -602,7 +602,7 @@ Prints number of records, optionally grouped by distinct values for specified fi
 
 Options:
 -g {a,b,c}    Field names for distinct count.
--n            Show only the number of distinct values. Not compatible with -u.
+-n            Show only the number of distinct values. Not interesting without -g.
 -o {name}     Field name for output count. Default "count".
 </pre>
 </div>
@@ -626,6 +626,34 @@ a=eks,count=1965
 a=wye,count=1966
 a=zee,count=2047
 a=hat,count=1941
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count -n -g a data/medium
+count=5
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count -g b data/medium
+b=pan,count=1942
+b=wye,count=2057
+b=zee,count=1943
+b=eks,count=2008
+b=hat,count=2050
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count -n -g b data/medium
+count=5
 </pre>
 </div>
 <p/>

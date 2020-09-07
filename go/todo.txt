@@ -57,6 +57,7 @@ TOP OF LIST:
   o --implicit-csv-header
   o --headerless-csv-output
   o new non-lite DKVP reader/writer
+  o comment-filtering compaosed io.Reader
 
 * simplify the DSL
   o Lvalue rule

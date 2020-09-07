@@ -499,7 +499,7 @@ VERBS
 
        Options:
        -g {a,b,c}    Field names for distinct count.
-       -n	     Show only the number of distinct values. Not compatible with -u.
+       -n	     Show only the number of distinct values. Not interesting without -g.
        -o {name}     Field name for output count. Default "count".
 
    count-distinct
@@ -2356,4 +2356,4 @@ SEE ALSO
 
 
 
-				  2020-09-03			     MILLER(1)
+				  2020-09-07			     MILLER(1)
