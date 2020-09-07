@@ -222,6 +222,9 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err 
 		)
 
 		endToken, err := decoder.Token()
+		if err == io.EOF {
+			return nil, false, errors.New("Miller JSON parser: unexpected premature EOF.")
+		}
 		if err != nil {
 			return nil, false, err
 		}

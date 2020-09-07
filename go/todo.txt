@@ -2,7 +2,6 @@
 TOP OF LIST:
 
 * json:
-  o handle EOF better: echo '{' | mlr --json cat just says "mlr :  EOF" :(
   o thorough UT for json mlrval-parser
   o need nesting-aware json printer
 
