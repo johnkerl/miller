@@ -1,17 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* json:
-  d thorough UT for json mlrval-parser including various expect-fail error cases
-  d doc re no jlistwrap on input if they want get streaming input
-  ~ UT JSON-to-JSON cat-mapping should be identical
-
-  o JSON-like accessor syntax in the grammar: $field.array[3].map{"bar"}
-  o flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
-    - make a jsonparse DSL function -- ?
-  o other formats: use JSON marshaler for collection types, maybe double-quoted
-  ? make sure .3 as well as 0.3 is handled for floats ... (tolerate mildly out-of-spec data here) -- if the
-    Golang JSON-decoder will permit that which i don't think it does :(
+o indirect-field-name assignments, with BNF/Lvalue refactor
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
@@ -64,6 +54,7 @@ TOP OF LIST:
 
 * widen DSL coverage
   o begin/end blocks
+  o oosvars
   o indirect field names, at LHS and RHS
   o support the filter verb
 
@@ -120,3 +111,12 @@ NITS/NON-IMMEDIATE:
 ! clean up the AST API. ish! :^/
 * defer reg_test/run until there is quite a bit more verb/dsl/io expansion
 * doc: no boolish truthy falsy
+* json:
+  d thorough UT for json mlrval-parser including various expect-fail error cases
+  d doc re no jlistwrap on input if they want get streaming input
+  d UT JSON-to-JSON cat-mapping should be identical
+  d JSON-like accessor syntax in the grammar: $field.array[3].map{"bar"}
+  d flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
+    - make a force-single-line writer
+    - make a jsonparse DSL function -- ?
+  d other formats: use JSON marshaler for collection types, maybe double-quoted
