@@ -60,58 +60,33 @@ func NewState(
 }
 
 // ----------------------------------------------------------------
-// This is for all statements and statemnt blocks within the CST.
-type IExecutable interface {
-	Execute(state *State)
-}
-
-// ----------------------------------------------------------------
 type Root struct {
 	// Statements/blocks
 	executables []IExecutable
 }
 
 // ----------------------------------------------------------------
-type SrecDirectFieldAssignmentNode struct {
-	lhsFieldName string
-	rhs          IEvaluable
+// This is for all statements and statemnt blocks within the CST.
+type IExecutable interface {
+	Execute(state *State)
 }
 
-type IndirectSrecFieldAssignmentNode struct {
-	lhsFieldName IEvaluable
-	rhs          IEvaluable
-}
-
+// ----------------------------------------------------------------
+// xxx to do once begin/end/main are in the DSL
 type StatementBlockNode struct {
 	// TODO: list of statement
 }
 
 // ================================================================
-// This is for any right-hand side (RHS) of an assignment statement.  Also, for
-// computed field names on the left-hand side, like '$a . $b' in mlr put '$[$a
-// . $b]' = $x + $y'. Also known as an "Rvalue".
-type IEvaluable interface {
-	Evaluate(state *State) lib.Mlrval
-}
-
-// This is for computing map entries at runtime. For example, in mlr put 'mymap
-// = {"sum": $x + $y, "diff": $x - $y}; ...', the first pair would have key
-// being string-literal "sum" and value being the evaluable expression '$x + $y'.
-type EvaluablePair struct {
-	Key   IEvaluable
-	Value IEvaluable
-}
-
-func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
-	return &EvaluablePair{
-		Key:   key,
-		Value: value,
-	}
+// This is for any left-hand side (LHS or Lvalue) of an assignment statement.
+type IAssignable interface {
+	Assign(mlrval *lib.Mlrval, state *State) error
 }
 
 // ================================================================
-// This is for any left-hand side (LHS) of an assignment statement.
-// Also known as an "Lvalue".
-type IAssignable interface {
-	Assign(state *State, mlrval lib.Mlrval) error
+// This is for any right-hand side (RHS or Rvalue) of an assignment statement.
+// Also, for computed field names on the left-hand side, like '$a . $b' in mlr
+// put '$[$a . $b]' = $x + $y'.
+type IEvaluable interface {
+	Evaluate(state *State) lib.Mlrval
 }

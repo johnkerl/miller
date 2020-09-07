@@ -35,22 +35,13 @@ func Build(ast *dsl.AST) (*Root, error) {
 	astChildren := ast.Root.Children
 
 	cstRoot := BuildRoot()
-
-	// For this very early stub, only process statement nodes (which is all the
-	// grammar produces at this point ...)
 	for _, astChild := range astChildren {
-		if astChild.Type != dsl.NodeTypeSrecDirectAssignment {
-			return nil, errors.New("Non-assignment AST node unhandled")
-		}
-
-		statement, err := BuildSrecDirectFieldAssignmentNode(astChild)
+		statement, err := BuildStatementNode(astChild)
 		if err != nil {
 			return nil, err
 		}
-
 		cstRoot.AppendStatement(statement)
 	}
-
 	return cstRoot, nil
 }
 

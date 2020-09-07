@@ -1,6 +1,8 @@
 package cst
 
 import (
+	"errors"
+
 	"miller/dsl"
 )
 
@@ -10,33 +12,23 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildSrecDirectFieldAssignmentNode(
+func BuildStatementNode(
 	astNode *dsl.ASTNode,
-) (*SrecDirectFieldAssignmentNode, error) {
+) (IExecutable, error) {
 
-	err := astNode.CheckArity(2)
-	if err != nil {
-		return nil, err
+	var statement IExecutable = nil
+	var err error = nil
+	// xxx more to do
+	switch astNode.Type {
+	case dsl.NodeTypeAssignment:
+		statement, err = BuildAssignmentNode(astNode)
+		if err != nil {
+			return nil, err
+		}
+
+	default:
+		return nil, errors.New("Non-assignment AST node unhandled")
+		break
 	}
-
-	lhsASTNode := astNode.Children[0]
-	rhsASTNode := astNode.Children[1]
-
-	lhsFieldName := string(lhsASTNode.Token.Lit)
-	rhs, err := BuildEvaluableNode(rhsASTNode)
-	if err != nil {
-		return nil, err
-	}
-
-	return &SrecDirectFieldAssignmentNode{
-		lhsFieldName: lhsFieldName,
-		rhs:          rhs,
-	}, nil
-}
-
-func (this *SrecDirectFieldAssignmentNode) Execute(state *State) {
-	value := this.rhs.Evaluate(state)
-	if !value.IsAbsent() {
-		state.Inrec.Put(&this.lhsFieldName, &value)
-	}
+	return statement, nil
 }

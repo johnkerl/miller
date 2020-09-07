@@ -513,25 +513,25 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(7), // $, reduce: SrecAssignment
-			reduce(7), // ;, reduce: SrecAssignment
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
+			nil,       // $
+			nil,       // ;
+			shift(13), // =
+			shift(14), // ||=
+			shift(15), // ^^=
+			shift(16), // &&=
+			shift(17), // |=
+			shift(18), // ^=
+			shift(19), // &=
+			shift(20), // <<=
+			shift(21), // >>=
+			shift(22), // +=
+			shift(23), // .=
+			shift(24), // -=
+			shift(25), // *=
+			shift(26), // /=
+			shift(27), // //=
+			shift(28), // %=
+			shift(29), // **=
 			nil,       // ?
 			nil,       // :
 			nil,       // ||
@@ -598,23 +598,23 @@ var actionTab = actionTable{
 			nil,       // INVALID
 			nil,       // $
 			nil,       // ;
-			shift(13), // =
-			shift(14), // ||=
-			shift(15), // ^^=
-			shift(16), // &&=
-			shift(17), // |=
-			shift(18), // ^=
-			shift(19), // &=
-			shift(20), // <<=
-			shift(21), // >>=
-			shift(22), // +=
-			shift(23), // .=
-			shift(24), // -=
-			shift(25), // *=
-			shift(26), // /=
-			shift(27), // //=
-			shift(28), // %=
-			shift(29), // **=
+			reduce(8), // =, reduce: Lvalue
+			reduce(8), // ||=, reduce: Lvalue
+			reduce(8), // ^^=, reduce: Lvalue
+			reduce(8), // &&=, reduce: Lvalue
+			reduce(8), // |=, reduce: Lvalue
+			reduce(8), // ^=, reduce: Lvalue
+			reduce(8), // &=, reduce: Lvalue
+			reduce(8), // <<=, reduce: Lvalue
+			reduce(8), // >>=, reduce: Lvalue
+			reduce(8), // +=, reduce: Lvalue
+			reduce(8), // .=, reduce: Lvalue
+			reduce(8), // -=, reduce: Lvalue
+			reduce(8), // *=, reduce: Lvalue
+			reduce(8), // /=, reduce: Lvalue
+			reduce(8), // //=, reduce: Lvalue
+			reduce(8), // %=, reduce: Lvalue
+			reduce(8), // **=, reduce: Lvalue
 			nil,       // ?
 			nil,       // :
 			nil,       // ||
@@ -2524,89 +2524,6 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: MlrvalOrFunction
-			nil,        // :
-			reduce(77), // ||, reduce: MlrvalOrFunction
-			reduce(77), // ^^, reduce: MlrvalOrFunction
-			reduce(77), // &&, reduce: MlrvalOrFunction
-			reduce(77), // =~, reduce: MlrvalOrFunction
-			reduce(77), // !=~, reduce: MlrvalOrFunction
-			reduce(77), // ==, reduce: MlrvalOrFunction
-			reduce(77), // !=, reduce: MlrvalOrFunction
-			reduce(77), // >, reduce: MlrvalOrFunction
-			reduce(77), // >=, reduce: MlrvalOrFunction
-			reduce(77), // <, reduce: MlrvalOrFunction
-			reduce(77), // <=, reduce: MlrvalOrFunction
-			reduce(77), // |, reduce: MlrvalOrFunction
-			reduce(77), // ^, reduce: MlrvalOrFunction
-			reduce(77), // &, reduce: MlrvalOrFunction
-			reduce(77), // <<, reduce: MlrvalOrFunction
-			reduce(77), // >>, reduce: MlrvalOrFunction
-			reduce(77), // +, reduce: MlrvalOrFunction
-			reduce(77), // -, reduce: MlrvalOrFunction
-			reduce(77), // .+, reduce: MlrvalOrFunction
-			reduce(77), // .-, reduce: MlrvalOrFunction
-			reduce(77), // ., reduce: MlrvalOrFunction
-			reduce(77), // *, reduce: MlrvalOrFunction
-			reduce(77), // /, reduce: MlrvalOrFunction
-			reduce(77), // //, reduce: MlrvalOrFunction
-			reduce(77), // %, reduce: MlrvalOrFunction
-			reduce(77), // .*, reduce: MlrvalOrFunction
-			reduce(77), // ./, reduce: MlrvalOrFunction
-			reduce(77), // .//, reduce: MlrvalOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: MlrvalOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(77), // ], reduce: MlrvalOrFunction
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_panic
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-			reduce(77), // [, reduce: MlrvalOrFunction
-			nil,        // ,
-			nil,        // {
-			nil,        // }
-		},
-	},
-	actionRow{ // S31
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -2662,6 +2579,89 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
 			nil,        // [
+			nil,        // ,
+			nil,        // {
+			nil,        // }
+		},
+	},
+	actionRow{ // S31
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: MlrvalOrFunction
+			nil,        // :
+			reduce(77), // ||, reduce: MlrvalOrFunction
+			reduce(77), // ^^, reduce: MlrvalOrFunction
+			reduce(77), // &&, reduce: MlrvalOrFunction
+			reduce(77), // =~, reduce: MlrvalOrFunction
+			reduce(77), // !=~, reduce: MlrvalOrFunction
+			reduce(77), // ==, reduce: MlrvalOrFunction
+			reduce(77), // !=, reduce: MlrvalOrFunction
+			reduce(77), // >, reduce: MlrvalOrFunction
+			reduce(77), // >=, reduce: MlrvalOrFunction
+			reduce(77), // <, reduce: MlrvalOrFunction
+			reduce(77), // <=, reduce: MlrvalOrFunction
+			reduce(77), // |, reduce: MlrvalOrFunction
+			reduce(77), // ^, reduce: MlrvalOrFunction
+			reduce(77), // &, reduce: MlrvalOrFunction
+			reduce(77), // <<, reduce: MlrvalOrFunction
+			reduce(77), // >>, reduce: MlrvalOrFunction
+			reduce(77), // +, reduce: MlrvalOrFunction
+			reduce(77), // -, reduce: MlrvalOrFunction
+			reduce(77), // .+, reduce: MlrvalOrFunction
+			reduce(77), // .-, reduce: MlrvalOrFunction
+			reduce(77), // ., reduce: MlrvalOrFunction
+			reduce(77), // *, reduce: MlrvalOrFunction
+			reduce(77), // /, reduce: MlrvalOrFunction
+			reduce(77), // //, reduce: MlrvalOrFunction
+			reduce(77), // %, reduce: MlrvalOrFunction
+			reduce(77), // .*, reduce: MlrvalOrFunction
+			reduce(77), // ./, reduce: MlrvalOrFunction
+			reduce(77), // .//, reduce: MlrvalOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(77), // **, reduce: MlrvalOrFunction
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(77), // ], reduce: MlrvalOrFunction
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_panic
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+			reduce(77), // [, reduce: MlrvalOrFunction
 			nil,        // ,
 			nil,        // {
 			nil,        // }
@@ -6820,6 +6820,89 @@ var actionTab = actionTable{
 	actionRow{ // S82
 		canRecover: false,
 		actions: [numSymbols]action{
+			nil,       // INVALID
+			reduce(7), // $, reduce: Assignment
+			reduce(7), // ;, reduce: Assignment
+			nil,       // =
+			nil,       // ||=
+			nil,       // ^^=
+			nil,       // &&=
+			nil,       // |=
+			nil,       // ^=
+			nil,       // &=
+			nil,       // <<=
+			nil,       // >>=
+			nil,       // +=
+			nil,       // .=
+			nil,       // -=
+			nil,       // *=
+			nil,       // /=
+			nil,       // //=
+			nil,       // %=
+			nil,       // **=
+			nil,       // ?
+			nil,       // :
+			nil,       // ||
+			nil,       // ^^
+			nil,       // &&
+			nil,       // =~
+			nil,       // !=~
+			nil,       // ==
+			nil,       // !=
+			nil,       // >
+			nil,       // >=
+			nil,       // <
+			nil,       // <=
+			nil,       // |
+			nil,       // ^
+			nil,       // &
+			nil,       // <<
+			nil,       // >>
+			nil,       // +
+			nil,       // -
+			nil,       // .+
+			nil,       // .-
+			nil,       // .
+			nil,       // *
+			nil,       // /
+			nil,       // //
+			nil,       // %
+			nil,       // .*
+			nil,       // ./
+			nil,       // .//
+			nil,       // !
+			nil,       // ~
+			nil,       // **
+			nil,       // (
+			nil,       // )
+			nil,       // md_token_field_name
+			nil,       // $[
+			nil,       // ]
+			nil,       // md_token_string_literal
+			nil,       // md_token_int_literal
+			nil,       // md_token_float_literal
+			nil,       // md_token_boolean_literal
+			nil,       // md_token_panic
+			nil,       // md_token_IPS
+			nil,       // md_token_IFS
+			nil,       // md_token_IRS
+			nil,       // md_token_OPS
+			nil,       // md_token_OFS
+			nil,       // md_token_ORS
+			nil,       // md_token_NF
+			nil,       // md_token_NR
+			nil,       // md_token_FNR
+			nil,       // md_token_FILENAME
+			nil,       // md_token_FILENUM
+			nil,       // [
+			nil,       // ,
+			nil,       // {
+			nil,       // }
+		},
+	},
+	actionRow{ // S83
+		canRecover: false,
+		actions: [numSymbols]action{
 			nil,        // INVALID
 			reduce(77), // $, reduce: MlrvalOrFunction
 			reduce(77), // ;, reduce: MlrvalOrFunction
@@ -6898,89 +6981,6 @@ var actionTab = actionTable{
 			nil,        // ,
 			nil,        // {
 			nil,        // }
-		},
-	},
-	actionRow{ // S83
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			reduce(8), // $, reduce: SrecDirectAssignment
-			reduce(8), // ;, reduce: SrecDirectAssignment
-			nil,       // =
-			nil,       // ||=
-			nil,       // ^^=
-			nil,       // &&=
-			nil,       // |=
-			nil,       // ^=
-			nil,       // &=
-			nil,       // <<=
-			nil,       // >>=
-			nil,       // +=
-			nil,       // .=
-			nil,       // -=
-			nil,       // *=
-			nil,       // /=
-			nil,       // //=
-			nil,       // %=
-			nil,       // **=
-			nil,       // ?
-			nil,       // :
-			nil,       // ||
-			nil,       // ^^
-			nil,       // &&
-			nil,       // =~
-			nil,       // !=~
-			nil,       // ==
-			nil,       // !=
-			nil,       // >
-			nil,       // >=
-			nil,       // <
-			nil,       // <=
-			nil,       // |
-			nil,       // ^
-			nil,       // &
-			nil,       // <<
-			nil,       // >>
-			nil,       // +
-			nil,       // -
-			nil,       // .+
-			nil,       // .-
-			nil,       // .
-			nil,       // *
-			nil,       // /
-			nil,       // //
-			nil,       // %
-			nil,       // .*
-			nil,       // ./
-			nil,       // .//
-			nil,       // !
-			nil,       // ~
-			nil,       // **
-			nil,       // (
-			nil,       // )
-			nil,       // md_token_field_name
-			nil,       // $[
-			nil,       // ]
-			nil,       // md_token_string_literal
-			nil,       // md_token_int_literal
-			nil,       // md_token_float_literal
-			nil,       // md_token_boolean_literal
-			nil,       // md_token_panic
-			nil,       // md_token_IPS
-			nil,       // md_token_IFS
-			nil,       // md_token_IRS
-			nil,       // md_token_OPS
-			nil,       // md_token_OFS
-			nil,       // md_token_ORS
-			nil,       // md_token_NF
-			nil,       // md_token_NR
-			nil,       // md_token_FNR
-			nil,       // md_token_FILENAME
-			nil,       // md_token_FILENUM
-			nil,       // [
-			nil,       // ,
-			nil,       // {
-			nil,       // }
 		},
 	},
 	actionRow{ // S84
@@ -11054,8 +11054,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(9), // $, reduce: SrecDirectAssignment
-			reduce(9), // ;, reduce: SrecDirectAssignment
+			reduce(9), // $, reduce: Assignment
+			reduce(9), // ;, reduce: Assignment
 			nil,       // =
 			nil,       // ||=
 			nil,       // ^^=
@@ -11137,8 +11137,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(10), // $, reduce: SrecDirectAssignment
-			reduce(10), // ;, reduce: SrecDirectAssignment
+			reduce(10), // $, reduce: Assignment
+			reduce(10), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11220,8 +11220,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(11), // $, reduce: SrecDirectAssignment
-			reduce(11), // ;, reduce: SrecDirectAssignment
+			reduce(11), // $, reduce: Assignment
+			reduce(11), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11303,8 +11303,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(12), // $, reduce: SrecDirectAssignment
-			reduce(12), // ;, reduce: SrecDirectAssignment
+			reduce(12), // $, reduce: Assignment
+			reduce(12), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11386,8 +11386,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(13), // $, reduce: SrecDirectAssignment
-			reduce(13), // ;, reduce: SrecDirectAssignment
+			reduce(13), // $, reduce: Assignment
+			reduce(13), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11469,8 +11469,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(14), // $, reduce: SrecDirectAssignment
-			reduce(14), // ;, reduce: SrecDirectAssignment
+			reduce(14), // $, reduce: Assignment
+			reduce(14), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11552,8 +11552,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(15), // $, reduce: SrecDirectAssignment
-			reduce(15), // ;, reduce: SrecDirectAssignment
+			reduce(15), // $, reduce: Assignment
+			reduce(15), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11635,8 +11635,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(16), // $, reduce: SrecDirectAssignment
-			reduce(16), // ;, reduce: SrecDirectAssignment
+			reduce(16), // $, reduce: Assignment
+			reduce(16), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11718,8 +11718,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(17), // $, reduce: SrecDirectAssignment
-			reduce(17), // ;, reduce: SrecDirectAssignment
+			reduce(17), // $, reduce: Assignment
+			reduce(17), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11801,8 +11801,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(18), // $, reduce: SrecDirectAssignment
-			reduce(18), // ;, reduce: SrecDirectAssignment
+			reduce(18), // $, reduce: Assignment
+			reduce(18), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11884,8 +11884,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(19), // $, reduce: SrecDirectAssignment
-			reduce(19), // ;, reduce: SrecDirectAssignment
+			reduce(19), // $, reduce: Assignment
+			reduce(19), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -11967,8 +11967,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(20), // $, reduce: SrecDirectAssignment
-			reduce(20), // ;, reduce: SrecDirectAssignment
+			reduce(20), // $, reduce: Assignment
+			reduce(20), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -12050,8 +12050,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(21), // $, reduce: SrecDirectAssignment
-			reduce(21), // ;, reduce: SrecDirectAssignment
+			reduce(21), // $, reduce: Assignment
+			reduce(21), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -12133,8 +12133,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(22), // $, reduce: SrecDirectAssignment
-			reduce(22), // ;, reduce: SrecDirectAssignment
+			reduce(22), // $, reduce: Assignment
+			reduce(22), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -12216,8 +12216,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(23), // $, reduce: SrecDirectAssignment
-			reduce(23), // ;, reduce: SrecDirectAssignment
+			reduce(23), // $, reduce: Assignment
+			reduce(23), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -12299,8 +12299,8 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(24), // $, reduce: SrecDirectAssignment
-			reduce(24), // ;, reduce: SrecDirectAssignment
+			reduce(24), // $, reduce: Assignment
+			reduce(24), // ;, reduce: Assignment
 			nil,        // =
 			nil,        // ||=
 			nil,        // ^^=
@@ -15555,89 +15555,6 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: MlrvalOrFunction
-			nil,        // :
-			reduce(77), // ||, reduce: MlrvalOrFunction
-			reduce(77), // ^^, reduce: MlrvalOrFunction
-			reduce(77), // &&, reduce: MlrvalOrFunction
-			reduce(77), // =~, reduce: MlrvalOrFunction
-			reduce(77), // !=~, reduce: MlrvalOrFunction
-			reduce(77), // ==, reduce: MlrvalOrFunction
-			reduce(77), // !=, reduce: MlrvalOrFunction
-			reduce(77), // >, reduce: MlrvalOrFunction
-			reduce(77), // >=, reduce: MlrvalOrFunction
-			reduce(77), // <, reduce: MlrvalOrFunction
-			reduce(77), // <=, reduce: MlrvalOrFunction
-			reduce(77), // |, reduce: MlrvalOrFunction
-			reduce(77), // ^, reduce: MlrvalOrFunction
-			reduce(77), // &, reduce: MlrvalOrFunction
-			reduce(77), // <<, reduce: MlrvalOrFunction
-			reduce(77), // >>, reduce: MlrvalOrFunction
-			reduce(77), // +, reduce: MlrvalOrFunction
-			reduce(77), // -, reduce: MlrvalOrFunction
-			reduce(77), // .+, reduce: MlrvalOrFunction
-			reduce(77), // .-, reduce: MlrvalOrFunction
-			reduce(77), // ., reduce: MlrvalOrFunction
-			reduce(77), // *, reduce: MlrvalOrFunction
-			reduce(77), // /, reduce: MlrvalOrFunction
-			reduce(77), // //, reduce: MlrvalOrFunction
-			reduce(77), // %, reduce: MlrvalOrFunction
-			reduce(77), // .*, reduce: MlrvalOrFunction
-			reduce(77), // ./, reduce: MlrvalOrFunction
-			reduce(77), // .//, reduce: MlrvalOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: MlrvalOrFunction
-			nil,        // (
-			reduce(77), // ), reduce: MlrvalOrFunction
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_panic
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-			reduce(77), // [, reduce: MlrvalOrFunction
-			nil,        // ,
-			nil,        // {
-			nil,        // }
-		},
-	},
-	actionRow{ // S188
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -15693,6 +15610,89 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
 			nil,        // [
+			nil,        // ,
+			nil,        // {
+			nil,        // }
+		},
+	},
+	actionRow{ // S188
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: MlrvalOrFunction
+			nil,        // :
+			reduce(77), // ||, reduce: MlrvalOrFunction
+			reduce(77), // ^^, reduce: MlrvalOrFunction
+			reduce(77), // &&, reduce: MlrvalOrFunction
+			reduce(77), // =~, reduce: MlrvalOrFunction
+			reduce(77), // !=~, reduce: MlrvalOrFunction
+			reduce(77), // ==, reduce: MlrvalOrFunction
+			reduce(77), // !=, reduce: MlrvalOrFunction
+			reduce(77), // >, reduce: MlrvalOrFunction
+			reduce(77), // >=, reduce: MlrvalOrFunction
+			reduce(77), // <, reduce: MlrvalOrFunction
+			reduce(77), // <=, reduce: MlrvalOrFunction
+			reduce(77), // |, reduce: MlrvalOrFunction
+			reduce(77), // ^, reduce: MlrvalOrFunction
+			reduce(77), // &, reduce: MlrvalOrFunction
+			reduce(77), // <<, reduce: MlrvalOrFunction
+			reduce(77), // >>, reduce: MlrvalOrFunction
+			reduce(77), // +, reduce: MlrvalOrFunction
+			reduce(77), // -, reduce: MlrvalOrFunction
+			reduce(77), // .+, reduce: MlrvalOrFunction
+			reduce(77), // .-, reduce: MlrvalOrFunction
+			reduce(77), // ., reduce: MlrvalOrFunction
+			reduce(77), // *, reduce: MlrvalOrFunction
+			reduce(77), // /, reduce: MlrvalOrFunction
+			reduce(77), // //, reduce: MlrvalOrFunction
+			reduce(77), // %, reduce: MlrvalOrFunction
+			reduce(77), // .*, reduce: MlrvalOrFunction
+			reduce(77), // ./, reduce: MlrvalOrFunction
+			reduce(77), // .//, reduce: MlrvalOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(77), // **, reduce: MlrvalOrFunction
+			nil,        // (
+			reduce(77), // ), reduce: MlrvalOrFunction
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_panic
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+			reduce(77), // [, reduce: MlrvalOrFunction
 			nil,        // ,
 			nil,        // {
 			nil,        // }
@@ -19851,89 +19851,6 @@ var actionTab = actionTable{
 	actionRow{ // S239
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(77), // ?, reduce: MlrvalOrFunction
-			nil,        // :
-			reduce(77), // ||, reduce: MlrvalOrFunction
-			reduce(77), // ^^, reduce: MlrvalOrFunction
-			reduce(77), // &&, reduce: MlrvalOrFunction
-			reduce(77), // =~, reduce: MlrvalOrFunction
-			reduce(77), // !=~, reduce: MlrvalOrFunction
-			reduce(77), // ==, reduce: MlrvalOrFunction
-			reduce(77), // !=, reduce: MlrvalOrFunction
-			reduce(77), // >, reduce: MlrvalOrFunction
-			reduce(77), // >=, reduce: MlrvalOrFunction
-			reduce(77), // <, reduce: MlrvalOrFunction
-			reduce(77), // <=, reduce: MlrvalOrFunction
-			reduce(77), // |, reduce: MlrvalOrFunction
-			reduce(77), // ^, reduce: MlrvalOrFunction
-			reduce(77), // &, reduce: MlrvalOrFunction
-			reduce(77), // <<, reduce: MlrvalOrFunction
-			reduce(77), // >>, reduce: MlrvalOrFunction
-			reduce(77), // +, reduce: MlrvalOrFunction
-			reduce(77), // -, reduce: MlrvalOrFunction
-			reduce(77), // .+, reduce: MlrvalOrFunction
-			reduce(77), // .-, reduce: MlrvalOrFunction
-			reduce(77), // ., reduce: MlrvalOrFunction
-			reduce(77), // *, reduce: MlrvalOrFunction
-			reduce(77), // /, reduce: MlrvalOrFunction
-			reduce(77), // //, reduce: MlrvalOrFunction
-			reduce(77), // %, reduce: MlrvalOrFunction
-			reduce(77), // .*, reduce: MlrvalOrFunction
-			reduce(77), // ./, reduce: MlrvalOrFunction
-			reduce(77), // .//, reduce: MlrvalOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: MlrvalOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(77), // ], reduce: MlrvalOrFunction
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_panic
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-			reduce(77), // [, reduce: MlrvalOrFunction
-			reduce(77), // ,, reduce: MlrvalOrFunction
-			nil,        // {
-			nil,        // }
-		},
-	},
-	actionRow{ // S240
-		canRecover: false,
-		actions: [numSymbols]action{
 			nil,         // INVALID
 			nil,         // $
 			nil,         // ;
@@ -20012,6 +19929,89 @@ var actionTab = actionTable{
 			reduce(105), // ,, reduce: ArrayLiteralElement
 			nil,         // {
 			nil,         // }
+		},
+	},
+	actionRow{ // S240
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: MlrvalOrFunction
+			nil,        // :
+			reduce(77), // ||, reduce: MlrvalOrFunction
+			reduce(77), // ^^, reduce: MlrvalOrFunction
+			reduce(77), // &&, reduce: MlrvalOrFunction
+			reduce(77), // =~, reduce: MlrvalOrFunction
+			reduce(77), // !=~, reduce: MlrvalOrFunction
+			reduce(77), // ==, reduce: MlrvalOrFunction
+			reduce(77), // !=, reduce: MlrvalOrFunction
+			reduce(77), // >, reduce: MlrvalOrFunction
+			reduce(77), // >=, reduce: MlrvalOrFunction
+			reduce(77), // <, reduce: MlrvalOrFunction
+			reduce(77), // <=, reduce: MlrvalOrFunction
+			reduce(77), // |, reduce: MlrvalOrFunction
+			reduce(77), // ^, reduce: MlrvalOrFunction
+			reduce(77), // &, reduce: MlrvalOrFunction
+			reduce(77), // <<, reduce: MlrvalOrFunction
+			reduce(77), // >>, reduce: MlrvalOrFunction
+			reduce(77), // +, reduce: MlrvalOrFunction
+			reduce(77), // -, reduce: MlrvalOrFunction
+			reduce(77), // .+, reduce: MlrvalOrFunction
+			reduce(77), // .-, reduce: MlrvalOrFunction
+			reduce(77), // ., reduce: MlrvalOrFunction
+			reduce(77), // *, reduce: MlrvalOrFunction
+			reduce(77), // /, reduce: MlrvalOrFunction
+			reduce(77), // //, reduce: MlrvalOrFunction
+			reduce(77), // %, reduce: MlrvalOrFunction
+			reduce(77), // .*, reduce: MlrvalOrFunction
+			reduce(77), // ./, reduce: MlrvalOrFunction
+			reduce(77), // .//, reduce: MlrvalOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(77), // **, reduce: MlrvalOrFunction
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(77), // ], reduce: MlrvalOrFunction
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_panic
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+			reduce(77), // [, reduce: MlrvalOrFunction
+			reduce(77), // ,, reduce: MlrvalOrFunction
+			nil,        // {
+			nil,        // }
 		},
 	},
 	actionRow{ // S241
@@ -24353,89 +24353,6 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: MlrvalOrFunction
-			reduce(77), // :, reduce: MlrvalOrFunction
-			reduce(77), // ||, reduce: MlrvalOrFunction
-			reduce(77), // ^^, reduce: MlrvalOrFunction
-			reduce(77), // &&, reduce: MlrvalOrFunction
-			reduce(77), // =~, reduce: MlrvalOrFunction
-			reduce(77), // !=~, reduce: MlrvalOrFunction
-			reduce(77), // ==, reduce: MlrvalOrFunction
-			reduce(77), // !=, reduce: MlrvalOrFunction
-			reduce(77), // >, reduce: MlrvalOrFunction
-			reduce(77), // >=, reduce: MlrvalOrFunction
-			reduce(77), // <, reduce: MlrvalOrFunction
-			reduce(77), // <=, reduce: MlrvalOrFunction
-			reduce(77), // |, reduce: MlrvalOrFunction
-			reduce(77), // ^, reduce: MlrvalOrFunction
-			reduce(77), // &, reduce: MlrvalOrFunction
-			reduce(77), // <<, reduce: MlrvalOrFunction
-			reduce(77), // >>, reduce: MlrvalOrFunction
-			reduce(77), // +, reduce: MlrvalOrFunction
-			reduce(77), // -, reduce: MlrvalOrFunction
-			reduce(77), // .+, reduce: MlrvalOrFunction
-			reduce(77), // .-, reduce: MlrvalOrFunction
-			reduce(77), // ., reduce: MlrvalOrFunction
-			reduce(77), // *, reduce: MlrvalOrFunction
-			reduce(77), // /, reduce: MlrvalOrFunction
-			reduce(77), // //, reduce: MlrvalOrFunction
-			reduce(77), // %, reduce: MlrvalOrFunction
-			reduce(77), // .*, reduce: MlrvalOrFunction
-			reduce(77), // ./, reduce: MlrvalOrFunction
-			reduce(77), // .//, reduce: MlrvalOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: MlrvalOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_panic
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-			reduce(77), // [, reduce: MlrvalOrFunction
-			nil,        // ,
-			nil,        // {
-			nil,        // }
-		},
-	},
-	actionRow{ // S294
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
 			nil,        // ?
 			shift(562), // :
 			nil,        // ||
@@ -24491,6 +24408,89 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
 			nil,        // [
+			nil,        // ,
+			nil,        // {
+			nil,        // }
+		},
+	},
+	actionRow{ // S294
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: MlrvalOrFunction
+			reduce(77), // :, reduce: MlrvalOrFunction
+			reduce(77), // ||, reduce: MlrvalOrFunction
+			reduce(77), // ^^, reduce: MlrvalOrFunction
+			reduce(77), // &&, reduce: MlrvalOrFunction
+			reduce(77), // =~, reduce: MlrvalOrFunction
+			reduce(77), // !=~, reduce: MlrvalOrFunction
+			reduce(77), // ==, reduce: MlrvalOrFunction
+			reduce(77), // !=, reduce: MlrvalOrFunction
+			reduce(77), // >, reduce: MlrvalOrFunction
+			reduce(77), // >=, reduce: MlrvalOrFunction
+			reduce(77), // <, reduce: MlrvalOrFunction
+			reduce(77), // <=, reduce: MlrvalOrFunction
+			reduce(77), // |, reduce: MlrvalOrFunction
+			reduce(77), // ^, reduce: MlrvalOrFunction
+			reduce(77), // &, reduce: MlrvalOrFunction
+			reduce(77), // <<, reduce: MlrvalOrFunction
+			reduce(77), // >>, reduce: MlrvalOrFunction
+			reduce(77), // +, reduce: MlrvalOrFunction
+			reduce(77), // -, reduce: MlrvalOrFunction
+			reduce(77), // .+, reduce: MlrvalOrFunction
+			reduce(77), // .-, reduce: MlrvalOrFunction
+			reduce(77), // ., reduce: MlrvalOrFunction
+			reduce(77), // *, reduce: MlrvalOrFunction
+			reduce(77), // /, reduce: MlrvalOrFunction
+			reduce(77), // //, reduce: MlrvalOrFunction
+			reduce(77), // %, reduce: MlrvalOrFunction
+			reduce(77), // .*, reduce: MlrvalOrFunction
+			reduce(77), // ./, reduce: MlrvalOrFunction
+			reduce(77), // .//, reduce: MlrvalOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(77), // **, reduce: MlrvalOrFunction
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_panic
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+			reduce(77), // [, reduce: MlrvalOrFunction
 			nil,        // ,
 			nil,        // {
 			nil,        // }
@@ -34894,89 +34894,6 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(77), // ?, reduce: MlrvalOrFunction
-			reduce(77), // :, reduce: MlrvalOrFunction
-			reduce(77), // ||, reduce: MlrvalOrFunction
-			reduce(77), // ^^, reduce: MlrvalOrFunction
-			reduce(77), // &&, reduce: MlrvalOrFunction
-			reduce(77), // =~, reduce: MlrvalOrFunction
-			reduce(77), // !=~, reduce: MlrvalOrFunction
-			reduce(77), // ==, reduce: MlrvalOrFunction
-			reduce(77), // !=, reduce: MlrvalOrFunction
-			reduce(77), // >, reduce: MlrvalOrFunction
-			reduce(77), // >=, reduce: MlrvalOrFunction
-			reduce(77), // <, reduce: MlrvalOrFunction
-			reduce(77), // <=, reduce: MlrvalOrFunction
-			reduce(77), // |, reduce: MlrvalOrFunction
-			reduce(77), // ^, reduce: MlrvalOrFunction
-			reduce(77), // &, reduce: MlrvalOrFunction
-			reduce(77), // <<, reduce: MlrvalOrFunction
-			reduce(77), // >>, reduce: MlrvalOrFunction
-			reduce(77), // +, reduce: MlrvalOrFunction
-			reduce(77), // -, reduce: MlrvalOrFunction
-			reduce(77), // .+, reduce: MlrvalOrFunction
-			reduce(77), // .-, reduce: MlrvalOrFunction
-			reduce(77), // ., reduce: MlrvalOrFunction
-			reduce(77), // *, reduce: MlrvalOrFunction
-			reduce(77), // /, reduce: MlrvalOrFunction
-			reduce(77), // //, reduce: MlrvalOrFunction
-			reduce(77), // %, reduce: MlrvalOrFunction
-			reduce(77), // .*, reduce: MlrvalOrFunction
-			reduce(77), // ./, reduce: MlrvalOrFunction
-			reduce(77), // .//, reduce: MlrvalOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: MlrvalOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			reduce(77), // ], reduce: MlrvalOrFunction
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_panic
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-			reduce(77), // [, reduce: MlrvalOrFunction
-			nil,        // ,
-			nil,        // {
-			nil,        // }
-		},
-	},
-	actionRow{ // S421
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
 			nil,        // ?
 			shift(645), // :
 			nil,        // ||
@@ -35032,6 +34949,89 @@ var actionTab = actionTable{
 			nil,        // md_token_FILENAME
 			nil,        // md_token_FILENUM
 			nil,        // [
+			nil,        // ,
+			nil,        // {
+			nil,        // }
+		},
+	},
+	actionRow{ // S421
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: MlrvalOrFunction
+			reduce(77), // :, reduce: MlrvalOrFunction
+			reduce(77), // ||, reduce: MlrvalOrFunction
+			reduce(77), // ^^, reduce: MlrvalOrFunction
+			reduce(77), // &&, reduce: MlrvalOrFunction
+			reduce(77), // =~, reduce: MlrvalOrFunction
+			reduce(77), // !=~, reduce: MlrvalOrFunction
+			reduce(77), // ==, reduce: MlrvalOrFunction
+			reduce(77), // !=, reduce: MlrvalOrFunction
+			reduce(77), // >, reduce: MlrvalOrFunction
+			reduce(77), // >=, reduce: MlrvalOrFunction
+			reduce(77), // <, reduce: MlrvalOrFunction
+			reduce(77), // <=, reduce: MlrvalOrFunction
+			reduce(77), // |, reduce: MlrvalOrFunction
+			reduce(77), // ^, reduce: MlrvalOrFunction
+			reduce(77), // &, reduce: MlrvalOrFunction
+			reduce(77), // <<, reduce: MlrvalOrFunction
+			reduce(77), // >>, reduce: MlrvalOrFunction
+			reduce(77), // +, reduce: MlrvalOrFunction
+			reduce(77), // -, reduce: MlrvalOrFunction
+			reduce(77), // .+, reduce: MlrvalOrFunction
+			reduce(77), // .-, reduce: MlrvalOrFunction
+			reduce(77), // ., reduce: MlrvalOrFunction
+			reduce(77), // *, reduce: MlrvalOrFunction
+			reduce(77), // /, reduce: MlrvalOrFunction
+			reduce(77), // //, reduce: MlrvalOrFunction
+			reduce(77), // %, reduce: MlrvalOrFunction
+			reduce(77), // .*, reduce: MlrvalOrFunction
+			reduce(77), // ./, reduce: MlrvalOrFunction
+			reduce(77), // .//, reduce: MlrvalOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(77), // **, reduce: MlrvalOrFunction
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			reduce(77), // ], reduce: MlrvalOrFunction
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_panic
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+			reduce(77), // [, reduce: MlrvalOrFunction
 			nil,        // ,
 			nil,        // {
 			nil,        // }
@@ -63509,89 +63509,6 @@ var actionTab = actionTable{
 	actionRow{ // S765
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,        // INVALID
-			nil,        // $
-			nil,        // ;
-			nil,        // =
-			nil,        // ||=
-			nil,        // ^^=
-			nil,        // &&=
-			nil,        // |=
-			nil,        // ^=
-			nil,        // &=
-			nil,        // <<=
-			nil,        // >>=
-			nil,        // +=
-			nil,        // .=
-			nil,        // -=
-			nil,        // *=
-			nil,        // /=
-			nil,        // //=
-			nil,        // %=
-			nil,        // **=
-			reduce(77), // ?, reduce: MlrvalOrFunction
-			nil,        // :
-			reduce(77), // ||, reduce: MlrvalOrFunction
-			reduce(77), // ^^, reduce: MlrvalOrFunction
-			reduce(77), // &&, reduce: MlrvalOrFunction
-			reduce(77), // =~, reduce: MlrvalOrFunction
-			reduce(77), // !=~, reduce: MlrvalOrFunction
-			reduce(77), // ==, reduce: MlrvalOrFunction
-			reduce(77), // !=, reduce: MlrvalOrFunction
-			reduce(77), // >, reduce: MlrvalOrFunction
-			reduce(77), // >=, reduce: MlrvalOrFunction
-			reduce(77), // <, reduce: MlrvalOrFunction
-			reduce(77), // <=, reduce: MlrvalOrFunction
-			reduce(77), // |, reduce: MlrvalOrFunction
-			reduce(77), // ^, reduce: MlrvalOrFunction
-			reduce(77), // &, reduce: MlrvalOrFunction
-			reduce(77), // <<, reduce: MlrvalOrFunction
-			reduce(77), // >>, reduce: MlrvalOrFunction
-			reduce(77), // +, reduce: MlrvalOrFunction
-			reduce(77), // -, reduce: MlrvalOrFunction
-			reduce(77), // .+, reduce: MlrvalOrFunction
-			reduce(77), // .-, reduce: MlrvalOrFunction
-			reduce(77), // ., reduce: MlrvalOrFunction
-			reduce(77), // *, reduce: MlrvalOrFunction
-			reduce(77), // /, reduce: MlrvalOrFunction
-			reduce(77), // //, reduce: MlrvalOrFunction
-			reduce(77), // %, reduce: MlrvalOrFunction
-			reduce(77), // .*, reduce: MlrvalOrFunction
-			reduce(77), // ./, reduce: MlrvalOrFunction
-			reduce(77), // .//, reduce: MlrvalOrFunction
-			nil,        // !
-			nil,        // ~
-			reduce(77), // **, reduce: MlrvalOrFunction
-			nil,        // (
-			nil,        // )
-			nil,        // md_token_field_name
-			nil,        // $[
-			nil,        // ]
-			nil,        // md_token_string_literal
-			nil,        // md_token_int_literal
-			nil,        // md_token_float_literal
-			nil,        // md_token_boolean_literal
-			nil,        // md_token_panic
-			nil,        // md_token_IPS
-			nil,        // md_token_IFS
-			nil,        // md_token_IRS
-			nil,        // md_token_OPS
-			nil,        // md_token_OFS
-			nil,        // md_token_ORS
-			nil,        // md_token_NF
-			nil,        // md_token_NR
-			nil,        // md_token_FNR
-			nil,        // md_token_FILENAME
-			nil,        // md_token_FILENUM
-			reduce(77), // [, reduce: MlrvalOrFunction
-			reduce(77), // ,, reduce: MlrvalOrFunction
-			nil,        // {
-			reduce(77), // }, reduce: MlrvalOrFunction
-		},
-	},
-	actionRow{ // S766
-		canRecover: false,
-		actions: [numSymbols]action{
 			nil,         // INVALID
 			nil,         // $
 			nil,         // ;
@@ -63670,6 +63587,89 @@ var actionTab = actionTable{
 			reduce(119), // ,, reduce: MapLiteralKeyValuePair
 			nil,         // {
 			reduce(119), // }, reduce: MapLiteralKeyValuePair
+		},
+	},
+	actionRow{ // S766
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,        // INVALID
+			nil,        // $
+			nil,        // ;
+			nil,        // =
+			nil,        // ||=
+			nil,        // ^^=
+			nil,        // &&=
+			nil,        // |=
+			nil,        // ^=
+			nil,        // &=
+			nil,        // <<=
+			nil,        // >>=
+			nil,        // +=
+			nil,        // .=
+			nil,        // -=
+			nil,        // *=
+			nil,        // /=
+			nil,        // //=
+			nil,        // %=
+			nil,        // **=
+			reduce(77), // ?, reduce: MlrvalOrFunction
+			nil,        // :
+			reduce(77), // ||, reduce: MlrvalOrFunction
+			reduce(77), // ^^, reduce: MlrvalOrFunction
+			reduce(77), // &&, reduce: MlrvalOrFunction
+			reduce(77), // =~, reduce: MlrvalOrFunction
+			reduce(77), // !=~, reduce: MlrvalOrFunction
+			reduce(77), // ==, reduce: MlrvalOrFunction
+			reduce(77), // !=, reduce: MlrvalOrFunction
+			reduce(77), // >, reduce: MlrvalOrFunction
+			reduce(77), // >=, reduce: MlrvalOrFunction
+			reduce(77), // <, reduce: MlrvalOrFunction
+			reduce(77), // <=, reduce: MlrvalOrFunction
+			reduce(77), // |, reduce: MlrvalOrFunction
+			reduce(77), // ^, reduce: MlrvalOrFunction
+			reduce(77), // &, reduce: MlrvalOrFunction
+			reduce(77), // <<, reduce: MlrvalOrFunction
+			reduce(77), // >>, reduce: MlrvalOrFunction
+			reduce(77), // +, reduce: MlrvalOrFunction
+			reduce(77), // -, reduce: MlrvalOrFunction
+			reduce(77), // .+, reduce: MlrvalOrFunction
+			reduce(77), // .-, reduce: MlrvalOrFunction
+			reduce(77), // ., reduce: MlrvalOrFunction
+			reduce(77), // *, reduce: MlrvalOrFunction
+			reduce(77), // /, reduce: MlrvalOrFunction
+			reduce(77), // //, reduce: MlrvalOrFunction
+			reduce(77), // %, reduce: MlrvalOrFunction
+			reduce(77), // .*, reduce: MlrvalOrFunction
+			reduce(77), // ./, reduce: MlrvalOrFunction
+			reduce(77), // .//, reduce: MlrvalOrFunction
+			nil,        // !
+			nil,        // ~
+			reduce(77), // **, reduce: MlrvalOrFunction
+			nil,        // (
+			nil,        // )
+			nil,        // md_token_field_name
+			nil,        // $[
+			nil,        // ]
+			nil,        // md_token_string_literal
+			nil,        // md_token_int_literal
+			nil,        // md_token_float_literal
+			nil,        // md_token_boolean_literal
+			nil,        // md_token_panic
+			nil,        // md_token_IPS
+			nil,        // md_token_IFS
+			nil,        // md_token_IRS
+			nil,        // md_token_OPS
+			nil,        // md_token_OFS
+			nil,        // md_token_ORS
+			nil,        // md_token_NF
+			nil,        // md_token_NR
+			nil,        // md_token_FNR
+			nil,        // md_token_FILENAME
+			nil,        // md_token_FILENUM
+			reduce(77), // [, reduce: MlrvalOrFunction
+			reduce(77), // ,, reduce: MlrvalOrFunction
+			nil,        // {
+			reduce(77), // }, reduce: MlrvalOrFunction
 		},
 	},
 	actionRow{ // S767

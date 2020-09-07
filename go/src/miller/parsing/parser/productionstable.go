@@ -81,7 +81,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `StatementInBody : SrecAssignment	<<  >>`,
+		String: `StatementInBody : Assignment	<<  >>`,
 		Id:         "StatementInBody",
 		NTType:     4,
 		Index:      6,
@@ -91,183 +91,183 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `SrecAssignment : SrecDirectAssignment	<<  >>`,
-		Id:         "SrecAssignment",
+		String: `Assignment : Lvalue "=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
 		NTType:     5,
 		Index:      7,
+		NumSymbols: 3,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
+		},
+	},
+	ProdTabEntry{
+		String: `Lvalue : FieldName	<<  >>`,
+		Id:         "Lvalue",
+		NTType:     6,
+		Index:      8,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return X[0], nil
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
-		Index:      8,
-		NumSymbols: 3,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
-		},
-	},
-	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "||=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "||=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      9,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "^^=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "^^=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      10,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "&&=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "&&=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      11,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "|=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "|=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      12,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "^=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "^=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      13,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "&=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "&=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      14,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "<<=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "<<=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      15,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName ">>=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue ">>=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      16,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "+=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "+=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      17,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName ".=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue ".=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      18,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "-=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "-=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      19,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "*=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "*=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      20,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "/=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "/=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      21,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "//=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "//=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      22,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "%!=(MISSING)" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "%!=(MISSING)" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      23,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
-		String: `SrecDirectAssignment : FieldName "**=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment) >>`,
-		Id:         "SrecDirectAssignment",
-		NTType:     6,
+		String: `Assignment : Lvalue "**=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
+		Id:         "Assignment",
+		NTType:     5,
 		Index:      24,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeSrecDirectAssignment)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment)
 		},
 	},
 	ProdTabEntry{
@@ -851,9 +851,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeStripDoubleQuotePairPlease(
-				X[0],
-				dsl.NodeTypeStringLiteral,
-			)
+    X[0],
+    dsl.NodeTypeStringLiteral,
+  )
 		},
 	},
 	ProdTabEntry{
@@ -1037,9 +1037,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(
-				dsl.NewASTToken("[]", X[0]),
-				dsl.NodeTypeArrayLiteral,
-			)
+      dsl.NewASTToken("[]", X[0]),
+      dsl.NodeTypeArrayLiteral,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1056,12 +1056,12 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
-					dsl.NewASTToken("[]", X[0]),
-					dsl.NodeTypeArrayLiteral,
-				),
-				X[1],
-			)
+      dsl.NewASTNodeNestable(
+        dsl.NewASTToken("[]", X[0]),
+        dsl.NodeTypeArrayLiteral,
+      ),
+      X[1],
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1076,10 +1076,10 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeArrayLiteral,
-			)
+      nil,
+      X[0],
+      dsl.NodeTypeArrayLiteral,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1094,10 +1094,10 @@ var productionsTable = ProdTab{
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeArrayLiteral,
-			)
+      nil,
+      X[0],
+      dsl.NodeTypeArrayLiteral,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1111,9 +1111,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.PrependChild(
-				X[2],
-				X[0],
-			)
+      X[2],
+      X[0],
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1149,11 +1149,11 @@ var productionsTable = ProdTab{
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeBinary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				dsl.NodeTypeArrayOrMapIndexAccess,
-			)
+      dsl.NewASTToken("[]", X[1]),
+      X[0],
+      X[2],
+      dsl.NodeTypeArrayOrMapIndexAccess,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1180,12 +1180,12 @@ var productionsTable = ProdTab{
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				X[4],
-				dsl.NodeTypeArraySliceAccess,
-			)
+      dsl.NewASTToken("[]", X[1]),
+      X[0],
+      X[2],
+      X[4],
+      dsl.NodeTypeArraySliceAccess,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1205,15 +1205,15 @@ var productionsTable = ProdTab{
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				dsl.NewASTNodeNestable(
-					X[2],
-					dsl.NodeTypeArraySliceEmptyLowerIndex,
-				),
-				X[3],
-				dsl.NodeTypeArraySliceAccess,
-			)
+      dsl.NewASTToken("[]", X[1]),
+      X[0],
+      dsl.NewASTNodeNestable(
+        X[2],
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      X[3],
+      dsl.NodeTypeArraySliceAccess,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1233,15 +1233,15 @@ var productionsTable = ProdTab{
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				X[2],
-				dsl.NewASTNodeNestable(
-					X[3],
-					dsl.NodeTypeArraySliceEmptyUpperIndex,
-				),
-				dsl.NodeTypeArraySliceAccess,
-			)
+      dsl.NewASTToken("[]", X[1]),
+      X[0],
+      X[2],
+      dsl.NewASTNodeNestable(
+        X[3],
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1264,18 +1264,18 @@ var productionsTable = ProdTab{
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeTernary(
-				dsl.NewASTToken("[]", X[1]),
-				X[0],
-				dsl.NewASTNodeNestable(
-					X[2],
-					dsl.NodeTypeArraySliceEmptyLowerIndex,
-				),
-				dsl.NewASTNodeNestable(
-					X[2],
-					dsl.NodeTypeArraySliceEmptyUpperIndex,
-				),
-				dsl.NodeTypeArraySliceAccess,
-			)
+      dsl.NewASTToken("[]", X[1]),
+      X[0],
+      dsl.NewASTNodeNestable(
+        X[2],
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      dsl.NewASTNodeNestable(
+        X[2],
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1299,9 +1299,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(
-				dsl.NewASTToken("{}", X[0]),
-				dsl.NodeTypeMapLiteral,
-			)
+      dsl.NewASTToken("{}", X[0]),
+      dsl.NodeTypeMapLiteral,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1318,12 +1318,12 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.AdoptChildren(
-				dsl.NewASTNodeNestable(
-					dsl.NewASTToken("{}", X[0]),
-					dsl.NodeTypeMapLiteral,
-				),
-				X[1],
-			)
+      dsl.NewASTNodeNestable(
+        dsl.NewASTToken("{}", X[0]),
+        dsl.NodeTypeMapLiteral,
+      ),
+      X[1],
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1338,10 +1338,10 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeMapLiteral,
-			)
+      nil,
+      X[0],
+      dsl.NodeTypeMapLiteral,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1356,10 +1356,10 @@ var productionsTable = ProdTab{
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(
-				nil,
-				X[0],
-				dsl.NodeTypeMapLiteral,
-			)
+      nil,
+      X[0],
+      dsl.NodeTypeMapLiteral,
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1373,9 +1373,9 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.PrependChild(
-				X[2],
-				X[0],
-			)
+      X[2],
+      X[0],
+    )
 		},
 	},
 	ProdTabEntry{
@@ -1391,11 +1391,11 @@ var productionsTable = ProdTab{
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeBinary(
-				X[1],
-				X[0],
-				X[2],
-				dsl.NodeTypeMapLiteralKeyValuePair,
-			)
+      X[1],
+      X[0],
+      X[2],
+      dsl.NodeTypeMapLiteralKeyValuePair,
+    )
 		},
 	},
 }

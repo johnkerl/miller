@@ -107,6 +107,21 @@ func BuildArraySliceAccessNode(
 //	}
 
 // ----------------------------------------------------------------
+// This is for computing map entries at runtime. For example, in mlr put 'mymap
+// = {"sum": $x + $y, "diff": $x - $y}; ...', the first pair would have key
+// being string-literal "sum" and value being the evaluable expression '$x + $y'.
+type EvaluablePair struct {
+	Key   IEvaluable
+	Value IEvaluable
+}
+
+func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
+	return &EvaluablePair{
+		Key:   key,
+		Value: value,
+	}
+}
+// ----------------------------------------------------------------
 type MapLiteralNode struct {
 	evaluablePairs []EvaluablePair
 	// needs array of key/value Mlrval pairs

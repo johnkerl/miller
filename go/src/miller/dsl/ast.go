@@ -25,10 +25,10 @@ const (
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"
 
-	NodeTypeStatementBlock       = "StatementBlock"
-	NodeTypeSrecDirectAssignment = "SrecDirectAssignment"
-	NodeTypeOperator             = "Operator"
-	NodeTypeContextVariable      = "ContextVariable"
+	NodeTypeStatementBlock  = "StatementBlock"
+	NodeTypeAssignment      = "Assignment"
+	NodeTypeOperator        = "Operator"
+	NodeTypeContextVariable = "ContextVariable"
 
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =

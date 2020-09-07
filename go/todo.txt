@@ -2,8 +2,9 @@
 TOP OF LIST:
 
 * monday:
-  o indirect-field-name assignments, with BNF/Lvalue refactor
-  o ENV
+  o cst-build unimpls to all indicate the callsite
+  o lib.GetTypeName
+  ? ENV
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...

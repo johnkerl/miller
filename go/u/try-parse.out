@@ -6,7 +6,7 @@ DSL EXPRESSION:
 $y = 1 || 2
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "||"
             * IntLiteral "1"
@@ -20,7 +20,7 @@ DSL EXPRESSION:
 $y = 1 || 2 || 3
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "||"
             * Operator "||"
@@ -36,7 +36,7 @@ DSL EXPRESSION:
 $y = 1 || 2 && 3
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "||"
             * IntLiteral "1"
@@ -52,7 +52,7 @@ DSL EXPRESSION:
 $y = 1 && 2 || 3
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "||"
             * Operator "&&"
@@ -68,7 +68,7 @@ DSL EXPRESSION:
 $y = 1 ? 2 : 3
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "?:"
             * IntLiteral "1"
@@ -83,7 +83,7 @@ DSL EXPRESSION:
 $y = $a + $b * $c
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "+"
             * DirectFieldName "a"
@@ -99,7 +99,7 @@ DSL EXPRESSION:
 $y = $a * $b * $c
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "*"
             * Operator "*"
@@ -115,7 +115,7 @@ DSL EXPRESSION:
 $y = $a ** $b ** $c
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "**"
             * DirectFieldName "a"
@@ -131,7 +131,7 @@ DSL EXPRESSION:
 $[2] = 3
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * IndirectFieldName "$["
             * IntLiteral "2"
         * IntLiteral "3"
@@ -144,7 +144,7 @@ DSL EXPRESSION:
 $[$y] = 4
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * IndirectFieldName "$["
             * DirectFieldName "y"
         * IntLiteral "4"
@@ -157,7 +157,7 @@ DSL EXPRESSION:
 $x = "abc"
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * StringLiteral "abc"
 
@@ -169,7 +169,7 @@ DSL EXPRESSION:
 $["abc"] = "def"
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * IndirectFieldName "$["
             * StringLiteral "abc"
         * StringLiteral "def"
@@ -182,7 +182,7 @@ DSL EXPRESSION:
 $[FILENAME] = FNR
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * IndirectFieldName "$["
             * ContextVariable "FILENAME"
         * ContextVariable "FNR"
@@ -195,7 +195,7 @@ DSL EXPRESSION:
 $x = $a + $b + $c
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * Operator "+"
             * Operator "+"
@@ -211,21 +211,21 @@ DSL EXPRESSION:
 $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * Operator "+"
             * Operator "+"
                 * DirectFieldName "a"
                 * DirectFieldName "b"
             * DirectFieldName "c"
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "+"
             * DirectFieldName "a"
             * Operator "+"
                 * DirectFieldName "b"
                 * DirectFieldName "c"
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * Operator "+"
             * Operator "+"
@@ -241,7 +241,7 @@ DSL EXPRESSION:
 $x = 2 * $a + $b . $c
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * Operator "."
             * Operator "+"
@@ -259,7 +259,7 @@ DSL EXPRESSION:
 $x = 2 * $a + ($b . $c)
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * Operator "+"
             * Operator "*"
@@ -277,14 +277,14 @@ DSL EXPRESSION:
 $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * Operator "*"
             * Operator "+"
                 * ContextVariable "NF"
                 * ContextVariable "NR"
             * IntLiteral "7"
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "y"
         * Operator "."
             * Operator "."
@@ -300,7 +300,7 @@ DSL EXPRESSION:
 $x = 123. + 1e-2 / .2e3 + 1.e-3
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "x"
         * Operator "+"
             * Operator "+"
@@ -318,7 +318,7 @@ DSL EXPRESSION:
 $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * Operator "+"
             * IntLiteral "0x7fffffffffffffff"
@@ -332,7 +332,7 @@ DSL EXPRESSION:
 $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * Operator ".+"
             * IntLiteral "0x7fffffffffffffff"
@@ -346,7 +346,7 @@ DSL EXPRESSION:
 $z=0x7fffffffffffffff  * 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * Operator "*"
             * IntLiteral "0x7fffffffffffffff"
@@ -360,7 +360,7 @@ DSL EXPRESSION:
 $z=0x7fffffffffffffff .* 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * Operator ".*"
             * IntLiteral "0x7fffffffffffffff"
@@ -374,7 +374,7 @@ DSL EXPRESSION:
 $z = []
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
 
@@ -386,7 +386,7 @@ DSL EXPRESSION:
 $z = [1,]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
@@ -399,7 +399,7 @@ DSL EXPRESSION:
 $z = [1,2]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
@@ -413,7 +413,7 @@ DSL EXPRESSION:
 $z = [1,2,]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
@@ -427,7 +427,7 @@ DSL EXPRESSION:
 $z = [1,2,3]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
@@ -442,7 +442,7 @@ DSL EXPRESSION:
 $z = [1,2,3,]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
@@ -457,7 +457,7 @@ DSL EXPRESSION:
 $z = {}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
 
@@ -469,7 +469,7 @@ DSL EXPRESSION:
 $z = {"a":"1"}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
@@ -484,7 +484,7 @@ DSL EXPRESSION:
 $z = {"a":"1",}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
@@ -499,7 +499,7 @@ DSL EXPRESSION:
 $z = {"a":"1", "b":2}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
@@ -517,7 +517,7 @@ DSL EXPRESSION:
 $z = {"a":"1", "b":2,}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
@@ -535,7 +535,7 @@ DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
@@ -556,7 +556,7 @@ DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3,}
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
@@ -577,7 +577,7 @@ DSL EXPRESSION:
 $z = $a[1]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayOrMapIndexAccess "[]"
             * DirectFieldName "a"
@@ -591,7 +591,7 @@ DSL EXPRESSION:
 $z = $a["index"]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayOrMapIndexAccess "[]"
             * DirectFieldName "a"
@@ -605,7 +605,7 @@ DSL EXPRESSION:
 $z = "abcde"[1]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayOrMapIndexAccess "[]"
             * StringLiteral "abcde"
@@ -619,7 +619,7 @@ DSL EXPRESSION:
 $z = "abcde"["index"]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayOrMapIndexAccess "[]"
             * StringLiteral "abcde"
@@ -633,7 +633,7 @@ DSL EXPRESSION:
 $z = $a[1:2]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArraySliceAccess "[]"
             * DirectFieldName "a"
@@ -648,7 +648,7 @@ DSL EXPRESSION:
 $z = $a[:2]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArraySliceAccess "[]"
             * DirectFieldName "a"
@@ -663,7 +663,7 @@ DSL EXPRESSION:
 $z = $a[1:]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArraySliceAccess "[]"
             * DirectFieldName "a"
@@ -678,7 +678,7 @@ DSL EXPRESSION:
 $z = $a[:]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArraySliceAccess "[]"
             * DirectFieldName "a"
@@ -693,7 +693,7 @@ DSL EXPRESSION:
 $z = [5,6,7,8,9][1]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayOrMapIndexAccess "[]"
             * ArrayLiteral "[]"
@@ -712,7 +712,7 @@ DSL EXPRESSION:
 $z = {"a":1, "b":2, "c":3}["b"]
 RAW AST:
 * StatementBlock
-    * SrecDirectAssignment "="
+    * Assignment "="
         * DirectFieldName "z"
         * ArrayOrMapIndexAccess "[]"
             * MapLiteral "{}"
