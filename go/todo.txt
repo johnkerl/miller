@@ -1,8 +1,9 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* monday:
+* tuesday:
   o indexed-lvalue assignment ops
+  o functions?!?
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
@@ -60,6 +61,7 @@ TOP OF LIST:
   o full indexable at LHS/RHS -- e.g. $*["a"] = $b
   o support the filter verb
   o there should have always been a >>> and >>>=
+  o "...\"...\"..." in string literals
 
 ! the DSL needs a full, written-down-and-published spell-out of reference/copy semantics
 * then careful CST impl

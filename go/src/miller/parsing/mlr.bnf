@@ -1,5 +1,5 @@
 // ================================================================
-// MILLER DSL GRAMMAR
+// GRAMMAR FOR THE MILLER DOMAIN-SPECIFIC LANGUAGE
 //
 // This is the Miller DSL's BNF grammar, using the awesome GOCC tool framework
 // from https://github.com/goccmack/gocc.
@@ -67,6 +67,7 @@ _string_literal_element
   | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
   | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '['
   | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
+  | ( '\\' '"' )
   | '\u0100'-'\U0010FFFF'
 ;
 md_token_string_literal : '"' {_string_literal_element} '"' ;
