@@ -96,6 +96,8 @@ echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || %%%panic%%%'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  ? 4 : %%%panic%%%'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false ? %%%panic%%% : 5'
 
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = "abc\"def\"ghi"'
+
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$i += 2'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$i *= 2'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$i /= 2'

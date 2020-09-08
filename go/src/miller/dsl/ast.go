@@ -3,6 +3,7 @@ package dsl
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"miller/parsing/token"
 )
@@ -127,16 +128,20 @@ func NewASTNodeStripDollarPlease(itok interface{}, nodeType TNodeType) (*ASTNode
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
 
-// Likewise for the leading/trailing double quotes on string literals.
+// Likewise for the leading/trailing double quotes on string literals.  Also,
+// since string literals can have backslash-escaped double-quotes like
+// "...\"...\"...", we also unbackslash here.
 func NewASTNodeStripDoubleQuotePairPlease(
 	itok interface{},
 	nodeType TNodeType,
 ) (*ASTNode, error) {
 	oldToken := itok.(*token.Token)
 	n := len(oldToken.Lit)
+	contents := string(oldToken.Lit[1 : n-1])
+	contents = strings.ReplaceAll(contents, "\\\"", "\"")
 	newToken := &token.Token{
 		Type: oldToken.Type,
-		Lit:  oldToken.Lit[1 : n-1],
+		Lit:  []byte(contents),
 		Pos:  oldToken.Pos,
 	}
 	return NewASTNodeNestable(newToken, nodeType), nil

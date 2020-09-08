@@ -662,7 +662,9 @@ MlrvalOrFunction
 
 // As with '$' on md_token_field_name, so too for md_token_string_literal we
 // get LR-1 conflicts if we attempt to put the double quotes here.  Hence the
-// quote-stripper AST method.
+// quote-stripper AST method. Also, since string literals can have
+// backslash-escaped double-quotes like "...\"...\"...", we also unbackslash
+// in the same method.
 MlrvalOrFunction
   : md_token_string_literal  << dsl.NewASTNodeStripDoubleQuotePairPlease(
     $0,
