@@ -122,7 +122,7 @@ NITS/NON-IMMEDIATE:
   d thorough UT for json mlrval-parser including various expect-fail error cases
   d doc re no jlistwrap on input if they want get streaming input
   d UT JSON-to-JSON cat-mapping should be identical
-  d JSON-like accessor syntax in the grammar: $field.array[3].map{"bar"}
+  d JSON-like accessor syntax in the grammar: $field[3]["bar"]
   d flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
     - make a force-single-line writer
     - make a jsonparse DSL function -- ?

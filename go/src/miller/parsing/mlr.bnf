@@ -1196,16 +1196,24 @@ StatementInBody : Assignment ;
 // xxx
 
 Assignment :
-  : Lvalue "=" Rvalue
+  : BaseLvalue "=" Rvalue
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
 
-Lvalue
+// A BaseValue is anything on the left-hand side of an assignment, excluding
+// the indexing -- e.g. @a is a BaseValue and an Lvalue; @a[1][2][3] is an
+// Lvalue which is an indexed Lvalue.
+BaseLvalue
   : FieldName
-// computed field name
-// positional name
-// positional value
+  // computed field name
+  // positional name
+  // positional value
   // indexed lvalues quite generally ...
   | FullSrec;
+
+Lvalue
+  : BaseLvalue
+  // | IndexedLvalue
+;
 
 // oosvar
 // computed oosvar
