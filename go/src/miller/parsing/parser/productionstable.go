@@ -121,7 +121,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BaseLvalue : FieldName	<<  >>`,
+		String: `BaseLvalue : FieldValue	<<  >>`,
 		Id:         "BaseLvalue",
 		NTType:     6,
 		Index:      10,
@@ -161,8 +161,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FieldName : DirectFieldName	<<  >>`,
-		Id:         "FieldName",
+		String: `FieldValue : DirectFieldValue	<<  >>`,
+		Id:         "FieldValue",
 		NTType:     8,
 		Index:      13,
 		NumSymbols: 1,
@@ -171,8 +171,8 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FieldName : IndirectFieldName	<<  >>`,
-		Id:         "FieldName",
+		String: `FieldValue : IndirectFieldValue	<<  >>`,
+		Id:         "FieldValue",
 		NTType:     8,
 		Index:      14,
 		NumSymbols: 1,
@@ -181,23 +181,23 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DirectFieldName : md_token_field_name	<< dsl.NewASTNodeStripDollarPlease(X[0], dsl.NodeTypeDirectFieldName) >>`,
-		Id:         "DirectFieldName",
+		String: `DirectFieldValue : md_token_field_name	<< dsl.NewASTNodeStripDollarPlease(X[0], dsl.NodeTypeDirectFieldValue) >>`,
+		Id:         "DirectFieldValue",
 		NTType:     9,
 		Index:      15,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeStripDollarPlease(X[0], dsl.NodeTypeDirectFieldName)
+			return dsl.NewASTNodeStripDollarPlease(X[0], dsl.NodeTypeDirectFieldValue)
 		},
 	},
 	ProdTabEntry{
-		String: `IndirectFieldName : "$[" Rvalue "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldName) >>`,
-		Id:         "IndirectFieldName",
+		String: `IndirectFieldValue : "$[" Rvalue "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldValue) >>`,
+		Id:         "IndirectFieldValue",
 		NTType:     10,
 		Index:      16,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldName)
+			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldValue)
 		},
 	},
 	ProdTabEntry{
@@ -1071,7 +1071,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : FieldName	<<  >>`,
+		String: `MlrvalOrFunction : FieldValue	<<  >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     29,
 		Index:      88,

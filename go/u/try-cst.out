@@ -790,9 +790,9 @@ $i += 2
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "i"
+        * DirectFieldValue "i"
         * Operator "+"
-            * DirectFieldName "i"
+            * DirectFieldValue "i"
             * IntLiteral "2"
 
 a   b   i x                   y
@@ -809,9 +809,9 @@ $i *= 2
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "i"
+        * DirectFieldValue "i"
         * Operator "*"
-            * DirectFieldName "i"
+            * DirectFieldValue "i"
             * IntLiteral "2"
 
 a   b   i x                   y
@@ -828,9 +828,9 @@ $i /= 2
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "i"
+        * DirectFieldValue "i"
         * Operator "/"
-            * DirectFieldName "i"
+            * DirectFieldValue "i"
             * IntLiteral "2"
 
 a   b   i   x                   y
@@ -847,9 +847,9 @@ $i |= 2
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "i"
+        * DirectFieldValue "i"
         * Operator "|"
-            * DirectFieldName "i"
+            * DirectFieldValue "i"
             * IntLiteral "2"
 
 a   b   i x                   y
@@ -866,14 +866,14 @@ $j = true; $j &&= $i < 2
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "j"
+        * DirectFieldValue "j"
         * BoolLiteral "true"
     * Assignment "="
-        * DirectFieldName "j"
+        * DirectFieldValue "j"
         * Operator "&&"
-            * DirectFieldName "j"
+            * DirectFieldValue "j"
             * Operator "<"
-                * DirectFieldName "i"
+                * DirectFieldValue "i"
                 * IntLiteral "2"
 
 a   b   i x                   y                   j
@@ -1426,8 +1426,8 @@ $new = $["a"]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "new"
-        * IndirectFieldName "$["
+        * DirectFieldValue "new"
+        * IndirectFieldValue "$["
             * StringLiteral "a"
 
 a   b   i x                   y                   new
@@ -1444,9 +1444,9 @@ $["new"] = $a
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldName "$["
+        * IndirectFieldValue "$["
             * StringLiteral "new"
-        * DirectFieldName "a"
+        * DirectFieldValue "a"
 
 a   b   i x                   y                   new
 pan pan 1 0.3467901443380824  0.7268028627434533  pan

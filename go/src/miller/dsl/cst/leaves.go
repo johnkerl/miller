@@ -20,8 +20,8 @@ func BuildLeafNode(
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeDirectFieldName:
-		return BuildSrecDirectFieldRvalueNode(sval), nil
+	case dsl.NodeTypeDirectFieldValue:
+		return BuildDirectFieldRvalueNode(sval), nil
 		break
 	case dsl.NodeTypeFullSrec:
 		return BuildFullSrecRvalueNode(sval), nil
@@ -54,16 +54,16 @@ func BuildLeafNode(
 }
 
 // ----------------------------------------------------------------
-type SrecDirectFieldRvalueNode struct {
+type DirectFieldRvalueNode struct {
 	fieldName string
 }
 
-func BuildSrecDirectFieldRvalueNode(fieldName string) *SrecDirectFieldRvalueNode {
-	return &SrecDirectFieldRvalueNode{
+func BuildDirectFieldRvalueNode(fieldName string) *DirectFieldRvalueNode {
+	return &DirectFieldRvalueNode{
 		fieldName: fieldName,
 	}
 }
-func (this *SrecDirectFieldRvalueNode) Evaluate(state *State) lib.Mlrval {
+func (this *DirectFieldRvalueNode) Evaluate(state *State) lib.Mlrval {
 	value := state.Inrec.Get(&this.fieldName)
 	if value == nil {
 		return lib.MlrvalFromAbsent()

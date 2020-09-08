@@ -19,9 +19,9 @@ var gotoTab = gotoTable{
 		5,  // Lvalue
 		6,  // BaseLvalue
 		7,  // IndexedLvalue
-		8,  // FieldName
-		10, // DirectFieldName
-		11, // IndirectFieldName
+		8,  // FieldValue
+		10, // DirectFieldValue
+		11, // IndirectFieldValue
 		9,  // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -60,9 +60,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -101,9 +101,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -142,9 +142,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -183,9 +183,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -224,9 +224,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -265,9 +265,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -306,9 +306,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -347,9 +347,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -388,9 +388,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -429,9 +429,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -470,9 +470,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -511,9 +511,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -552,9 +552,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		34, // FieldName
-		37, // DirectFieldName
-		38, // IndirectFieldName
+		34, // FieldValue
+		37, // DirectFieldValue
+		38, // IndirectFieldValue
 		35, // FullSrec
 		33, // Rvalue
 		42, // PrecedenceChainStart
@@ -593,9 +593,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -634,9 +634,9 @@ var gotoTab = gotoTable{
 		5,  // Lvalue
 		6,  // BaseLvalue
 		7,  // IndexedLvalue
-		8,  // FieldName
-		10, // DirectFieldName
-		11, // IndirectFieldName
+		8,  // FieldValue
+		10, // DirectFieldValue
+		11, // IndirectFieldValue
 		9,  // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -675,9 +675,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		89,  // Rvalue
 		98,  // PrecedenceChainStart
@@ -716,9 +716,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		144, // Rvalue
 		42,  // PrecedenceChainStart
@@ -757,9 +757,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		145, // Rvalue
 		98,  // PrecedenceChainStart
@@ -798,9 +798,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		146, // Rvalue
 		98,  // PrecedenceChainStart
@@ -839,9 +839,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		147, // Rvalue
 		98,  // PrecedenceChainStart
@@ -880,9 +880,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		148, // Rvalue
 		98,  // PrecedenceChainStart
@@ -921,9 +921,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		149, // Rvalue
 		98,  // PrecedenceChainStart
@@ -962,9 +962,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		150, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1003,9 +1003,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		151, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1044,9 +1044,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		152, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1085,9 +1085,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		153, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1126,9 +1126,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		154, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1167,9 +1167,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		155, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1208,9 +1208,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		156, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1249,9 +1249,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		157, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1290,9 +1290,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		158, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1331,9 +1331,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		159, // Rvalue
 		98,  // PrecedenceChainStart
@@ -1372,9 +1372,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1413,9 +1413,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1454,9 +1454,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1495,9 +1495,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -1536,9 +1536,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1577,9 +1577,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1618,9 +1618,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1659,9 +1659,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		219, // Rvalue
 		42,  // PrecedenceChainStart
@@ -1700,9 +1700,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1741,9 +1741,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1782,9 +1782,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1823,9 +1823,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1864,9 +1864,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1905,9 +1905,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1946,9 +1946,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -1987,9 +1987,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2028,9 +2028,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2069,9 +2069,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2110,9 +2110,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2151,9 +2151,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2192,9 +2192,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2233,9 +2233,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -2274,9 +2274,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2315,9 +2315,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -2356,9 +2356,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -2397,9 +2397,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -2438,9 +2438,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2479,9 +2479,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2520,9 +2520,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -2561,9 +2561,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -2602,9 +2602,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2643,9 +2643,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		256, // Rvalue
 		265, // PrecedenceChainStart
@@ -2684,9 +2684,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2725,9 +2725,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2766,9 +2766,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2807,9 +2807,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2848,9 +2848,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2889,9 +2889,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2930,9 +2930,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -2971,9 +2971,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3012,9 +3012,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -3053,9 +3053,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3094,9 +3094,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3135,9 +3135,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3176,9 +3176,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3217,9 +3217,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3258,9 +3258,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3299,9 +3299,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3340,9 +3340,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3381,9 +3381,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3422,9 +3422,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3463,9 +3463,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3504,9 +3504,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3545,9 +3545,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3586,9 +3586,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3627,9 +3627,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3668,9 +3668,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3709,9 +3709,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3750,9 +3750,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3791,9 +3791,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -3832,9 +3832,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3873,9 +3873,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3914,9 +3914,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -3955,9 +3955,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		372, // Rvalue
 		42,  // PrecedenceChainStart
@@ -3996,9 +3996,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4037,9 +4037,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4078,9 +4078,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4119,9 +4119,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4160,9 +4160,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4201,9 +4201,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4242,9 +4242,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4283,9 +4283,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4324,9 +4324,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4365,9 +4365,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4406,9 +4406,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4447,9 +4447,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4488,9 +4488,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4529,9 +4529,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -4570,9 +4570,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4611,9 +4611,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -4652,9 +4652,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -4693,9 +4693,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -4734,9 +4734,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4775,9 +4775,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4816,9 +4816,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -4857,9 +4857,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -4898,9 +4898,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -4939,9 +4939,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		409, // Rvalue
 		265, // PrecedenceChainStart
@@ -4980,9 +4980,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5021,9 +5021,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5062,9 +5062,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5103,9 +5103,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5144,9 +5144,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5185,9 +5185,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5226,9 +5226,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5267,9 +5267,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5308,9 +5308,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -5349,9 +5349,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5390,9 +5390,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5431,9 +5431,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5472,9 +5472,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5513,9 +5513,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5554,9 +5554,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5595,9 +5595,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5636,9 +5636,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5677,9 +5677,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5718,9 +5718,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5759,9 +5759,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5800,9 +5800,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5841,9 +5841,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5882,9 +5882,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5923,9 +5923,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -5964,9 +5964,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6005,9 +6005,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6046,9 +6046,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6087,9 +6087,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6128,9 +6128,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6169,9 +6169,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6210,9 +6210,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6251,9 +6251,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6292,9 +6292,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6333,9 +6333,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6374,9 +6374,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6415,9 +6415,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6456,9 +6456,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6497,9 +6497,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6538,9 +6538,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6579,9 +6579,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6620,9 +6620,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6661,9 +6661,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6702,9 +6702,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6743,9 +6743,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -6784,9 +6784,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6825,9 +6825,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6866,9 +6866,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6907,9 +6907,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -6948,9 +6948,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		416, // Rvalue
 		42,  // PrecedenceChainStart
@@ -6989,9 +6989,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7030,9 +7030,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7071,9 +7071,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7112,9 +7112,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7153,9 +7153,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7194,9 +7194,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7235,9 +7235,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7276,9 +7276,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7317,9 +7317,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7358,9 +7358,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7399,9 +7399,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7440,9 +7440,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7481,9 +7481,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7522,9 +7522,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -7563,9 +7563,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7604,9 +7604,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -7645,9 +7645,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -7686,9 +7686,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -7727,9 +7727,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7768,9 +7768,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7809,9 +7809,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -7850,9 +7850,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -7891,9 +7891,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -7932,9 +7932,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		453, // Rvalue
 		265, // PrecedenceChainStart
@@ -7973,9 +7973,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8014,9 +8014,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8055,9 +8055,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8096,9 +8096,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8137,9 +8137,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8178,9 +8178,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8219,9 +8219,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8260,9 +8260,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8301,9 +8301,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8342,9 +8342,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8383,9 +8383,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -8424,9 +8424,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8465,9 +8465,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8506,9 +8506,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8547,9 +8547,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8588,9 +8588,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8629,9 +8629,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8670,9 +8670,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8711,9 +8711,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8752,9 +8752,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8793,9 +8793,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8834,9 +8834,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8875,9 +8875,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8916,9 +8916,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8957,9 +8957,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -8998,9 +8998,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -9039,9 +9039,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9080,9 +9080,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9121,9 +9121,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9162,9 +9162,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9203,9 +9203,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9244,9 +9244,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9285,9 +9285,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9326,9 +9326,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9367,9 +9367,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9408,9 +9408,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9449,9 +9449,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9490,9 +9490,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9531,9 +9531,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9572,9 +9572,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9613,9 +9613,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9654,9 +9654,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9695,9 +9695,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9736,9 +9736,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9777,9 +9777,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9818,9 +9818,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9859,9 +9859,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9900,9 +9900,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -9941,9 +9941,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -9982,9 +9982,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10023,9 +10023,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10064,9 +10064,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10105,9 +10105,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10146,9 +10146,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10187,9 +10187,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10228,9 +10228,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10269,9 +10269,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10310,9 +10310,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10351,9 +10351,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10392,9 +10392,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10433,9 +10433,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10474,9 +10474,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -10515,9 +10515,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10556,9 +10556,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10597,9 +10597,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10638,9 +10638,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -10679,9 +10679,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10720,9 +10720,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10761,9 +10761,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10802,9 +10802,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		493, // Rvalue
 		42,  // PrecedenceChainStart
@@ -10843,9 +10843,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10884,9 +10884,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10925,9 +10925,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -10966,9 +10966,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11007,9 +11007,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11048,9 +11048,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11089,9 +11089,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11130,9 +11130,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11171,9 +11171,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11212,9 +11212,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11253,9 +11253,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11294,9 +11294,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11335,9 +11335,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11376,9 +11376,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -11417,9 +11417,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11458,9 +11458,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -11499,9 +11499,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -11540,9 +11540,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -11581,9 +11581,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11622,9 +11622,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11663,9 +11663,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -11704,9 +11704,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -11745,9 +11745,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11786,9 +11786,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		530, // Rvalue
 		265, // PrecedenceChainStart
@@ -11827,9 +11827,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11868,9 +11868,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11909,9 +11909,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11950,9 +11950,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -11991,9 +11991,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12032,9 +12032,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12073,9 +12073,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12114,9 +12114,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12155,9 +12155,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -12196,9 +12196,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12237,9 +12237,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12278,9 +12278,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12319,9 +12319,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12360,9 +12360,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12401,9 +12401,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12442,9 +12442,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12483,9 +12483,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12524,9 +12524,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12565,9 +12565,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12606,9 +12606,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12647,9 +12647,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12688,9 +12688,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12729,9 +12729,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12770,9 +12770,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		534, // Rvalue
 		543, // PrecedenceChainStart
@@ -12811,9 +12811,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12852,9 +12852,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12893,9 +12893,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -12934,9 +12934,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -12975,9 +12975,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13016,9 +13016,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13057,9 +13057,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13098,9 +13098,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		593, // Rvalue
 		42,  // PrecedenceChainStart
@@ -13139,9 +13139,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13180,9 +13180,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13221,9 +13221,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13262,9 +13262,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13303,9 +13303,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13344,9 +13344,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13385,9 +13385,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13426,9 +13426,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13467,9 +13467,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13508,9 +13508,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13549,9 +13549,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13590,9 +13590,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13631,9 +13631,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13672,9 +13672,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -13713,9 +13713,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13754,9 +13754,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -13795,9 +13795,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -13836,9 +13836,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -13877,9 +13877,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13918,9 +13918,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -13959,9 +13959,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -14000,9 +14000,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -14041,9 +14041,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14082,9 +14082,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		630, // Rvalue
 		265, // PrecedenceChainStart
@@ -14123,9 +14123,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14164,9 +14164,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14205,9 +14205,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14246,9 +14246,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14287,9 +14287,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14328,9 +14328,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14369,9 +14369,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14410,9 +14410,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14451,9 +14451,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -14492,9 +14492,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14533,9 +14533,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14574,9 +14574,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14615,9 +14615,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14656,9 +14656,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14697,9 +14697,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14738,9 +14738,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14779,9 +14779,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14820,9 +14820,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14861,9 +14861,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14902,9 +14902,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14943,9 +14943,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -14984,9 +14984,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15025,9 +15025,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15066,9 +15066,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15107,9 +15107,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15148,9 +15148,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15189,9 +15189,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15230,9 +15230,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15271,9 +15271,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -15312,9 +15312,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15353,9 +15353,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15394,9 +15394,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15435,9 +15435,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15476,9 +15476,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15517,9 +15517,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15558,9 +15558,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15599,9 +15599,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15640,9 +15640,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15681,9 +15681,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15722,9 +15722,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15763,9 +15763,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15804,9 +15804,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15845,9 +15845,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15886,9 +15886,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15927,9 +15927,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -15968,9 +15968,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16009,9 +16009,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16050,9 +16050,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16091,9 +16091,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16132,9 +16132,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16173,9 +16173,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16214,9 +16214,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16255,9 +16255,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16296,9 +16296,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16337,9 +16337,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16378,9 +16378,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16419,9 +16419,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16460,9 +16460,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16501,9 +16501,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16542,9 +16542,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16583,9 +16583,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16624,9 +16624,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16665,9 +16665,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16706,9 +16706,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16747,9 +16747,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -16788,9 +16788,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16829,9 +16829,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		669, // Rvalue
 		543, // PrecedenceChainStart
@@ -16870,9 +16870,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16911,9 +16911,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16952,9 +16952,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -16993,9 +16993,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -17034,9 +17034,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -17075,9 +17075,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -17116,9 +17116,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17157,9 +17157,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17198,9 +17198,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17239,9 +17239,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17280,9 +17280,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17321,9 +17321,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17362,9 +17362,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17403,9 +17403,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17444,9 +17444,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17485,9 +17485,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17526,9 +17526,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17567,9 +17567,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17608,9 +17608,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17649,9 +17649,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17690,9 +17690,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17731,9 +17731,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17772,9 +17772,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17813,9 +17813,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17854,9 +17854,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17895,9 +17895,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17936,9 +17936,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -17977,9 +17977,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18018,9 +18018,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18059,9 +18059,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18100,9 +18100,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18141,9 +18141,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18182,9 +18182,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18223,9 +18223,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18264,9 +18264,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18305,9 +18305,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18346,9 +18346,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18387,9 +18387,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18428,9 +18428,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18469,9 +18469,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18510,9 +18510,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18551,9 +18551,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -18592,9 +18592,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18633,9 +18633,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		705, // Rvalue
 		543, // PrecedenceChainStart
@@ -18674,9 +18674,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18715,9 +18715,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -18756,9 +18756,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18797,9 +18797,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18838,9 +18838,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18879,9 +18879,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18920,9 +18920,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -18961,9 +18961,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19002,9 +19002,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19043,9 +19043,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19084,9 +19084,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19125,9 +19125,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19166,9 +19166,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19207,9 +19207,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19248,9 +19248,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19289,9 +19289,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19330,9 +19330,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19371,9 +19371,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19412,9 +19412,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19453,9 +19453,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19494,9 +19494,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19535,9 +19535,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19576,9 +19576,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19617,9 +19617,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19658,9 +19658,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19699,9 +19699,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19740,9 +19740,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19781,9 +19781,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19822,9 +19822,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19863,9 +19863,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19904,9 +19904,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19945,9 +19945,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -19986,9 +19986,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20027,9 +20027,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20068,9 +20068,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20109,9 +20109,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20150,9 +20150,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20191,9 +20191,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20232,9 +20232,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -20273,9 +20273,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20314,9 +20314,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20355,9 +20355,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20396,9 +20396,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20437,9 +20437,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20478,9 +20478,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20519,9 +20519,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20560,9 +20560,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20601,9 +20601,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20642,9 +20642,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20683,9 +20683,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20724,9 +20724,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20765,9 +20765,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20806,9 +20806,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20847,9 +20847,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20888,9 +20888,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20929,9 +20929,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -20970,9 +20970,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21011,9 +21011,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21052,9 +21052,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21093,9 +21093,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21134,9 +21134,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21175,9 +21175,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21216,9 +21216,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21257,9 +21257,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21298,9 +21298,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21339,9 +21339,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21380,9 +21380,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21421,9 +21421,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21462,9 +21462,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21503,9 +21503,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21544,9 +21544,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21585,9 +21585,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21626,9 +21626,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21667,9 +21667,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21708,9 +21708,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -21749,9 +21749,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21790,9 +21790,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		743, // Rvalue
 		543, // PrecedenceChainStart
@@ -21831,9 +21831,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21872,9 +21872,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21913,9 +21913,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21954,9 +21954,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -21995,9 +21995,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22036,9 +22036,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -22077,9 +22077,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22118,9 +22118,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22159,9 +22159,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22200,9 +22200,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		750, // Rvalue
 		42,  // PrecedenceChainStart
@@ -22241,9 +22241,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22282,9 +22282,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22323,9 +22323,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22364,9 +22364,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22405,9 +22405,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		753, // Rvalue
 		42,  // PrecedenceChainStart
@@ -22446,9 +22446,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22487,9 +22487,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22528,9 +22528,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22569,9 +22569,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22610,9 +22610,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22651,9 +22651,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22692,9 +22692,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22733,9 +22733,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22774,9 +22774,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22815,9 +22815,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -22856,9 +22856,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -22897,9 +22897,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -22938,9 +22938,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -22979,9 +22979,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -23020,9 +23020,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23061,9 +23061,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23102,9 +23102,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -23143,9 +23143,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -23184,9 +23184,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23225,9 +23225,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		789, // Rvalue
 		265, // PrecedenceChainStart
@@ -23266,9 +23266,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23307,9 +23307,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23348,9 +23348,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23389,9 +23389,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23430,9 +23430,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23471,9 +23471,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23512,9 +23512,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23553,9 +23553,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23594,9 +23594,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -23635,9 +23635,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23676,9 +23676,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23717,9 +23717,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23758,9 +23758,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23799,9 +23799,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23840,9 +23840,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23881,9 +23881,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23922,9 +23922,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -23963,9 +23963,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24004,9 +24004,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24045,9 +24045,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24086,9 +24086,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24127,9 +24127,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24168,9 +24168,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24209,9 +24209,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		793, // Rvalue
 		802, // PrecedenceChainStart
@@ -24250,9 +24250,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24291,9 +24291,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24332,9 +24332,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -24373,9 +24373,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24414,9 +24414,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24455,9 +24455,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24496,9 +24496,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24537,9 +24537,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24578,9 +24578,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24619,9 +24619,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24660,9 +24660,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24701,9 +24701,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24742,9 +24742,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24783,9 +24783,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24824,9 +24824,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24865,9 +24865,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24906,9 +24906,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24947,9 +24947,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -24988,9 +24988,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25029,9 +25029,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25070,9 +25070,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25111,9 +25111,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25152,9 +25152,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25193,9 +25193,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25234,9 +25234,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25275,9 +25275,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25316,9 +25316,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25357,9 +25357,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25398,9 +25398,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25439,9 +25439,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25480,9 +25480,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25521,9 +25521,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25562,9 +25562,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25603,9 +25603,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25644,9 +25644,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25685,9 +25685,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25726,9 +25726,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25767,9 +25767,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25808,9 +25808,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -25849,9 +25849,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25890,9 +25890,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		881, // Rvalue
 		543, // PrecedenceChainStart
@@ -25931,9 +25931,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -25972,9 +25972,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26013,9 +26013,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26054,9 +26054,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -26095,9 +26095,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26136,9 +26136,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26177,9 +26177,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26218,9 +26218,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26259,9 +26259,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26300,9 +26300,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26341,9 +26341,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26382,9 +26382,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26423,9 +26423,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26464,9 +26464,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26505,9 +26505,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26546,9 +26546,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26587,9 +26587,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26628,9 +26628,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26669,9 +26669,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26710,9 +26710,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26751,9 +26751,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26792,9 +26792,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26833,9 +26833,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26874,9 +26874,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26915,9 +26915,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26956,9 +26956,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -26997,9 +26997,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27038,9 +27038,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27079,9 +27079,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27120,9 +27120,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27161,9 +27161,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27202,9 +27202,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27243,9 +27243,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27284,9 +27284,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27325,9 +27325,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27366,9 +27366,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27407,9 +27407,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27448,9 +27448,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27489,9 +27489,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		888, // Rvalue
 		42,  // PrecedenceChainStart
@@ -27530,9 +27530,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27571,9 +27571,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27612,9 +27612,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27653,9 +27653,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27694,9 +27694,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27735,9 +27735,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27776,9 +27776,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27817,9 +27817,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27858,9 +27858,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27899,9 +27899,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27940,9 +27940,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -27981,9 +27981,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28022,9 +28022,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28063,9 +28063,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28104,9 +28104,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28145,9 +28145,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28186,9 +28186,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28227,9 +28227,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28268,9 +28268,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28309,9 +28309,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28350,9 +28350,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28391,9 +28391,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28432,9 +28432,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28473,9 +28473,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28514,9 +28514,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28555,9 +28555,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28596,9 +28596,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28637,9 +28637,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28678,9 +28678,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28719,9 +28719,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28760,9 +28760,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28801,9 +28801,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28842,9 +28842,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28883,9 +28883,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28924,9 +28924,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -28965,9 +28965,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		893, // Rvalue
 		42,  // PrecedenceChainStart
@@ -29006,9 +29006,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29047,9 +29047,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29088,9 +29088,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -29129,9 +29129,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29170,9 +29170,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29211,9 +29211,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29252,9 +29252,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29293,9 +29293,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29334,9 +29334,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29375,9 +29375,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29416,9 +29416,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29457,9 +29457,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29498,9 +29498,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29539,9 +29539,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29580,9 +29580,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29621,9 +29621,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29662,9 +29662,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29703,9 +29703,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29744,9 +29744,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29785,9 +29785,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29826,9 +29826,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29867,9 +29867,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29908,9 +29908,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29949,9 +29949,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -29990,9 +29990,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30031,9 +30031,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30072,9 +30072,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30113,9 +30113,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30154,9 +30154,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30195,9 +30195,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30236,9 +30236,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30277,9 +30277,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30318,9 +30318,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30359,9 +30359,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30400,9 +30400,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30441,9 +30441,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30482,9 +30482,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30523,9 +30523,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		899, // Rvalue
 		42,  // PrecedenceChainStart
@@ -30564,9 +30564,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30605,9 +30605,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30646,9 +30646,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		901, // Rvalue
 		42,  // PrecedenceChainStart
@@ -30687,9 +30687,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30728,9 +30728,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30769,9 +30769,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30810,9 +30810,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -30851,9 +30851,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -30892,9 +30892,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30933,9 +30933,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -30974,9 +30974,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31015,9 +31015,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31056,9 +31056,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31097,9 +31097,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31138,9 +31138,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31179,9 +31179,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31220,9 +31220,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31261,9 +31261,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31302,9 +31302,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31343,9 +31343,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31384,9 +31384,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31425,9 +31425,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31466,9 +31466,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31507,9 +31507,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31548,9 +31548,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31589,9 +31589,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31630,9 +31630,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31671,9 +31671,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31712,9 +31712,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31753,9 +31753,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31794,9 +31794,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -31835,9 +31835,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31876,9 +31876,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31917,9 +31917,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31958,9 +31958,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -31999,9 +31999,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -32040,9 +32040,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -32081,9 +32081,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -32122,9 +32122,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32163,9 +32163,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32204,9 +32204,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32245,9 +32245,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32286,9 +32286,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32327,9 +32327,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -32368,9 +32368,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32409,9 +32409,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		535, // FieldName
-		538, // DirectFieldName
-		539, // IndirectFieldName
+		535, // FieldValue
+		538, // DirectFieldValue
+		539, // IndirectFieldValue
 		536, // FullSrec
 		937, // Rvalue
 		543, // PrecedenceChainStart
@@ -32450,9 +32450,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32491,9 +32491,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32532,9 +32532,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32573,9 +32573,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32614,9 +32614,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32655,9 +32655,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		161, // Rvalue
 		171, // PrecedenceChainStart
@@ -32696,9 +32696,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32737,9 +32737,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32778,9 +32778,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32819,9 +32819,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		942, // Rvalue
 		42,  // PrecedenceChainStart
@@ -32860,9 +32860,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32901,9 +32901,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32942,9 +32942,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -32983,9 +32983,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33024,9 +33024,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33065,9 +33065,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33106,9 +33106,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33147,9 +33147,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33188,9 +33188,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33229,9 +33229,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33270,9 +33270,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33311,9 +33311,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33352,9 +33352,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33393,9 +33393,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -33434,9 +33434,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33475,9 +33475,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -33516,9 +33516,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -33557,9 +33557,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -33598,9 +33598,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33639,9 +33639,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33680,9 +33680,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -33721,9 +33721,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		794, // FieldName
-		797, // DirectFieldName
-		798, // IndirectFieldName
+		794, // FieldValue
+		797, // DirectFieldValue
+		798, // IndirectFieldValue
 		795, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -33762,9 +33762,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33803,9 +33803,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		979, // Rvalue
 		265, // PrecedenceChainStart
@@ -33844,9 +33844,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33885,9 +33885,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33926,9 +33926,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -33967,9 +33967,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34008,9 +34008,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34049,9 +34049,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34090,9 +34090,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34131,9 +34131,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34172,9 +34172,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		313, // FieldName
-		316, // DirectFieldName
-		317, // IndirectFieldName
+		313, // FieldValue
+		316, // DirectFieldValue
+		317, // IndirectFieldValue
 		314, // FullSrec
 		312, // Rvalue
 		321, // PrecedenceChainStart
@@ -34213,9 +34213,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34254,9 +34254,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34295,9 +34295,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34336,9 +34336,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34377,9 +34377,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34418,9 +34418,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34459,9 +34459,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34500,9 +34500,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34541,9 +34541,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34582,9 +34582,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34623,9 +34623,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34664,9 +34664,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34705,9 +34705,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34746,9 +34746,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34787,9 +34787,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34828,9 +34828,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34869,9 +34869,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34910,9 +34910,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34951,9 +34951,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -34992,9 +34992,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35033,9 +35033,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35074,9 +35074,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35115,9 +35115,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35156,9 +35156,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35197,9 +35197,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35238,9 +35238,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35279,9 +35279,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35320,9 +35320,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35361,9 +35361,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35402,9 +35402,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35443,9 +35443,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35484,9 +35484,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35525,9 +35525,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35566,9 +35566,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35607,9 +35607,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35648,9 +35648,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35689,9 +35689,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35730,9 +35730,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35771,9 +35771,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35812,9 +35812,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35853,9 +35853,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35894,9 +35894,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35935,9 +35935,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -35976,9 +35976,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36017,9 +36017,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36058,9 +36058,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36099,9 +36099,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36140,9 +36140,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36181,9 +36181,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		986, // Rvalue
 		42,  // PrecedenceChainStart
@@ -36222,9 +36222,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36263,9 +36263,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36304,9 +36304,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		90,  // FieldName
-		93,  // DirectFieldName
-		94,  // IndirectFieldName
+		90,  // FieldValue
+		93,  // DirectFieldValue
+		94,  // IndirectFieldValue
 		91,  // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -36345,9 +36345,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36386,9 +36386,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		989, // Rvalue
 		42,  // PrecedenceChainStart
@@ -36427,9 +36427,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36468,9 +36468,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36509,9 +36509,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		162, // FieldName
-		166, // DirectFieldName
-		167, // IndirectFieldName
+		162, // FieldValue
+		166, // DirectFieldValue
+		167, // IndirectFieldValue
 		163, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -36550,9 +36550,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36591,9 +36591,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		993, // Rvalue
 		42,  // PrecedenceChainStart
@@ -36632,9 +36632,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36673,9 +36673,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36714,9 +36714,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36755,9 +36755,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		257, // FieldName
-		260, // DirectFieldName
-		261, // IndirectFieldName
+		257, // FieldValue
+		260, // DirectFieldValue
+		261, // IndirectFieldValue
 		258, // FullSrec
 		-1,  // Rvalue
 		-1,  // PrecedenceChainStart
@@ -36796,9 +36796,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36837,9 +36837,9 @@ var gotoTab = gotoTable{
 		-1,  // Lvalue
 		-1,  // BaseLvalue
 		-1,  // IndexedLvalue
-		34,  // FieldName
-		37,  // DirectFieldName
-		38,  // IndirectFieldName
+		34,  // FieldValue
+		37,  // DirectFieldValue
+		38,  // IndirectFieldValue
 		35,  // FullSrec
 		997, // Rvalue
 		42,  // PrecedenceChainStart
@@ -36878,9 +36878,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36919,9 +36919,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -36960,9 +36960,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37001,9 +37001,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37042,9 +37042,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37083,9 +37083,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37124,9 +37124,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37165,9 +37165,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37206,9 +37206,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37247,9 +37247,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37288,9 +37288,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37329,9 +37329,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37370,9 +37370,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37411,9 +37411,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37452,9 +37452,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37493,9 +37493,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37534,9 +37534,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37575,9 +37575,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37616,9 +37616,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37657,9 +37657,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37698,9 +37698,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37739,9 +37739,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37780,9 +37780,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37821,9 +37821,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37862,9 +37862,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37903,9 +37903,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37944,9 +37944,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -37985,9 +37985,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38026,9 +38026,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38067,9 +38067,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38108,9 +38108,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38149,9 +38149,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38190,9 +38190,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38231,9 +38231,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38272,9 +38272,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38313,9 +38313,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38354,9 +38354,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38395,9 +38395,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38436,9 +38436,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38477,9 +38477,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		34,   // FieldName
-		37,   // DirectFieldName
-		38,   // IndirectFieldName
+		34,   // FieldValue
+		37,   // DirectFieldValue
+		38,   // IndirectFieldValue
 		35,   // FullSrec
 		1004, // Rvalue
 		42,   // PrecedenceChainStart
@@ -38518,9 +38518,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38559,9 +38559,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38600,9 +38600,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38641,9 +38641,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -38682,9 +38682,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		313,  // FieldName
-		316,  // DirectFieldName
-		317,  // IndirectFieldName
+		313,  // FieldValue
+		316,  // DirectFieldValue
+		317,  // IndirectFieldValue
 		314,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38723,9 +38723,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38764,9 +38764,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38805,9 +38805,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38846,9 +38846,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38887,9 +38887,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38928,9 +38928,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -38969,9 +38969,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39010,9 +39010,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39051,9 +39051,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39092,9 +39092,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39133,9 +39133,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39174,9 +39174,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39215,9 +39215,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39256,9 +39256,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39297,9 +39297,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39338,9 +39338,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39379,9 +39379,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39420,9 +39420,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39461,9 +39461,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39502,9 +39502,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39543,9 +39543,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39584,9 +39584,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -39625,9 +39625,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39666,9 +39666,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39707,9 +39707,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39748,9 +39748,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39789,9 +39789,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39830,9 +39830,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39871,9 +39871,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -39912,9 +39912,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -39953,9 +39953,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -39994,9 +39994,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40035,9 +40035,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40076,9 +40076,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40117,9 +40117,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -40158,9 +40158,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40199,9 +40199,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		535,  // FieldName
-		538,  // DirectFieldName
-		539,  // IndirectFieldName
+		535,  // FieldValue
+		538,  // DirectFieldValue
+		539,  // IndirectFieldValue
 		536,  // FullSrec
 		1039, // Rvalue
 		543,  // PrecedenceChainStart
@@ -40240,9 +40240,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40281,9 +40281,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40322,9 +40322,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		313,  // FieldName
-		316,  // DirectFieldName
-		317,  // IndirectFieldName
+		313,  // FieldValue
+		316,  // DirectFieldValue
+		317,  // IndirectFieldValue
 		314,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -40363,9 +40363,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40404,9 +40404,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		34,   // FieldName
-		37,   // DirectFieldName
-		38,   // IndirectFieldName
+		34,   // FieldValue
+		37,   // DirectFieldValue
+		38,   // IndirectFieldValue
 		35,   // FullSrec
 		1043, // Rvalue
 		42,   // PrecedenceChainStart
@@ -40445,9 +40445,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40486,9 +40486,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40527,9 +40527,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40568,9 +40568,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40609,9 +40609,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40650,9 +40650,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40691,9 +40691,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40732,9 +40732,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40773,9 +40773,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40814,9 +40814,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40855,9 +40855,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40896,9 +40896,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40937,9 +40937,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -40978,9 +40978,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41019,9 +41019,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41060,9 +41060,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		535,  // FieldName
-		538,  // DirectFieldName
-		539,  // IndirectFieldName
+		535,  // FieldValue
+		538,  // DirectFieldValue
+		539,  // IndirectFieldValue
 		536,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -41101,9 +41101,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41142,9 +41142,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		34,   // FieldName
-		37,   // DirectFieldName
-		38,   // IndirectFieldName
+		34,   // FieldValue
+		37,   // DirectFieldValue
+		38,   // IndirectFieldValue
 		35,   // FullSrec
 		1050, // Rvalue
 		42,   // PrecedenceChainStart
@@ -41183,9 +41183,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41224,9 +41224,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41265,9 +41265,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41306,9 +41306,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41347,9 +41347,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41388,9 +41388,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41429,9 +41429,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41470,9 +41470,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41511,9 +41511,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41552,9 +41552,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41593,9 +41593,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41634,9 +41634,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41675,9 +41675,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41716,9 +41716,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41757,9 +41757,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41798,9 +41798,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41839,9 +41839,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41880,9 +41880,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41921,9 +41921,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -41962,9 +41962,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42003,9 +42003,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42044,9 +42044,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42085,9 +42085,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42126,9 +42126,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42167,9 +42167,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42208,9 +42208,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42249,9 +42249,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42290,9 +42290,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42331,9 +42331,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42372,9 +42372,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42413,9 +42413,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42454,9 +42454,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42495,9 +42495,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42536,9 +42536,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42577,9 +42577,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42618,9 +42618,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42659,9 +42659,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		34,   // FieldName
-		37,   // DirectFieldName
-		38,   // IndirectFieldName
+		34,   // FieldValue
+		37,   // DirectFieldValue
+		38,   // IndirectFieldValue
 		35,   // FullSrec
 		1056, // Rvalue
 		42,   // PrecedenceChainStart
@@ -42700,9 +42700,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42741,9 +42741,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42782,9 +42782,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42823,9 +42823,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42864,9 +42864,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42905,9 +42905,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42946,9 +42946,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -42987,9 +42987,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43028,9 +43028,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43069,9 +43069,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43110,9 +43110,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43151,9 +43151,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43192,9 +43192,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		794,  // FieldName
-		797,  // DirectFieldName
-		798,  // IndirectFieldName
+		794,  // FieldValue
+		797,  // DirectFieldValue
+		798,  // IndirectFieldValue
 		795,  // FullSrec
 		-1,   // Rvalue
 		-1,   // PrecedenceChainStart
@@ -43233,9 +43233,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43274,9 +43274,9 @@ var gotoTab = gotoTable{
 		-1,   // Lvalue
 		-1,   // BaseLvalue
 		-1,   // IndexedLvalue
-		34,   // FieldName
-		37,   // DirectFieldName
-		38,   // IndirectFieldName
+		34,   // FieldValue
+		37,   // DirectFieldValue
+		38,   // IndirectFieldValue
 		35,   // FullSrec
 		1061, // Rvalue
 		42,   // PrecedenceChainStart
@@ -43315,9 +43315,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43356,9 +43356,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43397,9 +43397,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43438,9 +43438,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43479,9 +43479,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43520,9 +43520,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43561,9 +43561,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43602,9 +43602,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart
@@ -43643,9 +43643,9 @@ var gotoTab = gotoTable{
 		-1, // Lvalue
 		-1, // BaseLvalue
 		-1, // IndexedLvalue
-		-1, // FieldName
-		-1, // DirectFieldName
-		-1, // IndirectFieldName
+		-1, // FieldValue
+		-1, // DirectFieldValue
+		-1, // IndirectFieldValue
 		-1, // FullSrec
 		-1, // Rvalue
 		-1, // PrecedenceChainStart

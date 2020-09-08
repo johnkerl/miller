@@ -37,8 +37,8 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case dsl.NodeTypeArraySliceAccess:
 		return BuildArraySliceAccessNode(astNode)
 
-	case dsl.NodeTypeIndirectFieldName:
-		return BuildIndirectFieldNameNode(astNode)
+	case dsl.NodeTypeIndirectFieldValue:
+		return BuildIndirectFieldValueNode(astNode)
 	}
 
 	// xxx if/while/etc
@@ -51,23 +51,23 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 }
 
 // ----------------------------------------------------------------
-type IndirectFieldNameNode struct {
+type IndirectFieldValueNode struct {
 	fieldNameEvaluable IEvaluable
 }
 
-func BuildIndirectFieldNameNode(astNode *dsl.ASTNode) (*IndirectFieldNameNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldName)
+func BuildIndirectFieldValueNode(astNode *dsl.ASTNode) (*IndirectFieldValueNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 	fieldNameEvaluable, err := BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	return &IndirectFieldNameNode{
+	return &IndirectFieldValueNode{
 		fieldNameEvaluable: fieldNameEvaluable,
 	}, nil
 }
-func (this *IndirectFieldNameNode) Evaluate(state *State) lib.Mlrval { // xxx err
+func (this *IndirectFieldValueNode) Evaluate(state *State) lib.Mlrval { // xxx err
 	fieldName := this.fieldNameEvaluable.Evaluate(state)
 	// xxx handle int-index too. needs a centralized place for that.
 	if fieldName.IsAbsent() {

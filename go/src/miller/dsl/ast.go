@@ -25,10 +25,10 @@ const (
 	NodeTypeArraySliceEmptyLowerIndex = "ArraySliceEmptyLowerIndex"
 	NodeTypeArraySliceEmptyUpperIndex = "ArraySliceEmptyUpperIndex"
 
-	NodeTypeDirectFieldName   = "DirectFieldName"
-	NodeTypeIndirectFieldName = "IndirectFieldName"
-	NodeTypeFullSrec          = "FullSrec"
-	NodeTypeIndexedLvalue     = "IndexedLvalue"
+	NodeTypeDirectFieldValue   = "DirectFieldValue"
+	NodeTypeIndirectFieldValue = "IndirectFieldValue"
+	NodeTypeFullSrec           = "FullSrec"
+	NodeTypeIndexedLvalue      = "IndexedLvalue"
 
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"

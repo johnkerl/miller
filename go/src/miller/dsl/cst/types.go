@@ -22,23 +22,6 @@ import (
 // ----------------------------------------------------------------
 
 // ----------------------------------------------------------------
-// AST nodes (TNodeType) at the moment:
-//
-// NodeTypeStringLiteral
-// NodeTypeIntLiteral
-// NodeTypeFloatLiteral
-// NodeTypeBoolLiteral
-//
-// NodeTypeDirectFieldName
-// NodeTypeIndirectFieldName
-//
-// NodeTypeStatementBlock
-// NodeTypeAssignment
-// NodeTypeOperator
-// NodeTypeContextVariable
-// ----------------------------------------------------------------
-
-// ----------------------------------------------------------------
 // When we do mlr put '...DSL expression here...', this state is what is needed
 // to execute the expression. That includes the current record, AWK-like variables
 // such as FILENAME and NR, and out-of-stream variables.

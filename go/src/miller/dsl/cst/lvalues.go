@@ -16,11 +16,11 @@ func BuildAssignableNode(
 ) (IAssignable, error) {
 
 	switch astNode.Type {
-	case dsl.NodeTypeDirectFieldName:
-		return BuildDirectFieldNameLvalueNode(astNode)
+	case dsl.NodeTypeDirectFieldValue:
+		return BuildDirectFieldValueLvalueNode(astNode)
 		break
-	case dsl.NodeTypeIndirectFieldName:
-		return BuildIndirectFieldNameLvalueNode(astNode)
+	case dsl.NodeTypeIndirectFieldValue:
+		return BuildIndirectFieldValueLvalueNode(astNode)
 		break
 	case dsl.NodeTypeFullSrec:
 		return BuildFullSrecLvalueNode(astNode)
@@ -36,31 +36,31 @@ func BuildAssignableNode(
 }
 
 // ----------------------------------------------------------------
-type DirectFieldNameLvalueNode struct {
+type DirectFieldValueLvalueNode struct {
 	lhsFieldName string
 }
 
-func BuildDirectFieldNameLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldName)
+func BuildDirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
 
 	lhsFieldName := string(astNode.Token.Lit)
-	return NewDirectFieldNameLvalueNode(lhsFieldName), nil
+	return NewDirectFieldValueLvalueNode(lhsFieldName), nil
 }
 
-func NewDirectFieldNameLvalueNode(lhsFieldName string) *DirectFieldNameLvalueNode {
-	return &DirectFieldNameLvalueNode{
+func NewDirectFieldValueLvalueNode(lhsFieldName string) *DirectFieldValueLvalueNode {
+	return &DirectFieldValueLvalueNode{
 		lhsFieldName: lhsFieldName,
 	}
 }
 
-func (this *DirectFieldNameLvalueNode) Assign(
+func (this *DirectFieldValueLvalueNode) Assign(
 	rvalue *lib.Mlrval,
 	state *State,
 ) error {
 	return this.AssignIndexed(rvalue, nil, state)
 }
 
-func (this *DirectFieldNameLvalueNode) AssignIndexed(
+func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	rvalue *lib.Mlrval,
 	indices []*lib.Mlrval,
 	state *State,
@@ -76,12 +76,12 @@ func (this *DirectFieldNameLvalueNode) AssignIndexed(
 }
 
 // ----------------------------------------------------------------
-type IndirectFieldNameLvalueNode struct {
+type IndirectFieldValueLvalueNode struct {
 	lhsFieldNameExpression IEvaluable
 }
 
-func BuildIndirectFieldNameLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldName)
+func BuildIndirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
@@ -90,25 +90,25 @@ func BuildIndirectFieldNameLvalueNode(astNode *dsl.ASTNode) (IAssignable, error)
 		return nil, err
 	}
 
-	return NewIndirectFieldNameLvalueNode(lhsFieldNameExpression), nil
+	return NewIndirectFieldValueLvalueNode(lhsFieldNameExpression), nil
 }
 
-func NewIndirectFieldNameLvalueNode(
+func NewIndirectFieldValueLvalueNode(
 	lhsFieldNameExpression IEvaluable,
-) *IndirectFieldNameLvalueNode {
-	return &IndirectFieldNameLvalueNode{
+) *IndirectFieldValueLvalueNode {
+	return &IndirectFieldValueLvalueNode{
 		lhsFieldNameExpression: lhsFieldNameExpression,
 	}
 }
 
-func (this *IndirectFieldNameLvalueNode) Assign(
+func (this *IndirectFieldValueLvalueNode) Assign(
 	rvalue *lib.Mlrval,
 	state *State,
 ) error {
 	return this.AssignIndexed(rvalue, nil, state)
 }
 
-func (this *IndirectFieldNameLvalueNode) AssignIndexed(
+func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	rvalue *lib.Mlrval,
 	indices []*lib.Mlrval,
 	state *State,
@@ -207,7 +207,7 @@ func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	//     * Assignment "="
 	//         * IndexedLvalue "[]"
 	//             * IndexedLvalue "[]"
-	//                 * DirectFieldName "x"
+	//                 * DirectFieldValue "x"
 	//                 * IntLiteral "1"
 	//             * IntLiteral "2"
 	//         * IntLiteral "3"

@@ -858,27 +858,27 @@ var actionTab = actionTable{
 			nil,        // $
 			nil,        // empty
 			nil,        // ;
-			reduce(13), // =, reduce: FieldName
-			reduce(13), // [, reduce: FieldName
+			reduce(13), // =, reduce: FieldValue
+			reduce(13), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
-			reduce(13), // ||=, reduce: FieldName
-			reduce(13), // ^^=, reduce: FieldName
-			reduce(13), // &&=, reduce: FieldName
-			reduce(13), // |=, reduce: FieldName
-			reduce(13), // ^=, reduce: FieldName
-			reduce(13), // <<=, reduce: FieldName
-			reduce(13), // >>=, reduce: FieldName
-			reduce(13), // +=, reduce: FieldName
-			reduce(13), // .=, reduce: FieldName
-			reduce(13), // -=, reduce: FieldName
-			reduce(13), // *=, reduce: FieldName
-			reduce(13), // /=, reduce: FieldName
-			reduce(13), // //=, reduce: FieldName
-			reduce(13), // %=, reduce: FieldName
-			reduce(13), // **=, reduce: FieldName
+			reduce(13), // ||=, reduce: FieldValue
+			reduce(13), // ^^=, reduce: FieldValue
+			reduce(13), // &&=, reduce: FieldValue
+			reduce(13), // |=, reduce: FieldValue
+			reduce(13), // ^=, reduce: FieldValue
+			reduce(13), // <<=, reduce: FieldValue
+			reduce(13), // >>=, reduce: FieldValue
+			reduce(13), // +=, reduce: FieldValue
+			reduce(13), // .=, reduce: FieldValue
+			reduce(13), // -=, reduce: FieldValue
+			reduce(13), // *=, reduce: FieldValue
+			reduce(13), // /=, reduce: FieldValue
+			reduce(13), // //=, reduce: FieldValue
+			reduce(13), // %=, reduce: FieldValue
+			reduce(13), // **=, reduce: FieldValue
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -942,27 +942,27 @@ var actionTab = actionTable{
 			nil,        // $
 			nil,        // empty
 			nil,        // ;
-			reduce(14), // =, reduce: FieldName
-			reduce(14), // [, reduce: FieldName
+			reduce(14), // =, reduce: FieldValue
+			reduce(14), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
-			reduce(14), // ||=, reduce: FieldName
-			reduce(14), // ^^=, reduce: FieldName
-			reduce(14), // &&=, reduce: FieldName
-			reduce(14), // |=, reduce: FieldName
-			reduce(14), // ^=, reduce: FieldName
-			reduce(14), // <<=, reduce: FieldName
-			reduce(14), // >>=, reduce: FieldName
-			reduce(14), // +=, reduce: FieldName
-			reduce(14), // .=, reduce: FieldName
-			reduce(14), // -=, reduce: FieldName
-			reduce(14), // *=, reduce: FieldName
-			reduce(14), // /=, reduce: FieldName
-			reduce(14), // //=, reduce: FieldName
-			reduce(14), // %=, reduce: FieldName
-			reduce(14), // **=, reduce: FieldName
+			reduce(14), // ||=, reduce: FieldValue
+			reduce(14), // ^^=, reduce: FieldValue
+			reduce(14), // &&=, reduce: FieldValue
+			reduce(14), // |=, reduce: FieldValue
+			reduce(14), // ^=, reduce: FieldValue
+			reduce(14), // <<=, reduce: FieldValue
+			reduce(14), // >>=, reduce: FieldValue
+			reduce(14), // +=, reduce: FieldValue
+			reduce(14), // .=, reduce: FieldValue
+			reduce(14), // -=, reduce: FieldValue
+			reduce(14), // *=, reduce: FieldValue
+			reduce(14), // /=, reduce: FieldValue
+			reduce(14), // //=, reduce: FieldValue
+			reduce(14), // %=, reduce: FieldValue
+			reduce(14), // **=, reduce: FieldValue
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -1026,27 +1026,27 @@ var actionTab = actionTable{
 			nil,        // $
 			nil,        // empty
 			nil,        // ;
-			reduce(15), // =, reduce: DirectFieldName
-			reduce(15), // [, reduce: DirectFieldName
+			reduce(15), // =, reduce: DirectFieldValue
+			reduce(15), // [, reduce: DirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
-			reduce(15), // ||=, reduce: DirectFieldName
-			reduce(15), // ^^=, reduce: DirectFieldName
-			reduce(15), // &&=, reduce: DirectFieldName
-			reduce(15), // |=, reduce: DirectFieldName
-			reduce(15), // ^=, reduce: DirectFieldName
-			reduce(15), // <<=, reduce: DirectFieldName
-			reduce(15), // >>=, reduce: DirectFieldName
-			reduce(15), // +=, reduce: DirectFieldName
-			reduce(15), // .=, reduce: DirectFieldName
-			reduce(15), // -=, reduce: DirectFieldName
-			reduce(15), // *=, reduce: DirectFieldName
-			reduce(15), // /=, reduce: DirectFieldName
-			reduce(15), // //=, reduce: DirectFieldName
-			reduce(15), // %=, reduce: DirectFieldName
-			reduce(15), // **=, reduce: DirectFieldName
+			reduce(15), // ||=, reduce: DirectFieldValue
+			reduce(15), // ^^=, reduce: DirectFieldValue
+			reduce(15), // &&=, reduce: DirectFieldValue
+			reduce(15), // |=, reduce: DirectFieldValue
+			reduce(15), // ^=, reduce: DirectFieldValue
+			reduce(15), // <<=, reduce: DirectFieldValue
+			reduce(15), // >>=, reduce: DirectFieldValue
+			reduce(15), // +=, reduce: DirectFieldValue
+			reduce(15), // .=, reduce: DirectFieldValue
+			reduce(15), // -=, reduce: DirectFieldValue
+			reduce(15), // *=, reduce: DirectFieldValue
+			reduce(15), // /=, reduce: DirectFieldValue
+			reduce(15), // //=, reduce: DirectFieldValue
+			reduce(15), // %=, reduce: DirectFieldValue
+			reduce(15), // **=, reduce: DirectFieldValue
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -3127,8 +3127,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
-			reduce(13), // ], reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
+			reduce(13), // ], reduce: FieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -3147,39 +3147,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -3211,8 +3211,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
-			reduce(14), // ], reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
+			reduce(14), // ], reduce: FieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -3231,39 +3231,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -3295,8 +3295,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
-			reduce(15), // ], reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
+			reduce(15), // ], reduce: DirectFieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -3315,39 +3315,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
 			nil,        // :
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -7827,11 +7827,11 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(13), // $, reduce: FieldName
+			reduce(13), // $, reduce: FieldValue
 			nil,        // empty
-			reduce(13), // ;, reduce: FieldName
+			reduce(13), // ;, reduce: FieldValue
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -7851,39 +7851,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -7911,11 +7911,11 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(14), // $, reduce: FieldName
+			reduce(14), // $, reduce: FieldValue
 			nil,        // empty
-			reduce(14), // ;, reduce: FieldName
+			reduce(14), // ;, reduce: FieldValue
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -7935,39 +7935,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -7995,11 +7995,11 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(15), // $, reduce: DirectFieldName
+			reduce(15), // $, reduce: DirectFieldValue
 			nil,        // empty
-			reduce(15), // ;, reduce: DirectFieldName
+			reduce(15), // ;, reduce: DirectFieldValue
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -8019,39 +8019,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
 			nil,        // :
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -13458,27 +13458,27 @@ var actionTab = actionTable{
 			nil,        // $
 			nil,        // empty
 			nil,        // ;
-			reduce(16), // =, reduce: IndirectFieldName
-			reduce(16), // [, reduce: IndirectFieldName
+			reduce(16), // =, reduce: IndirectFieldValue
+			reduce(16), // [, reduce: IndirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
-			reduce(16), // ||=, reduce: IndirectFieldName
-			reduce(16), // ^^=, reduce: IndirectFieldName
-			reduce(16), // &&=, reduce: IndirectFieldName
-			reduce(16), // |=, reduce: IndirectFieldName
-			reduce(16), // ^=, reduce: IndirectFieldName
-			reduce(16), // <<=, reduce: IndirectFieldName
-			reduce(16), // >>=, reduce: IndirectFieldName
-			reduce(16), // +=, reduce: IndirectFieldName
-			reduce(16), // .=, reduce: IndirectFieldName
-			reduce(16), // -=, reduce: IndirectFieldName
-			reduce(16), // *=, reduce: IndirectFieldName
-			reduce(16), // /=, reduce: IndirectFieldName
-			reduce(16), // //=, reduce: IndirectFieldName
-			reduce(16), // %=, reduce: IndirectFieldName
-			reduce(16), // **=, reduce: IndirectFieldName
+			reduce(16), // ||=, reduce: IndirectFieldValue
+			reduce(16), // ^^=, reduce: IndirectFieldValue
+			reduce(16), // &&=, reduce: IndirectFieldValue
+			reduce(16), // |=, reduce: IndirectFieldValue
+			reduce(16), // ^=, reduce: IndirectFieldValue
+			reduce(16), // <<=, reduce: IndirectFieldValue
+			reduce(16), // >>=, reduce: IndirectFieldValue
+			reduce(16), // +=, reduce: IndirectFieldValue
+			reduce(16), // .=, reduce: IndirectFieldValue
+			reduce(16), // -=, reduce: IndirectFieldValue
+			reduce(16), // *=, reduce: IndirectFieldValue
+			reduce(16), // /=, reduce: IndirectFieldValue
+			reduce(16), // //=, reduce: IndirectFieldValue
+			reduce(16), // %=, reduce: IndirectFieldValue
+			reduce(16), // **=, reduce: IndirectFieldValue
 			nil,        // ?
 			nil,        // :
 			nil,        // ||
@@ -13963,8 +13963,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
-			reduce(13), // ], reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
+			reduce(13), // ], reduce: FieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -13983,39 +13983,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -14023,7 +14023,7 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(13), // ,, reduce: FieldName
+			reduce(13), // ,, reduce: FieldValue
 			nil,        // {
 			nil,        // }
 			nil,        // md_token_IPS
@@ -14047,8 +14047,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
-			reduce(14), // ], reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
+			reduce(14), // ], reduce: FieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -14067,39 +14067,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -14107,7 +14107,7 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(14), // ,, reduce: FieldName
+			reduce(14), // ,, reduce: FieldValue
 			nil,        // {
 			nil,        // }
 			nil,        // md_token_IPS
@@ -14131,8 +14131,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
-			reduce(15), // ], reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
+			reduce(15), // ], reduce: DirectFieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -14151,39 +14151,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
 			nil,        // :
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -14191,7 +14191,7 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(15), // ,, reduce: DirectFieldName
+			reduce(15), // ,, reduce: DirectFieldValue
 			nil,        // {
 			nil,        // }
 			nil,        // md_token_IPS
@@ -21859,7 +21859,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -21879,41 +21879,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
-			reduce(13), // ), reduce: FieldName
+			reduce(13), // ), reduce: FieldValue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -21943,7 +21943,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -21963,41 +21963,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
-			reduce(14), // ), reduce: FieldName
+			reduce(14), // ), reduce: FieldValue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -22027,7 +22027,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -22047,41 +22047,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
 			nil,        // :
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
-			reduce(15), // ), reduce: DirectFieldName
+			reduce(15), // ), reduce: DirectFieldValue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -26563,7 +26563,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -26583,39 +26583,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
-			reduce(13), // :, reduce: FieldName
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
+			reduce(13), // :, reduce: FieldValue
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -26647,7 +26647,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -26667,39 +26667,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
-			reduce(14), // :, reduce: FieldName
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
+			reduce(14), // :, reduce: FieldValue
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -26731,7 +26731,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -26751,39 +26751,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
-			reduce(15), // :, reduce: DirectFieldName
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
+			reduce(15), // :, reduce: DirectFieldValue
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -38575,8 +38575,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
-			reduce(16), // ], reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
+			reduce(16), // ], reduce: IndirectFieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -38595,39 +38595,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
 			nil,        // :
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -45211,8 +45211,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
-			reduce(13), // ], reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
+			reduce(13), // ], reduce: FieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -45231,39 +45231,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
-			reduce(13), // :, reduce: FieldName
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
+			reduce(13), // :, reduce: FieldValue
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -45295,8 +45295,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
-			reduce(14), // ], reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
+			reduce(14), // ], reduce: FieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -45315,39 +45315,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
-			reduce(14), // :, reduce: FieldName
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
+			reduce(14), // :, reduce: FieldValue
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -45379,8 +45379,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
-			reduce(15), // ], reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
+			reduce(15), // ], reduce: DirectFieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -45399,39 +45399,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
-			reduce(15), // :, reduce: DirectFieldName
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
+			reduce(15), // :, reduce: DirectFieldValue
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -53523,11 +53523,11 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,        // INVALID
-			reduce(16), // $, reduce: IndirectFieldName
+			reduce(16), // $, reduce: IndirectFieldValue
 			nil,        // empty
-			reduce(16), // ;, reduce: IndirectFieldName
+			reduce(16), // ;, reduce: IndirectFieldValue
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -53547,39 +53547,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
 			nil,        // :
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -56551,8 +56551,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
-			reduce(16), // ], reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
+			reduce(16), // ], reduce: IndirectFieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -56571,39 +56571,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
 			nil,        // :
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -56611,7 +56611,7 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(16), // ,, reduce: IndirectFieldName
+			reduce(16), // ,, reduce: IndirectFieldValue
 			nil,        // {
 			nil,        // }
 			nil,        // md_token_IPS
@@ -59743,7 +59743,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -59763,41 +59763,41 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
 			nil,        // :
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
-			reduce(16), // ), reduce: IndirectFieldName
+			reduce(16), // ), reduce: IndirectFieldValue
 			nil,        // md_token_string_literal
 			nil,        // md_token_int_literal
 			nil,        // md_token_float_literal
@@ -66967,7 +66967,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(13), // [, reduce: FieldName
+			reduce(13), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -66987,39 +66987,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(13), // ?, reduce: FieldName
+			reduce(13), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(13), // ||, reduce: FieldName
-			reduce(13), // ^^, reduce: FieldName
-			reduce(13), // &&, reduce: FieldName
-			reduce(13), // =~, reduce: FieldName
-			reduce(13), // !=~, reduce: FieldName
-			reduce(13), // ==, reduce: FieldName
-			reduce(13), // !=, reduce: FieldName
-			reduce(13), // >, reduce: FieldName
-			reduce(13), // >=, reduce: FieldName
-			reduce(13), // <, reduce: FieldName
-			reduce(13), // <=, reduce: FieldName
-			reduce(13), // |, reduce: FieldName
-			reduce(13), // ^, reduce: FieldName
-			reduce(13), // &, reduce: FieldName
-			reduce(13), // <<, reduce: FieldName
-			reduce(13), // >>, reduce: FieldName
-			reduce(13), // +, reduce: FieldName
-			reduce(13), // -, reduce: FieldName
-			reduce(13), // .+, reduce: FieldName
-			reduce(13), // .-, reduce: FieldName
-			reduce(13), // ., reduce: FieldName
-			reduce(13), // *, reduce: FieldName
-			reduce(13), // /, reduce: FieldName
-			reduce(13), // //, reduce: FieldName
-			reduce(13), // %, reduce: FieldName
-			reduce(13), // .*, reduce: FieldName
-			reduce(13), // ./, reduce: FieldName
-			reduce(13), // .//, reduce: FieldName
+			reduce(13), // ||, reduce: FieldValue
+			reduce(13), // ^^, reduce: FieldValue
+			reduce(13), // &&, reduce: FieldValue
+			reduce(13), // =~, reduce: FieldValue
+			reduce(13), // !=~, reduce: FieldValue
+			reduce(13), // ==, reduce: FieldValue
+			reduce(13), // !=, reduce: FieldValue
+			reduce(13), // >, reduce: FieldValue
+			reduce(13), // >=, reduce: FieldValue
+			reduce(13), // <, reduce: FieldValue
+			reduce(13), // <=, reduce: FieldValue
+			reduce(13), // |, reduce: FieldValue
+			reduce(13), // ^, reduce: FieldValue
+			reduce(13), // &, reduce: FieldValue
+			reduce(13), // <<, reduce: FieldValue
+			reduce(13), // >>, reduce: FieldValue
+			reduce(13), // +, reduce: FieldValue
+			reduce(13), // -, reduce: FieldValue
+			reduce(13), // .+, reduce: FieldValue
+			reduce(13), // .-, reduce: FieldValue
+			reduce(13), // ., reduce: FieldValue
+			reduce(13), // *, reduce: FieldValue
+			reduce(13), // /, reduce: FieldValue
+			reduce(13), // //, reduce: FieldValue
+			reduce(13), // %, reduce: FieldValue
+			reduce(13), // .*, reduce: FieldValue
+			reduce(13), // ./, reduce: FieldValue
+			reduce(13), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(13), // **, reduce: FieldName
+			reduce(13), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -67027,9 +67027,9 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(13), // ,, reduce: FieldName
+			reduce(13), // ,, reduce: FieldValue
 			nil,        // {
-			reduce(13), // }, reduce: FieldName
+			reduce(13), // }, reduce: FieldValue
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -67051,7 +67051,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(14), // [, reduce: FieldName
+			reduce(14), // [, reduce: FieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -67071,39 +67071,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(14), // ?, reduce: FieldName
+			reduce(14), // ?, reduce: FieldValue
 			nil,        // :
-			reduce(14), // ||, reduce: FieldName
-			reduce(14), // ^^, reduce: FieldName
-			reduce(14), // &&, reduce: FieldName
-			reduce(14), // =~, reduce: FieldName
-			reduce(14), // !=~, reduce: FieldName
-			reduce(14), // ==, reduce: FieldName
-			reduce(14), // !=, reduce: FieldName
-			reduce(14), // >, reduce: FieldName
-			reduce(14), // >=, reduce: FieldName
-			reduce(14), // <, reduce: FieldName
-			reduce(14), // <=, reduce: FieldName
-			reduce(14), // |, reduce: FieldName
-			reduce(14), // ^, reduce: FieldName
-			reduce(14), // &, reduce: FieldName
-			reduce(14), // <<, reduce: FieldName
-			reduce(14), // >>, reduce: FieldName
-			reduce(14), // +, reduce: FieldName
-			reduce(14), // -, reduce: FieldName
-			reduce(14), // .+, reduce: FieldName
-			reduce(14), // .-, reduce: FieldName
-			reduce(14), // ., reduce: FieldName
-			reduce(14), // *, reduce: FieldName
-			reduce(14), // /, reduce: FieldName
-			reduce(14), // //, reduce: FieldName
-			reduce(14), // %, reduce: FieldName
-			reduce(14), // .*, reduce: FieldName
-			reduce(14), // ./, reduce: FieldName
-			reduce(14), // .//, reduce: FieldName
+			reduce(14), // ||, reduce: FieldValue
+			reduce(14), // ^^, reduce: FieldValue
+			reduce(14), // &&, reduce: FieldValue
+			reduce(14), // =~, reduce: FieldValue
+			reduce(14), // !=~, reduce: FieldValue
+			reduce(14), // ==, reduce: FieldValue
+			reduce(14), // !=, reduce: FieldValue
+			reduce(14), // >, reduce: FieldValue
+			reduce(14), // >=, reduce: FieldValue
+			reduce(14), // <, reduce: FieldValue
+			reduce(14), // <=, reduce: FieldValue
+			reduce(14), // |, reduce: FieldValue
+			reduce(14), // ^, reduce: FieldValue
+			reduce(14), // &, reduce: FieldValue
+			reduce(14), // <<, reduce: FieldValue
+			reduce(14), // >>, reduce: FieldValue
+			reduce(14), // +, reduce: FieldValue
+			reduce(14), // -, reduce: FieldValue
+			reduce(14), // .+, reduce: FieldValue
+			reduce(14), // .-, reduce: FieldValue
+			reduce(14), // ., reduce: FieldValue
+			reduce(14), // *, reduce: FieldValue
+			reduce(14), // /, reduce: FieldValue
+			reduce(14), // //, reduce: FieldValue
+			reduce(14), // %, reduce: FieldValue
+			reduce(14), // .*, reduce: FieldValue
+			reduce(14), // ./, reduce: FieldValue
+			reduce(14), // .//, reduce: FieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(14), // **, reduce: FieldName
+			reduce(14), // **, reduce: FieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -67111,9 +67111,9 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(14), // ,, reduce: FieldName
+			reduce(14), // ,, reduce: FieldValue
 			nil,        // {
-			reduce(14), // }, reduce: FieldName
+			reduce(14), // }, reduce: FieldValue
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -67135,7 +67135,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(15), // [, reduce: DirectFieldName
+			reduce(15), // [, reduce: DirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -67155,39 +67155,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(15), // ?, reduce: DirectFieldName
+			reduce(15), // ?, reduce: DirectFieldValue
 			nil,        // :
-			reduce(15), // ||, reduce: DirectFieldName
-			reduce(15), // ^^, reduce: DirectFieldName
-			reduce(15), // &&, reduce: DirectFieldName
-			reduce(15), // =~, reduce: DirectFieldName
-			reduce(15), // !=~, reduce: DirectFieldName
-			reduce(15), // ==, reduce: DirectFieldName
-			reduce(15), // !=, reduce: DirectFieldName
-			reduce(15), // >, reduce: DirectFieldName
-			reduce(15), // >=, reduce: DirectFieldName
-			reduce(15), // <, reduce: DirectFieldName
-			reduce(15), // <=, reduce: DirectFieldName
-			reduce(15), // |, reduce: DirectFieldName
-			reduce(15), // ^, reduce: DirectFieldName
-			reduce(15), // &, reduce: DirectFieldName
-			reduce(15), // <<, reduce: DirectFieldName
-			reduce(15), // >>, reduce: DirectFieldName
-			reduce(15), // +, reduce: DirectFieldName
-			reduce(15), // -, reduce: DirectFieldName
-			reduce(15), // .+, reduce: DirectFieldName
-			reduce(15), // .-, reduce: DirectFieldName
-			reduce(15), // ., reduce: DirectFieldName
-			reduce(15), // *, reduce: DirectFieldName
-			reduce(15), // /, reduce: DirectFieldName
-			reduce(15), // //, reduce: DirectFieldName
-			reduce(15), // %, reduce: DirectFieldName
-			reduce(15), // .*, reduce: DirectFieldName
-			reduce(15), // ./, reduce: DirectFieldName
-			reduce(15), // .//, reduce: DirectFieldName
+			reduce(15), // ||, reduce: DirectFieldValue
+			reduce(15), // ^^, reduce: DirectFieldValue
+			reduce(15), // &&, reduce: DirectFieldValue
+			reduce(15), // =~, reduce: DirectFieldValue
+			reduce(15), // !=~, reduce: DirectFieldValue
+			reduce(15), // ==, reduce: DirectFieldValue
+			reduce(15), // !=, reduce: DirectFieldValue
+			reduce(15), // >, reduce: DirectFieldValue
+			reduce(15), // >=, reduce: DirectFieldValue
+			reduce(15), // <, reduce: DirectFieldValue
+			reduce(15), // <=, reduce: DirectFieldValue
+			reduce(15), // |, reduce: DirectFieldValue
+			reduce(15), // ^, reduce: DirectFieldValue
+			reduce(15), // &, reduce: DirectFieldValue
+			reduce(15), // <<, reduce: DirectFieldValue
+			reduce(15), // >>, reduce: DirectFieldValue
+			reduce(15), // +, reduce: DirectFieldValue
+			reduce(15), // -, reduce: DirectFieldValue
+			reduce(15), // .+, reduce: DirectFieldValue
+			reduce(15), // .-, reduce: DirectFieldValue
+			reduce(15), // ., reduce: DirectFieldValue
+			reduce(15), // *, reduce: DirectFieldValue
+			reduce(15), // /, reduce: DirectFieldValue
+			reduce(15), // //, reduce: DirectFieldValue
+			reduce(15), // %, reduce: DirectFieldValue
+			reduce(15), // .*, reduce: DirectFieldValue
+			reduce(15), // ./, reduce: DirectFieldValue
+			reduce(15), // .//, reduce: DirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(15), // **, reduce: DirectFieldName
+			reduce(15), // **, reduce: DirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -67195,9 +67195,9 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(15), // ,, reduce: DirectFieldName
+			reduce(15), // ,, reduce: DirectFieldValue
 			nil,        // {
-			reduce(15), // }, reduce: DirectFieldName
+			reduce(15), // }, reduce: DirectFieldValue
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS
@@ -71335,7 +71335,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -71355,39 +71355,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
-			reduce(16), // :, reduce: IndirectFieldName
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
+			reduce(16), // :, reduce: IndirectFieldValue
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -75955,8 +75955,8 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
-			reduce(16), // ], reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
+			reduce(16), // ], reduce: IndirectFieldValue
 			nil,        // md_token_field_name
 			nil,        // $[
 			nil,        // md_token_full_srec
@@ -75975,39 +75975,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
-			reduce(16), // :, reduce: IndirectFieldName
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
+			reduce(16), // :, reduce: IndirectFieldValue
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -84607,7 +84607,7 @@ var actionTab = actionTable{
 			nil,        // empty
 			nil,        // ;
 			nil,        // =
-			reduce(16), // [, reduce: IndirectFieldName
+			reduce(16), // [, reduce: IndirectFieldValue
 			nil,        // ]
 			nil,        // md_token_field_name
 			nil,        // $[
@@ -84627,39 +84627,39 @@ var actionTab = actionTable{
 			nil,        // //=
 			nil,        // %=
 			nil,        // **=
-			reduce(16), // ?, reduce: IndirectFieldName
+			reduce(16), // ?, reduce: IndirectFieldValue
 			nil,        // :
-			reduce(16), // ||, reduce: IndirectFieldName
-			reduce(16), // ^^, reduce: IndirectFieldName
-			reduce(16), // &&, reduce: IndirectFieldName
-			reduce(16), // =~, reduce: IndirectFieldName
-			reduce(16), // !=~, reduce: IndirectFieldName
-			reduce(16), // ==, reduce: IndirectFieldName
-			reduce(16), // !=, reduce: IndirectFieldName
-			reduce(16), // >, reduce: IndirectFieldName
-			reduce(16), // >=, reduce: IndirectFieldName
-			reduce(16), // <, reduce: IndirectFieldName
-			reduce(16), // <=, reduce: IndirectFieldName
-			reduce(16), // |, reduce: IndirectFieldName
-			reduce(16), // ^, reduce: IndirectFieldName
-			reduce(16), // &, reduce: IndirectFieldName
-			reduce(16), // <<, reduce: IndirectFieldName
-			reduce(16), // >>, reduce: IndirectFieldName
-			reduce(16), // +, reduce: IndirectFieldName
-			reduce(16), // -, reduce: IndirectFieldName
-			reduce(16), // .+, reduce: IndirectFieldName
-			reduce(16), // .-, reduce: IndirectFieldName
-			reduce(16), // ., reduce: IndirectFieldName
-			reduce(16), // *, reduce: IndirectFieldName
-			reduce(16), // /, reduce: IndirectFieldName
-			reduce(16), // //, reduce: IndirectFieldName
-			reduce(16), // %, reduce: IndirectFieldName
-			reduce(16), // .*, reduce: IndirectFieldName
-			reduce(16), // ./, reduce: IndirectFieldName
-			reduce(16), // .//, reduce: IndirectFieldName
+			reduce(16), // ||, reduce: IndirectFieldValue
+			reduce(16), // ^^, reduce: IndirectFieldValue
+			reduce(16), // &&, reduce: IndirectFieldValue
+			reduce(16), // =~, reduce: IndirectFieldValue
+			reduce(16), // !=~, reduce: IndirectFieldValue
+			reduce(16), // ==, reduce: IndirectFieldValue
+			reduce(16), // !=, reduce: IndirectFieldValue
+			reduce(16), // >, reduce: IndirectFieldValue
+			reduce(16), // >=, reduce: IndirectFieldValue
+			reduce(16), // <, reduce: IndirectFieldValue
+			reduce(16), // <=, reduce: IndirectFieldValue
+			reduce(16), // |, reduce: IndirectFieldValue
+			reduce(16), // ^, reduce: IndirectFieldValue
+			reduce(16), // &, reduce: IndirectFieldValue
+			reduce(16), // <<, reduce: IndirectFieldValue
+			reduce(16), // >>, reduce: IndirectFieldValue
+			reduce(16), // +, reduce: IndirectFieldValue
+			reduce(16), // -, reduce: IndirectFieldValue
+			reduce(16), // .+, reduce: IndirectFieldValue
+			reduce(16), // .-, reduce: IndirectFieldValue
+			reduce(16), // ., reduce: IndirectFieldValue
+			reduce(16), // *, reduce: IndirectFieldValue
+			reduce(16), // /, reduce: IndirectFieldValue
+			reduce(16), // //, reduce: IndirectFieldValue
+			reduce(16), // %, reduce: IndirectFieldValue
+			reduce(16), // .*, reduce: IndirectFieldValue
+			reduce(16), // ./, reduce: IndirectFieldValue
+			reduce(16), // .//, reduce: IndirectFieldValue
 			nil,        // !
 			nil,        // ~
-			reduce(16), // **, reduce: IndirectFieldName
+			reduce(16), // **, reduce: IndirectFieldValue
 			nil,        // (
 			nil,        // )
 			nil,        // md_token_string_literal
@@ -84667,9 +84667,9 @@ var actionTab = actionTable{
 			nil,        // md_token_float_literal
 			nil,        // md_token_boolean_literal
 			nil,        // md_token_panic
-			reduce(16), // ,, reduce: IndirectFieldName
+			reduce(16), // ,, reduce: IndirectFieldValue
 			nil,        // {
-			reduce(16), // }, reduce: IndirectFieldName
+			reduce(16), // }, reduce: IndirectFieldValue
 			nil,        // md_token_IPS
 			nil,        // md_token_IFS
 			nil,        // md_token_IRS

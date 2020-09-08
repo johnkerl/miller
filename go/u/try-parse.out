@@ -7,7 +7,7 @@ $y = 1 || 2
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "||"
             * IntLiteral "1"
             * IntLiteral "2"
@@ -21,7 +21,7 @@ $y = 1 || 2 || 3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "||"
             * Operator "||"
                 * IntLiteral "1"
@@ -37,7 +37,7 @@ $y = 1 || 2 && 3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "||"
             * IntLiteral "1"
             * Operator "&&"
@@ -53,7 +53,7 @@ $y = 1 && 2 || 3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "||"
             * Operator "&&"
                 * IntLiteral "1"
@@ -69,7 +69,7 @@ $y = 1 ? 2 : 3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "?:"
             * IntLiteral "1"
             * IntLiteral "2"
@@ -84,12 +84,12 @@ $y = $a + $b * $c
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "+"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * Operator "*"
-                * DirectFieldName "b"
-                * DirectFieldName "c"
+                * DirectFieldValue "b"
+                * DirectFieldValue "c"
 
 
 
@@ -100,12 +100,12 @@ $y = $a * $b * $c
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "*"
             * Operator "*"
-                * DirectFieldName "a"
-                * DirectFieldName "b"
-            * DirectFieldName "c"
+                * DirectFieldValue "a"
+                * DirectFieldValue "b"
+            * DirectFieldValue "c"
 
 
 
@@ -116,12 +116,12 @@ $y = $a ** $b ** $c
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "**"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * Operator "**"
-                * DirectFieldName "b"
-                * DirectFieldName "c"
+                * DirectFieldValue "b"
+                * DirectFieldValue "c"
 
 
 
@@ -132,7 +132,7 @@ $[2] = 3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldName "$["
+        * IndirectFieldValue "$["
             * IntLiteral "2"
         * IntLiteral "3"
 
@@ -145,8 +145,8 @@ $[$y] = 4
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldName "$["
-            * DirectFieldName "y"
+        * IndirectFieldValue "$["
+            * DirectFieldValue "y"
         * IntLiteral "4"
 
 
@@ -158,7 +158,7 @@ $x = "abc"
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * StringLiteral "abc"
 
 
@@ -170,7 +170,7 @@ $["abc"] = "def"
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldName "$["
+        * IndirectFieldValue "$["
             * StringLiteral "abc"
         * StringLiteral "def"
 
@@ -183,7 +183,7 @@ $[FILENAME] = FNR
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldName "$["
+        * IndirectFieldValue "$["
             * ContextVariable "FILENAME"
         * ContextVariable "FNR"
 
@@ -196,12 +196,12 @@ $x = $a + $b + $c
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * Operator "+"
             * Operator "+"
-                * DirectFieldName "a"
-                * DirectFieldName "b"
-            * DirectFieldName "c"
+                * DirectFieldValue "a"
+                * DirectFieldValue "b"
+            * DirectFieldValue "c"
 
 
 
@@ -212,26 +212,26 @@ $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * Operator "+"
             * Operator "+"
-                * DirectFieldName "a"
-                * DirectFieldName "b"
-            * DirectFieldName "c"
+                * DirectFieldValue "a"
+                * DirectFieldValue "b"
+            * DirectFieldValue "c"
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "+"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * Operator "+"
-                * DirectFieldName "b"
-                * DirectFieldName "c"
+                * DirectFieldValue "b"
+                * DirectFieldValue "c"
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * Operator "+"
             * Operator "+"
-                * DirectFieldName "a"
-                * DirectFieldName "b"
-            * DirectFieldName "c"
+                * DirectFieldValue "a"
+                * DirectFieldValue "b"
+            * DirectFieldValue "c"
 
 
 
@@ -242,14 +242,14 @@ $x = 2 * $a + $b . $c
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * Operator "."
             * Operator "+"
                 * Operator "*"
                     * IntLiteral "2"
-                    * DirectFieldName "a"
-                * DirectFieldName "b"
-            * DirectFieldName "c"
+                    * DirectFieldValue "a"
+                * DirectFieldValue "b"
+            * DirectFieldValue "c"
 
 
 
@@ -260,14 +260,14 @@ $x = 2 * $a + ($b . $c)
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * Operator "+"
             * Operator "*"
                 * IntLiteral "2"
-                * DirectFieldName "a"
+                * DirectFieldValue "a"
             * Operator "."
-                * DirectFieldName "b"
-                * DirectFieldName "c"
+                * DirectFieldValue "b"
+                * DirectFieldValue "c"
 
 
 
@@ -278,18 +278,18 @@ $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * Operator "*"
             * Operator "+"
                 * ContextVariable "NF"
                 * ContextVariable "NR"
             * IntLiteral "7"
     * Assignment "="
-        * DirectFieldName "y"
+        * DirectFieldValue "y"
         * Operator "."
             * Operator "."
                 * ContextVariable "OFS"
-                * DirectFieldName "y"
+                * DirectFieldValue "y"
             * StringLiteral "hello"
 
 
@@ -301,7 +301,7 @@ $x = 123. + 1e-2 / .2e3 + 1.e-3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "x"
+        * DirectFieldValue "x"
         * Operator "+"
             * Operator "+"
                 * FloatLiteral "123."
@@ -319,7 +319,7 @@ $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * Operator "+"
             * IntLiteral "0x7fffffffffffffff"
             * IntLiteral "0x7fffffffffffffff"
@@ -333,7 +333,7 @@ $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * Operator ".+"
             * IntLiteral "0x7fffffffffffffff"
             * IntLiteral "0x7fffffffffffffff"
@@ -347,7 +347,7 @@ $z=0x7fffffffffffffff  * 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * Operator "*"
             * IntLiteral "0x7fffffffffffffff"
             * IntLiteral "0x7fffffffffffffff"
@@ -361,7 +361,7 @@ $z=0x7fffffffffffffff .* 0x7fffffffffffffff
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * Operator ".*"
             * IntLiteral "0x7fffffffffffffff"
             * IntLiteral "0x7fffffffffffffff"
@@ -375,7 +375,7 @@ $z = []
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayLiteral "[]"
 
 
@@ -387,7 +387,7 @@ $z = [1,]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
 
@@ -400,7 +400,7 @@ $z = [1,2]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
             * IntLiteral "2"
@@ -414,7 +414,7 @@ $z = [1,2,]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
             * IntLiteral "2"
@@ -428,7 +428,7 @@ $z = [1,2,3]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
             * IntLiteral "2"
@@ -443,7 +443,7 @@ $z = [1,2,3,]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayLiteral "[]"
             * IntLiteral "1"
             * IntLiteral "2"
@@ -458,7 +458,7 @@ $z = {}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
 
 
@@ -470,7 +470,7 @@ $z = {"a":"1"}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
                 * StringLiteral "a"
@@ -485,7 +485,7 @@ $z = {"a":"1",}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
                 * StringLiteral "a"
@@ -500,7 +500,7 @@ $z = {"a":"1", "b":2}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
                 * StringLiteral "a"
@@ -518,7 +518,7 @@ $z = {"a":"1", "b":2,}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
                 * StringLiteral "a"
@@ -536,7 +536,7 @@ $z = {"a":"1", "b":2, "c":3}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
                 * StringLiteral "a"
@@ -557,7 +557,7 @@ $z = {"a":"1", "b":2, "c":3,}
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * MapLiteral "{}"
             * MapLiteralKeyValuePair ":"
                 * StringLiteral "a"
@@ -578,9 +578,9 @@ $z = $a[1]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayOrMapIndexAccess "[]"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * IntLiteral "1"
 
 
@@ -592,9 +592,9 @@ $z = $a["index"]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayOrMapIndexAccess "[]"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * StringLiteral "index"
 
 
@@ -606,7 +606,7 @@ $z = "abcde"[1]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayOrMapIndexAccess "[]"
             * StringLiteral "abcde"
             * IntLiteral "1"
@@ -620,7 +620,7 @@ $z = "abcde"["index"]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayOrMapIndexAccess "[]"
             * StringLiteral "abcde"
             * StringLiteral "index"
@@ -634,9 +634,9 @@ $z = $a[1:2]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArraySliceAccess "[]"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * IntLiteral "1"
             * IntLiteral "2"
 
@@ -649,9 +649,9 @@ $z = $a[:2]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArraySliceAccess "[]"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * ArraySliceEmptyLowerIndex ":"
             * IntLiteral "2"
 
@@ -664,9 +664,9 @@ $z = $a[1:]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArraySliceAccess "[]"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * IntLiteral "1"
             * ArraySliceEmptyUpperIndex ":"
 
@@ -679,9 +679,9 @@ $z = $a[:]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArraySliceAccess "[]"
-            * DirectFieldName "a"
+            * DirectFieldValue "a"
             * ArraySliceEmptyLowerIndex ":"
             * ArraySliceEmptyUpperIndex ":"
 
@@ -694,7 +694,7 @@ $z = [5,6,7,8,9][1]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayOrMapIndexAccess "[]"
             * ArrayLiteral "[]"
                 * IntLiteral "5"
@@ -713,7 +713,7 @@ $z = {"a":1, "b":2, "c":3}["b"]
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * DirectFieldName "z"
+        * DirectFieldValue "z"
         * ArrayOrMapIndexAccess "[]"
             * MapLiteral "{}"
                 * MapLiteralKeyValuePair ":"

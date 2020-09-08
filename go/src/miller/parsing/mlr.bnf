@@ -312,9 +312,9 @@ Lvalue
 ;
 
 BaseLvalue
-  : FieldName
-  // computed field name $[...]
-  // braced field name ${...}
+  : FieldValue
+  // computed field value $[...]
+  // braced field value ${...}
   // positional field name $[[3]]
   // positional field value $[[[3]]]
   | FullSrec
@@ -336,11 +336,12 @@ IndexedLvalue
 ;
 
 // ----------------------------------------------------------------
-FieldName
-  : DirectFieldName
-  | IndirectFieldName
-  //| BracedFieldName
+FieldValue
+  : DirectFieldValue
+  | IndirectFieldValue
+  // | BracedFieldValue
   //| PositionalFieldName
+  //| PositionalFieldValue
   // ...
 ;
 
@@ -348,22 +349,28 @@ FieldName
 // includes the '$'.  If we omit the '$' there and include it in the parser
 // section here as "$", then we get an LR-1 conflict. So this must be dealt
 // with at the AST level. Hence the NewASTNodeStripDollarPlease.
-DirectFieldName
+DirectFieldValue
   : md_token_field_name
-    << dsl.NewASTNodeStripDollarPlease($0, dsl.NodeTypeDirectFieldName) >>
+    << dsl.NewASTNodeStripDollarPlease($0, dsl.NodeTypeDirectFieldValue) >>
 ;
 
-IndirectFieldName
+IndirectFieldValue
   : "$[" Rvalue "]"
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldName) >>
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldValue) >>
 ;
 
-//BracedFieldName
-//  : "${" md_token_id "}"
+// * Direct is '$name'
+// * Indirect is '$["name"]'
+// * Braced is '${name}' -- note no double-quotes. This is for when the field
+//   name has spaces or somesuch in it.
+
+// TODO: needs no "..." -- just ...
+//BracedFieldValue
+//  : "${" md_token_string_literal "}"
 //    << dsl.NewASTNodeUnary(
-//      $0,
-//      dsl.NewASTNodeNestable($1, dsl.NodeTypeFieldName),
-//      dsl.NodeTypeToken,
+//      dsl.NewASTNodeNestable($1, dsl.NodeTypeDirectFieldValue),
+//      $1,
+//      dsl.NodeTypeDirectFieldValue,
 //    ) >>
 //;
 
@@ -654,7 +661,7 @@ PrecedenceChainEnd : MlrvalOrFunction ;
 
 // ----------------------------------------------------------------
 MlrvalOrFunction
-  : FieldName
+  : FieldValue
   | FullSrec
   // oosvar
   // computed oosvar @[...]
@@ -1826,13 +1833,13 @@ ArraySliceAccess
 //	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_UNSET);
 //}
 
-//UnsetArgs(A) ::= DirectFieldName(B). {
+//UnsetArgs(A) ::= DirectFieldValue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 //}
-//UnsetArgs(A) ::= IndirectFieldName(B). {
+//UnsetArgs(A) ::= IndirectFieldValue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 //}
-//UnsetArgs(A) ::= PositionalSrecName(B). {
+//UnsetArgs(A) ::= PositionalSrecValue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 //}
 //UnsetArgs(A) ::= md_token_full_srec(B). {
@@ -1848,7 +1855,7 @@ ArraySliceAccess
 //	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 //}
 
-//UnsetArgs(A) ::= UnsetArgs(B) "," DirectFieldName(C). {
+//UnsetArgs(A) ::= UnsetArgs(B) "," DirectFieldValue(C). {
 //	A = mlr_dsl_ast_node_append_arg(B, C);
 //}
 //UnsetArgs(A) ::= UnsetArgs(B) "," OosvarKeylist(C). {
