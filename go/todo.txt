@@ -127,3 +127,6 @@ NITS/NON-IMMEDIATE:
     - make a force-single-line writer
     - make a jsonparse DSL function -- ?
   d other formats: use JSON marshaler for collection types, maybe double-quoted
+* better error-identification in the lexer / parser
+  o research gocc support
+  o maybe a case for hand-roll

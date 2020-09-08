@@ -71,10 +71,7 @@ _string_literal_element
 ;
 md_token_string_literal : '"' {_string_literal_element} '"' ;
 
-//\"([^\\\"]|\\.)*\"\i {
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_REGEXI);
-//	return md_token_regexi;
-//}
+// md_token_regexi : \"([^\\\"]|\\.)*\"\i ;
 
 // Notes on int literals:
 // * Leading minus sign is handled via the unary-minus operator, not here.
@@ -179,33 +176,12 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 //md_token_unset    : 'u' 'n' 's' 'e' 't' ;
 //md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
 
-//	md_token_map_type;
-//  "map"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-
-//	md_token_var_type;
-//  "var"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-
-//	md_token_numeric_type;
-//  "num"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
-
-//	md_token_int_type;
-//  "int"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION);
-
-//	md_token_float_type;
-//  "float"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
-
-//	md_token_boolean_type;
-//  "bool"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
-
-//	md_token_string_literal_type;
-//  "str"
-//	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
+//md_token_map_type   : 'm' 'a' 'p' ;
+//md_token_num_type   : 'n' 'u' 'm' ;
+//md_token_int_type   : 'i' 'n' 't' ;
+//md_token_float_type : 'f' 'l' 'o' 'a' 't' ;
+//md_token_bool_type  : 'b' 'o' 'o' 'l' ;
+//md_token_str_type   : 's' 't' 'r' ;
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -218,11 +194,19 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 // below as "$", then we get an LR-1 conflict. So this must be dealt with at
 // the AST level.
 md_token_field_name : '$' _idchar { _idchar } ;
+
+// This is for literal strings but where the field name might have spaces in it
+// or somesuch.
 // md_token_braced_field_name: \$\{([^\}]|\\.)*\}
+
 md_token_full_srec : '$' '*' ;
 
 // md_token_oosvar_name : '@' _idchar { _idchar } ;
+
+// This is for literal strings but where the oosvar name might have spaces in it
+// or somesuch.
 // md_token_braced_oosvar_name @\{([^\}]|\\.)*\}
+
 // md_token_full_oosvar : '@' '*' ;
 
 // ----------------------------------------------------------------
@@ -233,6 +217,7 @@ md_token_full_srec : '$' '*' ;
 // sole job of the CST evaluator for this token is to panic the process -- so
 // we'll know if we're evaluating something we should not.
 md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
+
 
 // ================================================================
 // SYNTAX ELEMENTS
@@ -281,26 +266,9 @@ md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // Import the AST/ASTNode types and functions
 << import "miller/dsl" >>
 
-// TODO: port to gacc
-//
-//// The caller is expected to provide more context.
-//%syntax_error {
-//	fprintf(stderr, "mlr DSL: syntax error at \"%s\"\n", TOKEN->text);
-//
-////	This is confusing and (as is) worse than nothing.
-////	Ideally we want to show the position within the input of the syntax error.
-////
-////	int n = sizeof(yyTokenName) / sizeof(yyTokenName[0]);
-////	for (int i = 0; i < n; ++i) {
-////			int a = yy_find_shift_action(pparser, (YYCODETYPE)i);
-////			if (a < YYNSTATE + YYNRULE) {
-////				fprintf(stderr, "Possible token \"%s\"\n", yyTokenName[i]);
-////			}
-////	}
-//
-//}
-
 // ================================================================
+// TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL
+
 Root :
   StatementBlock
     <<dsl.NewAST($0) >> ;
@@ -319,125 +287,732 @@ StatementBlock
     <<dsl.AppendChild($0, $2) >>
   ;
 
-Statement : StatementInBody ;
+// ================================================================
+// ASSIGMENT STATEMENTS
+
+Statement : Assignment ;
+
+Assignment :
+  : Lvalue "=" Rvalue
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+;
+
+// A BaseValue is anything on the left-hand side of an assignment, excluding
+// the indexing -- e.g. @a is a BaseValue and an Lvalue; @a[1][2][3] is an
+// Lvalue which is an indexed Lvalue.
+Lvalue
+  : BaseLvalue
+  // | IndexedLvalue -- adapt the indexed-rvalue logic
+;
+
+BaseLvalue
+  : FieldName
+  // computed field name $[...]
+  // braced field name ${...}
+  // positional field name $[[3]]
+  // positional field value $[[[3]]]
+  | FullSrec
+  // oosvar
+  // computed oosvar @[...]
+  // braced oosvar @{...}
+  // fulloosvar @*
+  // local variable abcd
+  // ENV -- only ENV["foo"] but not arbitrarily indexable
+;
+
+FieldName
+  : DirectFieldName
+  | IndirectFieldName
+  //| BracedFieldName
+  //| PositionalFieldName
+  // ...
+;
+
+// Note: the field name is "$field" not "field" since md_token_field_name
+// includes the '$'.  If we omit the '$' there and include it in the parser
+// section here as "$", then we get an LR-1 conflict. So this must be dealt
+// with at the AST level. Hence the NewASTNodeStripDollarPlease.
+DirectFieldName
+  : md_token_field_name
+    << dsl.NewASTNodeStripDollarPlease($0, dsl.NodeTypeDirectFieldName) >>
+;
+
+IndirectFieldName
+  : "$[" Rvalue "]"
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldName) >>
+;
+
+//BracedFieldName
+//  : "${" md_token_id "}"
+//    << dsl.NewASTNodeUnary(
+//      $0,
+//      dsl.NewASTNodeNestable($1, dsl.NodeTypeFieldName),
+//      dsl.NodeTypeToken,
+//    ) >>
+//;
+
+FullSrec
+  : md_token_full_srec
+  << dsl.NewASTNode($0, dsl.NodeTypeFullSrec) >>
+;
+
+// ----------------------------------------------------------------
+// xxx awkward factorization -- there will be huge cardinality if this is
+// number of assignment operators times number of possible LHSes.
+
+Assignment
+  : Lvalue "||=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "^^=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "&&=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "|="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "^="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "&="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "<<=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue ">>=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "+="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue ".="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "-="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "*="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "/="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "//=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "%="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+  | Lvalue "**=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+;
+
+// ================================================================
+// Begin Rvalue operator-precedence chain
+// ================================================================
+
+Rvalue : TernaryTerm ;
+
+TernaryTerm
+  : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
+    << dsl.NewASTNodeTernary(dsl.NewASTToken("?:", $1), $0, $2, $4, dsl.NodeTypeOperator) >>
+  | LogicalOrTerm
+;
+
+LogicalOrTerm
+  : LogicalOrTerm "||" LogicalXORTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | LogicalXORTerm
+;
+
+LogicalXORTerm
+  : LogicalXORTerm "^^" LogicalAndTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | LogicalAndTerm
+;
+
+LogicalAndTerm
+  : LogicalAndTerm "&&" EqneTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm
+;
+
+EqneTerm
+  : EqneTerm "=~"  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "=="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "!="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm
+;
+
+CmpTerm
+  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseORTerm
+;
+
+BitwiseORTerm
+  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseXORTerm
+;
+
+BitwiseXORTerm
+  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseANDTerm
+;
+
+BitwiseANDTerm
+  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm
+;
+
+BitwiseShiftTerm
+  : BitwiseShiftTerm "<<" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm ">>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm
+;
+
+AddsubdotTerm
+  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm
+;
+
+MuldivTerm
+  : MuldivTerm "*"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "/"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "//"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "%"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".*"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "./"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".//" UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | UnaryOpTerm
+;
+
+UnaryOpTerm
+  : "+"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "-"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".+" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".-" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "!"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "~"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | PowTerm
+;
+
+PowTerm
+  : MlrvalOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MlrvalOrFunction
+;
+
+// Please Excuse My Dear Aunt Sally! :) We've gotten to the 'P' so we're done
+// with the operator-precedence chain. :)
+
+MlrvalOrFunction
+  : "(" Rvalue ")"
+  << dsl.Nestable($1) >>
+;
+
+// ================================================================
+// End Rvalue operator-precedence chain
+// ================================================================
+
+// ================================================================
+// Leaf-ish nodes, i.e. expressions without operators ... in things like '$y =
+// 3 * $x + 4', the Rvalue operator-parse separates out the '3', the '$x', and
+// the '4' ... but they could have as well been '$y = 3 * $x[7] + f($a,$b,$c)'.
+//
+// Grammar rules here have to do with nodes like '3', or '$x[7]', or
+// 'f($a,$b,$c)'.
+//
+// At the moment I call these MlrvalOrFunction.
+
+// ----------------------------------------------------------------
+MlrvalOrFunction
+  : FieldName
+  | FullSrec
+  // oosvar
+  // computed oosvar @[...]
+  // braced oosvar @{...}
+  // fulloosvar @*
+  // local variable abcd
+  // ENV -- only ENV["foo"] but not arbitrarily indexable
+;
+
+// ----------------------------------------------------------------
+// STRING/INT/FLOAT/BOOL LITERALS
+
+// As with '$' on md_token_field_name, so too for md_token_string_literal we
+// get LR-1 conflicts if we attempt to put the double quotes here.  Hence the
+// quote-stripper AST method.
+MlrvalOrFunction
+  : md_token_string_literal  << dsl.NewASTNodeStripDoubleQuotePairPlease(
+    $0,
+    dsl.NodeTypeStringLiteral,
+  ) >>
+  | md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
+  | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+  | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
+  | md_token_panic           << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
+;
+
+//MlrvalOrFunction(A) ::= md_regexi(B). {
+//	A = B;
+//}
+
+//md_regexi(A) ::= md_token_regexi(B). {
+//	char* input = B->text;
+//	char* stripped = &input[1];
+//	int len = strlen(input);
+//	stripped[len-3] = 0;
+//	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
+//}
+
+// ----------------------------------------------------------------
+//MlrvalOrFunction(A) ::= IndexedFunctionCall(B). {
+//	A = B;
+//}
+
+//// Indexed function calls:
+//// * First child node is function call with argument list.
+//// * Second child node is list of indexing expressions.
+////
+//// Example: 'foo(1,2,3)[4][5]' parses to AST
+////
+//// text="foo", type=INDEXED_FUNCTION_CALLSITE:
+////     text="foo", type=FUNCTION_CALLSITE:
+////         text="1", type=NUMERIC_LITERAL.
+////         text="2", type=NUMERIC_LITERAL.
+////         text="3", type=NUMERIC_LITERAL.
+////     text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
+////         text="4", type=NUMERIC_LITERAL.
+////         text="5", type=NUMERIC_LITERAL.
+
+//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) "[" Rvalue(C) "]". {
+//	A = mlr_dsl_ast_node_alloc_binary(
+//		B->text,
+//		MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
+//		B,
+//		mlr_dsl_ast_node_alloc_unary(
+//			"indexing",
+//			MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST,
+//			C
+//		)
+//	);
+//}
+//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) "[" Rvalue(C) "]". {
+//	// Append to second child node which is list of indexing expressions.
+//	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
+//}
+
+// ----------------------------------------------------------------
+MlrvalOrFunction : ContextVariable ;
+
+ContextVariable
+  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+;
+
+// ----------------------------------------------------------------
+//MlrvalOrFunction(A) ::= EnvIndex(B). {
+//	A = B;
+//}
+
+//EnvIndex(A) ::= md_token_env(B) "[" Rvalue(C) "]". {
+//	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
+//}
+
+// ================================================================
+// Array literals in Miller are JSON-ish.
+
+MlrvalOrFunction : ArrayLiteral ;
+
+// ----------------------------------------------------------------
+ArrayLiteral
+
+  : "[" "]"
+    << dsl.NewASTNodeZary(
+      dsl.NewASTToken("[]", $0),
+      dsl.NodeTypeArrayLiteral,
+    ) >>
+
+  | "[" ArrayLiteralElements "]"
+    // As parsed there's an intermediate node between ArrayLiteral
+    // and the children. Now we can remove it.
+    //
+    // Before:
+    // * ArrayLiteral "[]"
+    //     * ArrayLiteral
+    //         * StringLiteral "a"
+    //         * StringLiteral "b"
+    //
+    // After:
+    // * ArrayLiteral "[]"
+    //     * StringLiteral "a"
+    //     * StringLiteral "b"
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        dsl.NewASTToken("[]", $0),
+        dsl.NodeTypeArrayLiteral,
+      ),
+      $1,
+    ) >>
+;
+
+// ----------------------------------------------------------------
+ArrayLiteralElements
+
+  : ArrayLiteralElement
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeArrayLiteral,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline map literals
+  | ArrayLiteralElement ","
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeArrayLiteral,
+    ) >>
+
+  // xxx temp -- needs to adopt children
+  // Allow trailing final comma, especially for multiline map literals
+  | ArrayLiteralElement "," ArrayLiteralElements
+    << dsl.PrependChild(
+      $2,
+      $0,
+    ) >>
+
+;
+
+// ----------------------------------------------------------------
+ArrayLiteralElement
+  : Rvalue
+;
+
+// ----------------------------------------------------------------
+// For Array or Map -- which one, to be determined at runtime.
+
+MlrvalOrFunction : ArrayOrMapIndexAccess ;
+
+ArrayOrMapIndexAccess
+  : MlrvalOrFunction "[" Rvalue "]" 
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NodeTypeArrayOrMapIndexAccess,
+    )>>
+;
+
+MlrvalOrFunction : ArraySliceAccess ;
+
+ArraySliceAccess
+
+  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      $4,
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" ":" Rvalue "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      $3,
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" Rvalue ":" "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NewASTNodeNestable(
+        $3,
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" ":" "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+;
+
+// ================================================================
+// Map literals in Miller are JSON-ish.
+
+MlrvalOrFunction : MapLiteral ;
+
+// ----------------------------------------------------------------
+MapLiteral
+
+  : "{" "}"
+    << dsl.NewASTNodeZary(
+      dsl.NewASTToken("{}", $0),
+      dsl.NodeTypeMapLiteral,
+    ) >>
+
+  | "{" MapLiteralKeyValuePairs "}"
+    // As parsed there's an intermediate node between MapLiteral
+    // and the children. Now we can remove it.
+    //
+    // Before:
+    // * MapLiteral "{}"
+    //     * MapLiteral
+    //         * MapLiteralKeyValuePair ":"
+    //             * StringLiteral "a"
+    //             * StringLiteral "1"
+    //         * MapLiteralKeyValuePair ":"
+    //             * StringLiteral "b"
+    //             * IntLiteral "2"
+    //
+    // After:
+    // * MapLiteral "{}"
+    //     * MapLiteralKeyValuePair ":"
+    //         * StringLiteral "a"
+    //         * StringLiteral "1"
+    //     * MapLiteralKeyValuePair ":"
+    //         * StringLiteral "b"
+    //         * IntLiteral "2"
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        dsl.NewASTToken("{}", $0),
+        dsl.NodeTypeMapLiteral,
+      ),
+      $1,
+    ) >>
+;
+
+// ----------------------------------------------------------------
+MapLiteralKeyValuePairs
+
+  : MapLiteralKeyValuePair
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeMapLiteral,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline map literals
+  | MapLiteralKeyValuePair ","
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeMapLiteral,
+    ) >>
+
+  // xxx temp -- needs to adopt children
+  // Allow trailing final comma, especially for multiline map literals
+  | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
+    << dsl.PrependChild(
+      $2,
+      $0,
+    ) >>
+
+;
+
+// ----------------------------------------------------------------
+MapLiteralKeyValuePair
+  : Rvalue ":" Rvalue
+    << dsl.NewASTNodeBinary(
+      $1,
+      $0,
+      $2,
+      dsl.NodeTypeMapLiteralKeyValuePair,
+    ) >>
+;
+
+// ================================================================
+// FUNCTION/SUBROUTINE CALLS
+
+//MlrvalOrFunction(A) ::= FcnOrSubrCall(B). {
+//	A = B;
+//}
+
+//// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
+//// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
+//// * On the "a" we make a function sub-AST called "anon(a)".
+//// * On the "b" we append the next argument to get "anon(a,b)".
+//// * On the "c" we append the next argument to get "anon(a,b,c)".
+//// * On the "f" we change the function name to get "f(a,b,c)".
+
+//FcnOrSubrCall(A) ::= md_token_non_sigil_name(O) "(" FcnArgList(B) ")". {
+//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
+//}
+//// For most functions it suffices to use the md_token_non_sigil_name pattern. But
+//// int and float are keywords in the lexer so we need to spell those out explicitly.
+//// (They're type-decl keywords but they're also the names of type-conversion functions.)
+//FcnOrSubrCall(A) ::= md_token_int(O) "(" FcnArgList(B) ")". {
+//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
+//}
+//FcnOrSubrCall(A) ::= md_token_float(O) "(" FcnArgList(B) ")". {
+//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
+//}
+
+//FcnArgList(A) ::= . {
+//	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+//}
+//FcnArgList(A) ::= FcnNonEmptyArgList(B). {
+//	A = B;
+//}
+
+//FcnNonEmptyArgList(A) ::= md_fcn_arg(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+//}
+//FcnNonEmptyArgList(A) ::= md_fcn_arg(B) ",". {
+//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+//}
+//FcnNonEmptyArgList(A) ::= md_fcn_arg(B) "," FcnNonEmptyArgList(C). {
+//	A = mlr_dsl_ast_node_prepend_arg(C, B);
+//}
+
+//md_fcn_arg(A) ::= Rvalue(B). {
+//	A = B;
+//}
+//md_fcn_arg(A) ::= md_token_full_srec(B). {
+//	A = B;
+//}
+//md_fcn_arg(A) ::= md_token_full_oosvar(B). {
+//	A = B;
+//}
+//md_fcn_arg(A) ::= MapLiteral(B). {
+//	A = B;
+//}
+
+// ================================================================
+// ================================================================
+// ================================================================
+// TO BE PORTED
+// ================================================================
+// ================================================================
+// ================================================================
 
 // ----------------------------------------------------------------
 //// Local-variable definitions at the current scope
-//StatementInBody(A) ::= UntypedLocalDefinition(B).    { A = B; }
-//StatementInBody(A) ::= NumericLocalDefinition(B).    { A = B; }
-//StatementInBody(A) ::= IntLocalDefinition(B).        { A = B; }
-//StatementInBody(A) ::= FloatLocalDefinition(B).      { A = B; }
-//StatementInBody(A) ::= BooleanLocalDefinition(B).    { A = B; }
-//StatementInBody(A) ::= StringLocalDefinition(B).     { A = B; }
-//StatementInBody(A) ::= MapLocalDefinition(B).        { A = B; }
-//StatementInBody(A) ::= NonindexedLocalAssignment(B). { A = B; }
-//StatementInBody(A) ::= IndexedLocalAssignment(B).    { A = B; }
+// xxx make TypedLocalDefinition with subcases for type-literals
+//Statement(A) ::= UntypedLocalDefinition(B).    { A = B; }
+//Statement(A) ::= TypedLocalDefinition(B).    { A = B; }
+//TypedLocalDefinition : {type} ...
 
+// ----------------------------------------------------------------
 //// For user-defined functions
-//StatementInBody(A) ::= md_token_return Rvalue(B). {
+//Statement(A) ::= md_token_return Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
-//StatementInBody(A) ::= md_token_return MapLiteral(B). {
+//Statement(A) ::= md_token_return MapLiteral(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
-//StatementInBody(A) ::= md_token_return md_token_full_srec(B). {
+//Statement(A) ::= md_token_return md_token_full_srec(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
-//StatementInBody(A) ::= md_token_return md_token_full_oosvar(B). {
+//Statement(A) ::= md_token_return md_token_full_oosvar(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 //}
 //// For user-defined subroutines
-//StatementInBody(A) ::= md_token_return. {
+//Statement(A) ::= md_token_return. {
 //	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
 //}
 
 //// Begin/end
-//StatementInBeginOrEnd(A) ::= FuncBlock(B).  { A = B; }
-//StatementInBeginOrEnd(A) ::= SubrBlock(B).  { A = B; }
-//StatementInBeginOrEnd(A) ::= BeginBlock(B). { A = B; }
-//StatementInBeginOrEnd(A) ::= EndBlock(B).   { A = B; }
+//Statement(A) ::= FuncBlock(B).  { A = B; }
+//Statement(A) ::= SubrBlock(B).  { A = B; }
+//Statement(A) ::= BeginBlock(B). { A = B; }
+//Statement(A) ::= EndBlock(B).   { A = B; }
 
 //// Nested control structures:
-//StatementInBeginOrEnd(A) ::= CondBlock(B).                { A = B; }
-//StatementInBeginOrEnd(A) ::= WhileBlock(B).               { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopFullSrec(B).          { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopFullSrecKeyOnly(B).   { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopFullOosvar(B).        { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopFullOosvarKeyOnly(B). { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopOosvar(B).            { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopOosvarKeyOnly(B).     { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopLocalMap(B).          { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopLocalMapKeyOnly(B).   { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopMapLiteral(B).        { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopMapLiteralKeyOnly(B). { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopFuncRetval(B).        { A = B; }
-//StatementInBeginOrEnd(A) ::= ForLoopFuncRetvalKeyOnly(B). { A = B; }
-//StatementInBeginOrEnd(A) ::= TripleFor(B).                { A = B; }
-//StatementInBeginOrEnd(A) ::= IfChain(B).                  { A = B; }
+//Statement(A) ::= CondBlock(B).                { A = B; }
+//Statement(A) ::= WhileBlock(B).               { A = B; }
+//Statement(A) ::= ForLoopFullSrec(B).          { A = B; }
+//Statement(A) ::= ForLoopFullSrecKeyOnly(B).   { A = B; }
+//Statement(A) ::= ForLoopFullOosvar(B).        { A = B; }
+//Statement(A) ::= ForLoopFullOosvarKeyOnly(B). { A = B; }
+//Statement(A) ::= ForLoopOosvar(B).            { A = B; }
+//Statement(A) ::= ForLoopOosvarKeyOnly(B).     { A = B; }
+//Statement(A) ::= ForLoopLocalMap(B).          { A = B; }
+//Statement(A) ::= ForLoopLocalMapKeyOnly(B).   { A = B; }
+//Statement(A) ::= ForLoopMapLiteral(B).        { A = B; }
+//Statement(A) ::= ForLoopMapLiteralKeyOnly(B). { A = B; }
+//Statement(A) ::= ForLoopFuncRetval(B).        { A = B; }
+//Statement(A) ::= ForLoopFuncRetvalKeyOnly(B). { A = B; }
+//Statement(A) ::= TripleFor(B).                { A = B; }
+//Statement(A) ::= IfChain(B).                  { A = B; }
 
-//StatementInBody(A) ::= md_token_subr_call FcnOrSubrCall(B). {
+//Statement(A) ::= md_token_subr_call FcnOrSubrCall(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
 //}
 
 // Not valid in begin/end since they refer to srecs:
-
-StatementInBody : Assignment ;
+// xxx enforce that in the AST/CST, not here in the grammar -- much simpler.
 
 //// Valid in begin/end since they don't refer to srecs (although the RHSs might):
-//StatementInBody(A) ::= DoWhileBlock(B).         { A = B; }
-//StatementInBody(A) ::= BareBoolean(B).          { A = B; }
-//StatementInBody(A) ::= OosvarAssignment(B).     { A = B; }
-//StatementInBody(A) ::= FullOosvarAssignment(B). { A = B; }
-//StatementInBody(A) ::= md_filter(B).            { A = B; }
-//StatementInBody(A) ::= md_unset(B).             { A = B; }
+//Statement(A) ::= DoWhileBlock(B).         { A = B; }
+//Statement(A) ::= BareBoolean(B).          { A = B; }
+//Statement(A) ::= OosvarAssignment(B).     { A = B; }
+//Statement(A) ::= FullOosvarAssignment(B). { A = B; }
+//Statement(A) ::= md_filter(B).            { A = B; }
+//Statement(A) ::= md_unset(B).             { A = B; }
 
-//StatementInBody(A) ::= TeeWrite(B).          { A = B; }
-//StatementInBody(A) ::= TeeAppend(B).         { A = B; }
-//StatementInBody(A) ::= TeePipe(B).           { A = B; }
-//StatementInBody(A) ::= md_emitf(B).          { A = B; }
-//StatementInBody(A) ::= EmitfWrite(B).        { A = B; }
-//StatementInBody(A) ::= EmitfAppend(B).       { A = B; }
-//StatementInBody(A) ::= EmitfPipe(B).         { A = B; }
-//StatementInBody(A) ::= md_emitp(B).          { A = B; }
-//StatementInBody(A) ::= EmitpWrite(B).        { A = B; }
-//StatementInBody(A) ::= EmitpAppend(B).       { A = B; }
-//StatementInBody(A) ::= EmitpPipe(B).         { A = B; }
-//StatementInBody(A) ::= md_emit(B).           { A = B; }
-//StatementInBody(A) ::= EmitWrite(B).         { A = B; }
-//StatementInBody(A) ::= EmitAppend(B).        { A = B; }
-//StatementInBody(A) ::= EmitPipe(B).          { A = B; }
-//StatementInBody(A) ::= EmitpLashed(B).       { A = B; }
-//StatementInBody(A) ::= EmitpLashedWrite(B).  { A = B; }
-//StatementInBody(A) ::= EmitpLashedAppend(B). { A = B; }
-//StatementInBody(A) ::= EmitpLashedPipe(B).   { A = B; }
-//StatementInBody(A) ::= EmitLashed(B).        { A = B; }
-//StatementInBody(A) ::= EmitLashedWrite(B).   { A = B; }
-//StatementInBody(A) ::= EmitLashedAppend(B).  { A = B; }
-//StatementInBody(A) ::= EmitLashedPipe(B).    { A = B; }
+//Statement(A) ::= TeeWrite(B).          { A = B; }
+//Statement(A) ::= TeeAppend(B).         { A = B; }
+//Statement(A) ::= TeePipe(B).           { A = B; }
+//Statement(A) ::= md_emitf(B).          { A = B; }
+//Statement(A) ::= EmitfWrite(B).        { A = B; }
+//Statement(A) ::= EmitfAppend(B).       { A = B; }
+//Statement(A) ::= EmitfPipe(B).         { A = B; }
+//Statement(A) ::= md_emitp(B).          { A = B; }
+//Statement(A) ::= EmitpWrite(B).        { A = B; }
+//Statement(A) ::= EmitpAppend(B).       { A = B; }
+//Statement(A) ::= EmitpPipe(B).         { A = B; }
+//Statement(A) ::= md_emit(B).           { A = B; }
+//Statement(A) ::= EmitWrite(B).         { A = B; }
+//Statement(A) ::= EmitAppend(B).        { A = B; }
+//Statement(A) ::= EmitPipe(B).          { A = B; }
+//Statement(A) ::= EmitpLashed(B).       { A = B; }
+//Statement(A) ::= EmitpLashedWrite(B).  { A = B; }
+//Statement(A) ::= EmitpLashedAppend(B). { A = B; }
+//Statement(A) ::= EmitpLashedPipe(B).   { A = B; }
+//Statement(A) ::= EmitLashed(B).        { A = B; }
+//Statement(A) ::= EmitLashedWrite(B).   { A = B; }
+//Statement(A) ::= EmitLashedAppend(B).  { A = B; }
+//Statement(A) ::= EmitLashedPipe(B).    { A = B; }
 
-//StatementInBody(A) ::= md_dump(B).      { A = B; }
-//StatementInBody(A) ::= DumpWrite(B).    { A = B; }
-//StatementInBody(A) ::= DumpAppend(B).   { A = B; }
-//StatementInBody(A) ::= DumpPipe(B).     { A = B; }
-//StatementInBody(A) ::= md_edump(B).     { A = B; }
-//StatementInBody(A) ::= md_print(B).     { A = B; }
-//StatementInBody(A) ::= md_eprint(B).    { A = B; }
-//StatementInBody(A) ::= PrintWrite(B).   { A = B; }
-//StatementInBody(A) ::= PrintAppend(B).  { A = B; }
-//StatementInBody(A) ::= PrintPipe(B).    { A = B; }
-//StatementInBody(A) ::= md_printn(B).    { A = B; }
-//StatementInBody(A) ::= md_eprintn(B).   { A = B; }
-//StatementInBody(A) ::= PrintnWrite(B).  { A = B; }
-//StatementInBody(A) ::= PrintnAppend(B). { A = B; }
-//StatementInBody(A) ::= PrintnPipe(B).   { A = B; }
+//Statement(A) ::= md_dump(B).      { A = B; }
+//Statement(A) ::= DumpWrite(B).    { A = B; }
+//Statement(A) ::= DumpAppend(B).   { A = B; }
+//Statement(A) ::= DumpPipe(B).     { A = B; }
+//Statement(A) ::= md_edump(B).     { A = B; }
+//Statement(A) ::= md_print(B).     { A = B; }
+//Statement(A) ::= md_eprint(B).    { A = B; }
+//Statement(A) ::= PrintWrite(B).   { A = B; }
+//Statement(A) ::= PrintAppend(B).  { A = B; }
+//Statement(A) ::= PrintPipe(B).    { A = B; }
+//Statement(A) ::= md_printn(B).    { A = B; }
+//Statement(A) ::= md_eprintn(B).   { A = B; }
+//Statement(A) ::= PrintnWrite(B).  { A = B; }
+//Statement(A) ::= PrintnAppend(B). { A = B; }
+//Statement(A) ::= PrintnPipe(B).   { A = B; }
 
 // Valid only within for/while, but we accept them here syntactically and
 // reject them in the AST-to-CST conversion, where we can produce much more
 // informative error messages:
-//StatementInBody(A) ::= md_token_break(O). {
+//Statement(A) ::= md_token_break(O). {
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
 //}
-//StatementInBody(A) ::= md_token_continue(O). {
+//Statement(A) ::= md_token_continue(O). {
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
 //}
 
@@ -1016,7 +1591,7 @@ StatementInBody : Assignment ;
 //	A = mlr_dsl_ast_node_alloc_quaternary(F->text, MD_AST_NODE_TYPE_TRIPLE_FOR, S, C, U, L);
 //}
 
-//TripleForStart(A) ::= StatementInBody(B). {
+//TripleForStart(A) ::= Statement(B). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = mlr_dsl_ast_node_alloc_zary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
@@ -1024,7 +1599,7 @@ StatementInBody : Assignment ;
 //		A = mlr_dsl_ast_node_alloc_unary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 //	}
 //}
-//TripleForStart(A) ::= TripleForStart(B) "," StatementInBody(C). {
+//TripleForStart(A) ::= TripleForStart(B) "," Statement(C). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = C;
@@ -1033,7 +1608,7 @@ StatementInBody : Assignment ;
 //	}
 //}
 
-//TripleForContinuation(A) ::= StatementInBody(B). {
+//TripleForContinuation(A) ::= Statement(B). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = mlr_dsl_ast_node_alloc_zary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
@@ -1041,7 +1616,7 @@ StatementInBody : Assignment ;
 //		A = mlr_dsl_ast_node_alloc_unary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 //	}
 //}
-//TripleForContinuation(A) ::= TripleForContinuation(B) "," StatementInBody(C). {
+//TripleForContinuation(A) ::= TripleForContinuation(B) "," Statement(C). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = C;
@@ -1050,7 +1625,7 @@ StatementInBody : Assignment ;
 //	}
 //}
 
-//TripleForUpdate(A) ::= StatementInBody(B). {
+//TripleForUpdate(A) ::= Statement(B). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = mlr_dsl_ast_node_alloc_zary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
@@ -1058,7 +1633,7 @@ StatementInBody : Assignment ;
 //		A = mlr_dsl_ast_node_alloc_unary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 //	}
 //}
-//TripleForUpdate(A) ::= TripleForUpdate(B) "," StatementInBody(C). {
+//TripleForUpdate(A) ::= TripleForUpdate(B) "," Statement(C). {
 //	if (B->type == MD_AST_NODE_TYPE_NOP) {
 //		mlr_dsl_ast_node_free(B);
 //		A = C;
@@ -1120,152 +1695,6 @@ StatementInBody : Assignment ;
 //md_filter(A) ::= md_token_filter(O) Rvalue(B). {
 //	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
 //}
-
-//// ----------------------------------------------------------------
-//UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
-//}
-//UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" md_token_full_srec(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
-//}
-//UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" md_token_full_oosvar(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
-//}
-//UntypedLocalDefinition(A) ::= md_token_var(T) NonindexedLocalVariable(N) "=" MapLiteral(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
-//}
-
-//NumericLocalDefinition(A) ::= md_token_numeric(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION, N, B);
-//}
-//IntLocalDefinition(A) ::= md_token_int(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION, N, B);
-//}
-//FloatLocalDefinition(A) ::= md_token_float(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION, N, B);
-//}
-//BooleanLocalDefinition(A) ::= md_token_boolean(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION, N, B);
-//}
-//StringLocalDefinition(A) ::= md_token_string_literal(T) NonindexedLocalVariable(N) "=" Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION, N, B);
-//}
-
-//MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" MapLiteral(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
-//}
-//MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" md_token_full_srec(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
-//}
-//MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" md_token_full_oosvar(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
-//}
-//MapLocalDefinition(A) ::= md_token_map(T) NonindexedLocalVariable(N) "=" Rvalue(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
-//}
-
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) "="(O) Rvalue(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) "="(O) Rvalue(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) "="(O) MapLiteral(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) "="(O) MapLiteral(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) "="(O) md_token_full_oosvar(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) "="(O) md_token_full_oosvar(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-
-//NonindexedLocalAssignment(A)  ::= NonindexedLocalVariable(B) "="(O) md_token_full_srec(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-//IndexedLocalAssignment(A)  ::= IndexedLocalVariable(B) "="(O) md_token_full_srec(C). {
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
-//}
-
-//// ----------------------------------------------------------------
-// xxx
-
-Assignment :
-  : BaseLvalue "=" Rvalue
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
-
-// A BaseValue is anything on the left-hand side of an assignment, excluding
-// the indexing -- e.g. @a is a BaseValue and an Lvalue; @a[1][2][3] is an
-// Lvalue which is an indexed Lvalue.
-BaseLvalue
-  : FieldName
-  // computed field name
-  // positional name
-  // positional value
-  // indexed lvalues quite generally ...
-  | FullSrec;
-
-Lvalue
-  : BaseLvalue
-  // | IndexedLvalue
-;
-
-// oosvar
-// computed oosvar
-// full oosvar
-
-// local variable
-
-// env
-
-// xxx indexing of various
-
-//SrecIndirectAssignment(A)  ::=
-//	"$[" Rvalue "]"
-//	"="(O) Rvalue(C).
-//
-//SrecPositionalNameAssignment(A)  ::=
-//	"$[["
-//			Rvalue(B)
-//		"]]"
-//	"="(O) Rvalue(C).
-//
-//// '$[[[3]]] = "new"' is shorthand for '$[ $[[3]] ] = "new"'.
-//// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
-//SrecPositionalValueAssignment(A)  ::=
-//	"$[[["
-//			Rvalue(B)
-//		"]]]"
-//	"="(O) Rvalue(C).
-//
-
-// ----------------------------------------------------------------
-// xxx awkward factorization -- there will be huge cardinality if this is
-// number of assignment operators times number of possible LHSes.
-
-Assignment
-  : Lvalue "||=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "^^=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "&&=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "|="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "^="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "&="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "<<=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue ">>=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "+="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue ".="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "-="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "*="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "/="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "//=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "%="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "**=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-;
 
 //// ----------------------------------------------------------------
 //md_unset(A) ::= md_token_unset(O) md_token_all(B). {
@@ -1916,643 +2345,3 @@ Assignment
 //OutputFile(A) ::= Rvalue(F).          { A = F; }
 //OutputFile(A) ::= md_token_stdout(F). { A = F; }
 //OutputFile(A) ::= md_token_stderr(F). { A = F; }
-
-// ================================================================
-// Begin Rvalue operator-precedence chain
-// ================================================================
-
-Rvalue : TernaryTerm ;
-
-TernaryTerm
-  : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
-    << dsl.NewASTNodeTernary(dsl.NewASTToken("?:", $1), $0, $2, $4, dsl.NodeTypeOperator) >>
-  | LogicalOrTerm
-;
-
-LogicalOrTerm
-  : LogicalOrTerm "||" LogicalXORTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | LogicalXORTerm
-;
-
-LogicalXORTerm
-  : LogicalXORTerm "^^" LogicalAndTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | LogicalAndTerm
-;
-
-LogicalAndTerm
-  : LogicalAndTerm "&&" EqneTerm
-    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm
-;
-
-EqneTerm
-  : EqneTerm "=~"  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "=="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | EqneTerm "!="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm
-;
-
-CmpTerm
-  : CmpTerm ">"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm ">=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm "<"  BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | CmpTerm "<=" BitwiseORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseORTerm
-;
-
-BitwiseORTerm
-  : BitwiseORTerm "|" BitwiseXORTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseXORTerm
-;
-
-BitwiseXORTerm
-  : BitwiseXORTerm "^" BitwiseANDTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseANDTerm
-;
-
-BitwiseANDTerm
-  : BitwiseANDTerm "&" BitwiseShiftTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseShiftTerm
-;
-
-BitwiseShiftTerm
-  : BitwiseShiftTerm "<<" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseShiftTerm ">>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm
-;
-
-AddsubdotTerm
-  : AddsubdotTerm "+"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm
-;
-
-MuldivTerm
-  : MuldivTerm "*"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "/"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "//"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "%"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".*"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "./"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".//" UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | UnaryOpTerm
-;
-
-UnaryOpTerm
-  : "+"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "-"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | ".+" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | ".-" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "!"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "~"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | PowTerm
-;
-
-PowTerm
-  : MlrvalOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MlrvalOrFunction
-;
-
-// Please Excuse My Dear Aunt Sally! :) We've gotten to the 'P' so we're done
-// with the operator-precedence chain. :)
-
-MlrvalOrFunction
-  : "(" Rvalue ")"
-  << dsl.Nestable($1) >>
-;
-
-// ================================================================
-// End Rvalue operator-precedence chain
-// ================================================================
-
-// ----------------------------------------------------------------
-// xxx to do
-
-// In the grammar provided to the user, field names are of the form "$x".  But
-// within Miller internally, field names are of the form "x".  We coded the
-// lexer to give us field names with leading "$" so we can confidently strip it
-// off here.
-
-MlrvalOrFunction
-  : FieldName
-  | FullSrec
-;
-
-FieldName
-  : DirectFieldName
-  | IndirectFieldName
-  //| BracedFieldName
-  //| PositionalFieldName
-  // ...
-;
-
-// Note: the field name is "$field" not "field" since md_token_field_name
-// includes the '$'.  If we omit the '$' there and include it in the parser
-// section here as "$", then we get an LR-1 conflict. So this must be dealt
-// with at the AST level. Hence the NewASTNodeStripDollarPlease.
-
-DirectFieldName
-  : md_token_field_name
-    << dsl.NewASTNodeStripDollarPlease($0, dsl.NodeTypeDirectFieldName) >>
-;
-
-IndirectFieldName
-  : "$[" Rvalue "]"
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldName) >>
-;
-
-//// xxx make a token-wrap constructor in the API
-//BracedFieldName
-//  : "${" md_token_id "}"
-//    << dsl.NewASTNodeUnary(
-//      $0,
-//      dsl.NewASTNodeNestable($1, dsl.NodeTypeFieldName),
-//      dsl.NodeTypeToken,
-//    ) >>
-//;
-
-//MlrvalOrFunction(A) ::= PositionalSrecName(B). {
-//	A = B;
-//}
-//PositionalSrecName(A) ::= "$[[" Rvalue "]]"
-//	A = mlr_dsl_ast_node_alloc_unary(
-//		"positional_srec_field_name",
-//		MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
-//		B
-//	);
-
-//// '$value = $[[[3]]]' is shorthand for '$value = $[ $[[3]] ]'.
-//// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
-//MlrvalOrFunction(A) ::= PositionalSrecValue(B). {
-//	A = B;
-//}
-//PositionalSrecValue(A) ::= "$"
-//	"[[["
-//		Rvalue(B)
-//	"]]].  {
-//	A = mlr_dsl_ast_node_alloc_unary(
-//		"indirect_field_name",
-//		MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME,
-//		mlr_dsl_ast_node_alloc_unary(
-//			"positional_srec_field_name",
-//			MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
-//			B
-//		)
-//	);
-//}
-
-FullSrec
-  : md_token_full_srec
-  << dsl.NewASTNode($0, dsl.NodeTypeFullSrec) >>
-;
-
-//// ----------------------------------------------------------------
-//MlrvalOrFunction(A) ::= OosvarKeylist(B). {
-//	A = B;
-//}
-
-//OosvarKeylist(A) ::= OosvarBasename(B). {
-//	A = B;
-//}
-//OosvarKeylist(A) ::= OosvarKeylist(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}
-
-//// E.g. @name
-//OosvarBasename(A) ::= md_token_unbraced_oosvar_name(B). {
-//	char* at_name = B->text;
-//	char* no_at_name = &at_name[1];
-//	A = mlr_dsl_ast_node_alloc_unary("oosvar_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST,
-//		mlr_dsl_ast_node_alloc(no_at_name, B->type));
-//}
-
-//// E.g. @{name}
-//OosvarBasename(A) ::= md_token_braced_oosvar_name(B). {
-//	// Replace "@%{field.name}" with just "field.name"
-//	char* at_name = B->text;
-//	char* no_at_name = &at_name[2];
-//	int len = strlen(no_at_name);
-//	if (len > 0)
-//		no_at_name[len-1] = 0;
-//	A = mlr_dsl_ast_node_alloc_unary("oosvar_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST,
-//		mlr_dsl_ast_node_alloc(no_at_name, B->type));
-//}
-
-//// E.g. @["name"]
-//OosvarBasename(A) ::= md_token_at_sign "[" Rvalue(B) "]". {
-//	A = mlr_dsl_ast_node_alloc_unary("oosvar_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST, B);
-//}
-
-//LocalMapKeylist(A) ::= NonindexedLocalVariable(B). {
-//	A = B;
-//}
-//LocalMapKeylist(A) ::= LocalMapKeylist(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}
-
-// ----------------------------------------------------------------
-// STRING/INT/FLOAT/BOOL LITERALS
-
-// As with '$' on md_token_field_name, so too for md_token_string_literal
-// we get LR-1 conflicts if we attempt to put the double quotes here.
-// Hence the quote-stripper AST method.
-MlrvalOrFunction
-  : md_token_string_literal  << dsl.NewASTNodeStripDoubleQuotePairPlease(
-    $0,
-    dsl.NodeTypeStringLiteral,
-  ) >>
-  | md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
-  | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
-  | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
-  | md_token_panic           << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
-;
-
-//MlrvalOrFunction(A) ::= md_regexi(B). {
-//	A = B;
-//}
-
-// ----------------------------------------------------------------
-//MlrvalOrFunction(A) ::= NonindexedLocalVariable(B). {
-//	A = B;
-//}
-
-//MlrvalOrFunction(A) ::= IndexedLocalVariable(B). {
-//	A = B;
-//}
-
-//NonindexedLocalVariable(A) ::= md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
-//}
-
-//IndexedLocalVariable(A) ::= NonindexedLocalVariable(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE, C);
-//	mlr_dsl_ast_node_free(B);
-//}
-//IndexedLocalVariable(A) ::= IndexedLocalVariable(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}
-
-//MlrvalOrFunction(A) ::= IndexedFunctionCall(B). {
-//	A = B;
-//}
-
-//// Indexed function calls:
-//// * First child node is function call with argument list.
-//// * Second child node is list of indexing expressions.
-////
-//// Example: 'foo(1,2,3)[4][5]' parses to AST
-////
-//// text="foo", type=INDEXED_FUNCTION_CALLSITE:
-////     text="foo", type=FUNCTION_CALLSITE:
-////         text="1", type=NUMERIC_LITERAL.
-////         text="2", type=NUMERIC_LITERAL.
-////         text="3", type=NUMERIC_LITERAL.
-////     text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
-////         text="4", type=NUMERIC_LITERAL.
-////         text="5", type=NUMERIC_LITERAL.
-//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_alloc_binary(
-//		B->text,
-//		MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
-//		B,
-//		mlr_dsl_ast_node_alloc_unary(
-//			"indexing",
-//			MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST,
-//			C
-//		)
-//	);
-//}
-//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) "[" Rvalue(C) "]". {
-//	// Append to second child node which is list of indexing expressions.
-//	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
-//}
-
-//md_string(A) ::= md_token_string_literal(B). {
-//	char* input = B->text;
-//	char* stripped = &input[1];
-//	int len = strlen(input);
-//	stripped[len-2] = 0;
-//	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
-//}
-//md_regexi(A) ::= md_token_regexi(B). {
-//	char* input = B->text;
-//	char* stripped = &input[1];
-//	int len = strlen(input);
-//	stripped[len-3] = 0;
-//	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
-//}
-
-// ----------------------------------------------------------------
-MlrvalOrFunction : ContextVariable ;
-
-ContextVariable
-  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-
-  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-
-  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-
-  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-;
-
-// ----------------------------------------------------------------
-//MlrvalOrFunction(A) ::= EnvIndex(B). {
-//	A = B;
-//}
-
-//EnvIndex(A) ::= md_token_env(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
-//}
-
-//MlrvalOrFunction(A) ::= FcnOrSubrCall(B). {
-//	A = B;
-//}
-
-//// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
-//// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
-//// * On the "a" we make a function sub-AST called "anon(a)".
-//// * On the "b" we append the next argument to get "anon(a,b)".
-//// * On the "c" we append the next argument to get "anon(a,b,c)".
-//// * On the "f" we change the function name to get "f(a,b,c)".
-
-//FcnOrSubrCall(A) ::= md_token_non_sigil_name(O) "(" FcnArgList(B) ")". {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
-//}
-//// For most functions it suffices to use the md_token_non_sigil_name pattern. But
-//// int and float are keywords in the lexer so we need to spell those out explicitly.
-//// (They're type-decl keywords but they're also the names of type-conversion functions.)
-//FcnOrSubrCall(A) ::= md_token_int(O) "(" FcnArgList(B) ")". {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
-//}
-//FcnOrSubrCall(A) ::= md_token_float(O) "(" FcnArgList(B) ")". {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
-//}
-
-//FcnArgList(A) ::= . {
-//	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-//}
-//FcnArgList(A) ::= FcnNonEmptyArgList(B). {
-//	A = B;
-//}
-
-//FcnNonEmptyArgList(A) ::= md_fcn_arg(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FcnNonEmptyArgList(A) ::= md_fcn_arg(B) ",". {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FcnNonEmptyArgList(A) ::= md_fcn_arg(B) "," FcnNonEmptyArgList(C). {
-//	A = mlr_dsl_ast_node_prepend_arg(C, B);
-//}
-
-//md_fcn_arg(A) ::= Rvalue(B). {
-//	A = B;
-//}
-//md_fcn_arg(A) ::= md_token_full_srec(B). {
-//	A = B;
-//}
-//md_fcn_arg(A) ::= md_token_full_oosvar(B). {
-//	A = B;
-//}
-//md_fcn_arg(A) ::= MapLiteral(B). {
-//	A = B;
-//}
-
-// ================================================================
-// Array literals in Miller are JSON-ish.
-
-MlrvalOrFunction : ArrayLiteral ;
-
-// ----------------------------------------------------------------
-ArrayLiteral
-
-  : "[" "]"
-    << dsl.NewASTNodeZary(
-      dsl.NewASTToken("[]", $0),
-      dsl.NodeTypeArrayLiteral,
-    ) >>
-
-  | "[" ArrayLiteralElements "]"
-    // As parsed there's an intermediate node between ArrayLiteral
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * ArrayLiteral "[]"
-    //     * ArrayLiteral
-    //         * StringLiteral "a"
-    //         * StringLiteral "b"
-    //
-    // After:
-    // * ArrayLiteral "[]"
-    //     * StringLiteral "a"
-    //     * StringLiteral "b"
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        dsl.NewASTToken("[]", $0),
-        dsl.NodeTypeArrayLiteral,
-      ),
-      $1,
-    ) >>
-;
-
-// ----------------------------------------------------------------
-ArrayLiteralElements
-
-  : ArrayLiteralElement
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeArrayLiteral,
-    ) >>
-
-  // Allow trailing final comma, especially for multiline map literals
-  | ArrayLiteralElement ","
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeArrayLiteral,
-    ) >>
-
-  // xxx temp -- needs to adopt children
-  // Allow trailing final comma, especially for multiline map literals
-  | ArrayLiteralElement "," ArrayLiteralElements
-    << dsl.PrependChild(
-      $2,
-      $0,
-    ) >>
-
-;
-
-// ----------------------------------------------------------------
-ArrayLiteralElement
-  : Rvalue
-;
-
-// ----------------------------------------------------------------
-// For Array or Map -- which one, to be determined at runtime.
-
-MlrvalOrFunction : ArrayOrMapIndexAccess ;
-
-ArrayOrMapIndexAccess
-  : MlrvalOrFunction "[" Rvalue "]" 
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      dsl.NodeTypeArrayOrMapIndexAccess,
-    )>>
-;
-
-MlrvalOrFunction : ArraySliceAccess ;
-
-ArraySliceAccess
-
-  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      $4,
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-  | MlrvalOrFunction "[" ":" Rvalue "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      dsl.NewASTNodeNestable(
-        $2,
-        dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      $3,
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-  | MlrvalOrFunction "[" Rvalue ":" "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      dsl.NewASTNodeNestable(
-        $3,
-        dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-  | MlrvalOrFunction "[" ":" "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      dsl.NewASTNodeNestable(
-        $2,
-        dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      dsl.NewASTNodeNestable(
-        $2,
-        dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-;
-
-// ================================================================
-// Map literals in Miller are JSON-ish.
-
-MlrvalOrFunction : MapLiteral ;
-
-// ----------------------------------------------------------------
-MapLiteral
-
-  : "{" "}"
-    << dsl.NewASTNodeZary(
-      dsl.NewASTToken("{}", $0),
-      dsl.NodeTypeMapLiteral,
-    ) >>
-
-  | "{" MapLiteralKeyValuePairs "}"
-    // As parsed there's an intermediate node between MapLiteral
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * MapLiteral "{}"
-    //     * MapLiteral
-    //         * MapLiteralKeyValuePair ":"
-    //             * StringLiteral "a"
-    //             * StringLiteral "1"
-    //         * MapLiteralKeyValuePair ":"
-    //             * StringLiteral "b"
-    //             * IntLiteral "2"
-    //
-    // After:
-    // * MapLiteral "{}"
-    //     * MapLiteralKeyValuePair ":"
-    //         * StringLiteral "a"
-    //         * StringLiteral "1"
-    //     * MapLiteralKeyValuePair ":"
-    //         * StringLiteral "b"
-    //         * IntLiteral "2"
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        dsl.NewASTToken("{}", $0),
-        dsl.NodeTypeMapLiteral,
-      ),
-      $1,
-    ) >>
-;
-
-// ----------------------------------------------------------------
-MapLiteralKeyValuePairs
-
-  : MapLiteralKeyValuePair
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeMapLiteral,
-    ) >>
-
-  // Allow trailing final comma, especially for multiline map literals
-  | MapLiteralKeyValuePair ","
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeMapLiteral,
-    ) >>
-
-  // xxx temp -- needs to adopt children
-  // Allow trailing final comma, especially for multiline map literals
-  | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
-    << dsl.PrependChild(
-      $2,
-      $0,
-    ) >>
-
-;
-
-// ----------------------------------------------------------------
-MapLiteralKeyValuePair
-  : Rvalue ":" Rvalue
-    << dsl.NewASTNodeBinary(
-      $1,
-      $0,
-      $2,
-      dsl.NodeTypeMapLiteralKeyValuePair,
-    ) >>
-;
