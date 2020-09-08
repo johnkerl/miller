@@ -281,14 +281,15 @@ md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL
 
 Root :
-  StatementBlock
-    <<dsl.NewAST($0) >> ;
-
-StatementBlock
   : empty // mlr put ' ' is OK: this is zero statements
     << dsl.NewASTNodeEmpty(dsl.NodeTypeEmptyStatement) >>
+  | StatementBlock
+    <<dsl.NewAST($0) >>
+  ;
 
-  | Statement
+StatementBlock
+
+  : Statement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   | StatementBlock ";"

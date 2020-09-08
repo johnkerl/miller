@@ -15,9 +15,9 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(2), // $, reduce: StatementBlock
+			reduce(1), // $, reduce: Root
 			nil,       // empty
-			reduce(2), // ;, reduce: StatementBlock
+			nil,       // ;
 			nil,       // =
 			nil,       // [
 			nil,       // ]
@@ -197,7 +197,7 @@ var actionTab = actionTable{
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(1), // $, reduce: Root
+			reduce(2), // $, reduce: Root
 			nil,       // empty
 			shift(30), // ;
 			nil,       // =
@@ -10482,7 +10482,7 @@ var actionTab = actionTable{
 			nil,        // INVALID
 			nil,        // $
 			nil,        // empty
-			reduce(2),  // ;, reduce: StatementBlock
+			nil,        // ;
 			nil,        // =
 			nil,        // [
 			nil,        // ]
@@ -10496,7 +10496,7 @@ var actionTab = actionTable{
 			shift(27),  // md_token_full_oosvar
 			shift(451), // md_token_begin
 			nil,        // {
-			reduce(2),  // }, reduce: StatementBlock
+			nil,        // }
 			shift(452), // md_token_end
 			nil,        // ||=
 			nil,        // ^^=
@@ -10573,7 +10573,7 @@ var actionTab = actionTable{
 			nil,        // INVALID
 			nil,        // $
 			nil,        // empty
-			reduce(2),  // ;, reduce: StatementBlock
+			nil,        // ;
 			nil,        // =
 			nil,        // [
 			nil,        // ]
@@ -10587,7 +10587,7 @@ var actionTab = actionTable{
 			shift(27),  // md_token_full_oosvar
 			shift(451), // md_token_begin
 			nil,        // {
-			reduce(2),  // }, reduce: StatementBlock
+			nil,        // }
 			shift(452), // md_token_end
 			nil,        // ||=
 			nil,        // ^^=
@@ -68631,7 +68631,7 @@ var actionTab = actionTable{
 			nil,        // INVALID
 			nil,        // $
 			nil,        // empty
-			reduce(2),  // ;, reduce: StatementBlock
+			nil,        // ;
 			nil,        // =
 			nil,        // [
 			nil,        // ]
@@ -68645,7 +68645,7 @@ var actionTab = actionTable{
 			shift(27),  // md_token_full_oosvar
 			shift(451), // md_token_begin
 			nil,        // {
-			reduce(2),  // }, reduce: StatementBlock
+			nil,        // }
 			shift(452), // md_token_end
 			nil,        // ||=
 			nil,        // ^^=
@@ -68722,7 +68722,7 @@ var actionTab = actionTable{
 			nil,        // INVALID
 			nil,        // $
 			nil,        // empty
-			reduce(2),  // ;, reduce: StatementBlock
+			nil,        // ;
 			nil,        // =
 			nil,        // [
 			nil,        // ]
@@ -68736,7 +68736,7 @@ var actionTab = actionTable{
 			shift(27),  // md_token_full_oosvar
 			shift(451), // md_token_begin
 			nil,        // {
-			reduce(2),  // }, reduce: StatementBlock
+			nil,        // }
 			shift(452), // md_token_end
 			nil,        // ||=
 			nil,        // ^^=
