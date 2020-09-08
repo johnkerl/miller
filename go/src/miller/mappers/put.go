@@ -168,7 +168,11 @@ func (this *MapperPut) Map(
 	if inrec != nil {
 
 		cstState := cst.NewState(inrec, &context)
-		outrec := this.cstRoot.Execute(cstState)
+		outrec, err := this.cstRoot.Execute(cstState)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 
 		outputChannel <- lib.NewRecordAndContext(
 			outrec,

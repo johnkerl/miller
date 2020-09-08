@@ -1,9 +1,6 @@
 package cst
 
 import (
-	"fmt"
-	"os"
-
 	"miller/dsl"
 	"miller/lib"
 )
@@ -59,14 +56,13 @@ func NewAssignmentNode(
 	}
 }
 
-func (this *AssignmentNode) Execute(state *State) {
+func (this *AssignmentNode) Execute(state *State) error {
 	rvalue := this.rvalue.Evaluate(state)
 	if !rvalue.IsAbsent() {
-		// xxx need to propagate the error coming back in the Execute() API
 		err := this.lvalue.Assign(&rvalue, state)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
 	}
+	return nil
 }

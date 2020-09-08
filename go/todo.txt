@@ -6,7 +6,8 @@ TOP OF LIST:
   ! Execute -> error not void
   o computed/braced srec on both sides
   o oosvars at state -- easy mlrmap now
-  o $[[[ ]]] ...
+  o $[1] is easier now; needn't $[[1]]
+  o $[[[ ]]] ... ?
   o functions?!?
 
 * array/map

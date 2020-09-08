@@ -68,7 +68,7 @@ type Root struct {
 // ----------------------------------------------------------------
 // This is for all statements and statemnt blocks within the CST.
 type IExecutable interface {
-	Execute(state *State)
+	Execute(state *State) error
 }
 
 // ----------------------------------------------------------------
