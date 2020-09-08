@@ -46,12 +46,6 @@ func BuildLeafNode(
 	case dsl.NodeTypePanic:
 		return BuildPanicNode(), nil
 		break
-
-		// xxx more
-		//	case NodeTypeIndirectFieldName:
-		//		return lib.MlrvalFromError(), errors.New("unhandled1")
-		//		break
-
 	}
 
 	return nil, errors.New(
