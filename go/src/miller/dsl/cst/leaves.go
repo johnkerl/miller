@@ -21,10 +21,10 @@ func BuildLeafNode(
 	switch astNode.Type {
 
 	case dsl.NodeTypeDirectFieldName:
-		return BuildSrecDirectFieldReadNode(sval), nil
+		return BuildSrecDirectFieldRvalueNode(sval), nil
 		break
 	case dsl.NodeTypeFullSrec:
-		return BuildFullSrecReadNode(sval), nil
+		return BuildFullSrecRvalueNode(sval), nil
 		break
 
 	case dsl.NodeTypeStringLiteral:
@@ -60,16 +60,16 @@ func BuildLeafNode(
 }
 
 // ----------------------------------------------------------------
-type SrecDirectFieldReadNode struct {
+type SrecDirectFieldRvalueNode struct {
 	fieldName string
 }
 
-func BuildSrecDirectFieldReadNode(fieldName string) *SrecDirectFieldReadNode {
-	return &SrecDirectFieldReadNode{
+func BuildSrecDirectFieldRvalueNode(fieldName string) *SrecDirectFieldRvalueNode {
+	return &SrecDirectFieldRvalueNode{
 		fieldName: fieldName,
 	}
 }
-func (this *SrecDirectFieldReadNode) Evaluate(state *State) lib.Mlrval {
+func (this *SrecDirectFieldRvalueNode) Evaluate(state *State) lib.Mlrval {
 	value := state.Inrec.Get(&this.fieldName)
 	if value == nil {
 		return lib.MlrvalFromAbsent()
@@ -79,13 +79,13 @@ func (this *SrecDirectFieldReadNode) Evaluate(state *State) lib.Mlrval {
 }
 
 // ----------------------------------------------------------------
-type FullSrecReadNode struct {
+type FullSrecRvalueNode struct {
 }
 
-func BuildFullSrecReadNode(fieldName string) *FullSrecReadNode {
-	return &FullSrecReadNode{}
+func BuildFullSrecRvalueNode(fieldName string) *FullSrecRvalueNode {
+	return &FullSrecRvalueNode{}
 }
-func (this *FullSrecReadNode) Evaluate(state *State) lib.Mlrval {
+func (this *FullSrecRvalueNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromMap(state.Inrec)
 }
 

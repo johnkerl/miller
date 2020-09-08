@@ -22,6 +22,9 @@ func BuildAssignableNode(
 	case dsl.NodeTypeIndirectFieldName:
 		return BuildIndirectFieldNameLvalueNode(astNode)
 		break
+	case dsl.NodeTypeFullSrec:
+		return BuildFullSrecLvalueNode(astNode)
+		break
 	}
 
 	// xxx temp
@@ -104,5 +107,38 @@ func (this *IndirectFieldNameLvalueNode) Assign(
 	sval := lhsFieldName.String()
 
 	state.Inrec.Put(&sval, rvalue)
+	return nil
+}
+
+// ----------------------------------------------------------------
+type FullSrecLvalueNode struct {
+}
+
+func BuildFullSrecLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullSrec)
+	lib.InternalCodingErrorIf(astNode == nil)
+	lib.InternalCodingErrorIf(astNode.Children != nil)
+	return NewFullSrecLvalueNode(), nil
+}
+
+func NewFullSrecLvalueNode() *FullSrecLvalueNode {
+	return &FullSrecLvalueNode{}
+}
+
+func (this *FullSrecLvalueNode) Assign(
+	rvalue *lib.Mlrval,
+	state *State,
+) error {
+	// AssignmentNode checks for absentness of the rvalue, so we just assign
+	// whatever we get
+	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+
+	if !rvalue.IsMap() {
+		// need 2nd-arg error in the API ... maybe
+	}
+
+	// xxx deepcopy!
+	state.Inrec = rvalue.GetMap()
+
 	return nil
 }
