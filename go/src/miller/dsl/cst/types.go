@@ -72,15 +72,16 @@ type IExecutable interface {
 }
 
 // ----------------------------------------------------------------
-// xxx to do once begin/end/main are in the DSL
 type StatementBlockNode struct {
-	// TODO: list of statement
+	// TODO: list of statement, once begin/end/main are in the DSL
 }
 
 // ================================================================
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
-	Assign(mlrval *lib.Mlrval, state *State) error
+	Assign(rvalue *lib.Mlrval, state *State) error
+	// Or maybe just have Assign take zero-length indices -- ?
+	//AssignIndexed(rvalue *lib.Mlrval, []*lib.Mlrval indices, state *State) error
 }
 
 // ================================================================

@@ -25,6 +25,9 @@ func BuildAssignableNode(
 	case dsl.NodeTypeFullSrec:
 		return BuildFullSrecLvalueNode(astNode)
 		break
+	//case dsl.NodeTypeIndexedLvalue:
+	//	return xxx(astNode)
+	//	break
 	}
 
 	// xxx temp
@@ -143,3 +146,15 @@ func (this *FullSrecLvalueNode) Assign(
 
 	return nil
 }
+
+// ----------------------------------------------------------------
+// IndexedLvalue:
+// * Base is some IAssignable
+// * Indices are an array of IEvaluables
+// * Each needs to evaluate to int or string
+// * Make a Mlrval method: func (this *Mlrval) IndexedAssign([]*Mlrval) {...}
+// * It needs to walk each level:
+//   o error if ith mlrval is int and that level isn't an array
+//   o error if ith mlrval is string and that level isn't a map
+//   o error for any other types -- maybe absent-handling for heterogeneity ...
+// * Need IAssignable to include some AssignedIndexed method?

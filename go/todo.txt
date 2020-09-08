@@ -2,8 +2,7 @@
 TOP OF LIST:
 
 * monday:
-  o rename MlrvalOrFunction in the DSL
-  ? ENV
+  o indexed-lvalue assignment ops
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
