@@ -275,7 +275,7 @@ Root :
     <<dsl.NewAST($0) >> ;
 
 StatementBlock
-  : empty
+  : empty // mlr put ' ' is OK: this is zero statements
     << dsl.NewASTNodeEmpty(dsl.NodeTypeEmptyStatement) >>
 
   | Statement
@@ -525,10 +525,12 @@ Assignment
 ;
 
 // ================================================================
-// Begin Rvalue operator-precedence chain
+// BEGIN RVALUE OPERATOR-PRECEDENCE CHAIN
 // ================================================================
 
-Rvalue : TernaryTerm ;
+Rvalue : PrecedenceChainStart ;
+
+PrecedenceChainStart : TernaryTerm ;
 
 TernaryTerm
   : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm
@@ -622,20 +624,22 @@ UnaryOpTerm
 ;
 
 PowTerm
-  : MlrvalOrFunction "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MlrvalOrFunction
+  : PrecedenceChainEnd "**" PowTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | PrecedenceChainEnd
 ;
 
 // Please Excuse My Dear Aunt Sally! :) We've gotten to the 'P' so we're done
 // with the operator-precedence chain. :)
 
-MlrvalOrFunction
+PrecedenceChainEnd
   : "(" Rvalue ")"
   << dsl.Nestable($1) >>
 ;
 
+PrecedenceChainEnd : MlrvalOrFunction ;
+
 // ================================================================
-// End Rvalue operator-precedence chain
+// END RVALUE OPERATOR-PRECEDENCE CHAIN
 // ================================================================
 
 // ================================================================
@@ -689,72 +693,6 @@ MlrvalOrFunction
 //	int len = strlen(input);
 //	stripped[len-3] = 0;
 //	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
-//}
-
-// ----------------------------------------------------------------
-//MlrvalOrFunction(A) ::= IndexedFunctionCall(B). {
-//	A = B;
-//}
-
-//// Indexed function calls:
-//// * First child node is function call with argument list.
-//// * Second child node is list of indexing expressions.
-////
-//// Example: 'foo(1,2,3)[4][5]' parses to AST
-////
-//// text="foo", type=INDEXED_FUNCTION_CALLSITE:
-////     text="foo", type=FUNCTION_CALLSITE:
-////         text="1", type=NUMERIC_LITERAL.
-////         text="2", type=NUMERIC_LITERAL.
-////         text="3", type=NUMERIC_LITERAL.
-////     text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
-////         text="4", type=NUMERIC_LITERAL.
-////         text="5", type=NUMERIC_LITERAL.
-
-//IndexedFunctionCall(A) ::= FcnOrSubrCall(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_alloc_binary(
-//		B->text,
-//		MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
-//		B,
-//		mlr_dsl_ast_node_alloc_unary(
-//			"indexing",
-//			MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST,
-//			C
-//		)
-//	);
-//}
-//IndexedFunctionCall(A) ::= IndexedFunctionCall(B) "[" Rvalue(C) "]". {
-//	// Append to second child node which is list of indexing expressions.
-//	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
-//}
-
-// ----------------------------------------------------------------
-MlrvalOrFunction : ContextVariable ;
-
-ContextVariable
-  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-
-  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-
-  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-
-  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-;
-
-// ----------------------------------------------------------------
-//MlrvalOrFunction(A) ::= EnvIndex(B). {
-//	A = B;
-//}
-
-//EnvIndex(A) ::= md_token_env(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 //}
 
 // ================================================================
@@ -824,77 +762,6 @@ ArrayLiteralElements
 // ----------------------------------------------------------------
 ArrayLiteralElement
   : Rvalue
-;
-
-// ================================================================
-// For Array or Map -- which one, to be determined at runtime.
-
-// ----------------------------------------------------------------
-MlrvalOrFunction : ArrayOrMapIndexAccess ;
-
-ArrayOrMapIndexAccess
-  : MlrvalOrFunction "[" Rvalue "]" 
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      dsl.NodeTypeArrayOrMapIndexAccess,
-    )>>
-;
-
-// ----------------------------------------------------------------
-MlrvalOrFunction : ArraySliceAccess ;
-
-ArraySliceAccess
-
-  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      $4,
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-  | MlrvalOrFunction "[" ":" Rvalue "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      dsl.NewASTNodeNestable(
-        $2,
-        dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      $3,
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-  | MlrvalOrFunction "[" Rvalue ":" "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      dsl.NewASTNodeNestable(
-        $3,
-        dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
-  | MlrvalOrFunction "[" ":" "]" 
-    << dsl.NewASTNodeTernary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      dsl.NewASTNodeNestable(
-        $2,
-        dsl.NodeTypeArraySliceEmptyLowerIndex,
-      ),
-      dsl.NewASTNodeNestable(
-        $2,
-        dsl.NodeTypeArraySliceEmptyUpperIndex,
-      ),
-      dsl.NodeTypeArraySliceAccess,
-    )>>
-
 ;
 
 // ================================================================
@@ -978,6 +845,107 @@ MapLiteralKeyValuePair
       $2,
       dsl.NodeTypeMapLiteralKeyValuePair,
     ) >>
+;
+
+// ================================================================
+MlrvalOrFunction : ContextVariable ;
+
+ContextVariable
+  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+
+  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+;
+
+// ----------------------------------------------------------------
+//MlrvalOrFunction(A) ::= EnvIndex(B). {
+//	A = B;
+//}
+
+//EnvIndex(A) ::= md_token_env(B) "[" Rvalue(C) "]". {
+//	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
+//}
+
+// ================================================================
+// INDEXED ACCESS
+//
+// For Array or Map -- which one, to be determined at runtime.
+
+// ----------------------------------------------------------------
+MlrvalOrFunction : ArrayOrMapIndexAccess ;
+
+ArrayOrMapIndexAccess
+  : MlrvalOrFunction "[" Rvalue "]" 
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NodeTypeArrayOrMapIndexAccess,
+    )>>
+;
+
+MlrvalOrFunction : ArraySliceAccess ;
+
+ArraySliceAccess
+
+  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      $4,
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" ":" Rvalue "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      $3,
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" Rvalue ":" "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NewASTNodeNestable(
+        $3,
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
+  | MlrvalOrFunction "[" ":" "]" 
+    << dsl.NewASTNodeTernary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyLowerIndex,
+      ),
+      dsl.NewASTNodeNestable(
+        $2,
+        dsl.NodeTypeArraySliceEmptyUpperIndex,
+      ),
+      dsl.NodeTypeArraySliceAccess,
+    )>>
+
 ;
 
 // ================================================================

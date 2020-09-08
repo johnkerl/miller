@@ -3,6 +3,9 @@ TOP OF LIST:
 
 * tuesday:
   o indexed-lvalue assignment ops
+  o computed/braced srec on both sides
+  o oosvars at state -- easy mlrmap now
+  o $[[[ ]]] ...
   o functions?!?
 
 * array/map
