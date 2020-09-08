@@ -302,7 +302,9 @@ Assignment :
 // Lvalue which is an indexed Lvalue.
 Lvalue
   : BaseLvalue
-  // | IndexedLvalue -- adapt the indexed-rvalue logic
+  | IndexedLvalue
+  // | SlicedLvalue -- like $text[3:7] = "interpolated"
+  // | ENVValue -- only ENV["foo"] but not arbitrarily indexable like ENV["foo"]["bar"]
 ;
 
 BaseLvalue
@@ -317,9 +319,19 @@ BaseLvalue
   // braced oosvar @{...}
   // fulloosvar @*
   // local variable abcd
-  // ENV -- only ENV["foo"] but not arbitrarily indexable
 ;
 
+IndexedLvalue
+  : Lvalue "[" Rvalue "]" 
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NodeTypeIndexedLvalue,
+    )>>
+;
+
+// ----------------------------------------------------------------
 FieldName
   : DirectFieldName
   | IndirectFieldName
@@ -357,26 +369,155 @@ FullSrec
 ;
 
 // ----------------------------------------------------------------
-// xxx awkward factorization -- there will be huge cardinality if this is
-// number of assignment operators times number of possible LHSes.
+// REWRITE COMPOUND ASSIGNMENT OPERATORS
+//
+// Transform '$x += 1' which would have AST
+//
+//   +=
+//       $x
+//       1
+//
+// into '$x = $x + 1' with AST
+//
+//   =
+//       $x
+//       +
+//           $x
+//           1
+//
+// right here in the parser.
+//
+// Use the NewASTToken to clone the "||=" into "||" and so on.
 
 Assignment
-  : Lvalue "||=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "^^=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "&&=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "|="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "^="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "&="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "<<=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue ">>=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "+="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue ".="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "-="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "*="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "/="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "//=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "%="  Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
-  | Lvalue "**=" Rvalue << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+
+  : Lvalue "||=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("||", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "^^=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^^", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "&&=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("&&", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "|=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("|", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "^=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "^=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "<<=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("<<", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue ">>=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "+=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("+", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue ".=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "-=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("-", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "*=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("*", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "/=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("/", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "//=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("//", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "%=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("%", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
+  | Lvalue "**=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("**", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
 ;
 
 // ================================================================
@@ -665,7 +806,6 @@ ArrayLiteralElements
       dsl.NodeTypeArrayLiteral,
     ) >>
 
-  // xxx temp -- needs to adopt children
   // Allow trailing final comma, especially for multiline map literals
   | ArrayLiteralElement "," ArrayLiteralElements
     << dsl.PrependChild(
@@ -680,9 +820,10 @@ ArrayLiteralElement
   : Rvalue
 ;
 
-// ----------------------------------------------------------------
+// ================================================================
 // For Array or Map -- which one, to be determined at runtime.
 
+// ----------------------------------------------------------------
 MlrvalOrFunction : ArrayOrMapIndexAccess ;
 
 ArrayOrMapIndexAccess
@@ -695,6 +836,7 @@ ArrayOrMapIndexAccess
     )>>
 ;
 
+// ----------------------------------------------------------------
 MlrvalOrFunction : ArraySliceAccess ;
 
 ArraySliceAccess
@@ -812,7 +954,6 @@ MapLiteralKeyValuePairs
       dsl.NodeTypeMapLiteral,
     ) >>
 
-  // xxx temp -- needs to adopt children
   // Allow trailing final comma, especially for multiline map literals
   | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
     << dsl.PrependChild(

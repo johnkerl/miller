@@ -25,6 +25,7 @@ const (
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"
 	NodeTypeFullSrec          = "FullSrec"
+	NodeTypeIndexedLvalue     = "IndexedLvalue"
 
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"
@@ -167,10 +168,15 @@ func NewASTNodeUnary(itok, childA interface{}, nodeType TNodeType) (*ASTNode, er
 }
 
 // Signature: Token Node Node Type
-func NewASTNodeBinary(itok, childA, childB interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeType) *ASTNode {
 	parent := NewASTNodeNestable(itok, nodeType)
 	convertToBinary(parent, childA, childB)
-	return parent, nil
+	return parent
+}
+
+// Signature: Token Node Node Type
+func NewASTNodeBinary(itok, childA, childB interface{}, nodeType TNodeType) (*ASTNode, error) {
+	return NewASTNodeBinaryNestable(itok, childA, childB, nodeType), nil
 }
 
 func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {

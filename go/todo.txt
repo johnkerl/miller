@@ -60,6 +60,7 @@ TOP OF LIST:
   o indirect field names, at LHS and RHS
   o full indexable at LHS/RHS -- e.g. $*["a"] = $b
   o support the filter verb
+  o there should have always been a >>> and >>>=
 
 ! the DSL needs a full, written-down-and-published spell-out of reference/copy semantics
 * then careful CST impl
