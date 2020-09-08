@@ -2,10 +2,13 @@
 TOP OF LIST:
 
 * tuesday:
-  o oosvars at state -- easy mlrmap now
   o indexed-lvalue assignment ops -- need ints too
-  o $[1] is easier now; needn't $[[[1]]]
+    - $[1] is easier now; needn't $[[[1]]]
     - keep or get rid of $[[[ ]]] ... ?
+  ? begin/end ?
+    - AST check / CST build: must be at top level
+    - CST build: block them into three
+    - be sure to not need ';' between 'b/e{...}' and next statement
   o functions?!?
 
 * array/map

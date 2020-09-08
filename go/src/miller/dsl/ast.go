@@ -13,6 +13,8 @@ type TNodeType string
 
 const (
 	NodeTypeEmptyStatement TNodeType = "EmptyStatement"
+	NodeTypeBeginBlock               = "BeginBlock"
+	NodeTypeEndBlock                 = "EndBlock"
 
 	NodeTypeStringLiteral             = "StringLiteral"
 	NodeTypeIntLiteral                = "IntLiteral"

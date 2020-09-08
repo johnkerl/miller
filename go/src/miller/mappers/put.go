@@ -88,9 +88,7 @@ func mapperPutParseCLI(
 
 	mapper, err := NewMapperPut(dslString, *pVerbose)
 	if err != nil {
-		// xxx make sure better parse-fail info is printed by the DSL parser
-		fmt.Fprintf(os.Stderr, "%s %s: cannot parse DSL expression.\n",
-			args[0], verb)
+		// Error message already printed out
 		os.Exit(1)
 	}
 
@@ -125,6 +123,11 @@ func NewMapperPut(
 ) (*MapperPut, error) {
 	astRoot, err := NewASTFromString(dslString)
 	if err != nil {
+		// Leave this out until we get better control over the error-messaging.
+		// At present it's overly parser-internal, and confusing. :(
+		// fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
+			os.Args[0])
 		return nil, err
 	}
 	if verbose {

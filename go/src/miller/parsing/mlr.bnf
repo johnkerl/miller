@@ -146,8 +146,10 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 //   in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
 // * true and false (boolean literals) are also keywords, defined above.
 
+md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
+md_token_end      : 'e' 'n' 'd' ;
+
 //md_token_all      : 'a' 'l' 'l' ;
-//md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
 //md_token_call     : 'c' 'a' 'l' 'l' ;
 //md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
@@ -159,7 +161,6 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 //md_token_emit     : 'e' 'm' 'i' 't' ;
 //md_token_emitf    : 'e' 'm' 'i' 't' 'f' ;
 //md_token_emitp    : 'e' 'm' 'i' 't' 'p' ;
-//md_token_end      : 'e' 'n' 'd' ;
 //md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 //md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 //md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
@@ -298,12 +299,24 @@ StatementBlock
 
   | StatementBlock ";" Statement
     <<dsl.AppendChild($0, $2) >>
-  ;
+
+  // They don't need the semicolon in 'begin {@a = 1}; $x = 2'
+  // TODO: LR-1 conflicts
+  // | BeginBlock StatementBlock
+  //   <<dsl.PrependChild($2, $0) >>
+  // | EndBlock StatementBlock
+  //   <<dsl.PrependChild($2, $0) >>
+
+;
 
 // ================================================================
 // ASSIGMENT STATEMENTS
 
-Statement : Assignment ;
+Statement
+  : Assignment
+  | BeginBlock
+  | EndBlock
+;
 
 Assignment :
   : Lvalue "=" Rvalue
@@ -411,6 +424,16 @@ BracedOosvarValue
 FullOosvar
   : md_token_full_oosvar
   << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
+;
+
+// ----------------------------------------------------------------
+BeginBlock
+  : md_token_begin "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeBeginBlock) >>
+;
+EndBlock
+  : md_token_end "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
 ;
 
 // ----------------------------------------------------------------

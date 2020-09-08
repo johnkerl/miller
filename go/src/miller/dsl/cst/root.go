@@ -13,7 +13,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildRoot() *Root {
+func BuildEmptyRoot() *Root {
 	return &Root{
 		executables: make([]IExecutable, 0),
 	}
@@ -30,7 +30,7 @@ func Build(ast *dsl.AST) (*Root, error) {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
 
-	cstRoot := BuildRoot()
+	cstRoot := BuildEmptyRoot()
 
 	// They can do mlr put '': there are simply zero statements.
 	if ast.Root.Type == dsl.NodeTypeEmptyStatement {
