@@ -27,7 +27,9 @@ func BuildOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return BuildTernaryOperatorNode(astNode)
 		break
 	}
-	return nil, errors.New("CST build: AST operator node unhandled.")
+	return nil, errors.New(
+		"CST BuildOperatorNode: unhandled AST node " + string(astNode.Type),
+	)
 }
 
 // ----------------------------------------------------------------
@@ -57,7 +59,9 @@ func BuildUnaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		break
 	}
 
-	return nil, errors.New("CST build: AST unary operator node unhandled.")
+	return nil, errors.New(
+		"CST BuildUnaryOperatorNode: unhandled AST node " + string(astNode.Type),
+	)
 }
 
 // ----------------------------------------------------------------
@@ -163,7 +167,7 @@ func BuildBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	}
 
 	return nil, errors.New(
-		"CST build: unandled AST binary operator node \"" + sop + "\"",
+		"CST BuildBinaryOperatorNode: unhandled AST node " + string(astNode.Type),
 	)
 }
 
@@ -197,7 +201,9 @@ func BuildTernaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		break
 	}
 
-	return nil, errors.New("CST build: AST ternary operator node unhandled.")
+	return nil, errors.New(
+		"CST BuildTernnaryOperatorNode: unhandled AST node " + string(astNode.Type),
+	)
 }
 
 // ================================================================

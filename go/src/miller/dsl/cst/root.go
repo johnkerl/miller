@@ -30,7 +30,9 @@ func Build(ast *dsl.AST) (*Root, error) {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
 	if ast.Root.Type != dsl.NodeTypeStatementBlock {
-		return nil, errors.New("Non-statement-block AST root node unhandled")
+		return nil, errors.New(
+			"CST root build: on-statement-block AST root node unhandled",
+		)
 	}
 	astChildren := ast.Root.Children
 

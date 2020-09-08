@@ -42,5 +42,7 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	// xxx function
 	// xxx more
 
-	return nil, errors.New("CST builder: unhandled AST node type " + string(astNode.Type))
+	return nil, errors.New(
+		"CST BuildEvaluableNode: unhandled AST node type " + string(astNode.Type),
+	)
 }

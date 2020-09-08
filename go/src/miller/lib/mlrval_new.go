@@ -265,3 +265,18 @@ func MlrvalEmptyMap() Mlrval {
 		mapval:        NewMlrmap(),
 	}
 }
+
+// xxx needs deepcopy! this will make references into $*.
+func MlrvalFromMap(that *Mlrmap) Mlrval {
+	this := MlrvalEmptyMap()
+	if that == nil {
+		// xxx maybe return 2nd-arg error in the API
+		return MlrvalFromError()
+	}
+
+	for pe := that.Head; pe != nil; pe = pe.Next {
+		this.mapval.Put(pe.Key, pe.Value)
+	}
+
+	return this
+}

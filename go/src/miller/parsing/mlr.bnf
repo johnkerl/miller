@@ -219,7 +219,7 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 // the AST level.
 md_token_field_name : '$' _idchar { _idchar } ;
 // md_token_braced_field_name: \$\{([^\}]|\\.)*\}
-// md_token_full_srec : '$' '*' ;
+md_token_full_srec : '$' '*' ;
 
 // md_token_oosvar_name : '@' _idchar { _idchar } ;
 // md_token_braced_oosvar_name @\{([^\}]|\\.)*\}
@@ -1199,11 +1199,13 @@ Assignment :
   : Lvalue "=" Rvalue
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >> ;
 
-Lvalue : FieldName;
+Lvalue
+  : FieldName
 // computed field name
 // positional name
 // positional value
-// full srec
+  // indexed lvalues quite generally ...
+  | FullSrec;
 
 // oosvar
 // computed oosvar
@@ -2031,6 +2033,7 @@ MlrvalOrFunction
 
 MlrvalOrFunction
   : FieldName
+  | FullSrec
 ;
 
 FieldName
@@ -2095,6 +2098,11 @@ IndirectFieldName
 //		)
 //	);
 //}
+
+FullSrec
+  : md_token_full_srec
+  << dsl.NewASTNode($0, dsl.NodeTypeFullSrec) >>
+;
 
 //// ----------------------------------------------------------------
 //MlrvalOrFunction(A) ::= OosvarKeylist(B). {

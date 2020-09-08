@@ -27,7 +27,9 @@ func BuildStatementNode(
 		}
 
 	default:
-		return nil, errors.New("Non-assignment AST node unhandled")
+		return nil, errors.New(
+			"CST BuildStatementNode: unhandled AST node " + string(astNode.Type),
+		)
 		break
 	}
 	return statement, nil

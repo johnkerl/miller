@@ -121,6 +121,7 @@ func NewEvaluablePair(key IEvaluable, value IEvaluable) *EvaluablePair {
 		Value: value,
 	}
 }
+
 // ----------------------------------------------------------------
 type MapLiteralNode struct {
 	evaluablePairs []EvaluablePair

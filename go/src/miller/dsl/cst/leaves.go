@@ -23,6 +23,9 @@ func BuildLeafNode(
 	case dsl.NodeTypeDirectFieldName:
 		return BuildSrecDirectFieldReadNode(sval), nil
 		break
+	case dsl.NodeTypeFullSrec:
+		return BuildFullSrecReadNode(sval), nil
+		break
 
 	case dsl.NodeTypeStringLiteral:
 		return BuildStringLiteralNode(sval), nil
@@ -51,7 +54,9 @@ func BuildLeafNode(
 
 	}
 
-	return nil, errors.New("CST builder: unhandled AST leaf node " + string(astNode.Type))
+	return nil, errors.New(
+		"CST BuildLeafNode: unhandled AST node " + string(astNode.Type),
+	)
 }
 
 // ----------------------------------------------------------------
@@ -71,6 +76,17 @@ func (this *SrecDirectFieldReadNode) Evaluate(state *State) lib.Mlrval {
 	} else {
 		return *value
 	}
+}
+
+// ----------------------------------------------------------------
+type FullSrecReadNode struct {
+}
+
+func BuildFullSrecReadNode(fieldName string) *FullSrecReadNode {
+	return &FullSrecReadNode{}
+}
+func (this *FullSrecReadNode) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromMap(state.Inrec)
 }
 
 // ----------------------------------------------------------------
@@ -175,7 +191,9 @@ func BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	}
 
-	return nil, errors.New("CST builder: unhandled context variable " + sval)
+	return nil, errors.New(
+		"CST BuildContextVariableNode: unhandled context variable " + sval,
+	)
 }
 
 // ----------------------------------------------------------------

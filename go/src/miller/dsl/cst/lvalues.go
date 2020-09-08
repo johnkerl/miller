@@ -25,7 +25,9 @@ func BuildAssignableNode(
 	}
 
 	// xxx temp
-	return nil, errors.New("unimplemented")
+	return nil, errors.New(
+		"CST BuildAssignableNode: unhandled AST node " + string(astNode.Type),
+	)
 }
 
 // ----------------------------------------------------------------

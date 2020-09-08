@@ -2,8 +2,9 @@
 TOP OF LIST:
 
 * monday:
-  o cst-build unimpls to all indicate the callsite
   o lib.GetTypeName
+  o rename MlrvalOrFunction in the DSL
+  ! tags file
   ? ENV
 
 * array/map
