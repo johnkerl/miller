@@ -211,13 +211,13 @@ md_token_braced_field_name: '$' '{' _braced_char { _braced_char } '}' ;
 
 md_token_full_srec : '$' '*' ;
 
-// md_token_oosvar_name : '@' _idchar { _idchar } ;
+md_token_oosvar_name : '@' _idchar { _idchar } ;
 
 // This is for literal strings but where the oosvar name might have spaces in it
 // or somesuch.
-// md_token_braced_oosvar_name @\{([^\}]|\\.)*\}
+md_token_braced_oosvar_name: '@' '{' _braced_char { _braced_char } '}' ;
 
-// md_token_full_oosvar : '@' '*' ;
+md_token_full_oosvar : '@' '*' ;
 
 // ----------------------------------------------------------------
 // PANIC TOKEN
@@ -322,15 +322,11 @@ Lvalue
 
 BaseLvalue
   : FieldValue
-  // computed field value $[...]
-  // braced field value ${...}
+  | OosvarValue
   // positional field name $[[3]]
   // positional field value $[[[3]]]
   | FullSrec
-  // oosvar
-  // computed oosvar @[...]
-  // braced oosvar @{...}
-  // fulloosvar @*
+  | FullOosvar
   // local variable abcd
 ;
 
@@ -354,13 +350,13 @@ FieldValue
   // ...
 ;
 
-// Note: the field name is "$field" not "field" since md_token_field_name
+// Note: the field name is "$name" not "name" since md_token_field_name
 // includes the '$'.  If we omit the '$' there and include it in the parser
 // section here as "$", then we get an LR-1 conflict. So this must be dealt
-// with at the AST level. Hence the NewASTNodeStripDollarSign.
+// with at the AST level. Hence the NewASTNodeStripDollarOrAtSign.
 DirectFieldValue
   : md_token_field_name
-    << dsl.NewASTNodeStripDollarSign($0, dsl.NodeTypeDirectFieldValue) >>
+    << dsl.NewASTNodeStripDollarOrAtSign($0, dsl.NodeTypeDirectFieldValue) >>
 ;
 
 IndirectFieldValue
@@ -374,22 +370,47 @@ IndirectFieldValue
 //   name has spaces or somesuch in it.
 BracedFieldValue
   : md_token_braced_field_name
-    << dsl.NewASTNodeStripDollarSignAndCurlyBraces($0, dsl.NodeTypeDirectFieldValue) >>
+    << dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectFieldValue) >>
 ;
-
-// TODO: needs no "..." -- just ...
-//BracedFieldValue
-//  : "${" md_token_string_literal "}"
-//    << dsl.NewASTNodeUnary(
-//      dsl.NewASTNodeNestable($1, dsl.NodeTypeDirectFieldValue),
-//      $1,
-//      dsl.NodeTypeDirectFieldValue,
-//    ) >>
-//;
 
 FullSrec
   : md_token_full_srec
   << dsl.NewASTNode($0, dsl.NodeTypeFullSrec) >>
+;
+
+// ----------------------------------------------------------------
+OosvarValue
+  : DirectOosvarValue
+  | IndirectOosvarValue
+  | BracedOosvarValue
+;
+
+// Note: the oosvar name is "@name" not "name" since md_token_oosvar_name
+// includes the '@'.  If we omit the '@' there and include it in the parser
+// section here as "$", then we get an LR-1 conflict. So this must be dealt
+// with at the AST level. Hence the NewASTNodeStripDollarOrAtSign.
+DirectOosvarValue
+  : md_token_oosvar_name
+    << dsl.NewASTNodeStripDollarOrAtSign($0, dsl.NodeTypeDirectOosvarValue) >>
+;
+
+IndirectOosvarValue
+  : "@[" Rvalue "]"
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectOosvarValue) >>
+;
+
+// * Direct is '@name'
+// * Indirect is '@["name"]'
+// * Braced is '@{name}' -- note no double-quotes. This is for when the oosvar
+//   name has spaces or somesuch in it.
+BracedOosvarValue
+  : md_token_braced_oosvar_name
+    << dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectOosvarValue) >>
+;
+
+FullOosvar
+  : md_token_full_oosvar
+  << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
 ;
 
 // ----------------------------------------------------------------
@@ -676,10 +697,8 @@ PrecedenceChainEnd : MlrvalOrFunction ;
 MlrvalOrFunction
   : FieldValue
   | FullSrec
-  // oosvar
-  // computed oosvar @[...]
-  // braced oosvar @{...}
-  // fulloosvar @*
+  | OosvarValue
+  | FullOosvar
   // local variable abcd
   // ENV -- only ENV["foo"] but not arbitrarily indexable
 ;

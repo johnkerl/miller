@@ -28,7 +28,7 @@ import (
 type State struct {
 	Inrec   *lib.Mlrmap
 	Context *lib.Context
-	// TODO: oosvars too
+	Oosvars *lib.Mlrmap
 	// TODO: stack frames will go into individual statement-block nodes
 }
 
@@ -36,9 +36,11 @@ func NewState(
 	inrec *lib.Mlrmap,
 	context *lib.Context,
 ) *State {
+	oosvars := lib.NewMlrmap()
 	return &State{
 		Inrec:   inrec,
 		Context: context,
+		Oosvars: oosvars,
 	}
 }
 

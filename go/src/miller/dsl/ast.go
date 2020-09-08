@@ -26,10 +26,14 @@ const (
 	NodeTypeArraySliceEmptyLowerIndex = "ArraySliceEmptyLowerIndex"
 	NodeTypeArraySliceEmptyUpperIndex = "ArraySliceEmptyUpperIndex"
 
-	NodeTypeDirectFieldValue   = "DirectFieldValue"
-	NodeTypeIndirectFieldValue = "IndirectFieldValue"
-	NodeTypeFullSrec           = "FullSrec"
-	NodeTypeIndexedLvalue      = "IndexedLvalue"
+	NodeTypeDirectFieldValue    = "DirectFieldValue"
+	NodeTypeIndirectFieldValue  = "IndirectFieldValue"
+	NodeTypeFullSrec            = "FullSrec"
+	NodeTypeDirectOosvarValue   = "DirectOosvarValue"
+	NodeTypeIndirectOosvarValue = "IndirectOosvarValue"
+	NodeTypeFullOosvar          = "FullOosvar"
+
+	NodeTypeIndexedLvalue = "IndexedLvalue"
 
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"
@@ -128,12 +132,12 @@ func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
 	}, nil
 }
 
-// Strips the leading '$' from field names. Not done in the parser itself due
-// to LR-1 conflicts.
-func NewASTNodeStripDollarSign(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+// Strips the leading '$' from field names, or '@' from oosvar names. Not done
+// in the parser itself due to LR-1 conflicts.
+func NewASTNodeStripDollarOrAtSign(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	oldToken := itok.(*token.Token)
 	lib.InternalCodingErrorIf(len(oldToken.Lit) < 2)
-	lib.InternalCodingErrorIf(oldToken.Lit[0] != '$')
+	lib.InternalCodingErrorIf(oldToken.Lit[0] != '$' && oldToken.Lit[0] != '@')
 	newToken := &token.Token{
 		Type: oldToken.Type,
 		Lit:  oldToken.Lit[1:],
@@ -142,16 +146,17 @@ func NewASTNodeStripDollarSign(itok interface{}, nodeType TNodeType) (*ASTNode, 
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
 
-// Strips the leading '${' and trailing '}' from braced field names. Not done
-// in the parser itself due to LR-1 conflicts.
-func NewASTNodeStripDollarSignAndCurlyBraces(
+// Strips the leading '${' and trailing '}' from braced field names, or '@{'
+// and '}' from oosvar names. Not done in the parser itself due to LR-1
+// conflicts.
+func NewASTNodeStripDollarOrAtSignAndCurlyBraces(
 	itok interface{},
 	nodeType TNodeType,
 ) (*ASTNode, error) {
 	oldToken := itok.(*token.Token)
 	n := len(oldToken.Lit)
 	lib.InternalCodingErrorIf(n < 4)
-	lib.InternalCodingErrorIf(oldToken.Lit[0] != '$')
+	lib.InternalCodingErrorIf(oldToken.Lit[0] != '$' && oldToken.Lit[0] != '@')
 	lib.InternalCodingErrorIf(oldToken.Lit[1] != '{')
 	lib.InternalCodingErrorIf(oldToken.Lit[n-1] != '}')
 	newToken := &token.Token{
