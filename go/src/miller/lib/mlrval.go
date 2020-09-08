@@ -93,3 +93,15 @@ const (
 	// function pointers which is MT_DIM x MT_DIM.
 	MT_DIM = 9
 )
+
+var TYPE_NAMES = [MT_DIM]string{
+	"error",
+	"absent",
+	"void",
+	"string",
+	"int",
+	"float",
+	"bool",
+	"array",
+	"map",
+}

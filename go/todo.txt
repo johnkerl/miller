@@ -2,9 +2,7 @@
 TOP OF LIST:
 
 * monday:
-  o lib.GetTypeName
   o rename MlrvalOrFunction in the DSL
-  ! tags file
   ? ENV
 
 * array/map
@@ -60,7 +58,12 @@ TOP OF LIST:
   o begin/end blocks
   o oosvars
   o indirect field names, at LHS and RHS
+  o full indexable at LHS/RHS -- e.g. $*["a"] = $b
   o support the filter verb
+
+! the DSL needs a full, written-down-and-published spell-out of reference/copy semantics
+* then careful CST impl
+! likewise error-eval semantics
 
 ----------------------------------------------------------------
 MAYBE:

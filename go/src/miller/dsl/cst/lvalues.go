@@ -98,9 +98,10 @@ func (this *IndirectFieldNameLvalueNode) Assign(
 	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 
 	if !lhsFieldName.IsString() {
-		// xxx make and use a Mlrval GetTypeName()
 		return errors.New(
-			"Miller DSL: computed field name [%s] should be a string but is not.",
+			"Miller DSL: computed field name [%s] should be a string but was " +
+				lhsFieldName.GetTypeName() +
+				".",
 		)
 	}
 

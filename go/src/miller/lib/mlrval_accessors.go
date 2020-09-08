@@ -4,6 +4,10 @@ func (this *Mlrval) GetType() MVType {
 	return this.mvtype
 }
 
+func (this *Mlrval) GetTypeName() string {
+	return TYPE_NAMES[this.mvtype]
+}
+
 func (this *Mlrval) IsError() bool {
 	return this.mvtype == MT_ERROR
 }

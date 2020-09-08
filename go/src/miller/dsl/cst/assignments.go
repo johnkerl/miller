@@ -58,6 +58,7 @@ func NewAssignmentNode(
 func (this *AssignmentNode) Execute(state *State) {
 	rvalue := this.rvalue.Evaluate(state)
 	if !rvalue.IsAbsent() {
+		// xxx need to propagate the error coming back in the Execute() API
 		this.lvalue.Assign(&rvalue, state)
 	}
 }
