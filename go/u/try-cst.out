@@ -1453,3 +1453,41 @@ pan pan 1 0.3467901443380824  0.7268028627434533  pan
 eks pan 2 0.7586799647899636  0.5221511083334797  eks
 wye wye 3 0.20460330576630303 0.33831852551664776 wye
 eks wye 4 0.38139939387114097 0.13418874328430463 eks
+
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp --idkvp --opprint put -v ${new} = $a . $b
+DSL EXPRESSION:
+${new} = $a . $b
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "new"
+        * Operator "."
+            * DirectFieldValue "a"
+            * DirectFieldValue "b"
+
+a   b   i x                   y                   new
+pan pan 1 0.3467901443380824  0.7268028627434533  panpan
+eks pan 2 0.7586799647899636  0.5221511083334797  ekspan
+wye wye 3 0.20460330576630303 0.33831852551664776 wyewye
+eks wye 4 0.38139939387114097 0.13418874328430463 ekswye
+
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp --idkvp --opprint put -v $new = ${a} . ${b}
+DSL EXPRESSION:
+$new = ${a} . ${b}
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "new"
+        * Operator "."
+            * DirectFieldValue "a"
+            * DirectFieldValue "b"
+
+a   b   i x                   y                   new
+pan pan 1 0.3467901443380824  0.7268028627434533  panpan
+eks pan 2 0.7586799647899636  0.5221511083334797  ekspan
+wye wye 3 0.20460330576630303 0.33831852551664776 wyewye
+eks wye 4 0.38139939387114097 0.13418874328430463 ekswye

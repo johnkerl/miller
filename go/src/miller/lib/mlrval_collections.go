@@ -119,8 +119,8 @@ func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 		nextLevelMlrval := levelMlrmap.Get(&key)
 		if nextLevelMlrval == nil {
 			if i < n-1 {
-				*nextLevelMlrval = MlrvalEmptyMap()
-				levelMlrmap.Put(&key, nextLevelMlrval)
+				newmap := MlrvalEmptyMap()
+				levelMlrmap.Put(&key, &newmap)
 			} else {
 				levelMlrmap.Put(&key, rvalue)
 			}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"miller/lib"
 	"miller/parsing/token"
 )
 
@@ -129,8 +130,10 @@ func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
 
 // Strips the leading '$' from field names. Not done in the parser itself due
 // to LR-1 conflicts.
-func NewASTNodeStripDollarPlease(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeStripDollarSign(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	oldToken := itok.(*token.Token)
+	lib.InternalCodingErrorIf(len(oldToken.Lit) < 2)
+	lib.InternalCodingErrorIf(oldToken.Lit[0] != '$')
 	newToken := &token.Token{
 		Type: oldToken.Type,
 		Lit:  oldToken.Lit[1:],
@@ -139,10 +142,30 @@ func NewASTNodeStripDollarPlease(itok interface{}, nodeType TNodeType) (*ASTNode
 	return NewASTNodeNestable(newToken, nodeType), nil
 }
 
+// Strips the leading '${' and trailing '}' from braced field names. Not done
+// in the parser itself due to LR-1 conflicts.
+func NewASTNodeStripDollarSignAndCurlyBraces(
+	itok interface{},
+	nodeType TNodeType,
+) (*ASTNode, error) {
+	oldToken := itok.(*token.Token)
+	n := len(oldToken.Lit)
+	lib.InternalCodingErrorIf(n < 4)
+	lib.InternalCodingErrorIf(oldToken.Lit[0] != '$')
+	lib.InternalCodingErrorIf(oldToken.Lit[1] != '{')
+	lib.InternalCodingErrorIf(oldToken.Lit[n-1] != '}')
+	newToken := &token.Token{
+		Type: oldToken.Type,
+		Lit:  oldToken.Lit[2 : n-1],
+		Pos:  oldToken.Pos,
+	}
+	return NewASTNodeNestable(newToken, nodeType), nil
+}
+
 // Likewise for the leading/trailing double quotes on string literals.  Also,
 // since string literals can have backslash-escaped double-quotes like
 // "...\"...\"...", we also unbackslash here.
-func NewASTNodeStripDoubleQuotePairPlease(
+func NewASTNodeStripDoubleQuotePair(
 	itok interface{},
 	nodeType TNodeType,
 ) (*ASTNode, error) {

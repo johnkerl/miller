@@ -2,11 +2,10 @@
 TOP OF LIST:
 
 * tuesday:
-  o computed/braced srec on both sides
-  o indexed-lvalue assignment ops -- need ints too
   o oosvars at state -- easy mlrmap now
-  o $[1] is easier now; needn't $[[1]]
-  o $[[[ ]]] ... ?
+  o indexed-lvalue assignment ops -- need ints too
+  o $[1] is easier now; needn't $[[[1]]]
+    - keep or get rid of $[[[ ]]] ... ?
   o functions?!?
 
 * array/map
