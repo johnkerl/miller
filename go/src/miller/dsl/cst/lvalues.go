@@ -25,9 +25,9 @@ func BuildAssignableNode(
 	case dsl.NodeTypeFullSrec:
 		return BuildFullSrecLvalueNode(astNode)
 		break
-	//case dsl.NodeTypeIndexedLvalue:
-	//	return xxx(astNode)
-	//	break
+		//case dsl.NodeTypeIndexedLvalue:
+		//	return xxx(astNode)
+		//	break
 	}
 
 	// xxx temp

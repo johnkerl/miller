@@ -11,17 +11,19 @@ import (
 type TNodeType string
 
 const (
-	NodeTypeStringLiteral             TNodeType = "StringLiteral"
-	NodeTypeIntLiteral                          = "IntLiteral"
-	NodeTypeFloatLiteral                        = "FloatLiteral"
-	NodeTypeBoolLiteral                         = "BoolLiteral"
-	NodeTypeArrayLiteral                        = "ArrayLiteral"
-	NodeTypeMapLiteral                          = "MapLiteral"
-	NodeTypeMapLiteralKeyValuePair              = "MapLiteralKeyValuePair"
-	NodeTypeArrayOrMapIndexAccess               = "ArrayOrMapIndexAccess"
-	NodeTypeArraySliceAccess                    = "ArraySliceAccess"
-	NodeTypeArraySliceEmptyLowerIndex           = "ArraySliceEmptyLowerIndex"
-	NodeTypeArraySliceEmptyUpperIndex           = "ArraySliceEmptyUpperIndex"
+	NodeTypeEmptyStatement TNodeType = "EmptyStatement"
+
+	NodeTypeStringLiteral             = "StringLiteral"
+	NodeTypeIntLiteral                = "IntLiteral"
+	NodeTypeFloatLiteral              = "FloatLiteral"
+	NodeTypeBoolLiteral               = "BoolLiteral"
+	NodeTypeArrayLiteral              = "ArrayLiteral"
+	NodeTypeMapLiteral                = "MapLiteral"
+	NodeTypeMapLiteralKeyValuePair    = "MapLiteralKeyValuePair"
+	NodeTypeArrayOrMapIndexAccess     = "ArrayOrMapIndexAccess"
+	NodeTypeArraySliceAccess          = "ArraySliceAccess"
+	NodeTypeArraySliceEmptyLowerIndex = "ArraySliceEmptyLowerIndex"
+	NodeTypeArraySliceEmptyUpperIndex = "ArraySliceEmptyUpperIndex"
 
 	NodeTypeDirectFieldName   = "DirectFieldName"
 	NodeTypeIndirectFieldName = "IndirectFieldName"
@@ -114,6 +116,15 @@ func (this *ASTNode) Print(depth int) {
 
 func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return NewASTNodeNestable(itok, nodeType), nil
+}
+
+// For handling empty expressions.
+func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
+	return &ASTNode{
+		Token:    nil,
+		Type:     nodeType,
+		Children: nil,
+	}, nil
 }
 
 // Strips the leading '$' from field names. Not done in the parser itself due

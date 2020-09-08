@@ -100,9 +100,7 @@ PARSER/LEXER PLAN:
 ----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
 
-* "...\"..." into string-literal parsing ...
 * address all manner of xxx and TODO comments
-* support whitespace-only DSL strings (as NOPs), either in the parser or outside ...
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 * mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0

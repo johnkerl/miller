@@ -29,14 +29,21 @@ func Build(ast *dsl.AST) (*Root, error) {
 	if ast.Root == nil {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
+
+	cstRoot := BuildRoot()
+
+	// They can do mlr put '': there are simply zero statements.
+	if ast.Root.Type == dsl.NodeTypeEmptyStatement {
+		return cstRoot, nil
+	}
+
 	if ast.Root.Type != dsl.NodeTypeStatementBlock {
 		return nil, errors.New(
-			"CST root build: on-statement-block AST root node unhandled",
+			"CST root build: non-statement-block AST root node unhandled",
 		)
 	}
 	astChildren := ast.Root.Children
 
-	cstRoot := BuildRoot()
 	for _, astChild := range astChildren {
 		statement, err := BuildStatementNode(astChild)
 		if err != nil {

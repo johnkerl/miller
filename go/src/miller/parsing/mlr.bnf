@@ -275,7 +275,10 @@ Root :
     <<dsl.NewAST($0) >> ;
 
 StatementBlock
-  : Statement
+  : empty
+    << dsl.NewASTNodeEmpty(dsl.NodeTypeEmptyStatement) >>
+
+  | Statement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   | StatementBlock ";"
