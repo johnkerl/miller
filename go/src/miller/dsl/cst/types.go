@@ -32,16 +32,21 @@ type State struct {
 	// TODO: stack frames will go into individual statement-block nodes
 }
 
-func NewState(
-	inrec *lib.Mlrmap,
-	context *lib.Context,
-) *State {
+func NewEmptyState() *State {
 	oosvars := lib.NewMlrmap()
 	return &State{
-		Inrec:   inrec,
-		Context: context,
+		Inrec:   nil,
+		Context: nil,
 		Oosvars: oosvars,
 	}
+}
+
+func (this *State) Update(
+	inrec *lib.Mlrmap,
+	context *lib.Context,
+) {
+	this.Inrec = inrec
+	this.Context = context
 }
 
 // ----------------------------------------------------------------

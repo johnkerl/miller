@@ -114,8 +114,9 @@ func mapperPutUsage(
 
 // ----------------------------------------------------------------
 type MapperPut struct {
-	astRoot *dsl.AST
-	cstRoot *cst.Root
+	astRoot  *dsl.AST
+	cstRoot  *cst.Root
+	cstState *cst.State
 }
 
 func NewMapperPut(
@@ -134,14 +135,16 @@ func NewMapperPut(
 		fmt.Println()
 	}
 	cstRoot, err := cst.Build(astRoot)
+	cstState := cst.NewEmptyState()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
 
 	return &MapperPut{
-		astRoot: astRoot,
-		cstRoot: cstRoot,
+		astRoot:  astRoot,
+		cstRoot:  cstRoot,
+		cstState: cstState,
 	}, nil
 }
 
@@ -167,8 +170,9 @@ func (this *MapperPut) Map(
 	context := inrecAndContext.Context
 	if inrec != nil {
 
-		cstState := cst.NewState(inrec, &context)
-		outrec, err := this.cstRoot.Execute(cstState)
+		this.cstState.Update(inrec, &context)
+
+		outrec, err := this.cstRoot.Execute(this.cstState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
