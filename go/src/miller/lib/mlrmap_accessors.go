@@ -1,5 +1,9 @@
 package lib
 
+import (
+	"errors"
+)
+
 // ----------------------------------------------------------------
 func (this *Mlrmap) Has(key *string) bool {
 	return this.findEntry(key) != nil
@@ -39,6 +43,66 @@ func (this *Mlrmap) Put(key *string, value *Mlrval) {
 	} else {
 		copy := *value
 		pe.Value = &copy
+	}
+}
+
+// ----------------------------------------------------------------
+// E.g. '$name[1]["foo"] = "bar"'
+// The key is "name" and the indices are [1, "foo"].
+// See also indexed-lvalues.md.
+func (this *Mlrmap) PutIndexed(key *string, indices []*Mlrval, rvalue *Mlrval) error {
+	mlrval := this.Get(key)
+	if mlrval == nil {
+		mapval := MlrvalEmptyMap()
+		this.Put(key, &mapval)
+		return mapval.PutIndexed(indices, rvalue)
+	} else if mlrval.IsAbsent() {
+		return errors.New("Value [\"" + *key + "\"] is not a maaaaaap.")
+	} else if !mlrval.IsMap() {
+		return errors.New("Value [\"" + *key + "\"] is not a map.")
+	} else {
+		return mlrval.PutIndexed(indices, rvalue)
+	}
+}
+
+// E.g. '$*["foo"][1] = "bar"'
+// The indices are ["foo", 1].
+// See also indexed-lvalues.md.
+//
+// This is a Mlrmap (from string to Mlrval) so we handle the first level of
+// indexing here, then pass the remaining indices to the Mlrval at the desired
+// slot.
+func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
+	n := len(indices)
+	if n == 0 { // mlr put '$* = {"a":1, "b":2}'
+		if !rvalue.IsMap() {
+			return errors.New("Cannot assign non-map to existing map; got " + rvalue.GetTypeName() + ".")
+		}
+		*this = *rvalue.mapval // xxx needs deepcopy
+		return nil
+	}
+
+	baseIndex := indices[0]
+	if !baseIndex.IsString() {
+		skey := baseIndex.String()
+		return errors.New("Non-string key " + skey) // xxx needs better wording
+	}
+	baseKey := baseIndex.printrep
+
+	if n == 1 {
+		this.Put(&baseKey, rvalue) // E.g. mlr put '$*["a"] = 3'
+		return nil
+	}
+
+	baseValue := this.Get(&baseKey)
+	if baseValue == nil {
+		baseValue := MlrvalEmptyMap()
+		this.Put(&baseKey, &baseValue)
+		return baseValue.PutIndexed(indices[1:], rvalue)
+	} else if !baseValue.IsMap() {
+		return errors.New("Value [\"" + baseKey + "\"] is not a map; got " + baseValue.GetTypeName() + ".")
+	} else {
+		return baseValue.PutIndexed(indices[1:], rvalue)
 	}
 }
 

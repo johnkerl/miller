@@ -1,5 +1,9 @@
 package lib
 
+import (
+	"errors"
+)
+
 // ----------------------------------------------------------------
 func (this *Mlrval) ArrayGet(index *Mlrval) Mlrval {
 	if this.mvtype != MT_ARRAY {
@@ -90,4 +94,38 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 		return
 	}
 	this.mapval.Put(&key.printrep, value) // TODO: deepcopy? or only at final CST assignment?
+}
+
+// ----------------------------------------------------------------
+// See also indexed-lvalues.md
+func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
+	n := len(indices)
+	InternalCodingErrorIf(n < 1)
+
+	levelMlrval := this
+
+	// xxx temp -- at very first just do strings.
+	for i, index := range indices {
+		if !levelMlrval.IsMap() {
+			return errors.New("indexed level not map") // xxx needs better messaging
+		}
+		levelMlrmap := levelMlrval.mapval
+
+		if !index.IsString() {
+			return errors.New("string-only indices for now, sorry!")
+		}
+		key := index.printrep
+
+		nextLevelMlrval := levelMlrmap.Get(&key)
+		if nextLevelMlrval == nil {
+			if i < n-1 {
+				*nextLevelMlrval = MlrvalEmptyMap()
+				levelMlrmap.Put(&key, nextLevelMlrval)
+			} else {
+				levelMlrmap.Put(&key, rvalue)
+			}
+		}
+	}
+
+	return nil
 }

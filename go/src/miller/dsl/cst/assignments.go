@@ -1,6 +1,9 @@
 package cst
 
 import (
+	"fmt"
+	"os"
+
 	"miller/dsl"
 	"miller/lib"
 )
@@ -28,6 +31,7 @@ func BuildAssignmentNode(
 	if err != nil {
 		return nil, err
 	}
+
 	rvalue, err := BuildEvaluableNode(rhsASTNode)
 	if err != nil {
 		return nil, err
@@ -59,6 +63,10 @@ func (this *AssignmentNode) Execute(state *State) {
 	rvalue := this.rvalue.Evaluate(state)
 	if !rvalue.IsAbsent() {
 		// xxx need to propagate the error coming back in the Execute() API
-		this.lvalue.Assign(&rvalue, state)
+		err := this.lvalue.Assign(&rvalue, state)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
 }

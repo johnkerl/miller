@@ -80,8 +80,11 @@ type StatementBlockNode struct {
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
 	Assign(rvalue *lib.Mlrval, state *State) error
-	// Or maybe just have Assign take zero-length indices -- ?
-	//AssignIndexed(rvalue *lib.Mlrval, []*lib.Mlrval indices, state *State) error
+
+	// 'foo = "bar"' or 'foo[3]["abc"] = "bar"'
+	// For non-indexed assignment, which is the normal case, indices can be
+	// zero-length or nil.
+	AssignIndexed(rvalue *lib.Mlrval, indices []*lib.Mlrval, state *State) error
 }
 
 // ================================================================
