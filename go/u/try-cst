@@ -149,3 +149,5 @@ echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$new = $["a"]'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$["new"] = $a'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '${new} = $a . $b'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$new = ${a} . ${b}'
+
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '@tmp = $a . $b; $ab = @tmp'

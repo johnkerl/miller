@@ -27,6 +27,13 @@ func BuildLeafNode(
 		return BuildFullSrecRvalueNode(sval), nil
 		break
 
+	case dsl.NodeTypeDirectOosvarValue:
+		return BuildDirectOosvarRvalueNode(sval), nil
+		break
+	case dsl.NodeTypeFullOosvar:
+		return BuildFullOosvarRvalueNode(sval), nil
+		break
+
 	case dsl.NodeTypeStringLiteral:
 		return BuildStringLiteralNode(sval), nil
 		break
@@ -81,6 +88,36 @@ func BuildFullSrecRvalueNode(fieldName string) *FullSrecRvalueNode {
 }
 func (this *FullSrecRvalueNode) Evaluate(state *State) lib.Mlrval {
 	return lib.MlrvalFromMap(state.Inrec)
+}
+
+// ----------------------------------------------------------------
+type DirectOosvarRvalueNode struct {
+	variableName string
+}
+
+func BuildDirectOosvarRvalueNode(variableName string) *DirectOosvarRvalueNode {
+	return &DirectOosvarRvalueNode{
+		variableName: variableName,
+	}
+}
+func (this *DirectOosvarRvalueNode) Evaluate(state *State) lib.Mlrval {
+	value := state.Oosvars.Get(&this.variableName)
+	if value == nil {
+		return lib.MlrvalFromAbsent()
+	} else {
+		return *value
+	}
+}
+
+// ----------------------------------------------------------------
+type FullOosvarRvalueNode struct {
+}
+
+func BuildFullOosvarRvalueNode(fieldName string) *FullOosvarRvalueNode {
+	return &FullOosvarRvalueNode{}
+}
+func (this *FullOosvarRvalueNode) Evaluate(state *State) lib.Mlrval {
+	return lib.MlrvalFromMap(state.Oosvars)
 }
 
 // ----------------------------------------------------------------
