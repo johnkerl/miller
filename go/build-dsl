@@ -8,7 +8,7 @@ export GOPATH=$(pwd)
 go get github.com/goccmack/gocc
 
 # Read the Miller DSL grammar file and generate code:
-bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf
+bin/gocc -v -o src/miller/parsing src/miller/parsing/mlr.bnf
 # Code-gen directories:
 #   src/miller/parsing/errors/
 #   src/miller/parsing/lexer/
