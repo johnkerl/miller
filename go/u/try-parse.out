@@ -820,3 +820,104 @@ RAW AST:
     * BeginBlock
     * EndBlock
 
+
+
+----------------------------------------------------------------
+mlr -n put -v $x=1;
+DSL EXPRESSION:
+$x=1;
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "x"
+        * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $x=1;$y=2;
+DSL EXPRESSION:
+$x=1;$y=2;
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "x"
+        * IntLiteral "1"
+    * Assignment "="
+        * DirectFieldValue "y"
+        * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{@x=1;@y=2}
+DSL EXPRESSION:
+begin{@x=1;@y=2}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "x"
+                * IntLiteral "1"
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{@x=1;@y=2;}
+DSL EXPRESSION:
+begin{@x=1;@y=2;}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "x"
+                * IntLiteral "1"
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{@x=1;@y=2;} $z=3
+DSL EXPRESSION:
+begin{@x=1;@y=2;} $z=3
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "x"
+                * IntLiteral "1"
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "2"
+    * Assignment "="
+        * DirectFieldValue "z"
+        * IntLiteral "3"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{@x=1;@y=2;} $z=3;
+DSL EXPRESSION:
+begin{@x=1;@y=2;} $z=3;
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "x"
+                * IntLiteral "1"
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "2"
+    * Assignment "="
+        * DirectFieldValue "z"
+        * IntLiteral "3"
+

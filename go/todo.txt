@@ -7,6 +7,7 @@ TOP OF LIST:
     - CST build: block them into three
     - be sure to not need ';' between 'b/e{...}' and next statement
     ! hack on callsite to strip trailing ";\s*" and comment why.
+    ! trailing semis within curly blocks ... :(
   o indexed-lvalue assignment ops -- need ints too
     - $[1] is easier now; needn't $[[[1]]]
     - keep or get rid of $[[[ ]]] ... ?

@@ -287,11 +287,9 @@ Root :
     <<dsl.NewAST($0) >>
 ;
 
-// xxx orphaned comment:
-// Semicolons are separators, not terminators, in the Miller DSL --
-// most importantly people can say '$x = 3' without '$x = 3;'.
-// However, we do allow trailing semicolons.
-
+// Braceful statements are things like 'begin{...}', 'end{...}', 'if{...}', etc.
+// Braceless statements are everything else -- such as assignments, subroutine
+// calls, bare booleans.
 StatementBlock
 
   : BracelessStatement
@@ -299,6 +297,12 @@ StatementBlock
 
   | BracelessStatement ";" StatementBlock
     <<dsl.PrependChild($2, $0) >>
+
+  // Semicolons are separators, not terminators, in the Miller DSL -- most
+  // importantly people can say '$x = 3' without '$x = 3;'.  However, we do
+  // allow trailing semicolons.
+  | BracelessStatement ";"
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   | BracefulStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
@@ -326,6 +330,8 @@ BeginBlock
 EndBlock
   : md_token_end "{" "}"
     << dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock) >>
+  | md_token_end "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
   | md_token_end "{" StatementBlock "}"
     << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
 ;

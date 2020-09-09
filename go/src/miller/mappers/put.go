@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"regexp"
 
 	"miller/clitypes"
 	"miller/dsl"
@@ -153,16 +152,9 @@ func NewMapperPut(
 }
 
 // xxx note (package cycle) why not a dsl.AST constructor :(
-// xxx maybe split out dsl into two package ... and/or put the astRoot.go into miller/parsing -- ?
+// xxx maybe split out dsl into two packages ... and/or put the astRoot.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
 func BuildASTFromString(dslString string) (*dsl.AST, error) {
-	// I struggled with LR-1 conflicts trying to allow trailing semicolons in
-	// the grammar, while also allowing 'begin{...} $x=3' statements i.e.  no
-	// semicolon after the closing curly brace. (I could get either one, but
-	// not both.) Ultimately I decided to strip out trailing semicolons here,
-	// before parsing.
-	re := regexp.MustCompile(`;\s*$`)
-	dslString = re.ReplaceAllString(dslString, "")
 
 	theLexer := lexer.NewLexer([]byte(dslString))
 	theParser := parser.NewParser()

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ================================================================
+# Reads the Miller DSL grammar file and generates Go code.
+# ================================================================
+
 set -euo pipefail
 
 export GOPATH=$(pwd)
@@ -7,12 +11,12 @@ export GOPATH=$(pwd)
 # Build the bin/gocc executable:
 go get github.com/goccmack/gocc
 
-lr1="src/miller/parsing/LR1_conflicts.txt"
+#lr1="src/miller/parsing/LR1_conflicts.txt"
+#rm -f $lr1
 
-rm -f $lr1
+#bin/gocc -v -o src/miller/parsing src/miller/parsing/mlr.bnf || expand -2 $lr1
+bin/gocc -v -o src/miller/parsing src/miller/parsing/mlr.bnf
 
-# Read the Miller DSL grammar file and generate code:
-bin/gocc -v -o src/miller/parsing src/miller/parsing/mlr.bnf || expand -2 $lr1
 # Code-gen directories:
 #   src/miller/parsing/errors/
 #   src/miller/parsing/lexer/

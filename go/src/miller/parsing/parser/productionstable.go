@@ -41,7 +41,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Root : Foo	<< dsl.NewAST(X[0]) >>`,
+		String: `Root : StatementBlock	<< dsl.NewAST(X[0]) >>`,
 		Id:         "Root",
 		NTType:     1,
 		Index:      2,
@@ -51,30 +51,10 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Foo : StatementBlock	<<  >>`,
-		Id:         "Foo",
-		NTType:     2,
-		Index:      3,
-		NumSymbols: 1,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return X[0], nil
-		},
-	},
-	ProdTabEntry{
-		String: `Foo : StatementBlock ";"	<<  >>`,
-		Id:         "Foo",
-		NTType:     2,
-		Index:      4,
-		NumSymbols: 2,
-		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return X[0], nil
-		},
-	},
-	ProdTabEntry{
 		String: `StatementBlock : BracelessStatement	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
 		Id:         "StatementBlock",
-		NTType:     3,
-		Index:      5,
+		NTType:     2,
+		Index:      3,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
@@ -83,18 +63,28 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `StatementBlock : BracelessStatement ";" StatementBlock	<< dsl.PrependChild(X[2], X[0]) >>`,
 		Id:         "StatementBlock",
-		NTType:     3,
-		Index:      6,
+		NTType:     2,
+		Index:      4,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.PrependChild(X[2], X[0])
 		},
 	},
 	ProdTabEntry{
+		String: `StatementBlock : BracelessStatement ";"	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		Id:         "StatementBlock",
+		NTType:     2,
+		Index:      5,
+		NumSymbols: 2,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
 		String: `StatementBlock : BracefulStatement	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
 		Id:         "StatementBlock",
-		NTType:     3,
-		Index:      7,
+		NTType:     2,
+		Index:      6,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
@@ -103,8 +93,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `StatementBlock : BracefulStatement StatementBlock	<< dsl.PrependChild(X[1], X[0]) >>`,
 		Id:         "StatementBlock",
-		NTType:     3,
-		Index:      8,
+		NTType:     2,
+		Index:      7,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.PrependChild(X[1], X[0])
@@ -113,8 +103,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BracefulStatement : BeginBlock	<<  >>`,
 		Id:         "BracefulStatement",
-		NTType:     4,
-		Index:      9,
+		NTType:     3,
+		Index:      8,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return X[0], nil
@@ -123,8 +113,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BracefulStatement : EndBlock	<<  >>`,
 		Id:         "BracefulStatement",
-		NTType:     4,
-		Index:      10,
+		NTType:     3,
+		Index:      9,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return X[0], nil
@@ -133,8 +123,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BeginBlock : md_token_begin "{" "}"	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeBeginBlock) >>`,
 		Id:         "BeginBlock",
-		NTType:     5,
-		Index:      11,
+		NTType:     4,
+		Index:      10,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(nil, dsl.NodeTypeBeginBlock)
@@ -143,8 +133,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BeginBlock : md_token_begin "{" StatementBlock "}"	<< dsl.NewASTNodeUnary(nil, X[2], dsl.NodeTypeBeginBlock) >>`,
 		Id:         "BeginBlock",
-		NTType:     5,
-		Index:      12,
+		NTType:     4,
+		Index:      11,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(nil, X[2], dsl.NodeTypeBeginBlock)
@@ -153,8 +143,8 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EndBlock : md_token_end "{" "}"	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock) >>`,
 		Id:         "EndBlock",
-		NTType:     6,
-		Index:      13,
+		NTType:     5,
+		Index:      12,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock)
@@ -163,7 +153,17 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EndBlock : md_token_end "{" StatementBlock "}"	<< dsl.NewASTNodeUnary(nil, X[2], dsl.NodeTypeEndBlock) >>`,
 		Id:         "EndBlock",
-		NTType:     6,
+		NTType:     5,
+		Index:      13,
+		NumSymbols: 4,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(nil, X[2], dsl.NodeTypeEndBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `EndBlock : md_token_end "{" StatementBlock "}"	<< dsl.NewASTNodeUnary(nil, X[2], dsl.NodeTypeEndBlock) >>`,
+		Id:         "EndBlock",
+		NTType:     5,
 		Index:      14,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -173,7 +173,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BracelessStatement : Assignment	<<  >>`,
 		Id:         "BracelessStatement",
-		NTType:     7,
+		NTType:     6,
 		Index:      15,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -183,7 +183,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `Assignment : Lvalue "=" Rvalue	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeAssignment) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      16,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -193,7 +193,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `Lvalue : BaseLvalue	<<  >>`,
 		Id:         "Lvalue",
-		NTType:     9,
+		NTType:     8,
 		Index:      17,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -203,7 +203,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `Lvalue : IndexedLvalue	<<  >>`,
 		Id:         "Lvalue",
-		NTType:     9,
+		NTType:     8,
 		Index:      18,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -213,7 +213,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BaseLvalue : FieldValue	<<  >>`,
 		Id:         "BaseLvalue",
-		NTType:     10,
+		NTType:     9,
 		Index:      19,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -223,7 +223,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BaseLvalue : OosvarValue	<<  >>`,
 		Id:         "BaseLvalue",
-		NTType:     10,
+		NTType:     9,
 		Index:      20,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -233,7 +233,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BaseLvalue : FullSrec	<<  >>`,
 		Id:         "BaseLvalue",
-		NTType:     10,
+		NTType:     9,
 		Index:      21,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -243,7 +243,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BaseLvalue : FullOosvar	<<  >>`,
 		Id:         "BaseLvalue",
-		NTType:     10,
+		NTType:     9,
 		Index:      22,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -258,7 +258,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeIndexedLvalue,
     ) >>`,
 		Id:         "IndexedLvalue",
-		NTType:     11,
+		NTType:     10,
 		Index:      23,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -273,7 +273,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `FieldValue : DirectFieldValue	<<  >>`,
 		Id:         "FieldValue",
-		NTType:     12,
+		NTType:     11,
 		Index:      24,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -283,7 +283,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `FieldValue : IndirectFieldValue	<<  >>`,
 		Id:         "FieldValue",
-		NTType:     12,
+		NTType:     11,
 		Index:      25,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -293,7 +293,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `FieldValue : BracedFieldValue	<<  >>`,
 		Id:         "FieldValue",
-		NTType:     12,
+		NTType:     11,
 		Index:      26,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -303,7 +303,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `DirectFieldValue : md_token_field_name	<< dsl.NewASTNodeStripDollarOrAtSign(X[0], dsl.NodeTypeDirectFieldValue) >>`,
 		Id:         "DirectFieldValue",
-		NTType:     13,
+		NTType:     12,
 		Index:      27,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -313,7 +313,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `IndirectFieldValue : "$[" Rvalue "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectFieldValue) >>`,
 		Id:         "IndirectFieldValue",
-		NTType:     14,
+		NTType:     13,
 		Index:      28,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -323,7 +323,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BracedFieldValue : md_token_braced_field_name	<< dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces(X[0], dsl.NodeTypeDirectFieldValue) >>`,
 		Id:         "BracedFieldValue",
-		NTType:     15,
+		NTType:     14,
 		Index:      29,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -333,7 +333,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `FullSrec : md_token_full_srec	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullSrec) >>`,
 		Id:         "FullSrec",
-		NTType:     16,
+		NTType:     15,
 		Index:      30,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -343,7 +343,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `OosvarValue : DirectOosvarValue	<<  >>`,
 		Id:         "OosvarValue",
-		NTType:     17,
+		NTType:     16,
 		Index:      31,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -353,7 +353,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `OosvarValue : IndirectOosvarValue	<<  >>`,
 		Id:         "OosvarValue",
-		NTType:     17,
+		NTType:     16,
 		Index:      32,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -363,7 +363,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `OosvarValue : BracedOosvarValue	<<  >>`,
 		Id:         "OosvarValue",
-		NTType:     17,
+		NTType:     16,
 		Index:      33,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -373,7 +373,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `DirectOosvarValue : md_token_oosvar_name	<< dsl.NewASTNodeStripDollarOrAtSign(X[0], dsl.NodeTypeDirectOosvarValue) >>`,
 		Id:         "DirectOosvarValue",
-		NTType:     18,
+		NTType:     17,
 		Index:      34,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -383,7 +383,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `IndirectOosvarValue : "@[" Rvalue "]"	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIndirectOosvarValue) >>`,
 		Id:         "IndirectOosvarValue",
-		NTType:     19,
+		NTType:     18,
 		Index:      35,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -393,7 +393,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BracedOosvarValue : md_token_braced_oosvar_name	<< dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces(X[0], dsl.NodeTypeDirectOosvarValue) >>`,
 		Id:         "BracedOosvarValue",
-		NTType:     20,
+		NTType:     19,
 		Index:      36,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -403,7 +403,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `FullOosvar : md_token_full_oosvar	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar) >>`,
 		Id:         "FullOosvar",
-		NTType:     21,
+		NTType:     20,
 		Index:      37,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -418,7 +418,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      38,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -438,7 +438,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      39,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -458,7 +458,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      40,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -478,7 +478,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      41,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -498,7 +498,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      42,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -518,7 +518,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      43,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -538,7 +538,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      44,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -558,7 +558,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      45,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -578,7 +578,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      46,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -598,7 +598,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      47,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -618,7 +618,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      48,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -638,7 +638,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      49,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -658,7 +658,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      50,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -678,7 +678,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      51,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -698,7 +698,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      52,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -718,7 +718,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
-		NTType:     8,
+		NTType:     7,
 		Index:      53,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -733,7 +733,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `Rvalue : PrecedenceChainStart	<<  >>`,
 		Id:         "Rvalue",
-		NTType:     22,
+		NTType:     21,
 		Index:      54,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -743,7 +743,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrecedenceChainStart : TernaryTerm	<<  >>`,
 		Id:         "PrecedenceChainStart",
-		NTType:     23,
+		NTType:     22,
 		Index:      55,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -753,7 +753,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `TernaryTerm : LogicalOrTerm "?" TernaryTerm ":" TernaryTerm	<< dsl.NewASTNodeTernary(dsl.NewASTToken("?:", X[1]), X[0], X[2], X[4], dsl.NodeTypeOperator) >>`,
 		Id:         "TernaryTerm",
-		NTType:     24,
+		NTType:     23,
 		Index:      56,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -763,7 +763,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `TernaryTerm : LogicalOrTerm	<<  >>`,
 		Id:         "TernaryTerm",
-		NTType:     24,
+		NTType:     23,
 		Index:      57,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -773,7 +773,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `LogicalOrTerm : LogicalOrTerm "||" LogicalXORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "LogicalOrTerm",
-		NTType:     25,
+		NTType:     24,
 		Index:      58,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -783,7 +783,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `LogicalOrTerm : LogicalXORTerm	<<  >>`,
 		Id:         "LogicalOrTerm",
-		NTType:     25,
+		NTType:     24,
 		Index:      59,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -793,7 +793,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `LogicalXORTerm : LogicalXORTerm "^^" LogicalAndTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "LogicalXORTerm",
-		NTType:     26,
+		NTType:     25,
 		Index:      60,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -803,7 +803,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `LogicalXORTerm : LogicalAndTerm	<<  >>`,
 		Id:         "LogicalXORTerm",
-		NTType:     26,
+		NTType:     25,
 		Index:      61,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -813,7 +813,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `LogicalAndTerm : LogicalAndTerm "&&" EqneTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "LogicalAndTerm",
-		NTType:     27,
+		NTType:     26,
 		Index:      62,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -823,7 +823,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `LogicalAndTerm : EqneTerm	<<  >>`,
 		Id:         "LogicalAndTerm",
-		NTType:     27,
+		NTType:     26,
 		Index:      63,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -833,7 +833,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "=~" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
-		NTType:     28,
+		NTType:     27,
 		Index:      64,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -843,7 +843,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "!=~" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
-		NTType:     28,
+		NTType:     27,
 		Index:      65,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -853,7 +853,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "==" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
-		NTType:     28,
+		NTType:     27,
 		Index:      66,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -863,7 +863,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EqneTerm : EqneTerm "!=" CmpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "EqneTerm",
-		NTType:     28,
+		NTType:     27,
 		Index:      67,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -873,7 +873,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `EqneTerm : CmpTerm	<<  >>`,
 		Id:         "EqneTerm",
-		NTType:     28,
+		NTType:     27,
 		Index:      68,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -883,7 +883,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm ">" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
-		NTType:     29,
+		NTType:     28,
 		Index:      69,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -893,7 +893,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm ">=" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
-		NTType:     29,
+		NTType:     28,
 		Index:      70,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -903,7 +903,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm "<" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
-		NTType:     29,
+		NTType:     28,
 		Index:      71,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -913,7 +913,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `CmpTerm : CmpTerm "<=" BitwiseORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "CmpTerm",
-		NTType:     29,
+		NTType:     28,
 		Index:      72,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -923,7 +923,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `CmpTerm : BitwiseORTerm	<<  >>`,
 		Id:         "CmpTerm",
-		NTType:     29,
+		NTType:     28,
 		Index:      73,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -933,7 +933,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseORTerm : BitwiseORTerm "|" BitwiseXORTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseORTerm",
-		NTType:     30,
+		NTType:     29,
 		Index:      74,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -943,7 +943,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseORTerm : BitwiseXORTerm	<<  >>`,
 		Id:         "BitwiseORTerm",
-		NTType:     30,
+		NTType:     29,
 		Index:      75,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -953,7 +953,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseXORTerm : BitwiseXORTerm "^" BitwiseANDTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseXORTerm",
-		NTType:     31,
+		NTType:     30,
 		Index:      76,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -963,7 +963,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseXORTerm : BitwiseANDTerm	<<  >>`,
 		Id:         "BitwiseXORTerm",
-		NTType:     31,
+		NTType:     30,
 		Index:      77,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -973,7 +973,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseANDTerm : BitwiseANDTerm "&" BitwiseShiftTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseANDTerm",
-		NTType:     32,
+		NTType:     31,
 		Index:      78,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -983,7 +983,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseANDTerm : BitwiseShiftTerm	<<  >>`,
 		Id:         "BitwiseANDTerm",
-		NTType:     32,
+		NTType:     31,
 		Index:      79,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -993,7 +993,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseShiftTerm : BitwiseShiftTerm "<<" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseShiftTerm",
-		NTType:     33,
+		NTType:     32,
 		Index:      80,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1003,7 +1003,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseShiftTerm : BitwiseShiftTerm ">>" AddsubdotTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "BitwiseShiftTerm",
-		NTType:     33,
+		NTType:     32,
 		Index:      81,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1013,7 +1013,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `BitwiseShiftTerm : AddsubdotTerm	<<  >>`,
 		Id:         "BitwiseShiftTerm",
-		NTType:     33,
+		NTType:     32,
 		Index:      82,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1023,7 +1023,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm "+" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
-		NTType:     34,
+		NTType:     33,
 		Index:      83,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1033,7 +1033,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm "-" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
-		NTType:     34,
+		NTType:     33,
 		Index:      84,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1043,7 +1043,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm ".+" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
-		NTType:     34,
+		NTType:     33,
 		Index:      85,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1053,7 +1053,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm ".-" MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
-		NTType:     34,
+		NTType:     33,
 		Index:      86,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1063,7 +1063,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `AddsubdotTerm : AddsubdotTerm "." MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "AddsubdotTerm",
-		NTType:     34,
+		NTType:     33,
 		Index:      87,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1073,7 +1073,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `AddsubdotTerm : MuldivTerm	<<  >>`,
 		Id:         "AddsubdotTerm",
-		NTType:     34,
+		NTType:     33,
 		Index:      88,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1083,7 +1083,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "*" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      89,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1093,7 +1093,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "/" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      90,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1103,7 +1103,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "//" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      91,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1113,7 +1113,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "%!"(MISSING) UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      92,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1123,7 +1123,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm ".*" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      93,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1133,7 +1133,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm "./" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      94,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1143,7 +1143,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : MuldivTerm ".//" UnaryOpTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      95,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1153,7 +1153,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MuldivTerm : UnaryOpTerm	<<  >>`,
 		Id:         "MuldivTerm",
-		NTType:     35,
+		NTType:     34,
 		Index:      96,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1163,7 +1163,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : "+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      97,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1173,7 +1173,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : "-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      98,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1183,7 +1183,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : ".+" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      99,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1193,7 +1193,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : ".-" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      100,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1203,7 +1203,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : "!" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      101,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1213,7 +1213,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : "~" PowTerm	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeOperator) >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      102,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1223,7 +1223,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `UnaryOpTerm : PowTerm	<<  >>`,
 		Id:         "UnaryOpTerm",
-		NTType:     36,
+		NTType:     35,
 		Index:      103,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1233,7 +1233,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PowTerm : PrecedenceChainEnd "**" PowTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
 		Id:         "PowTerm",
-		NTType:     37,
+		NTType:     36,
 		Index:      104,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1243,7 +1243,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PowTerm : PrecedenceChainEnd	<<  >>`,
 		Id:         "PowTerm",
-		NTType:     37,
+		NTType:     36,
 		Index:      105,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1253,7 +1253,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrecedenceChainEnd : "(" Rvalue ")"	<< dsl.Nestable(X[1]) >>`,
 		Id:         "PrecedenceChainEnd",
-		NTType:     38,
+		NTType:     37,
 		Index:      106,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1263,7 +1263,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `PrecedenceChainEnd : MlrvalOrFunction	<<  >>`,
 		Id:         "PrecedenceChainEnd",
-		NTType:     38,
+		NTType:     37,
 		Index:      107,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1273,7 +1273,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : FieldValue	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      108,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1283,7 +1283,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : FullSrec	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      109,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1293,7 +1293,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : OosvarValue	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      110,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1303,7 +1303,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : FullOosvar	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      111,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1316,7 +1316,7 @@ var productionsTable = ProdTab{
     dsl.NodeTypeStringLiteral,
   ) >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      112,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1329,7 +1329,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : md_token_int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      113,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1339,7 +1339,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : md_token_float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      114,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1349,7 +1349,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : md_token_boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      115,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1359,7 +1359,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : md_token_panic	<< dsl.NewASTNode(X[0], dsl.NodeTypePanic) >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      116,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1369,7 +1369,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : ArrayLiteral	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      117,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1382,7 +1382,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArrayLiteral,
     ) >>`,
 		Id:         "ArrayLiteral",
-		NTType:     40,
+		NTType:     39,
 		Index:      118,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1401,7 +1401,7 @@ var productionsTable = ProdTab{
       X[1],
     ) >>`,
 		Id:         "ArrayLiteral",
-		NTType:     40,
+		NTType:     39,
 		Index:      119,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1421,7 +1421,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArrayLiteral,
     ) >>`,
 		Id:         "ArrayLiteralElements",
-		NTType:     41,
+		NTType:     40,
 		Index:      120,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1439,7 +1439,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArrayLiteral,
     ) >>`,
 		Id:         "ArrayLiteralElements",
-		NTType:     41,
+		NTType:     40,
 		Index:      121,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1456,7 +1456,7 @@ var productionsTable = ProdTab{
       X[0],
     ) >>`,
 		Id:         "ArrayLiteralElements",
-		NTType:     41,
+		NTType:     40,
 		Index:      122,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1469,7 +1469,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ArrayLiteralElement : Rvalue	<<  >>`,
 		Id:         "ArrayLiteralElement",
-		NTType:     42,
+		NTType:     41,
 		Index:      123,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1479,7 +1479,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : MapLiteral	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      124,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1492,7 +1492,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteral,
     ) >>`,
 		Id:         "MapLiteral",
-		NTType:     43,
+		NTType:     42,
 		Index:      125,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1511,7 +1511,7 @@ var productionsTable = ProdTab{
       X[1],
     ) >>`,
 		Id:         "MapLiteral",
-		NTType:     43,
+		NTType:     42,
 		Index:      126,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1531,7 +1531,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteral,
     ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
-		NTType:     44,
+		NTType:     43,
 		Index:      127,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1549,7 +1549,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteral,
     ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
-		NTType:     44,
+		NTType:     43,
 		Index:      128,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1566,7 +1566,7 @@ var productionsTable = ProdTab{
       X[0],
     ) >>`,
 		Id:         "MapLiteralKeyValuePairs",
-		NTType:     44,
+		NTType:     43,
 		Index:      129,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1584,7 +1584,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeMapLiteralKeyValuePair,
     ) >>`,
 		Id:         "MapLiteralKeyValuePair",
-		NTType:     45,
+		NTType:     44,
 		Index:      130,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1599,7 +1599,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : ContextVariable	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      131,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1609,7 +1609,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_IPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      132,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1619,7 +1619,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_IFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      133,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1629,7 +1629,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_IRS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      134,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1639,7 +1639,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_OPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      135,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1649,7 +1649,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_OFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      136,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1659,7 +1659,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_ORS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      137,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1669,7 +1669,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_NF	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      138,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1679,7 +1679,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_NR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      139,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1689,7 +1689,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_FNR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      140,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1699,7 +1699,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_FILENAME	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      141,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1709,7 +1709,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `ContextVariable : md_token_FILENUM	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
-		NTType:     46,
+		NTType:     45,
 		Index:      142,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1719,7 +1719,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : ArrayOrMapIndexAccess	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      143,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1734,7 +1734,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArrayOrMapIndexAccess,
     ) >>`,
 		Id:         "ArrayOrMapIndexAccess",
-		NTType:     47,
+		NTType:     46,
 		Index:      144,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1749,7 +1749,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `MlrvalOrFunction : ArraySliceAccess	<<  >>`,
 		Id:         "MlrvalOrFunction",
-		NTType:     39,
+		NTType:     38,
 		Index:      145,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1765,7 +1765,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArraySliceAccess,
     ) >>`,
 		Id:         "ArraySliceAccess",
-		NTType:     48,
+		NTType:     47,
 		Index:      146,
 		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1790,7 +1790,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArraySliceAccess,
     ) >>`,
 		Id:         "ArraySliceAccess",
-		NTType:     48,
+		NTType:     47,
 		Index:      147,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1818,7 +1818,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArraySliceAccess,
     ) >>`,
 		Id:         "ArraySliceAccess",
-		NTType:     48,
+		NTType:     47,
 		Index:      148,
 		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
@@ -1849,7 +1849,7 @@ var productionsTable = ProdTab{
       dsl.NodeTypeArraySliceAccess,
     ) >>`,
 		Id:         "ArraySliceAccess",
-		NTType:     48,
+		NTType:     47,
 		Index:      149,
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
