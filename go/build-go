@@ -2,3 +2,4 @@
 
 export GOPATH=$(pwd)
 go build mlr.go
+echo "Compile OK"

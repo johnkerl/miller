@@ -112,16 +112,17 @@ func mapperPutUsage(
 
 // ----------------------------------------------------------------
 type MapperPut struct {
-	astRoot  *dsl.AST
-	cstRoot  *cst.Root
-	cstState *cst.State
+	astRootNode *dsl.AST
+	cstRootNode *cst.RootNode
+	cstState    *cst.State
+	callCount   int64
 }
 
 func NewMapperPut(
 	dslString string,
 	verbose bool,
 ) (*MapperPut, error) {
-	astRoot, err := BuildASTFromString(dslString)
+	astRootNode, err := BuildASTFromString(dslString)
 	if err != nil {
 		// Leave this out until we get better control over the error-messaging.
 		// At present it's overly parser-internal, and confusing. :(
@@ -134,10 +135,10 @@ func NewMapperPut(
 		fmt.Println("DSL EXPRESSION:")
 		fmt.Println(dslString)
 		fmt.Println("RAW AST:")
-		astRoot.Print()
+		astRootNode.Print()
 		fmt.Println()
 	}
-	cstRoot, err := cst.Build(astRoot)
+	cstRootNode, err := cst.Build(astRootNode)
 	cstState := cst.NewEmptyState()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -145,14 +146,15 @@ func NewMapperPut(
 	}
 
 	return &MapperPut{
-		astRoot:  astRoot,
-		cstRoot:  cstRoot,
-		cstState: cstState,
+		astRootNode: astRootNode,
+		cstRootNode: cstRootNode,
+		cstState:    cstState,
+		callCount:   0,
 	}, nil
 }
 
 // xxx note (package cycle) why not a dsl.AST constructor :(
-// xxx maybe split out dsl into two packages ... and/or put the astRoot.go into miller/parsing -- ?
+// xxx maybe split out dsl into two packages ... and/or put the ast.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
 func BuildASTFromString(dslString string) (*dsl.AST, error) {
 
@@ -162,8 +164,8 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 	if err != nil {
 		return nil, err
 	}
-	astRoot := interfaceAST.(*dsl.AST)
-	return astRoot, nil
+	astRootNode := interfaceAST.(*dsl.AST)
+	return astRootNode, nil
 }
 
 func (this *MapperPut) Map(
@@ -174,9 +176,20 @@ func (this *MapperPut) Map(
 	context := inrecAndContext.Context
 	if inrec != nil {
 
+		// Execute the begin { ... } before the first input record
+		this.callCount++
+		if this.callCount == 1 {
+			err := this.cstRootNode.ExecuteBeginBlocks(this.cstState)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		}
+
 		this.cstState.Update(inrec, &context)
 
-		outrec, err := this.cstRoot.Execute(this.cstState)
+		// Execute the main block on the current input record
+		outrec, err := this.cstRootNode.ExecuteMainBlock(this.cstState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -187,6 +200,14 @@ func (this *MapperPut) Map(
 			&context,
 		)
 	} else {
+
+		// Execute the end { ... } after the last input record
+		err := this.cstRootNode.ExecuteEndBlocks(this.cstState)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+
 		outputChannel <- lib.NewRecordAndContext(
 			nil, // signals end of input record stream
 			&context,

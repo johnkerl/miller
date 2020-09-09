@@ -61,18 +61,18 @@ const (
 
 // ----------------------------------------------------------------
 type AST struct {
-	Root *ASTNode
+	RootNode *ASTNode
 }
 
 // This is for the GOCC/BNF parser, which produces an AST
-func NewAST(root interface{}) (*AST, error) {
+func NewAST(iroot interface{}) (*AST, error) {
 	return &AST{
-		Root: root.(*ASTNode),
+		RootNode: iroot.(*ASTNode),
 	}, nil
 }
 
 func (this *AST) Print() {
-	this.Root.Print(0)
+	this.RootNode.Print(0)
 }
 
 // ----------------------------------------------------------------

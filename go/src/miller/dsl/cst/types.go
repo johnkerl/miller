@@ -50,9 +50,13 @@ func (this *State) Update(
 }
 
 // ----------------------------------------------------------------
-type Root struct {
-	// Statements/blocks
-	executables []IExecutable
+type RootNode struct {
+	// TODO: Statements/blocks
+	//executables []IExecutable
+
+	beginBlocks []*StatementBlockNode
+	mainBlock   *StatementBlockNode
+	endBlocks   []*StatementBlockNode
 }
 
 // ----------------------------------------------------------------
@@ -62,8 +66,9 @@ type IExecutable interface {
 }
 
 // ----------------------------------------------------------------
+// Also implements IExecutable
 type StatementBlockNode struct {
-	// TODO: list of statement, once begin/end/main are in the DSL
+	executables []IExecutable
 }
 
 // ================================================================
