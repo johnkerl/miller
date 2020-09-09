@@ -10,5 +10,3 @@ set -euo pipefail
 
 ./build-go
 check $verbose
-
-echo Test OK

@@ -20,3 +20,5 @@ git diff \
   u/try-verbs.out \
   u/try-parse.out \
   u/try-cst.out
+
+echo "Test OK"

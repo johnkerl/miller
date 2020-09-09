@@ -1043,6 +1043,7 @@ ArraySliceAccess
 //	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 //	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 //}
+
 //// For most functions it suffices to use the md_token_non_sigil_name pattern. But
 //// int and float are keywords in the lexer so we need to spell those out explicitly.
 //// (They're type-decl keywords but they're also the names of type-conversion functions.)
@@ -1073,15 +1074,6 @@ ArraySliceAccess
 //}
 
 //md_fcn_arg(A) ::= Rvalue(B). {
-//	A = B;
-//}
-//md_fcn_arg(A) ::= md_token_full_srec(B). {
-//	A = B;
-//}
-//md_fcn_arg(A) ::= md_token_full_oosvar(B). {
-//	A = B;
-//}
-//md_fcn_arg(A) ::= MapLiteral(B). {
 //	A = B;
 //}
 
