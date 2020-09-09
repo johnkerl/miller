@@ -20,11 +20,18 @@ func BuildStatementNode(
 	var err error = nil
 	// xxx more to do
 	switch astNode.Type {
+
 	case dsl.NodeTypeAssignment:
 		statement, err = BuildAssignmentNode(astNode)
 		if err != nil {
 			return nil, err
 		}
+
+	case dsl.NodeTypeBeginBlock:
+		return nil, nil // xxx temp
+
+	case dsl.NodeTypeEndBlock:
+		return nil, nil // xxx temp
 
 	default:
 		return nil, errors.New(

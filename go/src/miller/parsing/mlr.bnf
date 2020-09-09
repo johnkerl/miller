@@ -311,6 +311,22 @@ StatementBlock
 ;
 
 // ================================================================
+// BEGIN/END BLOCKS
+
+BeginBlock
+  : md_token_begin "{" "}"
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeBeginBlock) >>
+  | md_token_begin "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeBeginBlock) >>
+;
+EndBlock
+  : md_token_end "{" "}"
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock) >>
+  | md_token_end "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
+;
+
+// ================================================================
 // ASSIGMENT STATEMENTS
 
 Statement
@@ -425,16 +441,6 @@ BracedOosvarValue
 FullOosvar
   : md_token_full_oosvar
   << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
-;
-
-// ----------------------------------------------------------------
-BeginBlock
-  : md_token_begin "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeBeginBlock) >>
-;
-EndBlock
-  : md_token_end "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
 ;
 
 // ----------------------------------------------------------------
