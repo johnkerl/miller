@@ -727,3 +727,96 @@ RAW AST:
                     * IntLiteral "3"
             * StringLiteral "b"
 
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{}
+DSL EXPRESSION:
+begin{}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{@y=1}
+DSL EXPRESSION:
+begin{@y=1}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v end{}
+DSL EXPRESSION:
+end{}
+RAW AST:
+* StatementBlock
+    * EndBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v end{@y=1}
+DSL EXPRESSION:
+end{@y=1}
+RAW AST:
+* StatementBlock
+    * EndBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $x=2; end{@y=1}
+DSL EXPRESSION:
+$x=2; end{@y=1}
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "x"
+        * IntLiteral "2"
+    * EndBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{@y=1} $x=2
+DSL EXPRESSION:
+begin{@y=1} $x=2
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * Assignment "="
+                * DirectOosvarValue "y"
+                * IntLiteral "1"
+    * Assignment "="
+        * DirectFieldValue "x"
+        * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin{} end {}
+DSL EXPRESSION:
+begin{} end {}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+    * EndBlock
+
