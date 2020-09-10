@@ -49,17 +49,17 @@ func BuildAssignableNode(
 
 // ----------------------------------------------------------------
 type DirectFieldValueLvalueNode struct {
-	lhsFieldName string
+	lhsFieldName *lib.Mlrval
 }
 
 func BuildDirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
 
-	lhsFieldName := string(astNode.Token.Lit)
-	return NewDirectFieldValueLvalueNode(lhsFieldName), nil
+	lhsFieldName := lib.MlrvalFromString(string(astNode.Token.Lit))
+	return NewDirectFieldValueLvalueNode(&lhsFieldName), nil
 }
 
-func NewDirectFieldValueLvalueNode(lhsFieldName string) *DirectFieldValueLvalueNode {
+func NewDirectFieldValueLvalueNode(lhsFieldName *lib.Mlrval) *DirectFieldValueLvalueNode {
 	return &DirectFieldValueLvalueNode{
 		lhsFieldName: lhsFieldName,
 	}
@@ -80,10 +80,14 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	if indices == nil {
-		state.Inrec.PutCopy(&this.lhsFieldName, rvalue)
+		err := state.Inrec.PutCopyWithMlrvalIndex(this.lhsFieldName, rvalue)
+		if err != nil {
+			return err
+		}
 		return nil
 	} else {
-		return state.Inrec.PutIndexed(&this.lhsFieldName, indices, rvalue)
+		// xxx err return
+		return state.Inrec.PutIndexed(this.lhsFieldName, indices, rvalue)
 	}
 }
 
@@ -130,20 +134,14 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 
 	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 
-	if !lhsFieldName.IsString() {
-		return errors.New(
-			"Miller DSL: computed field name [%s] should be a string but was " +
-				lhsFieldName.GetTypeName() +
-				".",
-		)
-	}
-
-	sval := lhsFieldName.String()
 	if indices == nil {
-		state.Inrec.PutCopy(&sval, rvalue)
+		err := state.Inrec.PutCopyWithMlrvalIndex(&lhsFieldName, rvalue)
+		if err != nil {
+			return err
+		}
 		return nil
 	} else {
-		return state.Inrec.PutIndexed(&sval, indices, rvalue)
+		return state.Inrec.PutIndexed(&lhsFieldName, indices, rvalue)
 	}
 }
 
@@ -188,17 +186,17 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 
 // ----------------------------------------------------------------
 type DirectOosvarValueLvalueNode struct {
-	lhsOosvarName string
+	lhsOosvarName *lib.Mlrval
 }
 
 func BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectOosvarValue)
 
-	lhsOosvarName := string(astNode.Token.Lit)
-	return NewDirectOosvarValueLvalueNode(lhsOosvarName), nil
+	lhsOosvarName := lib.MlrvalFromString(string(astNode.Token.Lit))
+	return NewDirectOosvarValueLvalueNode(&lhsOosvarName), nil
 }
 
-func NewDirectOosvarValueLvalueNode(lhsOosvarName string) *DirectOosvarValueLvalueNode {
+func NewDirectOosvarValueLvalueNode(lhsOosvarName *lib.Mlrval) *DirectOosvarValueLvalueNode {
 	return &DirectOosvarValueLvalueNode{
 		lhsOosvarName: lhsOosvarName,
 	}
@@ -219,10 +217,13 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	if indices == nil {
-		state.Oosvars.PutCopy(&this.lhsOosvarName, rvalue)
+		err := state.Oosvars.PutCopyWithMlrvalIndex(this.lhsOosvarName, rvalue)
+		if err != nil {
+			return err
+		}
 		return nil
 	} else {
-		return state.Oosvars.PutIndexed(&this.lhsOosvarName, indices, rvalue)
+		return state.Oosvars.PutIndexed(this.lhsOosvarName, indices, rvalue)
 	}
 }
 
@@ -270,20 +271,14 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 
 	lhsOosvarName := this.lhsOosvarNameExpression.Evaluate(state)
 
-	if !lhsOosvarName.IsString() {
-		return errors.New(
-			"Miller DSL: computed field name [%s] should be a string but was " +
-				lhsOosvarName.GetTypeName() +
-				".",
-		)
-	}
-
-	sval := lhsOosvarName.String()
 	if indices == nil {
-		state.Oosvars.PutCopy(&sval, rvalue)
+		err := state.Oosvars.PutCopyWithMlrvalIndex(&lhsOosvarName, rvalue)
+		if err != nil {
+			return err
+		}
 		return nil
 	} else {
-		return state.Oosvars.PutIndexed(&sval, indices, rvalue)
+		return state.Oosvars.PutIndexed(&lhsOosvarName, indices, rvalue)
 	}
 }
 

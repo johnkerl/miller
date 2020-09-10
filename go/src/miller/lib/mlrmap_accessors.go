@@ -2,6 +2,7 @@ package lib
 
 import (
 	"errors"
+	"strconv"
 )
 
 // ----------------------------------------------------------------
@@ -20,6 +21,42 @@ func (this *Mlrmap) findEntry(key *string) *mlrmapEntry {
 		}
 		return nil
 	}
+}
+
+// For '$[1]' etc. in the DSL.
+//
+// Notes:
+// * This is a linear search.
+// * Indices are 1-up not 0-up
+// * Indices -n..-1 are aliases for 1..n. In particular, it will be faster to
+//   get the -1st field than the nth.
+// * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
+//   fields.
+func (this *Mlrmap) findEntryByPositionalIndex(position int64) *mlrmapEntry {
+	if position > this.FieldCount || position < -this.FieldCount || position == 0 {
+		return nil
+	}
+	if position > 0 {
+		var i int64 = 1
+		for pe := this.Head; pe != nil; pe = pe.Next {
+			if i == position {
+				return pe
+			}
+			i++
+		}
+		InternalCodingErrorIf(true)
+	} else {
+		var i int64 = -1
+		for pe := this.Tail; pe != nil; pe = pe.Prev {
+			if i == position {
+				return pe
+			}
+			i--
+		}
+		InternalCodingErrorIf(true)
+	}
+	InternalCodingErrorIf(true)
+	return nil
 }
 
 // ----------------------------------------------------------------
@@ -73,20 +110,62 @@ func (this *Mlrmap) PutReference(key *string, value *Mlrval) {
 	}
 }
 
+func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
+	if key.mvtype == MT_STRING {
+		this.PutCopy(&key.printrep, value)
+		return nil
+	} else if key.mvtype == MT_INT {
+		mapEntry := this.findEntryByPositionalIndex(key.intval)
+		if mapEntry == nil {
+			// xxx libify
+			// There is no auto-extend for positional indices
+			return errors.New(
+				"Positional index " +
+					strconv.Itoa(int(key.intval)) +
+					" not found.",
+			)
+		}
+		mapEntry.Value = value.Copy()
+		return nil
+	} else {
+		return errors.New(
+			"Record/map indices must be string or positional-int; got " + key.GetTypeName(),
+		)
+	}
+}
+
 // ----------------------------------------------------------------
 // E.g. '$name[1]["foo"] = "bar"'
 // The key is "name" and the indices are [1, "foo"].
 // See also indexed-lvalues.md.
-func (this *Mlrmap) PutIndexed(key *string, indices []*Mlrval, rvalue *Mlrval) error {
-	mlrval := this.Get(key)
+func (this *Mlrmap) PutIndexed(key *Mlrval, indices []*Mlrval, rvalue *Mlrval) error {
+	mlrval, err := this.GetWithMlrvalIndex(key)
+	if err != nil {
+		return err
+	}
 	if mlrval == nil {
 		mapval := MlrvalEmptyMap()
-		this.PutCopy(key, &mapval)
-		return mapval.PutIndexed(indices, rvalue)
+		if key.mvtype == MT_STRING {
+			this.PutCopy(&key.printrep, &mapval)
+			return mapval.PutIndexed(indices, rvalue)
+		} else if key.mvtype == MT_INT {
+			// xxx libify
+			// There is no auto-extend for positional indices
+			return errors.New(
+				"Positional index " +
+					strconv.Itoa(int(key.intval)) +
+					" not found.",
+			)
+		} else {
+			// xxx libify
+			return errors.New(
+				"Record/map indices must be string or positional-int; got " + key.GetTypeName(),
+			)
+		}
 	} else if mlrval.IsAbsent() {
-		return errors.New("Value [\"" + *key + "\"] is not a maaaaaap.")
+		return errors.New("Value [\"" + key.String() + "\"] is not a map.")
 	} else if !mlrval.IsMap() {
-		return errors.New("Value [\"" + *key + "\"] is not a map.")
+		return errors.New("Value [\"" + key.String() + "\"] is not a map.")
 	} else {
 		return mlrval.PutIndexed(indices, rvalue)
 	}
@@ -182,30 +261,11 @@ func (this *Mlrmap) Get(key *string) *Mlrval {
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
 func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
-	if position > this.FieldCount || position < -this.FieldCount || position == 0 {
+	mapEntry := this.findEntryByPositionalIndex(position)
+	if mapEntry == nil {
 		return nil
 	}
-	if position > 0 {
-		var i int64 = 1
-		for pe := this.Head; pe != nil; pe = pe.Next {
-			if i == position {
-				return pe.Value
-			}
-			i++
-		}
-		InternalCodingErrorIf(true)
-	} else {
-		var i int64 = -1
-		for pe := this.Tail; pe != nil; pe = pe.Prev {
-			if i == position {
-				return pe.Value
-			}
-			i--
-		}
-		InternalCodingErrorIf(true)
-	}
-	InternalCodingErrorIf(true)
-	return nil
+	return mapEntry.Value
 }
 
 func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {

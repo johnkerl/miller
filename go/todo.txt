@@ -148,3 +148,4 @@ NITS/NON-IMMEDIATE:
   o also $1 vs $[1] -- the former 'sticks' with input-data ordering
   o moral: miller is a name-indexed tool as its primary purpose. positional
     indexing is supported but it can be confusing.
+* '$[0] = ...' no-op -- should be error

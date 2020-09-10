@@ -113,23 +113,40 @@ func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 		}
 		levelMlrmap := levelMlrval.mapval
 
-		if !index.IsString() {
-			return errors.New("string-only indices for now, sorry!")
-		}
-		key := index.printrep
-
-		nextLevelMlrval := levelMlrmap.Get(&key)
-		if nextLevelMlrval == nil {
-			if i < n-1 {
-				next := MlrvalEmptyMap()
-				nextLevelMlrval = &next
-				levelMlrmap.PutCopy(&key, nextLevelMlrval)
-			} else {
-				levelMlrmap.PutCopy(&key, rvalue)
-				break
+		if index.mvtype == MT_STRING {
+			key := index.printrep
+			nextLevelMlrval := levelMlrmap.Get(&key)
+			if nextLevelMlrval == nil {
+				if i < n-1 {
+					next := MlrvalEmptyMap()
+					nextLevelMlrval = &next
+					levelMlrmap.PutCopy(&key, nextLevelMlrval)
+				} else {
+					levelMlrmap.PutCopy(&key, rvalue)
+					break
+				}
 			}
+			levelMlrval = nextLevelMlrval
+
+		} else if index.mvtype == MT_INT {
+			nextLevelMlrval := levelMlrmap.GetWithPositionalIndex(index.intval)
+			if nextLevelMlrval == nil {
+				// There is no auto-extend for positional indices
+				return errors.New(
+					"Positional index " +
+						string(index.intval) +
+						" not found.",
+				)
+			}
+			levelMlrval = nextLevelMlrval
+
+		} else {
+			return errors.New(
+				"Map key must string or positional int, but was " +
+					index.GetTypeName() +
+					".",
+			)
 		}
-		levelMlrval = nextLevelMlrval
 	}
 
 	return nil
