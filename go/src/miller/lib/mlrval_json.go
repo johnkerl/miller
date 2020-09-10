@@ -257,6 +257,9 @@ func (this *Mlrval) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 	case MT_PENDING:
 		return this.marshalJSONPending()
 		break
+	case MT_ERROR:
+		return this.marshalJSONError()
+		break
 	case MT_ABSENT:
 		return this.marshalJSONAbsent()
 		break
@@ -282,9 +285,9 @@ func (this *Mlrval) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 		return this.marshalJSONMap(elementNestingDepth)
 		break
 	case MT_DIM: // MT_DIM is one past the last valid type
-		return nil, errors.New("internal coding error detected")
+		return nil, errors.New("Miller: internal coding error detected")
 	}
-	return nil, errors.New("internal coding error detected")
+	return nil, errors.New("Miller: iInternal coding error detected")
 }
 
 // ================================================================
@@ -296,6 +299,12 @@ func (this *Mlrval) marshalJSONPending() ([]byte, error) {
 	return nil, errors.New(
 		"Miller internal coding error: pending-values should not have been produced",
 	)
+}
+
+// ----------------------------------------------------------------
+func (this *Mlrval) marshalJSONError() ([]byte, error) {
+	InternalCodingErrorIf(this.mvtype != MT_ERROR)
+	return []byte(this.printrep), nil
 }
 
 // ----------------------------------------------------------------

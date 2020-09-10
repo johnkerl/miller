@@ -86,8 +86,10 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 		}
 		return nil
 	} else {
-		// xxx err return
-		return state.Inrec.PutIndexed(this.lhsFieldName, indices, rvalue)
+		return state.Inrec.PutIndexed(
+			append([]*lib.Mlrval{this.lhsFieldName}, indices...),
+			rvalue,
+		)
 	}
 }
 
@@ -141,7 +143,10 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 		}
 		return nil
 	} else {
-		return state.Inrec.PutIndexed(&lhsFieldName, indices, rvalue)
+		return state.Inrec.PutIndexed(
+			append([]*lib.Mlrval{&lhsFieldName}, indices...),
+			rvalue,
+		)
 	}
 }
 
@@ -176,8 +181,8 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
-	// The input record is a *Mlrmap so just invoke its PutIndexedKeyless.
-	err := state.Inrec.PutIndexedKeyless(indices, rvalue)
+	// The input record is a *Mlrmap so just invoke its PutIndexed.
+	err := state.Inrec.PutIndexed(indices, rvalue)
 	if err != nil {
 		return err
 	}
@@ -223,7 +228,10 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 		}
 		return nil
 	} else {
-		return state.Oosvars.PutIndexed(this.lhsOosvarName, indices, rvalue)
+		return state.Oosvars.PutIndexed(
+			append([]*lib.Mlrval{this.lhsOosvarName}, indices...),
+			rvalue,
+		)
 	}
 }
 
@@ -278,7 +286,10 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 		}
 		return nil
 	} else {
-		return state.Oosvars.PutIndexed(&lhsOosvarName, indices, rvalue)
+		return state.Oosvars.PutIndexed(
+			append([]*lib.Mlrval{&lhsOosvarName}, indices...),
+			rvalue,
+		)
 	}
 }
 
@@ -313,8 +324,8 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
-	// The input record is a *Mlrmap so just invoke its PutIndexedKeyless.
-	err := state.Oosvars.PutIndexedKeyless(indices, rvalue)
+	// The input record is a *Mlrmap so just invoke its PutIndexed.
+	err := state.Oosvars.PutIndexed(indices, rvalue)
 	if err != nil {
 		return err
 	}

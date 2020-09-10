@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 export GOPATH=$(pwd)
 go build mlr.go
 echo "Compile OK"

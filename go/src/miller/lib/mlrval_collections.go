@@ -105,9 +105,29 @@ func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	n := len(indices)
 	InternalCodingErrorIf(n < 1)
 
+	//index := indices[0]
+
+	// * If this is a non-collection mlrval like string/int/float/etc.  then
+	//   it's non-indexable.
+	//
+	// * If it's a map-type mlrval then:
+	//
+	//   o Strings are map keys.
+	//   o Integers are interpreted as positional indices, only into existing
+	//     fields. (We don't auto-extend maps by positional indices.)
+	//
+	// * If it's an array-type mlrval then:
+	//
+	//   o Integers are array indices
+
+
+
+
+
+
+
 	levelMlrval := this
 
-	// xxx needs array auto-extend
 	for i, index := range indices {
 		if !levelMlrval.IsMap() {
 			return errors.New("indexed level not map") // xxx needs better messaging

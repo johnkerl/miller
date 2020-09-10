@@ -179,3 +179,4 @@ echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$*[-5] = "new"'
 # expect fail echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[0] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '@idx = NR % 5; @idx = @idx == 0 ? 5 : @idx; $*[@idx] = "NEW"'
 
+echo; run_mlr --json put '$a=$a[2]["b"][0]' u/nested.json

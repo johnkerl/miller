@@ -135,50 +135,14 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 }
 
 // ----------------------------------------------------------------
-// E.g. '$name[1]["foo"] = "bar"'
-// The key is "name" and the indices are [1, "foo"].
-// See also indexed-lvalues.md.
-func (this *Mlrmap) PutIndexed(key *Mlrval, indices []*Mlrval, rvalue *Mlrval) error {
-	mlrval, err := this.GetWithMlrvalIndex(key)
-	if err != nil {
-		return err
-	}
-	if mlrval == nil {
-		mapval := MlrvalEmptyMap()
-		if key.mvtype == MT_STRING {
-			this.PutCopy(&key.printrep, &mapval)
-			return mapval.PutIndexed(indices, rvalue)
-		} else if key.mvtype == MT_INT {
-			// xxx libify
-			// There is no auto-extend for positional indices
-			return errors.New(
-				"Positional index " +
-					strconv.Itoa(int(key.intval)) +
-					" not found.",
-			)
-		} else {
-			// xxx libify
-			return errors.New(
-				"Record/map indices must be string or positional-int; got " + key.GetTypeName(),
-			)
-		}
-	} else if mlrval.IsAbsent() {
-		return errors.New("Value [\"" + key.String() + "\"] is not a map.")
-	} else if !mlrval.IsMap() {
-		return errors.New("Value [\"" + key.String() + "\"] is not a map.")
-	} else {
-		return mlrval.PutIndexed(indices, rvalue)
-	}
-}
-
-// E.g. '$*["foo"][1] = "bar"'
-// The indices are ["foo", 1].
-// See also indexed-lvalues.md.
+// E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"'
+// In the former case the indices are ["name", 1, "foo"] and in the latter case
+// the indices are ["foo", 1]. See also indexed-lvalues.md.
 //
 // This is a Mlrmap (from string to Mlrval) so we handle the first level of
 // indexing here, then pass the remaining indices to the Mlrval at the desired
 // slot.
-func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
+func (this *Mlrmap) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	n := len(indices)
 	if n == 0 { // mlr put '$* = {"a":1, "b":2}'
 		if !rvalue.IsMap() {
@@ -191,22 +155,26 @@ func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
 	baseIndex := indices[0]
 
 	if n == 1 {
-		// yyy PutCopy w/ Mlrval flavor
-		// yyy sigh ... doc that positional indices on maps don't auto-extend.
 		this.PutCopyWithMlrvalIndex(baseIndex, rvalue) // E.g. mlr put '$*["a"] = 3'
 		return nil
 	}
 
-	// yyy Get w/ Mlrval flavor
 	baseValue, err := this.GetWithMlrvalIndex(baseIndex)
 	if err != nil {
 		return err
 	} else if baseValue == nil {
 		baseValue := MlrvalEmptyMap()
 		this.PutCopyWithMlrvalIndex(baseIndex, &baseValue)
+		// This is a Mlrmap method for the first index slot.
+		// Recurse on Mlrval PutIndexed for the rest.
 		return baseValue.PutIndexed(indices[1:], rvalue)
 	} else if !baseValue.IsMap() {
-		return errors.New("Value [\"" + baseIndex.String() + "\"] is not a map; got " + baseIndex.GetTypeName() + ".")
+		return errors.New(
+			"Value [\"" +
+				baseIndex.String() +
+				"\"] is not a map; got " +
+				baseIndex.GetTypeName() + ".",
+		)
 	} else {
 		return baseValue.PutIndexed(indices[1:], rvalue)
 	}
