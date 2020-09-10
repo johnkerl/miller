@@ -180,7 +180,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err 
 				if err != nil {
 					return nil, false, err
 				}
-				mlrval.ArrayExtend(element)
+				mlrval.ArrayAppend(element)
 			}
 
 		} else {

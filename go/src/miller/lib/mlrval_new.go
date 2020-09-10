@@ -1,11 +1,13 @@
 package lib
 
 import (
+	"errors"
 	"strconv"
 )
 
 // Constructors
 
+// ----------------------------------------------------------------
 func MlrvalFromPending() Mlrval {
 	return Mlrval{
 		mvtype:        MT_PENDING,
@@ -226,6 +228,7 @@ func MlrvalFromInferredType(input string) Mlrval {
 	return MlrvalFromString(input)
 }
 
+// ----------------------------------------------------------------
 // Does not copy the data. We can make a MlrvalFromArrayLiteralCopy if needed,
 // using lib.CopyMlrvalArray().
 func MlrvalFromArrayLiteralReference(input []Mlrval) Mlrval {
@@ -249,11 +252,56 @@ func MlrvalEmptyArray() Mlrval {
 		intval:        0,
 		floatval:      0.0,
 		boolval:       false,
-		arrayval:      make([]Mlrval, 0),
+		arrayval:      make([]Mlrval, 0, 10),
 		mapval:        nil,
 	}
 }
 
+// Users can do things like '$new[1][2][3] = 4' even if '$new' isn't already
+// allocated. This function supports that.
+func NewSizedMlrvalArray(length int64) *Mlrval {
+	arrayval := make([]Mlrval, length, 2*length)
+
+	for i := 0; i < int(length); i++ {
+		arrayval[i] = MlrvalFromString("")
+	}
+
+	return &Mlrval{
+		mvtype:        MT_ARRAY,
+		printrep:      "(bug-if-you-see-this-array-type)",
+		printrepValid: false,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      arrayval,
+		mapval:        nil,
+	}
+}
+
+func LengthenMlrvalArray(array *[]Mlrval, newLength64 int64) {
+	newLength := int(newLength64)
+	InternalCodingErrorIf(newLength <= len(*array))
+
+	if newLength <= cap(*array) {
+		newArray := (*array)[:newLength]
+		for i := len(*array); i < newLength; i++ {
+			newArray[i] = MlrvalFromString("")
+		}
+		*array = newArray
+	} else {
+		newArray := make([]Mlrval, newLength, 2*newLength)
+		i := 0
+		for i = 0; i < len(*array); i++ {
+			newArray[i] = (*array)[i]
+		}
+		for i = len(*array); i < newLength; i++ {
+			newArray[i] = MlrvalFromString("")
+		}
+		*array = newArray
+	}
+}
+
+// ----------------------------------------------------------------
 func MlrvalEmptyMap() Mlrval {
 	return Mlrval{
 		mvtype:        MT_MAP,
@@ -279,4 +327,23 @@ func MlrvalFromMap(that *Mlrmap) Mlrval {
 	}
 
 	return this
+}
+
+// ----------------------------------------------------------------
+// This is for auto-extend of arrays/maps in things like '$foo[1]["a"][2]["b"] = 3'
+// It takes the type of the next index-slot to be created, returing string for map,
+// int for array, error otherwise.
+
+func NewMlrvalForAutoExtend(mvtype MVType) (*Mlrval, error) {
+	if mvtype == MT_STRING {
+		empty := MlrvalEmptyMap()
+		return &empty, nil
+	} else if mvtype == MT_INT {
+		empty := MlrvalEmptyArray()
+		return &empty, nil
+	} else {
+		return nil, errors.New(
+			"Miller: indices must be string or int; got " + GetTypeName(mvtype),
+		)
+	}
 }

@@ -2,28 +2,12 @@
 TOP OF LIST:
 
 * thursday:
-  ! array-assigns with auto-extend
-    k API:
-      k mlrmap.GetWithPositionalIndex
-      k mlrmap.GetWithMlrvalIndex
-    k code/test '$new = $[1]'
-    k code/test '$new = $*[1]'
-    k code/test '$[1] = "new"'
-    k code/test '$*[1] = "new"'
-    o this auto-extend needs to work: '@records[FILENAME][NR]=$*'
-      - do not auto-extend maps with positional indexing
-      - do auto-extend arrays
-      ! ambiguity: $foo[x][y] whre y is of type int
-      ? maybe i really do want [[[...]]]
-  o c/reg_test/run reorgs
-  ! unbork pprint writer
-  o indexed-lvalue assignment ops -- need ints too
-    - $[1] is easier now; needn't $[[[1]]]
-    - keep or get rid of $[[[ ]]] ... ?
+  o unbork pprint writer
   * begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
   o functions?!?
+  o c/reg_test/run reorgs
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
@@ -154,3 +138,5 @@ NITS/NON-IMMEDIATE:
     indexing is supported but it can be confusing.
 * '$[0] = ...' no-op -- should be error
 * merge PutIndexed and PutIndexedKeyless to use a single array, w/ append
+* keep or get rid of $[[[ ]]] ... ?
+i @records[NR] now has a borky 0-slot

@@ -135,52 +135,6 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 }
 
 // ----------------------------------------------------------------
-// E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"'
-// In the former case the indices are ["name", 1, "foo"] and in the latter case
-// the indices are ["foo", 1]. See also indexed-lvalues.md.
-//
-// This is a Mlrmap (from string to Mlrval) so we handle the first level of
-// indexing here, then pass the remaining indices to the Mlrval at the desired
-// slot.
-func (this *Mlrmap) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
-	n := len(indices)
-	if n == 0 { // mlr put '$* = {"a":1, "b":2}'
-		if !rvalue.IsMap() {
-			return errors.New("Cannot assign non-map to existing map; got " + rvalue.GetTypeName() + ".")
-		}
-		*this = *rvalue.mapval.Copy()
-		return nil
-	}
-
-	baseIndex := indices[0]
-
-	if n == 1 {
-		this.PutCopyWithMlrvalIndex(baseIndex, rvalue) // E.g. mlr put '$*["a"] = 3'
-		return nil
-	}
-
-	baseValue, err := this.GetWithMlrvalIndex(baseIndex)
-	if err != nil {
-		return err
-	} else if baseValue == nil {
-		baseValue := MlrvalEmptyMap()
-		this.PutCopyWithMlrvalIndex(baseIndex, &baseValue)
-		// This is a Mlrmap method for the first index slot.
-		// Recurse on Mlrval PutIndexed for the rest.
-		return baseValue.PutIndexed(indices[1:], rvalue)
-	} else if !baseValue.IsMap() {
-		return errors.New(
-			"Value [\"" +
-				baseIndex.String() +
-				"\"] is not a map; got " +
-				baseIndex.GetTypeName() + ".",
-		)
-	} else {
-		return baseValue.PutIndexed(indices[1:], rvalue)
-	}
-}
-
-// ----------------------------------------------------------------
 func (this *Mlrmap) PrependCopy(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
@@ -296,6 +250,22 @@ func (this *Mlrmap) unlink(pe *mlrmapEntry) {
 	}
 	this.FieldCount--
 }
+
+// ----------------------------------------------------------------
+// E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"'
+// In the former case the indices are ["name", 1, "foo"] and in the latter case
+// the indices are ["foo", 1]. See also indexed-lvalues.md.
+//
+// This is a Mlrmap (from string to Mlrval) so we handle the first level of
+// indexing here, then pass the remaining indices to the Mlrval at the desired
+// slot.
+func (this *Mlrmap) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
+	return putIndexedOnMap(this, indices, rvalue)
+}
+
+// ================================================================
+// TO BE PORTED
+// ================================================================
 
 //mlrmapEntry* lrec_put_after(Mlrmap* prec, mlrmapEntry* pd, char* key, char* value, char free_flags) {
 //	mlrmapEntry* pe = lrec_find_entry(prec, key);

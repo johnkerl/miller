@@ -23,6 +23,18 @@ func (this *Mlrmap) Fprint(file *os.File) {
 	(*file).WriteString(buffer.String())
 }
 
+// ----------------------------------------------------------------
+// Must have non-pointer receiver in order to implement the fmt.Stringer
+// interface to make this printable via fmt.Println et al.
+func (this Mlrmap) String() string {
+	bytes, err := this.MarshalJSON()
+	if err != nil {
+		return "Mlrmap: could not not marshal self to JSON"
+	} else {
+		return string(bytes)
+	}
+}
+
 //// ----------------------------------------------------------------
 //void lrec_dump(Mlrmap* prec) {
 //	lrec_dump_fp(prec, stdout);
