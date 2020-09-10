@@ -154,5 +154,7 @@ echo; run_mlr --from u/s.dkvp --idkvp --opprint put '@tmp = $a . $b; $ab = @tmp'
 echo; run_mlr --ojson --from u/s.dkvp put '@curi=$i; $curi = @curi; $lagi=@lagi; @lagi=$i'
 echo; run_mlr --from u/s.dkvp --ojson put '$z["abc"]["def"]["ghi"]=NR'
 
-echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$up = $[NR]'
+echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$up   = $[NR]'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$down = $[-NR]'
+echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$up   = $*[NR]'
+echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$down = $*[-NR]'

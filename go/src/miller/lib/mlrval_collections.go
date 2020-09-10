@@ -69,18 +69,18 @@ func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if this.mvtype != MT_MAP {
 		return MlrvalFromError()
 	}
-	if key.mvtype != MT_STRING {
+
+	// Support positional indices, e.g. '$*[3]' is the same as '$[3]'.
+	mval, err := this.mapval.GetWithMlrvalIndex(key)
+	if err != nil { // xxx maybe error-return in the API
 		return MlrvalFromError()
 	}
-
-	mval := this.mapval.Get(&key.printrep)
 	if mval == nil {
 		return MlrvalFromAbsent()
-	} else {
-		// This returns a reference, not a copy. In general in Miller, we copy
-		// only on write/put.
-		return *mval
 	}
+	// This returns a reference, not a (deep) copy. In general in Miller, we
+	// copy only on write/put.
+	return *mval
 }
 
 // ----------------------------------------------------------------

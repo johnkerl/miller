@@ -7,7 +7,7 @@ TOP OF LIST:
       k mlrmap.GetWithPositionalIndex
       k mlrmap.GetWithMlrvalIndex
     k code/test '$new = $[1]'
-    o code/test '$new = $*[1]'
+    k code/test '$new = $*[1]'
     o code/test '$[1] = "new"'
     o code/test '$*[1] = "new"'
     o this needs to work: '@records[FILENAME][NR]=$*'
