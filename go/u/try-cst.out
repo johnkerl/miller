@@ -1427,7 +1427,7 @@ RAW AST:
 * StatementBlock
     * Assignment "="
         * DirectFieldValue "new"
-        * IndirectFieldValue "$["
+        * IndirectFieldValue "$[]"
             * StringLiteral "a"
 
 a   b   i x                   y                   new
@@ -1444,7 +1444,7 @@ $["new"] = $a
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldValue "$["
+        * IndirectFieldValue "$[]"
             * StringLiteral "new"
         * DirectFieldValue "a"
 

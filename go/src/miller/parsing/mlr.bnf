@@ -401,7 +401,7 @@ DirectFieldValue
 
 IndirectFieldValue
   : "$[" Rvalue "]"
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectFieldValue) >>
+    << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypeIndirectFieldValue) >>
 ;
 
 // * Direct is '$name'
@@ -436,7 +436,7 @@ DirectOosvarValue
 
 IndirectOosvarValue
   : "@[" Rvalue "]"
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIndirectOosvarValue) >>
+    << dsl.NewASTNodeUnary(dsl.NewASTToken("@[]", $0), $1, dsl.NodeTypeIndirectOosvarValue) >>
 ;
 
 // * Direct is '@name'

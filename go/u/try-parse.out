@@ -132,7 +132,7 @@ $[2] = 3
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldValue "$["
+        * IndirectFieldValue "$[]"
             * IntLiteral "2"
         * IntLiteral "3"
 
@@ -145,7 +145,7 @@ $[$y] = 4
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldValue "$["
+        * IndirectFieldValue "$[]"
             * DirectFieldValue "y"
         * IntLiteral "4"
 
@@ -170,7 +170,7 @@ $["abc"] = "def"
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldValue "$["
+        * IndirectFieldValue "$[]"
             * StringLiteral "abc"
         * StringLiteral "def"
 
@@ -183,7 +183,7 @@ $[FILENAME] = FNR
 RAW AST:
 * StatementBlock
     * Assignment "="
-        * IndirectFieldValue "$["
+        * IndirectFieldValue "$[]"
             * ContextVariable "FILENAME"
         * ContextVariable "FNR"
 
