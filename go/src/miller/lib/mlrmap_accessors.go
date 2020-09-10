@@ -167,6 +167,56 @@ func (this *Mlrmap) Get(key *string) *Mlrval {
 	return nil
 }
 
+// ----------------------------------------------------------------
+// For '$[1]' etc. in the DSL.
+//
+// Notes:
+// * This is a linear search.
+// * Indices are 1-up not 0-up
+// * Indices -n..-1 are aliases for 1..n. In particular, it will be faster to
+//   get the -1st field than the nth.
+// * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
+//   fields.
+func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
+	if position > this.FieldCount || position < -this.FieldCount || position == 0 {
+		return nil
+	}
+	if position > 0 {
+		var i int64 = 1
+		for pe := this.Head; pe != nil; pe = pe.Next {
+			if i == position {
+				return pe.Value
+			}
+			i++
+		}
+		InternalCodingErrorIf(true)
+	} else {
+		var i int64 = -1
+		for pe := this.Tail; pe != nil; pe = pe.Prev {
+			if i == position {
+				return pe.Value
+			}
+			i--
+		}
+		InternalCodingErrorIf(true)
+	}
+	InternalCodingErrorIf(true)
+	return nil
+}
+
+func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
+	if index.mvtype == MT_STRING {
+		return this.Get(&index.printrep), nil
+	} else if index.mvtype == MT_INT {
+		return this.GetWithPositionalIndex(index.intval), nil
+	} else {
+		return nil, errors.New(
+			"Record/map indices must be string or positional-int; got " + index.GetTypeName(),
+		)
+	}
+}
+
+// ----------------------------------------------------------------
 func (this *Mlrmap) Clear() {
 	this.FieldCount = 0
 	// Assuming everything unreferenced is getting GC'ed by the Go runtime

@@ -68,7 +68,7 @@ func (this *Context) UpdateForStartOfFile(filename string) {
 // For the record-readers to update their initial context as each new record is read.
 func (this *Context) UpdateForInputRecord(inrec *Mlrmap) {
 	if inrec != nil { // do not count the end-of-stream marker which is a nil record pointer
-		this.NF = inrec.FieldCount
+		this.NF = int64(inrec.FieldCount)
 		this.NR++
 		this.FNR++
 	}

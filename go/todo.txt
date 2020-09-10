@@ -3,7 +3,15 @@ TOP OF LIST:
 
 * wednesday:
   ! array-assigns with auto-extend
-    this needs to work: '@records[FILENAME][NR]=$*'
+    k API:
+      k mlrmap.GetWithPositionalIndex
+      k mlrmap.GetWithMlrvalIndex
+    k code/test '$new = $[1]'
+    o code/test '$new = $*[1]'
+    o code/test '$[1] = "new"'
+    o code/test '$*[1] = "new"'
+    o this needs to work: '@records[FILENAME][NR]=$*'
+  ! unbork pprint writer
   o indexed-lvalue assignment ops -- need ints too
     - $[1] is easier now; needn't $[[[1]]]
     - keep or get rid of $[[[ ]]] ... ?
@@ -53,6 +61,8 @@ TOP OF LIST:
   o --headerless-csv-output
   o new non-lite DKVP reader/writer
   o comment-filtering compaosed io.Reader
+  o make a pprint reader w/ width-detect
+  o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
 * widen DSL coverage
   o built-in functions

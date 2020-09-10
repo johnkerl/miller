@@ -30,6 +30,14 @@ func (this *Mlrval) IsString() bool {
 	return this.mvtype == MT_STRING
 }
 
+func (this *Mlrval) IsInt() bool {
+	return this.mvtype == MT_INT
+}
+
+func (this *Mlrval) IsFloat() bool {
+	return this.mvtype == MT_FLOAT
+}
+
 func (this *Mlrval) IsBool() bool {
 	return this.mvtype == MT_BOOL
 }
@@ -52,6 +60,14 @@ func (this *Mlrval) IsArrayOrMap() bool {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrval) GetIntValue() (intValue int64, isInt bool) {
+	if this.mvtype == MT_INT {
+		return this.intval, true
+	} else {
+		return -999, false
+	}
+}
+
 func (this *Mlrval) GetBoolValue() (boolValue bool, isBoolean bool) {
 	if this.mvtype == MT_BOOL {
 		return this.boolval, true
@@ -89,7 +105,7 @@ func (this *Mlrval) Copy() *Mlrval {
 
 func CopyMlrvalArray(input []Mlrval) []Mlrval {
 	output := make([]Mlrval, len(input))
-	for i, element := range(input) {
+	for i, element := range input {
 		output[i] = *element.Copy()
 	}
 	return output

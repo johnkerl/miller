@@ -2,6 +2,8 @@ package cst
 
 import (
 	"errors"
+	"fmt"
+	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -69,18 +71,21 @@ func BuildIndirectFieldValueNode(astNode *dsl.ASTNode) (*IndirectFieldValueNode,
 }
 func (this *IndirectFieldValueNode) Evaluate(state *State) lib.Mlrval { // xxx err
 	fieldName := this.fieldNameEvaluable.Evaluate(state)
-	// xxx handle int-index too. needs a centralized place for that.
 	if fieldName.IsAbsent() {
 		return lib.MlrvalFromAbsent()
 	}
-	if !fieldName.IsString() {
-		return lib.MlrvalFromError() // xxx needs err-return?
+
+	// Positional indices are supported, e.g. $[3] is the third field in the record.
+	value, err := state.Inrec.GetWithMlrvalIndex(&fieldName)
+	if err != nil {
+		// Key isn't int or string.
+		// xxx needs error-return in the API
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
-	skey := fieldName.String()
-	value := state.Inrec.Get(&skey)
 	if value == nil {
+		// E.g. $[7] but there aren't 7 fields in this record.
 		return lib.MlrvalFromAbsent()
-	} else {
-		return *value
 	}
+	return *value
 }
