@@ -110,6 +110,7 @@ func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
 	}
 
 	baseIndex := indices[0]
+	// yyy string/positional-int
 	if !baseIndex.IsString() {
 		skey := baseIndex.String()
 		return errors.New("Non-string key " + skey) // xxx needs better wording
@@ -117,10 +118,13 @@ func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
 	baseKey := baseIndex.printrep
 
 	if n == 1 {
+		// yyy PutCopy w/ Mlrval flavor
+		// yyy sigh ... doc that positional indices on maps don't auto-extend.
 		this.PutCopy(&baseKey, rvalue) // E.g. mlr put '$*["a"] = 3'
 		return nil
 	}
 
+	// yyy Get w/ Mlrval flavor
 	baseValue := this.Get(&baseKey)
 	if baseValue == nil {
 		baseValue := MlrvalEmptyMap()

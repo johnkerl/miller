@@ -96,7 +96,6 @@ func BuildIndirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-
 	lhsFieldNameExpression, err := BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
@@ -385,7 +384,6 @@ func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 			break
 		}
 	}
-
 	return NewIndexedLvalueNode(baseLvalue, indexEvaluables), nil
 }
 

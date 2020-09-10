@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* wednesday:
+* thursday:
   ! array-assigns with auto-extend
     k API:
       k mlrmap.GetWithPositionalIndex
@@ -10,7 +10,8 @@ TOP OF LIST:
     k code/test '$new = $*[1]'
     o code/test '$[1] = "new"'
     o code/test '$*[1] = "new"'
-    o this needs to work: '@records[FILENAME][NR]=$*'
+    o this auto-extend needs to work: '@records[FILENAME][NR]=$*'
+  o c/reg_test/run reorgs
   ! unbork pprint writer
   o indexed-lvalue assignment ops -- need ints too
     - $[1] is easier now; needn't $[[[1]]]
@@ -108,6 +109,7 @@ PARSER/LEXER PLAN:
 NITS/NON-IMMEDIATE:
 
 * address all manner of xxx and TODO comments
+* throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 * mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0
@@ -141,3 +143,8 @@ NITS/NON-IMMEDIATE:
 * support 0b0101 et al.? mlrdoc if so
 ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
   o if so, update r.mds
+* mlrdoc the confusing fact that arrays are 0-up but positionals are 1-up (b/c unix toolkit)
+  o -n..-1 aliased to 0..n-1 vs -n..-1 aliased to 1..n
+  o also $1 vs $[1] -- the former 'sticks' with input-data ordering
+  o moral: miller is a name-indexed tool as its primary purpose. positional
+    indexing is supported but it can be confusing.

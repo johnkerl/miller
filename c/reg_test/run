@@ -1,8 +1,28 @@
 #!/bin/sh
 
 # ================================================================
+# MILLER REGRESSION SCRIPT
+#
+# Miller has some source-code-level unit-test routines -- but the
+# vast majority of tests (thousands) are invoked here at the
+# command-line level.
+#
+# Output from various mlr command-line invocations, with prepared
+# inputs, is generated and then compared against stored expected
+# output.
+# ================================================================
+
+# ----------------------------------------------------------------
+# Make sure the script fails if any commnand fails. Note that this
+# includes a mlr command which should not fail and does -- as well as
+# one which should fail and does not. (See the mlr_expect_fail
+# function below.)
 set -e
 
+# ----------------------------------------------------------------
+# Path to mlr executable, which for interactive development is
+# simply "./mlr".
+#
 # For building with autoconf:
 # * in-directory build:
 #   pwd                  is /path/to/the/tree/c/reg_test
@@ -47,21 +67,17 @@ if [ "$1" = "--valgrind" ]; then
 fi
 echo Using mlr executable $path_to_mlr
 
+# ----------------------------------------------------------------
+# Input/output locations
 indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$pwd/output-regtest
 reloutdir=./output-regtest
 outfile=$outdir/out
 expfile=$expdir/out
-mkdir -p $outdir
 
-# Don't let the running user's .mlrrc affect the regression test
-export MLRRC="__none__"
-
-rm -rf $outdir
-mkdir -p $outdir
-touch $outfile
-echo
+# ================================================================
+# Functions
 
 num_completed=0
 
@@ -144,6 +160,19 @@ mlr_expect_fail() {
   # since set -e
   num_completed=`expr $num_completed + 1`
 }
+
+# ================================================================
+# Start of script
+
+mkdir -p $outdir
+
+# Don't let the running user's .mlrrc affect the regression test
+export MLRRC="__none__"
+
+rm -rf $outdir
+mkdir -p $outdir
+touch $outfile
+echo
 
 # ================================================================
 announce STATELESS MAPPERS
@@ -246,6 +275,40 @@ run_mlr format-values $indir/abixy
 run_mlr format-values -n $indir/abixy
 run_mlr format-values -i %08llx -f %.6le -s X%sX $indir/abixy
 run_mlr format-values -i %08llx -f %.6le -s X%sX -n $indir/abixy
+
+# ----------------------------------------------------------------
+announce REPEAT
+
+run_mlr repeat -n 5 $indir/repeat-input.dat
+run_mlr repeat -f a $indir/repeat-input.dat
+run_mlr repeat -f b $indir/repeat-input.dat
+run_mlr repeat -f c $indir/repeat-input.dat
+
+# ----------------------------------------------------------------
+announce MAPPER NOTHING
+
+run_mlr cat then nothing < $indir/abixy
+run_mlr cat then nothing   $indir/abixy
+run_mlr tac then nothing   $indir/abixy
+run_mlr cat then nothing   $indir/abixy $indir/abixy
+run_mlr cat then nothing then cat $indir/abixy
+
+# ----------------------------------------------------------------
+announce CHAINING
+
+run_mlr cat then cat $indir/short
+run_mlr cat then tac $indir/short
+run_mlr tac then cat $indir/short
+run_mlr tac then tac $indir/short
+
+run_mlr cat then cat then cat $indir/short
+run_mlr cat then cat then tac $indir/short
+run_mlr cat then tac then cat $indir/short
+run_mlr cat then tac then tac $indir/short
+run_mlr tac then cat then cat $indir/short
+run_mlr tac then cat then tac $indir/short
+run_mlr tac then tac then cat $indir/short
+run_mlr tac then tac then tac $indir/short
 
 # ----------------------------------------------------------------
 announce HEAD/TAIL/ETC.
@@ -563,14 +626,6 @@ run_mlr --idkvp    --ocsvlite join -i json     -j x -f $indir/multi-format-join-
 run_mlr --icsvlite --ocsvlite join -i json     -j x -f $indir/multi-format-join-a.json $indir/multi-format-join-b.csv
 
 # ----------------------------------------------------------------
-announce REPEAT
-
-run_mlr repeat -n 5 $indir/repeat-input.dat
-run_mlr repeat -f a $indir/repeat-input.dat
-run_mlr repeat -f b $indir/repeat-input.dat
-run_mlr repeat -f c $indir/repeat-input.dat
-
-# ----------------------------------------------------------------
 announce RESHAPE
 
 run_mlr --pprint reshape -i X,Y,Z   -o item,price $indir/reshape-wide.tbl
@@ -781,6 +836,28 @@ done
 for k in 1 2 3 4 5 6 7 8 9 10 11; do
 run_mlr --from $indir/x0to10.dat --oxtab head -n $k then stats1 -i -f x -a p00,p01,p02,p03,p04,p05,p06,p07,p08,p09,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26,p27,p28,p29,p30,p31,p32,p33,p34,p35,p36,p37,p38,p39,p40,p41,p42,p43,p44,p45,p46,p47,p48,p49,p50,p51,p52,p53,p54,p55,p56,p57,p58,p59,p60,p61,p62,p63,p64,p65,p66,p67,p68,p69,p70,p71,p72,p73,p74,p75,p76,p77,p78,p79,p80,p81,p82,p83,p84,p85,p86,p87,p88,p89,p90,p91,p92,p93,p94,p95,p96,p97,p98,p99,p100
 done
+
+# ----------------------------------------------------------------
+announce IN-PLACE PROCESSING
+
+cp $indir/abixy $outdir/abixy.temp1
+cp $indir/abixy $outdir/abixy.temp2
+run_cat $outdir/abixy.temp1
+run_cat $outdir/abixy.temp2
+run_mlr -I --opprint head -n 2 $outdir/abixy.temp1 $outdir/abixy.temp2
+run_cat $outdir/abixy.temp1
+run_cat $outdir/abixy.temp2
+
+mlr_expect_fail -I --opprint head -n 2 < $outdir/abixy.temp1
+mlr_expect_fail -I --opprint -n head -n 2 $outdir/abixy.temp1
+
+cp $indir/abixy $outdir/abixy.temp1
+cp $indir/abixy $outdir/abixy.temp2
+run_cat $outdir/abixy.temp1
+run_cat $outdir/abixy.temp2
+run_mlr -I --opprint rename a,AYE,b,BEE $outdir/abixy.temp1 $outdir/abixy.temp2
+run_cat $outdir/abixy.temp1
+run_cat $outdir/abixy.temp2
 
 # ----------------------------------------------------------------
 announce DSL OPERATOR ASSOCIATIVITY
@@ -2447,6 +2524,83 @@ run_mlr put -v '@["t"]["u"] = $y; emitp all' $indir/abixy
 
 # xxx @* on the right
 # xxx @* on the left
+
+# ----------------------------------------------------------------
+announce OOSVAR-FROM-SREC ASSIGNMENT
+
+run_mlr put -v '@v     = $*' /dev/null
+run_mlr put -v '@v[1]  = $*' /dev/null
+run_mlr put -v '@v[$2] = $*' /dev/null
+run_mlr put -v 'NR == 3 {@v     = $*}' /dev/null
+run_mlr put -v 'NR == 3 {@v[1]  = $*}' /dev/null
+run_mlr put -v 'NR == 3 {@v[$2] = $*}' /dev/null
+
+run_mlr --oxtab put -q '@v = $*; end {emitp @v }' $indir/abixy-het
+
+run_mlr --oxtab put -q '@v[$a] = $*; end {emitp @v      }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a] = $*; end {emitp @v, "a" }' $indir/abixy-het
+
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v          }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a"     }' $indir/abixy-het
+run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a", "b"}' $indir/abixy-het
+
+# ----------------------------------------------------------------
+announce SREC-FROM-OOSVAR ASSIGNMENT
+
+run_mlr put -v '$* = @v    ' /dev/null
+run_mlr put -v '$* = @v[1] ' /dev/null
+run_mlr put -v '$* = @v[$2]' /dev/null
+run_mlr put -v 'NR == 3 {$* = @v    }' /dev/null
+run_mlr put -v 'NR == 3 {$* = @v[1] }' /dev/null
+run_mlr put -v 'NR == 3 {$* = @v[$2]}' /dev/null
+
+run_mlr put '@v[NR] = $a; NR == 7 { @v = $*} ; $* = @v' $indir/abixy-het
+
+# ----------------------------------------------------------------
+announce OOSVAR-FROM-OOSVAR ASSIGNMENT
+
+run_mlr put -v '@u    = @v'    /dev/null
+run_mlr put -v '@u    = @v[1]' /dev/null
+run_mlr put -v '@u[2] = @v'    /dev/null
+run_mlr put -v '@u[2] = @v[1]' /dev/null
+
+run_mlr put -v 'begin { @u    = @v }'    /dev/null
+run_mlr put -v 'begin { @u    = @v[1] }' /dev/null
+run_mlr put -v 'begin { @u[2] = @v }'    /dev/null
+run_mlr put -v 'begin { @u[2] = @v[1] }' /dev/null
+
+run_mlr put -v 'NR == 3 { @u    = @v }'    /dev/null
+run_mlr put -v 'NR == 3 { @u    = @v[1] }' /dev/null
+run_mlr put -v 'NR == 3 { @u[2] = @v }'    /dev/null
+run_mlr put -v 'NR == 3 { @u[2] = @v[1] }' /dev/null
+
+run_mlr put -v 'end { @u    = @v }'    /dev/null
+run_mlr put -v 'end { @u    = @v[1] }' /dev/null
+run_mlr put -v 'end { @u[2] = @v }'    /dev/null
+run_mlr put -v 'end { @u[2] = @v[1] }' /dev/null
+
+
+run_mlr put -q '@s    += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
+
+run_mlr put -q '@s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t}' $indir/abixy
+
+run_mlr put -q '@s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t}' $indir/abixy
+
+run_mlr put -q '@s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t}' $indir/abixy
+
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t}' $indir/abixy
+
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t}' $indir/abixy
+run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t}' $indir/abixy
+
+run_mlr --opprint put -q '@s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"}' $indir/abixy
 
 # ----------------------------------------------------------------
 announce DSL WHILE/DO-WHILE LOOPS
@@ -4365,37 +4519,6 @@ run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return 
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return {"ab": a . "_" . b} } emitp (f($a, $b), f($x, $y)), "ab"'
 
 # ----------------------------------------------------------------
-announce MAPPER NOTHING
-
-run_mlr cat then nothing < $indir/abixy
-run_mlr cat then nothing   $indir/abixy
-run_mlr tac then nothing   $indir/abixy
-run_mlr cat then nothing   $indir/abixy $indir/abixy
-run_mlr cat then nothing then cat $indir/abixy
-
-# ----------------------------------------------------------------
-announce IN-PLACE PROCESSING
-
-cp $indir/abixy $outdir/abixy.temp1
-cp $indir/abixy $outdir/abixy.temp2
-run_cat $outdir/abixy.temp1
-run_cat $outdir/abixy.temp2
-run_mlr -I --opprint head -n 2 $outdir/abixy.temp1 $outdir/abixy.temp2
-run_cat $outdir/abixy.temp1
-run_cat $outdir/abixy.temp2
-
-mlr_expect_fail -I --opprint head -n 2 < $outdir/abixy.temp1
-mlr_expect_fail -I --opprint -n head -n 2 $outdir/abixy.temp1
-
-cp $indir/abixy $outdir/abixy.temp1
-cp $indir/abixy $outdir/abixy.temp2
-run_cat $outdir/abixy.temp1
-run_cat $outdir/abixy.temp2
-run_mlr -I --opprint rename a,AYE,b,BEE $outdir/abixy.temp1 $outdir/abixy.temp2
-run_cat $outdir/abixy.temp1
-run_cat $outdir/abixy.temp2
-
-# ----------------------------------------------------------------
 announce MAPPER TEE REDIRECTS
 
 tee1=$reloutdir/tee1
@@ -5122,970 +5245,6 @@ run_cat $emit10/err1
 touch $emit10/err2
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > stderr, mapexcept($*, "a", "b"), "NR"' $indir/abixy 2> $emit10/err2
 run_cat $emit10/err2
-
-# ----------------------------------------------------------------
-announce OOSVAR-FROM-SREC ASSIGNMENT
-
-run_mlr put -v '@v     = $*' /dev/null
-run_mlr put -v '@v[1]  = $*' /dev/null
-run_mlr put -v '@v[$2] = $*' /dev/null
-run_mlr put -v 'NR == 3 {@v     = $*}' /dev/null
-run_mlr put -v 'NR == 3 {@v[1]  = $*}' /dev/null
-run_mlr put -v 'NR == 3 {@v[$2] = $*}' /dev/null
-
-run_mlr --oxtab put -q '@v = $*; end {emitp @v }' $indir/abixy-het
-
-run_mlr --oxtab put -q '@v[$a] = $*; end {emitp @v      }' $indir/abixy-het
-run_mlr --oxtab put -q '@v[$a] = $*; end {emitp @v, "a" }' $indir/abixy-het
-
-run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v          }' $indir/abixy-het
-run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a"     }' $indir/abixy-het
-run_mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a", "b"}' $indir/abixy-het
-
-# ----------------------------------------------------------------
-announce SREC-FROM-OOSVAR ASSIGNMENT
-
-run_mlr put -v '$* = @v    ' /dev/null
-run_mlr put -v '$* = @v[1] ' /dev/null
-run_mlr put -v '$* = @v[$2]' /dev/null
-run_mlr put -v 'NR == 3 {$* = @v    }' /dev/null
-run_mlr put -v 'NR == 3 {$* = @v[1] }' /dev/null
-run_mlr put -v 'NR == 3 {$* = @v[$2]}' /dev/null
-
-run_mlr put '@v[NR] = $a; NR == 7 { @v = $*} ; $* = @v' $indir/abixy-het
-
-# ----------------------------------------------------------------
-announce OOSVAR-FROM-OOSVAR ASSIGNMENT
-
-run_mlr put -v '@u    = @v'    /dev/null
-run_mlr put -v '@u    = @v[1]' /dev/null
-run_mlr put -v '@u[2] = @v'    /dev/null
-run_mlr put -v '@u[2] = @v[1]' /dev/null
-
-run_mlr put -v 'begin { @u    = @v }'    /dev/null
-run_mlr put -v 'begin { @u    = @v[1] }' /dev/null
-run_mlr put -v 'begin { @u[2] = @v }'    /dev/null
-run_mlr put -v 'begin { @u[2] = @v[1] }' /dev/null
-
-run_mlr put -v 'NR == 3 { @u    = @v }'    /dev/null
-run_mlr put -v 'NR == 3 { @u    = @v[1] }' /dev/null
-run_mlr put -v 'NR == 3 { @u[2] = @v }'    /dev/null
-run_mlr put -v 'NR == 3 { @u[2] = @v[1] }' /dev/null
-
-run_mlr put -v 'end { @u    = @v }'    /dev/null
-run_mlr put -v 'end { @u    = @v[1] }' /dev/null
-run_mlr put -v 'end { @u[2] = @v }'    /dev/null
-run_mlr put -v 'end { @u[2] = @v[1] }' /dev/null
-
-
-run_mlr put -q '@s    += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
-
-run_mlr put -q '@s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t}' $indir/abixy
-
-run_mlr put -q '@s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t}' $indir/abixy
-
-run_mlr put -q '@s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t}' $indir/abixy
-
-run_mlr put -q '@s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t}' $indir/abixy
-
-run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t}' $indir/abixy
-run_mlr put -q '@s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t}' $indir/abixy
-
-run_mlr --opprint put -q '@s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"}' $indir/abixy
-
-# ----------------------------------------------------------------
-announce CHAINING
-
-run_mlr cat then cat $indir/short
-run_mlr cat then tac $indir/short
-run_mlr tac then cat $indir/short
-run_mlr tac then tac $indir/short
-
-run_mlr cat then cat then cat $indir/short
-run_mlr cat then cat then tac $indir/short
-run_mlr cat then tac then cat $indir/short
-run_mlr cat then tac then tac $indir/short
-run_mlr tac then cat then cat $indir/short
-run_mlr tac then cat then tac $indir/short
-run_mlr tac then tac then cat $indir/short
-run_mlr tac then tac then tac $indir/short
-
-# ----------------------------------------------------------------
-announce NUMBER FORMATTING
-
-run_mlr                --opprint stats1 -a sum -f x $indir/ofmt.dat
-run_mlr --ofmt '%.3lf' --opprint stats1 -a sum -f x $indir/ofmt.dat
-run_mlr --opprint --ofmt '%.3lf' stats1 -a sum -f x $indir/ofmt.dat
-
-# ----------------------------------------------------------------
-announce IMPLICIT-HEADER-CSV INPUT
-
-run_mlr --irs crlf                       --icsvlite --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
-run_mlr --irs crlf --implicit-csv-header --icsvlite --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
-
-run_mlr --irs crlf                       --icsvlite --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
-run_mlr --irs crlf --implicit-csv-header --icsvlite --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
-
-run_mlr                       --icsv --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
-run_mlr --implicit-csv-header --icsv --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
-
-run_mlr                       --icsv --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
-run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
-
-run_mlr --csv -N reorder -f 1,3,2,5,4 $indir/multi-sep.csv-crlf
-run_mlr --csv -N reorder -f 5,4,3,2,1 $indir/multi-sep.csv-crlf
-
-# ----------------------------------------------------------------
-announce HET-CSV INPUT
-
-run_mlr --icsvlite --odkvp cat $indir/a.csv
-run_mlr --icsvlite --odkvp cat $indir/b.csv
-run_mlr --icsvlite --odkvp cat $indir/c.csv
-run_mlr --icsvlite --odkvp cat $indir/d.csv
-run_mlr --icsvlite --odkvp cat $indir/e.csv
-run_mlr --icsvlite --odkvp cat $indir/f.csv
-run_mlr --icsvlite --odkvp cat $indir/g.csv
-
-run_mlr --icsvlite --odkvp cat $indir/a.csv $indir/a.csv
-run_mlr --icsvlite --odkvp cat $indir/b.csv $indir/b.csv
-run_mlr --icsvlite --odkvp cat $indir/c.csv $indir/c.csv
-run_mlr --icsvlite --odkvp cat $indir/d.csv $indir/d.csv
-run_mlr --icsvlite --odkvp cat $indir/e.csv $indir/e.csv
-run_mlr --icsvlite --odkvp cat $indir/f.csv $indir/f.csv
-run_mlr --icsvlite --odkvp cat $indir/g.csv $indir/g.csv
-
-run_mlr --icsvlite --odkvp cat $indir/a.csv $indir/b.csv
-run_mlr --icsvlite --odkvp cat $indir/b.csv $indir/c.csv
-run_mlr --icsvlite --odkvp cat $indir/c.csv $indir/d.csv
-run_mlr --icsvlite --odkvp cat $indir/d.csv $indir/e.csv
-run_mlr --icsvlite --odkvp cat $indir/e.csv $indir/f.csv
-run_mlr --icsvlite --odkvp cat $indir/f.csv $indir/g.csv
-
-run_mlr --icsvlite --odkvp cat $indir/a.csv $indir/b.csv \
-  $indir/c.csv $indir/d.csv $indir/e.csv $indir/f.csv $indir/g.csv
-
-run_mlr --icsvlite --odkvp tac $indir/het.csv
-
-run_mlr --headerless-csv-output --csvlite tac $indir/a.csv
-run_mlr --headerless-csv-output --csvlite tac $indir/c.csv
-run_mlr --headerless-csv-output --csvlite tac $indir/a.csv $indir/c.csv
-run_mlr --headerless-csv-output --csvlite tac $indir/het.csv
-run_mlr --headerless-csv-output --csvlite group-like $indir/het.csv
-
-# ----------------------------------------------------------------
-announce HET-PPRINT INPUT
-
-run_mlr --ipprint --odkvp cat $indir/a.pprint
-run_mlr --ipprint --odkvp cat $indir/b.pprint
-run_mlr --ipprint --odkvp cat $indir/c.pprint
-run_mlr --ipprint --odkvp cat $indir/d.pprint
-run_mlr --ipprint --odkvp cat $indir/e.pprint
-run_mlr --ipprint --odkvp cat $indir/f.pprint
-run_mlr --ipprint --odkvp cat $indir/g.pprint
-
-run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/a.pprint
-run_mlr --ipprint --odkvp cat $indir/b.pprint $indir/b.pprint
-run_mlr --ipprint --odkvp cat $indir/c.pprint $indir/c.pprint
-run_mlr --ipprint --odkvp cat $indir/d.pprint $indir/d.pprint
-run_mlr --ipprint --odkvp cat $indir/e.pprint $indir/e.pprint
-run_mlr --ipprint --odkvp cat $indir/f.pprint $indir/f.pprint
-run_mlr --ipprint --odkvp cat $indir/g.pprint $indir/g.pprint
-
-run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint
-run_mlr --ipprint --odkvp cat $indir/b.pprint $indir/c.pprint
-run_mlr --ipprint --odkvp cat $indir/c.pprint $indir/d.pprint
-run_mlr --ipprint --odkvp cat $indir/d.pprint $indir/e.pprint
-run_mlr --ipprint --odkvp cat $indir/e.pprint $indir/f.pprint
-run_mlr --ipprint --odkvp cat $indir/f.pprint $indir/g.pprint
-
-run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint \
-  $indir/c.pprint $indir/d.pprint $indir/e.pprint $indir/f.pprint $indir/g.pprint
-
-# ----------------------------------------------------------------
-announce NULL-FIELD INPUT
-
-run_mlr --icsvlite --odkvp cat $indir/null-fields.csv
-run_mlr --inidx --ifs comma --odkvp cat $indir/null-fields.nidx
-run_mlr --idkvp --oxtab cat $indir/missings.dkvp
-
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x          $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y          $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z          $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z      $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x     -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y     -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z     -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z -g a $indir/nullvals.dkvp
-
-run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -f x,y,z -o xyz $indir/nullvals.dkvp
-run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -r x,y,z -o xyz $indir/nullvals.dkvp
-run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -c x,y,z        $indir/nullvals.dkvp
-
-run_mlr --oxtab stats2 -a cov -f x,y        $indir/nullvals.dkvp
-run_mlr --oxtab stats2 -a cov -f x,z        $indir/nullvals.dkvp
-run_mlr --oxtab stats2 -a cov -f y,z        $indir/nullvals.dkvp
-run_mlr --oxtab stats2 -a cov -f x,y   -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats2 -a cov -f x,z   -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats2 -a cov -f y,z   -g a $indir/nullvals.dkvp
-
-run_mlr --opprint top    -n 5 -f x          $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f y          $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f z          $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f x,y,z      $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f x     -g a $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f y     -g a $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f z     -g a $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f x,y,z -g a $indir/nullvals.dkvp
-
-run_mlr --opprint top -a -n 5 -f x          $indir/nullvals.dkvp
-run_mlr --opprint top -a -n 5 -f y          $indir/nullvals.dkvp
-run_mlr --opprint top -a -n 5 -f z          $indir/nullvals.dkvp
-run_mlr --opprint top -a -n 5 -f x     -g a $indir/nullvals.dkvp
-run_mlr --opprint top -a -n 5 -f y     -g a $indir/nullvals.dkvp
-run_mlr --opprint top -a -n 5 -f z     -g a $indir/nullvals.dkvp
-
-run_mlr --opprint top    -n 5 -f x          -o foo $indir/nullvals.dkvp
-run_mlr --opprint top    -n 5 -f x     -g a -o foo $indir/nullvals.dkvp
-
-run_mlr --opprint top -a -n 5 -f x -o foo      $indir/nullvals.dkvp
-run_mlr --opprint top -a -n 5 -f z -o foo -g a $indir/nullvals.dkvp
-
-run_mlr --opprint step -a counter,rsum -f x          $indir/nullvals.dkvp
-run_mlr --opprint step -a counter,rsum -f y          $indir/nullvals.dkvp
-run_mlr --opprint step -a counter,rsum -f z          $indir/nullvals.dkvp
-run_mlr --opprint step -a counter,rsum -f x,y,z      $indir/nullvals.dkvp
-
-run_mlr --opprint step -a counter,rsum -f x     -g a $indir/nullvals.dkvp
-run_mlr --opprint step -a counter,rsum -f y     -g a $indir/nullvals.dkvp
-run_mlr --opprint step -a counter,rsum -f z     -g a $indir/nullvals.dkvp
-run_mlr --opprint step -a counter,rsum -f x,y,z -g a $indir/nullvals.dkvp
-
-# ----------------------------------------------------------------
-announce SPACE-PADDING
-
-run_mlr --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
-run_mlr --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.nidx
-run_mlr --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
-
-# ----------------------------------------------------------------
-announce DOUBLE PS
-
-run_mlr --opprint cat $indir/double-ps.dkvp
-
-# ----------------------------------------------------------------
-announce MISSING FINAL LF
-
-run_mlr --csvlite cat $indir/truncated.csv
-run_mlr --dkvp    cat $indir/truncated.dkvp
-run_mlr --nidx    cat $indir/truncated.nidx
-run_mlr --pprint  cat $indir/truncated.pprint
-run_mlr --xtab    cat $indir/truncated.xtab-crlf
-
-# ----------------------------------------------------------------
-announce UTF-8 alignment
-
-run_mlr --icsvlite --opprint cat $indir/utf8-1.csv
-run_mlr --icsvlite --opprint cat $indir/utf8-2.csv
-run_mlr --icsvlite --oxtab   cat $indir/utf8-1.csv
-run_mlr --icsvlite --oxtab   cat $indir/utf8-2.csv
-
-run_mlr --inidx --ifs space --opprint         cat $indir/utf8-align.nidx
-run_mlr --inidx --ifs space --opprint --right cat $indir/utf8-align.nidx
-run_mlr --oxtab cat $indir/utf8-align.dkvp
-
-run_mlr --inidx --ifs space --oxtab --xvright cat $indir/utf8-align.nidx
-
-# ----------------------------------------------------------------
-announce UTF-8 BOM
-
-run_mlr --icsv --opprint cat   $indir/bom.csv
-run_mlr --icsv --opprint cat < $indir/bom.csv
-run_mlr --icsv --opprint cat   $indir/bom-dquote-header.csv
-run_mlr --icsv --opprint cat < $indir/bom-dquote-header.csv
-
-# ----------------------------------------------------------------
-announce UTF-8 UPPERCASE/LOWERCASE
-
-run_mlr --icsvlite --opprint put '$langue = toupper($langue)' $indir/utf8-1.csv
-run_mlr --icsvlite --opprint put '$nom    = toupper($nom)'    $indir/utf8-1.csv
-run_mlr --icsvlite --opprint put '$jour   = toupper($jour)'   $indir/utf8-1.csv
-
-run_mlr --icsvlite --opprint put '$langue = capitalize($langue)' $indir/utf8-1.csv
-run_mlr --icsvlite --opprint put '$nom    = capitalize($nom)'    $indir/utf8-1.csv
-run_mlr --icsvlite --opprint put '$jour   = capitalize($jour)'   $indir/utf8-1.csv
-
-# ----------------------------------------------------------------
-announce SKIP/PASS COMMENTS DKVP
-
-mention input comments1.dkvp
-run_cat $indir/comments/comments1.dkvp
-
-mention skip comments1.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments1.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments1.dkvp
-
-mention pass comments1.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments1.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments1.dkvp
-
-
-mention input comments2.dkvp
-run_cat $indir/comments/comments2.dkvp
-
-mention skip comments2.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments2.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments2.dkvp
-
-mention pass comments2.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments2.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments2.dkvp
-
-
-mention input comments3.dkvp
-run_cat $indir/comments/comments3.dkvp
-
-mention skip comments3.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
-
-mention pass comments3.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
-
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
-
-mention input comments1-crlf.dkvp
-run_cat $outdir/comments1-crlf.dkvp
-
-mention skip comments1-crlf.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
-
-mention pass comments1-crlf.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-announce SKIP/PASS COMMENTS DKVP WITH ALTERNATE PREFIX
-
-mention input comments1-atat.dkvp
-run_cat $indir/comments/comments1-atat.dkvp
-
-mention skip comments1-atat.dkvp
-run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments1-atat.dkvp
-run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments1-atat.dkvp
-
-mention pass comments1-atat.dkvp
-run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments1-atat.dkvp
-run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments1-atat.dkvp
-
-
-mention input comments2-atat.dkvp
-run_cat $indir/comments/comments2-atat.dkvp
-
-mention skip comments2-atat.dkvp
-run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments2-atat.dkvp
-run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments2-atat.dkvp
-
-mention pass comments2-atat.dkvp
-run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments2-atat.dkvp
-run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments2-atat.dkvp
-
-
-mention input comments3-atat.dkvp
-run_cat $indir/comments/comments3-atat.dkvp
-
-mention skip comments3-atat.dkvp
-run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments3-atat.dkvp
-run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments3-atat.dkvp
-
-mention pass comments3-atat.dkvp
-run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments3-atat.dkvp
-run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments3-atat.dkvp
-
-# ----------------------------------------------------------------
-announce SKIP/PASS COMMENTS NIDX
-
-mention input comments1.nidx
-run_cat $indir/comments/comments1.nidx
-
-mention skip comments1.nidx
-run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments1.nidx
-run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments1.nidx
-
-mention pass comments1.nidx
-run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments1.nidx
-run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments1.nidx
-
-
-mention input comments2.nidx
-run_cat $indir/comments/comments2.nidx
-
-mention skip comments2.nidx
-run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments2.nidx
-run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments2.nidx
-
-mention pass comments2.nidx
-run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments2.nidx
-run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments2.nidx
-
-
-mention input comments3.nidx
-run_cat $indir/comments/comments3.nidx
-
-mention skip comments3.nidx
-run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
-run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
-
-mention pass comments3.nidx
-run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
-run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
-
-
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.nidx > $outdir/comments1-crlf.nidx
-
-mention input comments1-crlf.nidx
-run_cat $outdir/comments1-crlf.nidx
-
-mention skip comments1-crlf.nidx
-run_mlr --skip-comments --inidx --oxtab cat < $outdir/comments1-crlf.nidx
-run_mlr --skip-comments --inidx --oxtab cat   $outdir/comments1-crlf.nidx
-
-mention pass comments1-crlf.nidx
-run_mlr --pass-comments --inidx --oxtab cat < $outdir/comments1-crlf.nidx
-run_mlr --pass-comments --inidx --oxtab cat   $outdir/comments1-crlf.nidx
-
-# ----------------------------------------------------------------
-announce SKIP/PASS COMMENTS JSON
-
-mention input comments1.json
-run_cat $indir/comments/comments1.json
-
-mention skip comments1.json
-run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments1.json
-run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments1.json
-
-mention pass comments1.json
-run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments1.json
-run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments1.json
-
-
-mention input comments2.json
-run_cat $indir/comments/comments2.json
-
-mention skip comments2.json
-run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments2.json
-run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments2.json
-
-mention pass comments2.json
-run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments2.json
-run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments2.json
-
-
-mention input comments3.json
-run_cat $indir/comments/comments3.json
-
-mention skip comments3.json
-run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments3.json
-run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments3.json
-
-mention pass comments3.json
-run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments3.json
-run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments3.json
-
-
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
-
-mention input comments1-crlf.json
-run_cat $outdir/comments1-crlf.json
-
-mention skip comments1-crlf.json
-run_mlr --skip-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
-run_mlr --skip-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
-
-mention pass comments1-crlf.json
-run_mlr --pass-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
-run_mlr --pass-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
-
-# ----------------------------------------------------------------
-announce SKIP/PASS COMMENTS XTAB
-
-mention input comments1.xtab
-run_cat $indir/comments/comments1.xtab
-
-mention skip comments1.xtab
-run_mlr --skip-comments --ixtab --odkvp cat < $indir/comments/comments1.xtab
-run_mlr --skip-comments --ixtab --odkvp cat   $indir/comments/comments1.xtab
-
-mention pass comments1.xtab
-run_mlr --pass-comments --ixtab --odkvp cat < $indir/comments/comments1.xtab
-run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments1.xtab
-
-
-mention input comments2.xtab
-run_cat $indir/comments/comments2.xtab
-
-mention skip comments2.xtab
-run_mlr --skip-comments --ixtab --odkvp cat < $indir/comments/comments2.xtab
-run_mlr --skip-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
-
-mention pass comments2.xtab
-run_mlr --pass-comments --ixtab --odkvp cat < $indir/comments/comments2.xtab
-run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
-
-
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.xtab > $outdir/comments1-crlf.xtab
-
-mention input comments1-crlf.xtab
-run_cat $outdir/comments1-crlf.xtab
-
-mention skip comments1-crlf.xtab
-run_mlr --skip-comments --ixtab --odkvp cat < $outdir/comments1-crlf.xtab
-run_mlr --skip-comments --ixtab --odkvp cat   $outdir/comments1-crlf.xtab
-
-mention pass comments1-crlf.xtab
-run_mlr --pass-comments --ixtab --odkvp cat < $outdir/comments1-crlf.xtab
-run_mlr --pass-comments --ixtab --odkvp cat   $outdir/comments1-crlf.xtab
-
-# ----------------------------------------------------------------
-announce SKIP/PASS COMMENTS CSVLITE
-
-mention input comments1.csv
-run_cat $indir/comments/comments1.csv
-
-mention skip comments1.csv
-run_mlr --skip-comments --icsvlite --odkvp cat < $indir/comments/comments1.csv
-run_mlr --skip-comments --icsvlite --odkvp cat   $indir/comments/comments1.csv
-
-mention pass comments1.csv
-run_mlr --pass-comments --icsvlite --odkvp cat < $indir/comments/comments1.csv
-run_mlr --pass-comments --icsvlite --odkvp cat   $indir/comments/comments1.csv
-
-
-mention input comments2.csv
-run_cat $indir/comments/comments2.csv
-
-mention skip comments2.csv
-run_mlr --skip-comments --icsvlite --odkvp cat < $indir/comments/comments2.csv
-run_mlr --skip-comments --icsvlite --odkvp cat   $indir/comments/comments2.csv
-
-mention pass comments2.csv
-run_mlr --pass-comments --icsvlite --odkvp cat < $indir/comments/comments2.csv
-run_mlr --pass-comments --icsvlite --odkvp cat   $indir/comments/comments2.csv
-
-
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
-
-mention input comments1-crlf.csv
-run_cat $outdir/comments1-crlf.csv
-
-mention skip comments1-crlf.csv
-run_mlr --skip-comments --icsvlite --odkvp cat < $outdir/comments1-crlf.csv
-run_mlr --skip-comments --icsvlite --odkvp cat   $outdir/comments1-crlf.csv
-
-mention pass comments1-crlf.csv
-run_mlr --pass-comments --icsvlite --odkvp cat < $outdir/comments1-crlf.csv
-run_mlr --pass-comments --icsvlite --odkvp cat   $outdir/comments1-crlf.csv
-
-# ----------------------------------------------------------------
-announce SKIP/PASS COMMENTS CSV
-
-mention input comments1.csv
-run_cat $indir/comments/comments1.csv
-
-mention skip comments1.csv
-run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments1.csv
-run_mlr --skip-comments --icsv --odkvp cat   $indir/comments/comments1.csv
-
-mention pass comments1.csv
-run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments1.csv
-run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments1.csv
-
-
-mention input comments2.csv
-run_cat $indir/comments/comments2.csv
-
-mention skip comments2.csv
-run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments2.csv
-run_mlr --skip-comments --icsv --odkvp cat   $indir/comments/comments2.csv
-
-mention pass comments2.csv
-run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments2.csv
-run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments2.csv
-
-
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
-
-mention input comments1-crlf.csv
-run_cat $outdir/comments1-crlf.csv
-
-mention skip comments1-crlf.csv
-run_mlr --skip-comments --icsv --odkvp cat < $outdir/comments1-crlf.csv
-run_mlr --skip-comments --icsv --odkvp cat   $outdir/comments1-crlf.csv
-
-mention pass comments1-crlf.csv
-run_mlr --pass-comments --icsv --odkvp cat < $outdir/comments1-crlf.csv
-run_mlr --pass-comments --icsv --odkvp cat   $outdir/comments1-crlf.csv
-
-# ----------------------------------------------------------------
-announce INT64 I/O
-
-run_mlr --oxtab put '$c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b)' $indir/int64io.dkvp
-
-# There is different rounding on i386 vs. x86_64 but the essential check is
-# that overflow has been avoided. Hence the %g output format here.
-run_mlr --oxtab --ofmt '%.8g' put '$p0=$p+0;$p1=$p+1;$p2=$p+2;$p3=$p+3' $indir/int64arith.dkvp
-run_mlr --oxtab --ofmt '%.8g' put '$p0=$p-0;$p1=$p-1;$p2=$p-2;$p3=$p-3' $indir/int64arith.dkvp
-run_mlr --oxtab --ofmt '%.8g' put '$p0=$p*0;$p1=$p*1;$p2=$p*2;$p3=$p*3' $indir/int64arith.dkvp
-run_mlr --oxtab --ofmt '%.8g' put '$n0=$n+0;$n1=$n+1;$n2=$n+2;$n3=$n+3' $indir/int64arith.dkvp
-run_mlr --oxtab --ofmt '%.8g' put '$n0=$n-0;$n1=$n-1;$n2=$n-2;$n3=$n-3' $indir/int64arith.dkvp
-run_mlr --oxtab --ofmt '%.8g' put '$n0=$n*0;$n1=$n*1;$n2=$n*2;$n3=$n*3' $indir/int64arith.dkvp
-
-# ----------------------------------------------------------------
-announce COMPRESSED INPUT
-
-run_mlr --csv  --prepipe 'cat'   cat   $indir/rfc-csv/simple.csv-crlf
-run_mlr --dkvp --prepipe 'cat'   cat   $indir/abixy
-run_mlr --csv  --prepipe 'cat'   cat < $indir/rfc-csv/simple.csv-crlf
-run_mlr --dkvp --prepipe 'cat'   cat < $indir/abixy
-
-# ----------------------------------------------------------------
-announce STDIN
-
-run_mlr --csv cat < $indir/rfc-csv/simple.csv-crlf
-
-# ----------------------------------------------------------------
-announce RFC-CSV
-
-run_mlr --csv cat $indir/rfc-csv/simple.csv-crlf
-run_mlr --csv cat $indir/rfc-csv/simple-truncated.csv
-run_mlr --csv cat $indir/rfc-csv/narrow.csv
-run_mlr --csv cat $indir/rfc-csv/narrow-truncated.csv
-run_mlr --csv cat $indir/rfc-csv/quoted-comma.csv
-run_mlr --csv cat $indir/rfc-csv/quoted-comma-truncated.csv
-run_mlr --csv cat $indir/rfc-csv/quoted-crlf.csv
-run_mlr --csv cat $indir/rfc-csv/quoted-crlf-truncated.csv
-run_mlr --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv-crlf
-run_mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
-run_mlr --csv --rs lf --quote-original cut -o -f c,b,a $indir/quote-original.csv
-
-run_mlr --icsv --oxtab cat $indir/comma-at-eof.csv
-
-run_mlr --csv --quote-all      cat $indir/rfc-csv/simple.csv-crlf
-run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv-crlf
-
-run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
-
-run_mlr --iusv --oxtab cat $indir/example.usv
-
-# ----------------------------------------------------------------
-announce RAGGED NON-RFC CSV
-
-run_mlr --icsv     --oxtab --ragged cat $indir/ragged.csv
-run_mlr --icsvlite --oxtab --ragged cat $indir/ragged.csv
-
-# ----------------------------------------------------------------
-announce MARKDOWN OUTPUT
-
-run_mlr --itsv --rs lf --omd cat $indir/simple.tsv
-
-# ----------------------------------------------------------------
-announce CSV/RS ENVIRONMENT DEFAULTS
-
-run_mlr --csv cut -f a $indir/rfc-csv/simple.csv-crlf
-run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv-crlf
-mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv-crlf
-
-# ----------------------------------------------------------------
-announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
-
-run_mlr --oxtab --idkvp --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --idkvp --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --idkvp --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --idkvp --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
-
-# ----------------------------------------------------------------
-announce MULTI-CHARACTER IRS/IFS FOR NIDX
-
-run_mlr --oxtab --inidx --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --inidx --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --inidx --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --inidx --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
-
-# ----------------------------------------------------------------
-announce MULTI-CHARACTER IRS/IFS FOR CSVLITE
-
-run_mlr --oxtab --icsvlite --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
-run_mlr --oxtab --icsvlite --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
-run_mlr --oxtab --icsvlite --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
-run_mlr --oxtab --icsvlite --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
-
-# ----------------------------------------------------------------
-announce MULTI-CHARACTER SEPARATORS FOR XTAB
-
-run_mlr --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
-run_mlr --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
-run_mlr --xtab --ips ": " --ops '@@@@' put '$sum=int($a+$b)' $indir/multi-ips.dkvp
-
-# ----------------------------------------------------------------
-announce EMBEDDED IPS FOR XTAB
-
-run_mlr --xtab cat $indir/embedded-ips.xtab
-
-# ----------------------------------------------------------------
-announce MULTI-CHARACTER IRS FOR PPRINT
-
-run_mlr --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint-crlf
-
-# ----------------------------------------------------------------
-announce BARRED PPRINT
-
-run_mlr --opprint --barred cat $indir/abixy
-run_mlr --opprint --barred --right cat $indir/abixy
-
-run_mlr --opprint --barred cat $indir/abixy-het
-run_mlr --opprint --barred --right cat $indir/abixy-het
-
-# ----------------------------------------------------------------
-announce MULTI-CHARACTER IXS SPECIFIERS
-
-run_mlr --oxtab --idkvp --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
-run_mlr --oxtab --idkvp --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
-
-# ----------------------------------------------------------------
-announce JSON I/O
-
-run_mlr --ijson --opprint cat $indir/small-non-nested.json
-run_mlr --ijson --opprint cat $indir/small-non-nested-wrapped.json
-run_mlr --ijson --oxtab   cat $indir/small-nested.json
-
-run_mlr --ojson                                       cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack                             cat $indir/json-output-options.dkvp
-run_mlr --ojson             --jlistwrap               cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack   --jlistwrap               cat $indir/json-output-options.dkvp
-run_mlr --ojson                         --jquoteall   cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack               --jquoteall   cat $indir/json-output-options.dkvp
-run_mlr --ojson             --jlistwrap --jquoteall   cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack   --jlistwrap --jquoteall   cat $indir/json-output-options.dkvp
-run_mlr --ojson                         --jvquoteall  cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack               --jvquoteall  cat $indir/json-output-options.dkvp
-run_mlr --ojson             --jlistwrap --jvquoteall  cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack   --jlistwrap --jvquoteall  cat $indir/json-output-options.dkvp
-run_mlr --ojson                         --jknquoteint cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack               --jknquoteint cat $indir/json-output-options.dkvp
-run_mlr --ojson             --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack   --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
-
-run_mlr put -q --jvquoteall 'dump $*'                   $indir/json-output-options.dkvp
-run_mlr put -q --jvquoteall 'o = $*; o[7] = 8; dump o'  $indir/json-output-options.dkvp
-run_mlr put -q --jknquoteint 'dump $*'                  $indir/json-output-options.dkvp
-run_mlr put -q --jknquoteint 'o = $*; o[7] = 8; dump o' $indir/json-output-options.dkvp
-
-run_mlr  --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
-
-run_mlr --icsv --ojson --rs lf cat <<EOF
-col
-"abc ""def"" \ghi"
-EOF
-
-run_mlr --icsv --ojson --jvquoteall --rs lf cat <<EOF
-col
-"abc ""def"" \ghi"
-EOF
-
-run_mlr         --ijson --oxtab                              cat $indir/arrays.json
-run_mlr         --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
-run_mlr         --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
-mlr_expect_fail --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
-
-run_mlr --json cat $indir/escapes.json
-
-# ----------------------------------------------------------------
-announce FORMAT-CONVERSION KEYSTROKE-SAVERS
-
-run_mlr --d2t cat  $indir/abixy.dkvp
-run_mlr --d2n cat  $indir/abixy.dkvp
-run_mlr --d2j cat  $indir/abixy.dkvp
-run_mlr --d2p cat  $indir/abixy.dkvp
-run_mlr --d2x cat  $indir/abixy.dkvp
-run_mlr --d2m cat  $indir/abixy.dkvp
-
-run_mlr --c2t cat  $indir/abixy.csv
-run_mlr --c2d cat  $indir/abixy.csv
-run_mlr --c2n cat  $indir/abixy.csv
-run_mlr --c2j cat  $indir/abixy.csv
-run_mlr --c2p cat  $indir/abixy.csv
-run_mlr --c2x cat  $indir/abixy.csv
-run_mlr --c2m cat  $indir/abixy.csv
-
-run_mlr --t2c cat  $indir/abixy.tsv
-run_mlr --t2d cat  $indir/abixy.tsv
-run_mlr --t2n cat  $indir/abixy.tsv
-run_mlr --t2j cat  $indir/abixy.tsv
-run_mlr --t2p cat  $indir/abixy.tsv
-run_mlr --t2x cat  $indir/abixy.tsv
-run_mlr --t2m cat  $indir/abixy.tsv
-
-run_mlr --n2c cat  $indir/abixy.nidx
-run_mlr --n2t cat  $indir/abixy.nidx
-run_mlr --n2d cat  $indir/abixy.nidx
-run_mlr --n2j cat  $indir/abixy.nidx
-run_mlr --n2p cat  $indir/abixy.nidx
-run_mlr --n2x cat  $indir/abixy.nidx
-run_mlr --n2m cat  $indir/abixy.nidx
-
-run_mlr --j2c cat  $indir/abixy.json
-run_mlr --j2t cat  $indir/abixy.json
-run_mlr --j2d cat  $indir/abixy.json
-run_mlr --j2n cat  $indir/abixy.json
-run_mlr --j2p cat  $indir/abixy.json
-run_mlr --j2x cat  $indir/abixy.json
-run_mlr --j2m cat  $indir/abixy.json
-
-run_mlr --p2c cat  $indir/abixy.pprint
-run_mlr --p2t cat  $indir/abixy.pprint
-run_mlr --p2d cat  $indir/abixy.pprint
-run_mlr --p2n cat  $indir/abixy.pprint
-run_mlr --p2j cat  $indir/abixy.pprint
-run_mlr --p2x cat  $indir/abixy.pprint
-run_mlr --p2m cat  $indir/abixy.pprint
-
-run_mlr --x2c cat  $indir/abixy.xtab
-run_mlr --x2t cat  $indir/abixy.xtab
-run_mlr --x2d cat  $indir/abixy.xtab
-run_mlr --x2n cat  $indir/abixy.xtab
-run_mlr --x2j cat  $indir/abixy.xtab
-run_mlr --x2p cat  $indir/abixy.xtab
-run_mlr --x2m cat  $indir/abixy.xtab
-
-# ----------------------------------------------------------------
-announce LF/CRLF AND AUTODETECT
-
-run_mlr --irs auto --ors lf cat $indir/line-term-lf.dkvp
-run_mlr --irs auto --ors lf cat $indir/line-term-crlf.dkvp
-run_mlr cat $indir/line-term-lf.dkvp
-run_mlr cat $indir/line-term-crlf.dkvp
-
-mention nidx
-run_mlr --irs auto --ors lf --nidx --fs comma cat $indir/line-term-lf.dkvp
-run_mlr --irs auto --ors lf --nidx --fs comma cat $indir/line-term-crlf.dkvp
-run_mlr --nidx --fs comma cat $indir/line-term-lf.dkvp
-run_mlr --nidx --fs comma cat $indir/line-term-crlf.dkvp
-
-
-mention csvlite
-run_mlr --irs auto --ors lf --csvlite cat $indir/line-term-lf.csv
-run_mlr --irs auto --ors lf --csvlite cat $indir/line-term-crlf.csv
-run_mlr --csvlite cat $indir/line-term-lf.csv
-run_mlr --csvlite cat $indir/line-term-crlf.csv
-
-
-mention pprint
-run_mlr --irs auto --ors lf --pprint cat $indir/line-term-lf.csv
-run_mlr --irs auto --ors lf --pprint cat $indir/line-term-crlf.csv
-run_mlr --pprint cat $indir/line-term-lf.csv
-run_mlr --pprint cat $indir/line-term-crlf.csv
-
-
-mention xtab
-run_mlr --ifs auto --xtab cat $indir/line-term-lf.xtab
-run_mlr --ifs auto --xtab cat $indir/line-term-crlf.xtab
-run_mlr --fs  auto --xtab cat $indir/line-term-lf.xtab
-run_mlr --fs  auto --xtab cat $indir/line-term-crlf.xtab
-
-mention xtab
-run_mlr --ifs auto --xtab cat $indir/line-term-lf.xtab
-run_mlr --ifs auto --xtab cat $indir/line-term-crlf.xtab
-run_mlr --fs  auto --xtab cat $indir/line-term-lf.xtab
-run_mlr --fs  auto --xtab cat $indir/line-term-crlf.xtab
-
-
-mention csv
-run_mlr --irs auto --ors lf --csv cat $indir/line-term-lf.csv
-run_mlr --irs auto --ors lf --csv cat $indir/line-term-crlf.csv
-run_mlr --csv cat $indir/line-term-lf.csv
-run_mlr --csv cat $indir/line-term-crlf.csv
-
-
-mention json nowrap nostack
-run_mlr --irs auto --ors lf --json cat $indir/line-term-lf.json
-run_mlr --irs auto --ors lf --json cat $indir/line-term-crlf.json
-run_mlr --json cat $indir/line-term-lf.json
-run_mlr --json cat $indir/line-term-crlf.json
-
-
-mention json yeswrap nostack
-run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-lf-wrap.json
-run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-crlf-wrap.json
-run_mlr --jlistwrap --json cat $indir/line-term-lf-wrap.json
-run_mlr --jlistwrap --json cat $indir/line-term-crlf-wrap.json
-
-
-mention json nowrap yesstack
-run_mlr --irs auto --json --jvstack cat $indir/line-term-lf.json
-run_mlr --irs auto --ors lf --json --jvstack cat $indir/line-term-crlf.json
-run_mlr --json --jvstack cat $indir/line-term-lf.json
-run_mlr --json --jvstack cat $indir/line-term-crlf.json
-
-
-mention json yeswrap yesstack
-run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
-run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
-run_mlr --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
-run_mlr --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
-
-mention json nowrap nostack
-run_mlr --irs auto --ors lf --json cat $indir/line-term-lf.json
-run_mlr --irs auto --ors lf --json cat $indir/line-term-crlf.json
-run_mlr --json cat $indir/line-term-lf.json
-run_mlr --json cat $indir/line-term-crlf.json
-
-
-mention json yeswrap nostack
-run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-lf-wrap.json
-run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-crlf-wrap.json
-run_mlr --jlistwrap --json cat $indir/line-term-lf-wrap.json
-run_mlr --jlistwrap --json cat $indir/line-term-crlf-wrap.json
-
-
-mention json nowrap yesstack
-run_mlr --irs auto --ors lf --json --jvstack cat $indir/line-term-lf.json
-run_mlr --irs auto --ors lf --json --jvstack cat $indir/line-term-crlf.json
-run_mlr --json --jvstack cat $indir/line-term-lf.json
-run_mlr --json --jvstack cat $indir/line-term-crlf.json
-
-
-mention json yeswrap yesstack
-run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
-run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
-run_mlr --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
-run_mlr --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
 
 # ----------------------------------------------------------------
 announce USER-DEFINED FUNCTIONS AND SUBROUTINES
@@ -7245,6 +6404,876 @@ run_mlr --oxtab --from $indir/abixy-het put '
    {"b": "nonesuch"},
  )
 '
+
+# ----------------------------------------------------------------
+announce NUMBER FORMATTING
+
+run_mlr                --opprint stats1 -a sum -f x $indir/ofmt.dat
+run_mlr --ofmt '%.3lf' --opprint stats1 -a sum -f x $indir/ofmt.dat
+run_mlr --opprint --ofmt '%.3lf' stats1 -a sum -f x $indir/ofmt.dat
+
+# ----------------------------------------------------------------
+announce IMPLICIT-HEADER-CSV INPUT
+
+run_mlr --irs crlf                       --icsvlite --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
+run_mlr --irs crlf --implicit-csv-header --icsvlite --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
+
+run_mlr --irs crlf                       --icsvlite --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
+run_mlr --irs crlf --implicit-csv-header --icsvlite --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
+
+run_mlr                       --icsv --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
+run_mlr --implicit-csv-header --icsv --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
+
+run_mlr                       --icsv --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
+run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
+
+run_mlr --csv -N reorder -f 1,3,2,5,4 $indir/multi-sep.csv-crlf
+run_mlr --csv -N reorder -f 5,4,3,2,1 $indir/multi-sep.csv-crlf
+
+# ----------------------------------------------------------------
+announce HET-CSV INPUT
+
+run_mlr --icsvlite --odkvp cat $indir/a.csv
+run_mlr --icsvlite --odkvp cat $indir/b.csv
+run_mlr --icsvlite --odkvp cat $indir/c.csv
+run_mlr --icsvlite --odkvp cat $indir/d.csv
+run_mlr --icsvlite --odkvp cat $indir/e.csv
+run_mlr --icsvlite --odkvp cat $indir/f.csv
+run_mlr --icsvlite --odkvp cat $indir/g.csv
+
+run_mlr --icsvlite --odkvp cat $indir/a.csv $indir/a.csv
+run_mlr --icsvlite --odkvp cat $indir/b.csv $indir/b.csv
+run_mlr --icsvlite --odkvp cat $indir/c.csv $indir/c.csv
+run_mlr --icsvlite --odkvp cat $indir/d.csv $indir/d.csv
+run_mlr --icsvlite --odkvp cat $indir/e.csv $indir/e.csv
+run_mlr --icsvlite --odkvp cat $indir/f.csv $indir/f.csv
+run_mlr --icsvlite --odkvp cat $indir/g.csv $indir/g.csv
+
+run_mlr --icsvlite --odkvp cat $indir/a.csv $indir/b.csv
+run_mlr --icsvlite --odkvp cat $indir/b.csv $indir/c.csv
+run_mlr --icsvlite --odkvp cat $indir/c.csv $indir/d.csv
+run_mlr --icsvlite --odkvp cat $indir/d.csv $indir/e.csv
+run_mlr --icsvlite --odkvp cat $indir/e.csv $indir/f.csv
+run_mlr --icsvlite --odkvp cat $indir/f.csv $indir/g.csv
+
+run_mlr --icsvlite --odkvp cat $indir/a.csv $indir/b.csv \
+  $indir/c.csv $indir/d.csv $indir/e.csv $indir/f.csv $indir/g.csv
+
+run_mlr --icsvlite --odkvp tac $indir/het.csv
+
+run_mlr --headerless-csv-output --csvlite tac $indir/a.csv
+run_mlr --headerless-csv-output --csvlite tac $indir/c.csv
+run_mlr --headerless-csv-output --csvlite tac $indir/a.csv $indir/c.csv
+run_mlr --headerless-csv-output --csvlite tac $indir/het.csv
+run_mlr --headerless-csv-output --csvlite group-like $indir/het.csv
+
+# ----------------------------------------------------------------
+announce HET-PPRINT INPUT
+
+run_mlr --ipprint --odkvp cat $indir/a.pprint
+run_mlr --ipprint --odkvp cat $indir/b.pprint
+run_mlr --ipprint --odkvp cat $indir/c.pprint
+run_mlr --ipprint --odkvp cat $indir/d.pprint
+run_mlr --ipprint --odkvp cat $indir/e.pprint
+run_mlr --ipprint --odkvp cat $indir/f.pprint
+run_mlr --ipprint --odkvp cat $indir/g.pprint
+
+run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/a.pprint
+run_mlr --ipprint --odkvp cat $indir/b.pprint $indir/b.pprint
+run_mlr --ipprint --odkvp cat $indir/c.pprint $indir/c.pprint
+run_mlr --ipprint --odkvp cat $indir/d.pprint $indir/d.pprint
+run_mlr --ipprint --odkvp cat $indir/e.pprint $indir/e.pprint
+run_mlr --ipprint --odkvp cat $indir/f.pprint $indir/f.pprint
+run_mlr --ipprint --odkvp cat $indir/g.pprint $indir/g.pprint
+
+run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint
+run_mlr --ipprint --odkvp cat $indir/b.pprint $indir/c.pprint
+run_mlr --ipprint --odkvp cat $indir/c.pprint $indir/d.pprint
+run_mlr --ipprint --odkvp cat $indir/d.pprint $indir/e.pprint
+run_mlr --ipprint --odkvp cat $indir/e.pprint $indir/f.pprint
+run_mlr --ipprint --odkvp cat $indir/f.pprint $indir/g.pprint
+
+run_mlr --ipprint --odkvp cat $indir/a.pprint $indir/b.pprint \
+  $indir/c.pprint $indir/d.pprint $indir/e.pprint $indir/f.pprint $indir/g.pprint
+
+# ----------------------------------------------------------------
+announce NULL-FIELD INPUT
+
+run_mlr --icsvlite --odkvp cat $indir/null-fields.csv
+run_mlr --inidx --ifs comma --odkvp cat $indir/null-fields.nidx
+run_mlr --idkvp --oxtab cat $indir/missings.dkvp
+
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z      $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z -g a $indir/nullvals.dkvp
+
+run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -f x,y,z -o xyz $indir/nullvals.dkvp
+run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -r x,y,z -o xyz $indir/nullvals.dkvp
+run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -c x,y,z        $indir/nullvals.dkvp
+
+run_mlr --oxtab stats2 -a cov -f x,y        $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f x,z        $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f y,z        $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f x,y   -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f x,z   -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats2 -a cov -f y,z   -g a $indir/nullvals.dkvp
+
+run_mlr --opprint top    -n 5 -f x          $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f y          $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f z          $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f x,y,z      $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f x     -g a $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f y     -g a $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f z     -g a $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f x,y,z -g a $indir/nullvals.dkvp
+
+run_mlr --opprint top -a -n 5 -f x          $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f y          $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f z          $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f x     -g a $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f y     -g a $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f z     -g a $indir/nullvals.dkvp
+
+run_mlr --opprint top    -n 5 -f x          -o foo $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f x     -g a -o foo $indir/nullvals.dkvp
+
+run_mlr --opprint top -a -n 5 -f x -o foo      $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f z -o foo -g a $indir/nullvals.dkvp
+
+run_mlr --opprint step -a counter,rsum -f x          $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f y          $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f z          $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f x,y,z      $indir/nullvals.dkvp
+
+run_mlr --opprint step -a counter,rsum -f x     -g a $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f y     -g a $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f z     -g a $indir/nullvals.dkvp
+run_mlr --opprint step -a counter,rsum -f x,y,z -g a $indir/nullvals.dkvp
+
+# ----------------------------------------------------------------
+announce SPACE-PADDING
+
+run_mlr --idkvp    --odkvp --ifs space --repifs cat $indir/space-pad.dkvp
+run_mlr --inidx    --odkvp --ifs space --repifs cat $indir/space-pad.nidx
+run_mlr --icsvlite --odkvp --ifs space --repifs cat $indir/space-pad.pprint
+
+# ----------------------------------------------------------------
+announce DOUBLE PS
+
+run_mlr --opprint cat $indir/double-ps.dkvp
+
+# ----------------------------------------------------------------
+announce MISSING FINAL LF
+
+run_mlr --csvlite cat $indir/truncated.csv
+run_mlr --dkvp    cat $indir/truncated.dkvp
+run_mlr --nidx    cat $indir/truncated.nidx
+run_mlr --pprint  cat $indir/truncated.pprint
+run_mlr --xtab    cat $indir/truncated.xtab-crlf
+
+# ----------------------------------------------------------------
+announce UTF-8 alignment
+
+run_mlr --icsvlite --opprint cat $indir/utf8-1.csv
+run_mlr --icsvlite --opprint cat $indir/utf8-2.csv
+run_mlr --icsvlite --oxtab   cat $indir/utf8-1.csv
+run_mlr --icsvlite --oxtab   cat $indir/utf8-2.csv
+
+run_mlr --inidx --ifs space --opprint         cat $indir/utf8-align.nidx
+run_mlr --inidx --ifs space --opprint --right cat $indir/utf8-align.nidx
+run_mlr --oxtab cat $indir/utf8-align.dkvp
+
+run_mlr --inidx --ifs space --oxtab --xvright cat $indir/utf8-align.nidx
+
+# ----------------------------------------------------------------
+announce UTF-8 BOM
+
+run_mlr --icsv --opprint cat   $indir/bom.csv
+run_mlr --icsv --opprint cat < $indir/bom.csv
+run_mlr --icsv --opprint cat   $indir/bom-dquote-header.csv
+run_mlr --icsv --opprint cat < $indir/bom-dquote-header.csv
+
+# ----------------------------------------------------------------
+announce UTF-8 UPPERCASE/LOWERCASE
+
+run_mlr --icsvlite --opprint put '$langue = toupper($langue)' $indir/utf8-1.csv
+run_mlr --icsvlite --opprint put '$nom    = toupper($nom)'    $indir/utf8-1.csv
+run_mlr --icsvlite --opprint put '$jour   = toupper($jour)'   $indir/utf8-1.csv
+
+run_mlr --icsvlite --opprint put '$langue = capitalize($langue)' $indir/utf8-1.csv
+run_mlr --icsvlite --opprint put '$nom    = capitalize($nom)'    $indir/utf8-1.csv
+run_mlr --icsvlite --opprint put '$jour   = capitalize($jour)'   $indir/utf8-1.csv
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS DKVP
+
+mention input comments1.dkvp
+run_cat $indir/comments/comments1.dkvp
+
+mention skip comments1.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments1.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments1.dkvp
+
+mention pass comments1.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments1.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments1.dkvp
+
+
+mention input comments2.dkvp
+run_cat $indir/comments/comments2.dkvp
+
+mention skip comments2.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments2.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments2.dkvp
+
+mention pass comments2.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments2.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments2.dkvp
+
+
+mention input comments3.dkvp
+run_cat $indir/comments/comments3.dkvp
+
+mention skip comments3.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
+
+mention pass comments3.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
+
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
+
+mention input comments1-crlf.dkvp
+run_cat $outdir/comments1-crlf.dkvp
+
+mention skip comments1-crlf.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
+
+mention pass comments1-crlf.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+announce SKIP/PASS COMMENTS DKVP WITH ALTERNATE PREFIX
+
+mention input comments1-atat.dkvp
+run_cat $indir/comments/comments1-atat.dkvp
+
+mention skip comments1-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments1-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments1-atat.dkvp
+
+mention pass comments1-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments1-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments1-atat.dkvp
+
+
+mention input comments2-atat.dkvp
+run_cat $indir/comments/comments2-atat.dkvp
+
+mention skip comments2-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments2-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments2-atat.dkvp
+
+mention pass comments2-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments2-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments2-atat.dkvp
+
+
+mention input comments3-atat.dkvp
+run_cat $indir/comments/comments3-atat.dkvp
+
+mention skip comments3-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments3-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments3-atat.dkvp
+
+mention pass comments3-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments3-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments3-atat.dkvp
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS NIDX
+
+mention input comments1.nidx
+run_cat $indir/comments/comments1.nidx
+
+mention skip comments1.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments1.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments1.nidx
+
+mention pass comments1.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments1.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments1.nidx
+
+
+mention input comments2.nidx
+run_cat $indir/comments/comments2.nidx
+
+mention skip comments2.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments2.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments2.nidx
+
+mention pass comments2.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments2.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments2.nidx
+
+
+mention input comments3.nidx
+run_cat $indir/comments/comments3.nidx
+
+mention skip comments3.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
+
+mention pass comments3.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
+
+
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.nidx > $outdir/comments1-crlf.nidx
+
+mention input comments1-crlf.nidx
+run_cat $outdir/comments1-crlf.nidx
+
+mention skip comments1-crlf.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $outdir/comments1-crlf.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $outdir/comments1-crlf.nidx
+
+mention pass comments1-crlf.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $outdir/comments1-crlf.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $outdir/comments1-crlf.nidx
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS JSON
+
+mention input comments1.json
+run_cat $indir/comments/comments1.json
+
+mention skip comments1.json
+run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments1.json
+run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments1.json
+
+mention pass comments1.json
+run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments1.json
+run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments1.json
+
+
+mention input comments2.json
+run_cat $indir/comments/comments2.json
+
+mention skip comments2.json
+run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments2.json
+run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments2.json
+
+mention pass comments2.json
+run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments2.json
+run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments2.json
+
+
+mention input comments3.json
+run_cat $indir/comments/comments3.json
+
+mention skip comments3.json
+run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments3.json
+run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments3.json
+
+mention pass comments3.json
+run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments3.json
+run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments3.json
+
+
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
+
+mention input comments1-crlf.json
+run_cat $outdir/comments1-crlf.json
+
+mention skip comments1-crlf.json
+run_mlr --skip-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
+run_mlr --skip-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
+
+mention pass comments1-crlf.json
+run_mlr --pass-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
+run_mlr --pass-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS XTAB
+
+mention input comments1.xtab
+run_cat $indir/comments/comments1.xtab
+
+mention skip comments1.xtab
+run_mlr --skip-comments --ixtab --odkvp cat < $indir/comments/comments1.xtab
+run_mlr --skip-comments --ixtab --odkvp cat   $indir/comments/comments1.xtab
+
+mention pass comments1.xtab
+run_mlr --pass-comments --ixtab --odkvp cat < $indir/comments/comments1.xtab
+run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments1.xtab
+
+
+mention input comments2.xtab
+run_cat $indir/comments/comments2.xtab
+
+mention skip comments2.xtab
+run_mlr --skip-comments --ixtab --odkvp cat < $indir/comments/comments2.xtab
+run_mlr --skip-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
+
+mention pass comments2.xtab
+run_mlr --pass-comments --ixtab --odkvp cat < $indir/comments/comments2.xtab
+run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
+
+
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.xtab > $outdir/comments1-crlf.xtab
+
+mention input comments1-crlf.xtab
+run_cat $outdir/comments1-crlf.xtab
+
+mention skip comments1-crlf.xtab
+run_mlr --skip-comments --ixtab --odkvp cat < $outdir/comments1-crlf.xtab
+run_mlr --skip-comments --ixtab --odkvp cat   $outdir/comments1-crlf.xtab
+
+mention pass comments1-crlf.xtab
+run_mlr --pass-comments --ixtab --odkvp cat < $outdir/comments1-crlf.xtab
+run_mlr --pass-comments --ixtab --odkvp cat   $outdir/comments1-crlf.xtab
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS CSVLITE
+
+mention input comments1.csv
+run_cat $indir/comments/comments1.csv
+
+mention skip comments1.csv
+run_mlr --skip-comments --icsvlite --odkvp cat < $indir/comments/comments1.csv
+run_mlr --skip-comments --icsvlite --odkvp cat   $indir/comments/comments1.csv
+
+mention pass comments1.csv
+run_mlr --pass-comments --icsvlite --odkvp cat < $indir/comments/comments1.csv
+run_mlr --pass-comments --icsvlite --odkvp cat   $indir/comments/comments1.csv
+
+
+mention input comments2.csv
+run_cat $indir/comments/comments2.csv
+
+mention skip comments2.csv
+run_mlr --skip-comments --icsvlite --odkvp cat < $indir/comments/comments2.csv
+run_mlr --skip-comments --icsvlite --odkvp cat   $indir/comments/comments2.csv
+
+mention pass comments2.csv
+run_mlr --pass-comments --icsvlite --odkvp cat < $indir/comments/comments2.csv
+run_mlr --pass-comments --icsvlite --odkvp cat   $indir/comments/comments2.csv
+
+
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
+
+mention input comments1-crlf.csv
+run_cat $outdir/comments1-crlf.csv
+
+mention skip comments1-crlf.csv
+run_mlr --skip-comments --icsvlite --odkvp cat < $outdir/comments1-crlf.csv
+run_mlr --skip-comments --icsvlite --odkvp cat   $outdir/comments1-crlf.csv
+
+mention pass comments1-crlf.csv
+run_mlr --pass-comments --icsvlite --odkvp cat < $outdir/comments1-crlf.csv
+run_mlr --pass-comments --icsvlite --odkvp cat   $outdir/comments1-crlf.csv
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS CSV
+
+mention input comments1.csv
+run_cat $indir/comments/comments1.csv
+
+mention skip comments1.csv
+run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments1.csv
+run_mlr --skip-comments --icsv --odkvp cat   $indir/comments/comments1.csv
+
+mention pass comments1.csv
+run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments1.csv
+run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments1.csv
+
+
+mention input comments2.csv
+run_cat $indir/comments/comments2.csv
+
+mention skip comments2.csv
+run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments2.csv
+run_mlr --skip-comments --icsv --odkvp cat   $indir/comments/comments2.csv
+
+mention pass comments2.csv
+run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments2.csv
+run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments2.csv
+
+
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
+
+mention input comments1-crlf.csv
+run_cat $outdir/comments1-crlf.csv
+
+mention skip comments1-crlf.csv
+run_mlr --skip-comments --icsv --odkvp cat < $outdir/comments1-crlf.csv
+run_mlr --skip-comments --icsv --odkvp cat   $outdir/comments1-crlf.csv
+
+mention pass comments1-crlf.csv
+run_mlr --pass-comments --icsv --odkvp cat < $outdir/comments1-crlf.csv
+run_mlr --pass-comments --icsv --odkvp cat   $outdir/comments1-crlf.csv
+
+# ----------------------------------------------------------------
+announce INT64 I/O
+
+run_mlr --oxtab put '$c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b)' $indir/int64io.dkvp
+
+# There is different rounding on i386 vs. x86_64 but the essential check is
+# that overflow has been avoided. Hence the %g output format here.
+run_mlr --oxtab --ofmt '%.8g' put '$p0=$p+0;$p1=$p+1;$p2=$p+2;$p3=$p+3' $indir/int64arith.dkvp
+run_mlr --oxtab --ofmt '%.8g' put '$p0=$p-0;$p1=$p-1;$p2=$p-2;$p3=$p-3' $indir/int64arith.dkvp
+run_mlr --oxtab --ofmt '%.8g' put '$p0=$p*0;$p1=$p*1;$p2=$p*2;$p3=$p*3' $indir/int64arith.dkvp
+run_mlr --oxtab --ofmt '%.8g' put '$n0=$n+0;$n1=$n+1;$n2=$n+2;$n3=$n+3' $indir/int64arith.dkvp
+run_mlr --oxtab --ofmt '%.8g' put '$n0=$n-0;$n1=$n-1;$n2=$n-2;$n3=$n-3' $indir/int64arith.dkvp
+run_mlr --oxtab --ofmt '%.8g' put '$n0=$n*0;$n1=$n*1;$n2=$n*2;$n3=$n*3' $indir/int64arith.dkvp
+
+# ----------------------------------------------------------------
+announce COMPRESSED INPUT
+
+run_mlr --csv  --prepipe 'cat'   cat   $indir/rfc-csv/simple.csv-crlf
+run_mlr --dkvp --prepipe 'cat'   cat   $indir/abixy
+run_mlr --csv  --prepipe 'cat'   cat < $indir/rfc-csv/simple.csv-crlf
+run_mlr --dkvp --prepipe 'cat'   cat < $indir/abixy
+
+# ----------------------------------------------------------------
+announce STDIN
+
+run_mlr --csv cat < $indir/rfc-csv/simple.csv-crlf
+
+# ----------------------------------------------------------------
+announce RFC-CSV
+
+run_mlr --csv cat $indir/rfc-csv/simple.csv-crlf
+run_mlr --csv cat $indir/rfc-csv/simple-truncated.csv
+run_mlr --csv cat $indir/rfc-csv/narrow.csv
+run_mlr --csv cat $indir/rfc-csv/narrow-truncated.csv
+run_mlr --csv cat $indir/rfc-csv/quoted-comma.csv
+run_mlr --csv cat $indir/rfc-csv/quoted-comma-truncated.csv
+run_mlr --csv cat $indir/rfc-csv/quoted-crlf.csv
+run_mlr --csv cat $indir/rfc-csv/quoted-crlf-truncated.csv
+run_mlr --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv-crlf
+run_mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
+run_mlr --csv --rs lf --quote-original cut -o -f c,b,a $indir/quote-original.csv
+
+run_mlr --icsv --oxtab cat $indir/comma-at-eof.csv
+
+run_mlr --csv --quote-all      cat $indir/rfc-csv/simple.csv-crlf
+run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv-crlf
+
+run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
+
+run_mlr --iusv --oxtab cat $indir/example.usv
+
+# ----------------------------------------------------------------
+announce RAGGED NON-RFC CSV
+
+run_mlr --icsv     --oxtab --ragged cat $indir/ragged.csv
+run_mlr --icsvlite --oxtab --ragged cat $indir/ragged.csv
+
+# ----------------------------------------------------------------
+announce MARKDOWN OUTPUT
+
+run_mlr --itsv --rs lf --omd cat $indir/simple.tsv
+
+# ----------------------------------------------------------------
+announce CSV/RS ENVIRONMENT DEFAULTS
+
+run_mlr --csv cut -f a $indir/rfc-csv/simple.csv-crlf
+run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv-crlf
+mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv-crlf
+
+# ----------------------------------------------------------------
+announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
+
+run_mlr --oxtab --idkvp --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+
+# ----------------------------------------------------------------
+announce MULTI-CHARACTER IRS/IFS FOR NIDX
+
+run_mlr --oxtab --inidx --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+
+# ----------------------------------------------------------------
+announce MULTI-CHARACTER IRS/IFS FOR CSVLITE
+
+run_mlr --oxtab --icsvlite --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
+
+# ----------------------------------------------------------------
+announce MULTI-CHARACTER SEPARATORS FOR XTAB
+
+run_mlr --xtab --ifs crlf --ofs Z cut -x -f b $indir/truncated.xtab-crlf
+run_mlr --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
+run_mlr --xtab --ips ": " --ops '@@@@' put '$sum=int($a+$b)' $indir/multi-ips.dkvp
+
+# ----------------------------------------------------------------
+announce EMBEDDED IPS FOR XTAB
+
+run_mlr --xtab cat $indir/embedded-ips.xtab
+
+# ----------------------------------------------------------------
+announce MULTI-CHARACTER IRS FOR PPRINT
+
+run_mlr --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint-crlf
+
+# ----------------------------------------------------------------
+announce BARRED PPRINT
+
+run_mlr --opprint --barred cat $indir/abixy
+run_mlr --opprint --barred --right cat $indir/abixy
+
+run_mlr --opprint --barred cat $indir/abixy-het
+run_mlr --opprint --barred --right cat $indir/abixy-het
+
+# ----------------------------------------------------------------
+announce MULTI-CHARACTER IXS SPECIFIERS
+
+run_mlr --oxtab --idkvp --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+
+# ----------------------------------------------------------------
+announce JSON I/O
+
+run_mlr --ijson --opprint cat $indir/small-non-nested.json
+run_mlr --ijson --opprint cat $indir/small-non-nested-wrapped.json
+run_mlr --ijson --oxtab   cat $indir/small-nested.json
+
+run_mlr --ojson                                       cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack                             cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap               cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap               cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jknquoteint cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jknquoteint cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
+
+run_mlr put -q --jvquoteall 'dump $*'                   $indir/json-output-options.dkvp
+run_mlr put -q --jvquoteall 'o = $*; o[7] = 8; dump o'  $indir/json-output-options.dkvp
+run_mlr put -q --jknquoteint 'dump $*'                  $indir/json-output-options.dkvp
+run_mlr put -q --jknquoteint 'o = $*; o[7] = 8; dump o' $indir/json-output-options.dkvp
+
+run_mlr  --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
+
+run_mlr --icsv --ojson --rs lf cat <<EOF
+col
+"abc ""def"" \ghi"
+EOF
+
+run_mlr --icsv --ojson --jvquoteall --rs lf cat <<EOF
+col
+"abc ""def"" \ghi"
+EOF
+
+run_mlr         --ijson --oxtab                              cat $indir/arrays.json
+run_mlr         --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
+run_mlr         --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
+mlr_expect_fail --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
+
+run_mlr --json cat $indir/escapes.json
+
+# ----------------------------------------------------------------
+announce FORMAT-CONVERSION KEYSTROKE-SAVERS
+
+run_mlr --d2t cat  $indir/abixy.dkvp
+run_mlr --d2n cat  $indir/abixy.dkvp
+run_mlr --d2j cat  $indir/abixy.dkvp
+run_mlr --d2p cat  $indir/abixy.dkvp
+run_mlr --d2x cat  $indir/abixy.dkvp
+run_mlr --d2m cat  $indir/abixy.dkvp
+
+run_mlr --c2t cat  $indir/abixy.csv
+run_mlr --c2d cat  $indir/abixy.csv
+run_mlr --c2n cat  $indir/abixy.csv
+run_mlr --c2j cat  $indir/abixy.csv
+run_mlr --c2p cat  $indir/abixy.csv
+run_mlr --c2x cat  $indir/abixy.csv
+run_mlr --c2m cat  $indir/abixy.csv
+
+run_mlr --t2c cat  $indir/abixy.tsv
+run_mlr --t2d cat  $indir/abixy.tsv
+run_mlr --t2n cat  $indir/abixy.tsv
+run_mlr --t2j cat  $indir/abixy.tsv
+run_mlr --t2p cat  $indir/abixy.tsv
+run_mlr --t2x cat  $indir/abixy.tsv
+run_mlr --t2m cat  $indir/abixy.tsv
+
+run_mlr --n2c cat  $indir/abixy.nidx
+run_mlr --n2t cat  $indir/abixy.nidx
+run_mlr --n2d cat  $indir/abixy.nidx
+run_mlr --n2j cat  $indir/abixy.nidx
+run_mlr --n2p cat  $indir/abixy.nidx
+run_mlr --n2x cat  $indir/abixy.nidx
+run_mlr --n2m cat  $indir/abixy.nidx
+
+run_mlr --j2c cat  $indir/abixy.json
+run_mlr --j2t cat  $indir/abixy.json
+run_mlr --j2d cat  $indir/abixy.json
+run_mlr --j2n cat  $indir/abixy.json
+run_mlr --j2p cat  $indir/abixy.json
+run_mlr --j2x cat  $indir/abixy.json
+run_mlr --j2m cat  $indir/abixy.json
+
+run_mlr --p2c cat  $indir/abixy.pprint
+run_mlr --p2t cat  $indir/abixy.pprint
+run_mlr --p2d cat  $indir/abixy.pprint
+run_mlr --p2n cat  $indir/abixy.pprint
+run_mlr --p2j cat  $indir/abixy.pprint
+run_mlr --p2x cat  $indir/abixy.pprint
+run_mlr --p2m cat  $indir/abixy.pprint
+
+run_mlr --x2c cat  $indir/abixy.xtab
+run_mlr --x2t cat  $indir/abixy.xtab
+run_mlr --x2d cat  $indir/abixy.xtab
+run_mlr --x2n cat  $indir/abixy.xtab
+run_mlr --x2j cat  $indir/abixy.xtab
+run_mlr --x2p cat  $indir/abixy.xtab
+run_mlr --x2m cat  $indir/abixy.xtab
+
+# ----------------------------------------------------------------
+announce LF/CRLF AND AUTODETECT
+
+run_mlr --irs auto --ors lf cat $indir/line-term-lf.dkvp
+run_mlr --irs auto --ors lf cat $indir/line-term-crlf.dkvp
+run_mlr cat $indir/line-term-lf.dkvp
+run_mlr cat $indir/line-term-crlf.dkvp
+
+mention nidx
+run_mlr --irs auto --ors lf --nidx --fs comma cat $indir/line-term-lf.dkvp
+run_mlr --irs auto --ors lf --nidx --fs comma cat $indir/line-term-crlf.dkvp
+run_mlr --nidx --fs comma cat $indir/line-term-lf.dkvp
+run_mlr --nidx --fs comma cat $indir/line-term-crlf.dkvp
+
+
+mention csvlite
+run_mlr --irs auto --ors lf --csvlite cat $indir/line-term-lf.csv
+run_mlr --irs auto --ors lf --csvlite cat $indir/line-term-crlf.csv
+run_mlr --csvlite cat $indir/line-term-lf.csv
+run_mlr --csvlite cat $indir/line-term-crlf.csv
+
+
+mention pprint
+run_mlr --irs auto --ors lf --pprint cat $indir/line-term-lf.csv
+run_mlr --irs auto --ors lf --pprint cat $indir/line-term-crlf.csv
+run_mlr --pprint cat $indir/line-term-lf.csv
+run_mlr --pprint cat $indir/line-term-crlf.csv
+
+
+mention xtab
+run_mlr --ifs auto --xtab cat $indir/line-term-lf.xtab
+run_mlr --ifs auto --xtab cat $indir/line-term-crlf.xtab
+run_mlr --fs  auto --xtab cat $indir/line-term-lf.xtab
+run_mlr --fs  auto --xtab cat $indir/line-term-crlf.xtab
+
+mention xtab
+run_mlr --ifs auto --xtab cat $indir/line-term-lf.xtab
+run_mlr --ifs auto --xtab cat $indir/line-term-crlf.xtab
+run_mlr --fs  auto --xtab cat $indir/line-term-lf.xtab
+run_mlr --fs  auto --xtab cat $indir/line-term-crlf.xtab
+
+
+mention csv
+run_mlr --irs auto --ors lf --csv cat $indir/line-term-lf.csv
+run_mlr --irs auto --ors lf --csv cat $indir/line-term-crlf.csv
+run_mlr --csv cat $indir/line-term-lf.csv
+run_mlr --csv cat $indir/line-term-crlf.csv
+
+
+mention json nowrap nostack
+run_mlr --irs auto --ors lf --json cat $indir/line-term-lf.json
+run_mlr --irs auto --ors lf --json cat $indir/line-term-crlf.json
+run_mlr --json cat $indir/line-term-lf.json
+run_mlr --json cat $indir/line-term-crlf.json
+
+
+mention json yeswrap nostack
+run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-lf-wrap.json
+run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-crlf-wrap.json
+run_mlr --jlistwrap --json cat $indir/line-term-lf-wrap.json
+run_mlr --jlistwrap --json cat $indir/line-term-crlf-wrap.json
+
+
+mention json nowrap yesstack
+run_mlr --irs auto --json --jvstack cat $indir/line-term-lf.json
+run_mlr --irs auto --ors lf --json --jvstack cat $indir/line-term-crlf.json
+run_mlr --json --jvstack cat $indir/line-term-lf.json
+run_mlr --json --jvstack cat $indir/line-term-crlf.json
+
+
+mention json yeswrap yesstack
+run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
+run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
+run_mlr --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
+run_mlr --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
+
+mention json nowrap nostack
+run_mlr --irs auto --ors lf --json cat $indir/line-term-lf.json
+run_mlr --irs auto --ors lf --json cat $indir/line-term-crlf.json
+run_mlr --json cat $indir/line-term-lf.json
+run_mlr --json cat $indir/line-term-crlf.json
+
+
+mention json yeswrap nostack
+run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-lf-wrap.json
+run_mlr --irs auto --ors lf --jlistwrap --json cat $indir/line-term-crlf-wrap.json
+run_mlr --jlistwrap --json cat $indir/line-term-lf-wrap.json
+run_mlr --jlistwrap --json cat $indir/line-term-crlf-wrap.json
+
+
+mention json nowrap yesstack
+run_mlr --irs auto --ors lf --json --jvstack cat $indir/line-term-lf.json
+run_mlr --irs auto --ors lf --json --jvstack cat $indir/line-term-crlf.json
+run_mlr --json --jvstack cat $indir/line-term-lf.json
+run_mlr --json --jvstack cat $indir/line-term-crlf.json
+
+
+mention json yeswrap yesstack
+run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
+run_mlr --irs auto --ors lf --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
+run_mlr --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
+run_mlr --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
 
 # ----------------------------------------------------------------
 # AUX ENTRIES
