@@ -8,9 +8,13 @@ TOP OF LIST:
       k mlrmap.GetWithMlrvalIndex
     k code/test '$new = $[1]'
     k code/test '$new = $*[1]'
-    o code/test '$[1] = "new"'
-    o code/test '$*[1] = "new"'
+    k code/test '$[1] = "new"'
+    k code/test '$*[1] = "new"'
     o this auto-extend needs to work: '@records[FILENAME][NR]=$*'
+      - do not auto-extend maps with positional indexing
+      - do auto-extend arrays
+      ! ambiguity: $foo[x][y] whre y is of type int
+      ? maybe i really do want [[[...]]]
   o c/reg_test/run reorgs
   ! unbork pprint writer
   o indexed-lvalue assignment ops -- need ints too
@@ -149,3 +153,4 @@ NITS/NON-IMMEDIATE:
   o moral: miller is a name-indexed tool as its primary purpose. positional
     indexing is supported but it can be confusing.
 * '$[0] = ...' no-op -- should be error
+* merge PutIndexed and PutIndexedKeyless to use a single array, w/ append

@@ -2,6 +2,7 @@ package lib
 
 import (
 	"errors"
+	"strconv"
 )
 
 // ----------------------------------------------------------------
@@ -106,7 +107,7 @@ func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 
 	levelMlrval := this
 
-	// xxx temp -- at very first just do strings.
+	// xxx needs array auto-extend
 	for i, index := range indices {
 		if !levelMlrval.IsMap() {
 			return errors.New("indexed level not map") // xxx needs better messaging
@@ -134,7 +135,7 @@ func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 				// There is no auto-extend for positional indices
 				return errors.New(
 					"Positional index " +
-						string(index.intval) +
+						strconv.Itoa(int(index.intval)) +
 						" not found.",
 				)
 			}
