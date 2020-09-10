@@ -2,6 +2,10 @@
 TOP OF LIST:
 
 * wednesday:
+  * copy-on-write
+    - MapPutNoCopy w/ comments
+  ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
+    o if so, update r.mds
   ! array-assigns with auto-extend
     this needs to work: '@records[FILENAME][NR]=$*'
   o indexed-lvalue assignment ops -- need ints too
@@ -132,3 +136,5 @@ NITS/NON-IMMEDIATE:
 * better error-identification in the lexer / parser
   o research gocc support
   o maybe a case for hand-roll
+* ICE on scan of 0xffffffffffffffff
+* support 0b0101 et al.? mlrdoc if so

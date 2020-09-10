@@ -133,7 +133,16 @@ func BuildBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 		return BuildBitwiseXOROperatorNode(leftCSTChild, rightCSTChild), nil
 		break
 
-	// TO DO: implement short-circuiting for these, as special cases.
+	case "<<":
+		return BuildLeftShiftOperatorNode(leftCSTChild, rightCSTChild), nil
+		break
+	case ">>":
+		return BuildSignedRightShiftOperatorNode(leftCSTChild, rightCSTChild), nil
+		break
+	case ">>>":
+		return BuildUnsignedRightShiftOperatorNode(leftCSTChild, rightCSTChild), nil
+		break
+
 	case "&&":
 		return BuildLogicalANDOperatorNode(leftCSTChild, rightCSTChild), nil
 		break
@@ -406,6 +415,42 @@ func (this *BitwiseXOROperatorNode) Evaluate(state *State) lib.Mlrval {
 	aout := this.a.Evaluate(state)
 	bout := this.b.Evaluate(state)
 	return lib.MlrvalBitwiseXOR(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type LeftShiftOperatorNode struct{ a, b IEvaluable }
+
+func BuildLeftShiftOperatorNode(a, b IEvaluable) *LeftShiftOperatorNode {
+	return &LeftShiftOperatorNode{a: a, b: b}
+}
+func (this *LeftShiftOperatorNode) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalLeftShift(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type SignedRightShiftOperatorNode struct{ a, b IEvaluable }
+
+func BuildSignedRightShiftOperatorNode(a, b IEvaluable) *SignedRightShiftOperatorNode {
+	return &SignedRightShiftOperatorNode{a: a, b: b}
+}
+func (this *SignedRightShiftOperatorNode) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalSignedRightShift(&aout, &bout)
+}
+
+// ----------------------------------------------------------------
+type UnsignedRightShiftOperatorNode struct{ a, b IEvaluable }
+
+func BuildUnsignedRightShiftOperatorNode(a, b IEvaluable) *UnsignedRightShiftOperatorNode {
+	return &UnsignedRightShiftOperatorNode{a: a, b: b}
+}
+func (this *UnsignedRightShiftOperatorNode) Evaluate(state *State) lib.Mlrval {
+	aout := this.a.Evaluate(state)
+	bout := this.b.Evaluate(state)
+	return lib.MlrvalUnsignedRightShift(&aout, &bout)
 }
 
 // ----------------------------------------------------------------

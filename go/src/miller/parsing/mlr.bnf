@@ -51,6 +51,7 @@
 _letter : 'a'-'z' | 'A'-'Z' ;
 _decdig : '0'-'9' ;
 _hexdig : '0'-'9' | 'a'-'f' | 'A'-'F';
+_bindig : '0'-'1' ;
 _idchar : _letter | _decdig | '_' ;
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
 
@@ -79,6 +80,7 @@ md_token_string_literal : '"' {_string_literal_element} '"' ;
 md_token_int_literal
   : _decdig { _decdig }
   | '0' 'x' _hexdig { _hexdig }
+  | '0' 'b' _bindig { _bindig }
 ;
 
 // Notes on float literals:
@@ -538,6 +540,14 @@ Assignment
       dsl.NodeTypeAssignment,
     ) >>
 
+  | Lvalue ">>>=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(">"+">"+">", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
   | Lvalue "+=" Rvalue
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", $1),
@@ -667,8 +677,9 @@ BitwiseANDTerm
 ;
 
 BitwiseShiftTerm
-  : BitwiseShiftTerm "<<" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | BitwiseShiftTerm ">>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : BitwiseShiftTerm "<<"  AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm ">>"  AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | BitwiseShiftTerm ">>>" AddsubdotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm
 ;
 

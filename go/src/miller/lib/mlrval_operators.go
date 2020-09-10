@@ -908,6 +908,81 @@ func MlrvalBitwiseNOT(ma *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
+// Left shift
+
+func lsh_i_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromInt64(ma.intval << mb.intval)
+}
+
+var left_shift_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _void, _erro, lsh_i_ii, _erro, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _erro, _void, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+}
+
+func MlrvalLeftShift(ma, mb *Mlrval) Mlrval {
+	return left_shift_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+
+// ----------------------------------------------------------------
+// Signed right shift
+
+func srsh_i_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromInt64(ma.intval >> mb.intval)
+}
+
+var signed_right_shift_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _void, _erro, srsh_i_ii, _erro, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _erro, _void, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+}
+
+func MlrvalSignedRightShift(ma, mb *Mlrval) Mlrval {
+	return signed_right_shift_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+
+// ----------------------------------------------------------------
+// Unsigned right shift
+
+func ursh_i_ii(ma, mb *Mlrval) Mlrval {
+	var ua uint64 = uint64(ma.intval)
+	var ub uint64 = uint64(mb.intval)
+	var uc = ua >> ub
+	return MlrvalFromInt64(int64(uc))
+}
+
+var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]binaryFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
+	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _void, _erro, ursh_i_ii, _erro, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _erro, _void, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+}
+
+func MlrvalUnsignedRightShift(ma, mb *Mlrval) Mlrval {
+	return unsigned_right_shift_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+
+// ----------------------------------------------------------------
 // Boolean expressions for ==, !=, >, >=, <, <=
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
