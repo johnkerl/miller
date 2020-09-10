@@ -31,13 +31,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Root : empty	<< dsl.NewASTNodeEmpty(dsl.NodeTypeEmptyStatement) >>`,
+		String: `Root : empty	<< dsl.NewAST(dsl.NewASTNodeEmptyNestable(dsl.NodeTypeEmptyStatement)) >>`,
 		Id:         "Root",
 		NTType:     1,
 		Index:      1,
 		NumSymbols: 0,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeEmpty(dsl.NodeTypeEmptyStatement)
+			return dsl.NewAST(dsl.NewASTNodeEmptyNestable(dsl.NodeTypeEmptyStatement))
 		},
 	},
 	ProdTabEntry{

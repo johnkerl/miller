@@ -10,6 +10,8 @@ run_mlr() {
   mlr "$@"
 }
 
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put ''
+
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$i'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$x'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$x'

@@ -126,12 +126,17 @@ func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 }
 
 // For handling empty expressions.
-func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeEmptyNestable(nodeType TNodeType) *ASTNode {
 	return &ASTNode{
 		Token:    nil,
 		Type:     nodeType,
 		Children: nil,
-	}, nil
+	}
+}
+
+// For handling empty expressions.
+func NewASTNodeEmpty(nodeType TNodeType) (*ASTNode, error) {
+	return NewASTNodeEmptyNestable(nodeType), nil
 }
 
 // Strips the leading '$' from field names, or '@' from oosvar names. Not done

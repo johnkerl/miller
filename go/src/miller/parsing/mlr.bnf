@@ -284,7 +284,7 @@ md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 
 Root :
   : empty // mlr put ' ' is OK: this is zero statements
-    << dsl.NewASTNodeEmpty(dsl.NodeTypeEmptyStatement) >>
+    << dsl.NewAST(dsl.NewASTNodeEmptyNestable(dsl.NodeTypeEmptyStatement)) >>
   | StatementBlock
     <<dsl.NewAST($0) >>
 ;
