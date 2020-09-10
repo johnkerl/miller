@@ -203,7 +203,7 @@ func (this *MapperCut) includeWithInputOrder(
 			fieldName := *pe.Key
 			_, wanted := this.fieldNameSet[fieldName]
 			if wanted {
-				outrec.Put(&fieldName, pe.Value) // inrec will be GC'ed
+				outrec.PutReference(&fieldName, pe.Value) // inrec will be GC'ed
 			}
 		}
 		outrecAndContext := lib.NewRecordAndContext(outrec, &inrecAndContext.Context)
@@ -225,7 +225,7 @@ func (this *MapperCut) includeWithArgOrder(
 		for _, fieldName := range this.fieldNameList {
 			value := inrec.Get(&fieldName)
 			if value != nil {
-				outrec.Put(&fieldName, value)
+				outrec.PutReference(&fieldName, value) // inrec will be GC'ed
 			}
 		}
 		outrecAndContext := lib.NewRecordAndContext(outrec, &inrecAndContext.Context)

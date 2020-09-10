@@ -93,7 +93,7 @@ func (this *RecordReaderCSV) processHandle(
 		for i := 0; i < n; i++ {
 			key := header[i]
 			value := lib.MlrvalFromInferredType(csvRecord[i])
-			record.Put(&key, &value)
+			record.PutReference(&key, &value)
 		}
 		context.UpdateForInputRecord(record)
 

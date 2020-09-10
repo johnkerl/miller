@@ -114,12 +114,13 @@ func (this *Mlrmap) isHashed() bool {
 }
 
 // ----------------------------------------------------------------
+// Value-copy is up to the caller -- PutReference and PutCopy
+// are in the public Mlrmap API.
 func newMlrmapEntry(key *string, value *Mlrval) *mlrmapEntry {
 	kcopy := *key
-	vcopy := *value
 	return &mlrmapEntry{
 		&kcopy,
-		&vcopy,
+		value,
 		nil,
 		nil,
 	}

@@ -23,7 +23,9 @@ func (this *Mlrmap) findEntry(key *string) *mlrmapEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Put(key *string, value *Mlrval) {
+// Copies the key and value (deep-copying in case the value is array/map).
+// This is safe for DSL use. See also PutReference.
+func (this *Mlrmap) PutCopy(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -41,8 +43,33 @@ func (this *Mlrmap) Put(key *string, value *Mlrval) {
 		}
 		this.FieldCount++
 	} else {
-		copy := *value
-		pe.Value = &copy
+		pe.Value = value.Copy()
+	}
+}
+
+// Copies the key but not the value. This is not safe for DSL use, where we
+// could create undesired references between different objects.  Only intended
+// to be used at callsites which allocate a mlrval solely for the purpose of
+// putting into a map, e.g. input-record readers.
+func (this *Mlrmap) PutReference(key *string, value *Mlrval) {
+	pe := this.findEntry(key)
+	if pe == nil {
+		pe = newMlrmapEntry(key, value)
+		if this.Head == nil {
+			this.Head = pe
+			this.Tail = pe
+		} else {
+			pe.Prev = this.Tail
+			pe.Next = nil
+			this.Tail.Next = pe
+			this.Tail = pe
+		}
+		if this.keysToEntries != nil {
+			this.keysToEntries[*key] = pe
+		}
+		this.FieldCount++
+	} else {
+		pe.Value = value
 	}
 }
 
@@ -54,7 +81,7 @@ func (this *Mlrmap) PutIndexed(key *string, indices []*Mlrval, rvalue *Mlrval) e
 	mlrval := this.Get(key)
 	if mlrval == nil {
 		mapval := MlrvalEmptyMap()
-		this.Put(key, &mapval)
+		this.PutCopy(key, &mapval)
 		return mapval.PutIndexed(indices, rvalue)
 	} else if mlrval.IsAbsent() {
 		return errors.New("Value [\"" + *key + "\"] is not a maaaaaap.")
@@ -78,7 +105,7 @@ func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
 		if !rvalue.IsMap() {
 			return errors.New("Cannot assign non-map to existing map; got " + rvalue.GetTypeName() + ".")
 		}
-		*this = *rvalue.mapval // xxx needs deepcopy
+		*this = *rvalue.mapval.Copy()
 		return nil
 	}
 
@@ -90,14 +117,14 @@ func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
 	baseKey := baseIndex.printrep
 
 	if n == 1 {
-		this.Put(&baseKey, rvalue) // E.g. mlr put '$*["a"] = 3'
+		this.PutCopy(&baseKey, rvalue) // E.g. mlr put '$*["a"] = 3'
 		return nil
 	}
 
 	baseValue := this.Get(&baseKey)
 	if baseValue == nil {
 		baseValue := MlrvalEmptyMap()
-		this.Put(&baseKey, &baseValue)
+		this.PutCopy(&baseKey, &baseValue)
 		return baseValue.PutIndexed(indices[1:], rvalue)
 	} else if !baseValue.IsMap() {
 		return errors.New("Value [\"" + baseKey + "\"] is not a map; got " + baseValue.GetTypeName() + ".")
@@ -107,7 +134,7 @@ func (this *Mlrmap) PutIndexedKeyless(indices []*Mlrval, rvalue *Mlrval) error {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Prepend(key *string, value *Mlrval) {
+func (this *Mlrmap) PrependCopy(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -125,8 +152,7 @@ func (this *Mlrmap) Prepend(key *string, value *Mlrval) {
 		}
 		this.FieldCount++
 	} else {
-		copy := *value
-		pe.Value = &copy
+		pe.Value = value.Copy()
 	}
 }
 
@@ -149,11 +175,10 @@ func (this *Mlrmap) Clear() {
 }
 
 // ----------------------------------------------------------------
-// TODO: needs to be a deepcopy -- Mlrval needs its own Copy method.
 func (this *Mlrmap) Copy() *Mlrmap {
 	that := NewMlrmapMaybeHashed(this.isHashed())
 	for pe := this.Head; pe != nil; pe = pe.Next {
-		that.Put(pe.Key, pe.Value)
+		that.PutCopy(pe.Key, pe.Value)
 	}
 	return that
 }

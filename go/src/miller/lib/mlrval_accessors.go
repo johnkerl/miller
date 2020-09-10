@@ -1,5 +1,6 @@
 package lib
 
+// ----------------------------------------------------------------
 func (this *Mlrval) GetType() MVType {
 	return this.mvtype
 }
@@ -8,6 +9,7 @@ func (this *Mlrval) GetTypeName() string {
 	return TYPE_NAMES[this.mvtype]
 }
 
+// ----------------------------------------------------------------
 func (this *Mlrval) IsError() bool {
 	return this.mvtype == MT_ERROR
 }
@@ -32,14 +34,6 @@ func (this *Mlrval) IsBool() bool {
 	return this.mvtype == MT_BOOL
 }
 
-func (this *Mlrval) GetBoolValue() (boolValue bool, isBoolean bool) {
-	if this.mvtype == MT_BOOL {
-		return this.boolval, true
-	} else {
-		return false, false
-	}
-}
-
 func (this *Mlrval) IsTrue() bool {
 	return this.mvtype == MT_BOOL && this.boolval == true
 }
@@ -57,6 +51,15 @@ func (this *Mlrval) IsArrayOrMap() bool {
 	return this.mvtype == MT_ARRAY || this.mvtype == MT_MAP
 }
 
+// ----------------------------------------------------------------
+func (this *Mlrval) GetBoolValue() (boolValue bool, isBoolean bool) {
+	if this.mvtype == MT_BOOL {
+		return this.boolval, true
+	} else {
+		return false, false
+	}
+}
+
 func (this *Mlrval) GetArray() []Mlrval {
 	if this.mvtype == MT_ARRAY {
 		return this.arrayval
@@ -64,10 +67,30 @@ func (this *Mlrval) GetArray() []Mlrval {
 		return nil
 	}
 }
+
 func (this *Mlrval) GetMap() *Mlrmap {
 	if this.mvtype == MT_MAP {
 		return this.mapval
 	} else {
 		return nil
 	}
+}
+
+// ----------------------------------------------------------------
+func (this *Mlrval) Copy() *Mlrval {
+	that := *this
+	if this.mvtype == MT_MAP {
+		that.mapval = this.mapval.Copy()
+	} else if this.mvtype == MT_ARRAY {
+		that.arrayval = CopyMlrvalArray(this.arrayval)
+	}
+	return &that
+}
+
+func CopyMlrvalArray(input []Mlrval) []Mlrval {
+	output := make([]Mlrval, len(input))
+	for i, element := range(input) {
+		output[i] = *element.Copy()
+	}
+	return output
 }

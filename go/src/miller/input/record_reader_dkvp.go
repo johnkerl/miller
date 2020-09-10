@@ -93,10 +93,10 @@ func recordFromDKVPLine(
 		// xxx check length 0. also, check input is empty since "".split() -> [""] not []
 		if len(kv) == 1 {
 			value := lib.MlrvalFromVoid()
-			record.Put(&key, &value)
+			record.PutReference(&key, &value)
 		} else {
 			value := lib.MlrvalFromInferredType(kv[1])
-			record.Put(&key, &value)
+			record.PutReference(&key, &value)
 		}
 	}
 	return record

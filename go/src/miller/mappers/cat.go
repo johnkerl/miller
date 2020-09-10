@@ -158,7 +158,7 @@ func (this *MapperCat) Map(
 			this.counter++
 			key := this.counterFieldName
 			value := lib.MlrvalFromInt64(this.counter)
-			record.Prepend(&key, &value)
+			record.PrependCopy(&key, &value)
 		}
 	}
 	outputChannel <- inrecAndContext

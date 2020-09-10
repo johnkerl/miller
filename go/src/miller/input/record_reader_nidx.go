@@ -94,7 +94,7 @@ func recordFromNIDXLine(
 		i++
 		key := strconv.FormatInt(i, 10)
 		mval := lib.MlrvalFromInferredType(value)
-		record.Put(&key, &mval)
+		record.PutReference(&key, &mval)
 	}
 	return record
 }

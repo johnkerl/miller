@@ -226,8 +226,9 @@ func MlrvalFromInferredType(input string) Mlrval {
 	return MlrvalFromString(input)
 }
 
-// xxx copy or no? needs a Mlrval.Copy() (deep) if so.
-func MlrvalFromArrayLiteral(input []Mlrval) Mlrval {
+// Does not copy the data. We can make a MlrvalFromArrayLiteralCopy if needed,
+// using lib.CopyMlrvalArray().
+func MlrvalFromArrayLiteralReference(input []Mlrval) Mlrval {
 	return Mlrval{
 		mvtype:        MT_ARRAY,
 		printrep:      "(bug-if-you-see-this-array-type)",
@@ -266,7 +267,6 @@ func MlrvalEmptyMap() Mlrval {
 	}
 }
 
-// xxx needs deepcopy! this will make references into $*.
 func MlrvalFromMap(that *Mlrmap) Mlrval {
 	this := MlrvalEmptyMap()
 	if that == nil {
@@ -275,7 +275,7 @@ func MlrvalFromMap(that *Mlrmap) Mlrval {
 	}
 
 	for pe := that.Head; pe != nil; pe = pe.Next {
-		this.mapval.Put(pe.Key, pe.Value)
+		this.mapval.PutCopy(pe.Key, pe.Value)
 	}
 
 	return this

@@ -80,7 +80,7 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	if indices == nil {
-		state.Inrec.Put(&this.lhsFieldName, rvalue)
+		state.Inrec.PutCopy(&this.lhsFieldName, rvalue)
 		return nil
 	} else {
 		return state.Inrec.PutIndexed(&this.lhsFieldName, indices, rvalue)
@@ -141,7 +141,7 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 
 	sval := lhsFieldName.String()
 	if indices == nil {
-		state.Inrec.Put(&sval, rvalue)
+		state.Inrec.PutCopy(&sval, rvalue)
 		return nil
 	} else {
 		return state.Inrec.PutIndexed(&sval, indices, rvalue)
@@ -220,7 +220,7 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	if indices == nil {
-		state.Oosvars.Put(&this.lhsOosvarName, rvalue)
+		state.Oosvars.PutCopy(&this.lhsOosvarName, rvalue)
 		return nil
 	} else {
 		return state.Oosvars.PutIndexed(&this.lhsOosvarName, indices, rvalue)
@@ -281,7 +281,7 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 
 	sval := lhsOosvarName.String()
 	if indices == nil {
-		state.Oosvars.Put(&sval, rvalue)
+		state.Oosvars.PutCopy(&sval, rvalue)
 		return nil
 	} else {
 		return state.Oosvars.PutIndexed(&sval, indices, rvalue)

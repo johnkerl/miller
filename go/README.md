@@ -99,7 +99,7 @@ So, in broad overview, the key packages are:
 * `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.
 
-### Nil-record conventions
+# Nil-record conventions
 
 Through out the code, records are passed by reference (as are most things, for
 that matter, to reduce unnecessary data copies). In particular, records can be
@@ -116,7 +116,17 @@ nil through the reader/mapper/writer sequence.
   * Most writers produce their output one record at a time.
   * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
 
-### More about mlrvals
+# Memory management
+
+* Go has garbage collection which immediately simplifies the coding compared to the C port.
+* Pointers are used freely for record-processing: record-readers allocate pointed records; pointed records are passed on Go channels from record-readers to record-mappers to record-writers.
+  * Any mapper which passes an input record through is fine -- be it unmodifed as in `mlr cat` or modified as in `mlr cut`.
+  * If a mapper drops a record (`mlr filter` in false cases, for example, or `mlr nothing`) it will be GCed.
+  * One caveat is any mapper which produces multiples, e.g. `mlr repeat` -- this needs to explicitly copy records instead of producing multiple pointers to the same record.
+* Right-hand-sides of DSL expressions all pass around pointers to records and Mlrvals.
+* Copy-on-write is done on map/array put -- for example, in the assignment phase of a DSL statement.
+
+# More about mlrvals
 
 `Mlrval` is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
 

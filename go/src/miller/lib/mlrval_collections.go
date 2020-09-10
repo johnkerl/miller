@@ -50,7 +50,7 @@ func (this *Mlrval) ArrayPut(index *Mlrval, value *Mlrval) {
 		// Silent no-ops are not good UX ...
 		return
 	}
-	this.arrayval[i] = *value // TODO: deepcopy? or only at final CST assignment?
+	this.arrayval[i] = *value.Copy()
 }
 
 // ----------------------------------------------------------------
@@ -77,7 +77,9 @@ func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if mval == nil {
 		return MlrvalFromAbsent()
 	} else {
-		return *mval // TODO: point out this is a reference not a copy.
+		// This returns a reference, not a copy. In general in Miller, we copy
+		// only on write/put.
+		return *mval
 	}
 }
 
@@ -93,7 +95,7 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 		// Silent no-ops are not good UX ...
 		return
 	}
-	this.mapval.Put(&key.printrep, value) // TODO: deepcopy? or only at final CST assignment?
+	this.mapval.PutCopy(&key.printrep, value)
 }
 
 // ----------------------------------------------------------------
@@ -121,9 +123,9 @@ func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 			if i < n-1 {
 				next := MlrvalEmptyMap()
 				nextLevelMlrval = &next
-				levelMlrmap.Put(&key, nextLevelMlrval)
+				levelMlrmap.PutCopy(&key, nextLevelMlrval)
 			} else {
-				levelMlrmap.Put(&key, rvalue)
+				levelMlrmap.PutCopy(&key, rvalue)
 				break
 			}
 		}

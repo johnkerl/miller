@@ -42,7 +42,7 @@ func (this *ArrayLiteralNode) Evaluate(state *State) lib.Mlrval {
 		mlrval := evaluable.Evaluate(state)
 		mlrvals = append(mlrvals, mlrval)
 	}
-	return lib.MlrvalFromArrayLiteral(mlrvals)
+	return lib.MlrvalFromArrayLiteralReference(mlrvals)
 }
 
 // ----------------------------------------------------------------

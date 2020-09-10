@@ -2,10 +2,6 @@
 TOP OF LIST:
 
 * wednesday:
-  * copy-on-write
-    - MapPutNoCopy w/ comments
-  ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
-    o if so, update r.mds
   ! array-assigns with auto-extend
     this needs to work: '@records[FILENAME][NR]=$*'
   o indexed-lvalue assignment ops -- need ints too
@@ -18,9 +14,6 @@ TOP OF LIST:
 
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
-  o mlrval Go Copy method and DSL copy function ... or, better, pass by
-    reference throughout RHS but always copy on assignment. (don't
-    want references to $* trashing the UX.)
 
 * SUMMARY:
   o easy: most verbs
@@ -69,9 +62,7 @@ TOP OF LIST:
   o sigh ... the C DSL didn't have int keys per se, just stringifies of them.
     so auto-extend was not an issue and '@o[1][2][3]=4' worked. :(
 
-! the DSL needs a full, written-down-and-published spell-out of reference/copy semantics
-  o then careful CST impl
-! likewise error-eval semantics
+! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
 
 ----------------------------------------------------------------
 MAYBE:
@@ -138,3 +129,5 @@ NITS/NON-IMMEDIATE:
   o maybe a case for hand-roll
 * ICE on scan of 0xffffffffffffffff
 * support 0b0101 et al.? mlrdoc if so
+? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
+  o if so, update r.mds
