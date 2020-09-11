@@ -41,6 +41,9 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	case dsl.NodeTypeIndirectFieldValue:
 		return BuildIndirectFieldValueNode(astNode)
+
+	case dsl.NodeTypeFunctionCallsite:
+		return BuildFunctionCallsiteNode(astNode)
 	}
 
 	// xxx if/while/etc

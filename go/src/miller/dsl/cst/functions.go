@@ -1,5 +1,78 @@
 package cst
 
+import (
+	"miller/dsl"
+	"miller/lib"
+)
+
+// xxx temp
+
+// . + + - - * / // .+ .+ .- .- .* ./ .//
+// % ** | ^ & ~ << >> bitcount == != =~ !=~ > >= < <= && || ^^ !  ? :
+
+// abs acos acosh asin asinh asserting_absent asserting_bool
+// asserting_boolean asserting_empty asserting_empty_map asserting_float
+// asserting_int asserting_map asserting_nonempty_map asserting_not_empty
+// asserting_not_map asserting_not_null asserting_null asserting_numeric
+// asserting_present asserting_string atan atan2 atanh boolean capitalize
+// cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
+// dhms2fsec dhms2sec erf erfc exp expm1 float floor fmtnum fsec2dhms
+// fsec2hms gmt2sec gsub haskey hexfmt hms2fsec hms2sec int invqnorm
+// is_absent is_bool is_boolean is_empty is_empty_map is_float is_int
+// is_map is_nonempty_map is_not_empty is_not_map is_not_null is_null
+// is_numeric is_present is_string joink joinkv joinv leafcount length
+// localtime2sec log log10 log1p logifit lstrip madd mapdiff mapexcept
+// mapselect mapsum max mexp min mmul msub pow qnorm regextract
+// regextract_or_else round roundm rstrip sec2dhms sec2gmt sec2gmt
+// sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime sgn
+// sin sinh splitkv splitkvx splitnv splitnvx sqrt ssub strftime
+// strftime_local string strip strlen strptime strptime_local sub
+// substr system systime tan tanh tolower toupper typeof urand urand32
+// urandint urandrange
+
+// ----------------------------------------------------------------
+func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionCallsite)
+
+	return BuildPanicNode(), nil
+
+	//return nil, errors.New(
+	//"CST BuildFunctionCallsiteNode: unhandled AST node type " + string(astNode.Type),
+	//)
+}
+
+//// ----------------------------------------------------------------
+//type UnaryFunctionCallsiteNode struct {
+//	evaluable1 IEvaluable
+//}
+//
+//func BuilUnaryFunctionCallsiteNode(astNode *dsl.ASTNode) (*UnaryFunctionCallsiteNode, error) {
+//	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionCallsite)
+//	lib.InternalCodingErrorIf(astNode.Children == nil)
+//	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+//	evaluable1, err := BuildEvaluableNode(astNode.Children[0])
+//	if err != nil {
+//		return nil, err
+//	}
+//	return &UnaryFunctionCallsiteNode{
+//		evaluable1: evaluable1,
+//	}, nil
+//}
+//func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) lib.Mlrval { // xxx err
+//	arg1 := this.evaluable1.Evaluate(state)
+//	if arg1.IsAbsent() {
+//		return lib.MlrvalFromAbsent()
+//	}
+//
+//	output := xxx call the function
+//
+//	return *output
+//}
+
+
+
+
+
 //// ----------------------------------------------------------------
 //typedef enum _func_class_t {
 //	FUNC_CLASS_ARITHMETIC,

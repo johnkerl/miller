@@ -197,3 +197,11 @@ echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a[0]=4;@a[0][0]=5; $new=@a'
 
 echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a["x"]=4; $new=@a'
 echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a["x"]=4;@a["x"]["x"]=5; $new=@a'
+
+echo; run_mlr -n put -v '$z=f()'
+echo; run_mlr -n put -v '$z=f(1)'
+echo; run_mlr -n put -v '$z=f(1,)'
+echo; run_mlr -n put -v '$z=f(1,2)'
+echo; run_mlr -n put -v '$z=f(1,2,)'
+echo; run_mlr -n put -v '$z=f(1,2,3)'
+echo; run_mlr -n put -v '$z=f(1,2,3,)'

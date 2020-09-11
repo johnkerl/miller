@@ -2156,3 +2156,99 @@ mlr --from u/2.dkvp --ojson put @a = 3; @a["x"]=4;@a["x"]["x"]=5; $new=@a
     }
   }
 }
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f()
+DSL EXPRESSION:
+$z=f()
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f(1)
+DSL EXPRESSION:
+$z=f(1)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+            * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f(1,)
+DSL EXPRESSION:
+$z=f(1,)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+            * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f(1,2)
+DSL EXPRESSION:
+$z=f(1,2)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+            * IntLiteral "1"
+            * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f(1,2,)
+DSL EXPRESSION:
+$z=f(1,2,)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+            * IntLiteral "1"
+            * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f(1,2,3)
+DSL EXPRESSION:
+$z=f(1,2,3)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+            * IntLiteral "1"
+            * IntLiteral "2"
+            * IntLiteral "3"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=f(1,2,3,)
+DSL EXPRESSION:
+$z=f(1,2,3,)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "f"
+            * IntLiteral "1"
+            * IntLiteral "2"
+            * IntLiteral "3"
+
