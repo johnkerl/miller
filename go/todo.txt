@@ -56,7 +56,6 @@ TOP OF LIST:
   o built-in functions
   o UDFs
   o support the filter verb
-  o there should have always been a >>> and >>>=
   o sigh ... the C DSL didn't have int keys per se, just stringifies of them.
     so auto-extend was not an issue and '@o[1][2][3]=4' worked. :(
 
@@ -142,3 +141,4 @@ NITS/NON-IMMEDIATE:
 * keep or get rid of $[[[ ]]] ... ?
 i @records[NR] now has a borky 0-slot
   ? back-compat option -- default which old or new ?!? -- to stringify the int keys for oosvars/srecs ...
+* mlrdoc: there should have always been a >>> and >>>=, and now there are

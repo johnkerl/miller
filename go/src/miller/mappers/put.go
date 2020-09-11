@@ -38,6 +38,11 @@ func mapperPutParseCLI(
 
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
+	pExpressionFileName := flagSet.String(
+		"f",
+		"",
+		`File containing a DSL expression.`,
+	)
 	pVerbose := flagSet.Bool(
 		"v",
 		false,
@@ -45,10 +50,11 @@ func mapperPutParseCLI(
     full transparency on the precedence and associativity rules of
     Miller's grammar, to stdout.`,
 	)
-	pExpressionFileName := flagSet.String(
-		"f",
-		"",
-		`File containing a DSL expression.`,
+	pSuppressOutputRecord := flagSet.Bool(
+		"q",
+		false,
+		`Dos not include the modified record in the output stream. Useful for when
+all desired output is in begin and/or end blocks.`,
 	)
 	flagSet.Usage = func() {
 		ostream := os.Stderr
@@ -86,7 +92,7 @@ func mapperPutParseCLI(
 		argi += 1
 	}
 
-	mapper, err := NewMapperPut(dslString, *pVerbose)
+	mapper, err := NewMapperPut(dslString, *pVerbose, *pSuppressOutputRecord)
 	if err != nil {
 		// Error message already printed out
 		os.Exit(1)
@@ -112,15 +118,17 @@ func mapperPutUsage(
 
 // ----------------------------------------------------------------
 type MapperPut struct {
-	astRootNode *dsl.AST
-	cstRootNode *cst.RootNode
-	cstState    *cst.State
-	callCount   int64
+	astRootNode          *dsl.AST
+	cstRootNode          *cst.RootNode
+	cstState             *cst.State
+	callCount            int64
+	suppressOutputRecord bool
 }
 
 func NewMapperPut(
 	dslString string,
 	verbose bool,
+	suppressOutputRecord bool,
 ) (*MapperPut, error) {
 	astRootNode, err := BuildASTFromString(dslString)
 	if err != nil {
@@ -146,10 +154,11 @@ func NewMapperPut(
 	}
 
 	return &MapperPut{
-		astRootNode: astRootNode,
-		cstRootNode: cstRootNode,
-		cstState:    cstState,
-		callCount:   0,
+		astRootNode:          astRootNode,
+		cstRootNode:          cstRootNode,
+		cstState:             cstState,
+		callCount:            0,
+		suppressOutputRecord: suppressOutputRecord,
 	}, nil
 }
 
@@ -195,10 +204,12 @@ func (this *MapperPut) Map(
 			os.Exit(1)
 		}
 
-		outputChannel <- lib.NewRecordAndContext(
-			outrec,
-			&context,
-		)
+		if !this.suppressOutputRecord {
+			outputChannel <- lib.NewRecordAndContext(
+				outrec,
+				&context,
+			)
+		}
 	} else {
 
 		// Execute the end { ... } after the last input record
