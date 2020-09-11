@@ -207,6 +207,9 @@ var TokMap = TokenMap{
 		"md_token_FNR",
 		"md_token_FILENAME",
 		"md_token_FILENUM",
+		"md_token_non_sigil_name",
+		"md_token_int_type",
+		"md_token_float_type",
 	},
 
 	idMap: map[string]Type{
@@ -298,5 +301,8 @@ var TokMap = TokenMap{
 		"md_token_FNR":                85,
 		"md_token_FILENAME":           86,
 		"md_token_FILENUM":            87,
+		"md_token_non_sigil_name":     88,
+		"md_token_int_type":           89,
+		"md_token_float_type":         90,
 	},
 }

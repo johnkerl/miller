@@ -182,8 +182,8 @@ md_token_end      : 'e' 'n' 'd' ;
 
 //md_token_map_type   : 'm' 'a' 'p' ;
 //md_token_num_type   : 'n' 'u' 'm' ;
-//md_token_int_type   : 'i' 'n' 't' ;
-//md_token_float_type : 'f' 'l' 'o' 'a' 't' ;
+md_token_int_type   : 'i' 'n' 't' ;
+md_token_float_type : 'f' 'l' 'o' 'a' 't' ;
 //md_token_bool_type  : 'b' 'o' 'o' 'l' ;
 //md_token_str_type   : 's' 't' 'r' ;
 
@@ -221,6 +221,11 @@ md_token_oosvar_name : '@' _idchar { _idchar } ;
 md_token_braced_oosvar_name: '@' '{' _braced_char { _braced_char } '}' ;
 
 md_token_full_oosvar : '@' '*' ;
+
+// ----------------------------------------------------------------
+// FUNCTIONS AND LOCAL VARIABLES
+
+md_token_non_sigil_name : _idchar { _idchar } ;
 
 // ----------------------------------------------------------------
 // PANIC TOKEN
@@ -823,33 +828,28 @@ ArrayLiteral
 // ----------------------------------------------------------------
 ArrayLiteralElements
 
-  : ArrayLiteralElement
+  : Rvalue
     << dsl.NewASTNodeUnary(
       nil,
       $0,
       dsl.NodeTypeArrayLiteral,
     ) >>
 
-  // Allow trailing final comma, especially for multiline map literals
-  | ArrayLiteralElement ","
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue ","
     << dsl.NewASTNodeUnary(
       nil,
       $0,
       dsl.NodeTypeArrayLiteral,
     ) >>
 
-  // Allow trailing final comma, especially for multiline map literals
-  | ArrayLiteralElement "," ArrayLiteralElements
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue "," ArrayLiteralElements
     << dsl.PrependChild(
       $2,
       $0,
     ) >>
 
-;
-
-// ----------------------------------------------------------------
-ArrayLiteralElement
-  : Rvalue
 ;
 
 // ================================================================
@@ -907,7 +907,7 @@ MapLiteralKeyValuePairs
       dsl.NodeTypeMapLiteral,
     ) >>
 
-  // Allow trailing final comma, especially for multiline map literals
+  // Allow trailing final comma, especially for multiline statements
   | MapLiteralKeyValuePair ","
     << dsl.NewASTNodeUnary(
       nil,
@@ -915,7 +915,7 @@ MapLiteralKeyValuePairs
       dsl.NodeTypeMapLiteral,
     ) >>
 
-  // Allow trailing final comma, especially for multiline map literals
+  // Allow trailing final comma, especially for multiline statements
   | MapLiteralKeyValuePair "," MapLiteralKeyValuePairs
     << dsl.PrependChild(
       $2,
@@ -1039,54 +1039,78 @@ ArraySliceAccess
 // ================================================================
 // FUNCTION/SUBROUTINE CALLS
 
-//MlrvalOrFunction(A) ::= FcnOrSubrCall(B). {
-//	A = B;
-//}
+MlrvalOrFunction
+  : FcnOrSubrCall
+;
 
-//// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
-//// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
-//// * On the "a" we make a function sub-AST called "anon(a)".
-//// * On the "b" we append the next argument to get "anon(a,b)".
-//// * On the "c" we append the next argument to get "anon(a,b,c)".
-//// * On the "f" we change the function name to get "f(a,b,c)".
+FcnOrSubrCall
 
-//FcnOrSubrCall(A) ::= md_token_non_sigil_name(O) "(" FcnArgList(B) ")". {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
-//}
+  : FunctionName "(" ")"
+    << dsl.NewASTNodeZary(
+      $0,
+      dsl.NodeTypeFunctionCallsite,
+    ) >>
 
-//// For most functions it suffices to use the md_token_non_sigil_name pattern. But
-//// int and float are keywords in the lexer so we need to spell those out explicitly.
-//// (They're type-decl keywords but they're also the names of type-conversion functions.)
-//FcnOrSubrCall(A) ::= md_token_int(O) "(" FcnArgList(B) ")". {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
-//}
-//FcnOrSubrCall(A) ::= md_token_float(O) "(" FcnArgList(B) ")". {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
-//}
+  | FunctionName "(" FcnArgs ")"
+    // As parsed there's an intermediate node between FcnOrSubrCall
+    // and the children. Now we can remove it.
+    //
+    // Before:
+    // * FcnOrSubrCall "[]"
+    //     * FcnOrSubrCall
+    //         * StringLiteral "a"
+    //         * StringLiteral "b"
+    //
+    // After:
+    // * FcnOrSubrCall "[]"
+    //     * StringLiteral "a"
+    //     * StringLiteral "b"
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeFunctionCallsite,
+      ),
+      $2,
+    ) >>
 
-//FcnArgList(A) ::= . {
-//	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-//}
-//FcnArgList(A) ::= FcnNonEmptyArgList(B). {
-//	A = B;
-//}
+;
 
-//FcnNonEmptyArgList(A) ::= md_fcn_arg(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FcnNonEmptyArgList(A) ::= md_fcn_arg(B) ",". {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FcnNonEmptyArgList(A) ::= md_fcn_arg(B) "," FcnNonEmptyArgList(C). {
-//	A = mlr_dsl_ast_node_prepend_arg(C, B);
-//}
+// For most functions it suffices to use the md_token_non_sigil_name pattern.
+// But int and float are keywords in the lexer so we need to spell those out
+// explicitly.  (They're type-decl keywords but they're also the names of
+// type-conversion functions.)
+FunctionName
+  : md_token_non_sigil_name
+  | md_token_int_type
+  | md_token_float_type
+;
 
-//md_fcn_arg(A) ::= Rvalue(B). {
-//	A = B;
-//}
+// ----------------------------------------------------------------
+FcnArgs
+
+  : Rvalue
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeFunctionCallsite,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue ","
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeFunctionCallsite,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue "," FcnArgs
+    << dsl.PrependChild(
+      $2,
+      $0,
+    ) >>
+
+;
 
 // ================================================================
 // ================================================================

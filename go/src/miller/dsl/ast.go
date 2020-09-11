@@ -42,6 +42,8 @@ const (
 	NodeTypeOperator        = "Operator"
 	NodeTypeContextVariable = "ContextVariable"
 
+	NodeTypeFunctionCallsite = "FunctionCallsite"
+
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =
 	// input1 || panic should NOT panic the process when input1 is true.
