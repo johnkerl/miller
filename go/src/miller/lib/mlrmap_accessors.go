@@ -169,6 +169,17 @@ func (this *Mlrmap) Get(key *string) *Mlrval {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrmap) GetKeys() []string {
+	keys := make([]string, this.FieldCount)
+	i := 0
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		keys[i] = *pe.Key
+		i++
+	}
+	return keys
+}
+
+// ----------------------------------------------------------------
 // For '$[1]' etc. in the DSL.
 //
 // Notes:

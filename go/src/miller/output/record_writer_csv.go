@@ -3,6 +3,7 @@ package output
 import (
 	"encoding/csv"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -10,14 +11,15 @@ import (
 
 // ostream *os.File in constructors/factory
 type RecordWriterCSV struct {
-	onFirst   bool
 	csvWriter *csv.Writer
+	// For detecting schema changes: we print a newline and the new header
+	lastJoinedHeader *string
 }
 
 func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
 	return &RecordWriterCSV{
-		onFirst:   true,
 		csvWriter: csv.NewWriter(os.Stdout),
+		lastJoinedHeader: nil,
 	}
 }
 
@@ -30,8 +32,17 @@ func (this *RecordWriterCSV) Write(
 	}
 
 	// TODO: heterogeneity. keep previous header and reset if need.
+	needToPrintHeader := false
+	joinedHeader := strings.Join(outrec.GetKeys(), ",")
+	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
+		if this.lastJoinedHeader != nil {
+			os.Stdout.WriteString("\n")
+		}
+		this.lastJoinedHeader = &joinedHeader
+		needToPrintHeader = true
+	}
 
-	if this.onFirst {
+	if needToPrintHeader {
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
@@ -39,8 +50,6 @@ func (this *RecordWriterCSV) Write(
 			i++
 		}
 		this.csvWriter.Write(fields)
-
-		this.onFirst = false
 	}
 
 	fields := make([]string, outrec.FieldCount)

@@ -2,7 +2,6 @@
 TOP OF LIST:
 
 * thursday:
-  o unbork pprint writer
   * begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
@@ -96,6 +95,8 @@ PARSER/LEXER PLAN:
 ----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
 
+* record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
+  done by ChannelWriter, which is very small. opportunity to refactor.
 * address all manner of xxx and TODO comments
 * throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
@@ -140,3 +141,4 @@ NITS/NON-IMMEDIATE:
 * merge PutIndexed and PutIndexedKeyless to use a single array, w/ append
 * keep or get rid of $[[[ ]]] ... ?
 i @records[NR] now has a borky 0-slot
+  ? back-compat option -- default which old or new ?!? -- to stringify the int keys for oosvars/srecs ...

@@ -39,3 +39,35 @@ for ofmt in pprint csv dkvp nidx json; do
   ' u/s.$ifmt u/t.$ifmt
   echo
 done
+
+echo
+echo
+echo
+run_mlr --ocsv    cat u/het.dkvp
+run_mlr --opprint cat u/het.dkvp
+
+run_mlr --opprint cat << EOF
+EOF
+
+run_mlr --opprint cat << EOF
+a=1,b=2,c=3
+EOF
+
+run_mlr --opprint cat << EOF
+a=1,b=2,c=3
+a=2,b=2,c=3
+EOF
+
+run_mlr --opprint cat << EOF
+a=1,b=2,c=3
+a=2,b=2,c=3
+d=3,e=5,f=6
+EOF
+
+run_mlr --opprint cat << EOF
+a=1,b=2,c=3
+d=2,e=5,f=6
+d=3,e=5,f=6
+EOF
+
+

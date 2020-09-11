@@ -3,6 +3,8 @@ package output
 import (
 	"container/list"
 	"fmt"
+	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -11,6 +13,7 @@ import (
 // ostream *os.File in constructors/factory
 type RecordWriterPPRINT struct {
 	records *list.List
+	// For detecting schema changes: we print a newline and the new header
 }
 
 func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriterPPRINT {
@@ -19,6 +22,7 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 	}
 }
 
+// ----------------------------------------------------------------
 // xxx this is very naive at present -- needs copy from the C version.
 func (this *RecordWriterPPRINT) Write(
 	outrec *lib.Mlrmap,
@@ -30,10 +34,57 @@ func (this *RecordWriterPPRINT) Write(
 		return
 	}
 
+	// Group records by have-same-schema or not. Pretty-print each
+	// homoegeneous sublist, or "batch".
+
+	var lastJoinedHeader *string = nil
+	batch := list.New()
+	for {
+		head := this.records.Front()
+		if head == nil {
+			break
+		}
+		record := head.Value.(*lib.Mlrmap)
+		this.records.Remove(head)
+
+		if lastJoinedHeader == nil {
+			// First output record
+			// New batch
+			// No old batch to print
+			batch.PushBack(record)
+			temp := strings.Join(record.GetKeys(), ",")
+			lastJoinedHeader = &temp
+		} else {
+			joinedHeader := strings.Join(record.GetKeys(), ",")
+			if *lastJoinedHeader != joinedHeader {
+				// Print and free old batch
+				this.writeHeterogenousList(batch)
+				os.Stdout.WriteString("\n")
+				// Print a newline
+				// Start a new batch
+				batch = list.New()
+				batch.PushBack(record)
+				lastJoinedHeader = &joinedHeader
+			} else {
+				// Continue the batch
+				batch.PushBack(record)
+			}
+		}
+	}
+	if batch.Front() != nil {
+		this.writeHeterogenousList(batch)
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *RecordWriterPPRINT) writeHeterogenousList(
+	records *list.List,
+) {
+
 	// TODO: heterogeneity. keep previous header and reset if need.
 	maxWidths := make(map[string]int)
 
-	for e := this.records.Front(); e != nil; e = e.Next() {
+	for e := records.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*lib.Mlrmap)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			width := len(pe.Value.String())
@@ -53,7 +104,7 @@ func (this *RecordWriterPPRINT) Write(
 	}
 
 	onFirst := true
-	for e := this.records.Front(); e != nil; e = e.Next() {
+	for e := records.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*lib.Mlrmap)
 
 		// Print header line
