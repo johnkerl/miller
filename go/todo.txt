@@ -1,13 +1,11 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* thursday:
-  ?!? 1-up arrays for the DSL?!? weird, but lots of compat with 1-up
-    NF, NR, field positions.
+* friday:
+  o functions?!?
   * begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
-  o functions?!?
   o c/reg_test/run reorgs
 
 * array/map
@@ -89,13 +87,14 @@ DEV NOTES:
 ----------------------------------------------------------------
 PARSER/LEXER PLAN:
 
-* grok ch25
+* grok ch27
 * grok pike-lexer slides
-* alsu at ... what level ?
+* dragon at ... what level ?
 
 ----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
 
+* "Miller: " prefixes on all errors.New
 * record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
   done by ChannelWriter, which is very small. opportunity to refactor.
 * address all manner of xxx and TODO comments
@@ -133,14 +132,10 @@ NITS/NON-IMMEDIATE:
 * support 0b0101 et al.? mlrdoc if so
 ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
   o if so, update r.mds
-* mlrdoc the confusing fact that arrays are 0-up but positionals are 1-up (b/c unix toolkit)
-  o -n..-1 aliased to 0..n-1 vs -n..-1 aliased to 1..n
-  o also $1 vs $[1] -- the former 'sticks' with input-data ordering
+* keep or get rid of $[[[ ]]] ... ?
+* 1-up note from mlrval_collections -> doc6
+  o example of key-stringify to get truly awkish associative-array behavior
+  o also $1 vs $[1] -- the former 'sticks' with input-data ordering.
   o moral: miller is a name-indexed tool as its primary purpose. positional
     indexing is supported but it can be confusing.
-* '$[0] = ...' no-op -- should be error
-* merge PutIndexed and PutIndexedKeyless to use a single array, w/ append
-* keep or get rid of $[[[ ]]] ... ?
-i @records[NR] now has a borky 0-slot
-  ? back-compat option -- default which old or new ?!? -- to stringify the int keys for oosvars/srecs ...
 * mlrdoc: there should have always been a >>> and >>>=, and now there are

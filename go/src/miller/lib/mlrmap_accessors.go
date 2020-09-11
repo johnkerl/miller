@@ -115,6 +115,10 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 		this.PutCopy(&key.printrep, value)
 		return nil
 	} else if key.mvtype == MT_INT {
+
+		if key.intval == 0 {
+			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+		}
 		mapEntry := this.findEntryByPositionalIndex(key.intval)
 		if mapEntry == nil {
 			// There is no auto-deepen for positional indices
@@ -128,7 +132,7 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 		return nil
 	} else {
 		return errors.New(
-			"Record/map indices must be string or positional-int; got " + key.GetTypeName(),
+			"Miller: record/map indices must be string or positional-int; got " + key.GetTypeName(),
 		)
 	}
 }

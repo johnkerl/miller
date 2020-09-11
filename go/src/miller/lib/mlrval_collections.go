@@ -51,6 +51,16 @@ import (
 //     can use string(index) to get insertion-ordered hash maps:
 //     "0" is as valid a key as "1" or "100".
 //
+// Why integer indices at all?
+//
+// * AWK indices are always stringified and "arrays" are always associative,
+//   i.e. hashmaps. The Miller DSL is, essentially, a name-indexed AWK-ish
+//   processor. And, Miller versions up to Miller 5 stringified int indices
+//   awkishly.
+//
+// * But this is a new era; JSON is now widespread; people want arrays
+//   (per se) in their JSON files to be passed through as such.
+//
 // Naming conventions:
 //
 // * All userspace indexing is done in this file, ultimately through
@@ -334,8 +344,10 @@ func putIndexedOnArray(
 		// If last index, then assign.
 		if inBounds {
 			(*baseArray)[zindex] = *rvalue.Copy()
-		} else if mindex.intval <= 0 {
-			return errors.New("Cannot use negative or zero indices to auto-lengthen arrays")
+		} else if mindex.intval == 0 {
+			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+		} else if mindex.intval < 0 {
+			return errors.New("Miller: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 			// Given mindex is 4.
@@ -361,14 +373,16 @@ func putIndexedOnArray(
 				}
 			} else {
 				return errors.New(
-					"Indices must be string or int; got " + nextIndex.GetTypeName(),
+					"Miller: indices must be string or int; got " + nextIndex.GetTypeName(),
 				)
 			}
 
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 
-		} else if mindex.intval <= 0 {
-			return errors.New("Cannot use negative or zero indices to auto-lengthen arrays")
+		} else if mindex.intval == 0 {
+			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+		} else if mindex.intval < 0 {
+			return errors.New("Miller: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Already allocated but needs to be longer
 			LengthenMlrvalArray(baseArray, mindex.intval)
