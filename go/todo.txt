@@ -3,7 +3,7 @@ TOP OF LIST:
 
 * friday:
   o functions
-    - M_PI / M_E / etc
+    - M_PI / M_E in CST via math.Pi and math.E
     - need rand source
   o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
@@ -55,11 +55,8 @@ TOP OF LIST:
   o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
 * widen DSL coverage
-  o built-in functions
-  o UDFs
   o support the filter verb
-  o sigh ... the C DSL didn't have int keys per se, just stringifies of them.
-    so auto-extend was not an issue and '@o[1][2][3]=4' worked. :(
+  o UDFs
 
 ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
 
