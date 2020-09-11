@@ -96,14 +96,14 @@ func BuildArraySliceAccessNode(
 
 	// TODO
 
-	return BuildPanicNode(), nil
+	return BuildPanicNode(astNode)
 }
 
 //	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
-//		return BuildPanicNode(), nil // xxx temp
+//		return BuildPanicNode(astNode) // xxx temp
 //	}
 //	if astNode.Type == dsl.NodeTypeArraySliceEmptyUpperIndex {
-//		return BuildPanicNode(), nil // xxx temp
+//		return BuildPanicNode(astNode) // xxx temp
 //	}
 
 // ----------------------------------------------------------------

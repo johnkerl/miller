@@ -2,6 +2,8 @@ package lib
 
 import (
 	"math"
+	"math/rand"
+	"time"
 )
 
 // ================================================================
@@ -51,18 +53,33 @@ import (
 //       ('s') to anything else ('x').
 // ================================================================
 
+// Function-pointer type for zary functions.
+type ZaryFunc func() Mlrval
+
 // Function-pointer type for unary-operator disposition vectors.
 type UnaryFunc func(*Mlrval) Mlrval
+
+// Helps keystroke-saving for wrapping Go math-library functions
+// Examples: cos, sin, etc.
+type mathLibUnaryFunc func(float64) float64
+type mathLibUnaryFuncWrapper func(*Mlrval, mathLibUnaryFunc) Mlrval
 
 // Function-pointer type for binary-operator disposition matrices.
 type BinaryFunc func(*Mlrval, *Mlrval) Mlrval
 
-// ----------------------------------------------------------------
+// Function-pointer type for ternary functions
+type TernaryFunc func(*Mlrval, *Mlrval, *Mlrval) Mlrval
+
+// Function-pointer type for variadic functions.
+type VariadicFunc func([]*Mlrval) Mlrval
+
+// ================================================================
 // The following are frequently used in disposition matrices for various
 // operators and are defined here for re-use. The names are VERY short,
 // and all the same length, so that the disposition matrices will look
 // reasonable rectangular even after gofmt has been run.
 
+// ----------------------------------------------------------------
 // Return error (unary)
 func _erro1(ma *Mlrval) Mlrval {
 	return MlrvalFromError()
@@ -83,6 +100,23 @@ func _1u___(ma *Mlrval) Mlrval {
 	return *ma
 }
 
+// ----------------------------------------------------------------
+// Return error (unary math-library func)
+func _math_unary_erro1(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
+	return MlrvalFromError()
+}
+
+// Return absent (unary math-library func)
+func _math_unary_absn1(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
+	return MlrvalFromAbsent()
+}
+
+// Return void (unary math-library func)
+func _math_unary_void1(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
+	return MlrvalFromAbsent()
+}
+
+// ----------------------------------------------------------------
 // Return error (binary)
 func _erro(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromError()
@@ -127,6 +161,38 @@ func _i0__(ma, mb *Mlrval) Mlrval {
 func _f0__(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(0.0)
 }
+
+// ================================================================
+// ZARY FUNCTIONS
+// ================================================================
+
+func MlrvalSystime() Mlrval {
+	return MlrvalFromFloat64(
+		float64(time.Now().UnixNano()) / 1.0e9,
+	)
+}
+func MlrvalSystimeInt() Mlrval {
+	return MlrvalFromInt64(time.Now().Unix())
+}
+
+// TODO: needs https://golang.org/pkg/math/rand/#Source for Miller CLI --seed
+func MlrvalUrand() Mlrval {
+	return MlrvalFromFloat64(
+		rand.Float64(),
+	)
+}
+
+func MlrvalUrand32() Mlrval {
+	return MlrvalFromInt64(
+		int64(
+			rand.Uint32(),
+		),
+	)
+}
+
+// ================================================================
+// UNARY FUNCTIONS
+// ================================================================
 
 // ================================================================
 // Unary plus operator
@@ -175,6 +241,99 @@ func MlrvalUnaryMinus(ma *Mlrval) Mlrval {
 }
 
 // ================================================================
+// Logical NOT operator
+
+func MlrvalLogicalNOT(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_BOOL {
+		return MlrvalFromBool(!ma.boolval)
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+// ================================================================
+// Bitwise NOT
+
+func bitwise_not_i_i(ma *Mlrval) Mlrval {
+	return MlrvalFromInt64(^ma.intval)
+}
+
+var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*EMPTY  */ _void1,
+	/*STRING */ _erro1,
+	/*INT    */ bitwise_not_i_i,
+	/*FLOAT  */ _erro1,
+	/*BOOL   */ _erro1,
+	/*ARRAY  */ _absn1,
+	/*MAP    */ _absn1,
+}
+
+func MlrvalBitwiseNOT(ma *Mlrval) Mlrval {
+	return bitwise_not_dispositions[ma.mvtype](ma)
+}
+
+// ================================================================
+// Go math-library functions
+
+func math_unary_f_i(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
+	return MlrvalFromFloat64(f(float64(ma.intval)))
+}
+func math_unary_f_f(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
+	return MlrvalFromFloat64(f(ma.floatval))
+}
+
+var mudispo = [MT_DIM]mathLibUnaryFuncWrapper{
+	/*ERROR  */ _math_unary_erro1,
+	/*ABSENT */ _math_unary_absn1,
+	/*EMPTY  */ _math_unary_void1,
+	/*STRING */ _math_unary_erro1,
+	/*INT    */ math_unary_f_i,
+	/*FLOAT  */ math_unary_f_f,
+	/*BOOL   */ _math_unary_erro1,
+	/*ARRAY  */ _math_unary_absn1,
+	/*MAP    */ _math_unary_absn1,
+}
+
+func MlrvalAbs(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Abs) }
+func MlrvalAcos(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Acos) }
+func MlrvalAcosh(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Acosh) }
+func MlrvalAsin(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Asin) }
+func MlrvalAsinh(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Asinh) }
+func MlrvalAtan(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Atan) }
+func MlrvalAtanh(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Atanh) }
+func MlrvalCbrt(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Cbrt) }
+func MlrvalCeil(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Ceil) }
+func MlrvalCos(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Cos) }
+func MlrvalCosh(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Cosh) }
+func MlrvalErf(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Erf) }
+func MlrvalErfc(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Erfc) }
+func MlrvalExp(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Exp) }
+func MlrvalExpm1(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Expm1) }
+func MlrvalFloor(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Floor) }
+func MlrvalLog(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Log) }
+func MlrvalLog10(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Log10) }
+func MlrvalLog1p(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Log1p) }
+func MlrvalRound(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Round) }
+func MlrvalSin(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Sin) }
+func MlrvalSinh(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Sinh) }
+func MlrvalSqrt(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Sqrt) }
+func MlrvalTan(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Tan) }
+func MlrvalTanh(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Tanh) }
+
+// TODO: port from C
+//func MlrvalInvqnorm(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Invqnorm) }
+//func MlrvalMax(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Max) }
+//func MlrvalMin(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Min) }
+//func MlrvalQnorm(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Qnorm) }
+//func MlrvalSgn(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Sgn) }
+
+// ================================================================
+// BINARY FUNCTIONS
+// ================================================================
+
+// ================================================================
 // Dot operator, with loose typecasting.
 //
 // For most operations, I don't like loose typecasting -- for example, in PHP
@@ -193,7 +352,7 @@ func dot_s_xx(ma, mb *Mlrval) Mlrval {
 }
 
 var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
 	/*EMPTY  */ {_erro, _void, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
@@ -249,7 +408,7 @@ func plus_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -261,7 +420,7 @@ var plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalPlus(ma, mb *Mlrval) Mlrval {
+func MlrvalBinaryPlus(ma, mb *Mlrval) Mlrval {
 	return plus_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }
 
@@ -305,7 +464,7 @@ func minus_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var minus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -317,7 +476,7 @@ var minus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalMinus(ma, mb *Mlrval) Mlrval {
+func MlrvalBinaryMinus(ma, mb *Mlrval) Mlrval {
 	return minus_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }
 
@@ -377,7 +536,7 @@ func times_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var times_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -446,7 +605,7 @@ func divide_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -505,7 +664,7 @@ func int_divide_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var int_divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -539,7 +698,7 @@ func pow_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var pow_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -573,7 +732,7 @@ func dotplus_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var dot_plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -607,7 +766,7 @@ func dotminus_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var dotminus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -641,7 +800,7 @@ func dottimes_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var dottimes_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT   BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT   BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -675,7 +834,7 @@ func dotdivide_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var dotdivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -734,7 +893,7 @@ func dotidivide_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var dotidivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR ABSENT  EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -796,7 +955,7 @@ func modulus_f_ff(ma, mb *Mlrval) Mlrval {
 }
 
 var modulus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -820,7 +979,7 @@ func bitwise_and_i_ii(ma, mb *Mlrval) Mlrval {
 }
 
 var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -844,7 +1003,7 @@ func bitwise_or_i_ii(ma, mb *Mlrval) Mlrval {
 }
 
 var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -868,7 +1027,7 @@ func bitwise_xor_i_ii(ma, mb *Mlrval) Mlrval {
 }
 
 var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -884,29 +1043,6 @@ func MlrvalBitwiseXOR(ma, mb *Mlrval) Mlrval {
 	return bitwise_xor_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }
 
-// ================================================================
-// Bitwise NOT
-
-func bitwise_not_i_i(ma *Mlrval) Mlrval {
-	return MlrvalFromInt64(^ma.intval)
-}
-
-var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
-	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
-	/*EMPTY  */ _void1,
-	/*STRING */ _erro1,
-	/*INT    */ bitwise_not_i_i,
-	/*FLOAT  */ _erro1,
-	/*BOOL   */ _erro1,
-	/*ARRAY  */ _absn1,
-	/*MAP    */ _absn1,
-}
-
-func MlrvalBitwiseNOT(ma *Mlrval) Mlrval {
-	return bitwise_not_dispositions[ma.mvtype](ma)
-}
-
 // ----------------------------------------------------------------
 // Left shift
 
@@ -915,7 +1051,7 @@ func lsh_i_ii(ma, mb *Mlrval) Mlrval {
 }
 
 var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -939,7 +1075,7 @@ func srsh_i_ii(ma, mb *Mlrval) Mlrval {
 }
 
 var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -966,7 +1102,7 @@ func ursh_i_ii(ma, mb *Mlrval) Mlrval {
 }
 
 var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
@@ -1127,7 +1263,7 @@ func le_b_ff(ma, mb *Mlrval) Mlrval {
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 var eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _erro, _absn, _absn},
@@ -1140,7 +1276,7 @@ var eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var ne_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _erro, _absn, _absn},
@@ -1153,7 +1289,7 @@ var ne_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var gt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _erro, _absn, _absn},
@@ -1166,7 +1302,7 @@ var gt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var ge_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//          ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//          ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _erro, _absn, _absn},
@@ -1179,7 +1315,7 @@ var ge_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var lt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//          ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//          ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _erro, _absn, _absn},
@@ -1192,7 +1328,7 @@ var lt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var le_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//          ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL
+	//          ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*EMPTY  */ {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _erro, _absn, _absn},
@@ -1248,123 +1384,259 @@ func MlrvalLogicalXOR(ma, mb *Mlrval) Mlrval {
 	}
 }
 
-func MlrvalLogicalNOT(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_BOOL {
-		return MlrvalFromBool(!ma.boolval)
+// ================================================================
+// VARIADIC FUNCTIONS
+// ================================================================
+
+// ================================================================
+// MIN AND MAX
+
+// Sort rules (same for min, max, and comparator):
+// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * error == error (singleton type)
+// * absent == absent (singleton type)
+// * string compares on strings
+// * numeric compares on numbers
+// * false < true
+// Exceptions for min & max:
+// * absent-null always loses
+// * empty-null always loses against numbers
+
+// ----------------------------------------------------------------
+func min_f_ff(ma, mb *Mlrval) Mlrval {
+	var a float64 = ma.floatval
+	var b float64 = mb.floatval
+	return MlrvalFromFloat64(math.Min(a, b))
+}
+
+func min_f_fi(ma, mb *Mlrval) Mlrval {
+	var a float64 = ma.floatval
+	var b float64 = float64(mb.intval)
+	return MlrvalFromFloat64(math.Min(a, b))
+}
+
+func min_f_if(ma, mb *Mlrval) Mlrval {
+	var a float64 = float64(ma.intval)
+	var b float64 = mb.floatval
+	return MlrvalFromFloat64(math.Min(a, b))
+}
+
+func min_i_ii(ma, mb *Mlrval) Mlrval {
+	var a int64 = ma.intval
+	var b int64 = mb.intval
+	if a < b {
+		return *ma
 	} else {
-		return MlrvalFromError()
+		return *mb
+	}
+}
+
+// min | b=F   b=T
+// --- + ----- -----
+// a=F | min=a min=a
+// a=T | min=b min=b
+func min_b_bb(ma, mb *Mlrval) Mlrval {
+	if ma.boolval == false {
+		return *ma
+	} else {
+		return *mb
+	}
+}
+
+func min_s_ss(ma, mb *Mlrval) Mlrval {
+	var a string = ma.printrep
+	var b string = mb.printrep
+	if a < b {
+		return *ma
+	} else {
+		return *mb
+	}
+}
+
+var min_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _2___, _2___, _2___, _2___, _2___},
+	/*EMPTY  */ {_erro, _1___, _void, _void, _2___, _2___, _2___},
+	/*STRING */ {_erro, _1___, _void, min_s_ss, _2___, _2___, _2___},
+	/*INT    */ {_erro, _1___, _1___, _1___, min_i_ii, min_f_if, _1___},
+	/*FLOAT  */ {_erro, _1___, _1___, _1___, min_f_fi, min_f_ff, _1___},
+	/*BOOL   */ {_erro, _1___, _1___, _1___, _2___, _2___, min_b_bb},
+}
+
+func MlrvalBinaryMin(ma, mb *Mlrval) Mlrval {
+	return (min_dispositions[ma.mvtype][ma.mvtype])(ma, mb)
+}
+
+func MlrvalVariadicMin(mlrvals []*Mlrval) Mlrval {
+	if len(mlrvals) == 0 {
+		return MlrvalFromVoid()
+	} else {
+		retval := *mlrvals[0]
+		for _, mlrval := range mlrvals[1:] {
+			retval = MlrvalBinaryMin(&retval, mlrval)
+		}
+		return retval
+	}
+}
+
+// ----------------------------------------------------------------
+func max_f_ff(ma, mb *Mlrval) Mlrval {
+	var a float64 = ma.floatval
+	var b float64 = mb.floatval
+	return MlrvalFromFloat64(math.Max(a, b))
+}
+
+func max_f_fi(ma, mb *Mlrval) Mlrval {
+	var a float64 = ma.floatval
+	var b float64 = float64(mb.intval)
+	return MlrvalFromFloat64(math.Max(a, b))
+}
+
+func max_f_if(ma, mb *Mlrval) Mlrval {
+	var a float64 = float64(ma.intval)
+	var b float64 = mb.floatval
+	return MlrvalFromFloat64(math.Max(a, b))
+}
+
+func max_i_ii(ma, mb *Mlrval) Mlrval {
+	var a int64 = ma.intval
+	var b int64 = mb.intval
+	if a > b {
+		return *ma
+	} else {
+		return *mb
+	}
+}
+
+// max | b=F   b=T
+// --- + ----- -----
+// a=F | max=a max=b
+// a=T | max=a max=b
+func max_b_bb(ma, mb *Mlrval) Mlrval {
+	if mb.boolval == false {
+		return *ma
+	} else {
+		return *mb
+	}
+}
+
+func max_s_ss(ma, mb *Mlrval) Mlrval {
+	var a string = ma.printrep
+	var b string = mb.printrep
+	if a > b {
+		return *ma
+	} else {
+		return *mb
+	}
+}
+
+var max_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _2___, _2___, _2___, _2___, _2___},
+	/*EMPTY  */ {_erro, _1___, _void, _void, _2___, _2___, _2___},
+	/*STRING */ {_erro, _1___, _void, max_s_ss, _2___, _2___, _2___},
+	/*INT    */ {_erro, _1___, _1___, _1___, max_i_ii, max_f_if, _1___},
+	/*FLOAT  */ {_erro, _1___, _1___, _1___, max_f_fi, max_f_ff, _1___},
+	/*BOOL   */ {_erro, _1___, _1___, _1___, _2___, _2___, max_b_bb},
+}
+
+func MlrvalBinaryMax(ma, mb *Mlrval) Mlrval {
+	return (max_dispositions[ma.mvtype][ma.mvtype])(ma, mb)
+}
+
+func MlrvalVariadicMax(mlrvals []*Mlrval) Mlrval {
+	if len(mlrvals) == 0 {
+		return MlrvalFromVoid()
+	} else {
+		retval := *mlrvals[0]
+		for _, mlrval := range mlrvals[1:] {
+			retval = MlrvalBinaryMax(&retval, mlrval)
+		}
+		return retval
 	}
 }
 
 //// ----------------------------------------------------------------
-//int mv_equals_si(ma, mb *Mlrval) Mlrval {
-//	if (pa->type == MT_INT) Mlrval {
-//		return (pb->type == MT_INT) ? ma.intval == mb.intval : FALSE;
+//func max_f_ff(ma, mb *Mlrval) Mlrval {
+//	float64 a = ma.floatval;
+//	float64 b = mb.floatval;
+//	return MlrvalFromFloat64(math.Max(a, b));
+//}
+//
+//func max_f_fi(ma, mb *Mlrval) Mlrval {
+//	float64 a = ma.floatval;
+//	float64 b = (float64)mb.intval;
+//	return MlrvalFromFloat64(math.Max(a, b));
+//}
+//
+//func max_f_if(ma, mb *Mlrval) Mlrval {
+//	float64 a = (float64)ma.intval;
+//	float64 b = mb.floatval;
+//	return MlrvalFromFloat64(math.Max(a, b));
+//}
+//
+//func max_i_ii(ma, mb *Mlrval) Mlrval {
+//	int64 a = ma.intval;
+//	int64 b = mb.intval;
+//	return MlrvalFromInt64(a > b ? a : b);
+//}
+//
+//func max_b_bb(ma, mb *Mlrval) Mlrval {
+//	int a = ma.boolval;
+//	int b = mb.boolval;
+//	return mv_from_bool(a > b ? a : b);
+//}
+//
+//func max_s_ss(ma, mb *Mlrval) Mlrval {
+//	char* a = ma.printrep;
+//	char* b = mb.printrep;
+//	int   c = strcmp(a, b);
+//	if (c >= 0) {
+//		mv_free(pb);
+//		return *pa;
 //	} else {
-//		return (pb->type == MT_STRING) ? streq(pa->u.strv, pb->u.strv) : FALSE;
+//		mv_free(pa);
+//		return *pb;
 //	}
 //}
-
-// ----------------------------------------------------------------
-// For qsort support in C
-
-//static int eq_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval == mb.intval; }
-//static int ne_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval != mb.intval; }
-//static int gt_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval >  mb.intval; }
-//static int ge_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval >= mb.intval; }
-//static int lt_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval <  mb.intval; }
-//static int le_i_ii(ma, mb *Mlrval) Mlrval { return  ma.intval <= mb.intval; }
-
-//static int eq_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval == mb.floatval; }
-//static int ne_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval != mb.floatval; }
-//static int gt_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval >  mb.floatval; }
-//static int ge_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval >= mb.floatval; }
-//static int lt_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval <  mb.floatval; }
-//static int le_i_if(ma, mb *Mlrval) Mlrval { return  ma.intval <= mb.floatval; }
-
-//static int eq_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval == mb.intval; }
-//static int ne_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval != mb.intval; }
-//static int gt_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval >  mb.intval; }
-//static int ge_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval >= mb.intval; }
-//static int lt_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval <  mb.intval; }
-//static int le_i_fi(ma, mb *Mlrval) Mlrval { return  ma.floatval <= mb.intval; }
-
-//static int eq_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval == mb.floatval; }
-//static int ne_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval != mb.floatval; }
-//static int gt_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval >  mb.floatval; }
-//static int ge_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval >= mb.floatval; }
-//static int lt_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval <  mb.floatval; }
-//static int le_i_ff(ma, mb *Mlrval) Mlrval { return  ma.floatval <= mb.floatval; }
-
-//static mv_i_nn_comparator_func_t* ieq_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
-//	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*INT*/    {NULL, NULL,  NULL, NULL,  eq_i_ii, eq_i_if, NULL, _absn, _absn},
-//	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  eq_i_fi, eq_i_ff, NULL, _absn, _absn},
-//	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
+//
+//// Sort rules (same for min, max, and comparator):
+//// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+//// * error == error (singleton type)
+//// * absent == absent (singleton type)
+//// * string compares on strings
+//// * numeric compares on numbers
+//// * false < true
+//// Exceptions for min & max:
+//// * absent-null always loses
+//// * empty-null always loses against numbers
+//static mv_binary_func_t* max_dispositions[MT_DIM][MT_DIM] = {
+//	//         ERROR   ABSENT EMPTY  STRING    INT       FLOAT     BOOL ARRAY MAP
+//	/*ERROR*/  {_erro, _erro, _erro, _erro,    _erro,    _erro,    _erro},
+//	/*ABSENT*/ {_erro, _absn, _2___, _2f__,    _2___,    _2___,    _2___},
+//	/*EMPTY*/  {_erro, _1___, _void, _2f__,    _2___,    _2___,    _2___},
+//	/*STRING*/ {_erro, _1f__, _1f__, max_s_ss, _1f__,    _1f__,    _1f__},
+//	/*INT*/    {_erro, _1___, _1___, _2f__,    max_i_ii, max_f_if, _2___},
+//	/*FLOAT*/  {_erro, _1___, _1___, _2f__,    max_f_fi, max_f_ff, _2___},
+//	/*BOOL*/   {_erro, _1___, _1___, _2f__,    _1___,    _1___,    max_b_bb},
 //	};
 //
-//static mv_i_nn_comparator_func_t* ine_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
-//	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*INT*/    {NULL, NULL,  NULL, NULL,  ne_i_ii, ne_i_if, NULL, _absn, _absn},
-//	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  ne_i_fi, ne_i_ff, NULL, _absn, _absn},
-//	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	};
+//mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2) {
+//	return (max_dispositions[pval1->type][pval2->type])(pval1,pval2);
+//}
 //
-//static mv_i_nn_comparator_func_t* igt_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
-//	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*INT*/    {NULL, NULL,  NULL, NULL,  gt_i_ii, gt_i_if, NULL, _absn, _absn},
-//	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  gt_i_fi, gt_i_ff, NULL, _absn, _absn},
-//	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	};
+//mv_t variadic_max_func(mv_t* pvals, int nvals) {
+//	if (nvals == 0) {
+//		return mv_empty();
+//	} else {
+//		mv_t rv = pvals[0];
+//		for (int i = 1; i < nvals; i++) {
+//			rv = x_xx_max_func(&rv, &pvals[i]);
+//			// Disposition-matrix entries for max all free their non-return arguments
+//		}
+//		return rv;
+//	}
+//}
 //
-//static mv_i_nn_comparator_func_t* ige_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
-//	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*INT*/    {NULL, NULL,  NULL, NULL,  ge_i_ii, ge_i_if, NULL, _absn, _absn},
-//	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  ge_i_fi, ge_i_ff, NULL, _absn, _absn},
-//	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	};
-//
-//static mv_i_nn_comparator_func_t* ilt_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
-//	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*INT*/    {NULL, NULL,  NULL, NULL,  lt_i_ii, lt_i_if, NULL, _absn, _absn},
-//	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  lt_i_fi, lt_i_ff, NULL, _absn, _absn},
-//	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	};
-//
-//static mv_i_nn_comparator_func_t* ile_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR  ABSENT EMPTY STRING INT      FLOAT    BOOL
-//	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	/*INT*/    {NULL, NULL,  NULL, NULL,  le_i_ii, le_i_if, NULL, _absn, _absn},
-//	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  le_i_fi, le_i_ff, NULL, _absn, _absn},
-//	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,    NULL,    NULL, _absn, _absn},
-//	};
-//
-//int mv_i_nn_eq(mv_t* pval1, mv_t* pval2) Mlrval { return (ieq_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_ne(mv_t* pval1, mv_t* pval2) Mlrval { return (ine_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_gt(mv_t* pval1, mv_t* pval2) Mlrval { return (igt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_ge(mv_t* pval1, mv_t* pval2) Mlrval { return (ige_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_lt(mv_t* pval1, mv_t* pval2) Mlrval { return (ilt_dispositions[pval1->type][pval2->type])(pval1, pval2); }
-//int mv_i_nn_le(mv_t* pval1, mv_t* pval2) Mlrval { return (ile_dispositions[pval1->type][pval2->type])(pval1, pval2); }

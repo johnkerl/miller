@@ -24,9 +24,6 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeOperator:
-		return BuildOperatorNode(astNode)
-
 	case dsl.NodeTypeArrayLiteral:
 		return BuildArrayLiteralNode(astNode)
 
@@ -42,8 +39,13 @@ func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	case dsl.NodeTypeIndirectFieldValue:
 		return BuildIndirectFieldValueNode(astNode)
 
+	// Operators are just functions with infix syntax so we treat them like
+	// functions in the CST.
+	case dsl.NodeTypeOperator:
+		return BuildFunctionCallsiteNode(astNode)
 	case dsl.NodeTypeFunctionCallsite:
 		return BuildFunctionCallsiteNode(astNode)
+
 	}
 
 	// xxx if/while/etc

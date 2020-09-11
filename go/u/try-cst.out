@@ -2155,80 +2155,95 @@ mlr --from u/2.dkvp --ojson put @a = 3; @a["x"]=4;@a["x"]["x"]=5; $new=@a
 
 
 ----------------------------------------------------------------
-mlr -n put -v $z=f()
+mlr -n put -v $z=max()
 DSL EXPRESSION:
-$z=f()
+$z=max()
 RAW AST:
 * StatementBlock
     * Assignment "="
         * DirectFieldValue "z"
-        * FunctionCallsite "f"
+        * FunctionCallsite "max"
 
 
 
 ----------------------------------------------------------------
-mlr -n put -v $z=f(1)
+mlr -n put -v $z=max(1)
 DSL EXPRESSION:
-$z=f(1)
+$z=max(1)
 RAW AST:
 * StatementBlock
     * Assignment "="
         * DirectFieldValue "z"
-        * FunctionCallsite "f"
+        * FunctionCallsite "max"
             * IntLiteral "1"
 
 
 
 ----------------------------------------------------------------
-mlr -n put -v $z=f(1,)
+mlr -n put -v $z=max(1,)
 DSL EXPRESSION:
-$z=f(1,)
+$z=max(1,)
 RAW AST:
 * StatementBlock
     * Assignment "="
         * DirectFieldValue "z"
-        * FunctionCallsite "f"
+        * FunctionCallsite "max"
             * IntLiteral "1"
 
 
 
 ----------------------------------------------------------------
-mlr -n put -v $z=f(1,2)
+mlr -n put -v $z=max(1,2)
 DSL EXPRESSION:
-$z=f(1,2)
+$z=max(1,2)
 RAW AST:
 * StatementBlock
     * Assignment "="
         * DirectFieldValue "z"
-        * FunctionCallsite "f"
-            * IntLiteral "1"
-            * IntLiteral "2"
-
-
-
-----------------------------------------------------------------
-mlr -n put -v $z=f(1,2,)
-DSL EXPRESSION:
-$z=f(1,2,)
-RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "f"
+        * FunctionCallsite "max"
             * IntLiteral "1"
             * IntLiteral "2"
 
 
 
 ----------------------------------------------------------------
-mlr -n put -v $z=f(1,2,3)
+mlr -n put -v $z=max(1,2,)
 DSL EXPRESSION:
-$z=f(1,2,3)
+$z=max(1,2,)
 RAW AST:
 * StatementBlock
     * Assignment "="
         * DirectFieldValue "z"
-        * FunctionCallsite "f"
+        * FunctionCallsite "max"
+            * IntLiteral "1"
+            * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=max(1,2,3)
+DSL EXPRESSION:
+$z=max(1,2,3)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "max"
+            * IntLiteral "1"
+            * IntLiteral "2"
+            * IntLiteral "3"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $z=max(1,2,3,)
+DSL EXPRESSION:
+$z=max(1,2,3,)
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "z"
+        * FunctionCallsite "max"
             * IntLiteral "1"
             * IntLiteral "2"
             * IntLiteral "3"
@@ -2236,15 +2251,36 @@ RAW AST:
 
 
 ----------------------------------------------------------------
-mlr -n put -v $z=f(1,2,3,)
-DSL EXPRESSION:
-$z=f(1,2,3,)
-RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "f"
-            * IntLiteral "1"
-            * IntLiteral "2"
-            * IntLiteral "3"
+mlr --from u/s.dkvp --opprint put $z = max($x,$y)
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797  0.7586799647899636
+wye wye 3 0.20460330576630303 0.33831852551664776 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463 0.38139939387114097
 
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp --opprint put $z = min($x,$y,$i)
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0
+wye wye 3 0.20460330576630303 0.33831852551664776 0
+eks wye 4 0.38139939387114097 0.13418874328430463 0
+
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp --opprint put $z = abs($x)
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2 0.7586799647899636  0.5221511083334797  0.7586799647899636
+wye wye 3 0.20460330576630303 0.33831852551664776 0.20460330576630303
+eks wye 4 0.38139939387114097 0.13418874328430463 0.38139939387114097
+
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp --opprint put $c = cos(NR/100); $s = sin(NR/100)
+a   b   i x                   y                   c                  s
+pan pan 1 0.3467901443380824  0.7268028627434533  0.9999500004166653 0.009999833334166664
+eks pan 2 0.7586799647899636  0.5221511083334797  0.9998000066665778 0.01999866669333308
+wye wye 3 0.20460330576630303 0.33831852551664776 0.9995500337489875 0.02999550020249566
+eks wye 4 0.38139939387114097 0.13418874328430463 0.9992001066609779 0.03998933418663416

@@ -2,10 +2,11 @@
 TOP OF LIST:
 
 * friday:
-  o functions?!?
-    - lib/mlrval_operators.go -> lib/mlrval_functions.go
-    - cst/operators.go -> cst/functions.go
-  * begin/end hygiene:
+  o functions
+    ! short-circuits: &&, ||, ?:
+    - M_PI / M_E / etc
+    - need rand source
+  o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
   o c/reg_test/run reorgs
@@ -97,6 +98,7 @@ PARSER/LEXER PLAN:
 NITS/NON-IMMEDIATE:
 
 * "Miller: " prefixes on all errors.New
+* libify errors.New callsites for DSL/CST
 * record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
   done by ChannelWriter, which is very small. opportunity to refactor.
 * address all manner of xxx and TODO comments
@@ -141,3 +143,4 @@ NITS/NON-IMMEDIATE:
   o moral: miller is a name-indexed tool as its primary purpose. positional
     indexing is supported but it can be confusing.
 * mlrdoc: there should have always been a >>> and >>>=, and now there are
+! systime printing out in scientific notation :(

@@ -30,7 +30,7 @@ func InternalCodingErrorIf(condition bool) {
 	}
 	// Uncomment this and re-run if you want to get a stack trace to get the
 	// call-tree that led to the indicated file/line:
-	panic("eek")
+	// panic("eek")
 	os.Exit(1)
 }
 

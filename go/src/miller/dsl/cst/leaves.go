@@ -51,7 +51,7 @@ func BuildLeafNode(
 		break
 
 	case dsl.NodeTypePanic:
-		return BuildPanicNode(), nil
+		return BuildPanicNode(astNode)
 		break
 	}
 
@@ -356,8 +356,8 @@ func (this *OPSNode) Evaluate(state *State) lib.Mlrval {
 type PanicNode struct {
 }
 
-func BuildPanicNode() *PanicNode {
-	return &PanicNode{}
+func BuildPanicNode(astNode *dsl.ASTNode) (*PanicNode, error) {
+	return &PanicNode{}, nil
 }
 func (this *PanicNode) Evaluate(state *State) lib.Mlrval {
 	lib.InternalCodingErrorPanic("Panic token was evaluated, not short-circuited.")

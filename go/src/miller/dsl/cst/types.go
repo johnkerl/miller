@@ -1,6 +1,7 @@
 package cst
 
 import (
+	"miller/dsl"
 	"miller/lib"
 )
 
@@ -58,6 +59,11 @@ type RootNode struct {
 	mainBlock   *StatementBlockNode
 	endBlocks   []*StatementBlockNode
 }
+
+// ----------------------------------------------------------------
+// Many functions have this signature. This type-alias is for function-name
+// lookup tablees.
+type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
 
 // ----------------------------------------------------------------
 // This is for all statements and statemnt blocks within the CST.
