@@ -3,7 +3,6 @@ TOP OF LIST:
 
 * friday:
   o functions
-    ! short-circuits: &&, ||, ?:
     - M_PI / M_E / etc
     - need rand source
   o begin/end hygiene:

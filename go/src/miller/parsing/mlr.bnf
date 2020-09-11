@@ -107,6 +107,9 @@ md_token_float_literal
   |         { _decdig} '.' _decdig { _decdig} _scinotE '-' _decdig { _decdig}
 ;
 
+md_token_M_PI : 'M' '_' 'P' 'I' ;
+md_token_M_E  : 'M' '_' 'E' ;
+
 // Notes on boolean literals:
 // * true and false should be defined here rather than as "true" / "false"
 //   within the grammar below -- this forces them to be keywords, not legal as
@@ -135,9 +138,7 @@ md_token_FNR : 'F' 'N' 'R' ;
 md_token_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
 md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 
-// md_token_M_PI  : 'M' '_' 'P' 'I' `
-// md_token_M_E   : 'M' '_' 'E' ;`
-// md_token_ENV   : 'E' 'N' 'V' ;`
+// md_token_ENV   : 'E' 'N' 'V' ;
 
 // ----------------------------------------------------------------
 // MILLER KEYWORDS
@@ -770,10 +771,30 @@ MlrvalOrFunction
     $0,
     dsl.NodeTypeStringLiteral,
   ) >>
-  | md_token_int_literal     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
-  | md_token_float_literal   << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
-  | md_token_boolean_literal << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
-  | md_token_panic           << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
+
+  | md_token_int_literal
+    << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
+
+  | md_token_float_literal
+    << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
+
+  | md_token_boolean_literal
+    << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
+
+  | md_token_M_PI 
+    << dsl.NewASTNode(
+      dsl.NewASTToken("3.14159265358979323846264338327950288419716939937510582097494459", $0),
+      dsl.NodeTypeFloatLiteral,
+    ) >>
+
+  | md_token_M_E
+    << dsl.NewASTNode(
+      dsl.NewASTToken("2.71828182845904523536028747135266249775724709369995957496696763", $0),
+      dsl.NodeTypeFloatLiteral,
+    ) >>
+
+  | md_token_panic
+    << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
 ;
 
 //MlrvalOrFunction(A) ::= md_regexi(B). {
