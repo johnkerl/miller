@@ -5,7 +5,39 @@ import (
 	"miller/lib"
 )
 
-// xxx temp
+// ================================================================
+type NodeBuilder func (astNode *dsl.ASTNode) (IEvaluable, error)
+
+type FunctionInfo struct {
+	name string
+	nodeBuilder NodeBuilder
+	// help string
+	// builder ...
+	// func Builder(astNode *dsl.ASTNode) (IEvaluable, error) { ... }
+	// type UnaryFunc func(*Mlrval) Mlrval
+}
+
+type FunctionManager struct {
+}
+
+func (this *FunctionManager) LookUp(functionName string) *FunctionInfo {
+	return nil
+}
+
+// ================================================================
+func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionCallsite)
+
+	return BuildPanicNode(), nil
+
+	//return nil, errors.New(
+	//"CST BuildFunctionCallsiteNode: unhandled AST node type " + string(astNode.Type),
+	//)
+}
+
+// ================================================================
+// ================================================================
+// ================================================================
 
 // . + + - - * / // .+ .+ .- .- .* ./ .//
 // % ** | ^ & ~ << >> bitcount == != =~ !=~ > >= < <= && || ^^ !  ? :
@@ -29,17 +61,6 @@ import (
 // strftime_local string strip strlen strptime strptime_local sub
 // substr system systime tan tanh tolower toupper typeof urand urand32
 // urandint urandrange
-
-// ----------------------------------------------------------------
-func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionCallsite)
-
-	return BuildPanicNode(), nil
-
-	//return nil, errors.New(
-	//"CST BuildFunctionCallsiteNode: unhandled AST node type " + string(astNode.Type),
-	//)
-}
 
 //// ----------------------------------------------------------------
 //type UnaryFunctionCallsiteNode struct {
