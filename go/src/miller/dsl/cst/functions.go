@@ -69,9 +69,76 @@ func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 //	return *output
 //}
 
+// typedef struct _rval_evaluator_f_ff_state_t {
+//     mv_binary_func_t* pfunc;
+//     rval_evaluator_t* parg1;
+//     rval_evaluator_t* parg2;
+// } rval_evaluator_f_ff_state_t;
+//
+// static mv_t rval_evaluator_f_ff_func(void* pvstate, variables_t* pvars) {
+//     rval_evaluator_f_ff_state_t* pstate = pvstate;
+//     mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+//     mv_set_float_nullable(&val1);
+//     NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
+//
+//     mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
+//     mv_set_float_nullable(&val2);
+//     NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
+//
+//     return pstate->pfunc(&val1, &val2);
+// }
+// static void rval_evaluator_f_ff_free(rval_evaluator_t* pevaluator) {
+//     rval_evaluator_f_ff_state_t* pstate = pevaluator->pvstate;
+//     pstate->parg1->pfree_func(pstate->parg1);
+//     pstate->parg2->pfree_func(pstate->parg2);
+//     free(pstate);
+//     free(pevaluator);
+// }
+//
+// rval_evaluator_t* rval_evaluator_alloc_from_f_ff_func(mv_binary_func_t* pfunc,
+//     rval_evaluator_t* parg1, rval_evaluator_t* parg2)
+// {
+//     rval_evaluator_f_ff_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_f_ff_state_t));
+//     pstate->pfunc = pfunc;
+//     pstate->parg1 = parg1;
+//     pstate->parg2 = parg2;
+//
+//     rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+//     pevaluator->pvstate = pstate;
+//     pevaluator->pprocess_func = rval_evaluator_f_ff_func;
+//     pevaluator->pfree_func = rval_evaluator_f_ff_free;
+//
+//     return pevaluator;
+// }
 
+// } else if (streq(fnnm, "cbrt")) { return rval_evaluator_alloc_from_f_f_func(f_f_cbrt_func, parg1);
+// } else if (streq(fnnm, "ceil")) { return rval_evaluator_alloc_from_x_x_func(x_x_ceil_func, parg1);
+// } else if (streq(fnnm, "cos"))  { return rval_evaluator_alloc_from_f_f_func(f_f_cos_func,  parg1);
+// } else if (streq(fnnm, "cosh")) { return rval_evaluator_alloc_from_f_f_func(f_f_cosh_func, parg1);
 
-
+// static inline mv_t f_f_acos_func(mv_t*     pval1) {return mv_from_float(acos     (pval1->u.fltv));}
+// static inline mv_t f_f_acosh_func(mv_t*    pval1) {return mv_from_float(acosh    (pval1->u.fltv));}
+// static inline mv_t f_f_asin_func(mv_t*     pval1) {return mv_from_float(asin     (pval1->u.fltv));}
+// static inline mv_t f_f_asinh_func(mv_t*    pval1) {return mv_from_float(asinh    (pval1->u.fltv));}
+// static inline mv_t f_f_atan_func(mv_t*     pval1) {return mv_from_float(atan     (pval1->u.fltv));}
+// static inline mv_t f_f_atanh_func(mv_t*    pval1) {return mv_from_float(atanh    (pval1->u.fltv));}
+// static inline mv_t f_f_cbrt_func(mv_t*     pval1) {return mv_from_float(cbrt     (pval1->u.fltv));}
+// static inline mv_t f_f_cos_func(mv_t*      pval1) {return mv_from_float(cos      (pval1->u.fltv));}
+// static inline mv_t f_f_cosh_func(mv_t*     pval1) {return mv_from_float(cosh     (pval1->u.fltv));}
+// static inline mv_t f_f_erf_func(mv_t*      pval1) {return mv_from_float(erf      (pval1->u.fltv));}
+// static inline mv_t f_f_erfc_func(mv_t*     pval1) {return mv_from_float(erfc     (pval1->u.fltv));}
+// static inline mv_t f_f_exp_func(mv_t*      pval1) {return mv_from_float(exp      (pval1->u.fltv));}
+// static inline mv_t f_f_expm1_func(mv_t*    pval1) {return mv_from_float(expm1    (pval1->u.fltv));}
+// static inline mv_t f_f_invqnorm_func(mv_t* pval1) {return mv_from_float(invqnorm (pval1->u.fltv));}
+// static inline mv_t f_f_log10_func(mv_t*    pval1) {return mv_from_float(log10    (pval1->u.fltv));}
+// static inline mv_t f_f_log1p_func(mv_t*    pval1) {return mv_from_float(log1p    (pval1->u.fltv));}
+// static inline mv_t f_f_log_func(mv_t*      pval1) {return mv_from_float(log      (pval1->u.fltv));}
+// static inline mv_t f_f_qnorm_func(mv_t*    pval1) {return mv_from_float(qnorm    (pval1->u.fltv));}
+// static inline mv_t f_f_sin_func(mv_t*      pval1) {return mv_from_float(sin      (pval1->u.fltv));}
+// static inline mv_t f_f_sinh_func(mv_t*     pval1) {return mv_from_float(sinh     (pval1->u.fltv));}
+// static inline mv_t f_f_sqrt_func(mv_t*     pval1) {return mv_from_float(sqrt     (pval1->u.fltv));}
+// static inline mv_t f_f_tan_func(mv_t*      pval1) {return mv_from_float(tan      (pval1->u.fltv));}
+// static inline mv_t f_f_tanh_func(mv_t*     pval1) {return mv_from_float(tanh     (pval1->u.fltv));}
 
 //// ----------------------------------------------------------------
 //typedef enum _func_class_t {
