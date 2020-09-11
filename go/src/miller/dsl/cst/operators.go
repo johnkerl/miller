@@ -84,7 +84,7 @@ func BuildBinaryOperatorNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	sop := string(astNode.Token.Lit)
 	switch sop {
 
-	// xxx lookup table:
+	// xxx lookup table in function_manager:
 	// name:
 	// * help string
 	// * binaryFunc ptr

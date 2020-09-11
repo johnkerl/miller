@@ -6,14 +6,72 @@ import (
 )
 
 // ================================================================
-func (this *Mlrval) ArrayGet(index *Mlrval) Mlrval {
+// ABOUT ARRAY/MAP INDEXING
+//
+// Arrays:
+//
+// * Within the Miller domain-specific language:
+//   o Arrays are indexed 1-up within the DSL
+//   o Negative-index aliases are supported: -1 means the last element
+//     of the array (if any), -2 means second-to-last, and in general
+//     -n..-1 are aliases for 1..n.
+// * Within the Go implementation:
+//   o Array indices are of course 0-up.
+//
+// Maps:
+//
+// * Map keys are strings
+//
+// * They can also be indexed positionally (which is a linear search
+//   through the linked-hash-map struct). One of Miller's primary reasons for
+//   existing is to allow string-keyed access, but, sometimes people really
+//   want to access the nth field in a record. These are also 1-up.
+//
+// Why 1-up indices?
+//
+// * This is an odd choice in the broader programming-language context.
+//   There are a few languages such as Fortran, Julia, Matlab, and R which are
+//   1-up but the overal trend is decidedly toward 0-up. This means that
+//   if Miller does 1-up it should do so for a good reason.
+//
+// * Reasons: so many other things are already 1-up, mostly inherited
+//   from AWK:
+//
+//   o NR and FNR, the record-counter context variables start with 1.
+//     When we retain records, '@records[NR] = $*' is the natural thing
+//     to write, and the empty 0 slot would be a perpetual nuiscance.
+//
+//   o Field indices $[1], ..., $[NF] match AWK as well as NIDX format.
+//     The 1-up indexing for NIDX format was in turn devised specifically
+//     to match behavior of Unix tools like cut, sort, and so on -- all
+//     of which are 1-up.
+//
+//   o No zero index: AWK uses $0 like Miller uses $*, to refer
+//     to the entire record. In Miller, 0 is never a valid array index but one
+//     can use string(index) to get insertion-ordered hash maps:
+//     "0" is as valid a key as "1" or "100".
+//
+// Naming conventions:
+//
+// * All userspace indexing is done in this file, ultimately through
+//   the unaliasArrayIndex() function.
+//
+// * Outside of this file I simply say 'index'.
+//
+// * Inside this file I say 'zindex' for the 0-up Go indices and 'mindex'
+//   for 1-up Miller indices.
+//
+// ================================================================
+
+// ================================================================
+func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if this.mvtype != MT_ARRAY {
 		return MlrvalFromError()
 	}
-	if index.mvtype != MT_INT {
+	if mindex.mvtype != MT_INT {
 		return MlrvalFromError()
 	}
-	value := arrayGetAliased(&this.arrayval, index.intval)
+	value := arrayGetAliased(&this.arrayval, mindex.intval)
 	if value == nil {
 		return MlrvalFromError()
 	} else {
@@ -22,19 +80,19 @@ func (this *Mlrval) ArrayGet(index *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) ArrayPut(index *Mlrval, value *Mlrval) {
+func (this *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 	if this.mvtype != MT_ARRAY {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		return
 	}
-	if index.mvtype != MT_INT {
+	if mindex.mvtype != MT_INT {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		return
 	}
 
-	ok := arrayPutAliased(&this.arrayval, index.intval, value)
+	ok := arrayPutAliased(&this.arrayval, mindex.intval, value)
 	if ok {
 	} else {
 		// TODO: need to be careful about semantics here.
@@ -43,36 +101,37 @@ func (this *Mlrval) ArrayPut(index *Mlrval, value *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func arrayGetAliased(array *[]Mlrval, i int64) *Mlrval {
-	index, ok := unaliasArrayIndex(array, i)
+func arrayGetAliased(array *[]Mlrval, mindex int64) *Mlrval {
+	zindex, ok := unaliasArrayIndex(array, mindex)
 	if ok {
-		return &(*array)[index]
+		return &(*array)[zindex]
 	} else {
 		return nil
 	}
 }
 
-func arrayPutAliased(array *[]Mlrval, i int64, value *Mlrval) bool {
-	index, ok := unaliasArrayIndex(array, i)
+func arrayPutAliased(array *[]Mlrval, mindex int64, value *Mlrval) bool {
+	zindex, ok := unaliasArrayIndex(array, mindex)
 	if ok {
 		clone := value.Copy()
-		(*array)[index] = *clone
+		(*array)[zindex] = *clone
 		return true
 	} else {
 		return false
 	}
 }
 
-func unaliasArrayIndex(array *[]Mlrval, i int64) (int64, bool) {
+func unaliasArrayIndex(array *[]Mlrval, mindex int64) (int64, bool) {
 	n := int64(len(*array))
-	// TODO: document this (pythonic)
-	if i < 0 && i > -n {
-		i += n
-	}
-	if i < 0 || i >= n {
-		return -999, false
+
+	if 1 <= mindex && mindex <= n {
+		zindex := mindex - 1
+		return zindex, true
+	} else if -n <= mindex && mindex <= -1 {
+		zindex := mindex + n
+		return zindex, true
 	} else {
-		return i, true
+		return -999, false
 	}
 }
 
@@ -137,16 +196,16 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 //
 //   o Strings are map keys.
 //   o Integers are interpreted as positional indices, only into existing
-//     fields. (We don't auto-extend maps by positional indices.)
+//     fields. (We don't auto-deepen nested maps by positional indices.)
 //
 // * If it's an array-type mlrval then:
 //
 //   o Integers are array indices
-//   o We auto-create/auto-extend.
-//   o If '@foo[]' has indices 0..3, then on '@foo[4] = "new"' we extend
+//   o We auto-create/auto-lengthen/auto-deepen.
+//   o If '@foo[]' has indices 0..3, then on '@foo[4] = "new"' we lengthen
 //     the array by one.
 //   o If '@foo[]' has indices 0..3, then on '@foo[6] = "new"'
-//     we extend the array and absent-fill the intervenings.
+//     we lengthen the array and absent-fill the intervenings.
 //   o If '@foo["bar"]' does not exist, then on '@foo["bar"][0] = "new"'
 //     we create an array and populate the 0th slot.
 //   o If '@foo["bar"]' does not exist, then on '@foo["bar"][6] = "new"'
@@ -219,7 +278,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 			nextIndex := indices[1]
 
 			var err error = nil
-			baseValue, err = NewMlrvalForAutoExtend(nextIndex.mvtype)
+			baseValue, err = NewMlrvalForAutoDeepen(nextIndex.mvtype)
 			if err != nil {
 				return err
 			}
@@ -231,7 +290,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		// Base is map, index is int
 		baseValue := baseMap.GetWithPositionalIndex(baseIndex.intval)
 		if baseValue == nil {
-			// There is no auto-extend for positional indices on maps
+			// There is no auto-deepen for positional indices on maps
 			return errors.New(
 				"Miller: positional index " +
 					strconv.Itoa(int(baseIndex.intval)) +
@@ -260,26 +319,29 @@ func putIndexedOnArray(
 
 	numIndices := len(indices)
 	InternalCodingErrorIf(numIndices < 1)
-	index := indices[0]
+	mindex := indices[0]
 
-	if index.mvtype != MT_INT {
+	if mindex.mvtype != MT_INT {
 		return errors.New(
 			"Array index must be int, but was " +
-				index.GetTypeName() +
+				mindex.GetTypeName() +
 				".",
 		)
 	}
-	intIndex, inBounds := unaliasArrayIndex(baseArray, index.intval)
+	zindex, inBounds := unaliasArrayIndex(baseArray, mindex.intval)
 
 	if numIndices == 1 {
 		// If last index, then assign.
 		if inBounds {
-			(*baseArray)[intIndex] = *rvalue.Copy()
-		} else if index.intval < 0 {
-			return errors.New("Cannot use negative indices to auto-extend arrays")
+			(*baseArray)[zindex] = *rvalue.Copy()
+		} else if mindex.intval <= 0 {
+			return errors.New("Cannot use negative or zero indices to auto-lengthen arrays")
 		} else {
-			LengthenMlrvalArray(baseArray, index.intval+1)
-			(*baseArray)[index.intval] = *rvalue.Copy()
+			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
+			// Given mindex is 4.
+			LengthenMlrvalArray(baseArray, mindex.intval)
+			zindex := mindex.intval - 1
+			(*baseArray)[zindex] = *rvalue.Copy()
 		}
 		return nil
 
@@ -290,12 +352,12 @@ func putIndexedOnArray(
 
 			// Overwrite what's in this slot if it's the wrong type
 			if nextIndex.mvtype == MT_STRING {
-				if (*baseArray)[intIndex].mvtype != MT_MAP {
-					(*baseArray)[intIndex] = MlrvalEmptyMap()
+				if (*baseArray)[zindex].mvtype != MT_MAP {
+					(*baseArray)[zindex] = MlrvalEmptyMap()
 				}
 			} else if nextIndex.mvtype == MT_INT {
-				if (*baseArray)[intIndex].mvtype != MT_ARRAY {
-					(*baseArray)[intIndex] = MlrvalEmptyArray()
+				if (*baseArray)[zindex].mvtype != MT_ARRAY {
+					(*baseArray)[zindex] = MlrvalEmptyArray()
 				}
 			} else {
 				return errors.New(
@@ -303,14 +365,15 @@ func putIndexedOnArray(
 				)
 			}
 
-			return (*baseArray)[intIndex].PutIndexed(indices[1:], rvalue)
+			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 
-		} else if index.intval < 0 {
-			return errors.New("Cannot use negative indices to auto-extend arrays")
+		} else if mindex.intval <= 0 {
+			return errors.New("Cannot use negative or zero indices to auto-lengthen arrays")
 		} else {
 			// Already allocated but needs to be longer
-			LengthenMlrvalArray(baseArray, index.intval+1)
-			return (*baseArray)[index.intval].PutIndexed(indices[1:], rvalue)
+			LengthenMlrvalArray(baseArray, mindex.intval)
+			zindex := mindex.intval - 1
+			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 		}
 
 	}

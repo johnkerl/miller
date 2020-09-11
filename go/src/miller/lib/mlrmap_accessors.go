@@ -117,8 +117,7 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 	} else if key.mvtype == MT_INT {
 		mapEntry := this.findEntryByPositionalIndex(key.intval)
 		if mapEntry == nil {
-			// xxx libify
-			// There is no auto-extend for positional indices
+			// There is no auto-deepen for positional indices
 			return errors.New(
 				"Positional index " +
 					strconv.Itoa(int(key.intval)) +

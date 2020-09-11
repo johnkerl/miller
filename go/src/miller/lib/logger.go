@@ -28,6 +28,9 @@ func InternalCodingErrorIf(condition bool) {
 			"(unknown)",
 		)
 	}
+	// Uncomment this and re-run if you want to get a stack trace to get the
+	// call-tree that led to the indicated file/line:
+	panic("eek")
 	os.Exit(1)
 }
 

@@ -284,18 +284,18 @@ func LengthenMlrvalArray(array *[]Mlrval, newLength64 int64) {
 
 	if newLength <= cap(*array) {
 		newArray := (*array)[:newLength]
-		for i := len(*array); i < newLength; i++ {
-			newArray[i] = MlrvalFromString("")
+		for zindex := len(*array); zindex < newLength; zindex++ {
+			newArray[zindex] = MlrvalFromString("")
 		}
 		*array = newArray
 	} else {
 		newArray := make([]Mlrval, newLength, 2*newLength)
-		i := 0
-		for i = 0; i < len(*array); i++ {
-			newArray[i] = (*array)[i]
+		zindex := 0
+		for zindex = 0; zindex < len(*array); zindex++ {
+			newArray[zindex] = (*array)[zindex]
 		}
-		for i = len(*array); i < newLength; i++ {
-			newArray[i] = MlrvalFromString("")
+		for zindex = len(*array); zindex < newLength; zindex++ {
+			newArray[zindex] = MlrvalFromString("")
 		}
 		*array = newArray
 	}
@@ -330,11 +330,11 @@ func MlrvalFromMap(that *Mlrmap) Mlrval {
 }
 
 // ----------------------------------------------------------------
-// This is for auto-extend of arrays/maps in things like '$foo[1]["a"][2]["b"] = 3'
-// It takes the type of the next index-slot to be created, returing string for map,
-// int for array, error otherwise.
+// This is for auto-deepen of nested arrays/maps in things like
+// '$foo[1]["a"][2]["b"] = 3' It takes the type of the next index-slot to be
+// created, returing string for map, int for array, error otherwise.
 
-func NewMlrvalForAutoExtend(mvtype MVType) (*Mlrval, error) {
+func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 	if mvtype == MT_STRING {
 		empty := MlrvalEmptyMap()
 		return &empty, nil

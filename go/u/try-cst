@@ -167,7 +167,7 @@ echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[5] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[-1] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[-2] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[-5] = "new"'
-# expect fail echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[0] = "new"'
+# expect fail echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[1] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '@idx = NR % 5; @idx = @idx == 0 ? 5 : @idx; $[@idx] = "NEW"'
 
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$*[1] = "new"'
@@ -176,10 +176,10 @@ echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$*[5] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$*[-1] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$*[-2] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$*[-5] = "new"'
-# expect fail echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[0] = "new"'
+# expect fail echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '$[1] = "new"'
 echo; run_mlr --opprint --from u/s.dkvp --from u/t.dkvp put '@idx = NR % 5; @idx = @idx == 0 ? 5 : @idx; $*[@idx] = "NEW"'
 
-echo; run_mlr --json put '$a=$a[2]["b"][0]' u/nested.json
+echo; run_mlr --json put '$a=$a[2]["b"][1]' u/nested.json
 
 echo; run_mlr --ojson --from u/2.dkvp put '$abc[FILENAME] = "def"'
 echo; run_mlr --ojson --from u/2.dkvp put '$abc[NR] = "def"'
@@ -192,8 +192,8 @@ echo; run_mlr --ojson --from u/2.dkvp put '@abc[FILENAME][NR] = "def"; $ghi = @a
 echo; run_mlr --ojson --from u/2.dkvp put '@abc[NR][FILENAME] = "def"; $ghi = @abc'
 
 echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; $new=@a'
-echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a[0]=4; $new=@a'
-echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a[0]=4;@a[0][0]=5; $new=@a'
+echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a[1]=4; $new=@a'
+echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a[1]=4;@a[1][1]=5; $new=@a'
 
 echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a["x"]=4; $new=@a'
 echo; run_mlr --from u/2.dkvp --ojson put '@a = 3; @a["x"]=4;@a["x"]["x"]=5; $new=@a'

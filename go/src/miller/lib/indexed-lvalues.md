@@ -20,12 +20,10 @@ Multiple levels:
 
 * Each can be further indexed, e.g. `$x[1]["a"][3]`
 
-Auto-expand:
+Auto-deepen:
 
-* `x[1][2][3] = 4` should not auto-expand (or should it?)
-  * Accesses should be all in-bounds for each at-level array
-  * I don't want to absent-fill the intervenings if someone sets `x[3]` when `x` is empty ... or maybe I should?
-* `x["a"]["b"]["c"] = 4` should auto-expand
+* `x[1][2][3] = 4` should auto-deepen
+* `x["a"]["b"]["c"] = 4` should auto-deepen
   * Create new maps at each level if necessary, unless they're already something else -- like `x["a"]` is already int/array/etc.
 
 # Indexed types
