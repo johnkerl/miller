@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 type RecordReaderJSON struct {
@@ -20,7 +20,7 @@ func NewRecordReaderJSON(readerOptions *clitypes.TReaderOptions) *RecordReaderJS
 func (this *RecordReaderJSON) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -37,7 +37,7 @@ func (this *RecordReaderJSON) Read(
 			}
 		}
 	}
-	inputChannel <- lib.NewRecordAndContext(
+	inputChannel <- types.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -47,7 +47,7 @@ func (this *RecordReaderJSON) processHandle(
 	handle *os.File,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -76,7 +76,7 @@ func (this *RecordReaderJSON) processHandle(
 				return
 			}
 			context.UpdateForInputRecord(record)
-			inputChannel <- lib.NewRecordAndContext(
+			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,
 			)
@@ -98,7 +98,7 @@ func (this *RecordReaderJSON) processHandle(
 					return
 				}
 				context.UpdateForInputRecord(record)
-				inputChannel <- lib.NewRecordAndContext(
+				inputChannel <- types.NewRecordAndContext(
 					record,
 					context,
 				)

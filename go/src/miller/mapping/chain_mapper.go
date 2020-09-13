@@ -1,20 +1,20 @@
 package mapping
 
 import (
-	"miller/lib"
+	"miller/types"
 )
 
 func ChainMapper(
-	inputChannel <-chan *lib.RecordAndContext,
+	inputChannel <-chan *types.RecordAndContext,
 	recordMappers []IRecordMapper, // not *recordMapper since this is an interface
-	outputChannel chan<- *lib.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	i := 0
 	n := len(recordMappers)
 
-	intermediateChannels := make([]chan *lib.RecordAndContext, n-1)
+	intermediateChannels := make([]chan *types.RecordAndContext, n-1)
 	for i = 0; i < n-1; i++ {
-		intermediateChannels[i] = make(chan *lib.RecordAndContext, 1)
+		intermediateChannels[i] = make(chan *types.RecordAndContext, 1)
 	}
 
 	// r M0 w
@@ -42,9 +42,9 @@ func ChainMapper(
 }
 
 func runSingleMapper(
-	inputChannel <-chan *lib.RecordAndContext,
+	inputChannel <-chan *types.RecordAndContext,
 	recordMapper IRecordMapper,
-	outputChannel chan<- *lib.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	for {
 		recordAndContext := <-inputChannel

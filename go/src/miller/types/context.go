@@ -1,4 +1,4 @@
-package lib
+package types
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
 // FILENAME, NF, NF, FNR, etc.) needs to be duplicated and passed through the

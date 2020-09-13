@@ -2,7 +2,7 @@ package cst
 
 import (
 	"fmt"
-	"miller/lib"
+	"miller/types"
 	"os"
 )
 
@@ -18,11 +18,11 @@ type FunctionInfo struct {
 	// class      string -- "math", "time", "typing", "maps", etc
 	help               string
 	hasMultipleArities bool
-	zaryFunc           lib.ZaryFunc
-	unaryFunc          lib.UnaryFunc
-	binaryFunc         lib.BinaryFunc
-	ternaryFunc        lib.TernaryFunc
-	variadicFunc       lib.VariadicFunc
+	zaryFunc           types.ZaryFunc
+	unaryFunc          types.UnaryFunc
+	binaryFunc         types.BinaryFunc
+	ternaryFunc        types.TernaryFunc
+	variadicFunc       types.VariadicFunc
 }
 
 //// ----------------------------------------------------------------

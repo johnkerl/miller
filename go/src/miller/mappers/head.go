@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 	"miller/mapping"
 )
 
@@ -148,15 +148,15 @@ func NewMapperHead(
 
 // ----------------------------------------------------------------
 func (this *MapperHead) Map(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	this.recordMapperFunc(inrecAndContext, outputChannel)
 }
 
 func (this *MapperHead) mapUnkeyed(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
@@ -170,8 +170,8 @@ func (this *MapperHead) mapUnkeyed(
 }
 
 func (this *MapperHead) mapKeyed(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream

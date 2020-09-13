@@ -7,7 +7,7 @@ import (
 
 	"miller/clitypes"
 	"miller/input"
-	"miller/lib"
+	"miller/types"
 	"miller/mapping"
 	"miller/output"
 )
@@ -33,7 +33,7 @@ func Stream(
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
 	// passed through the channels along with each record.
-	initialContext := lib.NewContext()
+	initialContext := types.NewContext()
 
 	// Instantiate the record-reader
 	recordReader := input.Create(&options.ReaderOptions)
@@ -48,8 +48,8 @@ func Stream(
 	}
 
 	// Set up the reader-to-mapper and mapper-to-writer channels.
-	inputChannel := make(chan *lib.RecordAndContext, 10)
-	outputChannel := make(chan *lib.RecordAndContext, 1)
+	inputChannel := make(chan *types.RecordAndContext, 10)
+	outputChannel := make(chan *types.RecordAndContext, 1)
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use

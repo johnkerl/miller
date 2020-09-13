@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 // ostream *os.File in constructors/factory

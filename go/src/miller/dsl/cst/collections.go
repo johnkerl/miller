@@ -3,6 +3,7 @@ package cst
 import (
 	"miller/dsl"
 	"miller/lib"
+	"miller/types"
 )
 
 // ================================================================

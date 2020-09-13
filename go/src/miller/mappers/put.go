@@ -9,7 +9,7 @@ import (
 	"miller/clitypes"
 	"miller/dsl"
 	"miller/dsl/cst"
-	"miller/lib"
+	"miller/types"
 	"miller/mapping"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
@@ -178,8 +178,8 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 }
 
 func (this *MapperPut) Map(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
@@ -205,7 +205,7 @@ func (this *MapperPut) Map(
 		}
 
 		if !this.suppressOutputRecord {
-			outputChannel <- lib.NewRecordAndContext(
+			outputChannel <- types.NewRecordAndContext(
 				outrec,
 				&context,
 			)
@@ -219,7 +219,7 @@ func (this *MapperPut) Map(
 			os.Exit(1)
 		}
 
-		outputChannel <- lib.NewRecordAndContext(
+		outputChannel <- types.NewRecordAndContext(
 			nil, // signals end of input record stream
 			&context,
 		)

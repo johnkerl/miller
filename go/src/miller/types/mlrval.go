@@ -1,4 +1,4 @@
-package lib
+package types
 
 // The `types.Mlrval` structure includes **string, int, float, boolean, void,
 // absent, and error** types (not unlike PHP's `zval`) as well as

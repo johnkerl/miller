@@ -3,11 +3,11 @@ package output
 import (
 	"os"
 
-	"miller/lib"
+	"miller/types"
 )
 
 func ChannelWriter(
-	outputChannel <-chan *lib.RecordAndContext,
+	outputChannel <-chan *types.RecordAndContext,
 	recordWriter IRecordWriter,
 	done chan<- bool,
 	ostream *os.File,

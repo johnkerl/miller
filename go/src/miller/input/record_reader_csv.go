@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 type RecordReaderCSV struct {
@@ -25,7 +25,7 @@ func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV
 func (this *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -42,7 +42,7 @@ func (this *RecordReaderCSV) Read(
 			}
 		}
 	}
-	inputChannel <- lib.NewRecordAndContext(
+	inputChannel <- types.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,7 +52,7 @@ func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -86,7 +86,7 @@ func (this *RecordReaderCSV) processHandle(
 			return
 		}
 
-		record := lib.NewMlrmap()
+		record := types.NewMlrmap()
 
 		// TODO: check for length mismatches
 		n := len(header)
@@ -97,7 +97,7 @@ func (this *RecordReaderCSV) processHandle(
 		}
 		context.UpdateForInputRecord(record)
 
-		inputChannel <- lib.NewRecordAndContext(
+		inputChannel <- types.NewRecordAndContext(
 			record,
 			context,
 		)

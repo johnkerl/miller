@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 type RecordWriterDKVP struct {

@@ -1,8 +1,10 @@
-package lib
+package types
 
 import (
 	"errors"
 	"strconv"
+
+	"miller/lib"
 )
 
 // ================================================================
@@ -228,7 +230,7 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 // See also indexed-lvalues.md.
 
 func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
-	InternalCodingErrorIf(len(indices) < 1)
+	lib.InternalCodingErrorIf(len(indices) < 1)
 
 	if this.mvtype == MT_MAP {
 		return putIndexedOnMap(this.mapval, indices, rvalue)
@@ -328,7 +330,7 @@ func putIndexedOnArray(
 ) error {
 
 	numIndices := len(indices)
-	InternalCodingErrorIf(numIndices < 1)
+	lib.InternalCodingErrorIf(numIndices < 1)
 	mindex := indices[0]
 
 	if mindex.mvtype != MT_INT {

@@ -1,4 +1,4 @@
-package lib
+package types
 
 // ----------------------------------------------------------------
 func (this *Mlrval) GetType() MVType {

@@ -1,8 +1,10 @@
-package lib
+package types
 
 import (
 	"errors"
 	"strconv"
+
+	"miller/lib"
 )
 
 // Constructors
@@ -77,7 +79,7 @@ func MlrvalFromString(input string) Mlrval {
 func MlrvalFromInt64String(input string) Mlrval {
 	ival, ok := tryInt64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
-	InternalCodingErrorIf(!ok)
+	lib.InternalCodingErrorIf(!ok)
 	return Mlrval{
 		mvtype:        MT_INT,
 		printrep:      input,
@@ -118,7 +120,7 @@ func tryInt64FromString(input string) (int64, bool) {
 func MlrvalFromFloat64String(input string) Mlrval {
 	fval, ok := tryFloat64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
-	InternalCodingErrorIf(!ok)
+	lib.InternalCodingErrorIf(!ok)
 	return Mlrval{
 		mvtype:        MT_FLOAT,
 		printrep:      input,
@@ -230,7 +232,7 @@ func MlrvalFromInferredType(input string) Mlrval {
 
 // ----------------------------------------------------------------
 // Does not copy the data. We can make a MlrvalFromArrayLiteralCopy if needed,
-// using lib.CopyMlrvalArray().
+// using values.CopyMlrvalArray().
 func MlrvalFromArrayLiteralReference(input []Mlrval) Mlrval {
 	return Mlrval{
 		mvtype:        MT_ARRAY,
@@ -280,7 +282,7 @@ func NewSizedMlrvalArray(length int64) *Mlrval {
 
 func LengthenMlrvalArray(array *[]Mlrval, newLength64 int64) {
 	newLength := int(newLength64)
-	InternalCodingErrorIf(newLength <= len(*array))
+	lib.InternalCodingErrorIf(newLength <= len(*array))
 
 	if newLength <= cap(*array) {
 		newArray := (*array)[:newLength]

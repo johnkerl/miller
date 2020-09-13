@@ -4,19 +4,19 @@ import (
 	"flag"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 type IRecordMapper interface {
 	Map(
-		inrecAndContext *lib.RecordAndContext,
-		outputChannel chan<- *lib.RecordAndContext,
+		inrecAndContext *types.RecordAndContext,
+		outputChannel chan<- *types.RecordAndContext,
 	)
 }
 
 type RecordMapperFunc func(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 )
 
 type MapperParseCLIFunc func(

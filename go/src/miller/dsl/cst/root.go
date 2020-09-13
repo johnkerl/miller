@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"miller/dsl"
-	"miller/lib"
+	"miller/types"
 )
 
 // ================================================================

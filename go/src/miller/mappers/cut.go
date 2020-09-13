@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 	"miller/mapping"
 )
 
@@ -176,8 +176,8 @@ func NewMapperCut(
 
 // ----------------------------------------------------------------
 func (this *MapperCut) Map(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// xxx function-pointer assign at constructor time
 	if !this.doComplement {
@@ -194,12 +194,12 @@ func (this *MapperCut) Map(
 // ----------------------------------------------------------------
 // mlr cut -f a,b,c
 func (this *MapperCut) includeWithInputOrder(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		outrec := lib.NewMlrmap()
+		outrec := types.NewMlrmap()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			fieldName := *pe.Key
 			_, wanted := this.fieldNameSet[fieldName]
@@ -207,7 +207,7 @@ func (this *MapperCut) includeWithInputOrder(
 				outrec.PutReference(&fieldName, pe.Value) // inrec will be GC'ed
 			}
 		}
-		outrecAndContext := lib.NewRecordAndContext(outrec, &inrecAndContext.Context)
+		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 		outputChannel <- outrecAndContext
 	} else {
 		outputChannel <- inrecAndContext
@@ -217,19 +217,19 @@ func (this *MapperCut) includeWithInputOrder(
 // ----------------------------------------------------------------
 // mlr cut -o -f a,b,c
 func (this *MapperCut) includeWithArgOrder(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		outrec := lib.NewMlrmap()
+		outrec := types.NewMlrmap()
 		for _, fieldName := range this.fieldNameList {
 			value := inrec.Get(&fieldName)
 			if value != nil {
 				outrec.PutReference(&fieldName, value) // inrec will be GC'ed
 			}
 		}
-		outrecAndContext := lib.NewRecordAndContext(outrec, &inrecAndContext.Context)
+		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 		outputChannel <- outrecAndContext
 	} else {
 		outputChannel <- inrecAndContext
@@ -239,8 +239,8 @@ func (this *MapperCut) includeWithArgOrder(
 // ----------------------------------------------------------------
 // mlr cut -x -f a,b,c
 func (this *MapperCut) exclude(
-	inrecAndContext *lib.RecordAndContext,
-	outputChannel chan<- *lib.RecordAndContext,
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream

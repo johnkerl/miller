@@ -2,7 +2,7 @@ package cst
 
 import (
 	"miller/dsl"
-	"miller/lib"
+	"miller/types"
 )
 
 // ================================================================
@@ -34,7 +34,7 @@ type State struct {
 }
 
 func NewEmptyState() *State {
-	oosvars := lib.NewMlrmap()
+	oosvars := types.NewMlrmap()
 	return &State{
 		Inrec:   nil,
 		Context: nil,

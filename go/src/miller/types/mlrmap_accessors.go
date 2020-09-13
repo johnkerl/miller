@@ -1,8 +1,10 @@
-package lib
+package types
 
 import (
 	"errors"
 	"strconv"
+
+	"miller/lib"
 )
 
 // ----------------------------------------------------------------
@@ -44,7 +46,7 @@ func (this *Mlrmap) findEntryByPositionalIndex(position int64) *mlrmapEntry {
 			}
 			i++
 		}
-		InternalCodingErrorIf(true)
+		lib.InternalCodingErrorIf(true)
 	} else {
 		var i int64 = -1
 		for pe := this.Tail; pe != nil; pe = pe.Prev {
@@ -53,9 +55,9 @@ func (this *Mlrmap) findEntryByPositionalIndex(position int64) *mlrmapEntry {
 			}
 			i--
 		}
-		InternalCodingErrorIf(true)
+		lib.InternalCodingErrorIf(true)
 	}
-	InternalCodingErrorIf(true)
+	lib.InternalCodingErrorIf(true)
 	return nil
 }
 

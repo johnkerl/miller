@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 type RecordReaderDKVP struct {
@@ -25,7 +25,7 @@ func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDK
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -42,7 +42,7 @@ func (this *RecordReaderDKVP) Read(
 			}
 		}
 	}
-	inputChannel <- lib.NewRecordAndContext(
+	inputChannel <- types.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -52,7 +52,7 @@ func (this *RecordReaderDKVP) processHandle(
 	handle *os.File,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -71,7 +71,7 @@ func (this *RecordReaderDKVP) processHandle(
 			line = strings.TrimRight(line, "\n")
 			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
 			context.UpdateForInputRecord(record)
-			inputChannel <- lib.NewRecordAndContext(
+			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,
 			)
@@ -85,7 +85,7 @@ func recordFromDKVPLine(
 	ifs *string,
 	ips *string,
 ) *types.Mlrmap {
-	record := lib.NewMlrmap()
+	record := types.NewMlrmap()
 	pairs := strings.Split(*line, *ifs)
 	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)

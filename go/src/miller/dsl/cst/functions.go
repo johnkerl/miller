@@ -6,6 +6,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/types"
 )
 
 // ================================================================
@@ -77,7 +78,7 @@ func BuildMultipleArityFunctionCallsiteNode(
 
 // ----------------------------------------------------------------
 type ZaryFunctionCallsiteNode struct {
-	zaryFunc lib.ZaryFunc
+	zaryFunc types.ZaryFunc
 }
 
 func BuildZaryFunctionCallsiteNode(
@@ -107,7 +108,7 @@ func (this *ZaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 
 // ----------------------------------------------------------------
 type UnaryFunctionCallsiteNode struct {
-	unaryFunc  lib.UnaryFunc
+	unaryFunc  types.UnaryFunc
 	evaluable1 IEvaluable
 }
 
@@ -150,7 +151,7 @@ func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 
 // ----------------------------------------------------------------
 type BinaryFunctionCallsiteNode struct {
-	binaryFunc lib.BinaryFunc
+	binaryFunc types.BinaryFunc
 	evaluable1 IEvaluable
 	evaluable2 IEvaluable
 }
@@ -214,7 +215,7 @@ func (this *BinaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 
 // ----------------------------------------------------------------
 type TernaryFunctionCallsiteNode struct {
-	ternaryFunc lib.TernaryFunc
+	ternaryFunc types.TernaryFunc
 	evaluable1  IEvaluable
 	evaluable2  IEvaluable
 	evaluable3  IEvaluable
@@ -280,7 +281,7 @@ func (this *TernaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 
 // ----------------------------------------------------------------
 type VariadicFunctionCallsiteNode struct {
-	variadicFunc lib.VariadicFunc
+	variadicFunc types.VariadicFunc
 	evaluables   []IEvaluable
 }
 
@@ -362,10 +363,10 @@ func BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
 func (this *LogicalANDOperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
-	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
+	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
 		return types.MlrvalFromError()
 	}
-	if atype == lib.MT_ABSENT {
+	if atype == types.MT_ABSENT {
 		return aout
 	}
 	if aout.IsFalse() {
@@ -378,10 +379,10 @@ func (this *LogicalANDOperatorNode) Evaluate(state *State) types.Mlrval {
 
 	bout := this.b.Evaluate(state)
 	btype := bout.GetType()
-	if !(btype == lib.MT_ABSENT || btype == lib.MT_BOOL) {
+	if !(btype == types.MT_ABSENT || btype == types.MT_BOOL) {
 		return types.MlrvalFromError()
 	}
-	if btype == lib.MT_ABSENT {
+	if btype == types.MT_ABSENT {
 		return bout
 	}
 	return types.MlrvalLogicalAND(&aout, &bout)
@@ -402,10 +403,10 @@ func BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
 func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
-	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
+	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
 		return types.MlrvalFromError()
 	}
-	if atype == lib.MT_ABSENT {
+	if atype == types.MT_ABSENT {
 		return aout
 	}
 	if aout.IsTrue() {
@@ -418,10 +419,10 @@ func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
 
 	bout := this.b.Evaluate(state)
 	btype := bout.GetType()
-	if !(btype == lib.MT_ABSENT || btype == lib.MT_BOOL) {
+	if !(btype == types.MT_ABSENT || btype == types.MT_BOOL) {
 		return types.MlrvalFromError()
 	}
-	if btype == lib.MT_ABSENT {
+	if btype == types.MT_ABSENT {
 		return bout
 	}
 	return types.MlrvalLogicalOR(&aout, &bout)

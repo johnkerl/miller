@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
+	"miller/types"
 )
 
 type RecordReaderNIDX struct {
@@ -27,7 +27,7 @@ func NewRecordReaderNIDX(readerOptions *clitypes.TReaderOptions) *RecordReaderNI
 func (this *RecordReaderNIDX) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	if len(filenames) == 0 { // read from stdin
@@ -44,7 +44,7 @@ func (this *RecordReaderNIDX) Read(
 			}
 		}
 	}
-	inputChannel <- lib.NewRecordAndContext(
+	inputChannel <- types.NewRecordAndContext(
 		nil, // signals end of input record stream
 		&context,
 	)
@@ -54,7 +54,7 @@ func (this *RecordReaderNIDX) processHandle(
 	handle *os.File,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *lib.RecordAndContext,
+	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -75,7 +75,7 @@ func (this *RecordReaderNIDX) processHandle(
 			record := recordFromNIDXLine(&line)
 
 			context.UpdateForInputRecord(record)
-			inputChannel <- lib.NewRecordAndContext(
+			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,
 			)
@@ -87,7 +87,7 @@ func (this *RecordReaderNIDX) processHandle(
 func recordFromNIDXLine(
 	line *string,
 ) *types.Mlrmap {
-	record := lib.NewMlrmap()
+	record := types.NewMlrmap()
 	values := strings.Split(*line, " ") // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {

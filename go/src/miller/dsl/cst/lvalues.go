@@ -5,6 +5,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/types"
 )
 
 // This is for Lvalues, i.e. things on the left-hand-side of an assignment

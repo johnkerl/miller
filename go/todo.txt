@@ -119,7 +119,7 @@ NITS/NON-IMMEDIATE:
 * neaten/error-proof:
   o mlrmapEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
     or remove. (keeping pointers allows nil-check which is good.)
-  o inrec *lib.Mlrmap is good for default no-copy across channels ... needs
+  o inrec *types.Mlrmap is good for default no-copy across channels ... needs
     a big red flag though for things like the repeat verb (maybe *only* that one ...)
 ! clean up the AST API. ish! :^/
 * defer reg_test/run until there is quite a bit more verb/dsl/io expansion

@@ -1,4 +1,4 @@
-package lib
+package types
 
 // ================================================================
 // Mlrval implements the Unmarshaler and Marshaler interfaces needed for
@@ -14,6 +14,8 @@ import (
 	"errors"
 	"io"
 	"strings"
+
+	"miller/lib"
 )
 
 const MLRVAL_JSON_INDENT_STRING string = "  "
@@ -295,7 +297,7 @@ func (this *Mlrval) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONPending() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_PENDING)
+	lib.InternalCodingErrorIf(this.mvtype != MT_PENDING)
 	return nil, errors.New(
 		"Miller internal coding error: pending-values should not have been produced",
 	)
@@ -303,13 +305,13 @@ func (this *Mlrval) marshalJSONPending() ([]byte, error) {
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONError() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_ERROR)
+	lib.InternalCodingErrorIf(this.mvtype != MT_ERROR)
 	return []byte(this.printrep), nil
 }
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONAbsent() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_ABSENT)
+	lib.InternalCodingErrorIf(this.mvtype != MT_ABSENT)
 	return nil, errors.New(
 		"Miller internal coding error: absent-values should not have been assigned",
 	)
@@ -317,13 +319,13 @@ func (this *Mlrval) marshalJSONAbsent() ([]byte, error) {
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONVoid() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_VOID)
+	lib.InternalCodingErrorIf(this.mvtype != MT_VOID)
 	return []byte(""), nil
 }
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONString() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_STRING)
+	lib.InternalCodingErrorIf(this.mvtype != MT_STRING)
 	var buffer bytes.Buffer
 	buffer.WriteByte('"')
 	buffer.WriteString(strings.ReplaceAll(this.printrep, "\"", "\\\""))
@@ -333,25 +335,25 @@ func (this *Mlrval) marshalJSONString() ([]byte, error) {
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONInt() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_INT)
+	lib.InternalCodingErrorIf(this.mvtype != MT_INT)
 	return []byte(this.String()), nil
 }
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONFloat() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_FLOAT)
+	lib.InternalCodingErrorIf(this.mvtype != MT_FLOAT)
 	return []byte(this.String()), nil
 }
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONBool() ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_BOOL)
+	lib.InternalCodingErrorIf(this.mvtype != MT_BOOL)
 	return []byte(this.String()), nil
 }
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONArray(elementNestingDepth int) ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_ARRAY)
+	lib.InternalCodingErrorIf(this.mvtype != MT_ARRAY)
 
 	// Put an array of all-terminal nodes all on one line, like '[1,2,3,4,5].
 	allTerminal := true
@@ -439,7 +441,7 @@ func (this *Mlrval) marshalJSONArrayMultipleLines(elementNestingDepth int) ([]by
 
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONMap(elementNestingDepth int) ([]byte, error) {
-	InternalCodingErrorIf(this.mvtype != MT_MAP)
+	lib.InternalCodingErrorIf(this.mvtype != MT_MAP)
 	bytes, err := this.mapval.marshalJSONAux(elementNestingDepth)
 	if err != nil {
 		return nil, err

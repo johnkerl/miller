@@ -1,7 +1,7 @@
 package output
 
 import (
-	"miller/lib"
+	"miller/types"
 )
 
 // Convention: nil outrec signifies end of record stream
