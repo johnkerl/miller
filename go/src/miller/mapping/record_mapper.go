@@ -14,6 +14,11 @@ type IRecordMapper interface {
 	)
 }
 
+type RecordMapperFunc func(
+	inrecAndContext *lib.RecordAndContext,
+	outputChannel chan<- *lib.RecordAndContext,
+)
+
 type MapperParseCLIFunc func(
 	pargi *int,
 	argc int,

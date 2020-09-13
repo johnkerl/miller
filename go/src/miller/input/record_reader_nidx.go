@@ -26,7 +26,7 @@ func NewRecordReaderNIDX(readerOptions *clitypes.TReaderOptions) *RecordReaderNI
 
 func (this *RecordReaderNIDX) Read(
 	filenames []string,
-	context lib.Context,
+	context types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -53,7 +53,7 @@ func (this *RecordReaderNIDX) Read(
 func (this *RecordReaderNIDX) processHandle(
 	handle *os.File,
 	filename string,
-	context *lib.Context,
+	context *types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -86,14 +86,14 @@ func (this *RecordReaderNIDX) processHandle(
 // ----------------------------------------------------------------
 func recordFromNIDXLine(
 	line *string,
-) *lib.Mlrmap {
+) *types.Mlrmap {
 	record := lib.NewMlrmap()
 	values := strings.Split(*line, " ") // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {
 		i++
 		key := strconv.FormatInt(i, 10)
-		mval := lib.MlrvalFromInferredType(value)
+		mval := types.MlrvalFromInferredType(value)
 		record.PutReference(&key, &mval)
 	}
 	return record

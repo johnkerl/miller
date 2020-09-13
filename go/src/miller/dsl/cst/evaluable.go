@@ -74,10 +74,10 @@ func BuildIndirectFieldValueNode(astNode *dsl.ASTNode) (*IndirectFieldValueNode,
 		fieldNameEvaluable: fieldNameEvaluable,
 	}, nil
 }
-func (this *IndirectFieldValueNode) Evaluate(state *State) lib.Mlrval { // xxx err
+func (this *IndirectFieldValueNode) Evaluate(state *State) types.Mlrval { // xxx err
 	fieldName := this.fieldNameEvaluable.Evaluate(state)
 	if fieldName.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 
 	// Positional indices are supported, e.g. $[3] is the third field in the record.
@@ -90,7 +90,7 @@ func (this *IndirectFieldValueNode) Evaluate(state *State) lib.Mlrval { // xxx e
 	}
 	if value == nil {
 		// E.g. $[7] but there aren't 7 fields in this record.
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	return *value
 }

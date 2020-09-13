@@ -14,7 +14,7 @@ func main() {
 	decoder := json.NewDecoder(os.Stdin)
 
 	for {
-		mlrval, eof, err := lib.MlrvalDecodeFromJSON(decoder)
+		mlrval, eof, err := types.MlrvalDecodeFromJSON(decoder)
 		if eof {
 			break
 		}

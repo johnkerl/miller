@@ -45,34 +45,34 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 	{
 		name:     "systime",
 		help:     "help string will go here",
-		zaryFunc: lib.MlrvalSystime,
+		zaryFunc: types.MlrvalSystime,
 	},
 	{
 		name:     "systimeint",
 		help:     "help string will go here",
-		zaryFunc: lib.MlrvalSystimeInt,
+		zaryFunc: types.MlrvalSystimeInt,
 	},
 	{
 		name:     "urand",
-		zaryFunc: lib.MlrvalUrand,
+		zaryFunc: types.MlrvalUrand,
 	},
 	{
 		name:     "urand32",
-		zaryFunc: lib.MlrvalUrand32,
+		zaryFunc: types.MlrvalUrand32,
 	},
 
 	// ----------------------------------------------------------------
 	// Multiple-arity built-in functions
 	{
 		name:               "+",
-		unaryFunc:          lib.MlrvalUnaryPlus,
-		binaryFunc:         lib.MlrvalBinaryPlus,
+		unaryFunc:          types.MlrvalUnaryPlus,
+		binaryFunc:         types.MlrvalBinaryPlus,
 		hasMultipleArities: true,
 	},
 	{
 		name:               "-",
-		unaryFunc:          lib.MlrvalUnaryMinus,
-		binaryFunc:         lib.MlrvalBinaryMinus,
+		unaryFunc:          types.MlrvalUnaryMinus,
+		binaryFunc:         types.MlrvalBinaryMinus,
 		hasMultipleArities: true,
 	},
 
@@ -80,205 +80,205 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 	// Unary built-in functions
 	{
 		name:      "~",
-		unaryFunc: lib.MlrvalBitwiseNOT,
+		unaryFunc: types.MlrvalBitwiseNOT,
 	},
 	{
 		name:      "!",
-		unaryFunc: lib.MlrvalLogicalNOT,
+		unaryFunc: types.MlrvalLogicalNOT,
 	},
 
 	{
 		name:      "abs",
 		help:      "Absolute value.",
-		unaryFunc: lib.MlrvalAbs,
+		unaryFunc: types.MlrvalAbs,
 	},
 	{
 		name:      "acos",
 		help:      "Inverse trigonometric cosine.",
-		unaryFunc: lib.MlrvalAcos,
+		unaryFunc: types.MlrvalAcos,
 	},
 	{
 		name:      "acosh",
 		help:      "Inverse hyperbolic cosine.",
-		unaryFunc: lib.MlrvalAcosh,
+		unaryFunc: types.MlrvalAcosh,
 	},
 	{
 		name:      "asin",
 		help:      "Inverse trigonometric sine.",
-		unaryFunc: lib.MlrvalAsin,
+		unaryFunc: types.MlrvalAsin,
 	},
 	{
 		name:      "asinh",
 		help:      "Inverse hyperbolic sine.",
-		unaryFunc: lib.MlrvalAsinh,
+		unaryFunc: types.MlrvalAsinh,
 	},
 	{
 		name:      "atan",
 		help:      "One-argument arctangent.",
-		unaryFunc: lib.MlrvalAtan,
+		unaryFunc: types.MlrvalAtan,
 	},
 	{
 		name:      "atanh",
 		help:      "Inverse hyperbolic tangent.",
-		unaryFunc: lib.MlrvalAtanh,
+		unaryFunc: types.MlrvalAtanh,
 	},
 	{
 		name:      "cbrt",
 		help:      "Cube root.",
-		unaryFunc: lib.MlrvalCbrt,
+		unaryFunc: types.MlrvalCbrt,
 	},
 	{
 		name:      "ceil",
 		help:      "Ceiling: nearest integer at or above.",
-		unaryFunc: lib.MlrvalCeil,
+		unaryFunc: types.MlrvalCeil,
 	},
 	{
 		name:      "cos",
 		help:      "Trigonometric cosine.",
-		unaryFunc: lib.MlrvalCos,
+		unaryFunc: types.MlrvalCos,
 	},
 	{
 		name:      "cosh",
 		help:      "Hyperbolic cosine.",
-		unaryFunc: lib.MlrvalCosh,
+		unaryFunc: types.MlrvalCosh,
 	},
 	{
 		name:      "erf",
 		help:      "Error function.",
-		unaryFunc: lib.MlrvalErf,
+		unaryFunc: types.MlrvalErf,
 	},
 	{
 		name:      "erfc",
 		help:      "Complementary error function.",
-		unaryFunc: lib.MlrvalErfc,
+		unaryFunc: types.MlrvalErfc,
 	},
 	{
 		name:      "exp",
 		help:      "Exponential function e**x.",
-		unaryFunc: lib.MlrvalExp,
+		unaryFunc: types.MlrvalExp,
 	},
 	{
 		name:      "expm1",
 		help:      "e**x - 1.",
-		unaryFunc: lib.MlrvalExpm1,
+		unaryFunc: types.MlrvalExpm1,
 	},
 	{
 		name:      "floor",
 		help:      "Floor: nearest integer at or below.",
-		unaryFunc: lib.MlrvalFloor,
+		unaryFunc: types.MlrvalFloor,
 	},
 	{
 		name:      "log",
 		help:      "Natural (base-e) logarithm.",
-		unaryFunc: lib.MlrvalLog,
+		unaryFunc: types.MlrvalLog,
 	},
 	{
 		name:      "log10",
 		help:      "Base-10 logarithm.",
-		unaryFunc: lib.MlrvalLog10,
+		unaryFunc: types.MlrvalLog10,
 	},
 	{
 		name:      "log1p",
 		help:      "log(1-x).",
-		unaryFunc: lib.MlrvalLog1p,
+		unaryFunc: types.MlrvalLog1p,
 	},
 	{
 		name:      "round",
 		help:      "Round to nearest integer.",
-		unaryFunc: lib.MlrvalRound,
+		unaryFunc: types.MlrvalRound,
 	},
 	{
 		name:      "sin",
 		help:      "Trigonometric sine.",
-		unaryFunc: lib.MlrvalSin,
+		unaryFunc: types.MlrvalSin,
 	},
 	{
 		name:      "sinh",
 		help:      "Hyperbolic sine.",
-		unaryFunc: lib.MlrvalSinh,
+		unaryFunc: types.MlrvalSinh,
 	},
 	{
 		name:      "sqrt",
 		help:      "Square root.",
-		unaryFunc: lib.MlrvalSqrt,
+		unaryFunc: types.MlrvalSqrt,
 	},
 	{
 		name:      "tan",
 		help:      "Trigonometric tangent.",
-		unaryFunc: lib.MlrvalTan,
+		unaryFunc: types.MlrvalTan,
 	},
 	{
 		name:      "tanh",
 		help:      "Hyperbolic tangent.",
-		unaryFunc: lib.MlrvalTanh,
+		unaryFunc: types.MlrvalTanh,
 	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions
 	{
 		name:       ".",
-		binaryFunc: lib.MlrvalDot,
+		binaryFunc: types.MlrvalDot,
 	},
 	{
 		name:       "*",
-		binaryFunc: lib.MlrvalTimes,
+		binaryFunc: types.MlrvalTimes,
 	},
 	{
 		name:       "/",
-		binaryFunc: lib.MlrvalDivide,
+		binaryFunc: types.MlrvalDivide,
 	},
 	{
 		name:       "//",
-		binaryFunc: lib.MlrvalIntDivide,
+		binaryFunc: types.MlrvalIntDivide,
 	},
 	{
 		name:       "**",
-		binaryFunc: lib.MlrvalPow,
+		binaryFunc: types.MlrvalPow,
 	},
 	{
 		name:       ".+",
-		binaryFunc: lib.MlrvalDotPlus,
+		binaryFunc: types.MlrvalDotPlus,
 	},
 	{
 		name:       ".-",
-		binaryFunc: lib.MlrvalDotMinus,
+		binaryFunc: types.MlrvalDotMinus,
 	},
 	{
 		name:       ".*",
-		binaryFunc: lib.MlrvalDotTimes,
+		binaryFunc: types.MlrvalDotTimes,
 	},
 	{
 		name:       "./",
-		binaryFunc: lib.MlrvalDotDivide,
+		binaryFunc: types.MlrvalDotDivide,
 	},
 	{
 		name:       "%",
-		binaryFunc: lib.MlrvalModulus,
+		binaryFunc: types.MlrvalModulus,
 	},
 
 	{
 		name:       "==",
-		binaryFunc: lib.MlrvalEquals,
+		binaryFunc: types.MlrvalEquals,
 	},
 	{
 		name:       "!=",
-		binaryFunc: lib.MlrvalNotEquals,
+		binaryFunc: types.MlrvalNotEquals,
 	},
 	{
 		name:       ">",
-		binaryFunc: lib.MlrvalGreaterThan,
+		binaryFunc: types.MlrvalGreaterThan,
 	},
 	{
 		name:       ">=",
-		binaryFunc: lib.MlrvalGreaterThanOrEquals,
+		binaryFunc: types.MlrvalGreaterThanOrEquals,
 	},
 	{
 		name:       "<",
-		binaryFunc: lib.MlrvalLessThan,
+		binaryFunc: types.MlrvalLessThan,
 	},
 	{
 		name:       "<=",
-		binaryFunc: lib.MlrvalLessThanOrEquals,
+		binaryFunc: types.MlrvalLessThanOrEquals,
 	},
 
 	{
@@ -291,31 +291,31 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 	},
 	{
 		name:       "^&",
-		binaryFunc: lib.MlrvalLogicalXOR,
+		binaryFunc: types.MlrvalLogicalXOR,
 	},
 	{
 		name:       "&",
-		binaryFunc: lib.MlrvalBitwiseAND,
+		binaryFunc: types.MlrvalBitwiseAND,
 	},
 	{
 		name:       "|",
-		binaryFunc: lib.MlrvalBitwiseOR,
+		binaryFunc: types.MlrvalBitwiseOR,
 	},
 	{
 		name:       "^",
-		binaryFunc: lib.MlrvalBitwiseXOR,
+		binaryFunc: types.MlrvalBitwiseXOR,
 	},
 	{
 		name:       "<<",
-		binaryFunc: lib.MlrvalLeftShift,
+		binaryFunc: types.MlrvalLeftShift,
 	},
 	{
 		name:       ">>",
-		binaryFunc: lib.MlrvalSignedRightShift,
+		binaryFunc: types.MlrvalSignedRightShift,
 	},
 	{
 		name:       ">>>",
-		binaryFunc: lib.MlrvalUnsignedRightShift,
+		binaryFunc: types.MlrvalUnsignedRightShift,
 	},
 
 	{
@@ -345,11 +345,11 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 	// Variadic built-in functions
 	{
 		name:         "max",
-		variadicFunc: lib.MlrvalVariadicMax,
+		variadicFunc: types.MlrvalVariadicMax,
 	},
 	{
 		name:         "min",
-		variadicFunc: lib.MlrvalVariadicMin,
+		variadicFunc: types.MlrvalVariadicMin,
 	},
 }
 

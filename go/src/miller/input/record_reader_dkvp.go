@@ -24,7 +24,7 @@ func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDK
 
 func (this *RecordReaderDKVP) Read(
 	filenames []string,
-	context lib.Context,
+	context types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -51,7 +51,7 @@ func (this *RecordReaderDKVP) Read(
 func (this *RecordReaderDKVP) processHandle(
 	handle *os.File,
 	filename string,
-	context *lib.Context,
+	context *types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -84,7 +84,7 @@ func recordFromDKVPLine(
 	line *string,
 	ifs *string,
 	ips *string,
-) *lib.Mlrmap {
+) *types.Mlrmap {
 	record := lib.NewMlrmap()
 	pairs := strings.Split(*line, *ifs)
 	for _, pair := range pairs {
@@ -92,10 +92,10 @@ func recordFromDKVPLine(
 		key := kv[0]
 		// xxx check length 0. also, check input is empty since "".split() -> [""] not []
 		if len(kv) == 1 {
-			value := lib.MlrvalFromVoid()
+			value := types.MlrvalFromVoid()
 			record.PutReference(&key, &value)
 		} else {
-			value := lib.MlrvalFromInferredType(kv[1])
+			value := types.MlrvalFromInferredType(kv[1])
 			record.PutReference(&key, &value)
 		}
 	}

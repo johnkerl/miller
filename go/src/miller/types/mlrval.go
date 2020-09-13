@@ -1,6 +1,6 @@
 package lib
 
-// The `lib.Mlrval` structure includes **string, int, float, boolean, void,
+// The `types.Mlrval` structure includes **string, int, float, boolean, void,
 // absent, and error** types (not unlike PHP's `zval`) as well as
 // type-conversion logic for various operators.
 //

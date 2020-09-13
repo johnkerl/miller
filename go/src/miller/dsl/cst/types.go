@@ -27,9 +27,9 @@ import (
 // to execute the expression. That includes the current record, AWK-like variables
 // such as FILENAME and NR, and out-of-stream variables.
 type State struct {
-	Inrec   *lib.Mlrmap
-	Context *lib.Context
-	Oosvars *lib.Mlrmap
+	Inrec   *types.Mlrmap
+	Context *types.Context
+	Oosvars *types.Mlrmap
 	// TODO: stack frames will go into individual statement-block nodes
 }
 
@@ -43,8 +43,8 @@ func NewEmptyState() *State {
 }
 
 func (this *State) Update(
-	inrec *lib.Mlrmap,
-	context *lib.Context,
+	inrec *types.Mlrmap,
+	context *types.Context,
 ) {
 	this.Inrec = inrec
 	this.Context = context
@@ -80,12 +80,12 @@ type StatementBlockNode struct {
 // ================================================================
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
-	Assign(rvalue *lib.Mlrval, state *State) error
+	Assign(rvalue *types.Mlrval, state *State) error
 
 	// 'foo = "bar"' or 'foo[3]["abc"] = "bar"'
 	// For non-indexed assignment, which is the normal case, indices can be
 	// zero-length or nil.
-	AssignIndexed(rvalue *lib.Mlrval, indices []*lib.Mlrval, state *State) error
+	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *State) error
 }
 
 // ================================================================
@@ -93,5 +93,5 @@ type IAssignable interface {
 // Also, for computed field names on the left-hand side, like '$a . $b' in mlr
 // put '$[$a . $b]' = $x + $y'.
 type IEvaluable interface {
-	Evaluate(state *State) lib.Mlrval
+	Evaluate(state *State) types.Mlrval
 }

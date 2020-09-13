@@ -124,7 +124,7 @@ nil through the reader/mapper/writer sequence.
   * If a mapper drops a record (`mlr filter` in false cases, for example, or `mlr nothing`) it will be GCed.
   * One caveat is any mapper which produces multiples, e.g. `mlr repeat` -- this needs to explicitly copy records instead of producing multiple pointers to the same record.
 * Right-hand-sides of DSL expressions all pass around pointers to records and Mlrvals.
-  * Lvalue expressions return pointed `*lib.Mlrmap` so they can be assigned to; rvalue expressions return non-pointed `lib.Mlrval` but these are very shallow copies -- the int/string/etc types are copied but maps/arrays are passed by reference in the rvalue expression-evaluators.
+  * Lvalue expressions return pointed `*types.Mlrmap` so they can be assigned to; rvalue expressions return non-pointed `types.Mlrval` but these are very shallow copies -- the int/string/etc types are copied but maps/arrays are passed by reference in the rvalue expression-evaluators.
 * Copy-on-write is done on map/array put -- for example, in the assignment phase of a DSL statement, where an rvalue is assigned to an lvalue.
 
 # More about mlrvals

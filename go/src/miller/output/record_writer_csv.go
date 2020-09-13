@@ -24,7 +24,7 @@ func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV
 }
 
 func (this *RecordWriterCSV) Write(
-	outrec *lib.Mlrmap,
+	outrec *types.Mlrmap,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

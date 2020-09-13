@@ -24,7 +24,7 @@ func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV
 
 func (this *RecordReaderCSV) Read(
 	filenames []string,
-	context lib.Context,
+	context types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -51,7 +51,7 @@ func (this *RecordReaderCSV) Read(
 func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
-	context *lib.Context,
+	context *types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -92,7 +92,7 @@ func (this *RecordReaderCSV) processHandle(
 		n := len(header)
 		for i := 0; i < n; i++ {
 			key := header[i]
-			value := lib.MlrvalFromInferredType(csvRecord[i])
+			value := types.MlrvalFromInferredType(csvRecord[i])
 			record.PutReference(&key, &value)
 		}
 		context.UpdateForInputRecord(record)

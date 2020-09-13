@@ -19,7 +19,7 @@ func NewRecordReaderJSON(readerOptions *clitypes.TReaderOptions) *RecordReaderJS
 
 func (this *RecordReaderJSON) Read(
 	filenames []string,
-	context lib.Context,
+	context types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -46,7 +46,7 @@ func (this *RecordReaderJSON) Read(
 func (this *RecordReaderJSON) processHandle(
 	handle *os.File,
 	filename string,
-	context *lib.Context,
+	context *types.Context,
 	inputChannel chan<- *lib.RecordAndContext,
 	errorChannel chan error,
 ) {
@@ -54,7 +54,7 @@ func (this *RecordReaderJSON) processHandle(
 	decoder := json.NewDecoder(handle)
 
 	for {
-		mlrval, eof, err := lib.MlrvalDecodeFromJSON(decoder)
+		mlrval, eof, err := types.MlrvalDecodeFromJSON(decoder)
 		if eof {
 			break
 		}

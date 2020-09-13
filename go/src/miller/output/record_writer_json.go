@@ -20,7 +20,7 @@ func NewRecordWriterJSON(writerOptions *clitypes.TWriterOptions) *RecordWriterJS
 }
 
 func (this *RecordWriterJSON) Write(
-	outrec *lib.Mlrmap,
+	outrec *types.Mlrmap,
 ) {
 	// End of record stream
 	if outrec == nil {

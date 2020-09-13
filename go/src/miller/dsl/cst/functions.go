@@ -101,7 +101,7 @@ func BuildZaryFunctionCallsiteNode(
 	return &ZaryFunctionCallsiteNode{zaryFunc: functionInfo.zaryFunc}, nil
 }
 
-func (this *ZaryFunctionCallsiteNode) Evaluate(state *State) lib.Mlrval {
+func (this *ZaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	return this.zaryFunc()
 }
 
@@ -140,10 +140,10 @@ func BuildUnaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) lib.Mlrval {
+func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	if arg1.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	return this.unaryFunc(&arg1)
 }
@@ -200,14 +200,14 @@ func BuildBinaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *BinaryFunctionCallsiteNode) Evaluate(state *State) lib.Mlrval {
+func (this *BinaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	if arg1.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	arg2 := this.evaluable2.Evaluate(state)
 	if arg2.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	return this.binaryFunc(&arg1, &arg2)
 }
@@ -262,18 +262,18 @@ func BuildTernaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *TernaryFunctionCallsiteNode) Evaluate(state *State) lib.Mlrval {
+func (this *TernaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	if arg1.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	arg2 := this.evaluable2.Evaluate(state)
 	if arg2.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	arg3 := this.evaluable3.Evaluate(state)
 	if arg3.IsAbsent() {
-		return lib.MlrvalFromAbsent()
+		return types.MlrvalFromAbsent()
 	}
 	return this.ternaryFunc(&arg1, &arg2, &arg3)
 }
@@ -304,12 +304,12 @@ func BuildVariadicFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *VariadicFunctionCallsiteNode) Evaluate(state *State) lib.Mlrval {
-	args := make([]*lib.Mlrval, len(this.evaluables))
+func (this *VariadicFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+	args := make([]*types.Mlrval, len(this.evaluables))
 	for i, evaluable := range this.evaluables {
 		arg := evaluable.Evaluate(state)
 		if arg.IsAbsent() {
-			return lib.MlrvalFromAbsent()
+			return types.MlrvalFromAbsent()
 		}
 		args[i] = &arg
 	}
@@ -359,11 +359,11 @@ func BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
 // * If b is absent: return absent
 // * Return a && b
 
-func (this *LogicalANDOperatorNode) Evaluate(state *State) lib.Mlrval {
+func (this *LogicalANDOperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
-		return lib.MlrvalFromError()
+		return types.MlrvalFromError()
 	}
 	if atype == lib.MT_ABSENT {
 		return aout
@@ -379,12 +379,12 @@ func (this *LogicalANDOperatorNode) Evaluate(state *State) lib.Mlrval {
 	bout := this.b.Evaluate(state)
 	btype := bout.GetType()
 	if !(btype == lib.MT_ABSENT || btype == lib.MT_BOOL) {
-		return lib.MlrvalFromError()
+		return types.MlrvalFromError()
 	}
 	if btype == lib.MT_ABSENT {
 		return bout
 	}
-	return lib.MlrvalLogicalAND(&aout, &bout)
+	return types.MlrvalLogicalAND(&aout, &bout)
 }
 
 // ================================================================
@@ -399,11 +399,11 @@ func BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
 // if the first argumeent is false.
 //
 // See the disposition-matrix discussion for LogicalANDOperator.
-func (this *LogicalOROperatorNode) Evaluate(state *State) lib.Mlrval {
+func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == lib.MT_ABSENT || atype == lib.MT_BOOL) {
-		return lib.MlrvalFromError()
+		return types.MlrvalFromError()
 	}
 	if atype == lib.MT_ABSENT {
 		return aout
@@ -419,12 +419,12 @@ func (this *LogicalOROperatorNode) Evaluate(state *State) lib.Mlrval {
 	bout := this.b.Evaluate(state)
 	btype := bout.GetType()
 	if !(btype == lib.MT_ABSENT || btype == lib.MT_BOOL) {
-		return lib.MlrvalFromError()
+		return types.MlrvalFromError()
 	}
 	if btype == lib.MT_ABSENT {
 		return bout
 	}
-	return lib.MlrvalLogicalOR(&aout, &bout)
+	return types.MlrvalLogicalOR(&aout, &bout)
 }
 
 // ================================================================
@@ -433,12 +433,12 @@ type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
 func BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
 	return &StandardTernaryOperatorNode{a: a, b: b, c: c}
 }
-func (this *StandardTernaryOperatorNode) Evaluate(state *State) lib.Mlrval {
+func (this *StandardTernaryOperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 
 	boolValue, isBoolean := aout.GetBoolValue()
 	if !isBoolean {
-		return lib.MlrvalFromError()
+		return types.MlrvalFromError()
 	}
 
 	// Short-circuit: defer evaluation unless needed
@@ -460,12 +460,12 @@ func (this *StandardTernaryOperatorNode) Evaluate(state *State) lib.Mlrval {
 // for the function-manager lookup table to indicate the arity of the function,
 // even though at runtime these functions should not get invoked.
 
-func BinaryShortCircuitPlaceholder(a, b *lib.Mlrval) lib.Mlrval {
+func BinaryShortCircuitPlaceholder(a, b *types.Mlrval) types.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return lib.MlrvalFromError() // not reached
+	return types.MlrvalFromError() // not reached
 }
 
-func TernaryShortCircuitPlaceholder(a, b, c *lib.Mlrval) lib.Mlrval {
+func TernaryShortCircuitPlaceholder(a, b, c *types.Mlrval) types.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return lib.MlrvalFromError() // not reached
+	return types.MlrvalFromError() // not reached
 }

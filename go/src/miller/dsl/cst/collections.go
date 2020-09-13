@@ -36,13 +36,13 @@ func BuildArrayLiteralNode(
 	return &ArrayLiteralNode{evaluables: evaluables}, nil
 }
 
-func (this *ArrayLiteralNode) Evaluate(state *State) lib.Mlrval {
-	mlrvals := make([]lib.Mlrval, 0)
+func (this *ArrayLiteralNode) Evaluate(state *State) types.Mlrval {
+	mlrvals := make([]types.Mlrval, 0)
 	for _, evaluable := range this.evaluables {
 		mlrval := evaluable.Evaluate(state)
 		mlrvals = append(mlrvals, mlrval)
 	}
-	return lib.MlrvalFromArrayLiteralReference(mlrvals)
+	return types.MlrvalFromArrayLiteralReference(mlrvals)
 }
 
 // ----------------------------------------------------------------
@@ -75,7 +75,7 @@ func BuildArrayOrMapIndexAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) lib.Mlrval {
+func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) types.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 	// Base-is-array and index-is-int will be checked there
@@ -84,7 +84,7 @@ func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) lib.Mlrval {
 	} else if baseMlrval.IsMap() {
 		return baseMlrval.MapGet(&indexMlrval)
 	} else {
-		return lib.MlrvalFromError()
+		return types.MlrvalFromError()
 	}
 }
 
@@ -158,8 +158,8 @@ func BuildMapLiteralNode(
 	return &MapLiteralNode{evaluablePairs: evaluablePairs}, nil
 }
 
-func (this *MapLiteralNode) Evaluate(state *State) lib.Mlrval {
-	mlrval := lib.MlrvalEmptyMap()
+func (this *MapLiteralNode) Evaluate(state *State) types.Mlrval {
+	mlrval := types.MlrvalEmptyMap()
 
 	for _, evaluablePair := range this.evaluablePairs {
 		mkey := evaluablePair.Key.Evaluate(state)

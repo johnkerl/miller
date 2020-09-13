@@ -20,7 +20,7 @@ func NewRecordWriterXTAB(writerOptions *clitypes.TWriterOptions) *RecordWriterXT
 }
 
 func (this *RecordWriterXTAB) Write(
-	outrec *lib.Mlrmap,
+	outrec *types.Mlrmap,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {

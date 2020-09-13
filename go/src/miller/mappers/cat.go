@@ -157,7 +157,7 @@ func (this *MapperCat) Map(
 		if this.doCounters {
 			this.counter++
 			key := this.counterFieldName
-			value := lib.MlrvalFromInt64(this.counter)
+			value := types.MlrvalFromInt64(this.counter)
 			record.PrependCopy(&key, &value)
 		}
 	}

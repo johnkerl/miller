@@ -25,7 +25,7 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 // ----------------------------------------------------------------
 // xxx this is very naive at present -- needs copy from the C version.
 func (this *RecordWriterPPRINT) Write(
-	outrec *lib.Mlrmap,
+	outrec *types.Mlrmap,
 ) {
 	// No output until end of record stream, since we need to find out max
 	// width down each column.
@@ -44,7 +44,7 @@ func (this *RecordWriterPPRINT) Write(
 		if head == nil {
 			break
 		}
-		record := head.Value.(*lib.Mlrmap)
+		record := head.Value.(*types.Mlrmap)
 		this.records.Remove(head)
 
 		if lastJoinedHeader == nil {
@@ -85,7 +85,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 	maxWidths := make(map[string]int)
 
 	for e := records.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*lib.Mlrmap)
+		outrec := e.Value.(*types.Mlrmap)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			width := len(pe.Value.String())
 			oldMaxWidth := maxWidths[*pe.Key]
@@ -105,7 +105,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 
 	onFirst := true
 	for e := records.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*lib.Mlrmap)
+		outrec := e.Value.(*types.Mlrmap)
 
 		// Print header line
 		if onFirst {

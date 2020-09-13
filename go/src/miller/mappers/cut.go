@@ -179,6 +179,7 @@ func (this *MapperCut) Map(
 	inrecAndContext *lib.RecordAndContext,
 	outputChannel chan<- *lib.RecordAndContext,
 ) {
+	// xxx function-pointer assign at constructor time
 	if !this.doComplement {
 		if !this.doArgOrder {
 			this.includeWithInputOrder(inrecAndContext, outputChannel)

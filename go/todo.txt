@@ -1,7 +1,15 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* friday:
+* next:
+  o 10-min mappers
+    - infra/utils:
+      > string list to string set
+      > string-split -> true [] and/or ok flag
+      > cut.go use function pointers
+      > get-group-by
+    - head/tail
+    - sort
   o functions
     - M_PI / M_E in CST via math.Pi and math.E
     - need rand source
@@ -140,3 +148,4 @@ NITS/NON-IMMEDIATE:
     indexing is supported but it can be confusing.
 * mlrdoc: there should have always been a >>> and >>>=, and now there are
 ! systime printing out in scientific notation :(
+! head early-out -- cite the relevant issue & fix the right way ...

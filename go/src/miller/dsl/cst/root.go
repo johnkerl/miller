@@ -98,7 +98,7 @@ func (this *RootNode) ExecuteBeginBlocks(state *State) error {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) ExecuteMainBlock(state *State) (outrec *lib.Mlrmap, err error) {
+func (this *RootNode) ExecuteMainBlock(state *State) (outrec *types.Mlrmap, err error) {
 	err = this.mainBlock.Execute(state)
 
 	return state.Inrec, err
