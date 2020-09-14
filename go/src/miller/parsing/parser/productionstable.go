@@ -1388,8 +1388,8 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `MlrvalOrFunction : md_token_M_PI	<< dsl.NewASTNode(
-      dsl.NewASTToken("3.14159265358979323846264338327950288419716939937510582097494459", X[0]),
-      dsl.NodeTypeFloatLiteral,
+      X[0],
+      dsl.NodeTypeConstant,
     ) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     38,
@@ -1397,15 +1397,15 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(
-				dsl.NewASTToken("3.14159265358979323846264338327950288419716939937510582097494459", X[0]),
-				dsl.NodeTypeFloatLiteral,
+				X[0],
+				dsl.NodeTypeConstant,
 			)
 		},
 	},
 	ProdTabEntry{
 		String: `MlrvalOrFunction : md_token_M_E	<< dsl.NewASTNode(
-      dsl.NewASTToken("2.71828182845904523536028747135266249775724709369995957496696763", X[0]),
-      dsl.NodeTypeFloatLiteral,
+      X[0],
+      dsl.NodeTypeConstant,
     ) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     38,
@@ -1413,8 +1413,8 @@ var productionsTable = ProdTab{
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNode(
-				dsl.NewASTToken("2.71828182845904523536028747135266249775724709369995957496696763", X[0]),
-				dsl.NodeTypeFloatLiteral,
+				X[0],
+				dsl.NodeTypeConstant,
 			)
 		},
 	},

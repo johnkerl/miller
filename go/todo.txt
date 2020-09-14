@@ -1,19 +1,27 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* next:
+* go-try:
+  o build:
+    - go 1.10, 1.14; macosx/linux
+    - windows -- ?
+  o tracker issue
+  o clean up mlr --help to not advertise things it doesn't do yet
+  ! TSV/ASV
+  o quoted DKVP
+  o --x2y
+  ? doc6  ?
   o 10-min mappers
     - infra/utils:
       > string list to string set
-      > string-split -> true [] and/or ok flag
       > cut.go use function pointers
-      > get-group-by
     - head/tail/group-by/group-like
-      ! unordered dicts in Go, alas!! this is going to be a pain. fix it.
-        ? use Mlrmap? or something like it? needs interface{} keys ...
       > double-check usages
+      > mlr --help-all-verbs -> UT
       > write UTs
     - sort
+
+* next:
   o functions
     - M_PI / M_E in CST via math.Pi and math.E
     - need rand source

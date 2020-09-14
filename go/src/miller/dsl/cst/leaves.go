@@ -2,6 +2,7 @@ package cst
 
 import (
 	"errors"
+	"math"
 
 	"miller/dsl"
 	"miller/lib"
@@ -49,6 +50,9 @@ func BuildLeafNode(
 		break
 	case dsl.NodeTypeContextVariable:
 		return BuildContextVariableNode(astNode)
+		break
+	case dsl.NodeTypeConstant:
+		return BuildConstantNode(astNode)
 		break
 
 	case dsl.NodeTypePanic:
@@ -347,6 +351,49 @@ func BuildOPSNode() *OPSNode {
 }
 func (this *OPSNode) Evaluate(state *State) types.Mlrval {
 	return types.MlrvalFromString(state.Context.OPS)
+}
+
+// ================================================================
+func BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Token == nil)
+	sval := string(astNode.Token.Lit)
+
+	switch sval {
+
+	case "M_PI":
+		return BuildMathPINode(), nil
+		break
+	case "M_E":
+		return BuildMathENode(), nil
+		break
+
+	}
+
+	return nil, errors.New(
+		"CST BuildContextVariableNode: unhandled context variable " + sval,
+	)
+}
+
+// ----------------------------------------------------------------
+type MathPINode struct {
+}
+
+func BuildMathPINode() *MathPINode {
+	return &MathPINode{}
+}
+func (this *MathPINode) Evaluate(state *State) types.Mlrval {
+	return types.MlrvalFromFloat64(math.Pi)
+}
+
+// ----------------------------------------------------------------
+type MathENode struct {
+}
+
+func BuildMathENode() *MathENode {
+	return &MathENode{}
+}
+func (this *MathENode) Evaluate(state *State) types.Mlrval {
+	return types.MlrvalFromFloat64(math.E)
 }
 
 // ----------------------------------------------------------------

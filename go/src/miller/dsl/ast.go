@@ -41,6 +41,7 @@ const (
 	NodeTypeAssignment      = "Assignment"
 	NodeTypeOperator        = "Operator"
 	NodeTypeContextVariable = "ContextVariable"
+	NodeTypeConstant        = "Constant"
 
 	NodeTypeFunctionCallsite = "FunctionCallsite"
 
