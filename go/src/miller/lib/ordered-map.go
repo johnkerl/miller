@@ -16,7 +16,7 @@ type OrderedMap struct {
 }
 
 type orderedMapEntry struct {
-	Key   *string
+	Key   string
 	Value interface{}
 	Prev  *orderedMapEntry
 	Next  *orderedMapEntry
@@ -36,9 +36,8 @@ func NewOrderedMap() *OrderedMap {
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public OrderedMap API.
 func newOrderedMapEntry(key *string, value interface{}) *orderedMapEntry {
-	kcopy := *key
 	return &orderedMapEntry{
-		&kcopy,
+		*key,
 		value,
 		nil,
 		nil,
@@ -55,7 +54,7 @@ func (this *OrderedMap) findEntry(key *string) *orderedMapEntry {
 		return this.keysToEntries[*key]
 	} else {
 		for pe := this.Head; pe != nil; pe = pe.Next {
-			if *pe.Key == *key {
+			if pe.Key == *key {
 				return pe
 			}
 		}
@@ -135,7 +134,7 @@ func (this *OrderedMap) unlink(pe *orderedMapEntry) {
 		}
 	}
 	if this.keysToEntries != nil {
-		delete(this.keysToEntries, *pe.Key)
+		delete(this.keysToEntries, pe.Key)
 	}
 	this.FieldCount--
 }

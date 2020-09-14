@@ -101,7 +101,8 @@ type MapperTail struct {
 	groupByFieldNameList []string
 
 	// state
-	recordListsByGroup map[string]*list.List
+	// map from string to *list.List
+	recordListsByGroup *lib.OrderedMap
 }
 
 func NewMapperTail(
@@ -115,7 +116,7 @@ func NewMapperTail(
 		tailCount:            tailCount,
 		groupByFieldNameList: groupByFieldNameList,
 
-		recordListsByGroup: make(map[string]*list.List),
+		recordListsByGroup: lib.NewOrderedMap(),
 	}
 
 	return this, nil
@@ -134,11 +135,12 @@ func (this *MapperTail) Map(
 			return
 		}
 
-		recordListForGroup, present := this.recordListsByGroup[groupByKey]
-		if !present { // first time
-			recordListForGroup = list.New()
-			this.recordListsByGroup[groupByKey] = recordListForGroup
+		irecordListForGroup := this.recordListsByGroup.Get(groupByKey)
+		if irecordListForGroup == nil { // first time
+			irecordListForGroup = list.New()
+			this.recordListsByGroup.Put(groupByKey, irecordListForGroup)
 		}
+		recordListForGroup := irecordListForGroup.(*list.List)
 
 		recordListForGroup.PushBack(inrecAndContext)
 		for uint64(recordListForGroup.Len()) > this.tailCount {
@@ -146,9 +148,10 @@ func (this *MapperTail) Map(
 		}
 
 	} else {
-		for _, recordListForGroup := range this.recordListsByGroup {
-			for entry := recordListForGroup.Front(); entry != nil; entry = entry.Next() {
-				outputChannel <- entry.Value.(*types.RecordAndContext)
+		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
+			recordListForGroup := outer.Value.(*list.List)
+			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
+				outputChannel <- inner.Value.(*types.RecordAndContext)
 			}
 		}
 		outputChannel <- inrecAndContext // end-of-stream marker
