@@ -1,9 +1,9 @@
 #!/bin/bash
 
-runner="sh"
+runner="bash"
 if [ "$1" = "-v" ]; then
   set -x
-  runner="sh -x"
+  runner="bash -x"
 fi
 
 set -euo pipefail
