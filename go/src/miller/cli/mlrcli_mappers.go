@@ -13,6 +13,8 @@ import (
 var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.CatSetup,
 	mappers.CutSetup,
+	mappers.GroupBySetup,
+	mappers.GroupLikeSetup,
 	mappers.HeadSetup,
 	mappers.NothingSetup,
 	mappers.PutSetup,

@@ -8,7 +8,11 @@ TOP OF LIST:
       > string-split -> true [] and/or ok flag
       > cut.go use function pointers
       > get-group-by
-    - head/tail
+    - head/tail/group-by/group-like
+      ! unordered dicts in Go, alas!! this is going to be a pain. fix it.
+        ? use Mlrmap? or something like it? needs interface{} keys ...
+      > double-check usages
+      > write UTs
     - sort
   o functions
     - M_PI / M_E in CST via math.Pi and math.E
