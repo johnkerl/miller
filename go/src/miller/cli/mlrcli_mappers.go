@@ -17,6 +17,7 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.NothingSetup,
 	mappers.PutSetup,
 	mappers.TacSetup,
+	mappers.TailSetup,
 }
 
 //	&mapper_altkv_setup,

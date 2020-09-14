@@ -1,6 +1,7 @@
 package mappers
 
 import (
+	"container/list"
 	"flag"
 	"fmt"
 	"os"
@@ -12,13 +13,13 @@ import (
 )
 
 // ----------------------------------------------------------------
-var HeadSetup = mapping.MapperSetup{
-	Verb:         "head",
-	ParseCLIFunc: mapperHeadParseCLI,
+var TailSetup = mapping.MapperSetup{
+	Verb:         "tail",
+	ParseCLIFunc: mapperTailParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperHeadParseCLI(
+func mapperTailParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -35,20 +36,20 @@ func mapperHeadParseCLI(
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
 
-	//Usage: mlr head [options]
-	//-n {count}    Head count to print; default 10
-	//-g {a,b,c}    Optional group-by-field names for head counts
+	//Usage: mlr tail [options]
+	//-n {count}    Tail count to print; default 10
+	//-g {a,b,c}    Optional group-by-field names for tail counts
 
-	pHeadCount := flagSet.Uint64(
+	pTailCount := flagSet.Uint64(
 		"n",
 		10,
-		`Head count to print`,
+		`Tail count to print`,
 	)
 
 	pGroupByFieldNames := flagSet.String(
 		"g",
 		"",
-		"Optional group-by-field names for head counts, e.g. a,b,c",
+		"Optional group-by-field names for tail counts, e.g. a,b,c",
 	)
 
 	flagSet.Usage = func() {
@@ -56,7 +57,7 @@ func mapperHeadParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperHeadUsage(ostream, args[0], verb, flagSet)
+		mapperTailUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentioally requested
@@ -67,8 +68,8 @@ func mapperHeadParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	mapper, _ := NewMapperHead(
-		*pHeadCount,
+	mapper, _ := NewMapperTail(
+		*pTailCount,
 		*pGroupByFieldNames,
 	)
 
@@ -76,7 +77,7 @@ func mapperHeadParseCLI(
 	return mapper
 }
 
-func mapperHeadUsage(
+func mapperTailUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
@@ -94,65 +95,34 @@ consuming more input (i.e. is fast) when n records have been read.
 }
 
 // ----------------------------------------------------------------
-type MapperHead struct {
+type MapperTail struct {
 	// input
-	headCount            uint64
+	tailCount            uint64
 	groupByFieldNameList []string
 
 	// state
-	recordMapperFunc   mapping.RecordMapperFunc
-	unkeyedRecordCount uint64
-	keyedRecordCounts  map[string]uint64
+	recordListsByGroup map[string]*list.List
 }
 
-func NewMapperHead(
-	headCount uint64,
+func NewMapperTail(
+	tailCount uint64,
 	groupByFieldNames string,
-) (*MapperHead, error) {
+) (*MapperTail, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	this := &MapperHead{
-		headCount:            headCount,
+	this := &MapperTail{
+		tailCount:            tailCount,
 		groupByFieldNameList: groupByFieldNameList,
 
-		unkeyedRecordCount: 0,
-		keyedRecordCounts:  make(map[string]uint64),
-	}
-
-	if len(groupByFieldNameList) == 0 {
-		this.recordMapperFunc = this.mapUnkeyed
-	} else {
-		this.recordMapperFunc = this.mapKeyed
+		recordListsByGroup: make(map[string]*list.List),
 	}
 
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *MapperHead) Map(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	this.recordMapperFunc(inrecAndContext, outputChannel)
-}
-
-func (this *MapperHead) mapUnkeyed(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
-		this.unkeyedRecordCount++
-		if this.unkeyedRecordCount <= this.headCount {
-			outputChannel <- inrecAndContext
-		}
-	} else {
-		outputChannel <- inrecAndContext
-	}
-}
-
-func (this *MapperHead) mapKeyed(
+func (this *MapperTail) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -164,20 +134,23 @@ func (this *MapperHead) mapKeyed(
 			return
 		}
 
-		count, present := this.keyedRecordCounts[groupByKey]
+		recordListForGroup, present := this.recordListsByGroup[groupByKey]
 		if !present { // first time
-			this.keyedRecordCounts[groupByKey] = 1
-			count = 1
-		} else {
-			this.keyedRecordCounts[groupByKey] += 1
-			count += 1
+			recordListForGroup = list.New()
+			this.recordListsByGroup[groupByKey] = recordListForGroup
 		}
 
-		if count <= this.headCount {
-			outputChannel <- inrecAndContext
+		recordListForGroup.PushBack(inrecAndContext)
+		for uint64(recordListForGroup.Len()) > this.tailCount {
+			recordListForGroup.Remove(recordListForGroup.Front())
 		}
 
 	} else {
-		outputChannel <- inrecAndContext
+		for _, recordListForGroup := range this.recordListsByGroup {
+			for entry := recordListForGroup.Front(); entry != nil; entry = entry.Next() {
+				outputChannel <- entry.Value.(*types.RecordAndContext)
+			}
+		}
+		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
