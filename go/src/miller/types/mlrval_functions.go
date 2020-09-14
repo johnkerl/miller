@@ -1047,7 +1047,7 @@ func MlrvalBitwiseXOR(ma, mb *Mlrval) Mlrval {
 // Left shift
 
 func lsh_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval << mb.intval)
+	return MlrvalFromInt64(ma.intval << uint64(mb.intval))
 }
 
 var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -1071,7 +1071,7 @@ func MlrvalLeftShift(ma, mb *Mlrval) Mlrval {
 // Signed right shift
 
 func srsh_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval >> mb.intval)
+	return MlrvalFromInt64(ma.intval >> uint64(mb.intval))
 }
 
 var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
