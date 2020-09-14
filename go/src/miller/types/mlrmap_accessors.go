@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"errors"
 	"strconv"
 
@@ -277,6 +278,28 @@ func (this *Mlrmap) unlink(pe *mlrmapEntry) {
 // slot.
 func (this *Mlrmap) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	return putIndexedOnMap(this, indices, rvalue)
+}
+
+// ----------------------------------------------------------------
+// For group-by in several mappers.  If the record is 'a=x,b=y,c=3,d=4,e=5' and
+// selectedFieldNames is 'a,b,c' then values are 'x,y,3'. This is returned as a
+// comma-joined string.  The boolean ok is false if not all selected field
+// names were present in the record.
+func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string, bool) {
+	var buffer bytes.Buffer
+	for i, selectedFieldName := range(selectedFieldNames) {
+		entry := this.findEntry(&selectedFieldName)
+		if entry == nil {
+			return "", false
+		}
+		if i > 0 {
+			buffer.WriteString(",")
+		}
+		// This may be an array or map, or just a string/int/etc. Regardless we
+		// stringify it.
+		buffer.WriteString(entry.Value.String())
+	}
+	return buffer.String(), true
 }
 
 // ================================================================

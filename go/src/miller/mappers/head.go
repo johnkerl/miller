@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"miller/clitypes"
-	"miller/types"
+	"miller/lib"
 	"miller/mapping"
+	"miller/types"
 )
 
 // ----------------------------------------------------------------
@@ -103,12 +103,11 @@ type MapperHead struct {
 	// input
 	headCount            uint64
 	groupByFieldNameList []string
-	groupByFieldNameSet  map[string]bool
 
 	// state
 	recordMapperFunc   mapping.RecordMapperFunc
 	unkeyedRecordCount uint64
-	keyedRecordCounts map[string]uint64
+	keyedRecordCounts  map[string]uint64
 }
 
 func NewMapperHead(
@@ -116,25 +115,14 @@ func NewMapperHead(
 	groupByFieldNames string,
 ) (*MapperHead, error) {
 
-	// xxx util function
-	groupByFieldNameList := make([]string, 0)
-	if groupByFieldNames != "" {
-		groupByFieldNameList = strings.Split(groupByFieldNames, ",")
-	}
-
-	// xxx make/find-reuse util func
-	groupByFieldNameSet := make(map[string]bool)
-	for _, groupByFieldName := range groupByFieldNameList {
-		groupByFieldNameSet[groupByFieldName] = true
-	}
+	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
 	this := &MapperHead{
 		headCount:            headCount,
 		groupByFieldNameList: groupByFieldNameList,
-		groupByFieldNameSet:  groupByFieldNameSet,
 
 		unkeyedRecordCount: 0,
-		keyedRecordCounts: make(map[string]uint64),
+		keyedRecordCounts:  make(map[string]uint64),
 	}
 
 	if len(groupByFieldNameList) == 0 {
@@ -176,27 +164,23 @@ func (this *MapperHead) mapKeyed(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 
-		//		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
-		//			pstate->pgroup_by_field_names);
-		//		if pgroup_by_field_values == nil {
-		//			return
-		//		}
-		//
-		//		uint64* pcount_for_group = lhmslv_get(pstate->pcounts_by_group,
-		//			pgroup_by_field_values);
-		//		if (pcount_for_group == NULL) {
-		//			pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
-		//			*pcount_for_group = 0LL;
-		//			lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values),
-		//				pcount_for_group, FREE_ENTRY_KEY);
-		//		}
-		//		slls_free(pgroup_by_field_values);
-		//		(*pcount_for_group)++;
-		//		if (*pcount_for_group <= pstate->head_count) {
-		//			outputChannel <- inrecAndContext // xxx stub
-		//		}
+		groupByKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		if !ok {
+			return
+		}
 
-		outputChannel <- inrecAndContext // xxx stub
+		count, present := this.keyedRecordCounts[groupByKey]
+		if !present { // first time
+			this.keyedRecordCounts[groupByKey] = 1
+			count = 1
+		} else {
+			this.keyedRecordCounts[groupByKey] += 1
+			count += 1
+		}
+
+		if count <= this.headCount {
+			outputChannel <- inrecAndContext
+		}
 
 	} else {
 		outputChannel <- inrecAndContext

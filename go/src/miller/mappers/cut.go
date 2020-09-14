@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"miller/clitypes"
-	"miller/types"
+	"miller/lib"
 	"miller/mapping"
+	"miller/types"
 )
 
 // ----------------------------------------------------------------
@@ -87,7 +87,7 @@ Default is to retain them in the order found in the input data.`,
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	fieldNameList := strings.Split(*pFieldNames, ",")
+	fieldNameList := lib.SplitString(*pFieldNames, ",")
 	mapper, _ := NewMapperCut(
 		fieldNameList,
 		*pDoArgOrder,
