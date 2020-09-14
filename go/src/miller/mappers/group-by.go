@@ -90,7 +90,8 @@ type MapperGroupBy struct {
 	groupByFieldNameList []string
 
 	// state
-	recordListsByGroup map[string]*list.List
+	// map from string to *list.List
+	recordListsByGroup *lib.OrderedMap
 }
 
 func NewMapperGroupBy(
@@ -102,7 +103,7 @@ func NewMapperGroupBy(
 	this := &MapperGroupBy{
 		groupByFieldNameList: groupByFieldNameList,
 
-		recordListsByGroup: make(map[string]*list.List),
+		recordListsByGroup: lib.NewOrderedMap(),
 	}
 
 	return this, nil
@@ -121,18 +122,19 @@ func (this *MapperGroupBy) Map(
 			return
 		}
 
-		recordListForGroup, present := this.recordListsByGroup[groupByKey]
-		if !present { // first time
+		recordListForGroup := this.recordListsByGroup.Get(groupByKey)
+		if recordListForGroup == nil {
 			recordListForGroup = list.New()
-			this.recordListsByGroup[groupByKey] = recordListForGroup
+			this.recordListsByGroup.Put(groupByKey, recordListForGroup)
 		}
 
-		recordListForGroup.PushBack(inrecAndContext)
+		recordListForGroup.(*list.List).PushBack(inrecAndContext)
 
 	} else {
-		for _, recordListForGroup := range this.recordListsByGroup {
-			for entry := recordListForGroup.Front(); entry != nil; entry = entry.Next() {
-				outputChannel <- entry.Value.(*types.RecordAndContext)
+		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
+			recordListForGroup := outer.Value.(*list.List)
+			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
+				outputChannel <- inner.Value.(*types.RecordAndContext)
 			}
 		}
 		outputChannel <- inrecAndContext // end-of-stream marker
