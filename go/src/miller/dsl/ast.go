@@ -186,7 +186,7 @@ func NewASTNodeStripDoubleQuotePair(
 	oldToken := itok.(*token.Token)
 	n := len(oldToken.Lit)
 	contents := string(oldToken.Lit[1 : n-1])
-	contents = strings.ReplaceAll(contents, "\\\"", "\"")
+	contents = strings.Replace(contents, "\\\"", "\"", -1)
 	newToken := &token.Token{
 		Type: oldToken.Type,
 		Lit:  []byte(contents),
