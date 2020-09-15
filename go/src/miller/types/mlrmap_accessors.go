@@ -313,7 +313,7 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 	}
 
 	var buffer bytes.Buffer
-	for i, selectedFieldName := range(selectedFieldNames) {
+	for i, selectedFieldName := range selectedFieldNames {
 		entry := this.findEntry(&selectedFieldName)
 		if entry == nil {
 			return "", false

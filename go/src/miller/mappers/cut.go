@@ -123,11 +123,10 @@ func mapperCutUsage(
 
 // ----------------------------------------------------------------
 type MapperCut struct {
-	fieldNameList    []string
-	fieldNameSet     map[string]bool
-	doArgOrder       bool
-	doComplement     bool
-	doComplementLong bool
+	fieldNameList []string
+	fieldNameSet  map[string]bool
+
+	recordMapperFunc mapping.RecordMapperFunc
 }
 
 func NewMapperCut(
@@ -143,13 +142,22 @@ func NewMapperCut(
 		fieldNameSet[fieldName] = true
 	}
 
-	return &MapperCut{
-		fieldNameList:    fieldNameList,
-		fieldNameSet:     fieldNameSet,
-		doArgOrder:       doArgOrder,
-		doComplement:     doComplement,
-		doComplementLong: doComplementLong,
-	}, nil
+	this := &MapperCut{
+		fieldNameList: fieldNameList,
+		fieldNameSet:  fieldNameSet,
+	}
+
+	if !doComplement {
+		if !doArgOrder {
+			this.recordMapperFunc = this.includeWithInputOrder
+		} else {
+			this.recordMapperFunc = this.includeWithArgOrder
+		}
+	} else {
+		this.recordMapperFunc = this.exclude
+	}
+
+	return this, nil
 }
 
 //	if (!do_regexes) {
@@ -179,16 +187,7 @@ func (this *MapperCut) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	// xxx function-pointer assign at constructor time
-	if !this.doComplement {
-		if !this.doArgOrder {
-			this.includeWithInputOrder(inrecAndContext, outputChannel)
-		} else {
-			this.includeWithArgOrder(inrecAndContext, outputChannel)
-		}
-	} else {
-		this.exclude(inrecAndContext, outputChannel)
-	}
+	this.recordMapperFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------

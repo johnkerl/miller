@@ -86,11 +86,11 @@ func mapperHeadUsage(
 	fmt.Fprint(o,
 		`Passes through the first n records, optionally by category.
 `)
-// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
-//	fmt.Fprint(o,
-//		`Without -g, ceases consuming more input (i.e. is fast) when n records
-//have been read.
-//`)
+	// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
+	//	fmt.Fprint(o,
+	//		`Without -g, ceases consuming more input (i.e. is fast) when n records
+	//have been read.
+	//`)
 
 	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
 	flagSet.VisitAll(func(f *flag.Flag) {

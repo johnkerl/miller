@@ -7,9 +7,9 @@ import (
 
 	"miller/clitypes"
 	"miller/input"
-	"miller/types"
 	"miller/mapping"
 	"miller/output"
+	"miller/types"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/types"
 	"miller/mapping"
+	"miller/types"
 )
 
 // ----------------------------------------------------------------

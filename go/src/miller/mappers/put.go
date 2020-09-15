@@ -9,10 +9,10 @@ import (
 	"miller/clitypes"
 	"miller/dsl"
 	"miller/dsl/cst"
-	"miller/types"
 	"miller/mapping"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
+	"miller/types"
 )
 
 // ----------------------------------------------------------------

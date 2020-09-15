@@ -14,10 +14,7 @@ TOP OF LIST:
   o 10-min mappers
     - infra/utils:
       > string list to string set
-      > cut.go use function pointers
     - head/tail/group-by/group-like
-      > double-check usages
-      > mlr --help-all-verbs -> UT
       > write UTs
     - cat -n -g
     - sort

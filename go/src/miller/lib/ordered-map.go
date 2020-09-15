@@ -9,9 +9,9 @@ package lib
 
 // ----------------------------------------------------------------
 type OrderedMap struct {
-	FieldCount int64
-	Head       *orderedMapEntry
-	Tail       *orderedMapEntry
+	FieldCount    int64
+	Head          *orderedMapEntry
+	Tail          *orderedMapEntry
 	keysToEntries map[string]*orderedMapEntry
 }
 
