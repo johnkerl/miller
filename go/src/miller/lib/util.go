@@ -22,3 +22,11 @@ func SplitString(input string, separator string) []string {
 		return strings.Split(input, separator)
 	}
 }
+
+func StringListToSet(stringList []string) map[string]bool {
+	stringSet := make(map[string]bool)
+	for _, s := range stringList {
+		stringSet[s] = true
+	}
+	return stringSet
+}

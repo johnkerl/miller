@@ -13,3 +13,16 @@ run_mlr() {
 run_mlr --opprint cut    -f x,a u/s.dkvp
 run_mlr --opprint cut -o -f x,a u/s.dkvp
 run_mlr --opprint cut -x -f x,a u/s.dkvp
+
+
+run_mlr --opprint head -n 1 u/s.dkvp
+run_mlr --opprint head -n 1 -g a u/s.dkvp
+run_mlr --opprint head -n 1 -g a,b u/s.dkvp
+
+run_mlr --opprint tail -n 1 u/medium.dkvp
+run_mlr --opprint tail -n 1 -g a u/medium.dkvp
+run_mlr --opprint tail -n 1 -g a,b u/medium.dkvp
+
+run_mlr --opprint group-like u/het.dkvp
+run_mlr --opprint group-by a u/medium.dkvp
+run_mlr --opprint group-by a,b u/medium.dkvp

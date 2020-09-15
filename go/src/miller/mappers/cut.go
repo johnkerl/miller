@@ -136,11 +136,7 @@ func NewMapperCut(
 	doComplementLong bool,
 ) (*MapperCut, error) {
 
-	// xxx make/find-reuse util func
-	fieldNameSet := make(map[string]bool)
-	for _, fieldName := range fieldNameList {
-		fieldNameSet[fieldName] = true
-	}
+	fieldNameSet := lib.StringListToSet(fieldNameList)
 
 	this := &MapperCut{
 		fieldNameList: fieldNameList,

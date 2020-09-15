@@ -2,18 +2,11 @@
 TOP OF LIST:
 
 * go-try:
-  o build:
-    - go 1.10, 1.14; macosx/linux
-    - windows -- ?
-  o tracker issue
   o clean up mlr --help to not advertise things it doesn't do yet
   ! TSV/ASV
   o quoted DKVP
   o --x2y
-  ? doc6  ?
   o 10-min mappers
-    - infra/utils:
-      > string list to string set
     - head/tail/group-by/group-like
       > write UTs
     - cat -n -g
