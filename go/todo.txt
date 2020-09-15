@@ -7,7 +7,6 @@ TOP OF LIST:
     - how with whitespace regex -- ?
   ! quoted DKVP
   ! --implicit-csv-header
-  ! --headerless-csv-output
   ! cat -n -g a,b,c
   ! sort
   o clean up mlr --help to not advertise things it doesn't do yet

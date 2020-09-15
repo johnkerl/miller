@@ -10,8 +10,8 @@ import (
 )
 
 type RecordReaderCSV struct {
-	// TODO: parameterize
 	ifs string
+	// TODO: parameterize for ASV.
 	//irs string
 }
 
