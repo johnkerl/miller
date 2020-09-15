@@ -32,6 +32,15 @@
 * I think some DST/timezone issues such as [issue 359](https://github.com/johnkerl/miller/issues/359) will be easier to fix using the Go datetime library than using the C datetime library
 * The code will be easier to read and, I hope, easier for others to contribute to. What this means is it should be quicker and easier to add new features to Miller -- after the development-time cost of the port itself is paid, of course.
 
+# Things which may change
+
+As noted above, I want to preserve as much user experience as possible. That said:
+
+* `--jvstack` and `--jsonx` will still be supported as command-line flags, but JSON output will be pretty-printed (like `--jvstack`) by default.
+* `emitf` and `emitp` were invented before I had for-loops in the DSL. If people really want to keep these and are using these, I can keep them; but maybe we're better off leaving them behind. Please let me know.
+* CR vs CR/LF (line-endings) will be platform-appropriate using Go's own portability -- Windows files will be written correctly on Windows, and likewise for Linux and MacOS. That said, I don't know if we need any longer to preserve CR/LF-to-CR/LF even on Linux (line endings which are non-standard for the platform) -- again, please let me know.
+* `mlr put -S` and `mlr put -F` will become unnecessary since string-conversion will be done just-in-time as suggested by @gromgit on https://github.com/johnkerl/miller/issues/151.
+
 # Efficiency of the Go port
 
 As I wrote [here](http://johnkerl.org/miller/doc/whyc.html) back in 2015 I couldn't get Rust or Go (or any other language I tried) to do some test-case processing as quickly as C, so I stuck with C.

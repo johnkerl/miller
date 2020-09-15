@@ -7,8 +7,6 @@ TOP OF LIST:
   o quoted DKVP
   o --x2y
   o 10-min mappers
-    - head/tail/group-by/group-like
-      > write UTs
     - cat -n -g
     - sort
 
