@@ -15,9 +15,35 @@ func checkArgCount(args []string, argi int, argc int, n int) {
 	}
 }
 
-func SeparatorFromArg(arg string) string {
-	// xxx stub
-	return arg
+// ----------------------------------------------------------------
+// xxx temp -- still needs '\002' etc
+
+var SEPARATOR_NAMES_TO_VALUES = map[string]string{
+	"cr":        "\r",
+	"crcr":      "\r\r",
+	"newline":   "\n",
+	"lf":        "\n",
+	"lflf":      "\n\n",
+	"crlf":      "\r\n",
+	"crlfcrlf":  "\r\n\r\n",
+	"tab":       "\t",
+	"space":     " ",
+	"comma":     ":",
+	"pipe":      "|",
+	"slash":     "/",
+	"colon":     ":",
+	"semicolon": ";",
+	"equals":    "=",
+}
+
+func SeparatorFromArg(name string) string {
+	sep, ok := SEPARATOR_NAMES_TO_VALUES[name]
+	if !ok {
+		// xxx temp
+		fmt.Fprintf(os.Stderr, "Miller: could not handle separator \"%s\".\n", name);
+		os.Exit(1)
+	}
+	return sep
 	//	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
 	//	if (chars != nil) // E.g. crlf
 	//		return mlr_strdup_or_die(chars);

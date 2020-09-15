@@ -9,10 +9,10 @@ TOP OF LIST:
   o 10-min mappers
     - cat -n -g
     - sort
+  o need rand source; mlr --seed foo
 
 * next:
   o functions
-    - need rand source; mlr --seed x
   o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
@@ -54,6 +54,8 @@ TOP OF LIST:
   o markdown
 
 * I/O
+  !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
+    detection -- needs an input-stream delegator -- ?
   o --allow-ragged-csv-input|--ragged
   o --implicit-csv-header
   o --headerless-csv-output

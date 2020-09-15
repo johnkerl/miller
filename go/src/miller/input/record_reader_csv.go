@@ -11,14 +11,13 @@ import (
 
 type RecordReaderCSV struct {
 	// TODO: parameterize
-	//ifs string
+	ifs string
 	//irs string
 }
 
 func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
-		//ifs,
-		//irs,
+		ifs: readerOptions.IFS,
 	}
 }
 
@@ -60,6 +59,8 @@ func (this *RecordReaderCSV) processHandle(
 	var header []string = nil
 
 	csvReader := csv.NewReader(handle)
+	// xxx temp
+	csvReader.Comma = rune(this.ifs[0])
 
 	for {
 		if needHeader {

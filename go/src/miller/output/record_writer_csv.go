@@ -12,13 +12,17 @@ import (
 // ostream *os.File in constructors/factory
 type RecordWriterCSV struct {
 	csvWriter *csv.Writer
-	// For detecting schema changes: we print a newline and the new header
+	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
 }
 
 func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
+	csvWriter := csv.NewWriter(os.Stdout)
+	// xxx temp
+	csvWriter.Comma = rune(writerOptions.OFS[0])
+
 	return &RecordWriterCSV{
-		csvWriter:        csv.NewWriter(os.Stdout),
+		csvWriter:        csvWriter,
 		lastJoinedHeader: nil,
 	}
 }
