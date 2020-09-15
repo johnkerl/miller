@@ -332,15 +332,26 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
 	entry := this.findEntry(oldKey)
 	if entry == nil {
+		// Rename field from 'a' to 'b' where there is no 'a': no-op
 		return false
 	}
 
-	copy := *oldKey
-	entry.Key = &copy
+	existing := this.findEntry(newKey)
+	if existing == nil {
+		// Rename field from 'a' to 'b' where there is no 'b': simple update
+		copy := *newKey
+		entry.Key = &copy
 
-	if this.keysToEntries != nil {
+		if this.keysToEntries != nil {
+			delete(this.keysToEntries, *oldKey)
+			this.keysToEntries[*newKey] = entry
+		}
+	} else {
+		// Rename field from 'a' to 'b' where there are both 'a' and 'b':
+		// remove old 'a' and put its value into the slot of 'b'.
+		existing.Value = entry.Value
 		delete(this.keysToEntries, *oldKey)
-		this.keysToEntries[*newKey] = entry
+		this.unlink(entry)
 	}
 
 	return true

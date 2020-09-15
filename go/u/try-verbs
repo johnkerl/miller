@@ -26,3 +26,10 @@ run_mlr --opprint tail -n 1 -g a,b u/medium.dkvp
 run_mlr --opprint group-like u/het.dkvp
 run_mlr --opprint group-by a u/medium.dkvp
 run_mlr --opprint group-by a,b u/medium.dkvp
+
+run_mlr --opprint rename a,AAA u/s.dkvp
+run_mlr --opprint rename a,AAA,x,XXX u/s.dkvp
+run_mlr --opprint rename none,such u/s.dkvp
+run_mlr --opprint rename a,b u/s.dkvp
+run_mlr --opprint rename i,j,a,b u/s.dkvp
+run_mlr --opprint rename x,y,a,b u/s.dkvp

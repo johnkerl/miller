@@ -33,12 +33,8 @@ TOP OF LIST:
 
 * widen verb coverage
   o label
-  o rename
-  o group-by
-  o cut
   o count
   o repeat
-  o head/tail
   o sort
   o filter
   o focus on calendar/DST/TZ improvements

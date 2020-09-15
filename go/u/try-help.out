@@ -47,6 +47,10 @@ TODO: put detailed on-line help here.
     Miller's grammar, to stdout.
 
 ================================================================
+Usage: mlr rename [options] {old1,new1,old2,new2,...}
+Renames specified fields.
+
+================================================================
 Usage: mlr tac
 Prints records in reverse order from the order in which they were encountered.
 
