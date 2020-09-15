@@ -8,7 +8,7 @@
 
 # Trying out the Go port
 
-* Caveat: *lots* of things present in the C implementaiton are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it ddoesn't work *yet*.
+* Caveat: *lots* of things present in the C implementaiton are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it doesn't work *yet*.
 * That said, if anyone is interested in playing around with it and giving early feedback, I'll be happy for it.
 * Building:
   * Clone the Miller repo
@@ -20,6 +20,7 @@
 * On-line help:
   * `mlr --help` advertises some things the Go implementation doesn't actually do yet.
   * `mlr --help-all-verbs` correctly lists verbs which do things in the Go implementation.
+* See also https://github.com/johnkerl/miller/issues/372
 
 # Benefits of porting to Go
 
