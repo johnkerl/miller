@@ -19,6 +19,7 @@ TOP OF LIST:
       > double-check usages
       > mlr --help-all-verbs -> UT
       > write UTs
+    - cat -n -g
     - sort
 
 * next:

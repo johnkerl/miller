@@ -85,8 +85,7 @@ func mapperTailUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprint(o,
-		`Passes through the first n records, optionally by category.  Without -g, ceases
-consuming more input (i.e. is fast) when n records have been read.
+		`Passes through the last n records, optionally by category.
 `)
 	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
 	flagSet.VisitAll(func(f *flag.Flag) {

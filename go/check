@@ -11,6 +11,7 @@ set -euo pipefail
 $runner u/try-io    > u/try-io.out
 $runner u/try-chain > u/try-chain.out
 $runner u/try-verbs > u/try-verbs.out
+$runner u/try-help  > u/try-help.out
 $runner u/try-parse > u/try-parse.out
 $runner u/try-cst   > u/try-cst.out
 

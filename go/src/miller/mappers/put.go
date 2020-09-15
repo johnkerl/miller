@@ -53,8 +53,8 @@ func mapperPutParseCLI(
 	pSuppressOutputRecord := flagSet.Bool(
 		"q",
 		false,
-		`Dos not include the modified record in the output stream. Useful for when
-all desired output is in begin and/or end blocks.`,
+		`Does not include the modified record in the output stream.
+    Useful for when all desired output is in begin and/or end blocks.`,
 	)
 	flagSet.Usage = func() {
 		ostream := os.Stderr
