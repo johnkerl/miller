@@ -73,3 +73,4 @@ EOF
 run_mlr --itsv --ocsv cat u/s.tsv
 run_mlr --icsv --otsv cat u/s.tsv
 run_mlr --icsv --otsv cat u/s.csv
+run_mlr --c2j cat u/s.csv

@@ -2,9 +2,9 @@
 TOP OF LIST:
 
 * go-try:
+  ! quoted DKVP
   o clean up mlr --help to not advertise things it doesn't do yet
-  ! TSV/ASV
-  o quoted DKVP
+  o ASV
   o --x2y
   o 10-min mappers
     - cat -n -g
