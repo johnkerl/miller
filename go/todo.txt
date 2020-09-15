@@ -6,12 +6,13 @@ TOP OF LIST:
   ! quoted NIDX
     - how with whitespace regex -- ?
   ! quoted DKVP
+  ! --implicit-csv-header
+  ! --headerless-csv-output
+  ! cat -n -g a,b,c
+  ! sort
+  ! need rand source; mlr --seed foo
   o clean up mlr --help to not advertise things it doesn't do yet
-  o ASV
-  o 10-min mappers
-    - cat -n -g
-    - sort
-  o need rand source; mlr --seed foo
+  o ASV?
 
 * next:
   o functions
@@ -32,8 +33,6 @@ TOP OF LIST:
   o will take time: full DSL including functions, mapvals, etc
 
 * widen verb coverage
-  o cat -n -g a,b,c
-  o label
   o count
   o sort
   o filter

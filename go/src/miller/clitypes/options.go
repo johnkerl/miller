@@ -85,8 +85,8 @@ type TOptions struct {
 	//
 	NoInput bool // mlr -n
 
-	//	have_rand_seed bool;
-	//	rand_seed uint32;
+	HaveRandSeed bool
+	RandSeed     int64
 }
 
 // ----------------------------------------------------------------

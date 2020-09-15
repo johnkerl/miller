@@ -104,7 +104,7 @@ func NewMapperRename(
 	for i := 0; i < n; i += 2 {
 		oldName := names[i]
 		newName := names[i+1]
-		oldToNewNames.Put(oldName, newName);
+		oldToNewNames.Put(oldName, newName)
 	}
 
 	this := &MapperRename{

@@ -77,7 +77,7 @@ func MlrvalFromString(input string) Mlrval {
 
 // xxx comment why two -- one for from parsed user data; other for from math ops
 func MlrvalFromInt64String(input string) Mlrval {
-	ival, ok := tryInt64FromString(input)
+	ival, ok := lib.TryInt64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	lib.InternalCodingErrorIf(!ok)
 	return Mlrval{
@@ -102,16 +102,6 @@ func MlrvalFromInt64(input int64) Mlrval {
 		boolval:       false,
 		arrayval:      nil,
 		mapval:        nil,
-	}
-}
-
-// Tries decimal, hex, octal, and binary.
-func tryInt64FromString(input string) (int64, bool) {
-	ival, err := strconv.ParseInt(input, 0 /* check all*/, 64)
-	if err == nil {
-		return ival, true
-	} else {
-		return 0, false
 	}
 }
 
@@ -212,7 +202,7 @@ func MlrvalFromInferredType(input string) Mlrval {
 	// xxx the parsing has happened so stash it ...
 	// xxx emphasize the invariant that a non-invalid printrep always
 	// matches the nval ...
-	_, iok := tryInt64FromString(input)
+	_, iok := lib.TryInt64FromString(input)
 	if iok {
 		return MlrvalFromInt64String(input)
 	}

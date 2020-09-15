@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/mapping"
 	"miller/version"
 )
@@ -116,11 +117,9 @@ func ParseCommandLine(args []string) (
 	//		os.Exit(1);
 	//	}
 
-	//	if (options.have_rand_seed) {
-	//		mtrand_init(options.rand_seed);
-	//	} else {
-	//		mtrand_init_default();
-	//	}
+	if options.HaveRandSeed {
+		lib.SeedRandom(options.RandSeed)
+	}
 
 	return options, recordMappers, nil
 }
@@ -820,81 +819,81 @@ func parseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat        = "pprint";
 		//		argi += 1;
 		//
-			} else if args[argi] == "--c2t" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				writerOptions.OFS       = "\t";
-				argi += 1;
-			} else if args[argi] == "--c2d" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "dkvp";
-				argi += 1;
-			} else if args[argi] == "--c2n" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "nidx";
-				argi += 1;
-			} else if args[argi] == "--c2j" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "json";
-				argi += 1;
-			} else if args[argi] == "--c2p" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "pprint";
-				argi += 1;
-			} else if args[argi] == "--c2x" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "xtab";
-				argi += 1;
+	} else if args[argi] == "--c2t" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--c2d" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--c2n" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--c2j" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--c2p" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--c2x" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
 		//	} else if args[argi] == "--c2m" {
 		//		readerOptions.InputFileFormat = "csv";
 		//		readerOptions.IRS       = "auto";
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
 		//
-			} else if args[argi] == "--t2c" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IFS       = "\t";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				argi += 1;
-			} else if args[argi] == "--t2d" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IFS       = "\t";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "dkvp";
-				argi += 1;
-			} else if args[argi] == "--t2n" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IFS       = "\t";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "nidx";
-				argi += 1;
-			} else if args[argi] == "--t2j" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IFS       = "\t";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "json";
-				argi += 1;
-			} else if args[argi] == "--t2p" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IFS       = "\t";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "pprint";
-				argi += 1;
-			} else if args[argi] == "--t2x" {
-				readerOptions.InputFileFormat = "csv";
-				readerOptions.IFS       = "\t";
-				readerOptions.IRS       = "auto";
-				writerOptions.OutputFileFormat = "xtab";
-				argi += 1;
+	} else if args[argi] == "--t2c" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--t2d" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--t2n" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--t2j" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--t2p" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--t2x" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
 		//	} else if args[argi] == "--t2m" {
 		//		readerOptions.InputFileFormat = "csv";
 		//		readerOptions.IFS       = "\t";
@@ -902,97 +901,97 @@ func parseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
 		//
-			} else if args[argi] == "--d2c" {
-				readerOptions.InputFileFormat = "dkvp";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				argi += 1;
-			} else if args[argi] == "--d2t" {
-				readerOptions.InputFileFormat = "dkvp";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				writerOptions.OFS       = "\t";
-				argi += 1;
-			} else if args[argi] == "--d2n" {
-				readerOptions.InputFileFormat = "dkvp";
-				writerOptions.OutputFileFormat = "nidx";
-				argi += 1;
-			} else if args[argi] == "--d2j" {
-				readerOptions.InputFileFormat = "dkvp";
-				writerOptions.OutputFileFormat = "json";
-				argi += 1;
-			} else if args[argi] == "--d2p" {
-				readerOptions.InputFileFormat = "dkvp";
-				writerOptions.OutputFileFormat = "pprint";
-				argi += 1;
-			} else if args[argi] == "--d2x" {
-				readerOptions.InputFileFormat = "dkvp";
-				writerOptions.OutputFileFormat = "xtab";
-				argi += 1;
+	} else if args[argi] == "--d2c" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--d2t" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--d2n" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--d2j" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--d2p" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--d2x" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
 		//	} else if args[argi] == "--d2m" {
 		//		readerOptions.InputFileFormat = "dkvp";
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
 		//
-			} else if args[argi] == "--n2c" {
-				readerOptions.InputFileFormat = "nidx";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				argi += 1;
-			} else if args[argi] == "--n2t" {
-				readerOptions.InputFileFormat = "nidx";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				writerOptions.OFS       = "\t";
-				argi += 1;
-			} else if args[argi] == "--n2d" {
-				readerOptions.InputFileFormat = "nidx";
-				writerOptions.OutputFileFormat = "dkvp";
-				argi += 1;
-			} else if args[argi] == "--n2j" {
-				readerOptions.InputFileFormat = "nidx";
-				writerOptions.OutputFileFormat = "json";
-				argi += 1;
-			} else if args[argi] == "--n2p" {
-				readerOptions.InputFileFormat = "nidx";
-				writerOptions.OutputFileFormat = "pprint";
-				argi += 1;
-			} else if args[argi] == "--n2x" {
-				readerOptions.InputFileFormat = "nidx";
-				writerOptions.OutputFileFormat = "xtab";
-				argi += 1;
+	} else if args[argi] == "--n2c" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--n2t" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--n2d" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--n2j" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--n2p" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--n2x" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
 		//	} else if args[argi] == "--n2m" {
 		//		readerOptions.InputFileFormat = "nidx";
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
 		//
-			} else if args[argi] == "--j2c" {
-				readerOptions.InputFileFormat = "json";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				argi += 1;
-			} else if args[argi] == "--j2t" {
-				readerOptions.InputFileFormat = "json";
-				writerOptions.OutputFileFormat = "csv";
-				writerOptions.ORS       = "auto";
-				writerOptions.OFS       = "\t";
-				argi += 1;
-			} else if args[argi] == "--j2d" {
-				readerOptions.InputFileFormat = "json";
-				writerOptions.OutputFileFormat = "dkvp";
-				argi += 1;
-			} else if args[argi] == "--j2n" {
-				readerOptions.InputFileFormat = "json";
-				writerOptions.OutputFileFormat = "nidx";
-				argi += 1;
-			} else if args[argi] == "--j2p" {
-				readerOptions.InputFileFormat = "json";
-				writerOptions.OutputFileFormat = "pprint";
-				argi += 1;
-			} else if args[argi] == "--j2x" {
-				readerOptions.InputFileFormat = "json";
-				writerOptions.OutputFileFormat = "xtab";
-				argi += 1;
+	} else if args[argi] == "--j2c" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--j2t" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--j2d" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--j2n" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--j2p" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--j2x" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
 		//	} else if args[argi] == "--j2m" {
 		//		readerOptions.InputFileFormat = "json";
 		//		writerOptions.OutputFileFormat = "markdown";
@@ -1132,20 +1131,20 @@ func parseMiscOptions(
 		//		}
 		//		argi += 2;
 		//
-		//	} else if args[argi] == "--seed" {
-		//		checkArgCount(args, argi, argc, 2);
-		//		if (sscanf(args[argi+1], "0x%x", &options.rand_seed) == 1) {
-		//			options.have_rand_seed = true;
-		//		} else if (sscanf(args[argi+1], "%u", &options.rand_seed) == 1) {
-		//			options.have_rand_seed = true;
-		//		} else {
-		//			fmt.Fprintf(os.Stderr,
-		//				"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
-		//				os.Args[0], args[argi+1]);
-		//			mainUsageShort()
-		//			os.Exit(1);
-		//		}
-		//		argi += 2;
+	} else if args[argi] == "--seed" {
+		checkArgCount(args, argi, argc, 2)
+		randSeed, ok := lib.TryInt64FromString(args[argi+1])
+		if ok {
+			options.RandSeed = randSeed
+			options.HaveRandSeed = true
+		} else {
+			fmt.Fprintf(os.Stderr,
+				"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+				os.Args[0], args[argi+1])
+			mainUsageShort()
+			os.Exit(1)
+		}
+		argi += 2
 
 	}
 	*pargi = argi

@@ -2,8 +2,9 @@ package types
 
 import (
 	"math"
-	"math/rand"
 	"time"
+
+	"miller/lib"
 )
 
 // ================================================================
@@ -175,17 +176,16 @@ func MlrvalSystimeInt() Mlrval {
 	return MlrvalFromInt64(time.Now().Unix())
 }
 
-// TODO: needs https://golang.org/pkg/math/rand/#Source for Miller CLI --seed
 func MlrvalUrand() Mlrval {
 	return MlrvalFromFloat64(
-		rand.Float64(),
+		lib.RandFloat64(),
 	)
 }
 
 func MlrvalUrand32() Mlrval {
 	return MlrvalFromInt64(
 		int64(
-			rand.Uint32(),
+			lib.RandUint32(),
 		),
 	)
 }

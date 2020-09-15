@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -36,5 +37,15 @@ func IntMin2(a, b int) int {
 		return a
 	} else {
 		return b
+	}
+}
+
+// Tries decimal, hex, octal, and binary.
+func TryInt64FromString(input string) (int64, bool) {
+	ival, err := strconv.ParseInt(input, 0 /* check all*/, 64)
+	if err == nil {
+		return ival, true
+	} else {
+		return 0, false
 	}
 }

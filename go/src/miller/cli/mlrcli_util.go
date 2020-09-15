@@ -40,7 +40,7 @@ func SeparatorFromArg(name string) string {
 	sep, ok := SEPARATOR_NAMES_TO_VALUES[name]
 	if !ok {
 		// xxx temp
-		fmt.Fprintf(os.Stderr, "Miller: could not handle separator \"%s\".\n", name);
+		fmt.Fprintf(os.Stderr, "Miller: could not handle separator \"%s\".\n", name)
 		os.Exit(1)
 	}
 	return sep
