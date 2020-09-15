@@ -6,6 +6,21 @@
 * I hope to retain backward compatibility at the command-line level as much as possible.
 * In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
 
+# Trying out the Go port
+
+* Caveat: *lots* of things present in the C implementaiton are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it ddoesn't work *yet*.
+* That said, if anyone is interested in playing around with it and giving early feedback, I'll be happy for it.
+* Building:
+  * Clone the Miller repo
+  * `cd go`
+  * `./build` should create `mlr`, and print the two lines `Compile OK` and `Test OK`. If it doesn't do this on your platform, please [file an issue](https://github.com/johnkerl/miller/issues).
+* Platforms tried so far:
+  * macOS with Go 1.14, and Linux Mint with Go 1.10
+  * Windows I have not tried at all
+* On-line help:
+  * `mlr --help` advertises some things the Go implementation doesn't actually do yet.
+  * `mlr --help-all-verbs` correctly lists verbs which do things in the Go implementation.
+
 # Benefits of porting to Go
 
 * The [lack of a streaming (record-by-record) JSON reader](http://johnkerl.org/miller/doc/file-formats.html#JSON_non-streaming) in the C implementation ([issue 99](https://github.com/johnkerl/miller/issues/99)) is immediately solved in the Go implementation.
@@ -14,7 +29,7 @@
 * The quoted-DKVP feature from [issue 266](https://github.com/johnkerl/miller/issues/266) will be easily addressed.
 * String/number-formatting issues in [issue 211](https://github.com/johnkerl/miller/issues/211), [issue 178](https://github.com/johnkerl/miller/issues/178), [issue 151](https://github.com/johnkerl/miller/issues/151), and [issue 259](https://github.com/johnkerl/miller/issues/259) will be fixed during the Go port.
 * I think some DST/timezone issues such as [issue 359](https://github.com/johnkerl/miller/issues/359) will be easier to fix using the Go datetime library than using the C datetime library
-* The code will be easier to read and, I hope, easier for others to contribute to.
+* The code will be easier to read and, I hope, easier for others to contribute to. What this means is it should be quicker and easier to add new features to Miller -- after the development-time cost of the port itself is paid, of course.
 
 # Efficiency of the Go port
 
@@ -28,7 +43,9 @@ A way to look a little deeper at resource usage is to run `htop`, while processi
 
 Even commodity hardware has multiple CPUs these days -- and the Go code is *much* easier to read, extend, and improve than the C code -- so I'll call this a net win for Miller.
 
-# Source-code goals
+# Developer information
+
+## Source-code goals
 
 Donald Knuth famously said: *Programs are meant to be read by humans and only incidentally for computers to execute.*
 
@@ -49,7 +66,7 @@ During the coding of Miller, I've been guided by the following:
 * *The language should be an asset, not a liability.*
   * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward, and fun.  I hope you enjoy it as much as I have.
 
-# Directory structure
+## Directory structure
 
 Information here is for the benefit of anyone reading/using the Miller Go code. To use the Miller tool at the command line, you don't need to know any of this if you don't want to. :)
 
@@ -99,7 +116,7 @@ So, in broad overview, the key packages are:
 * `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.
 
-# Nil-record conventions
+## Nil-record conventions
 
 Through out the code, records are passed by reference (as are most things, for
 that matter, to reduce unnecessary data copies). In particular, records can be
@@ -116,7 +133,7 @@ nil through the reader/mapper/writer sequence.
   * Most writers produce their output one record at a time.
   * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
 
-# Memory management
+## Memory management
 
 * Go has garbage collection which immediately simplifies the coding compared to the C port.
 * Pointers are used freely for record-processing: record-readers allocate pointed records; pointed records are passed on Go channels from record-readers to record-mappers to record-writers.
@@ -127,7 +144,7 @@ nil through the reader/mapper/writer sequence.
   * Lvalue expressions return pointed `*types.Mlrmap` so they can be assigned to; rvalue expressions return non-pointed `types.Mlrval` but these are very shallow copies -- the int/string/etc types are copied but maps/arrays are passed by reference in the rvalue expression-evaluators.
 * Copy-on-write is done on map/array put -- for example, in the assignment phase of a DSL statement, where an rvalue is assigned to an lvalue.
 
-# More about mlrvals
+## More about mlrvals
 
 `Mlrval` is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
 
