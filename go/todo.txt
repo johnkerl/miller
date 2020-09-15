@@ -32,11 +32,12 @@ TOP OF LIST:
   o will take time: full DSL including functions, mapvals, etc
 
 * widen verb coverage
+  o cat -n -g a,b,c
   o label
   o count
-  o repeat
   o sort
   o filter
+  o repeat
   o focus on calendar/DST/TZ improvements
 
 * widen CLI coverage

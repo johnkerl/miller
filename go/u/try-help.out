@@ -32,6 +32,13 @@ Passes through the first n records, optionally by category.
  -n (default 10) Head count to print
 
 ================================================================
+Usage: mlr label [options] {new1,new2,new3,...}
+Given n comma-separated names, renames the first n fields of each record to
+have the respective name. (Fields past the nth are left with their original
+names.) Particularly useful with --inidx or --implicit-csv-header, to give
+useful names to otherwise integer-indexed fields.
+
+================================================================
 Usage: mlr nothing
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.

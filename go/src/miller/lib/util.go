@@ -30,3 +30,11 @@ func StringListToSet(stringList []string) map[string]bool {
 	}
 	return stringSet
 }
+
+func IntMin2(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}

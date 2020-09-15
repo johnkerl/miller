@@ -33,3 +33,9 @@ run_mlr --opprint rename none,such u/s.dkvp
 run_mlr --opprint rename a,b u/s.dkvp
 run_mlr --opprint rename i,j,a,b u/s.dkvp
 run_mlr --opprint rename x,y,a,b u/s.dkvp
+
+run_mlr --opprint label A,B,I u/s.dkvp
+run_mlr --opprint label A,B,I,X,Y u/s.dkvp
+run_mlr --opprint label A,B,I,X,Y,Z u/s.dkvp
+run_mlr --opprint label b,i,x u/s.dkvp
+run_mlr --opprint label x,i,b u/s.dkvp
