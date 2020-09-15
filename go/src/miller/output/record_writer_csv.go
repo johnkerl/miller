@@ -14,6 +14,7 @@ type RecordWriterCSV struct {
 	csvWriter *csv.Writer
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
+	doHeaderlessOutput bool
 }
 
 func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
@@ -24,6 +25,7 @@ func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV
 	return &RecordWriterCSV{
 		csvWriter:        csvWriter,
 		lastJoinedHeader: nil,
+		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 	}
 }
 
@@ -46,7 +48,7 @@ func (this *RecordWriterCSV) Write(
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader {
+	if needToPrintHeader && !this.doHeaderlessOutput {
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {

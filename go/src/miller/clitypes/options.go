@@ -41,12 +41,12 @@ type TReaderOptions struct {
 
 // ----------------------------------------------------------------
 type TWriterOptions struct {
-	OutputFileFormat string
-	ORS              string
-	OFS              string
-	OPS              string
+	OutputFileFormat    string
+	ORS                 string
+	OFS                 string
+	OPS                 string
+	HeaderlessCSVOutput bool
 
-	//	headerless_csv_output bool;
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;
 	//	pprint_barred bool;
@@ -111,9 +111,10 @@ func DefaultReaderOptions() TReaderOptions {
 
 func DefaultWriterOptions() TWriterOptions {
 	return TWriterOptions{
-		OutputFileFormat: "dkvp",
-		ORS:              "\n",
-		OFS:              ",",
-		OPS:              "=",
+		OutputFileFormat:    "dkvp",
+		ORS:                 "\n",
+		OFS:                 ",",
+		OPS:                 "=",
+		HeaderlessCSVOutput: false,
 	}
 }

@@ -521,10 +521,9 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		writerOptions.OFS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
-		//	} else if args[argi] == "--headerless-csv-output" {
-		//		writerOptions.headerless_csv_output = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--headerless-csv-output" {
+		writerOptions.HeaderlessCSVOutput = true
+		argi += 1
 	} else if args[argi] == "--ops" {
 		checkArgCount(args, argi, argc, 2)
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])

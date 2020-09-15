@@ -74,3 +74,6 @@ run_mlr --itsv --ocsv cat u/s.tsv
 run_mlr --icsv --otsv cat u/s.tsv
 run_mlr --icsv --otsv cat u/s.csv
 run_mlr --c2j cat u/s.csv
+
+run_mlr --ocsv cat u/het.dkvp
+run_mlr --ocsv --headerless-csv-output cat u/het.dkvp
