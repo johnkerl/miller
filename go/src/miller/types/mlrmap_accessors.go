@@ -328,6 +328,24 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 	return buffer.String(), true
 }
 
+// ----------------------------------------------------------------
+func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
+	entry := this.findEntry(oldKey)
+	if entry == nil {
+		return false
+	}
+
+	copy := *oldKey
+	entry.Key = &copy
+
+	if this.keysToEntries != nil {
+		delete(this.keysToEntries, *oldKey)
+		this.keysToEntries[*newKey] = entry
+	}
+
+	return true
+}
+
 // ================================================================
 // TO BE PORTED
 // ================================================================
