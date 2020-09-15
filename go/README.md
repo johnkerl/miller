@@ -34,13 +34,7 @@
 
 # Things which may change
 
-As noted above, I want to preserve as much user experience as possible. That said:
-
-* `--jvstack` and `--jsonx` will still be supported as command-line flags, but JSON output will be pretty-printed (like `--jvstack`) by default.
-* `--csvlite` will no longer be different from `--csv` although `--csvlite` will still be accepted at the command line, to avoid breaking existing Miller scripts.
-* `emitf` and `emitp` were invented before I had for-loops in the DSL. If people really want to keep these and are using these, I can keep them; but maybe we're better off leaving them behind. Please let me know.
-* CR vs CR/LF (line-endings) will be platform-appropriate using Go's own portability -- Windows files will be written correctly on Windows, and likewise for Linux and MacOS. That said, I don't know if we need any longer to preserve CR/LF-to-CR/LF even on Linux (line endings which are non-standard for the platform) -- again, please let me know.
-* `mlr put -S` and `mlr put -F` will become unnecessary since string-conversion will be done just-in-time as suggested by @gromgit on https://github.com/johnkerl/miller/issues/151.
+Please see https://github.com/johnkerl/miller/issues/372.
 
 # Efficiency of the Go port
 

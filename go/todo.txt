@@ -2,6 +2,7 @@
 TOP OF LIST:
 
 * go-try:
+  ! what-will-change: go/rmd -> link to issue and edit there
   ! quoted NIDX
     - how with whitespace regex -- ?
   ! quoted DKVP
