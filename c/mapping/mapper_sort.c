@@ -36,7 +36,7 @@
 //
 // * Buckets are retained in a hash map: the key is the string-list of the form
 //   ["red","1.0"] and the value is the pairing of parsed-value array ["red",1.0]
-//   ane linked list of records.
+//   and linked list of records.
 //
 // * Once all the input records are ingested into this hash map, we copy the
 //   bucket-pointers into an array and sort it: this being the pairing of

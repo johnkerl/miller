@@ -58,6 +58,10 @@ Usage: mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 
 ================================================================
+Usage: mlr sort [options]
+Outputs records in batches having identical values at specified field names.
+
+================================================================
 Usage: mlr tac
 Prints records in reverse order from the order in which they were encountered.
 
