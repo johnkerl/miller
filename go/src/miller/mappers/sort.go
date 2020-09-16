@@ -126,15 +126,31 @@ func mapperSortUsage(
 }
 
 // ----------------------------------------------------------------
+// Example:
+// * mlr sort -f a -n i
+// * group-by field-name list is "a,i"
+// * input record 'a=pan,b=pan,i=1,x=0.3467,y=0.7268'
+//   o values at a,i are "pan",1
+//   o grouping key for the ordered map from string to record-bucket is the string "pan,1"
+//   o we also need a map from "pan,1" to the array of mlrvals ["pan", 1].
+// * next input record 'a=eks,b=pan,i=2,x=0.7586,y=0.5221'
+//   o values at a,i are "eks",2
+//   o grouping key for the ordered map from string to record-bucket is the string "eks,2"
+//   o we also need a map from "eks,2" to the array of mlrvals ["eks", 2].
+// * what gets sorted are the bucket-heading arrays of mlrvals:
+//   o make an array [ ("pan,1", ["pan", 1]), ("eks,2", ["eks", 2])
+//   o sort that
+// * output is simply for each slot in the array, emit each record in the bucket
+
 type MapperSort struct {
-	// input
-	// xxx change for group-by -> sort
+	// Input
 	groupByFieldNameList []string
 
-	// state
-	// map from string to *list.List
+	// State
+	// Map from string to *list.List:
 	recordListsByGroup *lib.OrderedMap
-	// xxx for group-by -> sort: need map from string to exemplar srec
+	// Map from string to []lib.Mlrval:
+	bucketHeads *lib.OrderedMap
 }
 
 func NewMapperSort(
@@ -147,6 +163,7 @@ func NewMapperSort(
 		groupByFieldNameList: groupByFieldNameList,
 
 		recordListsByGroup: lib.NewOrderedMap(),
+		bucketHeads:        lib.NewOrderedMap(),
 	}
 
 	return this, nil
@@ -158,8 +175,10 @@ func (this *MapperSort) Map(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if inrec != nil {
+		// Not end of record stream
 
+		// xxx need to factor out the joined and non-joined -- this verb needs both
 		groupByKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok {
 			return
@@ -169,12 +188,17 @@ func (this *MapperSort) Map(
 		if recordListForGroup == nil {
 			recordListForGroup = list.New()
 			this.recordListsByGroup.Put(groupByKey, recordListForGroup)
+			this.bucketHeads.Put(groupByKey, recordListForGroup)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)
+		// xxx put the bucket-heads data
+		// bucketHeads.(*list.List).PushBack(xxx)
 
 	} else {
-		// xxx sort ... then output
+		// End of record stream
+
+		// xxx stub from group-by (no sorting):
 		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value.(*list.List)
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {

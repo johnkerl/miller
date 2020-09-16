@@ -2,18 +2,18 @@
 TOP OF LIST:
 
 * go-try:
+  ! sort
+  ! filter
+  ! emit; print/dump
+
   ! quoted NIDX
     - how with whitespace regex -- ?
   ! quoted DKVP
     - what about csvlite-style -- ? needs a --dkvplite ?
   ! --implicit-csv-header
   ! cat -n -g a,b,c
-  ! sort
   o clean up mlr --help to not advertise things it doesn't do yet
   o ASV?
-
-* array/map
-  o err-return for array/map get/put if incorrect types ... currently go-void ...
 
 * widen verb coverage
   o count
@@ -43,18 +43,18 @@ TOP OF LIST:
   o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
 * widen DSL coverage
+  ! print/dump/emit
   o c/reg_test/run reorgs
+  o err-return for array/map get/put if incorrect types ... currently go-void ...
+    ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
   o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
     - bare-boolean last statement in main block, & not in begin/end
   o support the filter verb
-  o print/dump/emit
   o UDFs
   o localvars
   o if/for/etc
-
-! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
 
 ----------------------------------------------------------------
 MAYBE:

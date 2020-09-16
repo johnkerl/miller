@@ -13,7 +13,7 @@ import (
 type RecordWriterCSV struct {
 	csvWriter *csv.Writer
 	// For reporting schema changes: we print a newline and the new header
-	lastJoinedHeader *string
+	lastJoinedHeader   *string
 	doHeaderlessOutput bool
 }
 
@@ -23,8 +23,8 @@ func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV
 	csvWriter.Comma = rune(writerOptions.OFS[0])
 
 	return &RecordWriterCSV{
-		csvWriter:        csvWriter,
-		lastJoinedHeader: nil,
+		csvWriter:          csvWriter,
+		lastJoinedHeader:   nil,
 		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 	}
 }
