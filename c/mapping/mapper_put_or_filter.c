@@ -454,8 +454,8 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	*pargi = argi;
 	return mapper_put_or_filter_alloc(mlr_dsl_expression, ppredefines, print_ast,
 		trace_stack_allocation, trace_execution,
-		past, put_output_disabled, do_final_filter, negate_final_filter, type_inferencing, oosvar_flatten_separator,
-		flush_every_record, pwriter_opts, pmain_writer_opts);
+		past, put_output_disabled, do_final_filter, negate_final_filter, type_inferencing,
+		oosvar_flatten_separator, flush_every_record, pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------

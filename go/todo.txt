@@ -2,33 +2,18 @@
 TOP OF LIST:
 
 * go-try:
-  ! what-will-change: go/rmd -> link to issue and edit there
   ! quoted NIDX
     - how with whitespace regex -- ?
   ! quoted DKVP
+    - what about csvlite-style -- ? needs a --dkvplite ?
   ! --implicit-csv-header
   ! cat -n -g a,b,c
   ! sort
   o clean up mlr --help to not advertise things it doesn't do yet
   o ASV?
 
-* next:
-  o functions
-  o begin/end hygiene:
-    - AST tree-walk / CST build: must be at top level
-    - tree-walk begin/end to check for invalids ($-anything etc)
-  o c/reg_test/run reorgs
-
 * array/map
   o err-return for array/map get/put if incorrect types ... currently go-void ...
-
-* SUMMARY:
-  o easy: most verbs
-  o easy: full cli
-  o easy: readers/writers including TSV/ASV, and CSV heterogeneity
-  o medium: sort/stats1/join
-  o will take time: array/map mlrval
-  o will take time: full DSL including functions, mapvals, etc
 
 * widen verb coverage
   o count
@@ -38,31 +23,36 @@ TOP OF LIST:
   o focus on calendar/DST/TZ improvements
 
 * widen CLI coverage
-  o --c2x et al.
+  o --c2x et al. -- fold in markdown
   o implement mlrrc
 
-* widen reader coverage
-  o TSV/ASV
-  o XTAB
-
-• widen writer coverage
-  o TSV/ASV
-  o markdown
-
 * I/O
+  o widen reader coverage
+    - TSV/ASV
+    - XTAB
+  o widen writer coverage
+    - TSV/ASV
+    - markdown
   !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
     detection -- needs an input-stream delegator -- ?
   o --allow-ragged-csv-input|--ragged
   o --implicit-csv-header
-  o --headerless-csv-output
   o new non-lite DKVP reader/writer
   o comment-filtering compaosed io.Reader
   o make a pprint reader w/ width-detect
   o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
 * widen DSL coverage
+  o c/reg_test/run reorgs
+  o begin/end hygiene:
+    - AST tree-walk / CST build: must be at top level
+    - tree-walk begin/end to check for invalids ($-anything etc)
+    - bare-boolean last statement in main block, & not in begin/end
   o support the filter verb
+  o print/dump/emit
   o UDFs
+  o localvars
+  o if/for/etc
 
 ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
 
