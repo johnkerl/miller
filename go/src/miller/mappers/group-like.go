@@ -44,7 +44,7 @@ func mapperGroupLikeParseCLI(
 		mapperGroupLikeUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentioally requested
+	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 
@@ -97,12 +97,12 @@ func (this *MapperGroupLike) Map(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 
-		groupByKey := inrec.GetKeysJoined()
+		groupingKey := inrec.GetKeysJoined()
 
-		recordListForGroup := this.recordListsByGroup.Get(groupByKey)
+		recordListForGroup := this.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil { // first time
 			recordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupByKey, recordListForGroup)
+			this.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)

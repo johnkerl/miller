@@ -2,7 +2,12 @@
 TOP OF LIST:
 
 * go-try:
+  o groupByKey -> groupingKey x all mappers
+
+  o rename: bulk-edit for b,i,x vs x,i,b cases
+
   ! sort
+    - UT per se for 'NUMERICS < BOOL < STRINGS < ERROR < ABSENT'
   ! filter
   ! emit; print/dump
 
@@ -14,6 +19,8 @@ TOP OF LIST:
   ! cat -n -g a,b,c
   o clean up mlr --help to not advertise things it doesn't do yet
   o ASV?
+
+! all dispo matrices -- check new MT_DIM -- !
 
 * widen verb coverage
   o count

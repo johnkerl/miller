@@ -60,7 +60,7 @@ func mapperTailParseCLI(
 		mapperTailUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentioally requested
+	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 
@@ -129,15 +129,15 @@ func (this *MapperTail) Map(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 
-		groupByKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok {
 			return
 		}
 
-		irecordListForGroup := this.recordListsByGroup.Get(groupByKey)
+		irecordListForGroup := this.recordListsByGroup.Get(groupingKey)
 		if irecordListForGroup == nil { // first time
 			irecordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupByKey, irecordListForGroup)
+			this.recordListsByGroup.Put(groupingKey, irecordListForGroup)
 		}
 		recordListForGroup := irecordListForGroup.(*list.List)
 

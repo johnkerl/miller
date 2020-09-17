@@ -74,6 +74,9 @@ type TernaryFunc func(*Mlrval, *Mlrval, *Mlrval) Mlrval
 // Function-pointer type for variadic functions.
 type VariadicFunc func([]*Mlrval) Mlrval
 
+// Function-pointer type for sorting. Returns < 0 if a < b, 0 if a == b, > 0 if a > b.
+type ComparatorFunc func(*Mlrval, *Mlrval) int
+
 // ================================================================
 // The following are frequently used in disposition matrices for various
 // operators and are defined here for re-use. The names are VERY short,
@@ -1557,3 +1560,172 @@ func MlrvalVariadicMax(mlrvals []*Mlrval) Mlrval {
 		return retval
 	}
 }
+
+// ================================================================
+// For sorting
+
+// Lexical sort: just stringify everything.
+func LexicalAscendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
+	sa := ma.String()
+	sb := mb.String()
+	if sa < sb {
+		return -1
+	} else if sa > sb {
+		return 1
+	} else {
+		return 0
+	}
+}
+func LexicalDescendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
+	return LexicalAscendingComparatorfunc(mb, ma)
+}
+
+// ----------------------------------------------------------------
+// Sort rules (same for min, max, and comparator):
+// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * error == error (singleton type)
+// * absent == absent (singleton type)
+// * string compares on strings
+// * numeric compares on numbers
+// * false < true
+
+func _neg1(ma, mb *Mlrval) int {
+	return -1
+}
+func _zero(ma, mb *Mlrval) int {
+	return 0
+}
+func _pos1(ma, mb *Mlrval) int {
+	return 1
+}
+
+func _scmp(ma, mb *Mlrval) int {
+	if ma.printrep < mb.printrep {
+		return -1
+	} else if ma.printrep > mb.printrep {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func iicmp(ma, mb *Mlrval) int {
+	ca := ma.intval
+	cb := mb.intval
+	if ca < cb {
+		return -1
+	} else if ca > cb {
+		return 1
+	} else {
+		return 0
+	}
+}
+func ifcmp(ma, mb *Mlrval) int {
+	ca := float64(ma.intval)
+	cb := mb.floatval
+	if ca < cb {
+		return -1
+	} else if ca > cb {
+		return 1
+	} else {
+		return 0
+	}
+}
+func ficmp(ma, mb *Mlrval) int {
+	ca := ma.floatval
+	cb := float64(mb.intval)
+	if ca < cb {
+		return -1
+	} else if ca > cb {
+		return 1
+	} else {
+		return 0
+	}
+}
+func ffcmp(ma, mb *Mlrval) int {
+	ca := ma.floatval
+	cb := mb.floatval
+	if ca < cb {
+		return -1
+	} else if ca > cb {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func bbcmp(ma, mb *Mlrval) int {
+	a := ma.boolval
+	b := mb.boolval
+	if a == false {
+		if b == false {
+			return 0
+		} else {
+			return -1
+		}
+	} else {
+		if b == false {
+			return 1
+		} else {
+			return 0
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+// Sort rules (same for min, max, and comparator):
+// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * error == error (singleton type)
+// * absent == absent (singleton type)
+// * string compares on strings
+// * numeric compares on numbers
+// * false < true
+
+var num_cmp_dispositions = [MT_DIM][MT_DIM]ComparatorFunc{
+	//       .  ERROR   ABSENT EMPTY  STRING INT    FLOAT  BOOL    ARRAY MAP
+	/*ERROR  */ {_zero, _neg1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
+	/*ABSENT */ {_pos1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
+	/*EMPTY  */ {_neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
+	/*STRING */ {_neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
+	/*INT    */ {_neg1, _neg1, _neg1, _neg1, iicmp, ifcmp, _neg1, _zero, _zero},
+	/*FLOAT  */ {_neg1, _neg1, _neg1, _neg1, ficmp, ffcmp, _neg1, _zero, _zero},
+	/*BOOL   */ {_neg1, _neg1, _neg1, _neg1, _pos1, _pos1, bbcmp, _zero, _zero},
+	/*ARRAY  */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
+	/*MAP    */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
+}
+
+func NumericAscendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
+	return num_cmp_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+func NumericDescendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
+	return NumericAscendingComparatorfunc(mb, ma)
+}
+
+//static int mv_cmp_eq(const mv_t* pa, const mv_t* pb) { return  0; }
+//static int mv_cmp_lt(const mv_t* pa, const mv_t* pb) { return -1; }
+//static int mv_cmp_gt(const mv_t* pa, const mv_t* pb) { return  1; }
+//
+//static int mv_bb_comparator(const mv_t* pa, const mv_t* pb) {
+//	int d = pa->u.boolv - pb->u.boolv;
+//	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
+//}
+//static int mv_ss_cmp(const mv_t* pa, const mv_t* pb) {
+//	return strcmp(pa->u.strv, pb->u.strv);
+//}
+
+//static mv_i_xx_comparator_func_t* mv_xx_comparator_dispositions[MT_DIM][MT_DIM] = {
+//	//         ERROR       ABSENT     EMPTY      STRING     INT        FLOAT      BOOL
+//	/*ERROR*/  {mv_cmp_eq, mv_cmp_lt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+//	/*ABSENT*/ {mv_cmp_gt, mv_cmp_eq, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+//	/*EMPTY*/  {mv_cmp_lt, mv_cmp_lt, mv_cmp_eq, mv_ss_cmp, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+//	/*STRING*/ {mv_cmp_lt, mv_cmp_lt, mv_ss_cmp, mv_ss_cmp, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+//	/*INT*/    {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_ii_cmp, mv_if_cmp, mv_cmp_lt},
+//	/*FLOAT*/  {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_fi_cmp, mv_ff_cmp, mv_cmp_lt},
+//	/*BOOL*/   {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_gt, mv_cmp_gt, mv_bb_comparator},
+//	};
+//
+//int mv_xx_comparator(const void* pva, const void* pvb) {
+//	const mv_t* pa = pva;
+//	const mv_t* pb = pvb;
+//	return mv_xx_comparator_dispositions[pa->type][pb->type](pa, pb);
+//}

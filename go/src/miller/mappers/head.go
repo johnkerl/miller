@@ -59,7 +59,7 @@ func mapperHeadParseCLI(
 		mapperHeadUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentioally requested
+	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 
@@ -164,17 +164,17 @@ func (this *MapperHead) mapKeyed(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 
-		groupByKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok {
 			return
 		}
 
-		count, present := this.keyedRecordCounts[groupByKey]
+		count, present := this.keyedRecordCounts[groupingKey]
 		if !present { // first time
-			this.keyedRecordCounts[groupByKey] = 1
+			this.keyedRecordCounts[groupingKey] = 1
 			count = 1
 		} else {
-			this.keyedRecordCounts[groupByKey] += 1
+			this.keyedRecordCounts[groupingKey] += 1
 			count += 1
 		}
 

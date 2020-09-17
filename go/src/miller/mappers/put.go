@@ -64,7 +64,7 @@ func mapperPutParseCLI(
 		mapperPutUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentioally requested
+	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 

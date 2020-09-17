@@ -44,7 +44,7 @@ func mapperGroupByParseCLI(
 		mapperGroupByUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentioally requested
+	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 
@@ -117,15 +117,15 @@ func (this *MapperGroupBy) Map(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 
-		groupByKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok {
 			return
 		}
 
-		recordListForGroup := this.recordListsByGroup.Get(groupByKey)
+		recordListForGroup := this.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
 			recordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupByKey, recordListForGroup)
+			this.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)

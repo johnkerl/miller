@@ -74,7 +74,7 @@ Default is to retain them in the order found in the input data.`,
 		mapperCutUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentioally requested
+	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 
@@ -156,6 +156,7 @@ func NewMapperCut(
 	return this, nil
 }
 
+// xxx to port:
 //	if (!do_regexes) {
 //		pstate->pfield_name_list   = pfield_name_list;
 //		slls_reverse(pstate->pfield_name_list);
@@ -248,6 +249,7 @@ func (this *MapperCut) exclude(
 	outputChannel <- inrecAndContext
 }
 
+// xxx to port:
 //// ----------------------------------------------------------------
 //static sllv_t* mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 //	if (pinrec != NULL) {
