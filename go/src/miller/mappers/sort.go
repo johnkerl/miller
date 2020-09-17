@@ -46,6 +46,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sort"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -149,7 +150,7 @@ type MapperSort struct {
 	// State
 	// Map from string to *list.List:
 	recordListsByGroup *lib.OrderedMap
-	// Map from string to []lib.Mlrval:
+	// Map from string to []*lib.Mlrval:
 	bucketHeads *lib.OrderedMap
 }
 
@@ -170,17 +171,24 @@ func NewMapperSort(
 }
 
 // ----------------------------------------------------------------
+type GroupingKeysAndMlrvals struct {
+	groupingKey string
+	mlrvals     []types.Mlrval
+}
+
 func (this *MapperSort) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
-	if inrec != nil {
-		// Not end of record stream
+	if inrec != nil { // Not end of record stream
 
 		// xxx need to factor out the joined and non-joined -- this verb needs both
-		groupByKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupByKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
+			this.groupByFieldNameList,
+		)
 		if !ok {
+			// xxx need a spill-bucket
 			return
 		}
 
@@ -188,26 +196,71 @@ func (this *MapperSort) Map(
 		if recordListForGroup == nil {
 			recordListForGroup = list.New()
 			this.recordListsByGroup.Put(groupByKey, recordListForGroup)
-			this.bucketHeads.Put(groupByKey, recordListForGroup)
+			this.bucketHeads.Put(groupByKey, selectedValues)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)
-		// xxx put the bucket-heads data
-		// bucketHeads.(*list.List).PushBack(xxx)
 
-	} else {
-		// End of record stream
+	} else { // End of record stream
 
-		// xxx stub from group-by (no sorting):
-		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
-			recordListForGroup := outer.Value.(*list.List)
-			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
-				outputChannel <- inner.Value.(*types.RecordAndContext)
+		// At this point, in the above example, bucketHeads is:
+		//
+		// {
+		//   "pan,1" : ["pan", 1],
+		//   "eks,2" : ["eks", 2]
+		// }
+		//
+		// We need to make an array like
+		//
+		// [
+		//   [ "pan,1", ["pan', 1],
+		//   [ "eks,2", ["eks', 2]
+		// ]
+
+		groupingKeysAndMlrvals := bucketHeadsToArray(this.bucketHeads)
+
+		// Next sort that array
+		// xxx this is a stub:
+		// xxx make a helper method
+		sort.Slice(groupingKeysAndMlrvals, func(i, j int) bool {
+			a, _ := groupingKeysAndMlrvals[i].mlrvals[0].GetFloatValue()
+			b, _ := groupingKeysAndMlrvals[j].mlrvals[0].GetFloatValue()
+			return a < b
+			//return groupingKeysAndMlrvals[i].mlrvals[0] > groupingKeysAndMlrvals[j].mlrvals[0]
+		})
+
+		// Now output the buckets
+		for _, groupingKeyAndMlrvals := range groupingKeysAndMlrvals {
+			iRecordsInBucket := this.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
+			recordsInBucket := iRecordsInBucket.(*list.List)
+			for iRecord := recordsInBucket.Front(); iRecord != nil; iRecord = iRecord.Next() {
+				outputChannel <- iRecord.Value.(*types.RecordAndContext)
 			}
 		}
+
 		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
+
+func bucketHeadsToArray(bucketHeads *lib.OrderedMap) []GroupingKeysAndMlrvals {
+	retval := make([]GroupingKeysAndMlrvals, bucketHeads.FieldCount)
+
+	i := 0
+	for entry := bucketHeads.Head; entry != nil; entry = entry.Next {
+		retval[i] = GroupingKeysAndMlrvals{
+			groupingKey: entry.Key,
+			mlrvals:     entry.Value.([]types.Mlrval),
+		}
+		i++
+	}
+
+	return retval
+}
+
+//type GroupingKeysAndMlrvals struct {
+//	groupingKey string
+//	mlrvals []*types.Mlrval
+//}
 
 //#define SORT_NUMERIC    0x80
 //#define SORT_DESCENDING 0x40

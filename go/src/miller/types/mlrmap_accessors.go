@@ -328,6 +328,39 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 	return buffer.String(), true
 }
 
+// As with GetSelectedValuesJoined but also returning the array of mlrvals.
+// For sort.
+func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
+	string,
+	[]Mlrval,
+	bool,
+) {
+	mlrvals := make([]Mlrval, 0, len(selectedFieldNames))
+
+	if len(selectedFieldNames) == 0 {
+		// The fall-through is functionally correct, but this is quicker with
+		// skipping setting up an empty bytes-buffer and stringifying it. The
+		// non-grouped case is quite normal and is worth optimizing for.
+		return "", mlrvals, true
+	}
+
+	var buffer bytes.Buffer
+	for i, selectedFieldName := range selectedFieldNames {
+		entry := this.findEntry(&selectedFieldName)
+		if entry == nil {
+			return "", mlrvals, false
+		}
+		if i > 0 {
+			buffer.WriteString(",")
+		}
+		// This may be an array or map, or just a string/int/etc. Regardless we
+		// stringify it.
+		buffer.WriteString(entry.Value.String())
+		mlrvals = append(mlrvals, *entry.Value.Copy())
+	}
+	return buffer.String(), mlrvals, true
+}
+
 // ----------------------------------------------------------------
 func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
 	entry := this.findEntry(oldKey)

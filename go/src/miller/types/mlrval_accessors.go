@@ -72,6 +72,16 @@ func (this *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 	}
 }
 
+func (this *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
+	if this.mvtype == MT_FLOAT {
+		return this.floatval, true
+	} else if this.mvtype == MT_INT {
+		return float64(this.intval), true
+	} else {
+		return -888.0, false
+	}
+}
+
 func (this *Mlrval) GetBoolValue() (boolValue bool, isBoolean bool) {
 	if this.mvtype == MT_BOOL {
 		return this.boolval, true
