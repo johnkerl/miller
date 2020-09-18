@@ -97,7 +97,6 @@ func mapperSortParseCLI(
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparatorfunc)
 			}
-			// xxx append sorters lexical ascending
 			argi += 2
 		} else if args[argi] == "-r" {
 			subList := lib.SplitString(args[argi+1], ",")
@@ -105,7 +104,6 @@ func mapperSortParseCLI(
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparatorfunc)
 			}
-			// xxx append sorters lexical scending
 			argi += 2
 		} else if args[argi] == "-n" {
 			subList := lib.SplitString(args[argi+1], ",")
@@ -113,7 +111,6 @@ func mapperSortParseCLI(
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparatorfunc)
 			}
-			// xxx append sorters numeric ascending
 			argi += 2
 		} else if args[argi] == "-nf" {
 			subList := lib.SplitString(args[argi+1], ",")
@@ -121,7 +118,6 @@ func mapperSortParseCLI(
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparatorfunc)
 			}
-			// xxx append sorters numeric ascending
 			argi += 2
 		} else if args[argi] == "-nr" {
 			subList := lib.SplitString(args[argi+1], ",")
@@ -129,7 +125,6 @@ func mapperSortParseCLI(
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparatorfunc)
 			}
-			// xxx append sorters numeric descending
 			argi += 2
 
 		} else {
@@ -137,18 +132,12 @@ func mapperSortParseCLI(
 		}
 	}
 
-	// xxx
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-
-	// Get the sort field names from the command line
-	if argi >= argc {
+	if len(groupByFieldNameList) == 0 {
 		mapperSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-		os.Exit(1)
 	}
 
 	mapper, _ := NewMapperSort(
@@ -220,13 +209,14 @@ func mapperSortUsage(
 type MapperSort struct {
 	// -- Input
 	groupByFieldNameList []string
-	comparatorFuncs []types.ComparatorFunc
+	comparatorFuncs      []types.ComparatorFunc
 
 	// -- State
 	// Map from string to *list.List:
 	recordListsByGroup *lib.OrderedMap
 	// Map from string to []*lib.Mlrval:
 	groupHeads *lib.OrderedMap
+	spillGroup *list.List // e.g. sort by field "a" -- this is for records lacking a field named "a"
 }
 
 func NewMapperSort(
@@ -236,10 +226,11 @@ func NewMapperSort(
 
 	this := &MapperSort{
 		groupByFieldNameList: groupByFieldNameList,
-		comparatorFuncs: comparatorFuncs,
+		comparatorFuncs:      comparatorFuncs,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 		groupHeads:         lib.NewOrderedMap(),
+		spillGroup:         list.New(),
 	}
 
 	return this, nil
@@ -262,7 +253,7 @@ func (this *MapperSort) Map(
 			this.groupByFieldNameList,
 		)
 		if !ok {
-			// xxx need a spill-group
+			this.spillGroup.PushBack(inrecAndContext)
 			return
 		}
 
@@ -295,7 +286,7 @@ func (this *MapperSort) Map(
 
 		// Go sort API: for ascending sort, return true if element i < element j.
 		sort.Slice(groupingKeysAndMlrvals, func(i, j int) bool {
-			for k, comparator := range(this.comparatorFuncs) {
+			for k, comparator := range this.comparatorFuncs {
 				result := comparator(
 					&groupingKeysAndMlrvals[i].mlrvals[k],
 					&groupingKeysAndMlrvals[j].mlrvals[k],
@@ -316,6 +307,10 @@ func (this *MapperSort) Map(
 			for iRecord := recordsInGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
 				outputChannel <- iRecord.Value.(*types.RecordAndContext)
 			}
+		}
+
+		for iRecord := this.spillGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
+			outputChannel <- iRecord.Value.(*types.RecordAndContext)
 		}
 
 		outputChannel <- inrecAndContext // end-of-stream marker

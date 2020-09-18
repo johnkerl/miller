@@ -39,3 +39,12 @@ run_mlr --opprint label A,B,I,X,Y u/s.dkvp
 run_mlr --opprint label A,B,I,X,Y,Z u/s.dkvp
 run_mlr --opprint label b,i,x u/s.dkvp
 run_mlr --opprint label x,i,b u/s.dkvp
+
+run_mlr --opprint --from u/s.dkvp sort -f nonesuch
+run_mlr --opprint --from u/s.dkvp sort -f a
+run_mlr --opprint --from u/s.dkvp sort -f a,b
+run_mlr --opprint --from u/s.dkvp sort -r a
+run_mlr --opprint --from u/s.dkvp sort -r a,b
+run_mlr --opprint --from u/s.dkvp sort -f a -r b
+run_mlr --opprint --from u/s.dkvp sort -f b -n i
+run_mlr --opprint --from u/s.dkvp sort -f b -nr i
