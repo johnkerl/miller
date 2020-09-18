@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-mlr --help-all-verbs
+./mlr --help-all-verbs

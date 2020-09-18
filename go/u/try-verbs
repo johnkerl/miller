@@ -7,7 +7,7 @@ run_mlr() {
   echo
   echo ----------------------------------------------------------------
   echo mlr "$@"
-  mlr "$@"
+  ./mlr "$@"
 }
 
 run_mlr --opprint cut    -f x,a u/s.dkvp

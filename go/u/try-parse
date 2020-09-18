@@ -7,7 +7,7 @@ run_mlr() {
   echo
   echo ----------------------------------------------------------------
   echo mlr "$@"
-  mlr "$@"
+  ./mlr "$@"
 }
 
 # With mlr -n put v, we are only parsing the DSL expression into an AST and

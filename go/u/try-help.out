@@ -1,11 +1,11 @@
 ================================================================
-Usage: mlr cat [options]
+Usage: ./mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
  -N (default ) Prepend field {name} to each record with record-counter starting at 1
  -n (default false) Prepend field "n" to each record with record-counter starting at 1
 
 ================================================================
-Usage: mlr cut [options]
+Usage: ./mlr cut [options]
 Passes through input records with specified fields included/excluded.
  -complement (default false) Synonymous with -x
  -f (default ) Comma-separated field names for cut, e.g. a,b,c
@@ -14,37 +14,37 @@ Default is to retain them in the order found in the input data.
  -x (default false) Exclude, rather than include, field names specified by -f.
 
 Examples:
-  mlr cut -f hostname,status
-  mlr cut -x -f hostname,status
+  ./mlr cut -f hostname,status
+  ./mlr cut -x -f hostname,status
 
 ================================================================
-Usage: mlr group-by [options]
+Usage: ./mlr group-by [options]
 Outputs records in batches having identical values at specified field names.
 
 ================================================================
-Usage: mlr group-like [options]
+Usage: ./mlr group-like [options]
 Outputs records in batches having identical field names.
 
 ================================================================
-Usage: mlr head [options]
+Usage: ./mlr head [options]
 Passes through the first n records, optionally by category.
  -g (default ) Optional group-by-field names for head counts, e.g. a,b,c
  -n (default 10) Head count to print
 
 ================================================================
-Usage: mlr label [options] {new1,new2,new3,...}
+Usage: ./mlr label [options] {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original
 names.) Particularly useful with --inidx or --implicit-csv-header, to give
 useful names to otherwise integer-indexed fields.
 
 ================================================================
-Usage: mlr nothing
+Usage: ./mlr nothing
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.
 
 ================================================================
-Usage: mlr put [options] {DSL expression}
+Usage: ./mlr put [options] {DSL expression}
 TODO: put detailed on-line help here.
  -f (default ) File containing a DSL expression.
  -q (default false) Does not include the modified record in the output stream.
@@ -54,11 +54,11 @@ TODO: put detailed on-line help here.
     Miller's grammar, to stdout.
 
 ================================================================
-Usage: mlr rename [options] {old1,new1,old2,new2,...}
+Usage: ./mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 
 ================================================================
-Usage: mlr sort {flags}
+Usage: ./mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
 field, and so on.  (Any records not having all specified sort keys will appear
 at the end of the output, in the order they were encountered, regardless of the
@@ -73,16 +73,16 @@ Flags:
   -nr {comma-separated field names}  Numerical descending; nulls sort first
 
 Example:
-  mlr sort -f a,b -nr x,y,z
+  ./mlr sort -f a,b -nr x,y,z
 which is the same as:
-  mlr sort -f a -f b -nr x -nr y -nr z
+  ./mlr sort -f a -f b -nr x -nr y -nr z
 
 ================================================================
-Usage: mlr tac
+Usage: ./mlr tac
 Prints records in reverse order from the order in which they were encountered.
 
 ================================================================
-Usage: mlr tail [options]
+Usage: ./mlr tail [options]
 Passes through the last n records, optionally by category.
  -g (default ) Optional group-by-field names for tail counts, e.g. a,b,c
  -n (default 10) Tail count to print
