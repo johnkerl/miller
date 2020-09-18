@@ -1565,7 +1565,7 @@ func MlrvalVariadicMax(mlrvals []*Mlrval) Mlrval {
 // For sorting
 
 // Lexical sort: just stringify everything.
-func LexicalAscendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
+func LexicalAscendingComparator(ma *Mlrval, mb *Mlrval) int {
 	sa := ma.String()
 	sb := mb.String()
 	if sa < sb {
@@ -1576,8 +1576,8 @@ func LexicalAscendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
 		return 0
 	}
 }
-func LexicalDescendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
-	return LexicalAscendingComparatorfunc(mb, ma)
+func LexicalDescendingComparator(ma *Mlrval, mb *Mlrval) int {
+	return LexicalAscendingComparator(mb, ma)
 }
 
 // ----------------------------------------------------------------
@@ -1694,9 +1694,9 @@ var num_cmp_dispositions = [MT_DIM][MT_DIM]ComparatorFunc{
 	/*MAP    */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
 }
 
-func NumericAscendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
+func NumericAscendingComparator(ma *Mlrval, mb *Mlrval) int {
 	return num_cmp_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }
-func NumericDescendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
-	return NumericAscendingComparatorfunc(mb, ma)
+func NumericDescendingComparator(ma *Mlrval, mb *Mlrval) int {
+	return NumericAscendingComparator(mb, ma)
 }

@@ -95,35 +95,35 @@ func mapperSortParseCLI(
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
-				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparatorfunc)
+				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
 			}
 			argi += 2
 		} else if args[argi] == "-r" {
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
-				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparatorfunc)
+				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparator)
 			}
 			argi += 2
 		} else if args[argi] == "-n" {
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
-				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparatorfunc)
+				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 			argi += 2
 		} else if args[argi] == "-nf" {
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
-				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparatorfunc)
+				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 			argi += 2
 		} else if args[argi] == "-nr" {
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
-				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparatorfunc)
+				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)
 			}
 			argi += 2
 

@@ -242,7 +242,7 @@ func mainUsageDataFormatExamples(o *os.File, argv0 string) {
 }
 
 func mainUsageDataFormatOptions(o *os.File, argv0 string) {
-	fmt.Fprintf(o,
+	fmt.Fprintln(o,
 		`
 	  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
 	                                  (this is Miller's default format).
