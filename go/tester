@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# ================================================================
+# GO-SOURCE TESTS
+# ================================================================
+
+# go test -v ./... doesn't work since it triggers unready things in
+# src/github.com/goccmack
+
+export GOPATH=$(pwd)
+go test miller/types

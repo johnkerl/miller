@@ -2,14 +2,9 @@
 TOP OF LIST:
 
 * go-try:
-
   o rename: bulk-edit for b,i,x vs x,i,b cases
-
-  ! sort
-    - UT per se for 'NUMERICS < BOOL < STRINGS < ERROR < ABSENT'
   ! filter
   ! emit; print/dump
-
   ! quoted NIDX
     - how with whitespace regex -- ?
   ! quoted DKVP

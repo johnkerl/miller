@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ================================================================
+# COMMAND-LINE TESTS
+# ================================================================
+
 runner="bash"
 if [ "$1" = "-v" ]; then
   set -x
@@ -8,17 +12,6 @@ fi
 
 set -euo pipefail
 
-# ----------------------------------------------------------------
-# GO-SOURCE TESTS
-
-# go test -v ./... doesn't work since it triggers unready things in
-# src/github.com/goccmack
-
-export GOPATH=$(pwd)
-go test miller/types
-
-# ----------------------------------------------------------------
-# COMMAND-LINE TESTS
 $runner u/try-io    > u/try-io.out
 $runner u/try-chain > u/try-chain.out
 $runner u/try-verbs > u/try-verbs.out

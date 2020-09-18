@@ -7,33 +7,15 @@ package types
 
 import (
 	"testing"
-	//"types"
 )
 
 // ----------------------------------------------------------------
-func TestLexicalAscendingComparator(t *testing.T) {
-	var a = MlrvalFromInt64(10)
-	var b = MlrvalFromInt64(2)
-	if LexicalAscendingComparator(&a, &b) != -1 {
-		t.Fatal()
-	}
-
-	a = MlrvalFromString("abc")
-	b = MlrvalFromString("def")
-	if LexicalAscendingComparator(&a, &b) != -1 {
-		t.Fatal()
-	}
-
-	a = MlrvalFromInt64(3)
-	b = MlrvalFromBool(true)
-	if LexicalAscendingComparator(&a, &b) != -1 {
-		t.Fatal()
-	}
-}
-
-// ----------------------------------------------------------------
 // SORTING
-// Sort rules (same for min, max, and comparator):
+//
+// Lexical compare is just string-sort on stringify of mlrvals:
+// e.g. "hello" < "true".
+//
+// Numerical sort rules (same for min, max, and comparator):
 // * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
 // * error == error (singleton type)
 // * absent == absent (singleton type)
@@ -41,7 +23,8 @@ func TestLexicalAscendingComparator(t *testing.T) {
 // * numeric compares on numbers
 // * false < true
 
-func TestNumericAscendingComparator(t *testing.T) {
+func TestComparactors(t *testing.T) {
+
 	i10 := MlrvalFromInt64(10)
 	i2 := MlrvalFromInt64(2)
 
@@ -56,7 +39,28 @@ func TestNumericAscendingComparator(t *testing.T) {
 	a := MlrvalFromAbsent()
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Within-type comparisons
+	// Within-type lexical comparisons
+	if LexicalAscendingComparator(&i10, &i2) != -1 {
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&bfalse, &bfalse) != 0 {
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&bfalse, &btrue) != -1 {
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&sabc, &sdef) != -1 {
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&e, &e) != 0 {
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&a, &a) != 0 {
+		t.Fatal()
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Within-type numeric comparisons
 	if NumericAscendingComparator(&i10, &i2) != 1 {
 		t.Fatal()
 	}
@@ -77,17 +81,54 @@ func TestNumericAscendingComparator(t *testing.T) {
 	if NumericAscendingComparator(&a, &a) != 0 {
 		t.Fatal()
 	}
-	// xxx more
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Across-type comparisons
+	// Across-type lexical comparisons
+
+	if LexicalAscendingComparator(&i10, &btrue) != -1 { // "10" < "true"
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&i10, &sabc) != -1 { // "10" < "abc"
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&i10, &e) != 1 { // "10" > "(error)"
+		t.Fatal()
+	}
+
+	if LexicalAscendingComparator(&bfalse, &sabc) != 1 { // "false" > "abc"
+		t.Fatal()
+	}
+	if LexicalAscendingComparator(&bfalse, &e) != 1 { // "false" > "(error)"
+		t.Fatal()
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Across-type numeric comparisons
 
 	if NumericAscendingComparator(&i10, &btrue) != -1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&e, &a) != -1 {
+	if NumericAscendingComparator(&i10, &sabc) != -1 {
+		t.Fatal()
+	}
+	if NumericAscendingComparator(&i10, &e) != -1 {
+		t.Fatal()
+	}
+	if NumericAscendingComparator(&i10, &a) != -1 {
 		t.Fatal()
 	}
 
-	// xxx more
+	if NumericAscendingComparator(&bfalse, &sabc) != -1 {
+		t.Fatal()
+	}
+	if NumericAscendingComparator(&bfalse, &e) != -1 {
+		t.Fatal()
+	}
+	if NumericAscendingComparator(&bfalse, &a) != -1 {
+		t.Fatal()
+	}
+
+	if NumericAscendingComparator(&e, &a) != -1 {
+		t.Fatal()
+	}
 }

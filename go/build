@@ -9,4 +9,5 @@ fi
 set -euo pipefail
 
 ./build-go
+tester
 check $verbose
