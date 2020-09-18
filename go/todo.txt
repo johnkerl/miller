@@ -2,7 +2,6 @@
 TOP OF LIST:
 
 * go-try:
-  o groupByKey -> groupingKey x all mappers
 
   o rename: bulk-edit for b,i,x vs x,i,b cases
 

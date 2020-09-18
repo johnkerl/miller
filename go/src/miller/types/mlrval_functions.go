@@ -1700,32 +1700,3 @@ func NumericAscendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
 func NumericDescendingComparatorfunc(ma *Mlrval, mb *Mlrval) int {
 	return NumericAscendingComparatorfunc(mb, ma)
 }
-
-//static int mv_cmp_eq(const mv_t* pa, const mv_t* pb) { return  0; }
-//static int mv_cmp_lt(const mv_t* pa, const mv_t* pb) { return -1; }
-//static int mv_cmp_gt(const mv_t* pa, const mv_t* pb) { return  1; }
-//
-//static int mv_bb_comparator(const mv_t* pa, const mv_t* pb) {
-//	int d = pa->u.boolv - pb->u.boolv;
-//	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
-//}
-//static int mv_ss_cmp(const mv_t* pa, const mv_t* pb) {
-//	return strcmp(pa->u.strv, pb->u.strv);
-//}
-
-//static mv_i_xx_comparator_func_t* mv_xx_comparator_dispositions[MT_DIM][MT_DIM] = {
-//	//         ERROR       ABSENT     EMPTY      STRING     INT        FLOAT      BOOL
-//	/*ERROR*/  {mv_cmp_eq, mv_cmp_lt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
-//	/*ABSENT*/ {mv_cmp_gt, mv_cmp_eq, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
-//	/*EMPTY*/  {mv_cmp_lt, mv_cmp_lt, mv_cmp_eq, mv_ss_cmp, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
-//	/*STRING*/ {mv_cmp_lt, mv_cmp_lt, mv_ss_cmp, mv_ss_cmp, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
-//	/*INT*/    {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_ii_cmp, mv_if_cmp, mv_cmp_lt},
-//	/*FLOAT*/  {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_fi_cmp, mv_ff_cmp, mv_cmp_lt},
-//	/*BOOL*/   {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_gt, mv_cmp_gt, mv_bb_comparator},
-//	};
-//
-//int mv_xx_comparator(const void* pva, const void* pvb) {
-//	const mv_t* pa = pva;
-//	const mv_t* pb = pvb;
-//	return mv_xx_comparator_dispositions[pa->type][pb->type](pa, pb);
-//}
