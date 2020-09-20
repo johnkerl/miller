@@ -205,10 +205,12 @@ func (this *MapperPut) Map(
 		}
 
 		if !this.suppressOutputRecord {
-			outputChannel <- types.NewRecordAndContext(
-				outrec,
-				&context,
-			)
+			if this.cstState.FilterResult == true {
+				outputChannel <- types.NewRecordAndContext(
+					outrec,
+					&context,
+				)
+			}
 		}
 	} else {
 

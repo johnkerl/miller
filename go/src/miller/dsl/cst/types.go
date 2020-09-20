@@ -30,6 +30,7 @@ type State struct {
 	Inrec   *types.Mlrmap
 	Context *types.Context
 	Oosvars *types.Mlrmap
+	FilterResult bool
 	// TODO: stack frames will go into individual statement-block nodes
 }
 
@@ -39,6 +40,7 @@ func NewEmptyState() *State {
 		Inrec:   nil,
 		Context: nil,
 		Oosvars: oosvars,
+		FilterResult: true,
 	}
 }
 

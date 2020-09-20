@@ -33,6 +33,9 @@ func BuildStatementNode(
 	case dsl.NodeTypeEndBlock:
 		return nil, nil // xxx temp
 
+	case dsl.NodeTypeFilterStatement:
+		return BuildFilterStatementNode(astNode)
+
 	default:
 		return nil, errors.New(
 			"CST BuildStatementNode: unhandled AST node " + string(astNode.Type),

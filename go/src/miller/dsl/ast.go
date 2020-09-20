@@ -39,6 +39,7 @@ const (
 
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"
+	NodeTypeFilterStatement      = "FilterStatement"
 	NodeTypeOperator        = "Operator"
 	NodeTypeContextVariable = "ContextVariable"
 	NodeTypeConstant        = "Constant"

@@ -151,6 +151,7 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 
 md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
 md_token_end      : 'e' 'n' 'd' ;
+md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 
 //md_token_all      : 'a' 'l' 'l' ;
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
@@ -166,7 +167,6 @@ md_token_end      : 'e' 'n' 'd' ;
 //md_token_emitp    : 'e' 'm' 'i' 't' 'p' ;
 //md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 //md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 //md_token_for      : 'f' 'o' 'r' ;
 //md_token_func     : 'f' 'u' 'n' 'c' ;
 //md_token_if       : 'i' 'f' ;
@@ -349,9 +349,10 @@ EndBlock
 
 BracelessStatement
   : Assignment
+  | FilterStatement
 ;
 
-Assignment :
+Assignment
   : Lvalue "=" Rvalue
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
 ;
@@ -385,6 +386,11 @@ IndexedLvalue
       dsl.NodeTypeIndexedLvalue,
     )>>
 ;
+
+FilterStatement
+  : md_token_filter Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
+  ;
 
 // ----------------------------------------------------------------
 FieldValue
