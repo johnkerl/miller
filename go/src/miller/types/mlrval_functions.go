@@ -1457,14 +1457,16 @@ func min_s_ss(ma, mb *Mlrval) Mlrval {
 }
 
 var min_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ABSENT */ {_erro, _absn, _2___, _2___, _2___, _2___, _2___},
-	/*EMPTY  */ {_erro, _1___, _void, _void, _2___, _2___, _2___},
-	/*STRING */ {_erro, _1___, _void, min_s_ss, _2___, _2___, _2___},
-	/*INT    */ {_erro, _1___, _1___, _1___, min_i_ii, min_f_if, _1___},
-	/*FLOAT  */ {_erro, _1___, _1___, _1___, min_f_fi, min_f_ff, _1___},
-	/*BOOL   */ {_erro, _1___, _1___, _1___, _2___, _2___, min_b_bb},
+	//          ERROR   ABSENT EMPTY  STRING  INT  FLOAT   BOOL   ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _2___, _2___, _2___, _2___, _2___, _absn, _absn},
+	/*EMPTY  */ {_erro, _1___, _void, _void, _2___, _2___, _2___, _absn, _absn},
+	/*STRING */ {_erro, _1___, _void, min_s_ss, _2___, _2___, _2___, _absn, _absn},
+	/*INT    */ {_erro, _1___, _1___, _1___, min_i_ii, min_f_if, _1___, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _1___, _1___, min_f_fi, min_f_ff, _1___, _absn, _absn},
+	/*BOOL   */ {_erro, _1___, _1___, _1___, _2___, _2___, min_b_bb, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
 func MlrvalBinaryMin(ma, mb *Mlrval) Mlrval {
@@ -1536,13 +1538,15 @@ func max_s_ss(ma, mb *Mlrval) Mlrval {
 
 var max_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	//           ERROR  ABSENT EMPTY  STRING INT    FLOAT  BOOL ARRAY MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ABSENT */ {_erro, _absn, _2___, _2___, _2___, _2___, _2___},
-	/*EMPTY  */ {_erro, _1___, _void, _void, _2___, _2___, _2___},
-	/*STRING */ {_erro, _1___, _void, max_s_ss, _2___, _2___, _2___},
-	/*INT    */ {_erro, _1___, _1___, _1___, max_i_ii, max_f_if, _1___},
-	/*FLOAT  */ {_erro, _1___, _1___, _1___, max_f_fi, max_f_ff, _1___},
-	/*BOOL   */ {_erro, _1___, _1___, _1___, _2___, _2___, max_b_bb},
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _2___, _2___, _2___, _2___, _2___, _absn, _absn},
+	/*EMPTY  */ {_erro, _1___, _void, _void, _2___, _2___, _2___, _absn, _absn},
+	/*STRING */ {_erro, _1___, _void, max_s_ss, _2___, _2___, _2___, _absn, _absn},
+	/*INT    */ {_erro, _1___, _1___, _1___, max_i_ii, max_f_if, _1___, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _1___, _1___, max_f_fi, max_f_ff, _1___, _absn, _absn},
+	/*BOOL   */ {_erro, _1___, _1___, _1___, _2___, _2___, max_b_bb, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
 func MlrvalBinaryMax(ma, mb *Mlrval) Mlrval {
