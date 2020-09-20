@@ -6,16 +6,25 @@
 
 set -euo pipefail
 
+verbose="false"
+if [ $# -eq 1 ]; then
+  if [ "$1" == "-v" ]; then
+    verbose="true"
+  fi
+fi
+
 export GOPATH=$(pwd)
 
 # Build the bin/gocc executable:
 go get github.com/goccmack/gocc
 
-#lr1="src/miller/parsing/LR1_conflicts.txt"
-#rm -f $lr1
-
-#bin/gocc -v -o src/miller/parsing src/miller/parsing/mlr.bnf || expand -2 $lr1
-bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf
+rm -f src/miller/parsing/*.txt
+if [ "$verbose" = "true" ]; then
+  lr1="src/miller/parsing/LR1_conflicts.txt"
+  bin/gocc -v -o src/miller/parsing src/miller/parsing/mlr.bnf || expand -2 $lr1
+else
+  bin/gocc -o src/miller/parsing src/miller/parsing/mlr.bnf
+fi
 
 # Code-gen directories:
 #   src/miller/parsing/errors/

@@ -4,6 +4,9 @@ TOP OF LIST:
 * go-try:
   o rename: bulk-edit for b,i,x vs x,i,b cases
   ! filter
+    > bare-boolean LR-1 conflicts wut
+    > prepend "filter " after last ";" hack -- ? gurk if "...;..." in a string :^/
+      - state machine dquote in/out w walkback; \" handling; good UT
   ! emit; print/dump
   ! quoted NIDX
     - how with whitespace regex -- ?
