@@ -210,3 +210,5 @@ echo; run_mlr --from u/s.dkvp --opprint put '$z = max($x,$y)'
 echo; run_mlr --from u/s.dkvp --opprint put '$z = min($x,$y,$i)'
 echo; run_mlr --from u/s.dkvp --opprint put '$z = abs($x)'
 echo; run_mlr --from u/s.dkvp --opprint put '$c = cos(2*M_PI*NR/32); $s = sin(2*M_PI*NR/32)'
+
+echo; run_mlr --from u/s.dkvp --opprint put 'filter NR > 2'

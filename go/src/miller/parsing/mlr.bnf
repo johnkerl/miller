@@ -152,6 +152,7 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
 md_token_end      : 'e' 'n' 'd' ;
 md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
+md_token_emit     : 'e' 'm' 'i' 't' ;
 
 //md_token_all      : 'a' 'l' 'l' ;
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
@@ -350,6 +351,7 @@ EndBlock
 BracelessStatement
   : Assignment
   | FilterStatement
+  | EmitStatement
 ;
 
 Assignment
@@ -383,13 +385,18 @@ IndexedLvalue
       dsl.NewASTToken("[]", $1),
       $0,
       $2,
-      dsl.NodeTypeIndexedLvalue,
+      dsl.NodeTypeArrayOrMapIndexAccess,
     )>>
 ;
 
 FilterStatement
   : md_token_filter Rvalue
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
+  ;
+
+EmitStatement
+  : md_token_emit Rvalue // xxx more to do
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
   ;
 
 // ----------------------------------------------------------------

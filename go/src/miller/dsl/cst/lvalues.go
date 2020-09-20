@@ -38,7 +38,7 @@ func BuildAssignableNode(
 		return BuildFullOosvarLvalueNode(astNode)
 		break
 
-	case dsl.NodeTypeIndexedLvalue:
+	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return BuildIndexedLvalueNode(astNode)
 		break
 	}
@@ -350,7 +350,7 @@ type IndexedLvalueNode struct {
 }
 
 func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndexedLvalue)
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
 	lib.InternalCodingErrorIf(astNode == nil)
 
 	var baseLvalue IAssignable = nil
@@ -363,8 +363,8 @@ func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	// RAW AST:
 	// * StatementBlock
 	//     * Assignment "="
-	//         * IndexedLvalue "[]"
-	//             * IndexedLvalue "[]"
+	//         * ArrayOrMapIndexAccess "[]"
+	//             * ArrayOrMapIndexAccess "[]"
 	//                 * DirectFieldValue "x"
 	//                 * IntLiteral "1"
 	//             * IntLiteral "2"
@@ -374,7 +374,7 @@ func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	// then the base Lvalue.
 	walkerNode := astNode
 	for {
-		if walkerNode.Type == dsl.NodeTypeIndexedLvalue {
+		if walkerNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
 			indexEvaluable, err := BuildEvaluableNode(walkerNode.Children[1])

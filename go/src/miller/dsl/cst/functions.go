@@ -143,9 +143,6 @@ func BuildUnaryFunctionCallsiteNode(
 
 func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
-	if arg1.IsAbsent() {
-		return types.MlrvalFromAbsent()
-	}
 	return this.unaryFunc(&arg1)
 }
 
@@ -175,6 +172,9 @@ func BuildBinaryFunctionCallsiteNode(
 	}
 
 	evaluable1, err := BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
 	evaluable2, err := BuildEvaluableNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
@@ -203,13 +203,7 @@ func BuildBinaryFunctionCallsiteNode(
 
 func (this *BinaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
-	if arg1.IsAbsent() {
-		return types.MlrvalFromAbsent()
-	}
 	arg2 := this.evaluable2.Evaluate(state)
-	if arg2.IsAbsent() {
-		return types.MlrvalFromAbsent()
-	}
 	return this.binaryFunc(&arg1, &arg2)
 }
 
@@ -265,17 +259,8 @@ func BuildTernaryFunctionCallsiteNode(
 
 func (this *TernaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
-	if arg1.IsAbsent() {
-		return types.MlrvalFromAbsent()
-	}
 	arg2 := this.evaluable2.Evaluate(state)
-	if arg2.IsAbsent() {
-		return types.MlrvalFromAbsent()
-	}
 	arg3 := this.evaluable3.Evaluate(state)
-	if arg3.IsAbsent() {
-		return types.MlrvalFromAbsent()
-	}
 	return this.ternaryFunc(&arg1, &arg2, &arg3)
 }
 
@@ -309,9 +294,6 @@ func (this *VariadicFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	args := make([]*types.Mlrval, len(this.evaluables))
 	for i, evaluable := range this.evaluables {
 		arg := evaluable.Evaluate(state)
-		if arg.IsAbsent() {
-			return types.MlrvalFromAbsent()
-		}
 		args[i] = &arg
 	}
 	return this.variadicFunc(args)

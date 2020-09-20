@@ -2,6 +2,12 @@
 TOP OF LIST:
 
 * go-try:
+
+  o astnode.print: aux method w/ depth; non-aux w/o
+  ! dsl
+
+    mlr --from s put -q '@sum[$a] += $i; emit {"sum": @sum}'
+
   o rename: bulk-edit for b,i,x vs x,i,b cases
   ! filter
     > bare-boolean LR-1 conflicts wut

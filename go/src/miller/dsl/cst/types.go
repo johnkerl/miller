@@ -31,6 +31,7 @@ type State struct {
 	Context *types.Context
 	Oosvars *types.Mlrmap
 	FilterResult bool
+    OutputChannel chan<- *types.RecordAndContext
 	// TODO: stack frames will go into individual statement-block nodes
 }
 

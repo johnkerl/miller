@@ -24,42 +24,42 @@ func BuildAssignmentNode(
 	lhsASTNode := astNode.Children[0]
 	rhsASTNode := astNode.Children[1]
 
-	lvalue, err := BuildAssignableNode(lhsASTNode)
+	lvalueNode, err := BuildAssignableNode(lhsASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	rvalue, err := BuildEvaluableNode(rhsASTNode)
+	rvalueNode, err := BuildEvaluableNode(rhsASTNode)
 	if err != nil {
 		return nil, err
 	}
 
 	return &AssignmentNode{
-		lvalue: lvalue,
-		rvalue: rvalue,
+		lvalueNode: lvalueNode,
+		rvalueNode: rvalueNode,
 	}, nil
 }
 
 // ----------------------------------------------------------------
 type AssignmentNode struct {
-	lvalue IAssignable
-	rvalue IEvaluable
+	lvalueNode IAssignable
+	rvalueNode IEvaluable
 }
 
 func NewAssignmentNode(
-	lvalue IAssignable,
-	rvalue IEvaluable,
+	lvalueNode IAssignable,
+	rvalueNode IEvaluable,
 ) *AssignmentNode {
 	return &AssignmentNode{
-		lvalue: lvalue,
-		rvalue: rvalue,
+		lvalueNode: lvalueNode,
+		rvalueNode: rvalueNode,
 	}
 }
 
 func (this *AssignmentNode) Execute(state *State) error {
-	rvalue := this.rvalue.Evaluate(state)
+	rvalue := this.rvalueNode.Evaluate(state)
 	if !rvalue.IsAbsent() {
-		err := this.lvalue.Assign(&rvalue, state)
+		err := this.lvalueNode.Assign(&rvalue, state)
 		if err != nil {
 			return err
 		}

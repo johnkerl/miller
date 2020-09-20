@@ -68,7 +68,7 @@ func (this *Mlrmap) findEntryByPositionalIndex(position int64) *mlrmapEntry {
 func (this *Mlrmap) PutCopy(key *string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
-		pe = newMlrmapEntry(key, value)
+		pe = newMlrmapEntry(key, value.Copy())
 		if this.Head == nil {
 			this.Head = pe
 			this.Tail = pe

@@ -181,6 +181,8 @@ func (this *MapperPut) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	this.cstState.OutputChannel = outputChannel
+
 	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
 	if inrec != nil {

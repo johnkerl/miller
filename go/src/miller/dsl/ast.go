@@ -27,6 +27,8 @@ const (
 	NodeTypeArraySliceAccess          = "ArraySliceAccess"
 	NodeTypeArraySliceEmptyLowerIndex = "ArraySliceEmptyLowerIndex"
 	NodeTypeArraySliceEmptyUpperIndex = "ArraySliceEmptyUpperIndex"
+	NodeTypeContextVariable           = "ContextVariable"
+	NodeTypeConstant                  = "Constant"
 
 	NodeTypeDirectFieldValue    = "DirectFieldValue"
 	NodeTypeIndirectFieldValue  = "IndirectFieldValue"
@@ -35,15 +37,12 @@ const (
 	NodeTypeIndirectOosvarValue = "IndirectOosvarValue"
 	NodeTypeFullOosvar          = "FullOosvar"
 
-	NodeTypeIndexedLvalue = "IndexedLvalue"
-
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"
-	NodeTypeFilterStatement      = "FilterStatement"
-	NodeTypeOperator        = "Operator"
-	NodeTypeContextVariable = "ContextVariable"
-	NodeTypeConstant        = "Constant"
+	NodeTypeFilterStatement = "FilterStatement"
+	NodeTypeEmitStatement   = "EmitStatement"
 
+	NodeTypeOperator         = "Operator"
 	NodeTypeFunctionCallsite = "FunctionCallsite"
 
 	// A special token which causes a panic when evaluated.  This is for

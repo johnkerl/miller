@@ -36,6 +36,9 @@ func BuildStatementNode(
 	case dsl.NodeTypeFilterStatement:
 		return BuildFilterStatementNode(astNode)
 
+	case dsl.NodeTypeEmitStatement:
+		return BuildEmitStatementNode(astNode)
+
 	default:
 		return nil, errors.New(
 			"CST BuildStatementNode: unhandled AST node " + string(astNode.Type),
