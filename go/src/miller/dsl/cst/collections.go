@@ -84,6 +84,8 @@ func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) types.Mlrval {
 		return baseMlrval.ArrayGet(&indexMlrval)
 	} else if baseMlrval.IsMap() {
 		return baseMlrval.MapGet(&indexMlrval)
+	} else if baseMlrval.IsAbsent() {
+		return baseMlrval
 	} else {
 		return types.MlrvalFromError()
 	}
