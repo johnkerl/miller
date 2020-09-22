@@ -109,15 +109,7 @@ func (this *MapperLabel) Map(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-
-		oldNames := inrec.GetKeys()
-		numOld := len(oldNames)
-		numNew := len(this.newNames)
-		numToRename := lib.IntMin2(numOld, numNew)
-
-		for i := 0; i < numToRename; i++ {
-			inrec.Rename(&oldNames[i], &this.newNames[i])
-		}
+		inrec.Label(this.newNames)
 	}
 	outputChannel <- inrecAndContext // end-of-stream marker
 }

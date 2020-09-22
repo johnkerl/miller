@@ -317,6 +317,36 @@ func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
 	return true
 }
 
+// ----------------------------------------------------------------
+func (this *Mlrmap) Label(newNames []string) {
+	that := NewMlrmapAsRecord()
+
+	i := 0
+	numNewNames := len(newNames)
+	for {
+		if i >= numNewNames {
+			break
+		}
+		pe := this.pop()
+		if pe == nil {
+			break
+		}
+		// Old record will be GC'ed: just move pointers
+		that.PutReference(&newNames[i], pe.Value)
+		i++
+	}
+
+	for {
+		pe := this.pop()
+		if pe == nil {
+			break
+		}
+		that.PutReference(pe.Key, pe.Value)
+	}
+
+	*this = *that
+}
+
 // ================================================================
 // PRIVATE METHODS
 

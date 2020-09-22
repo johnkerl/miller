@@ -17,8 +17,6 @@ TOP OF LIST:
     - default to absent (no hoisting)
     - no scope-walks needed for for-loops
 
-* rename: bulk-edit for b,i,x vs x,i,b cases
-
 ! filter
   > bare-boolean LR-1 conflicts wut
     ? erase BNF distinction between BaseLvalue and MlrvalOrFunction
@@ -164,3 +162,4 @@ NITS/NON-IMMEDIATE:
 * mlrdoc: there should have always been a >>> and >>>=, and now there are
 ! systime printing out in scientific notation :(
 ! head early-out -- cite the relevant issue & fix the right way ...
+* relnotes: label b,i,x vs x,i,b change
