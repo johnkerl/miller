@@ -3,7 +3,6 @@ package types
 import (
 	"bytes"
 	"errors"
-	"sort"
 	"strconv"
 
 	"miller/lib"
@@ -352,10 +351,7 @@ func (this *Mlrmap) Label(newNames []string) {
 func (this *Mlrmap) SortByKey() {
 	keys := this.GetKeys()
 
-	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(keys, func(i, j int) bool {
-		return keys[i] < keys[j]
-	})
+	lib.SortStrings(keys)
 
 	that := NewMlrmapAsRecord()
 

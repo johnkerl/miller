@@ -1,9 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* sort-within-records
-* regularize
-
 ! try Lvalue/Rvalue coalesce
   > to make condish work & unhack filter
   > better error messages in the CST builder anyway, so it's a win

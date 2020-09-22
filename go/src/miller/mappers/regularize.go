@@ -4,20 +4,22 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/mapping"
 	"miller/types"
 )
 
 // ----------------------------------------------------------------
-var SortWithinRecordsSetup = mapping.MapperSetup{
-	Verb:         "sort-within-records",
-	ParseCLIFunc: mapperSortWithinRecordsParseCLI,
+var RegularizeSetup = mapping.MapperSetup{
+	Verb:         "regularize",
+	ParseCLIFunc: mapperRegularizeParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperSortWithinRecordsParseCLI(
+func mapperRegularizeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -39,7 +41,7 @@ func mapperSortWithinRecordsParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperSortWithinRecordsUsage(ostream, args[0], verb, flagSet)
+		mapperRegularizeUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -50,13 +52,13 @@ func mapperSortWithinRecordsParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	mapper, _ := NewMapperSortWithinRecords()
+	mapper, _ := NewMapperRegularize()
 
 	*pargi = argi
 	return mapper
 }
 
-func mapperSortWithinRecordsUsage(
+func mapperRegularizeUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
@@ -73,25 +75,41 @@ func mapperSortWithinRecordsUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperSortWithinRecords struct {
+type MapperRegularize struct {
+	// map from string to []string
+	sortedToOriginal map[string][]string
 }
 
-func NewMapperSortWithinRecords() (*MapperSortWithinRecords, error) {
-
-	this := &MapperSortWithinRecords{
+func NewMapperRegularize() (*MapperRegularize, error) {
+	this := &MapperRegularize{
+		make(map[string][]string),
 	}
-
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *MapperSortWithinRecords) Map(
+func (this *MapperRegularize) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		inrec.SortByKey()
+		currentFieldNames := inrec.GetKeys()
+		currentSortedFieldNames := lib.SortedStrings(currentFieldNames)
+		currentSortedFieldNamesJoined := strings.Join(currentSortedFieldNames, ",")
+		previousSortedFieldNames := this.sortedToOriginal[currentSortedFieldNamesJoined]
+		if previousSortedFieldNames == nil {
+			this.sortedToOriginal[currentSortedFieldNamesJoined] = currentFieldNames
+			outputChannel <- inrecAndContext
+		} else {
+			outrec := types.NewMlrmapAsRecord()
+			for _, fieldName := range previousSortedFieldNames {
+				outrec.PutReference(&fieldName, inrec.Get(&fieldName)) // inrec will be GC'ed
+			}
+			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputChannel <- outrecAndContext
+		}
+	} else {
+		outputChannel <- inrecAndContext // end-of-stream marker
 	}
-	outputChannel <- inrecAndContext // end-of-stream marker
 }

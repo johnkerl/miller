@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -30,6 +31,25 @@ func StringListToSet(stringList []string) map[string]bool {
 		stringSet[s] = true
 	}
 	return stringSet
+}
+
+func SortStrings(strings []string) {
+	// Go sort API: for ascending sort, return true if element i < element j.
+	sort.Slice(strings, func(i, j int) bool {
+		return strings[i] < strings[j]
+	})
+}
+
+func SortedStrings(strings []string) []string {
+	copy := make([]string, len(strings))
+	for i, s := range(strings) {
+		copy[i] = s
+	}
+	// Go sort API: for ascending sort, return true if element i < element j.
+	sort.Slice(copy, func(i, j int) bool {
+		return copy[i] < copy[j]
+	})
+	return copy
 }
 
 func IntMin2(a, b int) int {

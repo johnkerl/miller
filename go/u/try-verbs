@@ -50,3 +50,4 @@ run_mlr --opprint --from u/s.dkvp sort -f b -n i
 run_mlr --opprint --from u/s.dkvp sort -f b -nr i
 
 run_mlr --json --from u/needs-sorting.json sort-within-records
+run_mlr --json --from u/needs-regularize.json regularize
