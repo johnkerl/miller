@@ -78,6 +78,10 @@ which is the same as:
   ./mlr sort -f a -f b -nr x -nr y -nr z
 
 ================================================================
+Usage: ./mlr sort-within-records [options]
+Outputs records sorted lexically ascending by keys.
+
+================================================================
 Usage: ./mlr tac
 Prints records in reverse order from the order in which they were encountered.
 

@@ -48,3 +48,5 @@ run_mlr --opprint --from u/s.dkvp sort -r a,b
 run_mlr --opprint --from u/s.dkvp sort -f a -r b
 run_mlr --opprint --from u/s.dkvp sort -f b -n i
 run_mlr --opprint --from u/s.dkvp sort -f b -nr i
+
+run_mlr --json --from u/needs-sorting.json sort-within-records
