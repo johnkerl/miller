@@ -1,30 +1,46 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* go-try:
+! try Lvalue/Rvalue coalesce
+  > to make condish work & unhack filter
+  > better error messages in the CST builder anyway, so it's a win
 
-  o while and do-while statements -- not urgent
-  ~ for-loops -- require localvars as prereq
-  ! need Lvalue/Rvalue coalesce
-    > to make condish work & unhack filter
-    > better error messages in the CST builder anyway, so it's a win
+* while and do-while statements -- not urgent
 
-  o rename: bulk-edit for b,i,x vs x,i,b cases
+~ for-loops -- require localvars as prereq
+  > for-k, for-kv, for-knv sooner -- stack-frame special cases
+  > defer triple-for until later
 
-  ! filter
-    > bare-boolean LR-1 conflicts wut
-      ? erase BNF distinction between BaseLvalue and MlrvalOrFunction
-        - ... i think not
-    > prepend "filter " after last ";" hack -- ? gurk if "...;..." in a string :^/
-      - state machine dquote in/out w walkback; \" handling; good UT
-  ! quoted NIDX
-    - how with whitespace regex -- ?
-  ! quoted DKVP
-    - what about csvlite-style -- ? needs a --dkvplite ?
-  ! --implicit-csv-header
-  ! cat -n -g a,b,c
-  o clean up mlr --help to not advertise things it doesn't do yet
-  o ASV? golang csv package parameterizes comma but not crlf :(
+* stack frames
+  o at cst.State: list.List of StackFrame
+  o for now: StackFrame containing only hash-map from name to mlrval.
+    - default to absent (no hoisting)
+    - no scope-walks needed for for-loops
+
+* rename: bulk-edit for b,i,x vs x,i,b cases
+
+! filter
+  > bare-boolean LR-1 conflicts wut
+    ? erase BNF distinction between BaseLvalue and MlrvalOrFunction
+      - ... i think not
+  > prepend "filter " after last ";" hack -- ? gurk if "...;..." in a string :^/
+    - state machine dquote in/out w walkback; \" handling; good UT
+
+! quoted NIDX
+  - how with whitespace regex -- ?
+! quoted DKVP
+  - what about csvlite-style -- ? needs a --dkvplite ?
+
+! --implicit-csv-header
+
+! cat -n -g a,b,c
+
+* clean up mlr --help to not advertise things it doesn't do yet
+
+* ASV? golang csv package parameterizes comma but not crlf :(
+
+----------------------------------------------------------------
+CATEGORIES:
 
 * widen verb coverage
   o count

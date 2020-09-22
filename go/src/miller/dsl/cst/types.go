@@ -32,7 +32,8 @@ type State struct {
 	Oosvars *types.Mlrmap
 	FilterResult bool
     OutputChannel chan<- *types.RecordAndContext
-	// TODO: stack frames will go into individual statement-block nodes
+	// TODO: stack frames will go into individual statement-block nodes or here?
+	// Needs to be here, for scope-resolution walks
 }
 
 func NewEmptyState() *State {
@@ -78,6 +79,7 @@ type IExecutable interface {
 // Also implements IExecutable
 type StatementBlockNode struct {
 	executables []IExecutable
+	// TODO: localvars -- here or in State's stack-frame
 }
 
 // ================================================================
