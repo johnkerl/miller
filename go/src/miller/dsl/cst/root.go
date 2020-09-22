@@ -64,7 +64,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	//         * IntLiteral "4"
 
 	for _, astChild := range astChildren {
-		if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeBeginBlock {
+		if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
 			statementBlockNode, err := BuildStatementBlockNodeFromBeginOrEnd(astChild)
 			if err != nil {
 				return nil, err

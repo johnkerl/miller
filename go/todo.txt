@@ -3,6 +3,11 @@ TOP OF LIST:
 
 * go-try:
 
+  ! begin/end
+    mlr --from s put -v 'begin{@sum=0} @sum += $x; end{emit @sum}'
+
+  o if/else-if/else
+
   o rename: bulk-edit for b,i,x vs x,i,b cases
 
   ! filter
