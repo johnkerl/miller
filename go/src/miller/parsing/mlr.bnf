@@ -155,19 +155,19 @@ md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 md_token_emit     : 'e' 'm' 'i' 't' ;
 md_token_dump     : 'd' 'u' 'm' 'p' ;
 md_token_edump    : 'e' 'd' 'u' 'm' 'p' ;
+md_token_if       : 'i' 'f' ;
+md_token_elif     : 'e' 'l' 'i' 'f' ;
+md_token_else     : 'e' 'l' 's' 'e' ;
 
 //md_token_all      : 'a' 'l' 'l' ;
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
 //md_token_call     : 'c' 'a' 'l' 'l' ;
 //md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
 //md_token_do       : 'd' 'o' ;
-//md_token_elif     : 'e' 'l' 'i' 'f' ;
-//md_token_else     : 'e' 'l' 's' 'e' ;
 //md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 //md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 //md_token_for      : 'f' 'o' 'r' ;
 //md_token_func     : 'f' 'u' 'n' 'c' ;
-//md_token_if       : 'i' 'f' ;
 //md_token_in       : 'i' 'n' ;
 //md_token_print    : 'p' 'r' 'i' 'n' 't' ;
 //md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
@@ -317,29 +317,6 @@ StatementBlock
   | BracefulStatement StatementBlock
     <<dsl.PrependChild($1, $0) >>
 
-;
-
-// ================================================================
-// BEGIN/END BLOCKS
-
-BracefulStatement
-  : BeginBlock
-  | EndBlock
-;
-
-BeginBlock
-  : md_token_begin "{" "}"
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeBeginBlock) >>
-  | md_token_begin "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeBeginBlock) >>
-;
-EndBlock
-  : md_token_end "{" "}"
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock) >>
-  | md_token_end "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
-  | md_token_end "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
 ;
 
 // ================================================================
@@ -1151,6 +1128,65 @@ FcnArgs
 ;
 
 // ================================================================
+// BEGIN/END BLOCKS
+
+BracefulStatement
+  : BeginBlock
+  | EndBlock
+  | IfChain
+;
+
+BeginBlock
+  : md_token_begin "{" "}"
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeBeginBlock) >>
+  | md_token_begin "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeBeginBlock) >>
+;
+EndBlock
+  : md_token_end "{" "}"
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock) >>
+  | md_token_end "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
+  | md_token_end "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
+;
+
+// ================================================================
+// IF-STATEMENTS
+
+// Cases:
+//   if elif*
+//   if elif* else
+
+IfChain
+  : IfElifStar
+  | IfElifStar ElseBlock
+    << dsl.AppendChild($0, $1) >>
+  ;
+
+IfElifStar
+  : IfBlock
+    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeIfHead) >>
+  | IfElifStar ElifBlock
+    << dsl.AppendChild($0, $1) >>
+  ;
+
+IfBlock
+  : md_token_if "(" Rvalue ")" "{" StatementBlock "}"
+    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeIfItem) >>
+  ;
+
+ElifBlock
+  : md_token_elif "(" Rvalue ")" "{" StatementBlock "}"
+    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeIfItem) >>
+  ;
+
+ElseBlock
+  : md_token_else "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeIfItem) >>
+  ;
+
+// ================================================================
 // ================================================================
 // ================================================================
 // TO BE PORTED
@@ -1895,55 +1931,6 @@ FcnArgs
 //	} else {
 //		A = mlr_dsl_ast_node_append_arg(B, C);
 //	}
-//}
-
-//// ----------------------------------------------------------------
-//// Cases:
-////   if elif*
-////   if elif* else
-
-//IfChain(A) ::= IfElifStar(B) . {
-//	A = B;
-//}
-//IfChain(A) ::= IfElifStar(B) ElseBlock(C). {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}
-//IfElifStar(A) ::= IfBlock(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("if_head", MD_AST_NODE_TYPE_IF_HEAD, B);
-//}
-//IfElifStar(A) ::= IfElifStar(B) ElifBlock(C). {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}
-
-//IfBlock(A) ::=
-//	md_token_if(O)
-//		"(" Rvalue(B) ")"
-//		"{" StatementBlock(C) "}".
-//{
-//	mlr_dsl_ast_node_replace_text(C, "if_block");
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
-//}
-
-//ElifBlock(A) ::=
-//	md_token_elif(O)
-//		"(" Rvalue(B) ")"
-//		"{" StatementBlock(C) "}".
-//{
-//	mlr_dsl_ast_node_replace_text(C, "elif_block");
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_IF_ITEM, B, C);
-//}
-
-//ElseBlock(A) ::=
-//	md_token_else(O)
-//		"{" StatementBlock(C) "}".
-//{
-//	mlr_dsl_ast_node_replace_text(C, "else_block");
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_IF_ITEM, C);
-//}
-
-//// ----------------------------------------------------------------
-//BareBoolean(A) ::= Rvalue(B). {
-//	A = B;
 //}
 
 //// ----------------------------------------------------------------

@@ -13,8 +13,6 @@ type TNodeType string
 
 const (
 	NodeTypeEmptyStatement TNodeType = "EmptyStatement"
-	NodeTypeBeginBlock               = "BeginBlock"
-	NodeTypeEndBlock                 = "EndBlock"
 
 	NodeTypeStringLiteral             = "StringLiteral"
 	NodeTypeIntLiteral                = "IntLiteral"
@@ -46,6 +44,11 @@ const (
 
 	NodeTypeOperator         = "Operator"
 	NodeTypeFunctionCallsite = "FunctionCallsite"
+
+	NodeTypeBeginBlock = "BeginBlock"
+	NodeTypeEndBlock   = "EndBlock"
+	NodeTypeIfHead     = "IfHead"
+	NodeTypeIfItem     = "IfItem"
 
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =

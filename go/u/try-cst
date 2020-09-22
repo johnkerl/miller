@@ -218,3 +218,9 @@ echo; run_mlr --from u/s.dkvp --opprint put -q '@sum[$a] += $i; emit {"sum": @su
 
 echo; run_mlr --from u/s.dkvp put -q '@sum += $x; dump' 
 echo; run_mlr --from u/s.dkvp put -q '@sum[$a] += $x; dump' 
+echo; run_mlr --from u/s.dkvp put -q 'begin{@sum=0} @sum += $x; end{dump}'
+echo; run_mlr --from u/s.dkvp put -q 'begin{@sum={}} @sum[$a] += $x; end{dump}'
+# xxx fix me
+# echo; run_mlr --from u/s.dkvp put -q 'begin{@sum=[]} @sum[1+NR%2] += $x; end{dump}'
+# xxx fix me
+# echo; run_mlr --from u/s.dkvp put -q 'begin{} @sum[1+(NR%2)] += $x; end{dump}'
