@@ -75,7 +75,7 @@ func NewAST(iroot interface{}) (*AST, error) {
 }
 
 func (this *AST) Print() {
-	this.RootNode.Print(0)
+	this.RootNode.Print()
 }
 
 // ----------------------------------------------------------------
@@ -104,7 +104,10 @@ type ASTNode struct {
 	// * node.Executor.Execute(inrec, state) ?
 }
 
-func (this *ASTNode) Print(depth int) {
+func (this *ASTNode) Print() {
+	this.PrintAux(0)
+}
+func (this *ASTNode) PrintAux(depth int) {
 	for i := 0; i < depth; i++ {
 		fmt.Print("    ")
 	}
@@ -119,7 +122,7 @@ func (this *ASTNode) Print(depth int) {
 	fmt.Println()
 	if this.Children != nil {
 		for _, child := range this.Children {
-			child.Print(depth + 1)
+			child.PrintAux(depth + 1)
 		}
 	}
 }
