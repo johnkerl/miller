@@ -3,7 +3,11 @@ TOP OF LIST:
 
 * go-try:
 
-  o if/else-if/else
+  o while and do-while statements -- not urgent
+  ~ for-loops -- require localvars as prereq
+  ! need Lvalue/Rvalue coalesce
+    > to make condish work & unhack filter
+    > better error messages in the CST builder anyway, so it's a win
 
   o rename: bulk-edit for b,i,x vs x,i,b cases
 

@@ -1194,41 +1194,9 @@ ElseBlock
 // ================================================================
 // ================================================================
 
-// ----------------------------------------------------------------
-//// Local-variable definitions at the current scope
-// xxx make TypedLocalDefinition with subcases for type-literals
-//Statement(A) ::= UntypedLocalDefinition(B).    { A = B; }
-//Statement(A) ::= TypedLocalDefinition(B).    { A = B; }
-//TypedLocalDefinition : {type} ...
-
-// ----------------------------------------------------------------
-//// For user-defined functions
-//Statement(A) ::= md_token_return Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//Statement(A) ::= md_token_return MapLiteral(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//Statement(A) ::= md_token_return md_token_full_srec(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//Statement(A) ::= md_token_return md_token_full_oosvar(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//// For user-defined subroutines
-//Statement(A) ::= md_token_return. {
-//	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
-//}
-
-//// Begin/end
-//Statement(A) ::= FuncBlock(B).  { A = B; }
-//Statement(A) ::= SubrBlock(B).  { A = B; }
-//Statement(A) ::= BeginBlock(B). { A = B; }
-//Statement(A) ::= EndBlock(B).   { A = B; }
-
-//// Nested control structures:
 //Statement(A) ::= CondBlock(B).                { A = B; }
 //Statement(A) ::= WhileBlock(B).               { A = B; }
+//Statement(A) ::= DoWhileBlock(B).             { A = B; }
 //Statement(A) ::= ForLoopFullSrec(B).          { A = B; }
 //Statement(A) ::= ForLoopFullSrecKeyOnly(B).   { A = B; }
 //Statement(A) ::= ForLoopFullOosvar(B).        { A = B; }
@@ -1242,149 +1210,6 @@ ElseBlock
 //Statement(A) ::= ForLoopFuncRetval(B).        { A = B; }
 //Statement(A) ::= ForLoopFuncRetvalKeyOnly(B). { A = B; }
 //Statement(A) ::= TripleFor(B).                { A = B; }
-//Statement(A) ::= IfChain(B).                  { A = B; }
-
-//Statement(A) ::= md_token_subr_call FcnOrSubrCall(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
-//}
-
-// Not valid in begin/end since they refer to srecs:
-// xxx enforce that in the AST/CST, not here in the grammar -- much simpler.
-
-//// Valid in begin/end since they don't refer to srecs (although the RHSs might):
-//Statement(A) ::= DoWhileBlock(B).         { A = B; }
-//Statement(A) ::= BareBoolean(B).          { A = B; }
-//Statement(A) ::= OosvarAssignment(B).     { A = B; }
-//Statement(A) ::= FullOosvarAssignment(B). { A = B; }
-//Statement(A) ::= md_filter(B).            { A = B; }
-//Statement(A) ::= md_unset(B).             { A = B; }
-
-//Statement(A) ::= TeeWrite(B).          { A = B; }
-//Statement(A) ::= TeeAppend(B).         { A = B; }
-//Statement(A) ::= TeePipe(B).           { A = B; }
-//Statement(A) ::= md_emitf(B).          { A = B; }
-//Statement(A) ::= EmitfWrite(B).        { A = B; }
-//Statement(A) ::= EmitfAppend(B).       { A = B; }
-//Statement(A) ::= EmitfPipe(B).         { A = B; }
-//Statement(A) ::= md_emitp(B).          { A = B; }
-//Statement(A) ::= EmitpWrite(B).        { A = B; }
-//Statement(A) ::= EmitpAppend(B).       { A = B; }
-//Statement(A) ::= EmitpPipe(B).         { A = B; }
-//Statement(A) ::= md_emit(B).           { A = B; }
-//Statement(A) ::= EmitWrite(B).         { A = B; }
-//Statement(A) ::= EmitAppend(B).        { A = B; }
-//Statement(A) ::= EmitPipe(B).          { A = B; }
-//Statement(A) ::= EmitpLashed(B).       { A = B; }
-//Statement(A) ::= EmitpLashedWrite(B).  { A = B; }
-//Statement(A) ::= EmitpLashedAppend(B). { A = B; }
-//Statement(A) ::= EmitpLashedPipe(B).   { A = B; }
-//Statement(A) ::= EmitLashed(B).        { A = B; }
-//Statement(A) ::= EmitLashedWrite(B).   { A = B; }
-//Statement(A) ::= EmitLashedAppend(B).  { A = B; }
-//Statement(A) ::= EmitLashedPipe(B).    { A = B; }
-
-//Statement(A) ::= DumpWrite(B).    { A = B; }
-//Statement(A) ::= DumpAppend(B).   { A = B; }
-//Statement(A) ::= DumpPipe(B).     { A = B; }
-//Statement(A) ::= md_print(B).     { A = B; }
-//Statement(A) ::= md_eprint(B).    { A = B; }
-//Statement(A) ::= PrintWrite(B).   { A = B; }
-//Statement(A) ::= PrintAppend(B).  { A = B; }
-//Statement(A) ::= PrintPipe(B).    { A = B; }
-//Statement(A) ::= md_printn(B).    { A = B; }
-//Statement(A) ::= md_eprintn(B).   { A = B; }
-//Statement(A) ::= PrintnWrite(B).  { A = B; }
-//Statement(A) ::= PrintnAppend(B). { A = B; }
-//Statement(A) ::= PrintnPipe(B).   { A = B; }
-
-// Valid only within for/while, but we accept them here syntactically and
-// reject them in the AST-to-CST conversion, where we can produce much more
-// informative error messages:
-//Statement(A) ::= md_token_break(O). {
-//	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
-//}
-//Statement(A) ::= md_token_continue(O). {
-//	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
-//}
-
-// ================================================================
-// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
-// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
-// * On the "a" we make a function sub-AST called "anon(a)".
-// * On the "b" we append the next argument to get "anon(a,b)".
-// * On the "c" we append the next argument to get "anon(a,b,c)".
-// * On the "f" we change the function name to get "f(a,b,c)".
-
-//FuncBlock(C) ::= md_token_func_def
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "func_block");
-//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B);
-//}
-
-//FuncBlock(C) ::= md_token_func_def
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	md_token_colon Typedecl(M)
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "func_block");
-//	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
-//}
-
-//SubrBlock(C) ::= md_token_subr_def
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "subr_block");
-//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
-//}
-
-//FuncOrSubrParameterList(A) ::= . {
-//	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-//}
-//FuncOrSubrParameterList(A) ::= FuncOrSubrNonEmptyParameterList(B). {
-//	A = B;
-//}
-//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B) ",". {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B) ","
-//	FuncOrSubrNonEmptyParameterList(C).
-//{
-//	A = mlr_dsl_ast_node_prepend_arg(C, B);
-//}
-
-//FuncOrSubrParameter(A) ::= md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
-//}
-//FuncOrSubrParameter(A) ::= Typedecl(T) md_token_non_sigil_name(N). {
-//	A = mlr_dsl_ast_node_alloc(N->text, T->type);
-//}
-
-//Typedecl(A) ::= md_token_var(B).     { A = B; A->type = MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_numeric(B). { A = B; A->type = MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_int(B).     { A = B; A->type = MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION;     }
-//Typedecl(A) ::= md_token_float(B).   { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
-//Typedecl(A) ::= md_token_string_literal(B).  { A = B; A->type = MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION;  }
-//Typedecl(A) ::= md_token_boolean(B). { A = B; A->type = MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_map(B).     { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
-
-//// ================================================================
-//BeginBlock(A) ::= md_token_begin(O) "{" StatementBlock(B) "}". {
-//	mlr_dsl_ast_node_replace_text(B, "begin_block");
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_BEGIN, B);
-//}
-//EndBlock(A)   ::= md_token_end(O)   "{" StatementBlock(B) "}". {
-//	mlr_dsl_ast_node_replace_text(B, "end_block");
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_END, B);
-//}
 
 //// ----------------------------------------------------------------
 //CondBlock(A) ::= Rvalue(B) "{" StatementBlock(C) "}". {
@@ -1932,6 +1757,169 @@ ElseBlock
 //		A = mlr_dsl_ast_node_append_arg(B, C);
 //	}
 //}
+
+// ----------------------------------------------------------------
+//// Local-variable definitions at the current scope
+// xxx make TypedLocalDefinition with subcases for type-literals
+//Statement(A) ::= UntypedLocalDefinition(B).    { A = B; }
+//Statement(A) ::= TypedLocalDefinition(B).    { A = B; }
+//TypedLocalDefinition : {type} ...
+
+// ----------------------------------------------------------------
+//// For user-defined functions
+//Statement(A) ::= md_token_return Rvalue(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+//}
+//Statement(A) ::= md_token_return MapLiteral(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+//}
+//Statement(A) ::= md_token_return md_token_full_srec(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+//}
+//Statement(A) ::= md_token_return md_token_full_oosvar(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+//}
+//// For user-defined subroutines
+//Statement(A) ::= md_token_return. {
+//	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
+//}
+
+//// Begin/end
+//Statement(A) ::= FuncBlock(B).  { A = B; }
+//Statement(A) ::= SubrBlock(B).  { A = B; }
+//Statement(A) ::= BeginBlock(B). { A = B; }
+//Statement(A) ::= EndBlock(B).   { A = B; }
+
+//Statement(A) ::= md_token_subr_call FcnOrSubrCall(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
+//}
+
+// Not valid in begin/end since they refer to srecs:
+// xxx enforce that in the AST/CST, not here in the grammar -- much simpler.
+
+//// Valid in begin/end since they don't refer to srecs (although the RHSs might):
+//Statement(A) ::= BareBoolean(B).          { A = B; }
+//Statement(A) ::= OosvarAssignment(B).     { A = B; }
+//Statement(A) ::= FullOosvarAssignment(B). { A = B; }
+//Statement(A) ::= md_filter(B).            { A = B; }
+//Statement(A) ::= md_unset(B).             { A = B; }
+
+//Statement(A) ::= TeeWrite(B).          { A = B; }
+//Statement(A) ::= TeeAppend(B).         { A = B; }
+//Statement(A) ::= TeePipe(B).           { A = B; }
+//Statement(A) ::= md_emitf(B).          { A = B; }
+//Statement(A) ::= EmitfWrite(B).        { A = B; }
+//Statement(A) ::= EmitfAppend(B).       { A = B; }
+//Statement(A) ::= EmitfPipe(B).         { A = B; }
+//Statement(A) ::= md_emitp(B).          { A = B; }
+//Statement(A) ::= EmitpWrite(B).        { A = B; }
+//Statement(A) ::= EmitpAppend(B).       { A = B; }
+//Statement(A) ::= EmitpPipe(B).         { A = B; }
+//Statement(A) ::= md_emit(B).           { A = B; }
+//Statement(A) ::= EmitWrite(B).         { A = B; }
+//Statement(A) ::= EmitAppend(B).        { A = B; }
+//Statement(A) ::= EmitPipe(B).          { A = B; }
+//Statement(A) ::= EmitpLashed(B).       { A = B; }
+//Statement(A) ::= EmitpLashedWrite(B).  { A = B; }
+//Statement(A) ::= EmitpLashedAppend(B). { A = B; }
+//Statement(A) ::= EmitpLashedPipe(B).   { A = B; }
+//Statement(A) ::= EmitLashed(B).        { A = B; }
+//Statement(A) ::= EmitLashedWrite(B).   { A = B; }
+//Statement(A) ::= EmitLashedAppend(B).  { A = B; }
+//Statement(A) ::= EmitLashedPipe(B).    { A = B; }
+
+//Statement(A) ::= DumpWrite(B).    { A = B; }
+//Statement(A) ::= DumpAppend(B).   { A = B; }
+//Statement(A) ::= DumpPipe(B).     { A = B; }
+//Statement(A) ::= md_print(B).     { A = B; }
+//Statement(A) ::= md_eprint(B).    { A = B; }
+//Statement(A) ::= PrintWrite(B).   { A = B; }
+//Statement(A) ::= PrintAppend(B).  { A = B; }
+//Statement(A) ::= PrintPipe(B).    { A = B; }
+//Statement(A) ::= md_printn(B).    { A = B; }
+//Statement(A) ::= md_eprintn(B).   { A = B; }
+//Statement(A) ::= PrintnWrite(B).  { A = B; }
+//Statement(A) ::= PrintnAppend(B). { A = B; }
+//Statement(A) ::= PrintnPipe(B).   { A = B; }
+
+// Valid only within for/while, but we accept them here syntactically and
+// reject them in the AST-to-CST conversion, where we can produce much more
+// informative error messages:
+//Statement(A) ::= md_token_break(O). {
+//	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
+//}
+//Statement(A) ::= md_token_continue(O). {
+//	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
+//}
+
+// ================================================================
+// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
+// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
+// * On the "a" we make a function sub-AST called "anon(a)".
+// * On the "b" we append the next argument to get "anon(a,b)".
+// * On the "c" we append the next argument to get "anon(a,b,c)".
+// * On the "f" we change the function name to get "f(a,b,c)".
+
+//FuncBlock(C) ::= md_token_func_def
+//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//	"{" StatementBlock(B) "}".
+//{
+//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+//	mlr_dsl_ast_node_replace_text(B, "func_block");
+//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B);
+//}
+
+//FuncBlock(C) ::= md_token_func_def
+//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//	md_token_colon Typedecl(M)
+//	"{" StatementBlock(B) "}".
+//{
+//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+//	mlr_dsl_ast_node_replace_text(B, "func_block");
+//	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
+//}
+
+//SubrBlock(C) ::= md_token_subr_def
+//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//	"{" StatementBlock(B) "}".
+//{
+//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+//	mlr_dsl_ast_node_replace_text(B, "subr_block");
+//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
+//}
+
+//FuncOrSubrParameterList(A) ::= . {
+//	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+//}
+//FuncOrSubrParameterList(A) ::= FuncOrSubrNonEmptyParameterList(B). {
+//	A = B;
+//}
+//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+//}
+//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B) ",". {
+//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+//}
+//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B) ","
+//	FuncOrSubrNonEmptyParameterList(C).
+//{
+//	A = mlr_dsl_ast_node_prepend_arg(C, B);
+//}
+
+//FuncOrSubrParameter(A) ::= md_token_non_sigil_name(B). {
+//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
+//}
+//FuncOrSubrParameter(A) ::= Typedecl(T) md_token_non_sigil_name(N). {
+//	A = mlr_dsl_ast_node_alloc(N->text, T->type);
+//}
+
+//Typedecl(A) ::= md_token_var(B).     { A = B; A->type = MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION; }
+//Typedecl(A) ::= md_token_numeric(B). { A = B; A->type = MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION; }
+//Typedecl(A) ::= md_token_int(B).     { A = B; A->type = MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION;     }
+//Typedecl(A) ::= md_token_float(B).   { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
+//Typedecl(A) ::= md_token_string_literal(B).  { A = B; A->type = MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION;  }
+//Typedecl(A) ::= md_token_boolean(B). { A = B; A->type = MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION; }
+//Typedecl(A) ::= md_token_map(B).     { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
 
 //// ----------------------------------------------------------------
 //md_filter(A) ::= md_token_filter(O) Rvalue(B). {
