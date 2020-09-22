@@ -41,6 +41,8 @@ const (
 	NodeTypeAssignment      = "Assignment"
 	NodeTypeFilterStatement = "FilterStatement"
 	NodeTypeEmitStatement   = "EmitStatement"
+	NodeTypeDumpStatement   = "DumpStatement"
+	NodeTypeEdumpStatement  = "EdumpStatement"
 
 	NodeTypeOperator         = "Operator"
 	NodeTypeFunctionCallsite = "FunctionCallsite"

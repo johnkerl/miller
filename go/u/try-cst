@@ -215,3 +215,6 @@ echo; run_mlr --from u/s.dkvp --opprint put 'filter NR > 2'
 
 # echo; run_mlr --from u/s.dkvp --opprint put -q '@sum += $i; emit {"sum": @sum}'
 echo; run_mlr --from u/s.dkvp --opprint put -q '@sum[$a] += $i; emit {"sum": @sum}'
+
+echo; run_mlr --from u/s.dkvp put -q '@sum += $x; dump' 
+echo; run_mlr --from u/s.dkvp put -q '@sum[$a] += $x; dump' 

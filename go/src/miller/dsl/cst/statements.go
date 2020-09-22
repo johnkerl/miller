@@ -38,6 +38,10 @@ func BuildStatementNode(
 
 	case dsl.NodeTypeEmitStatement:
 		return BuildEmitStatementNode(astNode)
+	case dsl.NodeTypeDumpStatement:
+		return BuildDumpStatementNode(astNode)
+	case dsl.NodeTypeEdumpStatement:
+		return BuildEdumpStatementNode(astNode)
 
 	default:
 		return nil, errors.New(
