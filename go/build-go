@@ -4,4 +4,5 @@ set -euo pipefail
 
 export GOPATH=$(pwd)
 go build mlr.go
+cp mlr mlrgo
 echo "Compile OK"
