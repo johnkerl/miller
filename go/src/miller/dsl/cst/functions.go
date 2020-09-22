@@ -419,8 +419,8 @@ func BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperat
 func (this *StandardTernaryOperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 
-	boolValue, isBoolean := aout.GetBoolValue()
-	if !isBoolean {
+	boolValue, isBool := aout.GetBoolValue()
+	if !isBool {
 		return types.MlrvalFromError()
 	}
 

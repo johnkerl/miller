@@ -921,3 +921,140 @@ RAW AST:
         * DirectFieldValue "z"
         * IntLiteral "3"
 
+
+
+----------------------------------------------------------------
+mlr -n put -v if (NR == 1) { $z = 100 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 }
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "1"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "100"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v if (NR == 1) { $z = 100 } else { $z = 900 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } else { $z = 900 }
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "1"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "100"
+        * IfItem "else"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "900"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "1"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "100"
+        * IfItem "elif"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "2"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "200"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "1"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "100"
+        * IfItem "elif"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "2"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "200"
+        * IfItem "else"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "900"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "1"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "100"
+        * IfItem "elif"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "2"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "200"
+        * IfItem "elif"
+            * Operator "=="
+                * ContextVariable "NR"
+                * IntLiteral "3"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "300"
+        * IfItem "else"
+            * StatementBlock
+                * Assignment "="
+                    * DirectFieldValue "z"
+                    * IntLiteral "900"
+

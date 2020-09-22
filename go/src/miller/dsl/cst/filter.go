@@ -38,8 +38,8 @@ func (this *FilterStatementNode) Execute(state *State) error {
 		return nil
 	}
 
-	boolValue, isBoolean := filterResult.GetBoolValue()
-	if !isBoolean {
+	boolValue, isBool := filterResult.GetBoolValue()
+	if !isBool {
 		return errors.New(
 			"Miller: expression does not evaluate to boolean: got " +
 				filterResult.GetTypeName() + ".",

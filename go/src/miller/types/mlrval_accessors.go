@@ -82,7 +82,7 @@ func (this *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
 	}
 }
 
-func (this *Mlrval) GetBoolValue() (boolValue bool, isBoolean bool) {
+func (this *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	if this.mvtype == MT_BOOL {
 		return this.boolval, true
 	} else {

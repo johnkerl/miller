@@ -2161,13 +2161,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `IfElifStar : IfBlock	<< dsl.NewASTNodeUnary(X[0], X[2], dsl.NodeTypeIfHead) >>`,
+		String: `IfElifStar : IfBlock	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeIfChain) >>`,
 		Id:         "IfElifStar",
 		NTType:     55,
 		Index:      173,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[2], dsl.NodeTypeIfHead)
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeIfChain)
 		},
 	},
 	ProdTabEntry{

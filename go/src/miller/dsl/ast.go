@@ -47,7 +47,7 @@ const (
 
 	NodeTypeBeginBlock = "BeginBlock"
 	NodeTypeEndBlock   = "EndBlock"
-	NodeTypeIfHead     = "IfHead"
+	NodeTypeIfChain    = "IfChain"
 	NodeTypeIfItem     = "IfItem"
 
 	// A special token which causes a panic when evaluated.  This is for

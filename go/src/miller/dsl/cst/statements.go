@@ -27,12 +27,6 @@ func BuildStatementNode(
 			return nil, err
 		}
 
-	case dsl.NodeTypeBeginBlock:
-		return nil, nil // xxx temp
-
-	case dsl.NodeTypeEndBlock:
-		return nil, nil // xxx temp
-
 	case dsl.NodeTypeFilterStatement:
 		return BuildFilterStatementNode(astNode)
 
@@ -42,6 +36,14 @@ func BuildStatementNode(
 		return BuildDumpStatementNode(astNode)
 	case dsl.NodeTypeEdumpStatement:
 		return BuildEdumpStatementNode(astNode)
+
+	case dsl.NodeTypeBeginBlock:
+		return nil, nil // xxx temp -- only valid at top level; say so here w/ error
+	case dsl.NodeTypeEndBlock:
+		return nil, nil // xxx temp -- only valid at top level; say so here w/ error
+
+	case dsl.NodeTypeIfChain:
+		return BuildIfChainNode(astNode)
 
 	default:
 		return nil, errors.New(

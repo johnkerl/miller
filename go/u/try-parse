@@ -81,3 +81,9 @@ echo; run_mlr -n put -v 'begin{@x=1;@y=2;} $z=3'
 echo; run_mlr -n put -v 'begin{@x=1;@y=2;} $z=3;'
 # disallow in the CST builder
 # mlr -n put -v 'begin{end{}}'
+
+echo; run_mlr -n put -v 'if (NR == 1) { $z = 100 }'
+echo; run_mlr -n put -v 'if (NR == 1) { $z = 100 } else { $z = 900 }'
+echo; run_mlr -n put -v 'if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }'
+echo; run_mlr -n put -v 'if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }'
+echo; run_mlr -n put -v 'if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }'

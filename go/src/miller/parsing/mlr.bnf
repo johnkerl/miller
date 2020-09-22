@@ -1166,7 +1166,7 @@ IfChain
 
 IfElifStar
   : IfBlock
-    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeIfHead) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeIfChain) >>
   | IfElifStar ElifBlock
     << dsl.AppendChild($0, $1) >>
   ;
