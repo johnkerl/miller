@@ -11,7 +11,6 @@ TOP OF LIST:
         - ... i think not
     > prepend "filter " after last ";" hack -- ? gurk if "...;..." in a string :^/
       - state machine dquote in/out w walkback; \" handling; good UT
-  ! emit; print/dump
   ! quoted NIDX
     - how with whitespace regex -- ?
   ! quoted DKVP
@@ -19,7 +18,7 @@ TOP OF LIST:
   ! --implicit-csv-header
   ! cat -n -g a,b,c
   o clean up mlr --help to not advertise things it doesn't do yet
-  o ASV?
+  o ASV? golang csv package parameterizes comma but not crlf :(
 
 * widen verb coverage
   o count
@@ -49,7 +48,7 @@ TOP OF LIST:
   o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
 * widen DSL coverage
-  ! print/dump/emit
+  ! print/dump/emit w/ redirect options
   o c/reg_test/run reorgs
   o err-return for array/map get/put if incorrect types ... currently go-void ...
     ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
