@@ -212,3 +212,6 @@ echo; run_mlr --from u/s.dkvp --opprint put '$z = abs($x)'
 echo; run_mlr --from u/s.dkvp --opprint put '$c = cos(2*M_PI*NR/32); $s = sin(2*M_PI*NR/32)'
 
 echo; run_mlr --from u/s.dkvp --opprint put 'filter NR > 2'
+
+# echo; run_mlr --from u/s.dkvp --opprint put -q '@sum += $i; emit {"sum": @sum}'
+echo; run_mlr --from u/s.dkvp --opprint put -q '@sum[$a] += $i; emit {"sum": @sum}'
