@@ -29,6 +29,8 @@ func BuildStatementNode(
 
 	case dsl.NodeTypeFilterStatement:
 		return BuildFilterStatementNode(astNode)
+	case dsl.NodeTypeBareBoolean:
+		return BuildFilterStatementNode(astNode)
 
 	case dsl.NodeTypeEmitStatement:
 		return BuildEmitStatementNode(astNode)

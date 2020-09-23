@@ -1,16 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! filter
-  > bare-boolean LR-1 conflicts wut
-    ? erase BNF distinction between BaseLvalue and MlrvalOrFunction
-      - ... i think not
-  > prepend "filter " after last ";" hack -- ? gurk if "...;..." in a string :^/
-    - state machine dquote in/out w walkback; \" handling; good UT
-  ! try Lvalue/Rvalue coalesce
-    - to make condish work & unhack filter
-    - better error messages in the CST builder anyway, so it's a win
-    - needs thorough UT on things like 'mlr put '1+2=3+4'
+! filter / bare-boolean
+  o needs thorough UT on things like 'mlr put '1+2=3+4'
 
 * mlr -f / -F
   o others in mlrcli_parse.go

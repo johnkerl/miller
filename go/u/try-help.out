@@ -18,6 +18,16 @@ Examples:
   ./mlr cut -x -f hostname,status
 
 ================================================================
+Usage: ./mlr filter [options] {DSL expression}
+TODO: put detailed on-line help here.
+ -f (default ) File containing a DSL expression.
+ -q (default false) Does not include the modified record in the output stream.
+    Useful for when all desired output is in begin and/or end blocks.
+ -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.
+
+================================================================
 Usage: ./mlr group-by [options]
 Outputs records in batches having identical values at specified field names.
 

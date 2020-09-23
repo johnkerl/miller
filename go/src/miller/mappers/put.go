@@ -22,6 +22,15 @@ var PutSetup = mapping.MapperSetup{
 	IgnoresInput: false,
 }
 
+// TODO:
+// * rename this file to put_or_filter.go
+// * check other things from the C impl
+var FilterSetup = mapping.MapperSetup{
+	Verb:         "filter",
+	ParseCLIFunc: mapperPutParseCLI,
+	IgnoresInput: false,
+}
+
 func mapperPutParseCLI(
 	pargi *int,
 	argc int,

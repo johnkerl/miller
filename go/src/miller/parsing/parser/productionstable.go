@@ -181,13 +181,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BareBoolean : Rvalue	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeBareBoolean) >>`,
+		String: `BareBoolean : Rvalue	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeBareBoolean) >>`,
 		Id:         "BareBoolean",
 		NTType:     6,
 		Index:      16,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeBareBoolean)
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeBareBoolean)
 		},
 	},
 	ProdTabEntry{
