@@ -324,6 +324,10 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 	{
 		name: "urandrange",
 	},
+	{
+		name: "truncate",
+		binaryFunc: types.MlrvalTruncate,
+	},
 
 	//pow (class=math #args=2): Exponentiation; same as **.
 	//roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is

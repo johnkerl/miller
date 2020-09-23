@@ -233,3 +233,9 @@ echo; run_mlr --from u/s.dkvp put 'if (NR == 1) { $z = 100 } elif (NR == 2) { $z
 
 echo x=eeee | run_mlr put '$y=ssub($x, "e", "X")'
 echo x=eeee | run_mlr put '$y=gsub($x, "e", "X")'
+echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, -1)'
+echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 0)'
+echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 1)'
+echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 2)'
+echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 3)'
+echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 4)'

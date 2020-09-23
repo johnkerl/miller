@@ -1715,7 +1715,7 @@ func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
 	if mb.IsErrorOrAbsent() {
 		return *mb
 	}
-	if mb.IsErrorOrAbsent() {
+	if mc.IsErrorOrAbsent() {
 		return *mc
 	}
 	if !ma.IsStringOrVoid() {
@@ -1740,7 +1740,7 @@ func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
 	if mb.IsErrorOrAbsent() {
 		return *mb
 	}
-	if mb.IsErrorOrAbsent() {
+	if mc.IsErrorOrAbsent() {
 		return *mc
 	}
 	if !ma.IsStringOrVoid() {
@@ -1757,4 +1757,31 @@ func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
 	return MlrvalFromString(
 		re.ReplaceAllString(ma.printrep, mc.printrep),
 	)
+}
+
+// ================================================================
+func MlrvalTruncate(ma, mb *Mlrval) Mlrval {
+	if ma.IsErrorOrAbsent() {
+		return *ma
+	}
+	if mb.IsErrorOrAbsent() {
+		return *mb
+	}
+	if !ma.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mb.IsInt() {
+		return MlrvalFromError()
+	}
+	if mb.intval < 0 {
+		return MlrvalFromError()
+	}
+
+	oldLength := int64(len(ma.printrep))
+	maxLength := mb.intval
+	if oldLength <= maxLength {
+		return *ma
+	} else {
+		return MlrvalFromString(ma.printrep[0:maxLength])
+	}
 }
