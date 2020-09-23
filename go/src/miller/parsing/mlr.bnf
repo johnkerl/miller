@@ -324,6 +324,7 @@ StatementBlock
 
 BracelessStatement
   : Assignment
+  | BareBoolean
   | FilterStatement
   | EmitStatement
   | DumpStatement
@@ -335,35 +336,47 @@ Assignment
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
 ;
 
-// A BaseValue is anything on the left-hand side of an assignment, excluding
-// the indexing -- e.g. @a is a BaseValue and an Lvalue; @a[1][2][3] is an
-// Lvalue which is an indexed Lvalue.
-Lvalue
-  : BaseLvalue
-  | IndexedLvalue
-  // | SlicedLvalue -- like $text[3:7] = "interpolated"
-  // | ENVValue -- only ENV["foo"] but not arbitrarily indexable like ENV["foo"]["bar"]
-;
+// In progress: expand Lvalue syntax here and prohibit it in the CST builder.
+// This is to eliminate LR-1 conflicts on bare-boolean and awkish conds.  As a
+// side effect, by allowing things like '1+2=3+4' here in the grammar and
+// prohibiting them in the CST builder, we can more easily make more detailed
+// error messages.
+Lvalue : Rvalue ;
 
-BaseLvalue
-  : FieldValue
-  | OosvarValue
-  // positional field name $[[3]]
-  // positional field value $[[[3]]]
-  | FullSrec
-  | FullOosvar
-  // local variable abcd
-;
+//// A BaseValue is anything on the left-hand side of an assignment, excluding
+//// the indexing -- e.g. @a is a BaseValue and an Lvalue; @a[1][2][3] is an
+//// Lvalue which is an indexed Lvalue.
+//Lvalue
+//  : BaseLvalue
+//  | IndexedLvalue
+//  // | SlicedLvalue -- like $text[3:7] = "interpolated"
+//  // | ENVValue -- only ENV["foo"] but not arbitrarily indexable like ENV["foo"]["bar"]
+//;
 
-IndexedLvalue
-  : Lvalue "[" Rvalue "]" 
-    << dsl.NewASTNodeBinary(
-      dsl.NewASTToken("[]", $1),
-      $0,
-      $2,
-      dsl.NodeTypeArrayOrMapIndexAccess,
-    )>>
-;
+//BaseLvalue
+//  : FieldValue
+//  | OosvarValue
+//  // positional field name $[[3]]
+//  // positional field value $[[[3]]]
+//  | FullSrec
+//  | FullOosvar
+//  // local variable abcd
+//;
+
+//IndexedLvalue
+//  : Lvalue "[" Rvalue "]" 
+//    << dsl.NewASTNodeBinary(
+//      dsl.NewASTToken("[]", $1),
+//      $0,
+//      $2,
+//      dsl.NodeTypeArrayOrMapIndexAccess,
+//    )>>
+//;
+
+BareBoolean
+  : Rvalue
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeBareBoolean) >>
+  ;
 
 FilterStatement
   : md_token_filter Rvalue

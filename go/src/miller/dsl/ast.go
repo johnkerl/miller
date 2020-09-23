@@ -37,6 +37,7 @@ const (
 
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"
+	NodeTypeBareBoolean     = "BareBoolean"
 	NodeTypeFilterStatement = "FilterStatement"
 	NodeTypeEmitStatement   = "EmitStatement"
 	NodeTypeDumpStatement   = "DumpStatement"
