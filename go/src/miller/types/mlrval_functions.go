@@ -2,6 +2,7 @@ package types
 
 import (
 	"math"
+	"strings"
 	"time"
 
 	"miller/lib"
@@ -1703,4 +1704,29 @@ func NumericAscendingComparator(ma *Mlrval, mb *Mlrval) int {
 }
 func NumericDescendingComparator(ma *Mlrval, mb *Mlrval) int {
 	return NumericAscendingComparator(mb, ma)
+}
+
+// ================================================================
+func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
+	if ma.IsErrorOrAbsent() {
+		return *ma
+	}
+	if mb.IsErrorOrAbsent() {
+		return *mb
+	}
+	if mb.IsErrorOrAbsent() {
+		return *mc
+	}
+	if !ma.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mb.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mc.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	return MlrvalFromString(
+		strings.Replace(ma.printrep, mb.printrep, mc.printrep, 1),
+	)
 }

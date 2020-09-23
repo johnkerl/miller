@@ -352,3 +352,22 @@ mlr --json --from u/needs-sorting.json sort-within-records
   "b": 2,
   "c": 3
 }
+
+----------------------------------------------------------------
+mlr --json --from u/needs-regularize.json regularize
+{
+  "b": 2,
+  "c": 3,
+  "a": 1
+}
+{
+  "b": 2,
+  "c": 3,
+  "a": 1
+}
+{
+  "d": 4,
+  "a": 1,
+  "b": 2,
+  "c": 3
+}

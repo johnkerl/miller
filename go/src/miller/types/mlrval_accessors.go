@@ -14,6 +14,10 @@ func GetTypeName(mvtype MVType) string {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrval) IsErrorOrAbsent() bool {
+	return this.mvtype == MT_ERROR || this.mvtype == MT_ABSENT
+}
+
 func (this *Mlrval) IsError() bool {
 	return this.mvtype == MT_ERROR
 }
@@ -32,6 +36,10 @@ func (this *Mlrval) IsErrorOrVoid() bool {
 
 func (this *Mlrval) IsString() bool {
 	return this.mvtype == MT_STRING
+}
+
+func (this *Mlrval) IsStringOrVoid() bool {
+	return this.mvtype == MT_STRING || this.mvtype == MT_VOID
 }
 
 func (this *Mlrval) IsInt() bool {
