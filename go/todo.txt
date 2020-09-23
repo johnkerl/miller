@@ -2,18 +2,12 @@
 TOP OF LIST:
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o note json types: string, number, boolean, null, object, array.
 
 * while and do-while statements -- not urgent
 
-~ for-loops -- require localvars as prereq
-  > for-k, for-kv, for-knv sooner -- stack-frame special cases
-  > defer triple-for until later
-
-* stack frames
-  o at cst.State: list.List of StackFrame
-  o for now: StackFrame containing only hash-map from name to mlrval.
-    - default to absent (no hoisting)
-    - no scope-walks needed for for-loops
+* for-knv
+  o defer triple-for until later
 
 ! quoted NIDX
   - how with whitespace regex -- ?
@@ -161,3 +155,4 @@ NITS/NON-IMMEDIATE:
 ! systime printing out in scientific notation :(
 ! head early-out -- cite the relevant issue & fix the right way ...
 * relnotes: label b,i,x vs x,i,b change
+* put -- multiple -f? as in C impl?

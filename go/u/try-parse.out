@@ -736,6 +736,7 @@ begin{}
 RAW AST:
 * StatementBlock
     * BeginBlock
+        * StatementBlock
 
 
 
@@ -760,6 +761,7 @@ end{}
 RAW AST:
 * StatementBlock
     * EndBlock
+        * StatementBlock
 
 
 
@@ -818,7 +820,9 @@ begin{} end {}
 RAW AST:
 * StatementBlock
     * BeginBlock
+        * StatementBlock
     * EndBlock
+        * StatementBlock
 
 
 
@@ -1061,9 +1065,9 @@ RAW AST:
 
 
 ----------------------------------------------------------------
-mlr -n put -v for (k in $*) { emit { k : k} }
+mlr -n put -v for (k in $*) { emit { k : k } }
 DSL EXPRESSION:
-for (k in $*) { emit { k : k} }
+for (k in $*) { emit { k : k } }
 RAW AST:
 * StatementBlock
     * ForLoopKeyOnly "for"
@@ -1075,4 +1079,132 @@ RAW AST:
                     * MapLiteralKeyValuePair ":"
                         * LocalVariable "k"
                         * LocalVariable "k"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin {}
+DSL EXPRESSION:
+begin {}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v begin {1}
+DSL EXPRESSION:
+begin {1}
+RAW AST:
+* StatementBlock
+    * BeginBlock
+        * StatementBlock
+            * BareBoolean
+                * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v end {}
+DSL EXPRESSION:
+end {}
+RAW AST:
+* StatementBlock
+    * EndBlock
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v end {1}
+DSL EXPRESSION:
+end {1}
+RAW AST:
+* StatementBlock
+    * EndBlock
+        * StatementBlock
+            * BareBoolean
+                * IntLiteral "1"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v if (1) {}
+DSL EXPRESSION:
+if (1) {}
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * IntLiteral "1"
+            * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v if (1) {2}
+DSL EXPRESSION:
+if (1) {2}
+RAW AST:
+* StatementBlock
+    * IfChain
+        * IfItem "if"
+            * IntLiteral "1"
+            * StatementBlock
+                * BareBoolean
+                    * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for (k in $*) {}
+DSL EXPRESSION:
+for (k in $*) {}
+RAW AST:
+* StatementBlock
+    * ForLoopKeyOnly "for"
+        * LocalVariable "k"
+        * FullSrec "$*"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for (k in $*) {2}
+DSL EXPRESSION:
+for (k in $*) {2}
+RAW AST:
+* StatementBlock
+    * ForLoopKeyOnly "for"
+        * LocalVariable "k"
+        * FullSrec "$*"
+        * StatementBlock
+            * BareBoolean
+                * IntLiteral "2"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v while (false) {}
+DSL EXPRESSION:
+while (false) {}
+RAW AST:
+* StatementBlock
+    * WhileLoop "while"
+        * BoolLiteral "false"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v do {} while (false)
+DSL EXPRESSION:
+do {} while (false)
+RAW AST:
+* StatementBlock
+    * DoWhileLoop "do"
+        * StatementBlock
+        * BoolLiteral "false"
 

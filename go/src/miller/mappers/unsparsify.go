@@ -88,9 +88,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 
 // ----------------------------------------------------------------
 type MapperUnsparsify struct {
-	fillerString string
+	fillerString       string
 	recordsAndContexts *list.List
-	fieldNamesSeen *lib.OrderedMap
+	fieldNamesSeen     *lib.OrderedMap
 }
 
 func NewMapperUnsparsify(
@@ -98,9 +98,9 @@ func NewMapperUnsparsify(
 ) (*MapperUnsparsify, error) {
 
 	this := &MapperUnsparsify{
-		fillerString: fillerString,
+		fillerString:       fillerString,
 		recordsAndContexts: list.New(),
-		fieldNamesSeen: lib.NewOrderedMap(),
+		fieldNamesSeen:     lib.NewOrderedMap(),
 	}
 
 	return this, nil

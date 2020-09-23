@@ -47,11 +47,14 @@ const (
 	NodeTypeOperator         = "Operator"
 	NodeTypeFunctionCallsite = "FunctionCallsite"
 
-	NodeTypeBeginBlock     = "BeginBlock"
-	NodeTypeEndBlock       = "EndBlock"
-	NodeTypeIfChain        = "IfChain"
-	NodeTypeIfItem         = "IfItem"
-	NodeTypeForLoopKeyOnly = "ForLoopKeyOnly"
+	NodeTypeBeginBlock      = "BeginBlock"
+	NodeTypeEndBlock        = "EndBlock"
+	NodeTypeIfChain         = "IfChain"
+	NodeTypeIfItem          = "IfItem"
+	NodeTypeWhileLoop       = "WhileLoop"
+	NodeTypeDoWhileLoop     = "DoWhileLoop"
+	NodeTypeForLoopKeyOnly  = "ForLoopKeyOnly"
+	NodeTypeForLoopKeyValue = "ForLoopKeyValue"
 
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =
@@ -240,13 +243,23 @@ func NewASTNodeBinaryNestable(itok, childA, childB interface{}, nodeType TNodeTy
 }
 
 // Signature: Token Node Node Type
-func NewASTNodeBinary(itok, childA, childB interface{}, nodeType TNodeType) (*ASTNode, error) {
+func NewASTNodeBinary(
+	itok, childA, childB interface{}, nodeType TNodeType,
+) (*ASTNode, error) {
 	return NewASTNodeBinaryNestable(itok, childA, childB, nodeType), nil
 }
 
 func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
 	parent := NewASTNodeNestable(itok, nodeType)
 	convertToTernary(parent, childA, childB, childC)
+	return parent, nil
+}
+
+func NewASTNodeQuaternary(
+	itok, childA, childB, childC, childD interface{}, nodeType TNodeType,
+) (*ASTNode, error) {
+	parent := NewASTNodeNestable(itok, nodeType)
+	convertToQuaternary(parent, childA, childB, childC, childD)
 	return parent, nil
 }
 
@@ -287,6 +300,16 @@ func convertToTernary(iparent interface{}, childA, childB, childC interface{}) {
 	parent.Children = children
 }
 
+func convertToQuaternary(iparent interface{}, childA, childB, childC, childD interface{}) {
+	parent := iparent.(*ASTNode)
+	children := make([]*ASTNode, 4)
+	children[0] = childA.(*ASTNode)
+	children[1] = childB.(*ASTNode)
+	children[2] = childC.(*ASTNode)
+	children[3] = childD.(*ASTNode)
+	parent.Children = children
+}
+
 func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	child := ichild.(*ASTNode)
@@ -314,6 +337,12 @@ func AdoptChildren(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	parent.Children = child.Children
 	child.Children = nil
 	return parent, nil
+}
+
+// TODO: comment
+func Wrap(inode interface{}) (*ASTNode, error) {
+	node := inode.(*ASTNode)
+	return node, nil
 }
 
 func (this *ASTNode) CheckArity(

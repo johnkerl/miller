@@ -150,22 +150,23 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 // * true and false (boolean literals) are also keywords, defined above.
 
 md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
-md_token_end      : 'e' 'n' 'd' ;
-md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
-md_token_emit     : 'e' 'm' 'i' 't' ;
+md_token_do       : 'd' 'o' ;
 md_token_dump     : 'd' 'u' 'm' 'p' ;
 md_token_edump    : 'e' 'd' 'u' 'm' 'p' ;
-md_token_if       : 'i' 'f' ;
 md_token_elif     : 'e' 'l' 'i' 'f' ;
 md_token_else     : 'e' 'l' 's' 'e' ;
+md_token_emit     : 'e' 'm' 'i' 't' ;
+md_token_end      : 'e' 'n' 'd' ;
+md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 md_token_for      : 'f' 'o' 'r' ;
+md_token_if       : 'i' 'f' ;
 md_token_in       : 'i' 'n' ;
+md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
 
 //md_token_all      : 'a' 'l' 'l' ;
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
 //md_token_call     : 'c' 'a' 'l' 'l' ;
 //md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
-//md_token_do       : 'd' 'o' ;
 //md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 //md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 //md_token_func     : 'f' 'u' 'n' 'c' ;
@@ -177,7 +178,6 @@ md_token_in       : 'i' 'n' ;
 //md_token_subr     : 's' 'u' 'b' 'r' ;
 //md_token_tee      : 't' 'e' 'e' ;
 //md_token_unset    : 'u' 'n' 's' 'e' 't' ;
-//md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
 
 //md_token_map_type   : 'm' 'a' 'p' ;
 //md_token_num_type   : 'n' 'u' 'm' ;
@@ -319,6 +319,16 @@ StatementBlock
 
 ;
 
+StatementBlockInBraces
+  // Defining StatementBlock to be emptyable would have been more elegant ...
+  // I got LR-1 conflicts though. :^/
+  : "{" "}"
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+
+  | "{" StatementBlock "}"
+    << dsl.Wrap($1) >>
+  ;
+
 // ================================================================
 // ASSIGMENT STATEMENTS
 
@@ -329,6 +339,9 @@ BracelessStatement
   | EmitStatement
   | DumpStatement
   | EdumpStatement
+  // Has braces but does not *end* in braces -- so it requires semicolon after.
+  | DoWhileLoop
+
 ;
 
 Assignment
@@ -1153,22 +1166,17 @@ BracefulStatement
   : BeginBlock
   | EndBlock
   | IfChain
+  | WhileLoop
   | ForLoop
 ;
 
 BeginBlock
-  : md_token_begin "{" "}"
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeBeginBlock) >>
-  | md_token_begin "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeBeginBlock) >>
+  : md_token_begin StatementBlockInBraces
+    << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeBeginBlock) >>
 ;
 EndBlock
-  : md_token_end "{" "}"
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeEndBlock) >>
-  | md_token_end "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
-  | md_token_end "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $2, dsl.NodeTypeEndBlock) >>
+  : md_token_end StatementBlockInBraces
+    << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeEndBlock) >>
 ;
 
 // ================================================================
@@ -1192,18 +1200,31 @@ IfElifStar
   ;
 
 IfBlock
-  : md_token_if "(" Rvalue ")" "{" StatementBlock "}"
-    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeIfItem) >>
+  : md_token_if "(" Rvalue ")" StatementBlockInBraces
+    << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
   ;
 
 ElifBlock
-  : md_token_elif "(" Rvalue ")" "{" StatementBlock "}"
-    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeIfItem) >>
+  : md_token_elif "(" Rvalue ")" StatementBlockInBraces
+    << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
   ;
 
 ElseBlock
-  : md_token_else "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeIfItem) >>
+  : md_token_else StatementBlockInBraces
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIfItem) >>
+  ;
+
+// ================================================================
+// WHILE AND DO-WHILE -LOOPS
+
+WhileLoop
+  : md_token_while "(" Rvalue ")" StatementBlockInBraces
+    << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeWhileLoop) >>
+  ;
+
+DoWhileLoop
+  : md_token_do StatementBlockInBraces md_token_while "(" Rvalue ")"
+    << dsl.NewASTNodeBinary($0, $1, $4, dsl.NodeTypeDoWhileLoop) >>
   ;
 
 // ================================================================
@@ -1238,14 +1259,12 @@ ElseBlock
 // ================================================================
 // FOR-LOOPS
 
-// ----------------------------------------------------------------
-ForLoopIndex
-  : LocalVariable
-  ;
+// TODO: typedefs on localvars
 
+// ----------------------------------------------------------------
 ForLoop
   : ForLoopKeyOnly
-  // | ForLoopKeyValue
+  | ForLoopKeyValue
   // | ForLoopMultipleKeysValue
   // | TripleForLoop
   ;
@@ -1255,56 +1274,53 @@ ForLoop
 ForLoopKeyOnly
   : md_token_for
     "("
-		ForLoopIndex
-		md_token_in
-    Rvalue
-		// TODO:... Mappable (function call, srec, oosvar ... -- or check at CST?)
+		  LocalVariable
+		  md_token_in
+      Rvalue
 	  ")"
-	  "{"
-	  	StatementBlock
-	  "}"
+ 	  StatementBlockInBraces
  <<
    dsl.NewASTNodeTernary(
      $0, // "for"
      $2, // k, etc.
      $4, // $*, etc.
-     $7, // { ... }
+     $6, // { ... }
      dsl.NodeTypeForLoopKeyOnly,
 	 );
  >>
  ;
 
 // ----------------------------------------------------------------
-//// for(k, v in $*) { ... }
+// for(k, v in $*) { ... }
+ForLoopKeyValue
+  : md_token_for
+    "("
+		  LocalVariable
+      ","
+		  LocalVariable
+		  md_token_in
+      Rvalue
+	  ")"
+   	StatementBlockInBraces
+ <<
+   dsl.NewASTNodeQuaternary(
+     $0, // "for"
+     $2, // k, etc.
+     $4, // v, etc.
+     $6, // $*, etc.
+     $8, // { ... }
+     dsl.NodeTypeForLoopKeyValue,
+	 );
+ >>
+ ;
 
-//ForLoopKeyValue(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) "," ForLoopIndex(V)
-//		md_token_in md_token_full_srec
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_full_srec_block");
-//	A = mlr_dsl_ast_node_alloc_binary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_SREC,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			K,
-//			V
-//		),
-//		S
-//	);
-//}
+// ForLoopMultipleKeysValue
 
 //// for((k1, k2), v in @*) { ... }
 //// for((k1, k2, k3), v in @*) { ... }
 //ForLoopMultipleKeysValue(A) ::=
 //	md_token_for(F) "("
-//		"(" ForMapKeylist(L) ")" "," ForLoopIndex(V)
+//		"(" ForMapKeylist(L) ")" "," LocalVariable(V)
 //		md_token_in md_token_full_oosvar
 //	")"
 //	"{"
@@ -1324,25 +1340,6 @@ ForLoopKeyOnly
 //		mlr_dsl_ast_node_alloc_zary("empty_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST),
 //		S
 //	);
-//}
-
-//ForLoopIndex(A) ::= md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION);
-//}
-//ForLoopIndex(A) ::= md_token_numeric md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
-//}
-//ForLoopIndex(A) ::= md_token_int md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION);
-//}
-//ForLoopIndex(A) ::= md_token_float md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
-//}
-//ForLoopIndex(A) ::= md_token_string_literal md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
-//}
-//ForLoopIndex(A) ::= md_token_boolean md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
 //}
 
 //ForMapKeylist(A) ::= ForLoopIndex(K). {

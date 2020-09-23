@@ -89,6 +89,8 @@ func BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) 
 
 // ----------------------------------------------------------------
 func (this *StatementBlockNode) Execute(state *State) error {
+	state.stack.PushStackFrame()
+	defer state.stack.PopStackFrame()
 
 	for _, statement := range this.executables {
 		err := statement.Execute(state)

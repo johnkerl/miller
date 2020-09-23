@@ -32,33 +32,11 @@ type State struct {
 	Oosvars       *types.Mlrmap
 	FilterResult  bool
 	OutputChannel chan<- *types.RecordAndContext
-	// TODO: stack frames will go into individual statement-block nodes or here?
-	// Needs to be here, for scope-resolution walks
-}
-
-func NewEmptyState() *State {
-	oosvars := types.NewMlrmap()
-	return &State{
-		Inrec:        nil,
-		Context:      nil,
-		Oosvars:      oosvars,
-		FilterResult: true,
-	}
-}
-
-func (this *State) Update(
-	inrec *types.Mlrmap,
-	context *types.Context,
-) {
-	this.Inrec = inrec
-	this.Context = context
+	stack         *Stack
 }
 
 // ----------------------------------------------------------------
 type RootNode struct {
-	// TODO: Statements/blocks
-	//executables []IExecutable
-
 	beginBlocks []*StatementBlockNode
 	mainBlock   *StatementBlockNode
 	endBlocks   []*StatementBlockNode
@@ -79,7 +57,6 @@ type IExecutable interface {
 // Also implements IExecutable
 type StatementBlockNode struct {
 	executables []IExecutable
-	// TODO: localvars -- here or in State's stack-frame
 }
 
 // ================================================================

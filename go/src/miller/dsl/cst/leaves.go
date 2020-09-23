@@ -36,6 +36,10 @@ func BuildLeafNode(
 		return BuildFullOosvarRvalueNode(sval), nil
 		break
 
+	case dsl.NodeTypeLocalVariable:
+		return BuildLocalVariableNode(sval), nil
+		break
+
 	case dsl.NodeTypeStringLiteral:
 		return BuildStringLiteralNode(sval), nil
 		break
@@ -123,6 +127,26 @@ func BuildFullOosvarRvalueNode(fieldName string) *FullOosvarRvalueNode {
 }
 func (this *FullOosvarRvalueNode) Evaluate(state *State) types.Mlrval {
 	return types.MlrvalFromMap(state.Oosvars)
+}
+
+// ----------------------------------------------------------------
+type LocalVariableNode struct {
+	variableName string
+}
+
+func BuildLocalVariableNode(variableName string) *LocalVariableNode {
+	return &LocalVariableNode{
+		variableName: variableName,
+	}
+}
+func (this *LocalVariableNode) Evaluate(state *State) types.Mlrval {
+	value := state.stack.ReadVariable(this.variableName)
+	//state.stack.Dump()
+	if value == nil {
+		return types.MlrvalFromAbsent()
+	} else {
+		return *value
+	}
 }
 
 // ----------------------------------------------------------------

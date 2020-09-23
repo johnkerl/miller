@@ -325,7 +325,7 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 		name: "urandrange",
 	},
 	{
-		name: "truncate",
+		name:       "truncate",
 		binaryFunc: types.MlrvalTruncate,
 	},
 
