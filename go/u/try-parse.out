@@ -1061,9 +1061,9 @@ RAW AST:
 
 
 ----------------------------------------------------------------
-mlr -n put -v for (k in $*) { emit { k : k} }
+mlr -n put -v for (k in $*) { emit { k : k } }
 DSL EXPRESSION:
-for (k in $*) { emit { k : k} }
+for (k in $*) { emit { k : k } }
 RAW AST:
 * StatementBlock
     * ForLoopKeyOnly "for"
