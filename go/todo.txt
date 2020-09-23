@@ -2,6 +2,8 @@
 TOP OF LIST:
 
 * mlr -f / -F
+  o others in mlrcli_parse.go
+  o copy over all operator help-strings from ../c
 
 ! try Lvalue/Rvalue coalesce
   > to make condish work & unhack filter

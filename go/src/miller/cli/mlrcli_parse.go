@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
+	"miller/dsl/cst"
 	"miller/lib"
 	"miller/mapping"
 	"miller/version"
@@ -221,21 +222,17 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		listAllVerbsRaw(os.Stdout)
 		return true
 
-		//	} else if args[argi] == "--list-all-functions-raw" || args[argi] == "-F" {
-		//		fmgr_t* pfmgr = fmgr_alloc();
-		//		fmgr_list_all_functions_raw(pfmgr, os.Stdout);
-		//		fmgr_free(pfmgr, nil);
-		//		return true;
+	} else if args[argi] == "--list-all-functions-raw" || args[argi] == "-F" {
+		cst.BuiltinFunctionManager.ListBuiltinFunctionsRaw(os.Stdout)
+		return true
 		//	} else if args[argi] == "--list-all-functions-as-table" {
 		//		fmgr_t* pfmgr = fmgr_alloc();
 		//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
 		//		fmgr_free(pfmgr, nil);
 		//		return true;
-		//	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
-		//		fmgr_t* pfmgr = fmgr_alloc();
-		//		fmgr_function_usage(pfmgr, os.Stdout, nil);
-		//		fmgr_free(pfmgr, nil);
-		//		return true;
+	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
+		cst.BuiltinFunctionManager.ListBuiltinFunctionUsages(os.Stdout)
+		return true
 		//	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
 		//		checkArgCount(args, argi, argc, 2);
 		//		fmgr_t* pfmgr = fmgr_alloc();
