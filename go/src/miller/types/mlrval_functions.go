@@ -2,6 +2,7 @@ package types
 
 import (
 	"math"
+	"regexp"
 	"strings"
 	"time"
 
@@ -1728,5 +1729,32 @@ func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
 	}
 	return MlrvalFromString(
 		strings.Replace(ma.printrep, mb.printrep, mc.printrep, 1),
+	)
+}
+
+// ================================================================
+func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
+	if ma.IsErrorOrAbsent() {
+		return *ma
+	}
+	if mb.IsErrorOrAbsent() {
+		return *mb
+	}
+	if mb.IsErrorOrAbsent() {
+		return *mc
+	}
+	if !ma.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mb.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mc.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	// TODO: better exception-handling
+	re := regexp.MustCompile(mb.printrep)
+	return MlrvalFromString(
+		re.ReplaceAllString(ma.printrep, mc.printrep),
 	)
 }

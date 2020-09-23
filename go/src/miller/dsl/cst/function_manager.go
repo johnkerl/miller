@@ -345,6 +345,10 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 		name:        "ssub",
 		ternaryFunc: types.MlrvalSsub,
 	},
+	{
+		name:        "gsub",
+		ternaryFunc: types.MlrvalGsub,
+	},
 
 	// Variadic built-in functions
 	{
