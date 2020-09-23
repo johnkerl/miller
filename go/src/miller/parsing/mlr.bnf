@@ -158,6 +158,8 @@ md_token_edump    : 'e' 'd' 'u' 'm' 'p' ;
 md_token_if       : 'i' 'f' ;
 md_token_elif     : 'e' 'l' 'i' 'f' ;
 md_token_else     : 'e' 'l' 's' 'e' ;
+md_token_for      : 'f' 'o' 'r' ;
+md_token_in       : 'i' 'n' ;
 
 //md_token_all      : 'a' 'l' 'l' ;
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
@@ -166,9 +168,7 @@ md_token_else     : 'e' 'l' 's' 'e' ;
 //md_token_do       : 'd' 'o' ;
 //md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 //md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_for      : 'f' 'o' 'r' ;
 //md_token_func     : 'f' 'u' 'n' 'c' ;
-//md_token_in       : 'i' 'n' ;
 //md_token_print    : 'p' 'r' 'i' 'n' 't' ;
 //md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
 //md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
@@ -472,6 +472,12 @@ FullOosvar
 ;
 
 // ----------------------------------------------------------------
+LocalVariable
+  : md_token_non_sigil_name
+    << dsl.NewASTNode($0, dsl.NodeTypeLocalVariable) >>
+  ;
+
+// ----------------------------------------------------------------
 // REWRITE COMPOUND ASSIGNMENT OPERATORS
 //
 // Transform '$x += 1' which would have AST
@@ -766,7 +772,7 @@ MlrvalOrFunction
   | FullSrec
   | OosvarValue
   | FullOosvar
-  // local variable abcd
+  | LocalVariable
   // ENV -- only ENV["foo"] but not arbitrarily indexable
 ;
 
@@ -1147,6 +1153,7 @@ BracefulStatement
   : BeginBlock
   | EndBlock
   | IfChain
+  | ForLoop
 ;
 
 BeginBlock
@@ -1200,30 +1207,6 @@ ElseBlock
   ;
 
 // ================================================================
-// ================================================================
-// ================================================================
-// TO BE PORTED
-// ================================================================
-// ================================================================
-// ================================================================
-
-//Statement(A) ::= CondBlock(B).                { A = B; }
-//Statement(A) ::= WhileBlock(B).               { A = B; }
-//Statement(A) ::= DoWhileBlock(B).             { A = B; }
-//Statement(A) ::= ForLoopFullSrec(B).          { A = B; }
-//Statement(A) ::= ForLoopFullSrecKeyOnly(B).   { A = B; }
-//Statement(A) ::= ForLoopFullOosvar(B).        { A = B; }
-//Statement(A) ::= ForLoopFullOosvarKeyOnly(B). { A = B; }
-//Statement(A) ::= ForLoopOosvar(B).            { A = B; }
-//Statement(A) ::= ForLoopOosvarKeyOnly(B).     { A = B; }
-//Statement(A) ::= ForLoopLocalMap(B).          { A = B; }
-//Statement(A) ::= ForLoopLocalMapKeyOnly(B).   { A = B; }
-//Statement(A) ::= ForLoopMapLiteral(B).        { A = B; }
-//Statement(A) ::= ForLoopMapLiteralKeyOnly(B). { A = B; }
-//Statement(A) ::= ForLoopFuncRetval(B).        { A = B; }
-//Statement(A) ::= ForLoopFuncRetvalKeyOnly(B). { A = B; }
-//Statement(A) ::= TripleFor(B).                { A = B; }
-
 //// ----------------------------------------------------------------
 //CondBlock(A) ::= Rvalue(B) "{" StatementBlock(C) "}". {
 //	mlr_dsl_ast_node_replace_text(C, "cond_block");
@@ -1251,9 +1234,50 @@ ElseBlock
 //	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DO_WHILE, B, C);
 //}
 
-//// ----------------------------------------------------------------
+
+// ================================================================
+// FOR-LOOPS
+
+// ----------------------------------------------------------------
+ForLoopIndex
+  : LocalVariable
+  ;
+
+ForLoop
+  : ForLoopKeyOnly
+  // | ForLoopKeyValue
+  // | ForLoopMultipleKeysValue
+  // | TripleForLoop
+  ;
+
+// ----------------------------------------------------------------
+// for(k in $*) { ... }
+ForLoopKeyOnly
+  : md_token_for
+    "("
+		ForLoopIndex
+		md_token_in
+    Rvalue
+		// TODO:... Mappable (function call, srec, oosvar ... -- or check at CST?)
+	  ")"
+	  "{"
+	  	StatementBlock
+	  "}"
+ <<
+   dsl.NewASTNodeTernary(
+     $0, // "for"
+     $2, // k, etc.
+     $4, // $*, etc.
+     $7, // { ... }
+     dsl.NodeTypeForLoopKeyOnly,
+	 );
+ >>
+ ;
+
+// ----------------------------------------------------------------
 //// for(k, v in $*) { ... }
-//ForLoopFullSrec(A) ::=
+
+//ForLoopKeyValue(A) ::=
 //	md_token_for(F) "("
 //		ForLoopIndex(K) "," ForLoopIndex(V)
 //		md_token_in md_token_full_srec
@@ -1276,60 +1300,9 @@ ElseBlock
 //	);
 //}
 
-//// for(k in $*) { ... }
-//ForLoopFullSrecKeyOnly(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) md_token_in md_token_full_srec
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_full_srec_block");
-//	A = mlr_dsl_ast_node_alloc_binary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_SREC_KEY_ONLY,
-//		mlr_dsl_ast_node_alloc_unary(
-//			"variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			K
-//		),
-//		S
-//	);
-//}
-
-//// for(k, v in @*) { ... }
-//ForLoopFullOosvar(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) "," ForLoopIndex(V)
-//		md_token_in md_token_full_oosvar
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_OOSVAR,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			mlr_dsl_ast_node_alloc_unary(
-//				"key_variables",
-//				MD_AST_NODE_TYPE_FOR_VARIABLES,
-//				K
-//			),
-//			V
-//		),
-//		mlr_dsl_ast_node_alloc_zary("empty_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST),
-//		S
-//	);
-//}
-
 //// for((k1, k2), v in @*) { ... }
 //// for((k1, k2, k3), v in @*) { ... }
-//ForLoopFullOosvar(A) ::=
+//ForLoopMultipleKeysValue(A) ::=
 //	md_token_for(F) "("
 //		"(" ForMapKeylist(L) ")" "," ForLoopIndex(V)
 //		md_token_in md_token_full_oosvar
@@ -1349,82 +1322,6 @@ ElseBlock
 //			V
 //		),
 //		mlr_dsl_ast_node_alloc_zary("empty_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST),
-//		S
-//	);
-//}
-
-//// for(k in @*) { ... }
-//ForLoopFullOosvarKeyOnly(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K)
-//		md_token_in
-//		md_token_full_oosvar
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY,
-//		K,
-//		mlr_dsl_ast_node_alloc_zary("empty_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST),
-//		S
-//	);
-//}
-
-//// for(k, v in @o[1][2]) { ... }
-//ForLoopOosvar(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) "," ForLoopIndex(V)
-//		md_token_in OosvarKeylist(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_OOSVAR,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			mlr_dsl_ast_node_alloc_unary(
-//				"key_variables",
-//				MD_AST_NODE_TYPE_FOR_VARIABLES,
-//				K
-//			),
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for((k1, k2), v in @o[1][2]) { ... }
-//// for((k1, k2, k3), v in @o[1][2]) { ... }
-//ForLoopOosvar(A) ::=
-//	md_token_for(F) "("
-//		"(" ForMapKeylist(L) ")" "," ForLoopIndex(V)
-//		md_token_in OosvarKeylist(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_OOSVAR,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			L,
-//			V
-//		),
-//		O,
 //		S
 //	);
 //}
@@ -1453,254 +1350,6 @@ ElseBlock
 //}
 //ForMapKeylist(A) ::= ForMapKeylist(L) "," ForLoopIndex(K). {
 //	A = mlr_dsl_ast_node_append_arg(L, K);
-//}
-
-//// for(k in @o[1][2]) { ... }
-//ForLoopOosvarKeyOnly(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K)
-//		md_token_in OosvarKeylist(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY,
-//		K,
-//		O,
-//		S
-//	);
-//}
-
-//// ----------------------------------------------------------------
-//// for(k, v in o[1][2]) { ... }
-//ForLoopLocalMap(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) "," ForLoopIndex(V)
-//		md_token_in LocalMapKeylist(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_LOCAL_MAP,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			mlr_dsl_ast_node_alloc_unary(
-//				"key_variables",
-//				MD_AST_NODE_TYPE_FOR_VARIABLES,
-//				K
-//			),
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for((k1, k2), v in o[1][2]) { ... }
-//// for((k1, k2, k3), v in o[1][2]) { ... }
-//ForLoopLocalMap(A) ::=
-//	md_token_for(F) "("
-//		"(" ForMapKeylist(L) ")" "," ForLoopIndex(V)
-//		md_token_in LocalMapKeylist(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_LOCAL_MAP,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			L,
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for(k in o[1][2]) { ... }
-//ForLoopLocalMapKeyOnly(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K)
-//		md_token_in LocalMapKeylist(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY,
-//		K,
-//		O,
-//		S
-//	);
-//}
-
-//// ----------------------------------------------------------------
-//// for(k, v in o[1][2]) { ... }
-//ForLoopMapLiteral(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) "," ForLoopIndex(V)
-//		md_token_in MapLiteral(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_MAP_LITERAL,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			mlr_dsl_ast_node_alloc_unary(
-//				"key_variables",
-//				MD_AST_NODE_TYPE_FOR_VARIABLES,
-//				K
-//			),
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for((k1, k2), v in o[1][2]) { ... }
-//// for((k1, k2, k3), v in o[1][2]) { ... }
-//ForLoopMapLiteral(A) ::=
-//	md_token_for(F) "("
-//		"(" ForMapKeylist(L) ")" "," ForLoopIndex(V)
-//		md_token_in MapLiteral(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_MAP_LITERAL,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			L,
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for(k in o[1][2]) { ... }
-//ForLoopMapLiteralKeyOnly(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K)
-//		md_token_in MapLiteral(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_MAP_LITERAL_KEY_ONLY,
-//		K,
-//		O,
-//		S
-//	);
-//}
-
-//// ----------------------------------------------------------------
-//// for(k, v in o[1][2]) { ... }
-//ForLoopFuncRetval(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K) "," ForLoopIndex(V)
-//		md_token_in FcnOrSubrCall(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_func_retval_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_FUNC_RETVAL,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			mlr_dsl_ast_node_alloc_unary(
-//				"key_variables",
-//				MD_AST_NODE_TYPE_FOR_VARIABLES,
-//				K
-//			),
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for((k1, k2), v in o[1][2]) { ... }
-//// for((k1, k2, k3), v in o[1][2]) { ... }
-//ForLoopFuncRetval(A) ::=
-//	md_token_for(F) "("
-//		"(" ForMapKeylist(L) ")" "," ForLoopIndex(V)
-//		md_token_in FcnOrSubrCall(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_func_retval_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_FUNC_RETVAL,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			L,
-//			V
-//		),
-//		O,
-//		S
-//	);
-//}
-
-//// for(k in o[1][2]) { ... }
-//ForLoopFuncRetvalKeyOnly(A) ::=
-//	md_token_for(F) "("
-//		ForLoopIndex(K)
-//		md_token_in FcnOrSubrCall(O)
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_loop_func_retval_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_FUNC_RETVAL_KEY_ONLY,
-//		K,
-//		O,
-//		S
-//	);
 //}
 
 //// ----------------------------------------------------------------
@@ -1770,6 +1419,19 @@ ElseBlock
 //		A = mlr_dsl_ast_node_append_arg(B, C);
 //	}
 //}
+
+// ================================================================
+// ================================================================
+// ================================================================
+// TO BE PORTED
+// ================================================================
+// ================================================================
+// ================================================================
+
+//Statement(A) ::= CondBlock(B).                { A = B; }
+//Statement(A) ::= WhileBlock(B).               { A = B; }
+//Statement(A) ::= DoWhileBlock(B).             { A = B; }
+//Statement(A) ::= TripleFor(B).                { A = B; }
 
 // ----------------------------------------------------------------
 //// Local-variable definitions at the current scope

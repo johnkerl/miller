@@ -34,6 +34,7 @@ const (
 	NodeTypeDirectOosvarValue   = "DirectOosvarValue"
 	NodeTypeIndirectOosvarValue = "IndirectOosvarValue"
 	NodeTypeFullOosvar          = "FullOosvar"
+	NodeTypeLocalVariable       = "LocalVariable"
 
 	NodeTypeStatementBlock  = "StatementBlock"
 	NodeTypeAssignment      = "Assignment"
@@ -46,10 +47,11 @@ const (
 	NodeTypeOperator         = "Operator"
 	NodeTypeFunctionCallsite = "FunctionCallsite"
 
-	NodeTypeBeginBlock = "BeginBlock"
-	NodeTypeEndBlock   = "EndBlock"
-	NodeTypeIfChain    = "IfChain"
-	NodeTypeIfItem     = "IfItem"
+	NodeTypeBeginBlock     = "BeginBlock"
+	NodeTypeEndBlock       = "EndBlock"
+	NodeTypeIfChain        = "IfChain"
+	NodeTypeIfItem         = "IfItem"
+	NodeTypeForLoopKeyOnly = "ForLoopKeyOnly"
 
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =

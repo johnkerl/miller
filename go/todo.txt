@@ -1,12 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! filter / bare-boolean
-  o needs thorough UT on things like 'mlr put '1+2=3+4'
-
-* mlr -f / -F
-  o others in mlrcli_parse.go
-  o copy over all operator help-strings from ../c
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
 
 * while and do-while statements -- not urgent
 
@@ -25,15 +20,20 @@ TOP OF LIST:
 ! quoted DKVP
   - what about csvlite-style -- ? needs a --dkvplite ?
 
-! --implicit-csv-header
+* --implicit-csv-header
 
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+* cat -n -g a,b,c
 
-! cat -n -g a,b,c
-
-* clean up mlr --help to not advertise things it doesn't do yet
+* clean up 'mlr --help' to not advertise things it doesn't do yet
 
 * ASV? golang csv package parameterizes comma but not crlf :(
+
+! filter / bare-boolean
+  o needs thorough UT on things like 'mlr put '1+2=3+4'
+
+* mlr -f / -F
+  o others in mlrcli_parse.go
+  o copy over all operator help-strings from ../c
 
 ----------------------------------------------------------------
 CATEGORIES:

@@ -46,6 +46,8 @@ func BuildStatementNode(
 
 	case dsl.NodeTypeIfChain:
 		return BuildIfChainNode(astNode)
+	case dsl.NodeTypeForLoopKeyOnly:
+		return BuildForLoopKeyOnlyNode(astNode)
 
 	default:
 		return nil, errors.New(
