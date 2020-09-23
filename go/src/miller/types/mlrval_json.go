@@ -320,7 +320,7 @@ func (this *Mlrval) marshalJSONAbsent() ([]byte, error) {
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONVoid() ([]byte, error) {
 	lib.InternalCodingErrorIf(this.mvtype != MT_VOID)
-	return []byte(""), nil
+	return []byte("\"\""), nil
 }
 
 // ----------------------------------------------------------------

@@ -35,6 +35,8 @@ TOP OF LIST:
 
 ! --implicit-csv-header
 
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+
 ! cat -n -g a,b,c
 
 * clean up mlr --help to not advertise things it doesn't do yet
