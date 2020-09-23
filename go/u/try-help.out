@@ -96,3 +96,14 @@ Passes through the last n records, optionally by category.
  -n (default 10) Tail count to print
 
 ================================================================
+Usage: ./mlr unsparsify [options]
+Prints records with the union of field names over all input records.
+For field names absent in a given record but present in others, fills in
+a value. This verb retains all input before producing any output.
+
+Example: if the input is two records, one being 'a=1,b=2' and the other
+being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
+'a=,b=3,c=4'.
+ -fill-with (default ) Prepend field {name} to each record with record-counter starting at 1
+
+================================================================

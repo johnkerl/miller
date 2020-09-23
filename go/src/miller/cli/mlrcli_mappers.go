@@ -25,6 +25,7 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.SortWithinRecordsSetup,
 	mappers.TacSetup,
 	mappers.TailSetup,
+	mappers.UnsparsifySetup,
 }
 
 //	&mapper_altkv_setup,
