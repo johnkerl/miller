@@ -1,13 +1,12 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+* for-loop over arrays -- '@records[FILENAME][NR]' -- ?
+  o for-k needs to bind k to 1..n; likewise for-kv
+* code-merge for-k, for-kv, for-knv
+
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
-
-* while and do-while statements -- not urgent
-
-* for-knv
-  o defer triple-for until later
 
 ! quoted NIDX
   - how with whitespace regex -- ?
@@ -21,9 +20,6 @@ TOP OF LIST:
 * clean up 'mlr --help' to not advertise things it doesn't do yet
 
 * ASV? golang csv package parameterizes comma but not crlf :(
-
-! filter / bare-boolean
-  o needs thorough UT on things like 'mlr put '1+2=3+4'
 
 * mlr -f / -F
   o others in mlrcli_parse.go
@@ -68,10 +64,11 @@ CATEGORIES:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
     - bare-boolean last statement in main block, & not in begin/end
-  o support the filter verb
+  o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
   o UDFs
   o localvars
-  o if/for/etc
+  o for-knv
+  o triple-for
 
 ----------------------------------------------------------------
 MAYBE:

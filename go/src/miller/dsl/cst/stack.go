@@ -13,11 +13,11 @@ import (
 
 // ----------------------------------------------------------------
 type Stack struct {
-	stackFrames   *list.List // list of *StackFrame
+	stackFrames *list.List // list of *StackFrame
 }
 
 func NewStack() *Stack {
-	return &Stack {
+	return &Stack{
 		stackFrames: list.New(),
 	}
 }
@@ -54,7 +54,7 @@ func (this *Stack) Dump() {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
 		fmt.Printf("  VARIABLES (count %d):\n", len(stackFrame.vars))
-		for k, v := range(stackFrame.vars) {
+		for k, v := range stackFrame.vars {
 			fmt.Printf("    %-16s %s\n", k, v.String())
 		}
 	}
