@@ -27,11 +27,11 @@ import (
 // to execute the expression. That includes the current record, AWK-like variables
 // such as FILENAME and NR, and out-of-stream variables.
 type State struct {
-	Inrec   *types.Mlrmap
-	Context *types.Context
-	Oosvars *types.Mlrmap
-	FilterResult bool
-    OutputChannel chan<- *types.RecordAndContext
+	Inrec         *types.Mlrmap
+	Context       *types.Context
+	Oosvars       *types.Mlrmap
+	FilterResult  bool
+	OutputChannel chan<- *types.RecordAndContext
 	// TODO: stack frames will go into individual statement-block nodes or here?
 	// Needs to be here, for scope-resolution walks
 }
@@ -39,9 +39,9 @@ type State struct {
 func NewEmptyState() *State {
 	oosvars := types.NewMlrmap()
 	return &State{
-		Inrec:   nil,
-		Context: nil,
-		Oosvars: oosvars,
+		Inrec:        nil,
+		Context:      nil,
+		Oosvars:      oosvars,
 		FilterResult: true,
 	}
 }

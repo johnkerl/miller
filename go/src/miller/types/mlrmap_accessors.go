@@ -355,7 +355,7 @@ func (this *Mlrmap) SortByKey() {
 
 	that := NewMlrmapAsRecord()
 
-	for _, key := range(keys) {
+	for _, key := range keys {
 		// Old record will be GC'ed: just move pointers
 		that.PutReference(&key, this.Get(&key))
 	}

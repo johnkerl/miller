@@ -78,8 +78,7 @@ type MapperSortWithinRecords struct {
 
 func NewMapperSortWithinRecords() (*MapperSortWithinRecords, error) {
 
-	this := &MapperSortWithinRecords{
-	}
+	this := &MapperSortWithinRecords{}
 
 	return this, nil
 }

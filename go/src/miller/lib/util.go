@@ -42,7 +42,7 @@ func SortStrings(strings []string) {
 
 func SortedStrings(strings []string) []string {
 	copy := make([]string, len(strings))
-	for i, s := range(strings) {
+	for i, s := range strings {
 		copy[i] = s
 	}
 	// Go sort API: for ascending sort, return true if element i < element j.

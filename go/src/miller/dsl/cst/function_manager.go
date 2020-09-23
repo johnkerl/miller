@@ -406,14 +406,14 @@ func hashifyLookupTable(lookupTable *[]FunctionInfo) map[string]*FunctionInfo {
 
 // ----------------------------------------------------------------
 func (this *FunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
-	for _, functionInfo := range(*this.lookupTable) {
+	for _, functionInfo := range *this.lookupTable {
 		fmt.Fprintln(o, functionInfo.name)
 	}
 }
 
 // ----------------------------------------------------------------
 func (this *FunctionManager) ListBuiltinFunctionUsages(o *os.File) {
-	for _, functionInfo := range(*this.lookupTable) {
+	for _, functionInfo := range *this.lookupTable {
 		fmt.Fprintf(o, "%-20s  %s\n", functionInfo.name, functionInfo.help)
 	}
 }
