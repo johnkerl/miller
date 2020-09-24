@@ -1234,28 +1234,6 @@ DoWhileLoop
 //	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
 //}
 
-//// ----------------------------------------------------------------
-//WhileBlock(A) ::=
-//	md_token_while(O)
-//		"(" Rvalue(B) ")"
-//		"{" StatementBlock(C) "}".
-//{
-//	mlr_dsl_ast_node_replace_text(C, "while_block");
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_WHILE, B, C);
-//}
-
-//// ----------------------------------------------------------------
-//DoWhileBlock(A) ::=
-//	MD_TOKEN_DO(O)
-//		"{" StatementBlock(B) "}"
-//	md_token_while
-//		"(" Rvalue(C) ")".
-//{
-//	mlr_dsl_ast_node_replace_text(B, "do_while_block");
-//	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DO_WHILE, B, C);
-//}
-
-
 // ================================================================
 // FOR-LOOPS
 
@@ -1424,11 +1402,6 @@ ForLoopKeyValue
 // ================================================================
 // ================================================================
 // ================================================================
-
-//Statement(A) ::= CondBlock(B).                { A = B; }
-//Statement(A) ::= WhileBlock(B).               { A = B; }
-//Statement(A) ::= DoWhileBlock(B).             { A = B; }
-//Statement(A) ::= TripleFor(B).                { A = B; }
 
 // ----------------------------------------------------------------
 //// Local-variable definitions at the current scope

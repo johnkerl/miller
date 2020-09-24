@@ -1,9 +1,12 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* for-loop over arrays -- '@records[FILENAME][NR]' -- ?
-  o for-k needs to bind k to 1..n; likewise for-kv
-* code-merge for-k, for-kv, for-knv
+! awkish cond-blocks
+* local vars
+* local vars w/ typing
+* then UDFs
+
+? determinism of emits vs outrecs -- ?!?
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
@@ -153,3 +156,4 @@ NITS/NON-IMMEDIATE:
 ! head early-out -- cite the relevant issue & fix the right way ...
 * relnotes: label b,i,x vs x,i,b change
 * put -- multiple -f? as in C impl?
+* emit { int : string } results in absent-something :^/
