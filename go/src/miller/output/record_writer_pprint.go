@@ -81,13 +81,15 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 	records *list.List,
 ) {
 
-	// TODO: heterogeneity. keep previous header and reset if need.
 	maxWidths := make(map[string]int)
 
 	for e := records.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*types.Mlrmap)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			width := len(pe.Value.String())
+			if width == 0 {
+				width = 1 // We'll rewrite "" to "-" below
+			}
 			oldMaxWidth := maxWidths[*pe.Key]
 			if width > oldMaxWidth {
 				maxWidths[*pe.Key] = width
@@ -121,10 +123,14 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 
 		// Print data lines
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
+			s := pe.Value.String()
+			if s == "" {
+				s = "-"
+			}
 			if pe.Next != nil {
-				fmt.Printf("%-*s ", maxWidths[*pe.Key], pe.Value.String())
+				fmt.Printf("%-*s ", maxWidths[*pe.Key], s)
 			} else {
-				fmt.Println(pe.Value.String())
+				fmt.Println(s)
 			}
 		}
 	}

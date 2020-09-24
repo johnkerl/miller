@@ -375,11 +375,11 @@ mlr --json --from u/needs-regularize.json regularize
 ----------------------------------------------------------------
 mlr --opprint --from u/needs-unsparsify.dkvp unsparsify
 a b c
-1   
-1 2 
+1 - -
+1 2 -
 1 2 3
-1 2 
-1   
+1 2 -
+1 - -
 
 ----------------------------------------------------------------
 mlr --opprint --from u/needs-unsparsify.dkvp unsparsify --fill-with X
