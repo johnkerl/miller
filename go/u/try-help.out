@@ -2,6 +2,7 @@
 Usage: ./mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
  -N (default ) Prepend field {name} to each record with record-counter starting at 1
+ -g (default ) Optional group-by-field names for counters, e.g. a,b,c
  -n (default false) Prepend field "n" to each record with record-counter starting at 1
 
 ================================================================

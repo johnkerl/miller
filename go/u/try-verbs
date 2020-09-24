@@ -10,6 +10,11 @@ run_mlr() {
   ./mlr "$@"
 }
 
+run_mlr --opprint cat           u/s.dkvp
+run_mlr --opprint cat -n        u/s.dkvp
+run_mlr --opprint cat -n -g a   u/s.dkvp
+run_mlr --opprint cat -n -g a,b u/s.dkvp
+
 run_mlr --opprint cut    -f x,a u/s.dkvp
 run_mlr --opprint cut -o -f x,a u/s.dkvp
 run_mlr --opprint cut -x -f x,a u/s.dkvp

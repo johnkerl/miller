@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/mapping"
 	"miller/types"
 )
@@ -46,6 +47,12 @@ func mapperCatParseCLI(
 		"Prepend field {name} to each record with record-counter starting at 1",
 	)
 
+	pGroupByFieldNames := flagSet.String(
+		"g",
+		"",
+		"Optional group-by-field names for counters, e.g. a,b,c",
+	)
+
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,22 +65,18 @@ func mapperCatParseCLI(
 		return nil
 	}
 
-	// xxx to port:
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	//	fmt.Fprintf(o, "Options:\n");
-	//	fmt.Fprintf(o, "-n        Prepend field \"%s\" to each record with record-counter starting at 1\n",
-	//		DEFAULT_COUNTER_FIELD_NAME);
-	//	fmt.Fprintf(o, "-g {comma-separated field name(s)} When used with -n/-N, writes record-counters\n");
-	//	fmt.Fprintf(o, "          keyed by specified field name(s).\n");
+	// TODO:
 	//	fmt.Fprintf(o, "-v        Write a low-level record-structure dump to stderr.\n");
-	//	fmt.Fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Find out how many flags were consumed by this verb and advance for the
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	mapper, _ := NewMapperCat(*pDoCounters, pCounterFieldName)
+	mapper, _ := NewMapperCat(
+		*pDoCounters,
+		pCounterFieldName,
+		*pGroupByFieldNames,
+	)
 
 	*pargi = argi
 	return mapper
@@ -95,16 +98,24 @@ func mapperCatUsage(
 
 // ----------------------------------------------------------------
 type MapperCat struct {
-	doCounters bool
+	doCounters           bool
+	groupByFieldNameList []string
 
 	counter          int64
+	countsByGroup    map[string]int64
 	counterFieldName string
+
+	recordMapperFunc mapping.RecordMapperFunc
 }
 
+// ----------------------------------------------------------------
 func NewMapperCat(
 	doCounters bool,
 	pCounterFieldName *string,
+	groupByFieldNames string,
 ) (*MapperCat, error) {
+
+	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
 	counterFieldName := "n"
 	if *pCounterFieldName != "" {
@@ -112,25 +123,85 @@ func NewMapperCat(
 		doCounters = true
 	}
 
-	return &MapperCat{
-		doCounters:       doCounters,
-		counter:          0,
-		counterFieldName: counterFieldName,
-	}, nil
+	this := &MapperCat{
+		doCounters:           doCounters,
+		groupByFieldNameList: groupByFieldNameList,
+		counter:              0,
+		countsByGroup:        make(map[string]int64),
+		counterFieldName:     counterFieldName,
+	}
+
+	if !doCounters {
+		this.recordMapperFunc = this.simpleCat
+	} else {
+		if groupByFieldNames == "" {
+			this.recordMapperFunc = this.countersUngrouped
+		} else {
+			this.recordMapperFunc = this.countersGrouped
+		}
+	}
+
+	return this, nil
 }
 
+// ----------------------------------------------------------------
 func (this *MapperCat) Map(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	this.recordMapperFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+func (this *MapperCat) simpleCat(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	outputChannel <- inrecAndContext
+}
+
+// ----------------------------------------------------------------
+func (this *MapperCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	record := inrecAndContext.Record
 	if record != nil { // not end of record stream
-		if this.doCounters {
+		this.counter++
+		key := this.counterFieldName
+		value := types.MlrvalFromInt64(this.counter)
+		record.PrependCopy(&key, &value)
+	}
+	outputChannel <- inrecAndContext
+}
+
+// ----------------------------------------------------------------
+func (this *MapperCat) countersGrouped(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	inrec := inrecAndContext.Record
+	if inrec != nil { // not end of record stream
+
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		var counter int64 = 0
+		if !ok {
+			// Treat as unkeyed
 			this.counter++
-			key := this.counterFieldName
-			value := types.MlrvalFromInt64(this.counter)
-			record.PrependCopy(&key, &value)
+			counter = this.counter
+		} else {
+			counter, ok = this.countsByGroup[groupingKey]
+			if ok {
+				counter++
+			} else {
+				counter = 1
+			}
+			this.countsByGroup[groupingKey] = counter
 		}
+
+		key := this.counterFieldName
+		value := types.MlrvalFromInt64(counter)
+		inrec.PrependCopy(&key, &value)
 	}
 	outputChannel <- inrecAndContext
 }
