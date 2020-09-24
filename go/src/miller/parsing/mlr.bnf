@@ -1165,6 +1165,7 @@ FcnArgs
 BracefulStatement
   : BeginBlock
   | EndBlock
+  | CondBlock
   | IfChain
   | WhileLoop
   | ForLoop
@@ -1178,6 +1179,15 @@ EndBlock
   : md_token_end StatementBlockInBraces
     << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeEndBlock) >>
 ;
+// ================================================================
+// AWKISH COND-BLOCKS
+// E.g. mlr put 'NR > 10 { ... }'.
+// Just shorthand for mlr put 'if (NR > 10) { ... }' without any elif/else.
+
+CondBlock
+  := Rvalue StatementBlockInBraces
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeCondBlock) >>
+  ;
 
 // ================================================================
 // IF-STATEMENTS

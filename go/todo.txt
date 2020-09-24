@@ -1,7 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! awkish cond-blocks
 * local vars
 * local vars w/ typing
 * then UDFs
@@ -17,8 +16,6 @@ TOP OF LIST:
   - what about csvlite-style -- ? needs a --dkvplite ?
 
 * --implicit-csv-header
-
-* cat -n -g a,b,c
 
 * clean up 'mlr --help' to not advertise things it doesn't do yet
 

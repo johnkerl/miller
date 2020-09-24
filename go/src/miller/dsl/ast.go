@@ -51,6 +51,7 @@ const (
 	NodeTypeEndBlock        = "EndBlock"
 	NodeTypeIfChain         = "IfChain"
 	NodeTypeIfItem          = "IfItem"
+	NodeTypeCondBlock       = "CondBlock"
 	NodeTypeWhileLoop       = "WhileLoop"
 	NodeTypeDoWhileLoop     = "DoWhileLoop"
 	NodeTypeForLoopKeyOnly  = "ForLoopKeyOnly"

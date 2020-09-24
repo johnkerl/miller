@@ -46,6 +46,8 @@ func BuildStatementNode(
 
 	case dsl.NodeTypeIfChain:
 		return BuildIfChainNode(astNode)
+	case dsl.NodeTypeCondBlock:
+		return BuildCondBlockNode(astNode)
 	case dsl.NodeTypeWhileLoop:
 		return BuildWhileLoopNode(astNode)
 	case dsl.NodeTypeDoWhileLoop:
