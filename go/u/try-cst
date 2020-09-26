@@ -265,4 +265,14 @@ echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k,v in [3,4,5]) { emit
 echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k,v in [3,4,5]) { emit { "foo" : k } }'
 echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k,v in [3,4,5]) { emit { "foo" : v } }'
 
+echo; run_mlr --from u/s.dkvp put 'nr=NR; $nr=nr'
 
+echo; run_mlr --from u/s.dkvp put '
+  z = 1;
+  if (NR <= 2) {
+    z = 2;
+  } else {
+    z = 3;
+  }
+  $z = z
+'

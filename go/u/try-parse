@@ -100,3 +100,6 @@ echo; run_mlr -n put -v 'for (k in $*) {}'
 echo; run_mlr -n put -v 'for (k in $*) {2}'
 echo; run_mlr -n put -v 'while (false) {}'
 echo; run_mlr -n put -v 'do {} while (false)'
+
+echo; run_mlr -n put -v 'nr=NR; $nr=nr'
+

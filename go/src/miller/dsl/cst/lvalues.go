@@ -37,6 +37,9 @@ func BuildAssignableNode(
 	case dsl.NodeTypeFullOosvar:
 		return BuildFullOosvarLvalueNode(astNode)
 		break
+	case dsl.NodeTypeLocalVariable:
+		return BuildLocalVariableLvalueNode(astNode)
+		break
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return BuildIndexedLvalueNode(astNode)
@@ -331,6 +334,47 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 		return err
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------
+type LocalVariableLvalueNode struct {
+	variableName string
+}
+
+func BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
+
+	variableName := string(astNode.Token.Lit)
+	return NewLocalVariableLvalueNode(variableName), nil
+}
+
+func NewLocalVariableLvalueNode(variableName string) *LocalVariableLvalueNode {
+	return &LocalVariableLvalueNode{
+		variableName: variableName,
+	}
+}
+
+func (this *LocalVariableLvalueNode) Assign(
+	rvalue *types.Mlrval,
+	state *State,
+) error {
+	return this.AssignIndexed(rvalue, nil, state)
+}
+
+func (this *LocalVariableLvalueNode) AssignIndexed(
+	rvalue *types.Mlrval,
+	indices []*types.Mlrval,
+	state *State,
+) error {
+	// AssignmentNode checks for absent, so we just assign whatever we get
+	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+	if indices == nil {
+		state.stack.SetVariable(this.variableName, rvalue)
+		return nil
+	} else {
+		// TODO
+		return errors.New("Indexed local-variable assignment has not been implemented yet.")
+	}
 }
 
 // ----------------------------------------------------------------

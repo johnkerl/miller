@@ -1,11 +1,9 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* local vars
+* triple-for
+* UDFs
 * local vars w/ typing
-* then UDFs
-
-? determinism of emits vs outrecs -- ?!?
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
@@ -30,7 +28,6 @@ CATEGORIES:
 
 * widen verb coverage
   o count
-  o sort
   o filter
   o repeat
   o focus on calendar/DST/TZ improvements
@@ -66,9 +63,17 @@ CATEGORIES:
     - bare-boolean last statement in main block, & not in begin/end
   o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
   o UDFs
-  o localvars
+  o typed localvars
   o for-knv
   o triple-for
+  profile mand.mlr & check for need for idx-assign
+  o indexed localvars at LHS
+
+* beyond:
+  o support 'x[1]["a"]' etc notation in various verbs?
+  o sort within nested data structures?
+  o array-sort, map-key sort, map-value sort in the DSL?
+  o closures for sorting and more -- ?!?
 
 ----------------------------------------------------------------
 MAYBE:

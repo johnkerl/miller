@@ -1208,3 +1208,18 @@ RAW AST:
         * StatementBlock
         * BoolLiteral "false"
 
+
+
+----------------------------------------------------------------
+mlr -n put -v nr=NR; $nr=nr
+DSL EXPRESSION:
+nr=NR; $nr=nr
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * LocalVariable "nr"
+        * ContextVariable "NR"
+    * Assignment "="
+        * DirectFieldValue "nr"
+        * LocalVariable "nr"
+
