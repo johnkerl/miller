@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Use poki to run the live-code bits within the markup files. See README.md for details.
+
+# TODO: use globbing
+
+poki < about.rst.in      > about.rst
+poki < 10min.rst.in      > 10min.rst
+poki < doc-status.rst.in > doc-status.rst
+poki < cookbook.rst.in   > cookbook.rst
+poki < faq.rst.in        > faq.rst
+poki < reference.rst.in  > reference.rst
+
+chmod 400 about.rst
+chmod 400 10min.rst
+chmod 400 doc-status.rst
+chmod 400 cookbook.rst
+chmod 400 faq.rst
+chmod 400 reference.rst
+

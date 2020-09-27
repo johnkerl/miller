@@ -1,6 +1,0 @@
-poki < about.rst.in      > about.rst
-poki < 10min.rst.in      > 10min.rst
-poki < doc-status.rst.in > doc-status.rst
-poki < cookbook.rst.in   > cookbook.rst
-poki < faq.rst.in        > faq.rst
-poki < reference.rst.in  > reference.rst

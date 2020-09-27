@@ -1,14 +1,36 @@
-TO DO:
+# Miller Sphinx docs
 
-* document _static CSS mods
-* document about `make clean html` after editing _static css
+## Why use Sphinx
 
-* document (after rename) poki-filter and foo.rst.in -> foo.rst
-* implement that in the makefile
-* make a better script
+* Connects to readthedocs.com so people can get their docmods onto the web instead of the self-hosted https://johnkerl.org/miller/doc. Thanks to @pabloab for the great advice!
+* More standard look and feel -- lots of people use readthedocs for other things so this should feel familiar
+* We get a Search feature for free
 
-* make a contributor's guide
-* emph `mlr` in path ...
-* neaten poki
+## Contributing
 
-* set up the commit hook
+* You need `pip install sphinx` (or `pip3 install sphinx`)
+* The docs include lots of live code examples which will be invoked using `mlr` which must be somewhere in your `$PATH`
+* Clone https://github.com/johnkerl/miller and cd into `docs/` within your clone
+* Editing loop:
+  * Edit `*.rst.in`
+  * Run `make html`
+  * Either `open _build/html/index.html` (MacOS) or point your browser to `file:///path/to/your/clone/of/miller/docs/_build/html/index.html`
+* Submitting:
+  * `git add` your modified files, `git push`, and submit a PR at https://github.com/johnkerl/miller
+
+## Notes
+
+* CSS:
+  * I used the Sphinx Classic theme which I like a lot except the colors -- it's a blue scheme and Miller has never been blue.
+  * Files are in `docs/_static/*.css` where I marked mods with `/* CHANGE ME */`
+  * If you modify the CSS you must run `make clean html` (not just `make html`) then reload in your browser
+* Live code:
+  * I didn't find a way to include non-Python live-code examples within Sphinx so I adapted the pre-Sphinx Miller-doc strategy
+  * Edit the `*.rst.in` files, not `*.rst` directly
+  * Within the `*.rst.in` files are lines like `POKI_RUN_COMMAND`. These will be run, and their output included, by `make html` which calls the `genrst` script for you.
+
+## To do
+
+* Make a better `genrst` script
+* Neaten `poki`
+* Set up the commit hook for readthedocs
