@@ -29,9 +29,11 @@
   * I didn't find a way to include non-Python live-code examples within Sphinx so I adapted the pre-Sphinx Miller-doc strategy which is to have a generator script read a template file (here, `foo.rst.in`), run the marked lines, and generate the output file (`foo.rst`).
   * Edit the `*.rst.in` files, not `*.rst` directly.
   * Within the `*.rst.in` files are lines like `POKI_RUN_COMMAND`. These will be run, and their output included, by `make html` which calls the `genrst` script for you.
+* readthedocs:
+  * https://readthedocs.org/projects/miller/
+  * https://readthedocs.org/projects/miller/builds/
+  * https://miller.readthedocs.io/en/latest/
 
 ## To do
 
 * Make a better `genrst` script
-* Set up the commit hook for readthedocs
-  * https://readthedocs.org/projects/miller/
