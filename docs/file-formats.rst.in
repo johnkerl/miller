@@ -82,8 +82,7 @@ As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, Miller ha
 etc. and I just log them as needed. Then later, I can use ``grep``, ``mlr --opprint group-like``, etc.
 to analyze my logs.
 
-See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than
-the default equals-sign and comma.
+See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than the default equals-sign and comma.
 
 NIDX: Index-numbered (toolkit style)
 ----------------------------------------------------------------
