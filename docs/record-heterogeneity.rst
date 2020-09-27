@@ -1,7 +1,7 @@
 ..
     PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
 
-Main reference
+Record-heterogeneity
 ================================================================
 
 To be ported

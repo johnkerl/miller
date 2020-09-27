@@ -1,7 +1,7 @@
 ..
     PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
 
-Main reference
+Cookbook part 2: Random things, and some math
 ================================================================
 
 To be ported
