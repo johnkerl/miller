@@ -75,7 +75,9 @@ Examples
 CSV/TSV/ASV/USV/etc.
 ----------------------------------------------------------------
 
+When ``mlr`` is invoked with the ``--csv`` or ``--csvlite`` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles changes of field names within a single data stream.
 
+Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` does.  For TSV, use ``--fs tab``; to convert TSV to CSV, use ``--ifs tab --ofs comma``, etc.  (See also POKI_PUT_LINK_FOR_PAGE(reference.html#Record/field/pair_separators)HERE.)
 
 **TSV (tab-separated values):** the following are synonymous pairs:
 
@@ -136,6 +138,7 @@ or ``print`` statements in various languages, e.g.
 
 Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, ``dish=7,egg=8,flint`` is parsed as ``"dish" => "7", "egg" => "8", "3" => "flint"`` and ``dish,egg,flint`` is parsed as ``"1" => "dish", "2" => "egg", "3" => "flint"``.
 
+As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as 
 
 ::
 
@@ -146,7 +149,7 @@ Fields lacking an IPS will have positional index (starting at 1) used as the key
 etc. and I just log them as needed. Then later, I can use ``grep``, ``mlr --opprint group-like``, etc.
 to analyze my logs.
 
-the default equals-sign and comma.
+See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than the default equals-sign and comma.
 
 NIDX: Index-numbered (toolkit style)
 ----------------------------------------------------------------
@@ -401,6 +404,7 @@ Miller's pretty-print format is like CSV, but column-aligned.  For example, comp
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on ``tail -f`` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
 
+See POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles changes of field names within a single data stream.
 
 For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format::
 
@@ -521,6 +525,7 @@ If you use ``--ors {something else}`` with (default or explicitly specified) ``-
 
 If you use ``--irs {something else}`` with (default or explicitly specified) ``--ors auto`` then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
+See also POKI_PUT_LINK_FOR_PAGE(reference.html#Record/field/pair_separators)HERE for more information about record/field/pair separators.
 
 Comments in data
 ----------------------------------------------------------------

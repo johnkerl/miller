@@ -4,8 +4,6 @@ set -euo pipefail
 
 # Use poki to run the live-code bits within the markup files. See README.md for details.
 
-# TODO: use globbing
-
 names=$(echo *.rst.in | sed 's/\.rst\.in//g')
 
 for name in $names; do

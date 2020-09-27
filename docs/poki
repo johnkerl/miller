@@ -57,6 +57,8 @@ def main
 
     elsif content_line =~ /POKI/
       #raise "Unhandled poki line #{content_line}"
+      $stderr.puts "Unhandled poki line <<#{content_line}>>"
+      output_handle.write(content_line)
     else
       output_handle.write(content_line)
     end
