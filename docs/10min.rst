@@ -271,9 +271,9 @@ If your output has a lot of columns, you can use XTAB format to line things up v
 Choices for printing to files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Often we want to print output <span class="boldmaroon">to the screen</span>. Miller does this by default, as we've seen in the previous examples.
+Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
 
-Sometimes we want to print output to another file: <span class="boldmaroon">just use '> outputfilenamegoeshere'</span> at the end of your command::
+Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command::
 
     % mlr --icsv --opprint cat example.csv > newfile.csv
     # Output goes to the new file;
@@ -294,7 +294,7 @@ Sometimes we want to print output to another file: <span class="boldmaroon">just
     yellow circle   1    87    63.5058  8.3350
     purple square   0    91    72.3735  8.2430
 
-Other times we just want our files to be changed in-place: <span class="boldmaroon">just use 'mlr -I'</span>.::
+Other times we just want our files to be **changed in-place**: just use **mlr -I**::
 
     % cp example.csv newfile.txt
 
@@ -373,7 +373,7 @@ then that's a way of saying::
     shape=circle,flag=1,index=24
     shape=square,flag=0,index=36
 
-Data written this way are called <span class="boldmaroon">DKVP</span>, for *delimited key-value pairs*.
+Data written this way are called **DKVP**, for *delimited key-value pairs*.
 
 We've also already seen other ways to write the same data::
 

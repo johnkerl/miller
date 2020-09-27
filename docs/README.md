@@ -37,4 +37,5 @@
 
 ## To do
 
-* Make a better `genrst` script
+* Port various content from `../doc`.
+* Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
