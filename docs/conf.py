@@ -24,9 +24,7 @@ author = 'John Kerl'
 # The full version, including alpha/beta/rc tags
 release = '5.9.1'
 
-
 # -- General configuration ---------------------------------------------------
-
 master_doc = 'index'
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -42,7 +40,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 # -- Options for HTML output -------------------------------------------------
 
