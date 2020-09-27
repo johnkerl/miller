@@ -22,15 +22,14 @@
 
 * CSS:
   * I used the Sphinx Classic theme which I like a lot except the colors -- it's a blue scheme and Miller has never been blue.
-  * Files are in `docs/_static/*.css` where I marked mods with `/* CHANGE ME */`
-  * If you modify the CSS you must run `make clean html` (not just `make html`) then reload in your browser
+  * Files are in `docs/_static/*.css` where I marked mods with `/* CHANGE ME */`.
+  * If you modify the CSS you must run `make clean html` (not just `make html`) then reload in your browser.
 * Live code:
-  * I didn't find a way to include non-Python live-code examples within Sphinx so I adapted the pre-Sphinx Miller-doc strategy
-  * Edit the `*.rst.in` files, not `*.rst` directly
+  * I didn't find a way to include non-Python live-code examples within Sphinx so I adapted the pre-Sphinx Miller-doc strategy which is to have a generator script read a template file (here, `foo.rst.in`), run the marked lines, and generate the output file (`foo.rst`).
+  * Edit the `*.rst.in` files, not `*.rst` directly.
   * Within the `*.rst.in` files are lines like `POKI_RUN_COMMAND`. These will be run, and their output included, by `make html` which calls the `genrst` script for you.
 
 ## To do
 
 * Make a better `genrst` script
-* Neaten `poki`
 * Set up the commit hook for readthedocs

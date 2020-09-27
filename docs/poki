@@ -7,6 +7,12 @@ require 'fileutils'
 require 'json'
 
 # ----------------------------------------------------------------
+# This is used to run live code for Miller Sphinx docs.
+# * Edit foo.rst.in
+# * Run this script to generate foo.rst
+# * The caller should chmod 400 the foo.rst file
+# * See README.md for more information.
+
 def main
   input_handle = $stdin
   output_handle = $stdout
@@ -17,47 +23,40 @@ def main
 
   input_handle.readlines.each do |content_line|
 
-  if content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
-    included_file_name = $1
-    include_escaped(included_file_name, output_handle)
+    if content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
+      included_file_name = $1
+      include_escaped(included_file_name, output_handle)
 
-  elsif content_line =~ /POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)HERE/
-    included_file_name = $1
-    cmd = File.readlines(included_file_name).join('')
-    run_command(cmd, output_handle)
+    elsif content_line =~ /POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)HERE/
+      included_file_name = $1
+      cmd = File.readlines(included_file_name).join('')
+      run_command(cmd, output_handle)
 
-#    # Page-content directive: run a script which generates HTML and print its output
-#    elsif content_line =~ /POKI_RUN_UNESCAPED\(([^)]+)\)HERE/
-#      included_file_name = $1
-#      cmd = File.readlines(included_file_name).join('')
-#      run_command(cmd, output_handle, false)
-#
-#    # Page-content directive: include other file (do HTML escapes) and print its output
-#    elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)HERE/
-#      cmd = $1
-#      run_content_generator(cmd, output_handle)
-#
-#    # Page-content directive: format as if included from a file.
-#    elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
-#      content_line = $1
-#      cardify(content_line, output_handle, true)
-#    elsif content_line =~ /POKI_CARDIFY{{([^)]+)}}HERE/
-#      content_line = $1
-#      cardify(content_line, output_handle, true)
-#
-#    elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
-#      content_line = $1
-#      cardify(content_line, output_handle, true)
-#
-  elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
-     cmd = $1
-     run_command(cmd, output_handle)
+    elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)HERE/
+      cmd = $1
+      run_content_generator(cmd, output_handle)
 
-    # Page-content directive: include other file (do HTML escapes)
-#    elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
-#      cmd = $1
-#      run_command_tolerating_error(cmd, output_handle)
+    elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
+      content_line = $1
+      cardify(content_line, output_handle, true)
+    elsif content_line =~ /POKI_CARDIFY{{([^)]+)}}HERE/
+      content_line = $1
+      cardify(content_line, output_handle, true)
 
+    elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
+      content_line = $1
+      cardify(content_line, output_handle, true)
+
+    elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
+       cmd = $1
+       run_command(cmd, output_handle)
+
+    elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
+      cmd = $1
+      run_command_tolerating_error(cmd, output_handle)
+
+    elsif content_line =~ /POKI/
+      raise "Unhandled poki line #{content_line}"
     else
       output_handle.write(content_line)
     end
@@ -79,26 +78,26 @@ def run_command(cmd, output_handle)
   write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
 end
 
-## ----------------------------------------------------------------
-#def run_command_tolerating_error(cmd, output_handle)
-#  cmd_output = `#{cmd} 2>&1`
-#  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle, true)
-#end
-#
-## ----------------------------------------------------------------
-#def run_content_generator(cmd, output_handle)
-#  cmd_output = `#{cmd} 2>&1`
-#  status = $?.to_i
-#  if status != 0
-#    raise "\"#{cmd}\" exited with non-zero code #{status}."
-#  end
-#  output_handle.puts(cmd_output)
-#end
-#
-## ----------------------------------------------------------------
-#def cardify(content_line, output_handle)
-#  write_card([content_line], output_handle)
-#end
+# ----------------------------------------------------------------
+def run_command_tolerating_error(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle, true)
+end
+
+# ----------------------------------------------------------------
+def run_content_generator(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  output_handle.puts(cmd_output)
+end
+
+# ----------------------------------------------------------------
+def cardify(content_line, output_handle)
+  write_card([content_line], output_handle)
+end
 
 # ----------------------------------------------------------------
 def write_card(content_lines, output_handle)
@@ -107,11 +106,6 @@ def write_card(content_lines, output_handle)
     output_handle.puts(content_line)
   end
 end
-
-## ----------------------------------------------------------------
-#def html_escape_line(line)
-#  line.gsub("&", "&amp;").gsub("<", "&lt;").gsub(">", "&gt;").rstrip
-#end
 
 # ================================================================
 main()

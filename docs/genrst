@@ -4,6 +4,13 @@
 
 # TODO: use globbing
 
+chmod u+w about.rst
+chmod u+w 10min.rst
+chmod u+w doc-status.rst
+chmod u+w cookbook.rst
+chmod u+w faq.rst
+chmod u+w reference.rst
+
 poki < about.rst.in      > about.rst
 poki < 10min.rst.in      > 10min.rst
 poki < doc-status.rst.in > doc-status.rst
