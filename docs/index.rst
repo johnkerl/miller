@@ -10,6 +10,7 @@ Overview
 
    about
    10min
+   file-formats
    doc-status
 
 Using Miller

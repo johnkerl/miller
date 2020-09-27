@@ -38,14 +38,14 @@ def main
 
     elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
       content_line = $1
-      cardify(content_line, output_handle, true)
+      cardify(content_line, output_handle)
     elsif content_line =~ /POKI_CARDIFY{{([^)]+)}}HERE/
       content_line = $1
-      cardify(content_line, output_handle, true)
+      cardify(content_line, output_handle)
 
     elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
       content_line = $1
-      cardify(content_line, output_handle, true)
+      cardify(content_line, output_handle)
 
     elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
        cmd = $1
@@ -56,7 +56,7 @@ def main
       run_command_tolerating_error(cmd, output_handle)
 
     elsif content_line =~ /POKI/
-      raise "Unhandled poki line #{content_line}"
+      #raise "Unhandled poki line #{content_line}"
     else
       output_handle.write(content_line)
     end
@@ -65,7 +65,7 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card(File.readlines(included_file_name), output_handle, true)
+  write_card(File.readlines(included_file_name), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -81,7 +81,7 @@ end
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd, output_handle)
   cmd_output = `#{cmd} 2>&1`
-  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle, true)
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -102,7 +102,11 @@ end
 # ----------------------------------------------------------------
 def write_card(content_lines, output_handle)
   content_lines.each do |content_line|
-    output_handle.write('    ')
+    # The callsite should do the "::", blank line, then this, then blank line
+    # in order to adhere to Sphinx code-block syntax. (Another option would be
+    # us here doing the ::, blank line, , then the content line, then the other
+    # blank line.)
+    output_handle.write('    ') # four leading spaces for Sphinx, on each line
     output_handle.puts(content_line)
   end
 end
