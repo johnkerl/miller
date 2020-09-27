@@ -6,7 +6,6 @@ Overview
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    doc-status
    about
@@ -21,7 +20,6 @@ Using Miller
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    faq
    customization
@@ -36,7 +34,6 @@ Reference
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    reference
    reference-verbs
@@ -50,7 +47,6 @@ Background
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    why
    whyc
@@ -64,7 +60,6 @@ Repository
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    contact
 
