@@ -42,6 +42,11 @@ div.related li {
     display: inline;
 }
 
+/* CHANGE ME */
+div.body li {
+    margin:0 0 10px 0;   
+}
+
 div.related li.right {
     float: right;
     margin-right: 5px;

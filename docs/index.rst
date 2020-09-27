@@ -1,5 +1,5 @@
-Miller Docs v2 (under construction)
-===================================
+Miller Docs v2
+==============
 
 Overview
 ^^^^^^^^
@@ -10,12 +10,26 @@ Overview
 
    about
    10min
+   doc-status
 
 Using Miller
 ^^^^^^^^^^^^
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+
+   cookbook
+   faq
+
 Reference
 ^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+
+   reference
 
 Background
 ^^^^^^^^^^

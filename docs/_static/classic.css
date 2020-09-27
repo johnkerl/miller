@@ -68,7 +68,8 @@ div.related {
 }
 
 div.related a {
-    color: #800000;
+    /* CHANGE ME */
+    color: #000000;
 }
 
 div.sphinxsidebar {
@@ -112,7 +113,7 @@ div.sphinxsidebar ul {
 
 div.sphinxsidebar a {
     /* CHANGE ME */
-    color: #808080;
+    color: #404040;
 }
 
 div.sphinxsidebar input {

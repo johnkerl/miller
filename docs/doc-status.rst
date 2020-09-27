@@ -1,0 +1,7 @@
+..
+    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
+
+Documentation Status
+======================
+
+As of September 2020 these docs are still being ported from http://johnkerl.org/miller/doc/. Please see https://github.com/johnkerl/miller/issues/375 for more information, including how you can help out.

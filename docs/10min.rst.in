@@ -198,6 +198,8 @@ We've also already seen other ways to write the same data::
 
 Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.
 
+.. _sql-output-examples:
+
 SQL-output examples
 ^^^^^^^^^^^^^^^^^^^
 
@@ -285,6 +287,8 @@ Since Miller handles TSV output, we can do as much or as little processing as we
     ...
 
 Again, all the examples in the CSV section apply here -- just change the input-format flags.
+
+.. _sql-input-examples:
 
 SQL-input examples
 ^^^^^^^^^^^^^^^^^^
@@ -442,4 +446,4 @@ POKI_RUN_COMMAND{{mlr --opprint group-like then sec2gmt time log.txt}}HERE
 More
 ^^^^
 
-Please see the <a href="reference.html">reference</a> for complete information, as well as the <a href="faq.html">FAQ</a> and the <a href="cookbook.html">cookbook</a> for more tips.
+Please see the :doc:`reference` for complete information, as well as the :doc:`faq` and the :doc:`cookbook` for more tips.

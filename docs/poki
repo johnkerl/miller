@@ -11,6 +11,10 @@ def main
   input_handle = $stdin
   output_handle = $stdout
 
+  output_handle.puts("..")
+  output_handle.puts("    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.")
+  output_handle.puts("")
+
   input_handle.readlines.each do |content_line|
 
   if content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
