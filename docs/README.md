@@ -17,6 +17,7 @@
   * Either `open _build/html/index.html` (MacOS) or point your browser to `file:///path/to/your/clone/of/miller/docs/_build/html/index.html`
 * Submitting:
   * `git add` your modified files, `git push`, and submit a PR at https://github.com/johnkerl/miller
+* A nice markup reference: https://www.sphinx-doc.org/en/1.8/usage/restructuredtext/basics.html
 
 ## Notes
 
@@ -33,3 +34,4 @@
 
 * Make a better `genrst` script
 * Set up the commit hook for readthedocs
+  * https://readthedocs.org/projects/miller/
