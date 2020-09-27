@@ -30,6 +30,7 @@
   * Edit the `*.rst.in` files, not `*.rst` directly.
   * Within the `*.rst.in` files are lines like `POKI_RUN_COMMAND`. These will be run, and their output included, by `make html` which calls the `genrst` script for you.
 * readthedocs:
+  * https://readthedocs.org/
   * https://readthedocs.org/projects/miller/
   * https://readthedocs.org/projects/miller/builds/
   * https://miller.readthedocs.io/en/latest/
