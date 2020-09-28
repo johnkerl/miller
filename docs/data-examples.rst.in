@@ -1,4 +1,88 @@
 Data-diving examples
 ================================================================
 
-To be ported
+flins data
+----------------------------------------------------------------
+
+The `flins.csv <data/flins.csv>`_ file is some sample data obtained from https://support.spatialkey.com/spatialkey-sample-csv-data.
+
+Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with:
+
+::
+
+POKI_RUN_COMMAND{{head -n 2 data/flins.csv | mlr --icsv --oxtab cat}}HERE
+
+A few simple queries:
+
+::
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line}}HERE
+
+Categorization of total insured value:
+
+::
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county}}HERE
+
+Color/shape data
+----------------------------------------------------------------
+
+The `colored-shapes.dkvp <data/colored-shapes.dkvp>`_ file is some sample data produced by the `mkdat2 <https://github.com/johnkerl/miller/blob/master/doc/datagen/mkdat2>`_ script. The idea is:
+
+* Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
+* Each record is labeled with one of a few colors and one of a few shapes.
+* The ``flag`` field is 0 or 1, with probability dependent on color
+* The ``u`` field is plain uniform on the unit interval.
+* The ``v`` field is the same, except tightly correlated with ``u`` for red circles.
+* The ``w`` field is autocorrelated for each color/shape pair.
+* The ``x`` field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
+
+Peek at the data:
+
+::
+
+POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
+
+POKI_RUN_COMMAND{{head -n 6 data/colored-shapes.dkvp | mlr --opprint cat}}HERE
+
+Look at uncategorized stats (using `creach <https://github.com/johnkerl/scripts/blob/master/fundam/creach>`_ for spacing).
+
+Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` but we can't yet see what:
+
+::
+
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3}}HERE
+
+The histogram shows the different distribution of 0/1 flags:
+
+::
+
+POKI_RUN_COMMAND{{mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp}}HERE
+
+Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script: 
+
+::
+
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp}}HERE
+
+Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise correlation for red circles pops out:
+
+::
+
+POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp}}HERE
