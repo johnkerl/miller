@@ -1,4 +1,110 @@
 Mixing with other languages
 ================================================================
 
-To be ported
+As discussed in the section on POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE, Miller supports several different file formats. Different tools are good at different things, so it's important to be able to move data into and out of other languages. **CSV** and **JSON** are well-known, of course; here are some examples using **DKVP** format, with **Ruby** and **Python**. Last, we show how to use arbitrary **shell commands** to extend functionality beyond Miller's domain-specific language. 
+
+DKVP I/O in Python
+----------------------------------------------------------------
+
+Here are the I/O routines:
+
+::
+
+POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.py)HERE
+
+And here is an example using them:
+
+::
+
+POKI_RUN_COMMAND{{cat polyglot-dkvp-io/example.py}}HERE
+
+Run as-is:
+
+::
+
+POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small}}HERE
+
+Run as-is, then pipe to Miller for pretty-printing:
+
+::
+
+POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat}}HERE
+
+DKVP I/O in Ruby
+----------------------------------------------------------------
+
+Here are the I/O routines:
+
+::
+
+POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.rb)HERE
+
+And here is an example using them:
+
+::
+
+POKI_RUN_COMMAND{{cat polyglot-dkvp-io/example.rb}}HERE
+
+Run as-is:
+
+::
+
+POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small}}HERE
+
+Run as-is, then pipe to Miller for pretty-printing:
+
+::
+
+POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat}}HERE
+
+SQL-output examples
+----------------------------------------------------------------
+
+Please see :ref:`sql-output-examples`.
+
+SQL-input examples
+----------------------------------------------------------------
+
+Please see :ref:`sql-input-examples`.
+
+Running shell commands
+----------------------------------------------------------------
+
+The <a href="reference-dsl.html#system">system</a> DSL function allows you to run a specific shell command and put its output -- minus the final newline -- into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
+
+::
+
+POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo hello world")' data/small}}HERE
+
+::
+
+POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo {" . NR . "}")' data/small}}HERE
+
+::
+
+POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small}}HERE
+
+Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system ``date`` command for the current time in nanoseconds versus computing it in process:
+
+..
+    hard-coded, not live-code, since %N doesn't exist on all platforms
+
+::
+
+    $ mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small
+    a   b   i x                   y                   t                    t_delta
+    pan pan 1 0.3467901443380824  0.7268028627434533  1568774318.513903817 0
+    eks pan 2 0.7586799647899636  0.5221511083334797  1568774318.514722876 0.000819
+    wye wye 3 0.20460330576630303 0.33831852551664776 1568774318.515618046 0.000895
+    eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.516547441 0.000929
+    wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.517518828 0.000971
+
+::
+
+    $ mlr --opprint put '$t=systime()' then step -a delta -f t data/small
+    a   b   i x                   y                   t                 t_delta
+    pan pan 1 0.3467901443380824  0.7268028627434533  1568774318.518699 0
+    eks pan 2 0.7586799647899636  0.5221511083334797  1568774318.518717 0.000018
+    wye wye 3 0.20460330576630303 0.33831852551664776 1568774318.518723 0.000006
+    eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.518727 0.000004
+    wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.518730 0.000003
