@@ -463,7 +463,7 @@ Suppose you have a database query which you run at one point in time, producing 
     yellow,27
     blue,6944
 
-And, suppose you want to compute the differences in the counters between adjacent keys. Since the color names aren't all in the same order, nor are they all present on both sides, we can't just paste the two files side-by-side and do some column-four-minus-column-two arithmetic. 
+And, suppose you want to compute the differences in the counters between adjacent keys. Since the color names aren't all in the same order, nor are they all present on both sides, we can't just paste the two files side-by-side and do some column-four-minus-column-two arithmetic.
 
 First, rename counter columns to make them distinct:
 

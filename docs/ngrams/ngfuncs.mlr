@@ -1,0 +1,49 @@
+# ================================================================
+func compute_sum_from_histo(map histo) : num {
+  num sum = 0;
+  for (k, n in histo) {
+    sum += n;
+  }
+  return sum;
+}
+
+# ----------------------------------------------------------------
+func compute_pmf_from_histo(map histo)  : map {
+  num sum = compute_sum_from_histo(histo);
+  num cumu = 0.0;
+  map pmf = {};
+  for (k, _ in histo) {
+    num p = histo[k] / sum;
+    pmf[k] = p;
+  }
+  return pmf;
+}
+
+# ----------------------------------------------------------------
+func compute_cmf_from_pmf(map pmf)  : map {
+  num cumu = 0.0;
+  map cmf = {};
+  for (k, p in pmf) {
+    cumu += p;
+    cmf[k] = cumu;
+  }
+  return cmf;
+}
+
+# ----------------------------------------------------------------
+func compute_cmf_from_histo(map histo)  : map {
+  return compute_cmf_from_pmf(compute_pmf_from_histo(histo));
+}
+
+# ----------------------------------------------------------------
+func sample_from_cmf(var cmf) : str {
+  u = urand();
+  output = "";
+  for (k, c in cmf) {
+    output = k;
+    if (u < c) {
+      break;
+    }
+  }
+  return output;
+}
