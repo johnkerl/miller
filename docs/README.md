@@ -42,6 +42,7 @@
   * Add the new `foo` to `./genrst` and `./index.rst`.
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
 * Scan for hrefs and other non-ported markup
+* !! cross-references all need work !!
 * Autogen the `manpage.txt`
 * get rid of `POKI_CARDIFY` -- just indent by 4
 * chocolatey to windows-install notes
