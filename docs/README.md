@@ -41,3 +41,5 @@
   * `./h2rfoo < ../doc/content-for-foo.html > ./foo.rst.in` is a rough first pass for autoconverting some things, but many bits will still need manual editing.  See also https://www.sphinx-doc.org/en/1.8/usage/restructuredtext/basics.html.
   * Add the new `foo` to `./genrst` and `./index.rst`.
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
+* Scan for hrefs and other non-ported markup
+* Autogen the `manpage.txt`
