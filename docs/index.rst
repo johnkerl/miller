@@ -49,8 +49,6 @@ Background
    :maxdepth: 2
 
    why
-   whyc
-   whyc-details
    etymology
    originality
    performance
