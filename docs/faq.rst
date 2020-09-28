@@ -447,8 +447,8 @@ The solution is to use the ``-o`` option:
     x=0.38139939387114097,i=4,a=eks
     x=0.5732889198020006,i=5,a=wye
 
-----------------------------------------------------------------
 NR is not consecutive after then-chaining
+----------------------------------------------------------------
 
 Given this input data:
 

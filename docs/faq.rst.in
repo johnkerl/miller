@@ -268,8 +268,8 @@ The solution is to use the ``-o`` option:
 
 POKI_RUN_COMMAND{{mlr cut -o -f x,i,a data/small}}HERE
 
-----------------------------------------------------------------
 NR is not consecutive after then-chaining
+----------------------------------------------------------------
 
 Given this input data:
 
