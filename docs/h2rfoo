@@ -22,6 +22,7 @@ cat "$@" \
     -e 's:&ldquo;:":g' \
     -e 's:&rdquo;:":g' \
     -e 's:&mdash;:--:g' \
+    -e 's:&amp;:\&:g' \
     -e 's:&gt;:>:g' \
     -e 's:&lt;:<:g' \
     -e 's:<span class="boldmaroon">:**:g' \
