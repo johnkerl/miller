@@ -1,0 +1,9 @@
+@n += 1;
+@sumx += $x;
+@sumx2 += $x**2;
+end {
+  @mean = @sumx / @n;
+  @var = (@sumx2 - @mean * (2 * @sumx - @n * @mean)) / (@n - 1);
+  @stddev = sqrt(@var);
+  emitf @n, @sumx, @sumx2, @mean, @var, @stddev
+}
