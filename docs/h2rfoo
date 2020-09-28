@@ -27,8 +27,12 @@ cat "$@" \
     -e 's:&lt;:<:g' \
     -e 's:<span class="boldmaroon">:**:g' \
     -e 's:</span>:**:g' \
+  | h1foo \
+  | h2foo \
+  | pokifoo \
   | sed 's/^  *//' \
   | grep -v '<ul>' \
   | grep -v '</ul>' \
   | grep -v '^<button' \
-  | grep -v 'body_section_toggle'
+  | grep -v 'body_section_toggle' \
+  | scrunch
