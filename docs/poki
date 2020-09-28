@@ -77,7 +77,10 @@ def run_command(cmd, output_handle)
   if status != 0
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
-  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+  # The command can be multi-line
+  cmd_lines = cmd.split(/\n/)
+  cmd_line_1 = cmd_lines.shift
+  write_card(['$ '+cmd_line_1] + cmd_lines + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------

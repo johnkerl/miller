@@ -676,16 +676,15 @@ Suppose your program has printed something like this::
 Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system ``grep`` command, or Miller's ``having-fields``, or ``is_present``, we can pick out the parts we want and analyze them::
 
     $ grep op=cache log.txt \
-  | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
+      | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
     type hit_mean
     A1   0.857143
     A4   0.714286
     A9   0.090909
     $ mlr --from log.txt --opprint \
-  filter 'is_present($batch_size)' \
-  then step -a delta -f time,num_filtered \
-  then sec2gmt time
-
+      filter 'is_present($batch_size)' \
+      then step -a delta -f time,num_filtered \
+      then sec2gmt time
     time                 batch_size num_filtered time_delta num_filtered_delta
     2016-09-02T12:34:50Z 100        237          0          0
     2016-09-02T12:35:05Z 100        348          15         111
