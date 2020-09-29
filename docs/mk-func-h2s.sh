@@ -4,10 +4,21 @@
 export MLRRC=__none__
 
 mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
+  displayname=$funcname
+  if [ "$funcname" = '+' ]; then
+    displayname='\+'
+  elif [ "$funcname" = '-' ]; then
+    displayname='\-'
+  elif [ "$funcname" = '*' ]; then
+    displayname='\*'
+  elif [ "$funcname" = '|' ]; then
+    displayname='\|'
+  fi
+
   echo ""
   echo ".. _\"$funcname\":"
   echo ""
-  echo "$funcname"
+  echo "$displayname"
   echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
   echo ""
   echo '::'
@@ -21,7 +32,7 @@ mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   echo ""
   echo ".. _\"$funcname\":"
   echo ""
-  echo "$funcname"
+  echo "$displayname"
   echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
   echo ""
   echo '::'
