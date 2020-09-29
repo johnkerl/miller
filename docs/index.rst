@@ -1,8 +1,8 @@
 Miller Docs v2
-==============
+================================================================
 
 Overview
-^^^^^^^^
+----------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2
@@ -10,40 +10,36 @@ Overview
    doc-status
    about
    10min
-   file-formats
    feature-comparison
    record-heterogeneity
    internationalization
    contact
 
 Using Miller
-^^^^^^^^^^^^
+----------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2
 
-   faq
+   file-formats
+   data-examples
    customization
+   build
+
+Details
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 2
+
    data-sharing
+   faq
    cookbook
    cookbook2
    cookbook3
-   data-examples
-   build
-
-Background
-^^^^^^^^^^
-
-.. toctree::
-   :maxdepth: 2
-
-   why
-   etymology
-   originality
-   performance
 
 Reference
-^^^^^^^^^
+----------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 2
@@ -54,8 +50,19 @@ Reference
    manpage
    release-docs
 
+Background
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   why
+   etymology
+   originality
+   performance
+
 Index
-^^^^^
+----------------------------------------------------------------
 
 * :ref:`genindex`
 * :ref:`search`
