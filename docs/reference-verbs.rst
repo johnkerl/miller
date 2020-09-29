@@ -43,6 +43,8 @@ Example:
 *  There is more to learn
 *  They are highly customizable
 
+.. _reference-verbs-altkv:
+
 altkv
 ----------------------------------------------------------------
 
@@ -63,6 +65,8 @@ Map list of values to alternating key/value pairs.
 
     $ echo 'a,b,c,d,e,f,g' | mlr altkv
     a=b,c=d,e=f,4=g
+
+.. _reference-verbs-bar:
 
 bar
 ----------------------------------------------------------------
@@ -126,6 +130,8 @@ Cheesy bar-charting.
     eks wye 4 [0.204603]************............................[0.75868] [0.134189]#.......................................[0.863624]
     wye pan 5 [0.204603]**************************..............[0.75868] [0.134189]***************************************#[0.863624]
 
+.. _reference-verbs-bootstrap:
+
 bootstrap
 ----------------------------------------------------------------
 
@@ -185,6 +191,8 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     green  0.507569 1111
     orange 0.468014 292
     </pre>
+
+.. _reference-verbs-cat:
 
 cat
 ----------------------------------------------------------------
@@ -267,6 +275,8 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
     2 eks wye 4 0.38139939387114097 0.13418874328430463
     2 wye pan 5 0.5732889198020006  0.8636244699032729
 
+.. _reference-verbs-check:
+
 check
 ----------------------------------------------------------------
 
@@ -276,6 +286,8 @@ check
     Usage: mlr check
     Consumes records without printing any output.
     Useful for doing a well-formatted check on input data.
+
+.. _reference-verbs-clean-whitespace:
 
 clean-whitespace
 ----------------------------------------------------------------
@@ -330,6 +342,8 @@ Function links:
 *  <a href="./reference-verbs.html/#strip">strip</a>
 *  <a href="./reference-verbs.html/#collapse_whitespace">collapse_whitespace</a>
 *  <a href="./reference-verbs.html/#clean_whitespace">clean_whitespace</a>
+
+.. _reference-verbs-count:
 
 count
 ----------------------------------------------------------------
@@ -406,6 +420,8 @@ count
     a=wye,b=zee,count=385
     a=eks,b=hat,count=417
     a=wye,b=eks,count=386
+
+.. _reference-verbs-count-distinct:
 
 count-distinct
 ----------------------------------------------------------------
@@ -505,6 +521,8 @@ count-distinct
     $ mlr count-distinct -n -f a,b data/medium
     count=25
 
+.. _reference-verbs-count-similar:
+
 count-similar
 ----------------------------------------------------------------
 
@@ -593,6 +611,8 @@ count-similar
     zee eks 17 0.29081949506712723 0.054478717073354166 5
     zee pan 19 0.43144132839222604 0.8442204830496998   5
 
+.. _reference-verbs-cut:
+
 cut
 ----------------------------------------------------------------
 
@@ -646,6 +666,8 @@ cut
     $ echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
     b=2,c=3,a=1
 
+.. _reference-verbs-decimate:
+
 decimate
 ----------------------------------------------------------------
 
@@ -658,6 +680,8 @@ decimate
     -e            Decimate by printing last of every n (default).
     -g {a,b,c}    Optional group-by-field names for decimate counts
     Passes through one of every n records, optionally by category.
+
+.. _reference-verbs-fill-down:
 
 fill-down
 ----------------------------------------------------------------
@@ -696,6 +720,8 @@ fill-down
     1,,3
     4,5,6
     7,,9
+
+.. _reference-verbs-filter:
 
 filter
 ----------------------------------------------------------------
@@ -792,6 +818,8 @@ Features which filter shares with put
 Please see the <a href="reference-dsl.html">DSL reference</a> for more
 information about the expression language for ``mlr filter``.
 
+.. _reference-verbs-format-values:
+
 format-values
 ----------------------------------------------------------------
 
@@ -867,6 +895,8 @@ format-values
     XwyeX XwyeX 3.000000e+00 2.046033e-01 3.383185e-01
     XeksX XwyeX 4.000000e+00 3.813994e-01 1.341887e-01
     XwyeX XpanX 5.000000e+00 5.732889e-01 8.636245e-01
+
+.. _reference-verbs-fraction:
 
 fraction
 ----------------------------------------------------------------
@@ -1024,6 +1054,8 @@ Another often-used idiom is to convert from a point distribution to a cumulative
     male   yellow 1192 88.954635
     male   orange 448  100
 
+.. _reference-verbs-grep:
+
 grep
 ----------------------------------------------------------------
 
@@ -1046,6 +1078,8 @@ grep
     and this command is intended to be merely a keystroke-saver. To get all the
     features of system grep, you can do
       "mlr --odkvp ... | grep ... | mlr --idkvp ..."
+
+.. _reference-verbs-group-by:
 
 group-by
 ----------------------------------------------------------------
@@ -1080,6 +1114,8 @@ This is similar to ``sort`` but with less work. Namely, Miller's sort has three 
 
 In this example, since the sort is on field ``a``, the first step is to group together all records having the same value for field ``a``; the second step is to sort the distinct ``a``-field values ``pan``, ``eks``, and ``wye`` into ``eks``, ``pan``, and ``wye``; the third step is to print out the record-list for ``a=eks``, then the record-list for ``a=pan``, then the record-list for ``a=wye``.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you. 
 
+.. _reference-verbs-group-like:
+
 group-like
 ----------------------------------------------------------------
 
@@ -1111,6 +1147,8 @@ This groups together records having the same schema (i.e. same ordered list of f
     record_count resource
     100          /path/to/file
     150          /path/to/second/file
+
+.. _reference-verbs-having-fields:
 
 having-fields
 ----------------------------------------------------------------
@@ -1160,6 +1198,8 @@ Similar to <a href="#group-like">``group-like``</a>, this retains records with s
     resource=/path/to/second/file,loadsec=0.32,ok=true
     resource=/some/other/path,loadsec=0.97,ok=false
 
+.. _reference-verbs-head:
+
 head
 ----------------------------------------------------------------
 
@@ -1193,6 +1233,8 @@ Note that ``head`` is distinct from <a href="#top">``top``</a> -- ``head`` shows
     eks zee 7  0.6117840605678454  0.1878849191181694
     zee eks 17 0.29081949506712723 0.054478717073354166
     wye hat 24 0.7286126830627567  0.19441962592638418
+
+.. _reference-verbs-histogram:
 
 histogram
 ----------------------------------------------------------------
@@ -1241,6 +1283,8 @@ This is just a histogram; there's not too much to say here. A note about binning
     0.700000  0.800000  1007       560         420
     0.800000  0.900000  986        571         383
     0.900000  1.000000  1013       507         341
+
+.. _reference-verbs-join:
 
 join
 ----------------------------------------------------------------
@@ -1420,6 +1464,8 @@ Use zero join columns:
     1      2      3      1       4       5
     1      4      5      1       4       5
 
+.. _reference-verbs-label:
+
 label
 ----------------------------------------------------------------
 
@@ -1490,6 +1536,8 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
     Alice 56  missing
     Carol 45  present
 
+.. _reference-verbs-least-frequent:
+
 least-frequent
 ----------------------------------------------------------------
 
@@ -1545,6 +1593,8 @@ least-frequent
     circle   purple
 
 See also <a href="#most-frequent">most-frequent</a>.
+
+.. _reference-verbs-merge-fields:
 
 merge-fields
 ----------------------------------------------------------------
@@ -1625,6 +1675,8 @@ Examples:
     526  320   963  780   846   1743
     220  888   705  831   1108  1536
 
+.. _reference-verbs-most-frequent:
+
 most-frequent
 ----------------------------------------------------------------
 
@@ -1681,6 +1733,8 @@ most-frequent
 
 See also <a href="#least-frequent">least-frequent</a>.
 
+.. _reference-verbs-nest:
+
 nest
 ----------------------------------------------------------------
 
@@ -1735,6 +1789,8 @@ nest
       e.g. by default the former is semicolon and the latter is comma.
     See also mlr reshape.
 
+.. _reference-verbs-nothing:
+
 nothing
 ----------------------------------------------------------------
 
@@ -1744,6 +1800,8 @@ nothing
     Usage: mlr nothing
     Drops all input records. Useful for testing, or after tee/print/etc. have
     produced other output.
+
+.. _reference-verbs-put:
 
 put
 ----------------------------------------------------------------
@@ -1851,6 +1909,8 @@ Features which put shares with filter
 Please see the <a href="reference-dsl.html">DSL reference</a> for more
 information about the expression language for ``mlr put``.
 
+.. _reference-verbs-regularize:
+
 regularize
 ----------------------------------------------------------------
 
@@ -1867,6 +1927,8 @@ regularize
 This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: ``mlr regularize`` helps clean that up. 
 
 See also <a href="#reorder">``reorder``</a>.
+
+.. _reference-verbs-remove-empty-columns:
 
 remove-empty-columns
 ----------------------------------------------------------------
@@ -1894,6 +1956,8 @@ remove-empty-columns
     3,5,7
 
 Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any. 
+
+.. _reference-verbs-rename:
 
 rename
 ----------------------------------------------------------------
@@ -1964,6 +2028,8 @@ As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller 
 
 See also <a href="#label">``label``</a>.
 
+.. _reference-verbs-reorder:
+
 reorder
 ----------------------------------------------------------------
 
@@ -2011,6 +2077,8 @@ two to the front of line where you can give a quick visual scan.
     wye 0.20460330576630303 0.33831852551664776 3 wye
     eks 0.38139939387114097 0.13418874328430463 4 wye
     wye 0.5732889198020006  0.8636244699032729  5 pan
+
+.. _reference-verbs-repeat:
 
 repeat
 ----------------------------------------------------------------
@@ -2074,6 +2142,8 @@ After expansion with ``repeat``, such data can then be sent on to
 ``stats1 -a mode``, or (if the data are numeric) to ``stats1 -a
 p10,p50,p90``, etc.
 
+.. _reference-verbs-reshape:
+
 reshape
 ----------------------------------------------------------------
 
@@ -2135,6 +2205,8 @@ reshape
         2009-01-02 -0.89248112 0.2154713
         2009-01-03 0.98012375  1.3179287
     See also mlr nest.
+
+.. _reference-verbs-sample:
 
 sample
 ----------------------------------------------------------------
@@ -2205,6 +2277,8 @@ Note that no output is produced until all inputs are in. Another way to do
 sampling, which works in the streaming case, is ``mlr filter 'urand() &
 0.001'`` where you tune the 0.001 to meet your needs.
 
+.. _reference-verbs-sec2gmt:
+
 sec2gmt
 ----------------------------------------------------------------
 
@@ -2221,6 +2295,8 @@ sec2gmt
     Options:
     -1 through -9: format the seconds using 1..9 decimal places, respectively.
 
+.. _reference-verbs-sec2gmtdate:
+
 sec2gmtdate
 ----------------------------------------------------------------
 
@@ -2234,6 +2310,8 @@ sec2gmtdate
       mlr sec2gmtdate time1,time2
     is the same as
       mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+
+.. _reference-verbs-seqgen:
 
 seqgen
 ----------------------------------------------------------------
@@ -2286,6 +2364,8 @@ seqgen
     i=24
     i=20
 
+.. _reference-verbs-shuffle:
+
 shuffle
 ----------------------------------------------------------------
 
@@ -2296,6 +2376,8 @@ shuffle
     Outputs records randomly permuted. No output records are produced until
     all input records are read.
     See also mlr bootstrap and mlr sample.
+
+.. _reference-verbs-skip-trivial-records:
 
 skip-trivial-records
 ----------------------------------------------------------------
@@ -2324,6 +2406,8 @@ skip-trivial-records
     1,2,3
     4,,6
     ,8,9
+
+.. _reference-verbs-sort:
 
 sort
 ----------------------------------------------------------------
@@ -2424,6 +2508,8 @@ were encountered, regardless of the specified sort order:
     x=2
     x=1
     a=3
+
+.. _reference-verbs-stats1:
 
 stats1
 ----------------------------------------------------------------
@@ -2544,6 +2630,8 @@ optionally categorized by one or more other fields.
     square   red
     circle   red
 
+.. _reference-verbs-stats2:
+
 stats2
 ----------------------------------------------------------------
 
@@ -2635,6 +2723,7 @@ I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot
 
 .. image:: data/linreg-example.jpg
 
+
 (Thanks Drew Kunas for a good conversation about PCA!)
 
 Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the ``count`` field and accumulated seconds in the ``upsec`` field, labeled by the ``color`` field: 
@@ -2685,6 +2774,8 @@ We can do a linear regression on count remaining as a function of time: with ``c
     upsec_count_pca_n       21
     upsec_count_pca_quality 0.999991
     donesec                 25.108529
+
+.. _reference-verbs-step:
 
 step
 ----------------------------------------------------------------
@@ -2787,6 +2878,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
     eks pan 13    0.4915175580479536     0.7709126592971468     0.446588   0.483050
     eks zee 14    0.5207382318405251     0.34141681118811673    0.454003   0.516969
 
+
 ::
 
     $ mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough ../doc/data/medium | head -15
@@ -2806,6 +2898,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
     eks pan 13    0.4915175580479536     0.7709126592971468     0.446588      0.483050
     eks zee 14    0.5207382318405251     0.34141681118811673    0.454003      0.516969
 
+
 Example deriving uptime-delta from system uptime:
 
 ::
@@ -2821,6 +2914,8 @@ Example deriving uptime-delta from system uptime:
     20:08 up 36 days, 10:39, 8 users, load averages: 2.79 1.92 1.83 0.070000
     20:08 up 36 days, 10:39, 4 users, load averages: 2.64 1.90 1.83 -0.020000
     
+
+.. _reference-verbs-tac:
 
 tac
 ----------------------------------------------------------------
@@ -2862,6 +2957,8 @@ Prints the records in the input stream in reverse order. Note: this requires Mil
     4 5 6 data/a.csv
     1 2 3 data/a.csv
 
+.. _reference-verbs-tail:
+
 tail
 ----------------------------------------------------------------
 
@@ -2892,6 +2989,8 @@ Prints the last *n* records in the input stream, optionally by category.
     blue   square   1    99974 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
     yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.49969878539567425 5.013809741826425
 
+.. _reference-verbs-tee:
+
 tee
 ----------------------------------------------------------------
 
@@ -2909,6 +3008,8 @@ tee
       mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
     the input is CSV, the output is pretty-print tabular, but the tee-file output
     is written in JSON format.
+
+.. _reference-verbs-top:
 
 top
 ----------------------------------------------------------------
@@ -2963,6 +3064,8 @@ Note that ``top`` is distinct from <a href="#head">``head``</a> -- ``head`` show
     wye 2       0.999264
     zee 1       0.999490
     zee 2       0.999438
+
+.. _reference-verbs-uniq:
 
 uniq
 ----------------------------------------------------------------
@@ -3162,6 +3265,8 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
     7     purple square   0
     3     red    square   1
     2     yellow triangle 1
+
+.. _reference-verbs-unsparsify:
 
 unsparsify
 ----------------------------------------------------------------

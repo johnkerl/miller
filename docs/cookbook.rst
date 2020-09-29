@@ -298,10 +298,12 @@ records.
 
 If you want to look at partial uniqueness -- for example, show only the first record for each unique combination of the ``account_id`` and ``account_status`` fields -- you might use ``mlr head -n 1 -g account_id,account_status``. Please also see <a href="reference-verbs.html#head">mlr head</a>. 
 
+.. _cookbook-data-cleaning-examples:
+
 Data-cleaning examples
 ----------------------------------------------------------------
 
-Here are some ways to use the type-checking options as described in the POKI_PUT_LINK_FOR_PAGE(reference-dsl.html#Type-test_and_type-assertion_expressions)HERE. Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.) 
+Here are some ways to use the type-checking options as described in :ref:`reference-dsl-type-tests-and-assertions` Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.) 
 
 ::
 

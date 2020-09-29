@@ -34,6 +34,8 @@ POKI_RUN_COMMAND{{mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/sma
 *  There is more to learn
 *  They are highly customizable
 
+.. _reference-verbs-altkv:
+
 altkv
 ----------------------------------------------------------------
 
@@ -50,6 +52,8 @@ POKI_RUN_COMMAND{{echo 'a,b,c,d,e,f' | mlr altkv}}HERE
 ::
 
 POKI_RUN_COMMAND{{echo 'a,b,c,d,e,f,g' | mlr altkv}}HERE
+
+.. _reference-verbs-bar:
 
 bar
 ----------------------------------------------------------------
@@ -75,6 +79,8 @@ POKI_RUN_COMMAND{{mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small}}HERE
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint bar --auto -f x,y data/small}}HERE
+
+.. _reference-verbs-bootstrap:
 
 bootstrap
 ----------------------------------------------------------------
@@ -130,6 +136,8 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     orange 0.468014 292
     </pre>
 
+.. _reference-verbs-cat:
+
 cat
 ----------------------------------------------------------------
 
@@ -167,12 +175,16 @@ POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
 
 POKI_RUN_COMMAND{{mlr --opprint cat -n -g a data/small}}HERE
 
+.. _reference-verbs-check:
+
 check
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr check --help}}HERE
+
+.. _reference-verbs-clean-whitespace:
 
 clean-whitespace
 ----------------------------------------------------------------
@@ -205,6 +217,8 @@ Function links:
 *  <a href="./reference-verbs.html/#collapse_whitespace">collapse_whitespace</a>
 *  <a href="./reference-verbs.html/#clean_whitespace">clean_whitespace</a>
 
+.. _reference-verbs-count:
+
 count
 ----------------------------------------------------------------
 
@@ -236,6 +250,8 @@ POKI_RUN_COMMAND{{mlr count -n -g b data/medium}}HERE
 
 POKI_RUN_COMMAND{{mlr count -g a,b data/medium}}HERE
 
+.. _reference-verbs-count-distinct:
+
 count-distinct
 ----------------------------------------------------------------
 
@@ -259,6 +275,8 @@ POKI_RUN_COMMAND{{mlr count-distinct -f a,b -o someothername then sort -nr someo
 
 POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE
 
+.. _reference-verbs-count-similar:
+
 count-similar
 ----------------------------------------------------------------
 
@@ -277,6 +295,8 @@ POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a data/medium}}
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium}}HERE
+
+.. _reference-verbs-cut:
 
 cut
 ----------------------------------------------------------------
@@ -301,12 +321,16 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -f b,c,a}}HERE
 
 POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 
+.. _reference-verbs-decimate:
+
 decimate
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr decimate --help}}HERE
+
+.. _reference-verbs-fill-down:
 
 fill-down
 ----------------------------------------------------------------
@@ -327,6 +351,8 @@ POKI_RUN_COMMAND{{mlr --csv fill-down -f b data/fill-down.csv}}HERE
 
 POKI_RUN_COMMAND{{mlr --csv fill-down -a -f b data/fill-down.csv}}HERE
 
+.. _reference-verbs-filter:
+
 filter
 ----------------------------------------------------------------
 
@@ -339,6 +365,8 @@ Features which filter shares with put
 
 Please see the <a href="reference-dsl.html">DSL reference</a> for more
 information about the expression language for ``mlr filter``.
+
+.. _reference-verbs-format-values:
 
 format-values
 ----------------------------------------------------------------
@@ -362,6 +390,8 @@ POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/sm
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small}}HERE
+
+.. _reference-verbs-fraction:
 
 fraction
 ----------------------------------------------------------------
@@ -410,12 +440,16 @@ POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p -c data/fraction-example.csv}}H
 
 POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv}}HERE
 
+.. _reference-verbs-grep:
+
 grep
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr grep -h}}HERE
+
+.. _reference-verbs-group-by:
 
 group-by
 ----------------------------------------------------------------
@@ -436,6 +470,8 @@ POKI_RUN_COMMAND{{mlr --opprint sort -f a data/small}}HERE
 
 In this example, since the sort is on field ``a``, the first step is to group together all records having the same value for field ``a``; the second step is to sort the distinct ``a``-field values ``pan``, ``eks``, and ``wye`` into ``eks``, ``pan``, and ``wye``; the third step is to print out the record-list for ``a=eks``, then the record-list for ``a=pan``, then the record-list for ``a=wye``.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you. 
 
+.. _reference-verbs-group-like:
+
 group-like
 ----------------------------------------------------------------
 
@@ -452,6 +488,8 @@ POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint group-like data/het.dkvp}}HERE
+
+.. _reference-verbs-having-fields:
 
 having-fields
 ----------------------------------------------------------------
@@ -474,6 +512,8 @@ POKI_RUN_COMMAND{{mlr having-fields --at-least resource data/het.dkvp}}HERE
 
 POKI_RUN_COMMAND{{mlr having-fields --which-are resource,ok,loadsec data/het.dkvp}}HERE
 
+.. _reference-verbs-head:
+
 head
 ----------------------------------------------------------------
 
@@ -491,6 +531,8 @@ POKI_RUN_COMMAND{{mlr --opprint head -n 4 data/medium}}HERE
 
 POKI_RUN_COMMAND{{mlr --opprint head -n 1 -g b data/medium}}HERE
 
+.. _reference-verbs-histogram:
+
 histogram
 ----------------------------------------------------------------
 
@@ -507,6 +549,8 @@ POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium}}HERE
+
+.. _reference-verbs-join:
 
 join
 ----------------------------------------------------------------
@@ -559,6 +603,8 @@ Use zero join columns:
 
 POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
 
+.. _reference-verbs-label:
+
 label
 ----------------------------------------------------------------
 
@@ -592,6 +638,8 @@ POKI_RUN_COMMAND{{mlr  --csv --implicit-csv-header label name,age,status data/he
 
 POKI_RUN_COMMAND{{mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
 
+.. _reference-verbs-least-frequent:
+
 least-frequent
 ----------------------------------------------------------------
 
@@ -617,6 +665,8 @@ POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -
 
 See also <a href="#most-frequent">most-frequent</a>.
 
+.. _reference-verbs-merge-fields:
+
 merge-fields
 ----------------------------------------------------------------
 
@@ -639,6 +689,8 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_ou
 ::
 
 POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv}}HERE
+
+.. _reference-verbs-most-frequent:
 
 most-frequent
 ----------------------------------------------------------------
@@ -665,6 +717,8 @@ POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f
 
 See also <a href="#least-frequent">least-frequent</a>.
 
+.. _reference-verbs-nest:
+
 nest
 ----------------------------------------------------------------
 
@@ -672,12 +726,16 @@ nest
 
 POKI_RUN_COMMAND{{mlr nest -h}}HERE
 
+.. _reference-verbs-nothing:
+
 nothing
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr nothing -h}}HERE
+
+.. _reference-verbs-put:
 
 put
 ----------------------------------------------------------------
@@ -692,6 +750,8 @@ Features which put shares with filter
 Please see the <a href="reference-dsl.html">DSL reference</a> for more
 information about the expression language for ``mlr put``.
 
+.. _reference-verbs-regularize:
+
 regularize
 ----------------------------------------------------------------
 
@@ -702,6 +762,8 @@ POKI_RUN_COMMAND{{mlr regularize --help}}HERE
 This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: ``mlr regularize`` helps clean that up. 
 
 See also <a href="#reorder">``reorder``</a>.
+
+.. _reference-verbs-remove-empty-columns:
 
 remove-empty-columns
 ----------------------------------------------------------------
@@ -719,6 +781,8 @@ POKI_RUN_COMMAND{{cat data/remove-empty-columns.csv}}HERE
 POKI_RUN_COMMAND{{mlr --csv remove-empty-columns data/remove-empty-columns.csv}}HERE
 
 Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any. 
+
+.. _reference-verbs-rename:
 
 rename
 ----------------------------------------------------------------
@@ -747,6 +811,8 @@ POKI_RUN_COMMAND{{mlr rename y,COLUMN5 data/small}}HERE
 
 See also <a href="#label">``label``</a>.
 
+.. _reference-verbs-reorder:
+
 reorder
 ----------------------------------------------------------------
 
@@ -769,6 +835,8 @@ POKI_RUN_COMMAND{{mlr --opprint reorder -f i,b data/small}}HERE
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
+
+.. _reference-verbs-repeat:
 
 repeat
 ----------------------------------------------------------------
@@ -793,12 +861,16 @@ After expansion with ``repeat``, such data can then be sent on to
 ``stats1 -a mode``, or (if the data are numeric) to ``stats1 -a
 p10,p50,p90``, etc.
 
+.. _reference-verbs-reshape:
+
 reshape
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr reshape --help}}HERE
+
+.. _reference-verbs-sample:
 
 sample
 ----------------------------------------------------------------
@@ -821,6 +893,8 @@ Note that no output is produced until all inputs are in. Another way to do
 sampling, which works in the streaming case, is ``mlr filter 'urand() &
 0.001'`` where you tune the 0.001 to meet your needs.
 
+.. _reference-verbs-sec2gmt:
+
 sec2gmt
 ----------------------------------------------------------------
 
@@ -828,12 +902,16 @@ sec2gmt
 
 POKI_RUN_COMMAND{{mlr sec2gmt -h}}HERE
 
+.. _reference-verbs-sec2gmtdate:
+
 sec2gmtdate
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr sec2gmtdate -h}}HERE
+
+.. _reference-verbs-seqgen:
 
 seqgen
 ----------------------------------------------------------------
@@ -854,12 +932,16 @@ POKI_RUN_COMMAND{{mlr seqgen --start 20 --stop 40 --step 4}}HERE
 
 POKI_RUN_COMMAND{{mlr seqgen --start 40 --stop 20 --step -4}}HERE
 
+.. _reference-verbs-shuffle:
+
 shuffle
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr shuffle -h}}HERE
+
+.. _reference-verbs-skip-trivial-records:
 
 skip-trivial-records
 ----------------------------------------------------------------
@@ -875,6 +957,8 @@ POKI_RUN_COMMAND{{cat data/trivial-records.csv}}HERE
 ::
 
 POKI_RUN_COMMAND{{mlr --csv skip-trivial-records data/trivial-records.csv}}HERE
+
+.. _reference-verbs-sort:
 
 sort
 ----------------------------------------------------------------
@@ -914,6 +998,8 @@ POKI_RUN_COMMAND{{mlr sort -n  x data/sort-missing.dkvp}}HERE
 
 POKI_RUN_COMMAND{{mlr sort -nr x data/sort-missing.dkvp}}HERE
 
+.. _reference-verbs-stats1:
+
 stats1
 ----------------------------------------------------------------
 
@@ -945,6 +1031,8 @@ POKI_RUN_COMMAND{{mlr --opprint count-distinct -f shape then sort -nr count data
 
 POKI_RUN_COMMAND{{mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp}}HERE
 
+.. _reference-verbs-stats2:
+
 stats2
 ----------------------------------------------------------------
 
@@ -975,6 +1063,7 @@ I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot
 
 .. image:: data/linreg-example.jpg
 
+
 (Thanks Drew Kunas for a good conversation about PCA!)
 
 Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the ``count`` field and accumulated seconds in the ``upsec`` field, labeled by the ``color`` field: 
@@ -988,6 +1077,8 @@ We can do a linear regression on count remaining as a function of time: with ``c
 ::
 
 POKI_RUN_COMMAND{{mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat}}HERE
+
+.. _reference-verbs-step:
 
 step
 ----------------------------------------------------------------
@@ -1010,15 +1101,19 @@ POKI_RUN_COMMAND{{mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/
 
 POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 ../doc/data/medium | head -15}}HERE
 
+
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough ../doc/data/medium | head -15}}HERE
+
 
 Example deriving uptime-delta from system uptime:
 
 ::
 
 POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)HERE
+
+.. _reference-verbs-tac:
 
 tac
 ----------------------------------------------------------------
@@ -1045,6 +1140,8 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint tac data/a.csv data/b.csv}}HERE
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv}}HERE
 
+.. _reference-verbs-tail:
+
 tail
 ----------------------------------------------------------------
 
@@ -1062,12 +1159,16 @@ POKI_RUN_COMMAND{{mlr --opprint tail -n 4 data/colored-shapes.dkvp}}HERE
 
 POKI_RUN_COMMAND{{mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp}}HERE
 
+.. _reference-verbs-tee:
+
 tee
 ----------------------------------------------------------------
 
 ::
 
 POKI_RUN_COMMAND{{mlr tee --help}}HERE
+
+.. _reference-verbs-top:
 
 top
 ----------------------------------------------------------------
@@ -1089,6 +1190,8 @@ POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x -o someothername data/medium}}HERE
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort -f a data/medium}}HERE
+
+.. _reference-verbs-uniq:
 
 uniq
 ----------------------------------------------------------------
@@ -1140,6 +1243,8 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -a -n data/repeats.dkvp}}HERE
 ::
 
 POKI_RUN_COMMAND{{mlr --opprint uniq -a -c data/repeats.dkvp}}HERE
+
+.. _reference-verbs-unsparsify:
 
 unsparsify
 ----------------------------------------------------------------

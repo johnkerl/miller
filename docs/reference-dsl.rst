@@ -846,6 +846,8 @@ Miller's ``put``/``filter`` DSLs support two optional kinds of type-checking.  O
 
 Use of type-checking is entirely up to you: omit it if you want flexibility with heterogeneous data; use it if you want to help catch misspellings in your DSL code or unexpected irregularities in your input data. 
 
+.. _reference-dsl-type-tests-and-assertions:
+
 Type-test and type-assertion expressions
 ................................................................
 
@@ -902,10 +904,10 @@ The following ``is...`` functions take a value and return a boolean indicating w
 </tr>
 </table>
 
-Please see the POKI_PUT_LINK_FOR_PAGE(cookbook.html#Data-cleaning_examples)HERE for examples of how to use these. 
+Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these. 
 
 Type-declarations for local variables, function parameter, and function return values
-................................................................
+...............................................................................................
 
 Local variables can be defined either untyped as in ``x = 1``, or typed as in ``int x = 1``. Types include **var** (explicitly untyped), **int**, **float**, **num** (int or float), **str**, **bool**, and **map**. These optional type declarations are enforced at the time values are assigned to variables: whether at the initial value assignment as in ``int x = 1`` or in any subsequent assignments to the same variable farther down in the scope. 
 
@@ -1419,7 +1421,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
     a=some other name
     a=xyz_789,b=left_xyz,c=right_789
 
-This produces heteregenous output which Miller, of course, has no problems with (see POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally: 
+This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally: 
 
 ::
 
@@ -3011,7 +3013,7 @@ You can get a list of all functions using **mlr -F**.
 
 .. _"**":
 
-**
+\**
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::

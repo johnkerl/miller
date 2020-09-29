@@ -15,7 +15,7 @@ CSV/TSV/ASV/USV/etc.
 
 When ``mlr`` is invoked with the ``--csv`` or ``--csvlite`` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See :doc:`record-heterogeneity` for how Miller handles changes of field names within a single data stream.
 
-Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` does.  For TSV, use ``--fs tab``; to convert TSV to CSV, use ``--ifs tab --ofs comma``, etc.  (See also POKI_PUT_LINK_FOR_PAGE(reference.html#Record/field/pair_separators)HERE.)
+Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` does.  For TSV, use ``--fs tab``; to convert TSV to CSV, use ``--ifs tab --ofs comma``, etc.  (See also :ref:`reference-separators`.)
 
 **TSV (tab-separated values):** the following are synonymous pairs:
 
@@ -259,7 +259,7 @@ If you use ``--ors {something else}`` with (default or explicitly specified) ``-
 
 If you use ``--irs {something else}`` with (default or explicitly specified) ``--ors auto`` then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
-See also POKI_PUT_LINK_FOR_PAGE(reference.html#Record/field/pair_separators)HERE for more information about record/field/pair separators.
+See also :ref:`reference-separators` for more information about record/field/pair separators.
 
 Comments in data
 ----------------------------------------------------------------

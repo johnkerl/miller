@@ -5,7 +5,7 @@ Overview
 ----------------------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    doc-status
    about
@@ -19,7 +19,7 @@ Using Miller
 ----------------------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    file-formats
    data-examples
@@ -30,7 +30,7 @@ Details
 ----------------------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    data-sharing
    faq
@@ -42,7 +42,7 @@ Reference
 ----------------------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    reference
    reference-verbs
@@ -54,7 +54,7 @@ Background
 ----------------------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    why
    etymology

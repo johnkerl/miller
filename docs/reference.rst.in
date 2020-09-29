@@ -5,7 +5,7 @@ Command overview
 ----------------------------------------------------------------
 
 Whereas the Unix toolkit is made of the separate executables ``cat``, ``tail``, ``cut``,
-``sort``, etc., Miller has subcommands, invoked as follows:
+``sort``, etc., Miller has subcommands, or **verbs**, invoked as follows:
 
 ::
 
@@ -13,61 +13,15 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
 These fall into categories as follows:
 
-* Analogs of their Unix-toolkit namesakes, discussed below as well as in :doc:`feature-comparison`:
+* Analogs of their Unix-toolkit namesakes, discussed below as well as in :doc:`feature-comparison`: :ref:`reference-verbs-cat` :ref:`reference-verbs-cut` :ref:`reference-verbs-grep` :ref:`reference-verbs-head` :ref:`reference-verbs-join` :ref:`reference-verbs-sort` :ref:`reference-verbs-tac` :ref:`reference-verbs-tail` :ref:`reference-verbs-top` :ref:`reference-verbs-uniq`.
 
-  * <a href="reference-verbs.html#cat">``cat``</a>,
-  * <a href="reference-verbs.html#cut">``cut``</a>,
-  * <a href="reference-verbs.html#grep">``grep``</a>,
-  * <a href="reference-verbs.html#head">``head``</a>,
-  * <a href="reference-verbs.html#join">``join``</a>,
-  * <a href="reference-verbs.html#sort">``sort``</a>,
-  * <a href="reference-verbs.html#tac">``tac``</a>,
-  * <a href="reference-verbs.html#tail">``tail``</a>,
-  * <a href="reference-verbs.html#top">``top``</a>,
-  * <a href="reference-verbs.html#uniq">``uniq``</a>
+* ``awk``-like functionality: :ref:`reference-verbs-filter` :ref:`reference-verbs-put` :ref:`reference-verbs-sec2gmt` :ref:`reference-verbs-sec2gmtdate` :ref:`reference-verbs-step` :ref:`reference-verbs-tee`.
 
-* ``awk``-like functionality:
+* Statistically oriented: :ref:`reference-verbs-bar` :ref:`reference-verbs-bootstrap` :ref:`reference-verbs-decimate` :ref:`reference-verbs-histogram` :ref:`reference-verbs-least-frequent` :ref:`reference-verbs-most-frequent` :ref:`reference-verbs-sample` :ref:`reference-verbs-shuffle` :ref:`reference-verbs-stats1` :ref:`reference-verbs-stats2`.
 
-  * <a href="reference-verbs.html#filter">``filter``</a>,
-  * <a href="reference-verbs.html#put">``put``</a>,
-  * <a href="reference-verbs.html#sec2gmt">``sec2gmt``</a>,
-  * <a href="reference-verbs.html#sec2gmtdate">``sec2gmtdate``</a>,
-  * <a href="reference-verbs.html#step">``step``</a>,
-  * <a href="reference-verbs.html#tee">``tee``</a>
+* Particularly oriented toward :doc:`record-heterogeneity`, although all Miller commands can handle heterogeneous records: :ref:`reference-verbs-group-by` :ref:`reference-verbs-group-like` :ref:`reference-verbs-having-fields`.
 
-* Statistically oriented:
-
-  * <a href="reference-verbs.html#bar">``bar``</a>,
-  * <a href="reference-verbs.html#bootstrap">``bootstrap``</a>,
-  * <a href="reference-verbs.html#decimate">``decimate``</a>,
-  * <a href="reference-verbs.html#histogram">``histogram``</a>,
-  * <a href="reference-verbs.html#least-frequent">``least-frequent``</a>,
-  * <a href="reference-verbs.html#most-frequent">``most-frequent``</a>,
-  * <a href="reference-verbs.html#sample">``sample``</a>,
-  * <a href="reference-verbs.html#shuffle">``shuffle``</a>,
-  * <a href="reference-verbs.html#stats1">``stats1``</a>,
-  * <a href="reference-verbs.html#stats1">``stats1``</a>,
-  * <a href="reference-verbs.html#stats2">``stats2``</a>
-
-* Particularly oriented toward :doc:`record-heterogeneity`, although all Miller commands can handle heterogeneous records:
-
-  * <a href="reference-verbs.html#group-by">``group-by``</a>,
-  * <a href="reference-verbs.html#group-like">``group-like``</a>,
-  * <a href="reference-verbs.html#having-fields">``having-fields``</a>
-
-* These draw from other sources (see also :doc:`originality`): <a href="reference-verbs.html#count-distinct">``count-distinct``</a> is SQL-ish, and <a href="reference-verbs.html#rename">``rename``</a> can be done by ``sed`` (which does it faster: see :doc:`performance`.
-
-  * <a href="reference-verbs.html#check">``check``</a>,
-  * <a href="reference-verbs.html#count-distinct">``count-distinct``</a>,
-  * <a href="reference-verbs.html#label">``label``</a>,
-  * <a href="reference-verbs.html#merge-fields">``merge-fields``</a>,
-  * <a href="reference-verbs.html#nest">``nest``</a>,
-  * <a href="reference-verbs.html#nothing">``nothing``</a>,
-  * <a href="reference-verbs.html#regularize">``rename``</a>,
-  * <a href="reference-verbs.html#rename">``rename``</a>,
-  * <a href="reference-verbs.html#reorder">``reorder``</a>,
-  * <a href="reference-verbs.html#reshape">``reshape``</a>,
-  * <a href="reference-verbs.html#seqgen">``seqgen``</a>
+* These draw from other sources (see also :doc:`originality`): <a href="reference-verbs.html#count-distinct">``count-distinct``</a> is SQL-ish, and <a href="reference-verbs.html#rename">``rename``</a> can be done by ``sed`` (which does it faster: see :doc:`performance`. Verbs: :ref:`reference-verbs-check` :ref:`reference-verbs-count-distinct` :ref:`reference-verbs-label` :ref:`reference-verbs-merge-fields` :ref:`reference-verbs-nest` :ref:`reference-verbs-nothing` :ref:`reference-verbs-regularize` :ref:`reference-verbs-rename` :ref:`reference-verbs-reorder` :ref:`reference-verbs-reshape` :ref:`reference-verbs-seqgen`.
 
 I/O options
 ----------------------------------------------------------------
@@ -150,6 +104,8 @@ The prepipe command is anything which reads from standard input and produces dat
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z > outfile.csv.xz
     $ xz -cd < myfile1.csv.xz | mlr cut -f hostname,uptime | gzip > outfile.csv.xz
     $ mlr --prepipe 'xz -cd' cut -f hostname,uptime myfile1.csv.xz myfile2.csv.xz | xz -z > outfile.csv.xz
+
+.. _reference-separators:
 
 Record/field/pair separators
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

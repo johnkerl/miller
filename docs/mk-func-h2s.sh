@@ -11,6 +11,8 @@ mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
     displayname='\-'
   elif [ "$funcname" = '*' ]; then
     displayname='\*'
+  elif [ "$funcname" = '**' ]; then
+    displayname='\**'
   elif [ "$funcname" = '|' ]; then
     displayname='\|'
   fi
