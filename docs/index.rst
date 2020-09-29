@@ -14,6 +14,7 @@ Overview
    feature-comparison
    record-heterogeneity
    internationalization
+   contact
 
 Using Miller
 ^^^^^^^^^^^^
@@ -28,18 +29,6 @@ Using Miller
    cookbook2
    cookbook3
    data-examples
-
-Reference
-^^^^^^^^^
-
-.. toctree::
-   :maxdepth: 2
-
-   reference
-   reference-verbs
-   reference-dsl
-   manpage
-   release-docs
    build
 
 Background
@@ -53,13 +42,17 @@ Background
    originality
    performance
 
-Repository
-^^^^^^^^^^
+Reference
+^^^^^^^^^
 
 .. toctree::
    :maxdepth: 2
 
-   contact
+   reference
+   reference-verbs
+   reference-dsl
+   manpage
+   release-docs
 
 Index
 ^^^^^
