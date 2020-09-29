@@ -7,11 +7,11 @@ Verbs reference
 Overview
 ----------------------------------------------------------------
 
-When you type ``mlr {something} myfile.dat``, the ``{something}`` part is called a **verb**. It specifies how you want to transform your data. (See also <a href="reference.html#Command_overview">here</a> for a breakdown.) The following is an alphabetical list of verbs with their descriptions. 
+When you type ``mlr {something} myfile.dat``, the ``{something}`` part is called a **verb**. It specifies how you want to transform your data. (See also :ref:`reference-command-overview` for a breakdown.) The following is an alphabetical list of verbs with their descriptions.
 
-The verbs ``put`` and ``filter`` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found <a href="reference-dsl.html">here</a>. 
+The verbs ``put`` and ``filter`` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at :doc:`reference-dsl`.
 
-Here's a comparison of verbs and ``put``/``filter`` DSL expressions: 
+Here's a comparison of verbs and ``put``/``filter`` DSL expressions:
 
 Example:
 
@@ -337,11 +337,11 @@ clean-whitespace
 
 Function links:
 
-*  <a href="./reference-verbs.html/#lstrip">lstrip</a>
-*  <a href="./reference-verbs.html/#rstrip">rstrip</a>
-*  <a href="./reference-verbs.html/#strip">strip</a>
-*  <a href="./reference-verbs.html/#collapse_whitespace">collapse_whitespace</a>
-*  <a href="./reference-verbs.html/#clean_whitespace">clean_whitespace</a>
+*  :ref:`reference-dsl-lstrip`
+*  :ref:`reference-dsl-rstrip`
+*  :ref:`reference-dsl-strip`
+*  :ref:`reference-dsl-collapse_whitespace`
+*  :ref:`reference-dsl-clean_whitespace`
 
 .. _reference-verbs-count:
 
@@ -815,8 +815,7 @@ filter
 Features which filter shares with put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please see the <a href="reference-dsl.html">DSL reference</a> for more
-information about the expression language for ``mlr filter``.
+Please see :doc:`reference-dsl` for more information about the expression language for ``mlr filter``.
 
 .. _reference-verbs-format-values:
 
@@ -1090,7 +1089,7 @@ group-by
     Usage: mlr group-by {comma-separated field names}
     Outputs records in batches having identical values at specified field names.
 
-This is similar to ``sort`` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear. 
+This is similar to ``sort`` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
 
 ::
 
@@ -1112,7 +1111,7 @@ This is similar to ``sort`` but with less work. Namely, Miller's sort has three 
     wye wye 3 0.20460330576630303 0.33831852551664776
     wye pan 5 0.5732889198020006  0.8636244699032729
 
-In this example, since the sort is on field ``a``, the first step is to group together all records having the same value for field ``a``; the second step is to sort the distinct ``a``-field values ``pan``, ``eks``, and ``wye`` into ``eks``, ``pan``, and ``wye``; the third step is to print out the record-list for ``a=eks``, then the record-list for ``a=pan``, then the record-list for ``a=wye``.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you. 
+In this example, since the sort is on field ``a``, the first step is to group together all records having the same value for field ``a``; the second step is to sort the distinct ``a``-field values ``pan``, ``eks``, and ``wye`` into ``eks``, ``pan``, and ``wye``; the third step is to print out the record-list for ``a=eks``, then the record-list for ``a=pan``, then the record-list for ``a=wye``.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you.
 
 .. _reference-verbs-group-like:
 
@@ -1125,7 +1124,7 @@ group-like
     Usage: mlr group-like
     Outputs records in batches having identical field names.
 
-This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in :doc:`record-heterogeneity` -- in particular, in preparation for CSV or pretty-print output.  
+This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in :doc:`record-heterogeneity` -- in particular, in preparation for CSV or pretty-print output.
 
 ::
 
@@ -1171,7 +1170,7 @@ having-fields
       mlr having-fields --any-matching '"sda[0-9]"'
       mlr having-fields --any-matching '"sda[0-9]"i' (this is case-insensitive)
 
-Similar to <a href="#group-like">``group-like``</a>, this retains records with specified schema.
+Similar to :ref:`reference-verbs-group-like`, this retains records with specified schema.
 
 ::
 
@@ -1213,7 +1212,7 @@ head
     Without -g, ceases consuming more input (i.e. is fast) when n
     records have been read.
 
-Note that ``head`` is distinct from <a href="#top">``top``</a> -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest). 
+Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
 ::
 
@@ -1252,7 +1251,7 @@ histogram
     -o {prefix}   Prefix for output field name. Default: no prefix.
     Just a histogram. Input values < lo or > hi are not counted.
 
-This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``. 
+This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``.
 
 ::
 
@@ -1481,7 +1480,7 @@ label
       "echo 'a b c d' | mlr --inidx --odkvp cat"       gives "1=a,2=b,3=c,4=d"
       "echo 'a b c d' | mlr --inidx --odkvp label s,t" gives "s=a,t=b,3=c,4=d"
 
-See also <a href="#rename">``rename``</a>.
+See also :ref:`reference-verbs-rename`.
 
 Example: Files such as ``/etc/passwd``, ``/etc/group``, and so on have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
 
@@ -1592,7 +1591,7 @@ least-frequent
     circle   green
     circle   purple
 
-See also <a href="#most-frequent">most-frequent</a>.
+See also :ref:`reference-verbs-most-frequent`.
 
 .. _reference-verbs-merge-fields:
 
@@ -1647,7 +1646,7 @@ merge-fields
       since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
       "b_y", and "b_out_x" collapses to "b_x".
 
-This is like ``mlr stats1`` but all accumulation is done across fields within each given record: horizontal rather than vertical statistics, if you will. 
+This is like ``mlr stats1`` but all accumulation is done across fields within each given record: horizontal rather than vertical statistics, if you will.
 
 Examples:
 
@@ -1731,7 +1730,7 @@ most-frequent
     square   yellow
     square   blue
 
-See also <a href="#least-frequent">least-frequent</a>.
+See also :ref:`reference-verbs-least-frequent`.
 
 .. _reference-verbs-nest:
 
@@ -1906,8 +1905,7 @@ put
 Features which put shares with filter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please see the <a href="reference-dsl.html">DSL reference</a> for more
-information about the expression language for ``mlr put``.
+Please see the :doc:`reference-dsl` for more information about the expression language for ``mlr put``.
 
 .. _reference-verbs-regularize:
 
@@ -1924,9 +1922,9 @@ regularize
     Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
     output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
 
-This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: ``mlr regularize`` helps clean that up. 
+This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: ``mlr regularize`` helps clean that up.
 
-See also <a href="#reorder">``reorder``</a>.
+See also :ref:`reference-verbs-reorder`.
 
 .. _reference-verbs-remove-empty-columns:
 
@@ -1955,7 +1953,7 @@ remove-empty-columns
     2,4,5
     3,5,7
 
-Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any. 
+Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any.
 
 .. _reference-verbs-rename:
 
@@ -2026,7 +2024,7 @@ As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller 
     a=eks,b=wye,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 
-See also <a href="#label">``label``</a>.
+See also :ref:`reference-verbs-label`.
 
 .. _reference-verbs-reorder:
 
@@ -2726,7 +2724,7 @@ I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot
 
 (Thanks Drew Kunas for a good conversation about PCA!)
 
-Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the ``count`` field and accumulated seconds in the ``upsec`` field, labeled by the ``color`` field: 
+Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the ``count`` field and accumulated seconds in the ``upsec`` field, labeled by the ``color`` field:
 
 ::
 
@@ -2742,7 +2740,7 @@ Here's an example estimating time-to-completion for a set of jobs. Input data co
     upsec=1.093,color=blue,count=2662
     upsec=1.327,color=purple,count=917
 
-We can do a linear regression on count remaining as a function of time: with ``c = m*u+b`` we want to find the time when the count goes to zero, i.e. ``u=-b/m``. 
+We can do a linear regression on count remaining as a function of time: with ``c = m*u+b`` we want to find the time when the count goes to zero, i.e. ``u=-b/m``.
 
 ::
 
@@ -2819,7 +2817,7 @@ step
     https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
     for more information on EWMA.
 
-Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``stats2``, and ``histogram`` which compute aggregate output. The ``step`` command is intermediate: it allows the option of adding fields which are functions of fields from previous records. Rsum is short for *running sum*. 
+Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``stats2``, and ``histogram`` which compute aggregate output. The ``step`` command is intermediate: it allows the option of adding fields which are functions of fields from previous records. Rsum is short for *running sum*.
 
 ::
 
@@ -2926,7 +2924,7 @@ tac
     Usage: mlr tac
     Prints records in reverse order from the order in which they were encountered.
 
-Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced. 
+Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced.
 
 ::
 
@@ -3030,7 +3028,7 @@ top
     Prints the n records with smallest/largest values at specified fields,
     optionally by category.
 
-Note that ``top`` is distinct from <a href="#head">``head``</a> -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest). 
+Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
 ::
 

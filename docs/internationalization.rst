@@ -8,11 +8,10 @@ Miller handles strings with any characters other than 0x00 or 0xff, using explic
 
 By and large, Miller treats strings as sequences of non-null bytes without need to interpret them semantically. Intentional support for internationalization includes:
 
-* <a href="file-formats.html">Tabular output formats</a> (pprint and xtab) are aligned correctly.
-* The <a href="reference-dsl.html#strlen">strlen</a> function correctly counts UTF-8 codepoints rather than bytes.
-* The <a href="reference-dsl.html#toupper">toupper</a>, <a href="reference-dsl.html#tolower">tolower</a>, and <a href="reference-dsl.html#capitalize">capitalize</a> DSL functions within the capabilities of <a href="https://github.com/sheredom/utf8.h">https://github.com/sheredom/utf8.h</a>.
+* Tabular output formats such pprint and xtab (see :doc:`file-formats`) are aligned correctly.
+* The :ref:`reference-dsl-strlen` function correctly counts UTF-8 codepoints rather than bytes.
+* The :ref:`reference-dsl-toupper`, :ref:`reference-dsl-tolower`, and :ref:`reference-dsl-capitalize` DSL functions within the capabilities of https://github.com/sheredom/utf8.h.
 
-Meanwhile, regular expressions and the <a href="reference-dsl.html#sub">sub</a> and <a href="reference-dsl.html#gsub">gsub</a> function correctly, albeit without explicit intentional support.
+Meanwhile, regular expressions and the DSL functions :ref:`reference-dsl-sub` and :ref:`reference-dsl-gsub` function correctly, albeit without explicit intentional support.
 
-Please file an issue at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a> if you encounter bugs related to internationalization (or anything else for
-that matter).
+Please file an issue at https://github.com/johnkerl/miller if you encounter bugs related to internationalization (or anything else for that matter).

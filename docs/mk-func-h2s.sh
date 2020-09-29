@@ -5,20 +5,32 @@ export MLRRC=__none__
 
 mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   displayname=$funcname
+  linkname="$funcname"
   if [ "$funcname" = '+' ]; then
     displayname='\+'
+    linkname='plus'
   elif [ "$funcname" = '-' ]; then
     displayname='\-'
+    linkname='minus'
   elif [ "$funcname" = '*' ]; then
     displayname='\*'
+    linkname='times'
   elif [ "$funcname" = '**' ]; then
     displayname='\**'
+    linkname='exponentiation'
   elif [ "$funcname" = '|' ]; then
     displayname='\|'
+    linkname='bitwise-or'
+  elif [ "$funcname" = '?' ]; then
+    displayname='\?'
+    linkname='question-mark'
+  elif [ "$funcname" = ':' ]; then
+    displayname='\:'
+    linkname='colon'
   fi
 
   echo ""
-  echo ".. _\"$funcname\":"
+  echo ".. _reference-dsl-${linkname}:"
   echo ""
   echo "$displayname"
   echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
@@ -31,8 +43,33 @@ mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
 done
 
 mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
+  displayname=$funcname
+  linkname="$funcname"
+  if [ "$funcname" = '+' ]; then
+    displayname='\+'
+    linkname='plus'
+  elif [ "$funcname" = '-' ]; then
+    displayname='\-'
+    linkname='minus'
+  elif [ "$funcname" = '*' ]; then
+    displayname='\*'
+    linkname='times'
+  elif [ "$funcname" = '**' ]; then
+    displayname='\**'
+    linkname='exponentiation'
+  elif [ "$funcname" = '|' ]; then
+    displayname='\|'
+    linkname='bitwise-or'
+  elif [ "$funcname" = '?' ]; then
+    displayname='\?'
+    linkname='question-mark'
+  elif [ "$funcname" = ':' ]; then
+    displayname='\:'
+    linkname='colon'
+  fi
+
   echo ""
-  echo ".. _\"$funcname\":"
+  echo ".. _reference-dsl-${linkname}:"
   echo ""
   echo "$displayname"
   echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"

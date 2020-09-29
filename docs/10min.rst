@@ -60,6 +60,9 @@ but it can also do format conversion (here, you can pretty-print in tabular form
     red,square,1,15,79.2778,0.0130
     red,circle,1,16,13.8103,2.9010
     red,square,0,48,77.5542,7.4670
+
+::
+
     $ mlr --csv tail -n 4 example.csv
     color,shape,flag,index,quantity,rate
     purple,triangle,0,65,80.1405,5.8240
@@ -135,6 +138,9 @@ You can use ``filter`` to keep only records you care about::
     red   circle 1    16    13.8103  2.9010
     red   square 0    48    77.5542  7.4670
     red   square 0    64    77.1991  9.5310
+
+::
+
     $ mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv
     color shape  flag index quantity rate
     red   square 1    15    79.2778  0.0130
@@ -169,6 +175,9 @@ Even though Miller's main selling point is name-indexing, sometimes you really w
     yellow circle   1   73    63.9785  4.2370
     yellow circle   1   87    63.5058  8.3350
     purple square   0   91    72.3735  8.2430
+
+::
+
     $ mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
     color  shape    flag index quantity rate
     yellow triangle NEW  11    43.6498  9.8870
@@ -336,11 +345,15 @@ Lastly, using ``tee`` within ``put``, you can split your input data into separat
 
     $ mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
 
+::
+
     $ cat circle.csv
     color,shape,flag,index,quantity,rate
     red,circle,1,16,13.8103,2.9010
     yellow,circle,1,73,63.9785,4.2370
     yellow,circle,1,87,63.5058,8.3350
+
+::
 
     $ cat square.csv
     color,shape,flag,index,quantity,rate
@@ -349,12 +362,13 @@ Lastly, using ``tee`` within ``put``, you can split your input data into separat
     red,square,0,64,77.1991,9.5310
     purple,square,0,91,72.3735,8.2430
 
+::
+
     $ cat triangle.csv
     color,shape,flag,index,quantity,rate
     yellow,triangle,1,11,43.6498,9.8870
     purple,triangle,0,51,81.2290,8.5910
     purple,triangle,0,65,80.1405,5.8240
-
 
 Other-format examples
 ^^^^^^^^^^^^^^^^^^^^^

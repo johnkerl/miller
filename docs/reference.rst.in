@@ -1,6 +1,9 @@
 Main reference
 ================================================================
 
+
+.. _reference-command-overview:
+
 Command overview
 ----------------------------------------------------------------
 
@@ -21,7 +24,7 @@ These fall into categories as follows:
 
 * Particularly oriented toward :doc:`record-heterogeneity`, although all Miller commands can handle heterogeneous records: :ref:`reference-verbs-group-by` :ref:`reference-verbs-group-like` :ref:`reference-verbs-having-fields`.
 
-* These draw from other sources (see also :doc:`originality`): <a href="reference-verbs.html#count-distinct">``count-distinct``</a> is SQL-ish, and <a href="reference-verbs.html#rename">``rename``</a> can be done by ``sed`` (which does it faster: see :doc:`performance`. Verbs: :ref:`reference-verbs-check` :ref:`reference-verbs-count-distinct` :ref:`reference-verbs-label` :ref:`reference-verbs-merge-fields` :ref:`reference-verbs-nest` :ref:`reference-verbs-nothing` :ref:`reference-verbs-regularize` :ref:`reference-verbs-rename` :ref:`reference-verbs-reorder` :ref:`reference-verbs-reshape` :ref:`reference-verbs-seqgen`.
+* These draw from other sources (see also :doc:`originality`): :ref:`reference-verbs-count-distinct` is SQL-ish, and :ref:`reference-verbs-rename` can be done by ``sed`` (which does it faster: see :doc:`performance`. Verbs: :ref:`reference-verbs-check` :ref:`reference-verbs-count-distinct` :ref:`reference-verbs-label` :ref:`reference-verbs-merge-fields` :ref:`reference-verbs-nest` :ref:`reference-verbs-nothing` :ref:`reference-verbs-regularize` :ref:`reference-verbs-rename` :ref:`reference-verbs-reorder` :ref:`reference-verbs-reshape` :ref:`reference-verbs-seqgen`.
 
 I/O options
 ----------------------------------------------------------------
@@ -160,12 +163,12 @@ POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 Data transformations (verbs)
 ----------------------------------------------------------------
 
-Please see <a href="reference-verbs.html">the separate page here</a>.
+Please see the separate page :doc:`reference-verbs`.
 
 Expression language for filter and put
 ----------------------------------------------------------------
 
-Please see <a href="reference-dsl.html">the separate page here</a>.
+Please see the separate page :doc:`reference-dsl`.
 
 then-chaining
 ----------------------------------------------------------------
@@ -372,7 +375,7 @@ You can use the following backslash escapes for strings such as between the doub
 * ``\123``: Octal 123, etc. for ``\000`` up to ``\377``
 * ``\x7f``: Hexadecimal 7f, etc. for ``\x00`` up to ``\xff``
 
-See also <a href="https://en.wikipedia.org/wiki/Escape_sequences_in_C">https://en.wikipedia.org/wiki/Escape_sequences_in_C</a>.
+See also https://en.wikipedia.org/wiki/Escape_sequences_in_C.
 
 These replacements apply only to strings you key in for the DSL expressions for ``filter`` and ``put``: that is, if you type ``\t`` in a string literal for a ``filter``/``put`` expression, it will be turned into a tab character. If you want a backslash followed by a ``t``, then please type ``\\t``. 
 

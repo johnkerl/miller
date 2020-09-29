@@ -30,7 +30,7 @@ POKI_RUN_COMMAND{{mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/sma
 *  There is more to learn
 *  They are highly customizable
 
-Please see <a href="reference-verbs.html">here</a> for information on verbs other than ``put`` and ``filter``.
+Please see :doc:`reference-verbs` for information on verbs other than ``put`` and ``filter``.
 
 The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection and record-updating expressions, respectively. For example, given the following input data:
 

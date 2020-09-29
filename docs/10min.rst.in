@@ -19,6 +19,9 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
 ``mlr head`` and ``mlr tail`` count records rather than lines. Whethere you're getting the first few records or the last few, the CSV header is included either way::
 
 POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
+
+::
+
 POKI_RUN_COMMAND{{mlr --csv tail -n 4 example.csv}}HERE
 
 You can sort primarily alphabetically on one field, then secondarily numerically descending on another field::
@@ -40,6 +43,9 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint cut -x -f flag,shape example.csv}}HERE
 You can use ``filter`` to keep only records you care about::
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red"' example.csv}}HERE
+
+::
+
 POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv}}HERE
 
 You can use ``put`` to create new fields which are computed from other fields::
@@ -49,6 +55,9 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_s
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3::
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv}}HERE
+
+::
+
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv}}HERE
 
 JSON-file examples
@@ -152,12 +161,17 @@ Lastly, using ``tee`` within ``put``, you can split your input data into separat
 
 POKI_RUN_COMMAND{{mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'}}HERE
 
+::
+
 POKI_RUN_COMMAND{{cat circle.csv}}HERE
+
+::
 
 POKI_RUN_COMMAND{{cat square.csv}}HERE
 
-POKI_RUN_COMMAND{{cat triangle.csv}}HERE
+::
 
+POKI_RUN_COMMAND{{cat triangle.csv}}HERE
 
 Other-format examples
 ^^^^^^^^^^^^^^^^^^^^^

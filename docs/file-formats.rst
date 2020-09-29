@@ -98,7 +98,7 @@ Here are the differences between CSV and CSV-lite:
 
 * CSV supports `RFC-4180 <https://tools.ietf.org/html/rfc4180>`_-style double-quoting, including the ability to have commas and/or LF/CRLF line-endings contained within an input field; CSV-lite does not.
 
-* CSV does not allow heterogeneous data; CSV-lite does (see also <a href="record-heterogeneity.html">here</a>).
+* CSV does not allow heterogeneous data; CSV-lite does (see also :doc:`record-heterogeneity`).
 
 * The CSV-lite input-reading code is fractionally more efficient than the CSV input-reader.
 

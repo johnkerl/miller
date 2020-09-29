@@ -39,7 +39,7 @@ Example:
 *  There is more to learn
 *  They are highly customizable
 
-Please see <a href="reference-verbs.html">here</a> for information on verbs other than ``put`` and ``filter``.
+Please see :doc:`reference-verbs` for information on verbs other than ``put`` and ``filter``.
 
 The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection and record-updating expressions, respectively. For example, given the following input data:
 
@@ -2882,7 +2882,7 @@ Each function takes a specific number of arguments, as shown below, except for f
 You can get a list of all functions using **mlr -F**.
 
 
-.. _"+":
+.. _reference-dsl-plus:
 
 \+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2895,7 +2895,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"-":
+.. _reference-dsl-minus:
 
 \-
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2908,7 +2908,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"*":
+.. _reference-dsl-times:
 
 \*
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2919,7 +2919,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"/":
+.. _reference-dsl-/:
 
 /
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2930,7 +2930,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"//":
+.. _reference-dsl-//:
 
 //
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2941,7 +2941,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _".+":
+.. _reference-dsl-.+:
 
 .+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2954,7 +2954,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _".-":
+.. _reference-dsl-.-:
 
 .-
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2967,7 +2967,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _".*":
+.. _reference-dsl-.*:
 
 .*
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2978,7 +2978,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"./":
+.. _reference-dsl-./:
 
 ./
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2989,7 +2989,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _".//":
+.. _reference-dsl-.//:
 
 .//
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3000,7 +3000,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"%":
+.. _reference-dsl-%:
 
 %
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3011,7 +3011,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"**":
+.. _reference-dsl-exponentiation:
 
 \**
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3023,7 +3023,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"|":
+.. _reference-dsl-bitwise-or:
 
 \|
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3034,7 +3034,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"^":
+.. _reference-dsl-^:
 
 ^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3045,7 +3045,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"&":
+.. _reference-dsl-&:
 
 &
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3056,7 +3056,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"~":
+.. _reference-dsl-~:
 
 ~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3068,7 +3068,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"<<":
+.. _reference-dsl-<<:
 
 <<
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3079,7 +3079,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _">>":
+.. _reference-dsl->>:
 
 >>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3090,7 +3090,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"==":
+.. _reference-dsl-==:
 
 ==
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3102,7 +3102,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"!=":
+.. _reference-dsl-!=:
 
 !=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3114,7 +3114,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"=~":
+.. _reference-dsl-=~:
 
 =~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3126,7 +3126,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"!=~":
+.. _reference-dsl-!=~:
 
 !=~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3138,7 +3138,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _">":
+.. _reference-dsl->:
 
 >
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3150,7 +3150,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _">=":
+.. _reference-dsl->=:
 
 >=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3162,7 +3162,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"<":
+.. _reference-dsl-<:
 
 <
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3174,7 +3174,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"<=":
+.. _reference-dsl-<=:
 
 <=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3186,7 +3186,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"&&":
+.. _reference-dsl-&&:
 
 &&
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3197,7 +3197,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"||":
+.. _reference-dsl-||:
 
 ||
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3208,7 +3208,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"^^":
+.. _reference-dsl-^^:
 
 ^^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3219,7 +3219,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"!":
+.. _reference-dsl-!:
 
 !
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3230,7 +3230,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"? :":
+.. _reference-dsl-? ::
 
 ? :
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3241,7 +3241,7 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _".":
+.. _reference-dsl-.:
 
 .
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3252,9 +3252,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"abs":
+.. _reference-dsl-abs:
 
-
+abs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3263,9 +3263,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"acos":
+.. _reference-dsl-acos:
 
-
+acos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3274,9 +3274,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"acosh":
+.. _reference-dsl-acosh:
 
-
+acosh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3285,9 +3285,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asin":
+.. _reference-dsl-asin:
 
-
+asin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3296,9 +3296,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asinh":
+.. _reference-dsl-asinh:
 
-
+asinh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3307,9 +3307,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_absent":
+.. _reference-dsl-asserting_absent:
 
-
+asserting_absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3319,9 +3319,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_bool":
+.. _reference-dsl-asserting_bool:
 
-
+asserting_bool
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3331,9 +3331,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_boolean":
+.. _reference-dsl-asserting_boolean:
 
-
+asserting_boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3343,9 +3343,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_empty":
+.. _reference-dsl-asserting_empty:
 
-
+asserting_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3355,9 +3355,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_empty_map":
+.. _reference-dsl-asserting_empty_map:
 
-
+asserting_empty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3367,9 +3367,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_float":
+.. _reference-dsl-asserting_float:
 
-
+asserting_float
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3379,9 +3379,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_int":
+.. _reference-dsl-asserting_int:
 
-
+asserting_int
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3391,9 +3391,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_map":
+.. _reference-dsl-asserting_map:
 
-
+asserting_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3402,9 +3402,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_nonempty_map":
+.. _reference-dsl-asserting_nonempty_map:
 
-
+asserting_nonempty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3414,9 +3414,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_not_empty":
+.. _reference-dsl-asserting_not_empty:
 
-
+asserting_not_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3426,9 +3426,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_not_map":
+.. _reference-dsl-asserting_not_map:
 
-
+asserting_not_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3437,9 +3437,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_not_null":
+.. _reference-dsl-asserting_not_null:
 
-
+asserting_not_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3449,9 +3449,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_null":
+.. _reference-dsl-asserting_null:
 
-
+asserting_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3461,9 +3461,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_numeric":
+.. _reference-dsl-asserting_numeric:
 
-
+asserting_numeric
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3473,9 +3473,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_present":
+.. _reference-dsl-asserting_present:
 
-
+asserting_present
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3485,9 +3485,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"asserting_string":
+.. _reference-dsl-asserting_string:
 
-
+asserting_string
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3497,9 +3497,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"atan":
+.. _reference-dsl-atan:
 
-
+atan
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3508,9 +3508,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"atan2":
+.. _reference-dsl-atan2:
 
-
+atan2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3519,9 +3519,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"atanh":
+.. _reference-dsl-atanh:
 
-
+atanh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3530,9 +3530,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"bitcount":
+.. _reference-dsl-bitcount:
 
-
+bitcount
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3541,9 +3541,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"boolean":
+.. _reference-dsl-boolean:
 
-
+boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3552,9 +3552,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"capitalize":
+.. _reference-dsl-capitalize:
 
-
+capitalize
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3563,9 +3563,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"cbrt":
+.. _reference-dsl-cbrt:
 
-
+cbrt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3574,9 +3574,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"ceil":
+.. _reference-dsl-ceil:
 
-
+ceil
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3585,9 +3585,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"clean_whitespace":
+.. _reference-dsl-clean_whitespace:
 
-
+clean_whitespace
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3596,9 +3596,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"collapse_whitespace":
+.. _reference-dsl-collapse_whitespace:
 
-
+collapse_whitespace
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3607,9 +3607,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"cos":
+.. _reference-dsl-cos:
 
-
+cos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3618,9 +3618,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"cosh":
+.. _reference-dsl-cosh:
 
-
+cosh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3629,9 +3629,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"depth":
+.. _reference-dsl-depth:
 
-
+depth
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3640,9 +3640,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"dhms2fsec":
+.. _reference-dsl-dhms2fsec:
 
-
+dhms2fsec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3652,9 +3652,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"dhms2sec":
+.. _reference-dsl-dhms2sec:
 
-
+dhms2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3664,9 +3664,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"erf":
+.. _reference-dsl-erf:
 
-
+erf
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3675,9 +3675,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"erfc":
+.. _reference-dsl-erfc:
 
-
+erfc
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3686,9 +3686,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"exp":
+.. _reference-dsl-exp:
 
-
+exp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3697,9 +3697,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"expm1":
+.. _reference-dsl-expm1:
 
-
+expm1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3708,9 +3708,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"float":
+.. _reference-dsl-float:
 
-
+float
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3719,9 +3719,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"floor":
+.. _reference-dsl-floor:
 
-
+floor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3730,9 +3730,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"fmtnum":
+.. _reference-dsl-fmtnum:
 
-
+fmtnum
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3743,9 +3743,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"fsec2dhms":
+.. _reference-dsl-fsec2dhms:
 
-
+fsec2dhms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3755,9 +3755,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"fsec2hms":
+.. _reference-dsl-fsec2hms:
 
-
+fsec2hms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3767,9 +3767,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"gmt2sec":
+.. _reference-dsl-gmt2sec:
 
-
+gmt2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3779,9 +3779,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"gsub":
+.. _reference-dsl-gsub:
 
-
+gsub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3791,9 +3791,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"haskey":
+.. _reference-dsl-haskey:
 
-
+haskey
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3803,9 +3803,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"hexfmt":
+.. _reference-dsl-hexfmt:
 
-
+hexfmt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3814,9 +3814,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"hms2fsec":
+.. _reference-dsl-hms2fsec:
 
-
+hms2fsec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3826,9 +3826,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"hms2sec":
+.. _reference-dsl-hms2sec:
 
-
+hms2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3838,9 +3838,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"int":
+.. _reference-dsl-int:
 
-
+int
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3849,9 +3849,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"invqnorm":
+.. _reference-dsl-invqnorm:
 
-
+invqnorm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3861,9 +3861,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_absent":
+.. _reference-dsl-is_absent:
 
-
+is_absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3872,9 +3872,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_bool":
+.. _reference-dsl-is_bool:
 
-
+is_bool
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3883,9 +3883,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_boolean":
+.. _reference-dsl-is_boolean:
 
-
+is_boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3894,9 +3894,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_empty":
+.. _reference-dsl-is_empty:
 
-
+is_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3905,9 +3905,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_empty_map":
+.. _reference-dsl-is_empty_map:
 
-
+is_empty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3916,9 +3916,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_float":
+.. _reference-dsl-is_float:
 
-
+is_float
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3927,9 +3927,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_int":
+.. _reference-dsl-is_int:
 
-
+is_int
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3938,9 +3938,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_map":
+.. _reference-dsl-is_map:
 
-
+is_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3949,9 +3949,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_nonempty_map":
+.. _reference-dsl-is_nonempty_map:
 
-
+is_nonempty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3960,9 +3960,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_not_empty":
+.. _reference-dsl-is_not_empty:
 
-
+is_not_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3971,9 +3971,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_not_map":
+.. _reference-dsl-is_not_map:
 
-
+is_not_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3982,9 +3982,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_not_null":
+.. _reference-dsl-is_not_null:
 
-
+is_not_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -3993,9 +3993,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_null":
+.. _reference-dsl-is_null:
 
-
+is_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4004,9 +4004,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_numeric":
+.. _reference-dsl-is_numeric:
 
-
+is_numeric
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4015,9 +4015,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_present":
+.. _reference-dsl-is_present:
 
-
+is_present
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4026,9 +4026,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"is_string":
+.. _reference-dsl-is_string:
 
-
+is_string
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4037,9 +4037,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"joink":
+.. _reference-dsl-joink:
 
-
+joink
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4048,9 +4048,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"joinkv":
+.. _reference-dsl-joinkv:
 
-
+joinkv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4059,9 +4059,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"joinv":
+.. _reference-dsl-joinv:
 
-
+joinv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4070,9 +4070,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"leafcount":
+.. _reference-dsl-leafcount:
 
-
+leafcount
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4082,9 +4082,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"length":
+.. _reference-dsl-length:
 
-
+length
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4093,9 +4093,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"localtime2sec":
+.. _reference-dsl-localtime2sec:
 
-
+localtime2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4105,9 +4105,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"log":
+.. _reference-dsl-log:
 
-
+log
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4116,9 +4116,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"log10":
+.. _reference-dsl-log10:
 
-
+log10
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4127,9 +4127,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"log1p":
+.. _reference-dsl-log1p:
 
-
+log1p
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4138,9 +4138,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"logifit":
+.. _reference-dsl-logifit:
 
-
+logifit
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4150,9 +4150,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"lstrip":
+.. _reference-dsl-lstrip:
 
-
+lstrip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4161,9 +4161,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"madd":
+.. _reference-dsl-madd:
 
-
+madd
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4172,9 +4172,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"mapdiff":
+.. _reference-dsl-mapdiff:
 
-
+mapdiff
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4184,9 +4184,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"mapexcept":
+.. _reference-dsl-mapexcept:
 
-
+mapexcept
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4196,9 +4196,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"mapselect":
+.. _reference-dsl-mapselect:
 
-
+mapselect
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4208,9 +4208,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"mapsum":
+.. _reference-dsl-mapsum:
 
-
+mapsum
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4220,9 +4220,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"max":
+.. _reference-dsl-max:
 
-
+max
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4231,9 +4231,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"mexp":
+.. _reference-dsl-mexp:
 
-
+mexp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4242,9 +4242,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"min":
+.. _reference-dsl-min:
 
-
+min
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4253,9 +4253,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"mmul":
+.. _reference-dsl-mmul:
 
-
+mmul
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4264,9 +4264,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"msub":
+.. _reference-dsl-msub:
 
-
+msub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4275,9 +4275,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"pow":
+.. _reference-dsl-pow:
 
-
+pow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4286,9 +4286,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"qnorm":
+.. _reference-dsl-qnorm:
 
-
+qnorm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4297,9 +4297,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"regextract":
+.. _reference-dsl-regextract:
 
-
+regextract
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4309,9 +4309,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"regextract_or_else":
+.. _reference-dsl-regextract_or_else:
 
-
+regextract_or_else
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4321,9 +4321,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"round":
+.. _reference-dsl-round:
 
-
+round
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4332,9 +4332,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"roundm":
+.. _reference-dsl-roundm:
 
-
+roundm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4344,9 +4344,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"rstrip":
+.. _reference-dsl-rstrip:
 
-
+rstrip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4355,9 +4355,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sec2dhms":
+.. _reference-dsl-sec2dhms:
 
-
+sec2dhms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4367,9 +4367,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sec2gmt":
+.. _reference-dsl-sec2gmt:
 
-
+sec2gmt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4384,9 +4384,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sec2gmtdate":
+.. _reference-dsl-sec2gmtdate:
 
-
+sec2gmtdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4397,9 +4397,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sec2hms":
+.. _reference-dsl-sec2hms:
 
-
+sec2hms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4409,9 +4409,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sec2localdate":
+.. _reference-dsl-sec2localdate:
 
-
+sec2localdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4422,9 +4422,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sec2localtime":
+.. _reference-dsl-sec2localtime:
 
-
+sec2localtime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4439,9 +4439,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sgn":
+.. _reference-dsl-sgn:
 
-
+sgn
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4451,9 +4451,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sin":
+.. _reference-dsl-sin:
 
-
+sin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4462,9 +4462,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sinh":
+.. _reference-dsl-sinh:
 
-
+sinh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4473,9 +4473,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"splitkv":
+.. _reference-dsl-splitkv:
 
-
+splitkv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4485,9 +4485,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"splitkvx":
+.. _reference-dsl-splitkvx:
 
-
+splitkvx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4498,9 +4498,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"splitnv":
+.. _reference-dsl-splitnv:
 
-
+splitnv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4510,9 +4510,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"splitnvx":
+.. _reference-dsl-splitnvx:
 
-
+splitnvx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4522,9 +4522,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sqrt":
+.. _reference-dsl-sqrt:
 
-
+sqrt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4533,9 +4533,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"ssub":
+.. _reference-dsl-ssub:
 
-
+ssub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4544,9 +4544,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"strftime":
+.. _reference-dsl-strftime:
 
-
+strftime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4561,9 +4561,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"strftime_local":
+.. _reference-dsl-strftime_local:
 
-
+strftime_local
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4572,9 +4572,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"string":
+.. _reference-dsl-string:
 
-
+string
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4583,9 +4583,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"strip":
+.. _reference-dsl-strip:
 
-
+strip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4594,9 +4594,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"strlen":
+.. _reference-dsl-strlen:
 
-
+strlen
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4605,9 +4605,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"strptime":
+.. _reference-dsl-strptime:
 
-
+strptime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4619,9 +4619,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"strptime_local":
+.. _reference-dsl-strptime_local:
 
-
+strptime_local
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4630,9 +4630,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"sub":
+.. _reference-dsl-sub:
 
-
+sub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4642,9 +4642,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"substr":
+.. _reference-dsl-substr:
 
-
+substr
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4654,9 +4654,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"system":
+.. _reference-dsl-system:
 
-
+system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4665,9 +4665,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"systime":
+.. _reference-dsl-systime:
 
-
+systime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4677,9 +4677,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"tan":
+.. _reference-dsl-tan:
 
-
+tan
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4688,9 +4688,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"tanh":
+.. _reference-dsl-tanh:
 
-
+tanh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4699,9 +4699,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"tolower":
+.. _reference-dsl-tolower:
 
-
+tolower
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4710,9 +4710,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"toupper":
+.. _reference-dsl-toupper:
 
-
+toupper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4721,9 +4721,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"typeof":
+.. _reference-dsl-typeof:
 
-
+typeof
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4733,9 +4733,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"urand":
+.. _reference-dsl-urand:
 
-
+urand
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4745,9 +4745,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"urand32":
+.. _reference-dsl-urand32:
 
-
+urand32
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4757,9 +4757,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"urandint":
+.. _reference-dsl-urandint:
 
-
+urandint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
@@ -4769,9 +4769,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _"urandrange":
+.. _reference-dsl-urandrange:
 
-
+urandrange
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
