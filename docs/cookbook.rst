@@ -207,7 +207,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 Full field renames and reassigns
 ----------------------------------------------------------------
 
-Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully generalize <a href="reference-verbs.html#rename">``mlr rename``</a>, <a href="reference-verbs.html#reorder">``mlr reorder``</a>, etc.:
+Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully generalize :ref:`mlr rename <reference-verbs-rename>`, :ref:`mlr reorder <reference-verbs-reorder>`, etc.
 
 ::
 
@@ -293,10 +293,9 @@ The difference is a matter of taste (although ``mlr cat -n`` puts the counter fi
 Options for dealing with duplicate rows
 ----------------------------------------------------------------
 
-If your data has records appearing multiple times, you can use <a href="reference-verbs.html#uniq">mlr uniq</a> to show and/or count the unique
-records.
+If your data has records appearing multiple times, you can use :ref:`mlr uniq <reference-verbs-uniq>` to show and/or count the unique records.
 
-If you want to look at partial uniqueness -- for example, show only the first record for each unique combination of the ``account_id`` and ``account_status`` fields -- you might use ``mlr head -n 1 -g account_id,account_status``. Please also see <a href="reference-verbs.html#head">mlr head</a>. 
+If you want to look at partial uniqueness -- for example, show only the first record for each unique combination of the ``account_id`` and ``account_status`` fields -- you might use ``mlr head -n 1 -g account_id,account_status``. Please also see :ref:`mlr head <reference-verbs-head>`.
 
 .. _cookbook-data-cleaning-examples:
 
@@ -379,7 +378,7 @@ Suppose you have a TSV file like this:
     x	z
     s	u:v:w
 
-The simplest option is to use <a href="reference-verbs.html#nest">``mlr nest``</a>:
+The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 
 ::
 
@@ -1009,7 +1008,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
     1 - 2 - 3 -
     - - 1 - - 2
 
-There is a keystroke-saving verb for this: <a href="reference-verbs.html#unsparsify">``mlr unsparsify``</a>.
+There is a keystroke-saving verb for this: :ref:`mlr unsparsify <reference-verbs-unsparsify>`.
 
 Parsing log-file output
 ----------------------------------------------------------------

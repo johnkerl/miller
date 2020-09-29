@@ -10,6 +10,8 @@ Examples
 
 POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
 
+.. _file-formats-csv:
+
 CSV/TSV/ASV/USV/etc.
 ----------------------------------------------------------------
 
@@ -45,6 +47,8 @@ Here are things they have in common:
 * The ability to specify record/field separators other than the default, e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 
 * The ``--implicit-csv-header`` flag for input and the ``--headerless-csv-output`` flag for output.
+
+.. _file-formats-dkvp:
 
 DKVP: Key-value pairs
 ----------------------------------------------------------------
@@ -84,6 +88,8 @@ to analyze my logs.
 
 See :doc:`reference` regarding how to specify separators other than the default equals-sign and comma.
 
+.. _file-formats-nidx:
+
 NIDX: Index-numbered (toolkit style)
 ----------------------------------------------------------------
 
@@ -112,6 +118,8 @@ Example with index-numbered input and output:
 POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
 
 POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
+
+.. _file-formats-json:
 
 Tabular JSON
 ----------------------------------------------------------------
@@ -195,6 +203,8 @@ JSON non-streaming
 
 The JSON parser Miller uses does not return until all input is parsed: in particular this means that, unlike for other file formats, Miller does not (at present) handle JSON files in ``tail -f`` contexts.
 
+.. _file-formats-pprint:
+
 PPRINT: Pretty-printed tabular
 ----------------------------------------------------------------
 
@@ -213,6 +223,8 @@ See :doc:`record-heterogeneity` for how Miller handles changes of field names wi
 For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format::
 
 POKI_RUN_COMMAND{{mlr --opprint --barred cat data/small}}HERE
+
+.. _file-formats-xtab:
 
 XTAB: Vertical tabular
 ----------------------------------------------------------------

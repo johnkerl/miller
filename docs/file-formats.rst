@@ -72,6 +72,8 @@ Examples
       | | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
       +-----------------------+
 
+.. _file-formats-csv:
+
 CSV/TSV/ASV/USV/etc.
 ----------------------------------------------------------------
 
@@ -107,6 +109,8 @@ Here are things they have in common:
 * The ability to specify record/field separators other than the default, e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 
 * The ``--implicit-csv-header`` flag for input and the ``--headerless-csv-output`` flag for output.
+
+.. _file-formats-dkvp:
 
 DKVP: Key-value pairs
 ----------------------------------------------------------------
@@ -150,6 +154,8 @@ etc. and I just log them as needed. Then later, I can use ``grep``, ``mlr --oppr
 to analyze my logs.
 
 See :doc:`reference` regarding how to specify separators other than the default equals-sign and comma.
+
+.. _file-formats-nidx:
 
 NIDX: Index-numbered (toolkit style)
 ----------------------------------------------------------------
@@ -201,6 +207,8 @@ Example with index-numbered input and output:
     say can
     the dawn's
     light
+
+.. _file-formats-json:
 
 Tabular JSON
 ----------------------------------------------------------------
@@ -379,6 +387,8 @@ JSON non-streaming
 
 The JSON parser Miller uses does not return until all input is parsed: in particular this means that, unlike for other file formats, Miller does not (at present) handle JSON files in ``tail -f`` contexts.
 
+.. _file-formats-pprint:
+
 PPRINT: Pretty-printed tabular
 ----------------------------------------------------------------
 
@@ -418,6 +428,8 @@ For output only (this isn't supported in the input-scanner as of 5.0.0) you can 
     | eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
     | wye | pan | 5 | 0.5732889198020006  | 0.8636244699032729  |
     +-----+-----+---+---------------------+---------------------+
+
+.. _file-formats-xtab:
 
 XTAB: Vertical tabular
 ----------------------------------------------------------------

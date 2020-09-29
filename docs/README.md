@@ -37,6 +37,8 @@
 
 ## To do
 
+* separate install from build; latter to reference section
+* unix-toolkit context: needs a leading paragraph
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
 * !! cross-references all need work !!
 * Scan for hrefs and other non-ported markup

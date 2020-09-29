@@ -62,7 +62,6 @@ tags
 *~
 .deps/
 .libs/
-Makefile
 config.h
 config.log
 config.status
@@ -94,3 +93,24 @@ msys-2.0.dll
 
 data/big.*
 data/nmc?.*
+
+/Makefile
+c/Makefile
+c/auxents/Makefile
+c/cli/Makefile
+c/containers/Makefile
+c/dsl/Makefile
+c/experimental/Makefile
+c/input/Makefile
+c/lib/Makefile
+c/mapping/Makefile
+c/output/Makefile
+c/parsing/Makefile
+c/reg_test/Makefile
+c/reg_test/expected/Makefile
+c/reg_test/input/Makefile
+c/reg_test/input/comments/Makefile
+c/reg_test/input/rfc-csv/Makefile
+c/stream/Makefile
+c/unit_test/Makefile
+doc/Makefile

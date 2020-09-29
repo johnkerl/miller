@@ -191,7 +191,7 @@ Built-in variables
 
 These are written all in capital letters, such as ``NR``, ``NF``, ``FILENAME``, and only a small, specific set of them is defined by Miller. 
 
-Namely, Miller supports the following five built-in variables for <a href="reference-verbs.html#filter">``filter``</a> and ``put``, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``. 
+Namely, Miller supports the following five built-in variables for :doc:`filter and put <reference-dsl>`, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``. 
 
 ::
 
@@ -220,7 +220,7 @@ These are all **read-only** for the ``mlr put`` and ``mlr filter`` DSLs: they ma
 Field names
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Names of fields within stream records must be specified using a ``$`` in ``filter`` and <a href="reference-verbs.html#put">``put``</a> expressions, even though the dollar signs don't appear in the data stream itself. For integer-indexed data, this looks like ``awk``'s ``$1,$2,$3``, except that Miller allows non-numeric names such as ``$quantity`` or ``$hostname``.  Likewise, enclose string literals in double quotes in ``filter`` expressions even though they don't appear in file data.  In particular, ``mlr filter '$x=="abc"'`` passes through the record ``x=abc``. 
+Names of fields within stream records must be specified using a ``$`` in :doc:`filter and put expressions <reference-dsl>`, even though the dollar signs don't appear in the data stream itself. For integer-indexed data, this looks like ``awk``'s ``$1,$2,$3``, except that Miller allows non-numeric names such as ``$quantity`` or ``$hostname``.  Likewise, enclose string literals in double quotes in ``filter`` expressions even though they don't appear in file data.  In particular, ``mlr filter '$x=="abc"'`` passes through the record ``x=abc``.
 
 If field names have **special characters** such as ``.`` then you can use braces, e.g. ``'${field.name}'``. 
 

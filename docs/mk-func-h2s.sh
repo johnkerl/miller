@@ -27,6 +27,9 @@ mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   elif [ "$funcname" = ':' ]; then
     displayname='\:'
     linkname='colon'
+  elif [ "$funcname" = '? :' ]; then
+    displayname='\?'
+    linkname='question-mark-colon'
   fi
 
   echo ""
@@ -66,6 +69,9 @@ mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   elif [ "$funcname" = ':' ]; then
     displayname='\:'
     linkname='colon'
+  elif [ "$funcname" = '? :' ]; then
+    displayname='\?'
+    linkname='question-mark-colon'
   fi
 
   echo ""

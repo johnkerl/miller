@@ -32,11 +32,11 @@ Details
 .. toctree::
    :maxdepth: 1
 
-   data-sharing
    faq
    cookbook
    cookbook2
    cookbook3
+   data-sharing
 
 Reference
 ----------------------------------------------------------------

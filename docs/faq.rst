@@ -158,7 +158,7 @@ The same conversion rules as above are being used. Namely:
 
 Taken individually the rules make sense; taken collectively they produce a mishmash of types here.
 
-The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Then all field values are left as string. You can type-coerce on demand using syntax like ``'$z = int($x) + float($y)'``. (See also the <a href="reference-verbs.html#put">put documentation</a>; see also https://github.com/johnkerl/miller/issues/150.)
+The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Then all field values are left as string. You can type-coerce on demand using syntax like ``'$z = int($x) + float($y)'``. (See also :doc:`reference-dsl`; see also https://github.com/johnkerl/miller/issues/150.)
 
 ::
 
@@ -282,7 +282,7 @@ Given input like
     2018-03-07,discovery
     2018-02-03,allocation
 
-we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the <a href="reference-dsl.html#strptime">strptime</a> format-string.  For example: 
+we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example: 
 
 ::
 
@@ -304,7 +304,7 @@ How can I handle commas-as-data in various formats?
     "Xiao, Lin",administrator
     "Khavari, Darius",tester
 
-Likewise <a href="file-formats.html#Tabular_JSON">JSON</a>:
+Likewise :ref:`file-formats-json`:
 
 ::
 
@@ -312,7 +312,7 @@ Likewise <a href="file-formats.html#Tabular_JSON">JSON</a>:
     { "Name": "Xiao, Lin", "Role": "administrator" }
     { "Name": "Khavari, Darius", "Role": "tester" }
 
-For Miller's <a href="file-formats.html#XTAB:_Vertical_tabular">XTAB</a> there is no escaping for carriage returns, but commas work fine:
+For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no escaping for carriage returns, but commas work fine:
 
 ::
 
@@ -323,7 +323,7 @@ For Miller's <a href="file-formats.html#XTAB:_Vertical_tabular">XTAB</a> there i
     Name Khavari, Darius
     Role tester
 
-But for <a href="file-formats.html#DKVP:_Key-value_pairs">DKVP</a> and <a href="file-formats.html#NIDX:_Index-numbered_(toolkit_style)">NIDX</a>, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters: 
+But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters: 
 
 ::
 
