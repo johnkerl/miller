@@ -277,6 +277,8 @@ If your output has a lot of columns, you can use XTAB format to line things up v
     rate_p99  9.887000
     rate_p100 9.887000
 
+.. _10min-choices-for-printing-to-files:
+
 Choices for printing to files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

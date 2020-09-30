@@ -41,7 +41,7 @@
 * unix-toolkit context: needs a leading paragraph
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
 * !! cross-references all need work !!
-* Scan for hrefs and other non-ported markup
+* Scan for non-ported markup
 * Autogen the `manpage.txt`
 * Get rid of `POKI_CARDIFY` -- just indent by 4
 * Chocolatey to windows-install notes

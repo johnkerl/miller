@@ -8,31 +8,29 @@ Suppose you always use CSV files. Then instead of always having to type ``--csv`
 
 ::
 
-POKI_CARDIFY(mlr --csv cut -x -f extra mydata.csv)HERE
+    mlr --csv cut -x -f extra mydata.csv
 
 ::
 
-POKI_CARDIFY(mlr --csv sort -n id mydata.csv)HERE
+    mlr --csv sort -n id mydata.csv
 
 and so on, you can instead put the following into your ``$HOME/.mlrrc``:
 
 ::
 
-POKI_CARDIFY(--csv)HERE
+    --csv
 
 Then you can just type things like
 
 ::
 
-POKI_CARDIFY(mlr cut -x -f extra mydata.csv)HERE
+    mlr cut -x -f extra mydata.csv
 
 ::
 
-POKI_CARDIFY(mlr sort -n id mydata.csv)HERE
+    mlr sort -n id mydata.csv
 
-and the ``--csv`` part will automatically be understood. (If you do
-want to process, say, a JSON file then ``mlr --json ...`` at the command
-line will override the default from your ``.mlrrc``.)
+and the ``--csv`` part will automatically be understood. (If you do want to process, say, a JSON file then ``mlr --json ...`` at the command line will override the default from your ``.mlrrc``.)
 
 What you can put in your .mlrrc
 ----------------------------------------------------------------

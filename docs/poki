@@ -36,17 +36,6 @@ def main
       cmd = $1
       run_content_generator(cmd, output_handle)
 
-    elsif content_line =~ /POKI_CARDIFY\(([^)]+)\)HERE/
-      content_line = $1
-      cardify(content_line, output_handle)
-    elsif content_line =~ /POKI_CARDIFY{{([^)]+)}}HERE/
-      content_line = $1
-      cardify(content_line, output_handle)
-
-    elsif content_line =~ /POKI_CARDIFY{{(.+)}}HERE/
-      content_line = $1
-      cardify(content_line, output_handle)
-
     elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
        cmd = $1
        run_command(cmd, output_handle)
@@ -97,11 +86,6 @@ def run_content_generator(cmd, output_handle)
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
   output_handle.puts(cmd_output)
-end
-
-# ----------------------------------------------------------------
-def cardify(content_line, output_handle)
-  write_card([content_line], output_handle)
 end
 
 # ----------------------------------------------------------------

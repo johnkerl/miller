@@ -161,17 +161,17 @@ Bodies for all compound statements must be enclosed in **curly braces**, even if
 
 ::
 
-POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2' # Syntax error}}HERE
+    mlr put 'if ($x == 1) $y = 2' # Syntax error
 
 ::
 
-POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 }' # This is OK}}HERE
+    mlr put 'if ($x == 1) { $y = 2 }' # This is OK
 
 Bodies for compound statements may be empty:
 
 ::
 
-POKI_CARDIFY{{mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable}}HERE
+    mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 
 Variables
 ----------------------------------------------------------------
@@ -659,11 +659,11 @@ These are again reminiscent of ``awk``. Pattern-action blocks are a special case
 
 ::
 
-POKI_CARDIFY{{mlr put 'NR == 4 {$foo = "bar"}'}}HERE
+    mlr put 'NR == 4 {$foo = "bar"}'
 
 ::
 
-POKI_CARDIFY{{mlr put 'if (NR == 4) {$foo = "bar"}'}}HERE
+    mlr put 'if (NR == 4) {$foo = "bar"}'
 
 Compound statements use ``elif`` (rather than ``elsif`` or ``else if``):
 

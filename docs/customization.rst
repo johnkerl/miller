@@ -33,9 +33,7 @@ Then you can just type things like
 
     mlr sort -n id mydata.csv
 
-and the ``--csv`` part will automatically be understood. (If you do
-want to process, say, a JSON file then ``mlr --json ...`` at the command
-line will override the default from your ``.mlrrc``.)
+and the ``--csv`` part will automatically be understood. (If you do want to process, say, a JSON file then ``mlr --json ...`` at the command line will override the default from your ``.mlrrc``.)
 
 What you can put in your .mlrrc
 ----------------------------------------------------------------

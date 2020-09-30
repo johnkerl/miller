@@ -61,17 +61,21 @@ Such data are easy to generate, e.g. in Ruby with
 
 ::
 
-POKI_CARDIFY(puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}")HERE
+  puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
 
-POKI_CARDIFY{{puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')}}HERE
+::
+
+  puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
 
 or ``print`` statements in various languages, e.g.
 
 ::
 
-POKI_CARDIFY(echo "type=3,user=$USER,date=$date\n";)HERE
+    echo "type=3,user=$USER,date=$date\n";
 
-POKI_CARDIFY{{logger.log("type=3,user=$USER,date=$date\n");}}HERE
+::
+
+    logger.log("type=3,user=$USER,date=$date\n");
 
 Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, ``dish=7,egg=8,flint`` is parsed as ``"dish" => "7", "egg" => "8", "3" => "flint"`` and ``dish,egg,flint`` is parsed as ``"1" => "dish", "2" => "egg", "3" => "flint"``.
 

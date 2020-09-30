@@ -93,6 +93,8 @@ If your output has a lot of columns, you can use XTAB format to line things up v
 
 POKI_RUN_COMMAND{{mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
 
+.. _10min-choices-for-printing-to-files:
+
 Choices for printing to files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

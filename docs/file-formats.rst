@@ -128,15 +128,19 @@ Such data are easy to generate, e.g. in Ruby with
 
 ::
 
-    puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
+  puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
 
-    puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+::
+
+  puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
 
 or ``print`` statements in various languages, e.g.
 
 ::
 
     echo "type=3,user=$USER,date=$date\n";
+
+::
 
     logger.log("type=3,user=$USER,date=$date\n");
 
