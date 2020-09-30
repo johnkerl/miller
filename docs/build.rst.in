@@ -20,6 +20,7 @@ Grateful acknowledgement: Miller's GNU autoconfig work was done by the generous 
 * ``cd mlr-i.j.k``
 * Install the following packages using your system's package manager (``apt-get``, ``yum install``, etc.): **flex**
 * Various configuration options of your choice, e.g.
+
   * ``./configure``
   * ``./configure --prefix=/usr/local``
   * ``./configure --prefix=$HOME/pkgs``
@@ -27,6 +28,7 @@ Grateful acknowledgement: Miller's GNU autoconfig work was done by the generous 
   * ``./configure --disable-shared`` (to make a statically linked executable)
   * ``./configure 'CFLAGS=-Wall -std=gnu99 -O3'``
   * etc.
+
 *  ``make`` creates the ``c/mlr`` executable
 *  ``make check``
 *  ``make install`` copies the ``c/mlr`` executable to your prefix's ``bin`` subdirectory.

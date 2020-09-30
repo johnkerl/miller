@@ -37,7 +37,6 @@
 
 ## To do
 
-* unix-toolkit context: needs a leading paragraph
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
 * Scan for non-ported markup
 * Autogen the `manpage.txt`
