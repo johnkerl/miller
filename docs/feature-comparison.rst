@@ -4,6 +4,8 @@
 Unix-toolkit context
 ================================================================
 
+How does Miller fit within the Unix toolkit (`grep`, `sed`, `awk`, etc.)?
+
 File-format awareness
 ----------------------------------------------------------------
 
