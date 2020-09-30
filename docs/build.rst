@@ -134,7 +134,7 @@ These are included within the `Miller source tree <https://github.com/johnkerl/m
 
 * `Mersenne Twister <http://en.wikipedia.org/wiki/Mersenne_Twister>`_ for pseudorandom-number generation: `C implementation by Nishimura and Matsumoto <https://github.com/johnkerl/miller/blob/master/c/lib/mtrand.c>`_ with license terms respected.
 * `MinUnit <http://www.jera.com/techinfo/jtns/jtn002.html>`_ for unit-testing, with as-is-no-warranty license http://www.jera.com/techinfo/jtns/jtn002.html#License, https://github.com/johnkerl/miller/blob/master/c/lib/minunit.h.
-* The `Lemon parser-generator <http://www.hwaci.com/sw/lemon/>`_, the author of which `explicitly disclaims copyright <https://github.com/johnkerl/miller/blob/master/c/dsls/lemon.c>`_
+* The `Lemon parser-generator <http://www.hwaci.com/sw/lemon/>`_, the author of which explicitly disclaims copyright.
 * The `udp JSON parser <https://github.com/udp/json-parser>`_, with BSD2 license.
 * The `sheredom UTF-8 library <https://github.com/sheredom/utf8.h>`_, which is free and unencumbered software released into the public domain.
 * The NetBSD ``strptime`` (needed for the Windows/MSYS2 port since MSYS2 lacks this), with BSD license.
