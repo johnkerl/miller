@@ -8,7 +8,7 @@ Given this `word list <data/english-words.txt>`_, first take a look to see what 
 
 ::
 
-    $ head data/english-words.txt 
+    $ head data/english-words.txt
     a
     aa
     aal
@@ -40,9 +40,9 @@ Then the following will randomly sample ten words with four to eight characters 
 Randomly generating jabberwocky words
 ----------------------------------------------------------------
 
-These are simple *n*-grams as described `here <http://johnkerl.org/randspell/randspell-slides-ts.pdf>`_. Some common functions are `here <ngrams/ngfuncs.mlr.txt>`_. Then here are scripts for `1-grams <ngrams/ng1.mlr.txt>`_ `2-grams <ngrams/ng2.mlr.txt>`_ `3-grams <ngrams/ng3.mlr.txt>`_ `4-grams <ngrams/ng4.mlr.txt>`_, and `5-grams <ngrams/ng5.mlr.txt>`_. 
+These are simple *n*-grams as described `here <http://johnkerl.org/randspell/randspell-slides-ts.pdf>`_. Some common functions are `here <ngrams/ngfuncs.mlr.txt>`_. Then here are scripts for `1-grams <ngrams/ng1.mlr.txt>`_ `2-grams <ngrams/ng2.mlr.txt>`_ `3-grams <ngrams/ng3.mlr.txt>`_ `4-grams <ngrams/ng4.mlr.txt>`_, and `5-grams <ngrams/ng5.mlr.txt>`_.
 
-The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*: 
+The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
 ::
 
@@ -67,7 +67,7 @@ The idea is that words from the input file are consumed, then taken apart and pa
 Program timing
 ----------------------------------------------------------------
 
-This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The ``delta`` function computes the difference between successive timestamps. 
+This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The ``delta`` function computes the difference between successive timestamps.
 
 ::
 
@@ -124,7 +124,7 @@ POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
 Sieve of Eratosthenes
 ----------------------------------------------------------------
 
-The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`_ is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data). 
+The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`_ is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
 
 ::
 
@@ -139,7 +139,7 @@ Mandelbrot-set generator
 
 The `Mandelbrot set <http://en.wikipedia.org/wiki/Mandelbrot_set>`_ is also easily expressed. This isn't an important case of data-processing in the vein for which Miller was designed, but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
 
-The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen: 
+The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
 ::
 
@@ -151,7 +151,7 @@ At standard resolution this makes a nice little ASCII plot:
 
 POKI_RUN_COMMAND{{mlr -n put -f ./programs/mand.mlr}}HERE
 
-But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture: 
+But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
 
 ::
 
@@ -160,7 +160,7 @@ But using a very small font size (as small as my Mac will let me go), and by cho
     iheight=$(stty size | mlr --nidx --fs space cut -f 1)
     iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
     echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
-    | mlr put -f programs/mand.mlr 
+    | mlr put -f programs/mand.mlr
     </pre></div>
 
 .. image:: pix/mand.png

@@ -29,9 +29,9 @@ Grateful acknowledgement: Miller's GNU autoconfig work was done by the generous 
   * ``./configure 'CFLAGS=-Wall -std=gnu99 -O3'``
   * etc.
 
-*  ``make`` creates the ``c/mlr`` executable
-*  ``make check``
-*  ``make install`` copies the ``c/mlr`` executable to your prefix's ``bin`` subdirectory.
+* ``make`` creates the ``c/mlr`` executable
+* ``make check``
+* ``make install`` copies the ``c/mlr`` executable to your prefix's ``bin`` subdirectory.
 
 From git clone using autoconfig
 ----------------------------------------------------------------
@@ -45,7 +45,7 @@ From git clone using autoconfig
 Without using autoconfig
 ----------------------------------------------------------------
 
-GNU autoconfig is familiar to many users, and indeed plenty of folks won't bother to use an open-source software package which doesn't have autoconfig support. And this is for good reason: GNU autoconfig allows us to build software on a wide diversity of platforms. For this reason I'm happy that Miller supports autoconfig. 
+GNU autoconfig is familiar to many users, and indeed plenty of folks won't bother to use an open-source software package which doesn't have autoconfig support. And this is for good reason: GNU autoconfig allows us to build software on a wide diversity of platforms. For this reason I'm happy that Miller supports autoconfig.
 
 But, many others (myself included!) find autoconfig confusing: if it works without errors, great, but if not, the ``./configure && make`` output can be exceedingly difficult to decipher. And this also can be a turn-off for using open-source software: if you can't figure out the build errors, you may just keep walking. For this reason I'm happy that Miller allows you to build without autoconfig. (Of course, if you have any build errors, feel free to contact me at mailto:kerl.john.r+miller@gmail.com -- or, better, open an issue with "New Issue" at https://github.com/johnkerl/miller/issues.)
 
@@ -58,14 +58,14 @@ Steps:
 * ``make -f Makefile.no-autoconfig`` creates the ``mlr`` executable and runs unit/regression tests (i.e. the equivalent of both ``make`` and ``make check`` using autoconfig).
 * ``make install`` copies the ``mlr`` executable to your install directory.
 
-The ``Makefile.no-autoconfig`` is simple: little more than ``gcc *.c``.  Customzing is less automatic than autoconfig, but more transparent. I expect this makefile to work with few modifications on a large fraction of modern Linux/BSD-like systems: I'm aware of successful use with ``gcc`` and ``clang``, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS Yosemite), and FreeBSD. 
+The ``Makefile.no-autoconfig`` is simple: little more than ``gcc *.c``.  Customzing is less automatic than autoconfig, but more transparent. I expect this makefile to work with few modifications on a large fraction of modern Linux/BSD-like systems: I'm aware of successful use with ``gcc`` and ``clang``, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS Yosemite), and FreeBSD.
 
 Windows
 ----------------------------------------------------------------
 
-*Disclaimer: I'm now relying exclusively on* `Appveyor <https://ci.appveyor.com/project/johnkerl/miller>`_ *for Windows builds; I haven't built from source using MSYS in quite a while.* 
+*Disclaimer: I'm now relying exclusively on* `Appveyor <https://ci.appveyor.com/project/johnkerl/miller>`_ *for Windows builds; I haven't built from source using MSYS in quite a while.*
 
-Miller has been built on Windows using MSYS2: http://www.msys2.org/.  You can install MSYS2 and build Miller from its source code within MSYS2, and then you can use the binary from outside MSYS2.  You can also use a precompiled binary (see above). 
+Miller has been built on Windows using MSYS2: http://www.msys2.org/.  You can install MSYS2 and build Miller from its source code within MSYS2, and then you can use the binary from outside MSYS2.  You can also use a precompiled binary (see above).
 
 You will first need to install MSYS2: http://www.msys2.org/.  Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to ``C:\msys2\``) run ``C:\msys2\mingw64.exe``.  Within the MSYS2 shell, you can run the following to install dependent packages:
 
@@ -180,7 +180,7 @@ In this example I am using version 3.4.0; of course that will change for subsequ
 
   * Submit ``brew`` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
   * Similarly for ``macports``: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
-  *  Social-media updates.
+  * Social-media updates.
 
 ::
 

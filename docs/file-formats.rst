@@ -83,12 +83,12 @@ Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` d
 
 **TSV (tab-separated values):** the following are synonymous pairs:
 
-*  ``--tsv`` and ``--csv --fs tab``
-*  ``--itsv`` and ``--icsv --ifs tab``
-*  ``--otsv`` and ``--ocsv --ofs tab``
-*  ``--tsvlite`` and ``--csvlite --fs tab``
-*  ``--itsvlite`` and ``--icsvlite --ifs tab``
-*  ``--otsvlite`` and ``--ocsvlite --ofs tab``
+* ``--tsv`` and ``--csv --fs tab``
+* ``--itsv`` and ``--icsv --ifs tab``
+* ``--otsv`` and ``--ocsv --ofs tab``
+* ``--tsvlite`` and ``--csvlite --fs tab``
+* ``--itsvlite`` and ``--icsvlite --ifs tab``
+* ``--otsvlite`` and ``--ocsvlite --ofs tab``
 
 **ASV (ASCII-separated values):** the flags ``--asv``, ``--iasv``, ``--oasv``, ``--asvlite``, ``--iasvlite``, and ``--oasvlite`` are analogous except they use ASCII FS and RS 0x1f and 0x1e, respectively.
 

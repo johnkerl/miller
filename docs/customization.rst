@@ -7,7 +7,7 @@ Customization: .mlrrc
 How to use .mlrrc
 ----------------------------------------------------------------
 
-Suppose you always use CSV files. Then instead of always having to type ``--csv`` as in 
+Suppose you always use CSV files. Then instead of always having to type ``--csv`` as in
 
 ::
 
@@ -38,9 +38,9 @@ and the ``--csv`` part will automatically be understood. (If you do want to proc
 What you can put in your .mlrrc
 ----------------------------------------------------------------
 
-* You can include any command-line flags, except the "terminal" ones such as ``--help``.  
+* You can include any command-line flags, except the "terminal" ones such as ``--help``.
 
-* The formatting rule is you need to put one flag beginning with ``--`` per line: for example, ``--csv`` on one line and ``--nr-progress-mod 1000`` on a separate line.  
+* The formatting rule is you need to put one flag beginning with ``--`` per line: for example, ``--csv`` on one line and ``--nr-progress-mod 1000`` on a separate line.
 
 * Since every line starts with a ``--`` option, you can leave off the initial ``--`` if you want. For example, ``ojson`` is the same as ``--ojson``, and ``nr-progress-mod 1000`` is the same as ``--nr-progress-mod 1000``.
 

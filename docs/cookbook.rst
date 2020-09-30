@@ -60,7 +60,7 @@ Likewise, if you need to produce CSV which is lacking its header, you can pipe M
     red,square,0,48,0.9562743938458542,0.7467203085342884,0.7755423050923582,7.117831369597269
     purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.753094629505863
 
-Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also :doc:`file-formats`.) For example: 
+Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also :doc:`file-formats`.) For example:
 
 ::
 
@@ -302,7 +302,7 @@ If you want to look at partial uniqueness -- for example, show only the first re
 Data-cleaning examples
 ----------------------------------------------------------------
 
-Here are some ways to use the type-checking options as described in :ref:`reference-dsl-type-tests-and-assertions` Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.) 
+Here are some ways to use the type-checking options as described in :ref:`reference-dsl-type-tests-and-assertions` Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.)
 
 ::
 
@@ -400,7 +400,7 @@ The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 
 While ``mlr nest`` is simplest, let's also take a look at a few ways to do this using the ``put`` DSL.
 
-One option to split out the colon-delimited values in the ``b`` column is to use ``splitnv`` to create an integer-indexed map and loop over it, adding new fields to the current record: 
+One option to split out the colon-delimited values in the ``b`` column is to use ``splitnv`` to create an integer-indexed map and loop over it, adding new fields to the current record:
 
 ::
 
@@ -494,7 +494,7 @@ First, rename counter columns to make them distinct:
     yellow,27
     blue,6944
 
-Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use ``--ul`` and ``--ur`` to emit unpaired records (namely, purple on the left and yellow on the right): 
+Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use ``--ul`` and ``--ur`` to emit unpaired records (namely, purple on the left and yellow on the right):
 
 ::
 
@@ -534,7 +534,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
     $ wc -l data/miss-date.csv
         1372 data/miss-date.csv
 
-Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters): 
+Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
 
 ::
 
@@ -601,12 +601,12 @@ Given this, it's now easy to see where the gaps are:
 Two-pass algorithms
 ----------------------------------------------------------------
 
-Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as ``sort``, ``tac``, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory. 
+Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as ``sort``, ``tac``, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
 
 Two-pass algorithms: computation of percentages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage. 
+For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage.
 
 ::
 
@@ -699,7 +699,7 @@ The idea is to retain records having the largest value of ``n`` in the following
     red    purple 4 0.477187
     blue   red    4 0.007487
 
-Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end: 
+Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
 
 ::
 
@@ -791,7 +791,7 @@ with the result that your program's output is
     inner1=312
     inner1=313,inner2=314
 
-The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don't refactor your code just to handle some ad-hoc log-data formatting -- instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs. 
+The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don't refactor your code just to handle some ad-hoc log-data formatting -- instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs.
 
 ::
 
@@ -816,7 +816,7 @@ The idea here is that middles starting with a 1 belong to the outer value of 1, 
 Regularizing ragged CSV
 ----------------------------------------------------------------
 
-Miller handles compliant CSV: in particular, it's an error if the number of data fields in a given data line don't match the number of header lines. But in the event that you have a CSV file in which some lines have less than the full number of fields, you can use Miller to pad them out. The trick is to use NIDX format, for which each line stands on its own without respect to a header line. 
+Miller handles compliant CSV: in particular, it's an error if the number of data fields in a given data line don't match the number of header lines. But in the event that you have a CSV file in which some lines have less than the full number of fields, you can use Miller to pad them out. The trick is to use NIDX format, for which each line stands on its own without respect to a header line.
 
 ::
 
@@ -876,7 +876,7 @@ Suppose you have some heterogeneous data like this:
     { "qoh": 0, "rate": 0.40, "latency": 0.01 }
     { "qoh": 5438, "rate": 1.56, "latency": 0.17 }
 
-A reasonable question to ask is, how many occurrences of each field are there? And, what percentage of total row count has each of them? Since the denominator of the percentage is not known until the end, this is a two-pass algorithm: 
+A reasonable question to ask is, how many occurrences of each field are there? And, what percentage of total row count has each of them? Since the denominator of the percentage is not known until the end, this is a two-pass algorithm:
 
 ::
 
@@ -938,7 +938,7 @@ Then
 Unsparsing
 ----------------------------------------------------------------
 
-The previous section discussed how to fill out missing data fields within CSV with full header line -- so the list of all field names is present within the header line. Next, let's look at a related problem: we have data where each record has various key names but we want to produce rectangular output having the union of all key names. 
+The previous section discussed how to fill out missing data fields within CSV with full header line -- so the list of all field names is present within the header line. Next, let's look at a related problem: we have data where each record has various key names but we want to produce rectangular output having the union of all key names.
 
 For example, suppose you have JSON input like this:
 
@@ -950,7 +950,7 @@ For example, suppose you have JSON input like this:
     {"a":1,"v":2,"x":3}
     {"v":1,"w":2}
 
-There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block: 
+There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block:
 
 ::
 
@@ -1085,7 +1085,7 @@ produces output like this:
     27 317811 635621  0.605969906
     28 514229 1028457 0.971235037
 
-Note that the time it takes to evaluate the function is blowing up exponentially as the input argument increases. Using ``@``-variables, which persist across records, we can cache and reuse the results of previous computations: 
+Note that the time it takes to evaluate the function is blowing up exponentially as the input argument increases. Using ``@``-variables, which persist across records, we can cache and reuse the results of previous computations:
 
 ::
 

@@ -16,11 +16,11 @@ Example:
 
 POKI_RUN_COMMAND{{mlr stats1 -a sum -f x -g a data/small}}HERE
 
-*  Verbs are coded in C
-*  They run a bit faster
-*  They take fewer keystrokes
-*  There is less to learn
-*  Their customization is limited to each verb's options
+* Verbs are coded in C
+* They run a bit faster
+* They take fewer keystrokes
+* There is less to learn
+* Their customization is limited to each verb's options
 
 Example:
 
@@ -28,11 +28,11 @@ Example:
 
 POKI_RUN_COMMAND{{mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small}}HERE
 
-*  You get to write your own DSL expressions
-*  They run a bit slower
-*  They take more keystrokes
-*  There is more to learn
-*  They are highly customizable
+* You get to write your own DSL expressions
+* They run a bit slower
+* They take more keystrokes
+* There is more to learn
+* They are highly customizable
 
 .. _reference-verbs-altkv:
 
@@ -211,11 +211,11 @@ POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv}
 
 Function links:
 
-*  :ref:`reference-dsl-lstrip`
-*  :ref:`reference-dsl-rstrip`
-*  :ref:`reference-dsl-strip`
-*  :ref:`reference-dsl-collapse_whitespace`
-*  :ref:`reference-dsl-clean_whitespace`
+* :ref:`reference-dsl-lstrip`
+* :ref:`reference-dsl-rstrip`
+* :ref:`reference-dsl-strip`
+* :ref:`reference-dsl-collapse_whitespace`
+* :ref:`reference-dsl-clean_whitespace`
 
 .. _reference-verbs-count:
 

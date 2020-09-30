@@ -145,7 +145,7 @@ The histogram shows the different distribution of 0/1 flags:
     0.900000  1.000000 4020       1013    939
     1.000000  1.100000 0          0       25
 
-Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script: 
+Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
 
 ::
 

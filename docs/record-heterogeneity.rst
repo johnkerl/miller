@@ -61,7 +61,7 @@ Miller simply prints a newline and a new header when there is a schema change. W
     resource         loadsec ok
     /some/other/path 0.97    false
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use ``--allow-ragged-csv-input`` (or keystroke-saver ``--ragged``). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows: 
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use ``--allow-ragged-csv-input`` (or keystroke-saver ``--ragged``). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
 
 ::
 

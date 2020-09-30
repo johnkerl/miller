@@ -22,11 +22,11 @@ Example:
     a=eks,x_sum=1.140079
     a=wye,x_sum=0.777892
 
-*  Verbs are coded in C
-*  They run a bit faster
-*  They take fewer keystrokes
-*  There is less to learn
-*  Their customization is limited to each verb's options
+* Verbs are coded in C
+* They run a bit faster
+* They take fewer keystrokes
+* There is less to learn
+* Their customization is limited to each verb's options
 
 Example:
 
@@ -37,11 +37,11 @@ Example:
     a=eks,x_sum=1.140079
     a=wye,x_sum=0.777892
 
-*  You get to write your own DSL expressions
-*  They run a bit slower
-*  They take more keystrokes
-*  There is more to learn
-*  They are highly customizable
+* You get to write your own DSL expressions
+* They run a bit slower
+* They take more keystrokes
+* There is more to learn
+* They are highly customizable
 
 .. _reference-verbs-altkv:
 
@@ -337,11 +337,11 @@ clean-whitespace
 
 Function links:
 
-*  :ref:`reference-dsl-lstrip`
-*  :ref:`reference-dsl-rstrip`
-*  :ref:`reference-dsl-strip`
-*  :ref:`reference-dsl-collapse_whitespace`
-*  :ref:`reference-dsl-clean_whitespace`
+* :ref:`reference-dsl-lstrip`
+* :ref:`reference-dsl-rstrip`
+* :ref:`reference-dsl-strip`
+* :ref:`reference-dsl-collapse_whitespace`
+* :ref:`reference-dsl-clean_whitespace`
 
 .. _reference-verbs-count:
 

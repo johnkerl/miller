@@ -1,7 +1,7 @@
 Mixing with other languages
 ================================================================
 
-As discussed in the section on :doc:`file-formats`, Miller supports several different file formats. Different tools are good at different things, so it's important to be able to move data into and out of other languages. **CSV** and **JSON** are well-known, of course; here are some examples using **DKVP** format, with **Ruby** and **Python**. Last, we show how to use arbitrary **shell commands** to extend functionality beyond Miller's domain-specific language. 
+As discussed in the section on :doc:`file-formats`, Miller supports several different file formats. Different tools are good at different things, so it's important to be able to move data into and out of other languages. **CSV** and **JSON** are well-known, of course; here are some examples using **DKVP** format, with **Ruby** and **Python**. Last, we show how to use arbitrary **shell commands** to extend functionality beyond Miller's domain-specific language.
 
 DKVP I/O in Python
 ----------------------------------------------------------------

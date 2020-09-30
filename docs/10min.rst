@@ -231,7 +231,7 @@ Or, JSON output with vertical-formatting flags::
 Sorts and stats
 ^^^^^^^^^^^^^^^
 
-Now suppose you want to sort the data on a given column, *and then* take the top few in that ordering. You can use Miller's ``then`` feature to pipe commands together.  
+Now suppose you want to sort the data on a given column, *and then* take the top few in that ordering. You can use Miller's ``then`` feature to pipe commands together.
 
 Here are the records with the top three ``index`` values::
 
@@ -292,7 +292,7 @@ Sometimes we want to print output to another file: just use **> outputfilenamego
     </pre> </div>
     </td><td>
     <div class="pokipanel"> <pre>
-    % cat newfile.csv 
+    % cat newfile.csv
     color  shape    flag index quantity rate
     yellow triangle 1    11    43.6498  9.8870
     red    square   1    15    79.2778  0.0130
@@ -443,7 +443,7 @@ Using ``mysql``'s ``-B`` we get TSV output::
 
 Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.::
 
-    $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat 
+    $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat
     [
       {
         "Field": "id",

@@ -14,7 +14,7 @@ If you're using Miller version less than 5.0.0 (try ``mlr --version`` on your sy
 Fields not selected
 ----------------------------------------------------------------
 
-Check the field-separators of the data, e.g. with the command-line ``head`` program. Example: for CSV, Miller's default record separator is comma; if your data is tab-delimited, e.g. ``aTABbTABc``, then Miller won't find three fields named ``a``, ``b``, and ``c`` but rather just one named ``aTABbTABc``.  Solution in this case: ``mlr --fs tab {remaining arguments ...}``. 
+Check the field-separators of the data, e.g. with the command-line ``head`` program. Example: for CSV, Miller's default record separator is comma; if your data is tab-delimited, e.g. ``aTABbTABc``, then Miller won't find three fields named ``a``, ``b``, and ``c`` but rather just one named ``aTABbTABc``.  Solution in this case: ``mlr --fs tab {remaining arguments ...}``.
 
 Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable characters.
 
@@ -86,7 +86,7 @@ How do I suppress numeric conversion?
 
 **TL;DR use put -S**.
 
-Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input records is to parse them as integer, if possible, then as float, if possible, else leave them as string: 
+Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input records is to parse them as integer, if possible, then as float, if possible, else leave them as string:
 
 ::
 
@@ -112,7 +112,7 @@ The numeric-conversion rule is simple:
 * If that doesn't succeed, try to scan as float (``"1.0"`` should be float);
 * If that doesn't succeed, leave the value as a string (``"1x"`` is string).
 
-This is a sensible default: you should be able to put ``'$z = $x + $y'`` without having to write ``'$z = int($x) + float($y)'``.  Also note that default output format for floating-point numbers created by ``put`` (and other verbs such as ``stats1``) is six decimal places; you can override this using ``mlr --ofmt``.  Also note that Miller uses your system's C library functions whenever possible: e.g. ``sscanf`` for converting strings to integer or floating-point. 
+This is a sensible default: you should be able to put ``'$z = $x + $y'`` without having to write ``'$z = int($x) + float($y)'``.  Also note that default output format for floating-point numbers created by ``put`` (and other verbs such as ``stats1``) is six decimal places; you can override this using ``mlr --ofmt``.  Also note that Miller uses your system's C library functions whenever possible: e.g. ``sscanf`` for converting strings to integer or floating-point.
 
 But now suppose you have data like these:
 
@@ -178,7 +178,7 @@ The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Th
 How do I examine then-chaining?
 ----------------------------------------------------------------
 
-Then-chaining found in Miller is intended to function the same as Unix pipes, but with less keystroking. You can print your data one pipeline step at a time, to see what intermediate output at one step becomes the input to the next step. 
+Then-chaining found in Miller is intended to function the same as Unix pipes, but with less keystroking. You can print your data one pipeline step at a time, to see what intermediate output at one step becomes the input to the next step.
 
 First, look at the input data:
 
@@ -230,7 +230,7 @@ Note, by the way, that you'll get the same results using pipes:
 I assigned $9 and it's not 9th
 ----------------------------------------------------------------
 
-Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data. 
+Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
 
 ::
 
@@ -282,7 +282,7 @@ Given input like
     2018-03-07,discovery
     2018-02-03,allocation
 
-we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example: 
+we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
 
 ::
 
@@ -323,7 +323,7 @@ For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no esca
     Name Khavari, Darius
     Role tester
 
-But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters: 
+But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
 
 ::
 
@@ -392,7 +392,7 @@ This is a little tricky due to the shell's handling of quotes. For simplicity, l
     $ echo a=bcd | mlr put -f data/single-quote-example.mlr
     a=It's OK, I said, then 'for now'.
 
-So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem. 
+So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
 
 Without putting the update expression in a file, it's messier:
 
@@ -469,14 +469,14 @@ why don't I see ``NR=1`` and ``NR=2`` here??
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
 
-The reason is that ``NR`` is computed for the original input records and isn't dynamically updated. By contrast, ``NF`` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of ``NF`` will change: 
+The reason is that ``NR`` is computed for the original input records and isn't dynamically updated. By contrast, ``NF`` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of ``NF`` will change:
 
 ::
 
     $ echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
     nf1=3,u=4,nf2=5,nf3=3
 
-``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows: 
+``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
 
 ::
 
@@ -541,9 +541,9 @@ For example, the right file here has nine records, and the left file should add 
     10.4.5.94 apoapsis.east.our.org 1448762589 8899
     10.4.5.94 apoapsis.east.our.org 1448762599 12200
 
-The issue is that Miller's ``join``, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system ``join`` command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input. 
+The issue is that Miller's ``join``, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system ``join`` command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.
 
-The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input: 
+The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:
 
 ::
 
@@ -559,7 +559,7 @@ The solution (besides pre-sorting the input files on the join keys) is to simply
     10.3.1.18 nadir.east.our.org    1448762598 73425
     10.4.5.94 apoapsis.east.our.org 1448762599 12200
 
-General advice is to make sure the left-file is relatively small, e.g. containing name-to-number mappings, while saving large amounts of data for the right file. 
+General advice is to make sure the left-file is relatively small, e.g. containing name-to-number mappings, while saving large amounts of data for the right file.
 
 How to rectangularize after joins with unpaired?
 ----------------------------------------------------------------
@@ -615,11 +615,11 @@ Thanks to @aborruso for the tip!
 What about XML or JSON file formats?
 ----------------------------------------------------------------
 
-Miller handles **tabular data**, which is a list of records each having fields which are key-value pairs. Miller also doesn't require that each record have the same field names (see also :doc:`record-heterogeneity`). Regardless, tabular data is a **non-recursive data structure**. 
+Miller handles **tabular data**, which is a list of records each having fields which are key-value pairs. Miller also doesn't require that each record have the same field names (see also :doc:`record-heterogeneity`). Regardless, tabular data is a **non-recursive data structure**.
 
-XML, JSON, etc. are, by contrast, all **recursive** or **nested** data structures. For example, in JSON you can represent a hash map whose values are lists of lists. 
+XML, JSON, etc. are, by contrast, all **recursive** or **nested** data structures. For example, in JSON you can represent a hash map whose values are lists of lists.
 
-Now, you can put tabular data into these formats -- since list-of-key-value-pairs is one of the things representable in XML or JSON. Example: 
+Now, you can put tabular data into these formats -- since list-of-key-value-pairs is one of the things representable in XML or JSON. Example:
 
 ::
 
@@ -651,7 +651,7 @@ Now, you can put tabular data into these formats -- since list-of-key-value-pair
     # JSON
     [{"x":1,"y":2},{"z":3}]
 
-However, a tool like Miller which handles non-recursive data is never going to be able to handle full XML/JSON semantics -- only a small subset.  If tabular data represented in XML/JSON/etc are sufficiently well-structured, it may be easy to grep/sed out the data into a simpler text form -- this is a general text-processing problem. 
+However, a tool like Miller which handles non-recursive data is never going to be able to handle full XML/JSON semantics -- only a small subset.  If tabular data represented in XML/JSON/etc are sufficiently well-structured, it may be easy to grep/sed out the data into a simpler text form -- this is a general text-processing problem.
 
 Miller does support tabular data represented in JSON: please see :doc:`file-formats`.  See also `jq <https://stedolan.github.io/jq/>`_ for a truly powerful, JSON-specific tool.
 
