@@ -17,6 +17,8 @@ TOP OF LIST:
 
 * clean up 'mlr --help' to not advertise things it doesn't do yet
 
+* prohibit NR etc at LHS within the CST
+
 * ASV? golang csv package parameterizes comma but not crlf :(
 
 * mlr -f / -F

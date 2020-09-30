@@ -859,10 +859,6 @@ Type-test and type-assertion expressions
 
 The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-<table>
-<tr>
-<td>
-
 ::
 
     $ mlr -F | grep ^is
@@ -883,9 +879,6 @@ The following ``is...`` functions take a value and return a boolean indicating w
     is_present
     is_string
 
-</td>
-<td>
-
 ::
 
     $ mlr -F | grep ^assert
@@ -905,10 +898,6 @@ The following ``is...`` functions take a value and return a boolean indicating w
     asserting_numeric
     asserting_present
     asserting_string
-
-</td>
-</tr>
-</table>
 
 Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these.
 
@@ -1503,7 +1492,7 @@ Miller's ``while`` and ``do-while`` are unsurprising in comparison to various la
     x=1,y=2,3=,4=,5=,foo=bar
 
 A ``break`` or ``continue`` within nested conditional blocks or if-statements will, of course, propagate to the innermost loop enclosing them, if any. A ``break`` or ``continue`` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
-The existence of ``while``, ``do-while``, and ``for`` loops in Miller's DSL means that you can create infinite-loop scenarios inadvertently.  In particular, please recall that DSL statements are executed once if in ``begin`` or ``end`` blocks, and once *per record* otherwise. For example, **``while (NR < 10)`` will never terminate as ``NR`` is only incremented between records**.
+The existence of ``while``, ``do-while``, and ``for`` loops in Miller's DSL means that you can create infinite-loop scenarios inadvertently.  In particular, please recall that DSL statements are executed once if in ``begin`` or ``end`` blocks, and once *per record* otherwise. For example, **while (NR < 10) will never terminate as NR is only incremented between records**.
 
 For-loops
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1705,8 +1694,6 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
 
 Then we can get at various values as follows:
 
-<table><tr><td>
-
 ::
 
     $ mlr -n put --jknquoteint -q '
@@ -1728,8 +1715,6 @@ Then we can get at various values as follows:
     key=1,valuetype=int
     key=3,valuetype=map
     key=6,valuetype=map
-
-</td><td>
 
 ::
 
@@ -1753,8 +1738,6 @@ Then we can get at various values as follows:
     key1=3,key2=4,valuetype=int
     key1=6,key2=7,valuetype=map
 
-</td><td>
-
 ::
 
     $ mlr -n put --jknquoteint -q '
@@ -1775,8 +1758,6 @@ Then we can get at various values as follows:
       }
     '
     key1=7,key2=8,valuetype=int
-
-</td></tr></table>
 
 C-style triple-for loops
 ................................................................
@@ -4917,7 +4898,7 @@ The ``syntax error`` message is cryptic: it says ``syntax error at `` followed b
 
 Now for transparency:
 
-* As in any language, you can do (see :ref:`reference-dsl-print-statements`) ``print``</a> (or ``eprint`` to print to stderr). See also :ref:`reference-dsl-dump-statements` and :ref:`reference-dsl-emit-statements`.
+* As in any language, you can do (see :ref:`reference-dsl-print-statements`) ``print`` (or ``eprint`` to print to stderr). See also :ref:`reference-dsl-dump-statements` and :ref:`reference-dsl-emit-statements`.
 
 * The ``-v`` option to ``mlr put`` and ``mlr filter`` prints abstract syntax trees for your code. While not all details here will be of interest to everyone, certainly this makes questions such as operator precedence completely unambiguous.
 

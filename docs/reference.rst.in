@@ -318,7 +318,7 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
 
-* Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement **:
+* Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
 ::
 
@@ -381,7 +381,7 @@ See also https://en.wikipedia.org/wiki/Escape_sequences_in_C.
 
 These replacements apply only to strings you key in for the DSL expressions for ``filter`` and ``put``: that is, if you type ``\t`` in a string literal for a ``filter``/``put`` expression, it will be turned into a tab character. If you want a backslash followed by a ``t``, then please type ``\\t``.
 
-However, these replacements are not done automatically within your data stream. If you wish to make these replacements, you can do, for example, for a field named ``field``, `` mlr put '$field = gsub($field, "\\t", "\t")'``. If you need to make such a replacement for all fields in your data, you should probably simply use the system ``sed`` command.
+However, these replacements are not done automatically within your data stream. If you wish to make these replacements, you can do, for example, for a field named ``field``, ``mlr put '$field = gsub($field, "\\t", "\t")'``. If you need to make such a replacement for all fields in your data, you should probably simply use the system ``sed`` command.
 
 Regular expressions
 ----------------------------------------------------------------
@@ -475,7 +475,7 @@ The sum, difference, and product of integers is again integer, except for when t
 
 The short of it is that Miller does this transparently for you so you needn't think about it.
 
-Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2<sup>63</sup> or greater than 2<sup>63</sup>-1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
+Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\ :sup:`63` or greater than 2\ :sup:`63`\ -1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
 
 ::
 
@@ -490,7 +490,7 @@ Implementation details of this, for the interested: integer adds and subtracts o
     0x7ffffffffffffffe 9223372036854775806 9223372036854775808.000000 0x8000000000000000
     0x7fffffffffffffff 9223372036854775807 9223372036854775808.000000 0x8000000000000000
 
-That is, one cannot check an integer product to see if it is precisely greater than 2<sup>63</sup>-1 or less than -2<sup>63</sup> using either integer arithmetic (it may have already overflowed) or using double-precision (due to granularity).  Instead Miller checks for overflow in 64-bit integer multiplication by seeing whether the absolute value of the double-precision product exceeds the largest representable IEEE double less than 2<sup>63</sup>, which we see from the listing above is 9223372036854774784. (An alternative would be to do all integer multiplies using handcrafted multi-word 128-bit arithmetic.  This approach is not taken.)
+That is, one cannot check an integer product to see if it is precisely greater than 2\ :sup:`63`\ -1 or less than -2\ :sup:`63` using either integer arithmetic (it may have already overflowed) or using double-precision (due to granularity).  Instead Miller checks for overflow in 64-bit integer multiplication by seeing whether the absolute value of the double-precision product exceeds the largest representable IEEE double less than 2\ :sup:`63`, which we see from the listing above is 9223372036854774784. (An alternative would be to do all integer multiplies using handcrafted multi-word 128-bit arithmetic.  This approach is not taken.)
 
 Pythonic division
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

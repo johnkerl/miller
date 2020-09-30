@@ -284,14 +284,16 @@ Choices for printing to files
 
 Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
 
-Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command::
+Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command:
+
+::
 
     % mlr --icsv --opprint cat example.csv > newfile.csv
     # Output goes to the new file;
     # nothing is printed to the screen.
-    </pre> </div>
-    </td><td>
-    <div class="pokipanel"> <pre>
+
+::
+
     % cat newfile.csv
     color  shape    flag index quantity rate
     yellow triangle 1    11    43.6498  9.8870
@@ -382,7 +384,6 @@ For example, if you have::
     shape,flag,index
     circle,1,24
     square,0,36
-    </pre>
 
 then that's a way of saying::
 

@@ -19,7 +19,6 @@ Given this `word list <data/english-words.txt>`_, first take a look to see what 
     aba
     abac
     abaca
-    </pre> </div>
 
 Then the following will randomly sample ten words with four to eight characters in them:
 
@@ -161,6 +160,5 @@ But using a very small font size (as small as my Mac will let me go), and by cho
     iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
     echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
     | mlr put -f programs/mand.mlr
-    </pre></div>
 
 .. image:: pix/mand.png

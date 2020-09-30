@@ -38,5 +38,5 @@
 ## To do
 
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
-* Scan for non-ported markup
 * Autogen the `manpage.txt`
+* `make linkcheck`
