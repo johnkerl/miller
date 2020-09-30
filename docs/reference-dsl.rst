@@ -135,6 +135,8 @@ Newlines within the expression are ignored, which can help increase legibility o
     x_y_corr
     -0.747994
 
+.. _reference-dsl-expressions-from-files:
+
 Expressions from files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -602,6 +604,8 @@ Begin/end blocks can be mixed with pattern/action blocks. For example:
     x=3,y=0.477121,z=0.690740
     num_total=5,num_positive=3
 
+.. _reference-dsl-local-variables:
+
 Local variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -648,7 +652,7 @@ Things which are completely unsurprising, resembling many other languages:
 
 *  You can define locals (using ``var``, ``num``, etc.) at any scope (if-statements, else-statements, while-loops, for-loops, or the top-level scope), and nested scopes will have access (more details on scope in the next section).  If you define a local variable with the same name inside an inner scope, then a new variable is created with the narrower scope. 
 
-*  If you assign to a local variable for the first time in a scope without declaring it as ``var``, ``num``, etc. then: if it exists in an outer scope, that outer-scope variable will be updated; if not, it will be defined in the current scope as if ``var`` had been used. (See also <a href="#Type-checking">here</a> for an example.) I recommend always declaring variables explicitly to make the intended scoping clear. 
+*  If you assign to a local variable for the first time in a scope without declaring it as ``var``, ``num``, etc. then: if it exists in an outer scope, that outer-scope variable will be updated; if not, it will be defined in the current scope as if ``var`` had been used. (See also :ref:`reference-dsl-type-checking` for an example.) I recommend always declaring variables explicitly to make the intended scoping clear. 
 
 *  Functions and subroutines never have access to locals from their callee (unless passed by value as arguments). 
 
@@ -656,7 +660,7 @@ Things which are perhaps surprising compared to other languages:
 
 *  Type declarations using ``var``, or typed using ``num``, ``int``, ``float``, ``str``, and ``bool`` are necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using ``var``. (Some examples are shown below.) 
 
-*  Type-checking is done at assignment time. For example, ``float f = 0`` is an error (since ``0`` is an integer), as is ``float f = 0.0; f = 1``. For this reason I prefer to use ``num`` over ``float`` in most contexts since ``num`` encompasses integer and floating-point values. More information about type-checking is <a href="#Type-checking">here</a>. 
+*  Type-checking is done at assignment time. For example, ``float f = 0`` is an error (since ``0`` is an integer), as is ``float f = 0.0; f = 1``. For this reason I prefer to use ``num`` over ``float`` in most contexts since ``num`` encompasses integer and floating-point values. More information about type-checking is at :ref:`reference-dsl-type-checking`.
 
 *  Bound variables in for-loops over stream records and out-of-stream variables are implicitly local to that block. E.g. in ``for (k, v in $*) { ... }`` ``for ((k1, k2), v in @*) { ... }`` if there are ``k``, ``v``, etc. in the enclosing scope then those will be masked by the loop-local bound variables in the loop, and moreover the values of the loop-local bound variables are not available after the end of the loop. 
 
@@ -839,6 +843,8 @@ Like out-of-stream and local variables, map literals can be multi-level:
 
 By default, map-valued expressions are dumped using JSON formatting. If you use ``dump`` to print a hashmap with integer keys and you don't want them double-quoted (JSON-style) then you can use ``mlr put --jknquoteint``. See also ``mlr put --help``. 
 
+.. _reference-dsl-type-checking:
+
 Type-checking
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -981,7 +987,7 @@ Thirdly, function return values can be type-checked at the point of ``return`` u
 Null data: empty and absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please see <a href="reference.html#Null_data:_empty_and_absent">here</a>.
+Please see :ref:`reference-null-data`.
 
 Aggregate variable assignments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1921,6 +1927,8 @@ For the first two options you are populating the output-records stream which fee
 
 For the last three options you are sending output directly to standard output, standard error, or a file. 
 
+.. _reference-dsl-print-statements:
+
 Print statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1934,7 +1942,9 @@ The ``print`` statement is perhaps self-explanatory, but with a few light caveat
 
 * You can redirect print output to a file: ``mlr --from myfile.dat put 'print > "tap.txt", $x'`` ``mlr --from myfile.dat put 'o=$*; print > $a.".txt", $x'``. 
 
-*  See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples.
+*  See also :ref:`reference-dsl-redirected-output-statements` for examples.
+
+.. _reference-dsl-dump-statements:
 
 Dump statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1951,7 +1961,7 @@ The ``dump`` statement is for printing expressions, including maps, directly to 
 
 *  As with ``print``, you can redirect output to files. 
 
-*  See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples. 
+*  See also :ref:`reference-dsl-redirected-output-statements` for examples.
 
 Tee statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1960,7 +1970,9 @@ Records produced by a ``mlr put`` go downstream to the next verb in your ``then`
 
 The syntax is, by example, ``mlr --from myfile.dat put 'tee > "tap.dat", $*' then sort -n index``.  First is ``tee >``, then the filename expression (which can be an expression such as ``"tap.".$a.".dat"``), then a comma, then ``$*``. (Nothing else but ``$*`` is teeable.) 
 
-See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples. 
+See also :ref:`reference-dsl-redirected-output-statements` for examples.
+
+.. _reference-dsl-redirected-output-statements:
 
 Redirected-output statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2126,6 +2138,8 @@ Details:
       Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
     
       Please see http://johnkerl.org/miller/doc for more information.
+
+.. _reference-dsl-emit-statements:
 
 Emit statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -4823,15 +4837,15 @@ Properties of user-defined functions:
 
 *  Functions may be defined and called either within ``mlr put`` or ``mlr put``. 
 
-*  Functions have read access to ``$``-variables and ``@``-variables but may not modify them. See also <a href="cookbook.html#Memoization_with_out-of-stream_variables">this cookbook item</a> for an example. 
+*  Functions have read access to ``$``-variables and ``@``-variables but may not modify them. See also :ref:`cookbook-memoization-with-oosvars` for an example. 
 
 *  Argument values may be reassigned: they are not read-only. 
 
-*  When a return value is not implicitly returned, this results in a return value of absent-null. (In the example above, if there were records for which the argument to ``f`` is non-numeric, the assignments would be skipped.) See also the section on <a href="#Null_data:_empty_and_absent">empty_and_absent null data</a>. 
+*  When a return value is not implicitly returned, this results in a return value of absent-null. (In the example above, if there were records for which the argument to ``f`` is non-numeric, the assignments would be skipped.) See also the section on :ref:`reference-null-data`.
 
-*  See the section on <a href="#Local_variables">local variables</a> for information on scope and extent of arguments, as well as for information on the use of local variables within functions. 
+*  See the section on :ref:`reference-dsl-local-variables` for information on scope and extent of arguments, as well as for information on the use of local variables within functions. 
 
-*  See the section on <a href="#Expressions_from_files">expressions from files</a> for information on the use of ``-f`` and ``-e`` flags. 
+*  See the section on :ref:`reference-dsl-expressions-from-files` for information on the use of ``-f`` and ``-e`` flags. 
 
 User-defined subroutines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -4882,9 +4896,11 @@ Properties of user-defined subroutines:
 
 *  Argument values may be reassigned: they are not read-only. 
 
-*  See the section on <a href="#Local_variables">local variables</a> for information on scope and extent of arguments, as well as for information on the use of local variables within functions. 
+*  See the section on :ref:`reference-dsl-local-variables` for information on scope and extent of arguments, as well as for information on the use of local variables within functions. 
 
-*  See the section on <a href="#Expressions_from_files">expressions from files</a> for information on the use of ``-f`` and ``-e`` flags. 
+*  See the section on :ref:`reference-dsl-expressions-from-files` for information on the use of ``-f`` and ``-e`` flags. 
+
+.. _reference-dsl-errors-and-transparency:
 
 Errors and transparency
 ----------------------------------------------------------------
@@ -4901,7 +4917,7 @@ The ``syntax error`` message is cryptic: it says ``syntax error at `` followed b
 
 Now for transparency:
 
-* As in any language, you can do <a href="#Print_statements">``print``</a> (or ``eprint`` to print to stderr). See also <a href="#Dump_statements">``dump``</a> and <a href="#Emit_statements">``emit``</a>. 
+* As in any language, you can do (see :ref:`reference-dsl-print-statements`) ``print``</a> (or ``eprint`` to print to stderr). See also :ref:`reference-dsl-dump-statements` and :ref:`reference-dsl-emit-statements`.
 
 *  The ``-v`` option to ``mlr put`` and ``mlr filter`` prints abstract syntax trees for your code. While not all details here will be of interest to everyone, certainly this makes questions such as operator precedence completely unambiguous. 
 
@@ -4909,7 +4925,7 @@ Now for transparency:
 
 *  The ``-t`` and ``-a`` options show low-level details for the parsing process and for stack-variable-index allocation, respectively. These will likely be of interest to people who enjoy compilers, and probably less useful for a more general audience. 
 
-*  Please see the <a href="#Type-checking">type-checking section</a> for type declarations and type-assertions you can use to make sure expressions and the data flowing them are evaluating as you expect.  I made them optional because one of Miller's important use-cases is being able to say simple things like ``mlr put '$y = $x + 1' myfile.dat`` with a minimum of punctuational bric-a-brac -- but for programs over a few lines I generally find that the more type-specification, the better. 
+*  Please see :ref:`reference-dsl-type-checking` for type declarations and type-assertions you can use to make sure expressions and the data flowing them are evaluating as you expect.  I made them optional because one of Miller's important use-cases is being able to say simple things like ``mlr put '$y = $x + 1' myfile.dat`` with a minimum of punctuational bric-a-brac -- but for programs over a few lines I generally find that the more type-specification, the better. 
 
 A note on the complexity of Miller's expression language
 ----------------------------------------------------------------

@@ -70,7 +70,7 @@ Please see :ref:`sql-input-examples`.
 Running shell commands
 ----------------------------------------------------------------
 
-The <a href="reference-dsl.html#system">system</a> DSL function allows you to run a specific shell command and put its output -- minus the final newline -- into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
+The :ref:`reference-dsl-system` DSL function allows you to run a specific shell command and put its output -- minus the final newline -- into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
 
 ::
 

@@ -88,7 +88,7 @@ Use the ``mlr -I`` flag to process files in-place. For example, ``mlr -I --csv c
 
 By default, Miller output goes to the screen (or you can redirect a file using ``>`` or to another process using ``|``). With ``-I``, for each file name on the command line, output is written to a temporary file in the same directory. Miller writes its output into that temp file, which is then renamed over the original.  Then, processing continues on the next file. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file; statistics are only over each file's own records; and so on.
 
-Please see <a href="10-min.html#Choices_for_printing_to_files">here</a> for examples.
+Please see :ref:`10min-choices-for-printing-to-files` for examples.
 
 Compression
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -360,6 +360,8 @@ For ``mlr put`` and ``mlr filter``:
 
 * All math functions described in ``mlr --help-all-functions`` take integer as well as float input.
 
+.. _reference-null-data:
+
 Null data: empty and absent
 ----------------------------------------------------------------
 
@@ -450,7 +452,7 @@ The reasoning is as follows:
 
 * Absent out-of-stream-variable values are precisely what allow you to write ``mlr put '@sum += $x'``. Otherwise you would have to write ``mlr put 'begin{@sum = 0}; @sum += $x'`` -- which is tolerable -- but for ``mlr put 'begin{...}; @sum[$a][$b] += $x'`` you'd have to pre-initialize ``@sum`` for all values of ``$a`` and ``$b`` in your input data stream, which is intolerable. 
 
-* The penalty for the absent feature is that misspelled variables can be hard to find: e.g. in ``mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'`` the accumulator is spelt ``@sumx`` in the begin-block but ``@sum`` in the end-block, where since it is absent, ``@sum*2`` evaluates to 2. See also the section on <a href="reference-dsl.html#Errors_and_transparency">errors and transparency</a>. 
+* The penalty for the absent feature is that misspelled variables can be hard to find: e.g. in ``mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'`` the accumulator is spelt ``@sumx`` in the begin-block but ``@sum`` in the end-block, where since it is absent, ``@sum*2`` evaluates to 2. See also the section on :ref:`reference-dsl-errors-and-transparency`.
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as ``@sum += $x`` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with ``is_present``: 
 

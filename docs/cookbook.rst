@@ -1025,6 +1025,8 @@ I prefer to pre-filter with ``grep`` and/or ``sed`` to extract the structured te
 
     grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
 
+.. _cookbook-memoization-with-oosvars:
+
 Memoization with out-of-stream variables
 ----------------------------------------------------------------
 
