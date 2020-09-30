@@ -24,7 +24,7 @@ Using Miller
    file-formats
    data-examples
    customization
-   build
+   install
 
 Details
 ----------------------------------------------------------------
@@ -49,6 +49,7 @@ Reference
    reference-dsl
    manpage
    release-docs
+   build
 
 Background
 ----------------------------------------------------------------

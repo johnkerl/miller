@@ -1,60 +1,18 @@
 ..
     PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
 
-Installation
+Building from source
 ================================================================
+
+Please also see :doc:`install` for information about pre-built executables.
 
 Miller license
 ----------------------------------------------------------------
 
 Two-clause BSD license https://github.com/johnkerl/miller/blob/master/LICENSE.txt.
 
-Prebuilt executables
-----------------------------------------------------------------
-
-Via package managers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Homebrew installation support for OSX is available via
-
-::
-
-    brew update && brew install miller
-
-...and also via MacPorts:
-
-::
-
-    sudo port selfupdate && sudo port install miller
-
-You may already have the ``mlr`` executable available in your platform's package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions. For example, on various Linux distributions you might do one of the following: 
-
-::
-
-    sudo apt-get install miller
-
-::
-
-    sudo apt install miller
-
-::
-
-    sudo yum install miller
-
-Via GitHub per release
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Please see https://github.com/johnkerl/miller/releases where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows (via Appveyor build artifacts).
-
-Miller is autobuilt for **Linux** using **Travis** on every commit (https://travis-ci.org/johnkerl/miller/builds). This was set up by the generous assistance of `SikhNerd <https://github.com/SikhNerd>`_ on Github, tracked in https://github.com/johnkerl/miller/issues/15. Analogously, Miller is autobuilt for **Windows** using the **Appveyor** continuous-build system: https://ci.appveyor.com/project/johnkerl/miller. 
-
-Miller releases from `5.1.0 <https://github.com/johnkerl/miller/releases/tag/v5.1.0w>`_ onward will have a precompiled Windows binary, in addition to the MacOSX and Linux 64-bit precompiled binaries as on previous releases.  Specifically, at https://ci.appveyor.com/project/johnkerl/miller you can select *Latest Build* and then *Artifacts* to always get the current head build. Miller releases from 5.3.0 onward will simply point to a particular Appveyor artifact associated with the release. 
-
-Building from source
-----------------------------------------------------------------
-
 From release tarball using autoconfig
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------
 
 Miller allows you the option of using GNU ``autoconfigure`` to build portably.
 
@@ -77,7 +35,7 @@ Grateful acknowledgement: Miller's GNU autoconfig work was done by the generous 
 *  ``make install`` copies the ``c/mlr`` executable to your prefix's ``bin`` subdirectory.
 
 From git clone using autoconfig
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------
 
 * ``git clone https://github.com/johnkerl/miller``
 * ``cd miller``
@@ -86,7 +44,7 @@ From git clone using autoconfig
 * Then continue from "Install the following ... " as above.
 
 Without using autoconfig
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------
 
 GNU autoconfig is familiar to many users, and indeed plenty of folks won't bother to use an open-source software package which doesn't have autoconfig support. And this is for good reason: GNU autoconfig allows us to build software on a wide diversity of platforms. For this reason I'm happy that Miller supports autoconfig. 
 
@@ -104,7 +62,7 @@ Steps:
 The ``Makefile.no-autoconfig`` is simple: little more than ``gcc *.c``.  Customzing is less automatic than autoconfig, but more transparent. I expect this makefile to work with few modifications on a large fraction of modern Linux/BSD-like systems: I'm aware of successful use with ``gcc`` and ``clang``, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS Yosemite), and FreeBSD. 
 
 Windows
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------
 
 *Disclaimer: I'm now relying exclusively on* `Appveyor <https://ci.appveyor.com/project/johnkerl/miller>`_ *for Windows builds; I haven't built from source using MSYS in quite a while.* 
 
