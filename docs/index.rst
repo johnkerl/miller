@@ -7,7 +7,6 @@ Overview
 .. toctree::
    :maxdepth: 1
 
-   doc-status
    about
    10min
    feature-comparison
