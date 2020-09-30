@@ -39,4 +39,3 @@
 
 * Let's all discuss if/how we want the v2 docs to be structured better than the v1 docs.
 * Autogen the `manpage.txt`
-* `make linkcheck`

@@ -39,7 +39,7 @@ Then the following will randomly sample ten words with four to eight characters 
 Randomly generating jabberwocky words
 ----------------------------------------------------------------
 
-These are simple *n*-grams as described `here <http://johnkerl.org/randspell/randspell-slides-ts.pdf>`_. Some common functions are `here <ngrams/ngfuncs.mlr.txt>`_. Then here are scripts for `1-grams <ngrams/ng1.mlr.txt>`_ `2-grams <ngrams/ng2.mlr.txt>`_ `3-grams <ngrams/ng3.mlr.txt>`_ `4-grams <ngrams/ng4.mlr.txt>`_, and `5-grams <ngrams/ng5.mlr.txt>`_.
+These are simple *n*-grams as `described here <http://johnkerl.org/randspell/randspell-slides-ts.pdf>`_. Some common functions are `located here <ngrams/ngfuncs.mlr.txt>`_. Then here are scripts for `1-grams <ngrams/ng1.mlr.txt>`_ `2-grams <ngrams/ng2.mlr.txt>`_ `3-grams <ngrams/ng3.mlr.txt>`_ `4-grams <ngrams/ng4.mlr.txt>`_, and `5-grams <ngrams/ng5.mlr.txt>`_.
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
