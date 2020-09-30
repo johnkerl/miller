@@ -7,8 +7,7 @@
 [![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
 [![Windows build status](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
 [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
-[![Docs v1](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
-[![Docs v2](https://readthedocs.org/projects/miller/badge/?version=latest)](https://miller.readthedocs.io/en/latest/?badge=latest)
+[![Docs](https://readthedocs.org/projects/miller/badge/?version=latest)](https://miller.readthedocs.io/en/latest/?badge=latest)
 
 # Distributions
 
@@ -143,9 +142,7 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 # Documentation links
 
 * [**Full documentation for latest release**](http://johnkerl.org/miller/doc)
-* [Head docs](http://johnkerl.org/miller-releases/miller-head/doc/index.html) match
-[head code](https://github.com/johnkerl/miller); [release-specific docs](http://johnkerl.org/miller/doc/release-docs.html)
-match [release-specific code](https://github.com/johnkerl/miller/tags).
+* [Head docs](https://miller.readthedocs.io/en/latest) match [head code](https://github.com/johnkerl/miller); [release-specific docs](https://miller.readthedocs.io) match [release-specific code](https://github.com/johnkerl/miller/tags).
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 * [Build information including dependencies](http://johnkerl.org/miller/doc/build.html)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
