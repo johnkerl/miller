@@ -130,8 +130,7 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 
 * Miller does **conversion** between formats
 
-* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header
-lines first
+* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header lines first
 
 * Miller has high-throughput **performance** on par with the Unix toolkit
 
