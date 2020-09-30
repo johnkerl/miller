@@ -2,7 +2,7 @@
 
 ## Why use Sphinx
 
-* Connects to readthedocs.com so people can get their docmods onto the web instead of the self-hosted https://johnkerl.org/miller/doc. Thanks to @pabloab for the great advice!
+* Connects to https://miller.readthedocs.io so people can get their docmods onto the web instead of the self-hosted https://johnkerl.org/miller/doc. Thanks to @pabloab for the great advice!
 * More standard look and feel -- lots of people use readthedocs for other things so this should feel familiar
 * We get a Search feature for free
 
