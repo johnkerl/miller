@@ -9,25 +9,25 @@ MANDIR  ?= /usr/share/man
 DESTDIR ?=
 
 all: c manpage
-devall: c install doc
+devall: c install docs
 # TODO: the install target exists to put most-recent mlr executable in the
 # path to be picked up by the mlr-execs in the docs dir. better would be to
 # export PATH here with ./c at its head.
 c: .always
 	make -C c -f Makefile.no-autoconfig top
-doc: .always
-	cd doc && poki
+docs: .always
+	cd docs && make html
 install: .always
 	make -C c -f Makefile.no-autoconfig install
 	install -d -m 0755 $(DESTDIR)/$(MANDIR)
-	install -m 0644 doc/miller.1 $(DESTDIR)/$(MANDIR)
+	install -m 0644 docs/miller.1 $(DESTDIR)/$(MANDIR)
 clean: .always
 	make -C c -f Makefile.no-autoconfig clean
 .PHONY: manpage
 # OSX:
 # * brew install asciidoc
 # * export XML_CATALOG_FILES=/usr/local/etc/xml/catalog
-manpage: doc/miller.1.txt
-	( cd doc && a2x -d manpage -f manpage miller.1.txt )
+manpage: docs/miller.1.txt
+	( cd docs && a2x -d manpage -f manpage miller.1.txt )
 .always:
 	@true
