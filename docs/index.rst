@@ -7,9 +7,11 @@ Overview
 .. toctree::
    :maxdepth: 1
 
-   about
+   features
    10min
+   quick-examples
    feature-comparison
+   file-formats
    record-heterogeneity
    internationalization
    contact
@@ -20,7 +22,8 @@ Using Miller
 .. toctree::
    :maxdepth: 1
 
-   file-formats
+   sql-examples
+   log-processing-examples
    data-examples
    customization
    install

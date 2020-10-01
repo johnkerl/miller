@@ -1,5 +1,8 @@
-About
-=====
+..
+    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
+
+Features
+================================================================
 
 Miller is like awk, sed, cut, join, and sort for **name-indexed data such as
 CSV, TSV, and tabular JSON**. You get to work with your data using named
@@ -12,9 +15,6 @@ the latter is the array, then Miller's natural data structure is the
 insertion-ordered hash map.  This encompasses a **variety of data formats**,
 including but not limited to the familiar CSV, TSV, and JSON.  (Miller can handle
 **positionally-indexed data** as a special case.)
-
-Features
-^^^^^^^^
 
 * Miller is **multi-purpose**: it's useful for **data cleaning**, **data reduction**, **statistical reporting**, **devops**, **system administration**, **log-file processing**, **format conversion**, and **database-query post-processing**.
 
@@ -41,73 +41,3 @@ Features
 * Not unlike `jq <https://stedolan.github.io/jq/>`_ (for JSON), Miller is written in portable, modern C, with **zero runtime dependencies**.  You can download or compile a single binary, ``scp`` it to a faraway machine, and expect it to work.
 
 Releases and release notes: https://github.com/johnkerl/miller/releases.
-
-Examples
-^^^^^^^^
-
-Column select::
-
-    % mlr --csv cut -f hostname,uptime mydata.csv
-
-Add new columns as function of other columns::
-
-    % mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
-
-Row filter::
-
-    % mlr --csv filter '$status != "down" && $upsec >= 10000' *.csv
-
-Apply column labels and pretty-print::
-
-    % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-
-Join multiple data sources on key columns::
-
-    % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-
-Multiple formats including JSON::
-
-    % mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
-
-Aggregate per-column statistics::
-
-    % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-
-Linear regression::
-
-    % mlr stats2 -a linreg-pca -f u,v -g shape data/*
-
-Aggregate custom per-column statistics::
-
-    % mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
-
-Iterate over data using DSL expressions::
-
-    % mlr --from estimates.tbl put '
-      for (k,v in $*) {
-        if (is_numeric(v) && k =~ "^[t-z].*$") {
-          $sum += v; $count += 1
-        }
-      }
-      $mean = $sum / $count # no assignment if count unset
-    '
-
-Run DSL expressions from a script file::
-
-    % mlr --from infile.dat put -f analyze.mlr
-
-Split/reduce output to multiple filenames::
-
-    % mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
-
-Compressed I/O::
-
-    % mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
-
-Interoperate with other data-processing tools using standard pipes::
-
-    % mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-
-Tap/trace::
-
-    % mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
