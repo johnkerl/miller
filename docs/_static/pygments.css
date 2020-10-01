@@ -4,9 +4,9 @@ span.linenos { color: #000000; background-color: #f0f0f0; padding: 0 5px 0 5px; 
 td.linenos pre.special { color: #000000; background-color: #ffffc0; padding: 0 5px 0 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding: 0 5px 0 5px; }
 .highlight .hll { background-color: #ffffcc }
-/* CHANGE ME */
 /*.highlight { background: #eeffcc; }*/
-.highlight { background: #c5b690; }
+/* CHANGE ME */
+.highlight { background: #eae2cb; }
 .highlight .c { color: #408090; font-style: italic } /* Comment */
 .highlight .err { border: 1px solid #FF0000 } /* Error */
 .highlight .k { color: #007020; font-weight: bold } /* Keyword */

@@ -2366,4 +2366,4 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
     
     
-    				  2020-09-30			     MILLER(1)
+    				  2020-10-01			     MILLER(1)
