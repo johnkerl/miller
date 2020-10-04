@@ -64,4 +64,4 @@ awk-like features: mlr filter and mlr put
 See also
 ----------------------------------------------------------------
 
-See :doc:`reference` for more on Miller's subcommands ``cat``, ``cut``, ``head``, ``sort``, ``tac``, ``tail``, ``top``, and ``uniq``, as well as awk-like ``mlr filter`` and ``mlr put``.
+See :doc:`reference-verbs` for more on Miller's subcommands ``cat``, ``cut``, ``head``, ``sort``, ``tac``, ``tail``, ``top``, and ``uniq``, as well as :doc:`reference-dsl` for more on the awk-like ``mlr filter`` and ``mlr put``.
