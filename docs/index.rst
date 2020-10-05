@@ -8,8 +8,8 @@ Overview
    :maxdepth: 1
 
    features
-   10min
    quick-examples
+   10min
    feature-comparison
    file-formats
    record-heterogeneity
