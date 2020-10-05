@@ -35,7 +35,7 @@ There's a good chance you can get Miller pre-built for your system:
 |Mac|`brew install miller`<br/>`port install miller`|
 |Windows|`choco install miller`|
 
-See also [building from source](http://johnkerl.org/miller/doc/build.html#Building_from_source).
+See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
 
 # What can Miller do for me?
 
@@ -87,7 +87,7 @@ insertion-ordered hash map.
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** too!)
 
-For a few more examples please see [Miller in 10 minutes](http://johnkerl.org/miller/doc/10-min.html).
+For a few more examples please see [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
 
 # Features
 
@@ -140,9 +140,7 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
 # Documentation links
 
-* [**Full documentation for latest release**](http://johnkerl.org/miller/doc)
-* [Head docs](https://miller.readthedocs.io/en/latest) match [head code](https://github.com/johnkerl/miller); [release-specific docs](https://miller.readthedocs.io) match [release-specific code](https://github.com/johnkerl/miller/tags).
+* [**Full documentation**](https://miller.readthedocs.io/)
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
-* [Build information including dependencies](http://johnkerl.org/miller/doc/build.html)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)

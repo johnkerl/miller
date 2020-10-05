@@ -1,9 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* triple-for
 * UDFs
-* local vars w/o typing
 * local vars w/ typing
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
