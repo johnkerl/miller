@@ -88,18 +88,31 @@ func BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) 
 }
 
 // ----------------------------------------------------------------
-// Assumes the caller has wrapped PushStackFrame() / PopStackFrame().  That
-// could be done here, but is instead done in the caller to simplify the
-// binding of for-loop variables.
-
 func (this *StatementBlockNode) Execute(state *State) error {
-
+	state.stack.PushStackFrame()
+	defer state.stack.PopStackFrame()
 	for _, statement := range this.executables {
 		err := statement.Execute(state)
 		if err != nil {
 			return err
 		}
 	}
+	return nil
+}
 
+// Assumes the caller has wrapped PushStackFrame() / PopStackFrame().  That
+// could be done here, but is instead done in the caller to simplify the
+// binding of for-loop variables. In particular, in
+//   'for (i = 0; i < 10; i += 1) {...}'
+// the 'i = 0' and 'i += 1' are StatementBlocks and if they pushed their
+// own stack frame then the 'i=0' would be in an evanescent, isolated frame.
+
+func (this *StatementBlockNode) ExecuteFrameless(state *State) error {
+	for _, statement := range this.executables {
+		err := statement.Execute(state)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

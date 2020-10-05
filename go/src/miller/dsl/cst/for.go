@@ -173,14 +173,11 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
 				state.stack.BindVariable(this.valueVariableName, pe.Value)
 			}
-			// Make a frame for the loop body
-			state.stack.PushStackFrame()
+			// The loop body will push its own frame
 			err := this.statementBlockNode.Execute(state)
 			if err != nil {
-				state.stack.PopStackFrame()
 				return err
 			}
-			state.stack.PopStackFrame()
 		}
 
 	} else if mlrval.IsArray() {
@@ -200,14 +197,11 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
 				state.stack.BindVariable(this.valueVariableName, &element)
 			}
-			// Make a frame for the loop body
-			state.stack.PushStackFrame()
+			// The loop body will push its own frame
 			err := this.statementBlockNode.Execute(state)
 			if err != nil {
-				state.stack.PopStackFrame()
 				return err
 			}
-			state.stack.PopStackFrame()
 		}
 
 	} else {
@@ -353,7 +347,10 @@ func (this *TripleForLoopNode) Execute(state *State) error {
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 
-	err := this.startBlockNode.Execute(state)
+	// Use ExecuteFrameless here, otherwise the start-statements would be
+	// within an ephemeral, isolated frame and not accessible to the remaining
+	// parts of the for-loop.
+	err := this.startBlockNode.ExecuteFrameless(state)
 	if err != nil {
 		return err
 	}
@@ -378,9 +375,9 @@ func (this *TripleForLoopNode) Execute(state *State) error {
 			return err
 		}
 
-		// Make a frame for the loop body.
+		// The loop body will push its own frame.
 		state.stack.PushStackFrame()
-		err = this.updateBlockNode.Execute(state)
+		err = this.updateBlockNode.ExecuteFrameless(state)
 		if err != nil {
 			state.stack.PopStackFrame()
 			return err

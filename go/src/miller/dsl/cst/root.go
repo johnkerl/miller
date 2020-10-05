@@ -89,36 +89,27 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteBeginBlocks(state *State) error {
 	for _, beginBlock := range this.beginBlocks {
-		state.stack.PushStackFrame()
 		err := beginBlock.Execute(state)
 		if err != nil {
-			state.stack.PopStackFrame()
 			return err
 		}
-		state.stack.PopStackFrame()
 	}
 	return nil
 }
 
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteMainBlock(state *State) (outrec *types.Mlrmap, err error) {
-	state.stack.PushStackFrame()
 	err = this.mainBlock.Execute(state)
-	state.stack.PopStackFrame()
-
 	return state.Inrec, err
 }
 
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteEndBlocks(state *State) error {
 	for _, endBlock := range this.endBlocks {
-		state.stack.PushStackFrame()
 		err := endBlock.Execute(state)
 		if err != nil {
-			state.stack.PopStackFrame()
 			return err
 		}
-		state.stack.PopStackFrame()
 	}
 	return nil
 }
