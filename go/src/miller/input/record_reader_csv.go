@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"io"
 	"os"
+	"strconv"
 
 	"miller/clitypes"
 	"miller/types"
@@ -14,14 +15,14 @@ type RecordReaderCSV struct {
 	ifs string
 	// TODO: parameterize for ASV.
 	//irs string
-	useImplicitCSVHeader bool
+	useImplicitHeader bool
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
-		ifs: readerOptions.IFS,
-		useImplicitCSVHeader: false,
+		ifs:               readerOptions.IFS,
+		useImplicitHeader: readerOptions.UseImplicitCSVHeader,
 	}
 }
 
@@ -61,7 +62,7 @@ func (this *RecordReaderCSV) processHandle(
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
-	needHeader := true
+	needHeader := !this.useImplicitHeader
 	var header []string = nil
 
 	csvReader := csv.NewReader(handle)
@@ -70,21 +71,16 @@ func (this *RecordReaderCSV) processHandle(
 
 	for {
 		if needHeader {
-			if this.useImplicitCSVHeader {
-				// TODO
-			} else {
-				// TODO: make this a helper function
-				csvRecord, err := csvReader.Read()
-				if err == io.EOF {
-					break
-				}
-				if err != nil {
-					errorChannel <- err
-					return
-				}
-				header = csvRecord
-
+			// TODO: make this a helper function
+			csvRecord, err := csvReader.Read()
+			if err == io.EOF {
+				break
 			}
+			if err != nil {
+				errorChannel <- err
+				return
+			}
+			header = csvRecord
 
 			needHeader = false
 		}
@@ -99,6 +95,14 @@ func (this *RecordReaderCSV) processHandle(
 		}
 
 		record := types.NewMlrmap()
+
+		if header == nil { // implicit CSV header
+			n := len(csvRecord)
+			header = make([]string, n)
+			for i := 0; i < n; i++ {
+				header[i] = strconv.Itoa(i + 1)
+			}
+		}
 
 		// TODO: check for length mismatches
 		n := len(header)
