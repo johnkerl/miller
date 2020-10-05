@@ -341,7 +341,6 @@ BracelessStatement
   | EdumpStatement
   // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
-
 ;
 
 Assignment
@@ -1254,7 +1253,7 @@ ForLoop
   : ForLoopKeyOnly
   | ForLoopKeyValue
   // | ForLoopMultipleKeysValue
-  // | TripleForLoop
+  | TripleForLoop
   ;
 
 // ----------------------------------------------------------------
@@ -1337,73 +1336,54 @@ ForLoopKeyValue
 //	A = mlr_dsl_ast_node_append_arg(L, K);
 //}
 
-//// ----------------------------------------------------------------
-//TripleFor(A) ::=
-//	md_token_for(F) "("
-//		TripleForStart(S)
-//			md_token_semicolon
-//		TripleForContinuation(C)
-//			md_token_semicolon
-//		TripleForUpdate(U)
-//	")"
-//	"{"
-//		StatementBlock(L)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(L, "triple_for_block");
-//	A = mlr_dsl_ast_node_alloc_quaternary(F->text, MD_AST_NODE_TYPE_TRIPLE_FOR, S, C, U, L);
-//}
+// ----------------------------------------------------------------
+TripleForLoop
+  :
+  	md_token_for
+    "("
+    TripleForStart
+    ";"
+    TripleForContinuation
+    ";"
+    TripleForUpdate
+  	")"
+   	StatementBlockInBraces
+ <<
+   dsl.NewASTNodeQuaternary(
+     $0, // for
+     $2, // start
+     $4, // continuation
+     $6, // update
+     $8, // body
+     dsl.NodeTypeTripleForLoop,
+	 );
+ >>
+ ;
 
-//TripleForStart(A) ::= Statement(B). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = mlr_dsl_ast_node_alloc_zary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
-//	} else {
-//		A = mlr_dsl_ast_node_alloc_unary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
-//	}
-//}
-//TripleForStart(A) ::= TripleForStart(B) "," Statement(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_append_arg(B, C);
-//	}
-//}
+TripleForStart
+  : empty
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+  | Assignment
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+  | TripleForStart "," Assignment
+    <<dsl.AppendChild($0, $2) >>
+  ;
 
-//TripleForContinuation(A) ::= Statement(B). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = mlr_dsl_ast_node_alloc_zary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
-//	} else {
-//		A = mlr_dsl_ast_node_alloc_unary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
-//	}
-//}
-//TripleForContinuation(A) ::= TripleForContinuation(B) "," Statement(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_append_arg(B, C);
-//	}
-//}
+TripleForContinuation
+  : empty
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+  | BracelessStatement
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+  ;
 
-//TripleForUpdate(A) ::= Statement(B). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = mlr_dsl_ast_node_alloc_zary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
-//	} else {
-//		A = mlr_dsl_ast_node_alloc_unary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
-//	}
-//}
-//TripleForUpdate(A) ::= TripleForUpdate(B) "," Statement(C). {
-//	if (B->type == MD_AST_NODE_TYPE_NOP) {
-//		mlr_dsl_ast_node_free(B);
-//		A = C;
-//	} else {
-//		A = mlr_dsl_ast_node_append_arg(B, C);
-//	}
-//}
+TripleForUpdate
+  : empty
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+  | Assignment
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+  | TripleForUpdate "," Assignment
+    <<dsl.AppendChild($0, $2) >>
+  ;
 
 // ================================================================
 // ================================================================

@@ -3,6 +3,7 @@ TOP OF LIST:
 
 * triple-for
 * UDFs
+* local vars w/o typing
 * local vars w/ typing
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
@@ -12,8 +13,6 @@ TOP OF LIST:
   - how with whitespace regex -- ?
 ! quoted DKVP
   - what about csvlite-style -- ? needs a --dkvplite ?
-
-* --implicit-csv-header
 
 * clean up 'mlr --help' to not advertise things it doesn't do yet
 

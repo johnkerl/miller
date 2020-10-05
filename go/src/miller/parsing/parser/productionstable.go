@@ -2261,6 +2261,16 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
+		String: `ForLoop : TripleForLoop	<<  >>`,
+		Id:         "ForLoop",
+		NTType:     63,
+		Index:      184,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return X[0], nil
+		},
+	},
+	ProdTabEntry{
 		String: `ForLoopKeyOnly : md_token_for "(" LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeTernary(
      X[0], // "for"
      X[2], // k, etc.
@@ -2270,7 +2280,7 @@ var productionsTable = ProdTab{
 	 ); >>`,
 		Id:         "ForLoopKeyOnly",
 		NTType:     64,
-		Index:      184,
+		Index:      185,
 		NumSymbols: 7,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeTernary(
@@ -2293,7 +2303,7 @@ var productionsTable = ProdTab{
 	 ); >>`,
 		Id:         "ForLoopKeyValue",
 		NTType:     65,
-		Index:      185,
+		Index:      186,
 		NumSymbols: 9,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeQuaternary(
@@ -2304,6 +2314,110 @@ var productionsTable = ProdTab{
 				X[8], // { ... }
 				dsl.NodeTypeForLoopKeyValue,
 			)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForLoop : md_token_for "(" TripleForStart ";" TripleForContinuation ";" TripleForUpdate ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+     X[0], // for
+     X[2], // start
+     X[4], // continuation
+     X[6], // update
+     X[8], // body
+     dsl.NodeTypeTripleForLoop,
+	 ); >>`,
+		Id:         "TripleForLoop",
+		NTType:     66,
+		Index:      187,
+		NumSymbols: 9,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeQuaternary(
+				X[0], // for
+				X[2], // start
+				X[4], // continuation
+				X[6], // update
+				X[8], // body
+				dsl.NodeTypeTripleForLoop,
+			)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForStart : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		Id:         "TripleForStart",
+		NTType:     67,
+		Index:      188,
+		NumSymbols: 0,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForStart : Assignment	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		Id:         "TripleForStart",
+		NTType:     67,
+		Index:      189,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForStart : TripleForStart "," Assignment	<< dsl.AppendChild(X[0], X[2]) >>`,
+		Id:         "TripleForStart",
+		NTType:     67,
+		Index:      190,
+		NumSymbols: 3,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.AppendChild(X[0], X[2])
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForContinuation : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		Id:         "TripleForContinuation",
+		NTType:     68,
+		Index:      191,
+		NumSymbols: 0,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForContinuation : BracelessStatement	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		Id:         "TripleForContinuation",
+		NTType:     68,
+		Index:      192,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForUpdate : empty	<< dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>`,
+		Id:         "TripleForUpdate",
+		NTType:     69,
+		Index:      193,
+		NumSymbols: 0,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForUpdate : Assignment	<< dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock) >>`,
+		Id:         "TripleForUpdate",
+		NTType:     69,
+		Index:      194,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeUnary(nil, X[0], dsl.NodeTypeStatementBlock)
+		},
+	},
+	ProdTabEntry{
+		String: `TripleForUpdate : TripleForUpdate "," Assignment	<< dsl.AppendChild(X[0], X[2]) >>`,
+		Id:         "TripleForUpdate",
+		NTType:     69,
+		Index:      195,
+		NumSymbols: 3,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.AppendChild(X[0], X[2])
 		},
 	},
 }

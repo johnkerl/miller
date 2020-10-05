@@ -208,3 +208,169 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 
 	return nil
 }
+
+// ================================================================
+type TripleForLoopNode struct {
+	startBlockNode             *StatementBlockNode
+	continuationExpressionNode IEvaluable
+	updateBlockNode            *StatementBlockNode
+	bodyBlockNode              *StatementBlockNode
+}
+
+func NewTripleForLoopNode(
+	startBlockNode *StatementBlockNode,
+	continuationExpressionNode IEvaluable,
+	updateBlockNode *StatementBlockNode,
+	bodyBlockNode *StatementBlockNode,
+) *TripleForLoopNode {
+	return &TripleForLoopNode{
+		startBlockNode,
+		continuationExpressionNode,
+		updateBlockNode,
+		bodyBlockNode,
+	}
+}
+
+// ----------------------------------------------------------------
+// Sample ASTs:
+
+// DSL EXPRESSION:
+// for (;;) {}
+// RAW AST:
+// * StatementBlock
+//     * TripleForLoop "for"
+//         * StatementBlock
+//         * StatementBlock
+//         * StatementBlock
+//         * StatementBlock
+
+// mlr --from u/s.dkvp put -v for (i = 0; i < NR; i += 1) { $i += i }
+// DSL EXPRESSION:
+// for (i = 0; i < NR; i += 1) { $i += i }
+// RAW AST:
+// * StatementBlock
+//     * TripleForLoop "for"
+//         * StatementBlock
+//             * Assignment "="
+//                 * LocalVariable "i"
+//                 * IntLiteral "0"
+//         * StatementBlock
+//             * BareBoolean
+//                 * Operator "<"
+//                     * LocalVariable "i"
+//                     * ContextVariable "NR"
+//         * StatementBlock
+//             * Assignment "="
+//                 * LocalVariable "i"
+//                 * Operator "+"
+//                     * LocalVariable "i"
+//                     * IntLiteral "1"
+//         * StatementBlock
+//             * Assignment "="
+//                 * DirectFieldValue "i"
+//                 * Operator "+"
+//                     * DirectFieldValue "i"
+//                     * LocalVariable "i"
+
+func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTripleForLoop)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
+
+	startBlockASTNode := astNode.Children[0]
+	continuationExpressionASTNode := astNode.Children[1]
+	updateBlockASTNode := astNode.Children[2]
+	bodyBlockASTNode := astNode.Children[3]
+
+	lib.InternalCodingErrorIf(startBlockASTNode.Type != dsl.NodeTypeStatementBlock)
+	lib.InternalCodingErrorIf(continuationExpressionASTNode.Type != dsl.NodeTypeStatementBlock)
+	lib.InternalCodingErrorIf(len(continuationExpressionASTNode.Children) > 1)
+	lib.InternalCodingErrorIf(updateBlockASTNode.Type != dsl.NodeTypeStatementBlock)
+	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != dsl.NodeTypeStatementBlock)
+
+	startBlockNode, err := BuildStatementBlockNode(startBlockASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	var continuationExpressionNode IEvaluable = nil
+	// empty is true
+	if len(continuationExpressionASTNode.Children) == 1 {
+		bareBooleanASTNode := continuationExpressionASTNode.Children[0]
+		lib.InternalCodingErrorIf(bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean)
+		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
+
+		continuationExpressionNode, err = BuildEvaluableNode(bareBooleanASTNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	updateBlockNode, err := BuildStatementBlockNode(updateBlockASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	bodyBlockNode, err := BuildStatementBlockNode(bodyBlockASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewTripleForLoopNode(
+		startBlockNode,
+		continuationExpressionNode,
+		updateBlockNode,
+		bodyBlockNode,
+	), nil
+}
+
+// ----------------------------------------------------------------
+// Note: The statement-block has its own push/pop for its localvars.
+// Meanwhile we need to restrict scope of the bindvar to the for-loop.
+//
+// So we have:
+//
+//   mlr put '
+//     x = 1;           <--- frame #1 main
+//     for (k in $*) {  <--- frame #2 for for-loop bindvars (right here)
+//       x = 2          <--- frame #3 for for-loop locals
+//     }
+//     x = 3;           <--- back in frame #1 main
+//   '
+//
+
+func (this *TripleForLoopNode) Execute(state *State) error {
+
+	// TODO: new stack frames
+
+	err := this.startBlockNode.Execute(state)
+	if err != nil {
+		return err
+	}
+
+	for {
+		// empty is true
+		if this.continuationExpressionNode != nil {
+			continuationValue := this.continuationExpressionNode.Evaluate(state)
+			boolValue, isBool := continuationValue.GetBoolValue()
+			if !isBool {
+				// TODO: propagate line-number context
+				return errors.New("Miller: for-loop continuation did not evaluate to boolean.")
+			}
+			if boolValue == false {
+				break
+			}
+		}
+
+		err = this.bodyBlockNode.Execute(state)
+		if err != nil {
+			return err
+		}
+
+		err = this.updateBlockNode.Execute(state)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

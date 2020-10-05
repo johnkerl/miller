@@ -56,6 +56,8 @@ func BuildStatementNode(
 		return BuildForLoopKeyOnlyNode(astNode)
 	case dsl.NodeTypeForLoopKeyValue:
 		return BuildForLoopKeyValueNode(astNode)
+	case dsl.NodeTypeTripleForLoop:
+		return BuildTripleForLoopNode(astNode)
 
 	default:
 		return nil, errors.New(
