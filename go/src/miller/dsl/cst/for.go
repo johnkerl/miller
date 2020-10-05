@@ -163,6 +163,7 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 
 		mapval := mlrval.GetMap()
 
+		// Make a frame for the loop variable(s)
 		state.stack.PushStackFrame()
 		defer state.stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
@@ -172,7 +173,7 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
 				state.stack.BindVariable(this.valueVariableName, pe.Value)
 			}
-			//state.stack.Dump()
+			// Make a frame for the loop body
 			state.stack.PushStackFrame()
 			err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -186,8 +187,10 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 
 		arrayval := mlrval.GetArray()
 
-		// Miller user-space array indices ("mindex") are 1-up. Internal Go
-		// storage ("zindex") is 0-up.
+		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
+		// Go storage ("zindex") is 0-up.
+
+		// Make a frame for the loop variable(s)
 		state.stack.PushStackFrame()
 		defer state.stack.PopStackFrame()
 		for zindex, element := range arrayval {
@@ -197,7 +200,7 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
 				state.stack.BindVariable(this.valueVariableName, &element)
 			}
-			// state.stack.Dump()
+			// Make a frame for the loop body
 			state.stack.PushStackFrame()
 			err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -346,13 +349,10 @@ func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 
 func (this *TripleForLoopNode) Execute(state *State) error {
 
+	// Make a frame for the loop variables.
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 
-	// TODO: make a variant without its own internal frame-push. And/or factor
-	// that out entirely. Issue is that in 'for (i = 0; i < 10; i += 1) {...}'
-	// the 'i = 0' happens in an isolated frame that only lasts for that
-	// assignment.
 	err := this.startBlockNode.Execute(state)
 	if err != nil {
 		return err
@@ -378,6 +378,7 @@ func (this *TripleForLoopNode) Execute(state *State) error {
 			return err
 		}
 
+		// Make a frame for the loop body.
 		state.stack.PushStackFrame()
 		err = this.updateBlockNode.Execute(state)
 		if err != nil {
