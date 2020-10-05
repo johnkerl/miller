@@ -173,10 +173,13 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 				state.stack.BindVariable(this.valueVariableName, pe.Value)
 			}
 			//state.stack.Dump()
+			state.stack.PushStackFrame()
 			err := this.statementBlockNode.Execute(state)
 			if err != nil {
+				state.stack.PopStackFrame()
 				return err
 			}
+			state.stack.PopStackFrame()
 		}
 
 	} else if mlrval.IsArray() {
@@ -195,10 +198,13 @@ func (this *ForLoopKeyValueNode) Execute(state *State) error {
 				state.stack.BindVariable(this.valueVariableName, &element)
 			}
 			// state.stack.Dump()
+			state.stack.PushStackFrame()
 			err := this.statementBlockNode.Execute(state)
 			if err != nil {
+				state.stack.PopStackFrame()
 				return err
 			}
+			state.stack.PopStackFrame()
 		}
 
 	} else {
@@ -372,10 +378,13 @@ func (this *TripleForLoopNode) Execute(state *State) error {
 			return err
 		}
 
+		state.stack.PushStackFrame()
 		err = this.updateBlockNode.Execute(state)
 		if err != nil {
+			state.stack.PopStackFrame()
 			return err
 		}
+		state.stack.PopStackFrame()
 	}
 
 	return nil
