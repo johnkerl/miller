@@ -44,9 +44,8 @@ CATEGORIES:
   !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
     detection -- needs an input-stream delegator -- ?
   o --allow-ragged-csv-input|--ragged
-  o --implicit-csv-header
-  o new non-lite DKVP reader/writer
-  o comment-filtering compaosed io.Reader
+  o non-lite DKVP reader/writer
+  o comment-filtering-compaosed io.Reader
   o make a pprint reader w/ width-detect
   o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
@@ -63,8 +62,7 @@ CATEGORIES:
   o UDFs
   o typed localvars
   o for-knv
-  o triple-for
-  profile mand.mlr & check for need for idx-assign
+  * profile mand.mlr & check for need for idx-assign
   o indexed localvars at LHS
 
 * beyond:
