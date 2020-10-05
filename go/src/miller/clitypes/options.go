@@ -25,7 +25,7 @@ type TReaderOptions struct {
 
 	//	allow_repeat_ifs bool;
 	//	allow_repeat_ips bool;
-	//	use_implicit_csv_header bool;
+	UseImplicitCSVHeader bool;
 	//	allow_ragged_csv_input bool;
 	//
 	//	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case

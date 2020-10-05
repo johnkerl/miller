@@ -30,7 +30,6 @@ CATEGORIES:
 
 * widen verb coverage
   o count
-  o filter
   o repeat
   o focus on calendar/DST/TZ improvements
 

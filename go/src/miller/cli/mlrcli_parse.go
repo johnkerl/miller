@@ -348,14 +348,14 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		//		readerOptions.json_array_ingest = JSON_ARRAY_INGEST_AS_MAP;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--implicit-csv-header" {
-		//		readerOptions.use_implicit_csv_header = true;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--no-implicit-csv-header" {
-		//		readerOptions.use_implicit_csv_header = false;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--implicit-csv-header" {
+		readerOptions.UseImplicitCSVHeader = true
+		argi += 1
+
+	} else if args[argi] == "--no-implicit-csv-header" {
+		readerOptions.UseImplicitCSVHeader = false
+		argi += 1
+
 		//	} else if args[argi] == "--allow-ragged-csv-input" || args[argi] == "--ragged" {
 		//		readerOptions.allow_ragged_csv_input = true;
 		//		argi += 1;
@@ -1071,10 +1071,10 @@ func parseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "-N" {
-		//		readerOptions.use_implicit_csv_header = true;
-		//		writerOptions.headerless_csv_output = true;
-		//		argi += 1;
+	} else if args[argi] == "-N" {
+		readerOptions.UseImplicitCSVHeader = true
+		writerOptions.HeaderlessCSVOutput = true
+		argi += 1
 	}
 	*pargi = argi
 	return argi != oargi

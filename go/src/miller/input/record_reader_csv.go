@@ -9,18 +9,23 @@ import (
 	"miller/types"
 )
 
+// ----------------------------------------------------------------
 type RecordReaderCSV struct {
 	ifs string
 	// TODO: parameterize for ASV.
 	//irs string
+	useImplicitCSVHeader bool
 }
 
+// ----------------------------------------------------------------
 func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
 		ifs: readerOptions.IFS,
+		useImplicitCSVHeader: false,
 	}
 }
 
+// ----------------------------------------------------------------
 func (this *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
@@ -47,6 +52,7 @@ func (this *RecordReaderCSV) Read(
 	)
 }
 
+// ----------------------------------------------------------------
 func (this *RecordReaderCSV) processHandle(
 	handle *os.File,
 	filename string,
@@ -64,16 +70,21 @@ func (this *RecordReaderCSV) processHandle(
 
 	for {
 		if needHeader {
-			// TODO: make this a helper function
-			csvRecord, err := csvReader.Read()
-			if err == io.EOF {
-				break
+			if this.useImplicitCSVHeader {
+				// TODO
+			} else {
+				// TODO: make this a helper function
+				csvRecord, err := csvReader.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					errorChannel <- err
+					return
+				}
+				header = csvRecord
+
 			}
-			if err != nil {
-				errorChannel <- err
-				return
-			}
-			header = csvRecord
 
 			needHeader = false
 		}
