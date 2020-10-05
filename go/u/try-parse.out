@@ -1223,3 +1223,48 @@ RAW AST:
         * DirectFieldValue "nr"
         * LocalVariable "nr"
 
+
+
+----------------------------------------------------------------
+mlr -n put -v for (i = 0; i < 10; i += 1) { $x += i }
+DSL EXPRESSION:
+for (i = 0; i < 10; i += 1) { $x += i }
+RAW AST:
+* StatementBlock
+    * TripleForLoop "for"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * IntLiteral "0"
+        * StatementBlock
+            * BareBoolean
+                * Operator "<"
+                    * LocalVariable "i"
+                    * IntLiteral "10"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * Operator "+"
+                    * LocalVariable "i"
+                    * IntLiteral "1"
+        * StatementBlock
+            * Assignment "="
+                * DirectFieldValue "x"
+                * Operator "+"
+                    * DirectFieldValue "x"
+                    * LocalVariable "i"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for (;;) {}
+DSL EXPRESSION:
+for (;;) {}
+RAW AST:
+* StatementBlock
+    * TripleForLoop "for"
+        * StatementBlock
+        * StatementBlock
+        * StatementBlock
+        * StatementBlock
+

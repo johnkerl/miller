@@ -103,3 +103,5 @@ echo; run_mlr -n put -v 'do {} while (false)'
 
 echo; run_mlr -n put -v 'nr=NR; $nr=nr'
 
+echo; run_mlr -n put -v 'for (i = 0; i < 10; i += 1) { $x += i }'
+echo; run_mlr -n put -v 'for (;;) {}'

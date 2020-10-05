@@ -340,14 +340,20 @@ func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 
 func (this *TripleForLoopNode) Execute(state *State) error {
 
-	// TODO: new stack frames
+	state.stack.PushStackFrame()
+	defer state.stack.PopStackFrame()
 
+	// TODO: make a variant without its own internal frame-push. And/or factor
+	// that out entirely. Issue is that in 'for (i = 0; i < 10; i += 1) {...}'
+	// the 'i = 0' happens in an isolated frame that only lasts for that
+	// assignment.
 	err := this.startBlockNode.Execute(state)
 	if err != nil {
 		return err
 	}
 
 	for {
+		// state.stack.Dump()
 		// empty is true
 		if this.continuationExpressionNode != nil {
 			continuationValue := this.continuationExpressionNode.Evaluate(state)
