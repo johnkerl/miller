@@ -1237,13 +1237,6 @@ DoWhileLoop
   ;
 
 // ================================================================
-//// ----------------------------------------------------------------
-//CondBlock(A) ::= Rvalue(B) "{" StatementBlock(C) "}". {
-//	mlr_dsl_ast_node_replace_text(C, "cond_block");
-//	A = mlr_dsl_ast_node_alloc_binary("cond", MD_AST_NODE_TYPE_CONDITIONAL_BLOCK, B, C);
-//}
-
-// ================================================================
 // FOR-LOOPS
 
 // TODO: typedefs on localvars
