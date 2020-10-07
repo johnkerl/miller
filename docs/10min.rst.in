@@ -87,6 +87,9 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g
 Statistics can be computed with or without group-by field(s)::
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
+
+::
+
 POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead::

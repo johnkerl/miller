@@ -4,6 +4,9 @@ TOP OF LIST:
 * UDFs
 * local vars w/ typing
 
+* comment-handling
+  - delegator for CSV ...
+
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
 

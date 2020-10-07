@@ -256,6 +256,9 @@ Statistics can be computed with or without group-by field(s)::
     triangle 3              43.649800    68.339767     81.229000
     square   4              72.373500    76.601150     79.277800
     circle   3              13.810300    47.098200     63.978500
+
+::
+
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
     shape    color  quantity_count quantity_min quantity_mean quantity_max
     triangle yellow 1              43.649800    43.649800     43.649800
