@@ -28,3 +28,12 @@ func RandFloat64() float64 {
 func RandUint32() uint32 {
 	return generator.Uint32()
 }
+func RandRange(lowInclusive, highExclusive int) int {
+	if lowInclusive == highExclusive {
+		return lowInclusive
+	} else {
+		u := int(generator.Uint32())
+		// TODO: test divide-by-zero cases in UT
+		return lowInclusive + (u % (highExclusive - lowInclusive))
+	}
+}

@@ -4,6 +4,13 @@ TOP OF LIST:
 * UDFs
 * local vars w/ typing
 
+* some more verbs
+  o altkv bootstrap count decimate grep having-fields remove-empty-columns reorder
+  o stats1 stats2
+
+* double-check rand-seeding
+  o all rand invocations should go through the seeder for UT/other determinism
+
 * comment-handling
   - delegator for CSV ...
 
@@ -17,7 +24,9 @@ TOP OF LIST:
 
 * clean up 'mlr --help' to not advertise things it doesn't do yet
 
-* prohibit NR etc at LHS within the CST
+* CST validators
+  - prohibit NR etc at LHS; 1+2=3+4; etc
+  - begin/end non-nested
 
 * ASV? golang csv package parameterizes comma but not crlf :(
 

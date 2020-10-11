@@ -24,6 +24,7 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.RenameSetup,
 	mappers.SortSetup,
 	mappers.SortWithinRecordsSetup,
+	mappers.ShuffleSetup,
 	mappers.TacSetup,
 	mappers.TailSetup,
 	mappers.UnsparsifySetup,

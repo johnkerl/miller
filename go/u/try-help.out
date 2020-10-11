@@ -97,6 +97,11 @@ Usage: ./mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
 
 ================================================================
+Usage: ./mlr shuffle {no options}
+Outputs records randomly permuted. No output records are produced until
+all input records are read. See also ./mlr bootstrap and ./mlr sample.
+
+================================================================
 Usage: ./mlr tac
 Prints records in reverse order from the order in which they were encountered.
 
