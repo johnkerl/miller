@@ -109,8 +109,16 @@ type MapperCount struct {
 
 	// state
 	recordMapperFunc mapping.RecordMapperFunc
-	recordListsByGroup *lib.OrderedMap
-	ungroupedCount int64
+	ungroupedCount   int64
+	// Example:
+	// * Suppose group-by fields are a,b.
+	// * One record has a=foo,b=bar
+	// * Another record has a=baz,b=quux
+	// * Map keys are strings "foo,bar" and "baz,quux".
+	// * groupedCounts maps "foo,bar" to 1 and "baz,quux" to 1.
+	// * groupByValues maps "foo,bar" to ["foo", "bar"] and "baz,quux" to ["baz", "quux"].
+	groupedCounts  *lib.OrderedMap
+	groupingValues *lib.OrderedMap
 }
 
 func NewMapperCount(
@@ -126,8 +134,9 @@ func NewMapperCount(
 		showCountsOnly:       showCountsOnly,
 		outputFieldName:      outputFieldName,
 
-		recordListsByGroup: lib.NewOrderedMap(),
 		ungroupedCount: 0,
+		groupedCounts:  lib.NewOrderedMap(),
+		groupingValues: lib.NewOrderedMap(),
 	}
 
 	if len(groupByFieldNameList) == 0 {
@@ -154,7 +163,7 @@ func (this *MapperCount) countUngrouped(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		this.ungroupedCount++;
+		this.ungroupedCount++
 	} else {
 		newrec := types.NewMlrmapAsRecord()
 		mcount := types.MlrvalFromInt64(this.ungroupedCount)
@@ -166,15 +175,6 @@ func (this *MapperCount) countUngrouped(
 	}
 }
 
-//		return NULL;
-//	} else { // end of record stream
-//		lrec_t* poutrec = lrec_unbacked_alloc();
-//		lrec_put(poutrec, pstate->output_field_name,
-//			mlr_alloc_string_from_ll(pstate->ungrouped_count), FREE_ENTRY_VALUE);
-//		return sllv_single(poutrec);
-//	}
-//}
-
 // ----------------------------------------------------------------
 func (this *MapperCount) countGrouped(
 	inrecAndContext *types.RecordAndContext,
@@ -183,102 +183,61 @@ func (this *MapperCount) countGrouped(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 
+		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
+			this.groupByFieldNameList,
+		)
+		if !ok { // Current record does not have specified fields; ignore
+			return
+		}
+
+		if !this.groupedCounts.Has(groupingKey) {
+			var count int64 = 1
+			this.groupedCounts.Put(groupingKey, count)
+			this.groupingValues.Put(groupingKey, selectedValues)
+		} else {
+			this.groupedCounts.Put(
+				groupingKey,
+				this.groupedCounts.Get(groupingKey).(int64)+1,
+			)
+		}
+
 	} else {
+		if this.showCountsOnly {
+			newrec := types.NewMlrmapAsRecord()
+			mcount := types.MlrvalFromInt64(this.groupedCounts.FieldCount)
+			newrec.PutCopy(&this.outputFieldName, &mcount)
+
+			outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
+			outputChannel <- outrecAndContext
+
+		} else {
+			for outer := this.groupedCounts.Head; outer != nil; outer = outer.Next {
+				groupingKey := outer.Key
+				newrec := types.NewMlrmapAsRecord()
+
+				// Example:
+				// * Suppose group-by fields are a,b.
+				// * Record has a=foo,b=bar
+				// * Grouping key is "foo,bar"
+				// * Grouping values for key is ["foo", "bar"]
+				// Here we populate a record with "a=foo,b=bar".
+
+				groupingValuesForKey := this.groupingValues.Get(groupingKey).([]types.Mlrval)
+				i := 0
+				for _, groupingValueForKey := range groupingValuesForKey {
+					newrec.PutCopy(&this.groupByFieldNameList[i], &groupingValueForKey)
+					i++
+				}
+
+				countForGroup := outer.Value.(int64)
+				mcount := types.MlrvalFromInt64(countForGroup)
+				newrec.PutCopy(&this.outputFieldName, &mcount)
+
+				outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
+				outputChannel <- outrecAndContext
+			}
+		}
+
 		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
-
-
-
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_count_process_grouped(
-//	lrec_t* pinrec,
-//	context_t* pctx,
-//	void* pvstate)
-//{
-//	mapper_count_state_t* pstate = pvstate;
-//	if (pinrec != NULL) { // not end of record stream
-//		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
-//			pstate->pgroup_by_field_names);
-//		if (pgroup_by_field_values == NULL) {
-//			lrec_free(pinrec);
-//			return NULL;
-//		}
-//
-//		unsigned long long* pcount = lhmslv_get(pstate->pcounts_by_group, pgroup_by_field_values);
-//		if (pcount == NULL) {
-//			pcount = mlr_malloc_or_die(sizeof(unsigned long long));
-//			*pcount = 1LL;
-//			slls_t* pcopy = slls_copy(pgroup_by_field_values);
-//			lhmslv_put(pstate->pcounts_by_group, pcopy, pcount, FREE_ENTRY_KEY);
-//			lrec_free(pinrec);
-//		} else {
-//			(*pcount)++;
-//			lrec_free(pinrec);
-//		}
-//
-//		return NULL;
-//
-//	} else { // end of record stream
-//		sllv_t* poutrecs = sllv_alloc();
-//
-//		if (pstate->show_counts_only) {
-//			lrec_t* poutrec = lrec_unbacked_alloc();
-//
-//			unsigned long long count = (unsigned long long)lhmslv_size(pstate->pcounts_by_group);
-//			lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(count),
-//				FREE_ENTRY_VALUE);
-//
-//			sllv_append(poutrecs, poutrec);
-//		} else {
-//			for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
-//				lrec_t* poutrec = lrec_unbacked_alloc();
-//
-//				slls_t* pgroup_by_field_values = pa->key;
-//
-//				sllse_t* pb = pstate->pgroup_by_field_names->phead;
-//				sllse_t* pc =         pgroup_by_field_values->phead;
-//				for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
-//					lrec_put(poutrec, pb->value, pc->value, NO_FREE);
-//				}
-//
-//				unsigned long long* pcount = pa->pvvalue;
-//				lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(*pcount),
-//					FREE_ENTRY_VALUE);
-//
-//				sllv_append(poutrecs, poutrec);
-//			}
-//		}
-//
-//		sllv_append(poutrecs, NULL);
-//		return poutrecs;
-//
-//	}
-//}
-
-//	if x {
-//		//		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
-//		//		if !ok {
-//		//			return
-//		//		}
-//		//
-//		//		irecordListForGroup := this.recordListsByGroup.Get(groupingKey)
-//		//		if irecordListForGroup == nil { // first time
-//		//			irecordListForGroup = list.New()
-//		//			this.recordListsByGroup.Put(groupingKey, irecordListForGroup)
-//		//		}
-//		//		recordListForGroup := irecordListForGroup.(*list.List)
-//		//
-//		//		recordListForGroup.PushBack(inrecAndContext)
-//		//		for uint64(recordListForGroup.Len()) > this.countCount {
-//		//			recordListForGroup.Remove(recordListForGroup.Front())
-//		//		}
-//	} else {
-//		//		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
-//		//			recordListForGroup := outer.Value.(*list.List)
-//		//			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
-//		//				outputChannel <- inner.Value.(*types.RecordAndContext)
-//		//			}
-//		//		}
-//		outputChannel <- inrecAndContext // end-of-stream marker
-//	}

@@ -58,3 +58,11 @@ run_mlr --json --from u/needs-sorting.json sort-within-records
 run_mlr --json --from u/needs-regularize.json regularize
 run_mlr --opprint --from u/needs-unsparsify.dkvp unsparsify
 run_mlr --opprint --from u/needs-unsparsify.dkvp unsparsify --fill-with X
+
+run_mlr --opprint --from u/medium.dkvp count
+run_mlr --opprint --from u/medium.dkvp count -g a
+run_mlr --opprint --from u/medium.dkvp count -g a,b
+run_mlr --opprint --from u/medium.dkvp count -g a -n
+run_mlr --opprint --from u/medium.dkvp count -g a,b -n
+run_mlr --opprint --from u/medium.dkvp count -o NAME
+run_mlr --opprint --from u/medium.dkvp count -g a -o NAME

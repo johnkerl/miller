@@ -10,6 +10,10 @@ func (this *Mlrmap) Print() {
 	this.Fprint(os.Stdout)
 }
 func (this *Mlrmap) Fprint(file *os.File) {
+	(*file).WriteString(this.ToDKVPString())
+}
+
+func (this *Mlrmap) ToDKVPString() string {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)
@@ -20,7 +24,7 @@ func (this *Mlrmap) Fprint(file *os.File) {
 		}
 	}
 	buffer.WriteString("\n")
-	(*file).WriteString(buffer.String())
+	return buffer.String()
 }
 
 // ----------------------------------------------------------------

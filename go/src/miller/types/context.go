@@ -25,7 +25,7 @@ func NewRecordAndContext(
 func (this *RecordAndContext) Copy() *RecordAndContext {
 	recordCopy := this.Record.Copy()
 	contextCopy := this.Context
-	return &RecordAndContext {
+	return &RecordAndContext{
 		recordCopy,
 		contextCopy,
 	}
