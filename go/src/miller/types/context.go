@@ -21,6 +21,16 @@ func NewRecordAndContext(
 	}
 }
 
+// For the record-readers to update their initial context as each new record is read.
+func (this *RecordAndContext) Copy() *RecordAndContext {
+	recordCopy := this.Record.Copy()
+	contextCopy := this.Context
+	return &RecordAndContext {
+		recordCopy,
+		contextCopy,
+	}
+}
+
 // ----------------------------------------------------------------
 type Context struct {
 	FILENAME string

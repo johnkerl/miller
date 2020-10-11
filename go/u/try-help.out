@@ -1,4 +1,12 @@
 ================================================================
+Usage: ./mlr bootstrap [options]
+Emits an n-sample, with replacement, of the input records.
+See also ./mlr bootstrap and ./mlr sample.
+Options:
+ -n Number of samples to output. Defaults to number of input records.
+    Must be non-negative.
+
+================================================================
 Usage: ./mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
  -N (default ) Prepend field {name} to each record with record-counter starting at 1
@@ -73,6 +81,11 @@ Usage: ./mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 
 ================================================================
+Usage: ./mlr shuffle {no options}
+Outputs records randomly permuted. No output records are produced until
+all input records are read. See also ./mlr bootstrap and ./mlr sample.
+
+================================================================
 Usage: ./mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
 field, and so on.  (Any records not having all specified sort keys will appear
@@ -95,11 +108,6 @@ which is the same as:
 ================================================================
 Usage: ./mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
-
-================================================================
-Usage: ./mlr shuffle {no options}
-Outputs records randomly permuted. No output records are produced until
-all input records are read. See also ./mlr bootstrap and ./mlr sample.
 
 ================================================================
 Usage: ./mlr tac

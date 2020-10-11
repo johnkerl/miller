@@ -11,6 +11,7 @@ import (
 
 // ----------------------------------------------------------------
 var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
+	mappers.BootstrapSetup,
 	mappers.CatSetup,
 	mappers.CutSetup,
 	mappers.FilterSetup,
@@ -22,9 +23,9 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.PutSetup,
 	mappers.RegularizeSetup,
 	mappers.RenameSetup,
+	mappers.ShuffleSetup,
 	mappers.SortSetup,
 	mappers.SortWithinRecordsSetup,
-	mappers.ShuffleSetup,
 	mappers.TacSetup,
 	mappers.TailSetup,
 	mappers.UnsparsifySetup,
