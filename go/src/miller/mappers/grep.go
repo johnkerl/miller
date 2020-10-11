@@ -71,6 +71,10 @@ func mapperGrepParseCLI(
 	pattern := args[argi]
 	argi += 1
 
+	if *pIgnoreCase {
+		pattern = "(?i)" + pattern
+	}
+
 	// TODO: maybe CompilePOSIX
 	regexp, err := regexp.Compile(pattern)
 	if err != nil {
@@ -81,7 +85,6 @@ func mapperGrepParseCLI(
 
 	mapper, _ := NewMapperGrep(
 		regexp,
-		*pIgnoreCase,
 		*pInvert,
 	)
 
@@ -122,18 +125,15 @@ features of system grep, you can do
 // ----------------------------------------------------------------
 type MapperGrep struct {
 	regexp *regexp.Regexp
-	ignoreCase bool
 	invert bool
 }
 
 func NewMapperGrep(
 	regexp *regexp.Regexp,
-	ignoreCase bool,
 	invert bool,
 ) (*MapperGrep, error) {
 	this := &MapperGrep{
 		regexp: regexp,
-		ignoreCase: ignoreCase,
 		invert: invert,
 	}
 	return this, nil
@@ -147,7 +147,6 @@ func (this *MapperGrep) Map(
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
 		inrecAsString := inrec.ToDKVPString()
-		// TODO: ignore case
 		matches := this.regexp.Match([]byte(inrecAsString))
 		if this.invert {
 			if !matches {
