@@ -112,6 +112,11 @@ Outputs records randomly permuted. No output records are produced until
 all input records are read. See also ./mlr bootstrap and ./mlr sample.
 
 ================================================================
+Usage: ./mlr skip-trivial-records {no options}
+Passes through all records except those with zero fields,
+or those for which all fields have empty value.
+
+================================================================
 Usage: ./mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
 field, and so on.  (Any records not having all specified sort keys will appear
