@@ -14,6 +14,11 @@ Passes input records directly to output. Most useful for format conversion.
  -n (default false) Prepend field "n" to each record with record-counter starting at 1
 
 ================================================================
+Usage: ./mlr check
+Consumes records without printing any output.
+Useful for doing a well-formatted check on input data.
+
+================================================================
 Usage: ./mlr count [options]
 Prints number of records, optionally grouped by distinct values for specified field names.
 Options:
