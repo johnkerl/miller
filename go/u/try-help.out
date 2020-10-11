@@ -14,6 +14,14 @@ Passes input records directly to output. Most useful for format conversion.
  -n (default false) Prepend field "n" to each record with record-counter starting at 1
 
 ================================================================
+Usage: ./mlr count [options]
+Prints number of records, optionally grouped by distinct values for specified field names.
+Options:
+ -g Optional group-by-field names for counts, e.g. a,b,c
+ -n (default false) Show only the number of distinct values. Not interesting without -g.
+ -o (default count) Field name for output count
+
+================================================================
 Usage: ./mlr cut [options]
 Passes through input records with specified fields included/excluded.
  -complement (default false) Synonymous with -x

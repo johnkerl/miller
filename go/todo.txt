@@ -5,7 +5,7 @@ TOP OF LIST:
 * local vars w/ typing
 
 * some more verbs
-  o altkv bootstrap count decimate grep having-fields remove-empty-columns reorder
+  o altkv count decimate grep having-fields remove-empty-columns reorder
   o stats1 stats2
 
 * double-check rand-seeding
