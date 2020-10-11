@@ -16,6 +16,7 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.CountSetup,
 	mappers.CutSetup,
 	mappers.FilterSetup,
+	mappers.GrepSetup,
 	mappers.GroupBySetup,
 	mappers.GroupLikeSetup,
 	mappers.HeadSetup,

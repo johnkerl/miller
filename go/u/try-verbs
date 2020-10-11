@@ -66,3 +66,6 @@ run_mlr --opprint --from u/medium.dkvp count -g a -n
 run_mlr --opprint --from u/medium.dkvp count -g a,b -n
 run_mlr --opprint --from u/medium.dkvp count -o NAME
 run_mlr --opprint --from u/medium.dkvp count -g a -o NAME
+
+run_mlr --opprint --from u/s.dkvp grep pan
+run_mlr --opprint --from u/s.dkvp grep -v pan
