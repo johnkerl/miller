@@ -90,8 +90,8 @@ func (this *MapperSkipTrivialRecords) Map(
 		hasAny := false
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if pe.Value.String() != "" {
-				hasAny = true;
-				break;
+				hasAny = true
+				break
 			}
 		}
 

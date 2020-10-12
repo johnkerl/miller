@@ -468,10 +468,10 @@ func (this *Mlrmap) linkAtHead(pe *mlrmapEntry) {
 		this.Head = pe
 		this.Tail = pe
 	} else {
-		pe.Prev   = nil;
-		pe.Next   = this.Head;
-		this.Head.Prev = pe;
-		this.Head = pe;
+		pe.Prev = nil
+		pe.Next = this.Head
+		this.Head.Prev = pe
+		this.Head = pe
 	}
 	this.FieldCount++
 }
@@ -484,10 +484,10 @@ func (this *Mlrmap) linkAtTail(pe *mlrmapEntry) {
 		this.Head = pe
 		this.Tail = pe
 	} else {
-		pe.Prev   = this.Tail;
-		pe.Next   = nil;
-		this.Tail.Next = pe;
-		this.Tail = pe;
+		pe.Prev = this.Tail
+		pe.Next = nil
+		this.Tail.Next = pe
+		this.Tail = pe
 	}
 	this.FieldCount++
 }

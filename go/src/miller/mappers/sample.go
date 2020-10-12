@@ -105,8 +105,8 @@ type sampleBucketType struct {
 
 type MapperSample struct {
 	groupByFieldNameList []string
-	sampleCount       int64
-	bucketsByGroup    *lib.OrderedMap
+	sampleCount          int64
+	bucketsByGroup       *lib.OrderedMap
 }
 
 func NewMapperSample(
@@ -114,9 +114,9 @@ func NewMapperSample(
 	groupByFieldNames string,
 ) (*MapperSample, error) {
 	this := &MapperSample{
-		sampleCount:       sampleCount,
+		sampleCount:          sampleCount,
 		groupByFieldNameList: lib.SplitString(groupByFieldNames, ","),
-		bucketsByGroup:    lib.NewOrderedMap(),
+		bucketsByGroup:       lib.NewOrderedMap(),
 	}
 	return this, nil
 }

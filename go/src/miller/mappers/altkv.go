@@ -90,7 +90,7 @@ func (this *MapperAltkv) Map(
 		newrec := types.NewMlrmapAsRecord()
 		outputFieldNumber := 1
 
-		fmt.Printf("\n");
+		fmt.Printf("\n")
 		for pe := inrec.Head; pe != nil; /* increment in loop body */ {
 			if pe.Next != nil { // Not at end of record with odd-numbered field count
 				key := pe.Value.String()
@@ -111,7 +111,7 @@ func (this *MapperAltkv) Map(
 			}
 			pe = pe.Next
 		}
-		fmt.Printf("\n");
+		fmt.Printf("\n")
 
 		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 

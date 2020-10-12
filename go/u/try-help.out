@@ -31,6 +31,13 @@ Options:
  -o (default count) Field name for output count
 
 ================================================================
+Usage: ./mlr count-similar [options]
+Ingests all records, then emits each record augmented by a count of
+the number of other records having the same group-by field values.
+ -g Group-by-field names for counts, e.g. a,b,c
+ -o (default count) Field name for output count.
+
+================================================================
 Usage: ./mlr cut [options]
 Passes through input records with specified fields included/excluded.
  -complement (default false) Synonymous with -x
@@ -42,6 +49,14 @@ Default is to retain them in the order found in the input data.
 Examples:
   ./mlr cut -f hostname,status
   ./mlr cut -x -f hostname,status
+
+================================================================
+Usage: ./mlr decimate [options]
+Passes through one of every n records, optionally by category.
+ -b (default false) Decimate by printing first of every n.
+ -e (default false) Decimate by printing last of every n (default).
+ -g Optional group-by-field names for decimate counts, e.g. a,b,c
+ -n (default 10) Decimation factor.
 
 ================================================================
 Usage: ./mlr fill-down [options]

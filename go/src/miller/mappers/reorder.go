@@ -92,11 +92,11 @@ func mapperReorderUsage(
 	flagSet.VisitAll(func(f *flag.Flag) {
 		fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage) // f.Name, f.Value
 	})
-	fmt.Fprintf(o, "Examples:\n");
+	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
-		argv0, verb);
+		argv0, verb)
 	fmt.Fprintf(o, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
-		argv0, verb);
+		argv0, verb)
 }
 
 // ----------------------------------------------------------------
@@ -146,7 +146,7 @@ func (this *MapperReorder) reorderToStart(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		for _, fieldName := range(this.fieldNameList) {
+		for _, fieldName := range this.fieldNameList {
 			inrec.MoveToHead(&fieldName)
 		}
 		outputChannel <- inrecAndContext
@@ -163,7 +163,7 @@ func (this *MapperReorder) reorderToEnd(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		for _, fieldName := range(this.fieldNameList) {
+		for _, fieldName := range this.fieldNameList {
 			inrec.MoveToTail(&fieldName)
 		}
 		outputChannel <- inrecAndContext

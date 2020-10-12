@@ -88,3 +88,13 @@ run_mlr --icsv --opprint fill-down -f a,b,c,d u/remove-empty-columns.csv
 
 run_mlr --icsv --opprint reorder -f x,i    u/s.dkvp
 run_mlr --icsv --opprint reorder -f x,i -e u/s.dkvp
+
+run_mlr decimate       -n 2 u/s.dkvp
+run_mlr decimate -b    -n 2 u/s.dkvp
+run_mlr decimate    -e -n 2 u/s.dkvp
+run_mlr decimate -b -e -n 2 u/s.dkvp
+
+run_mlr --opprint count-similar -g a u/s.dkvp
+run_mlr --opprint count-similar -g b u/s.dkvp
+run_mlr --opprint count-similar -g a,b u/s.dkvp
+run_mlr --opprint count-similar -g a -o altnamehere u/s.dkvp

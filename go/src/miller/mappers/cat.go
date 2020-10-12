@@ -165,12 +165,12 @@ func (this *MapperCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	record := inrecAndContext.Record
-	if record != nil { // not end of record stream
+	inrec := inrecAndContext.Record
+	if inrec != nil { // not end of record stream
 		this.counter++
 		key := this.counterFieldName
 		value := types.MlrvalFromInt64(this.counter)
-		record.PrependCopy(&key, &value)
+		inrec.PrependCopy(&key, &value)
 	}
 	outputChannel <- inrecAndContext
 }
