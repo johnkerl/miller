@@ -34,6 +34,22 @@ func (this *Mlrval) IsErrorOrVoid() bool {
 	return this.mvtype == MT_ERROR || this.mvtype == MT_VOID
 }
 
+// * Error is non-empty
+// * Absent is non-empty (shouldn't have been assigned in the first place; error
+//   should be surfaced)
+// * Void is empty
+// * Empty string is empty
+// * Int/float/bool/array/map are all non-empty
+func (this *Mlrval) IsEmpty() bool {
+	if this.mvtype == MT_VOID {
+		return true
+	} else if this.mvtype == MT_STRING {
+		return this.printrep == ""
+	} else {
+		return false
+	}
+}
+
 func (this *Mlrval) IsString() bool {
 	return this.mvtype == MT_STRING
 }

@@ -112,6 +112,10 @@ Usage: ./mlr regularize [options]
 Outputs records sorted lexically ascending by keys.
 
 ================================================================
+Usage: ./mlr remove-empty-columns {no options}
+Omits fields which are empty on every input row. Non-streaming.
+
+================================================================
 Usage: ./mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 

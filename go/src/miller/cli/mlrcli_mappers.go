@@ -26,6 +26,7 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.NothingSetup,
 	mappers.PutSetup,
 	mappers.RegularizeSetup,
+	mappers.RemoveEmptyColumnsSetup,
 	mappers.RenameSetup,
 	mappers.ShuffleSetup,
 	mappers.SkipTrivialRecordsSetup,
