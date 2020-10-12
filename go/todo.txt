@@ -3,6 +3,11 @@ TOP OF LIST:
 
 * UDFs
 * local vars w/ typing
+* Check for "Options:" in all mappers
+
+* default ifs/ofs to space not comma for nidx. & what else did i miss?
+
+* sliding-window averages (C + Go)
 
 * some more verbs
   o altkv decimate having-fields remove-empty-columns reorder

@@ -1,4 +1,8 @@
 ================================================================
+Usage: ./mlr altkv {no options}
+Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+
+================================================================
 Usage: ./mlr bootstrap [options]
 Emits an n-sample, with replacement, of the input records.
 See also ./mlr bootstrap and ./mlr sample.

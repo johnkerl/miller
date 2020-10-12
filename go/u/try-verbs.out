@@ -523,3 +523,15 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 mlr --from u/skip-trivial-records.dkvp skip-trivial-records
 a=1,b=2
 c=4,d=
+
+----------------------------------------------------------------
+mlr --inidx --ifs comma altkv
+
+
+a=b,c=d,e=f
+
+----------------------------------------------------------------
+mlr --inidx --ifs comma altkv
+
+
+a=b,c=d,e=f,4=g

@@ -75,3 +75,6 @@ run_mlr --opprint --from u/s.dkvp grep -i -v PAN
 
 run_mlr --from u/s.dkvp skip-trivial-records
 run_mlr --from u/skip-trivial-records.dkvp skip-trivial-records
+
+echo 'a,b,c,d,e,f'   | run_mlr --inidx --ifs comma altkv
+echo 'a,b,c,d,e,f,g' | run_mlr --inidx --ifs comma altkv

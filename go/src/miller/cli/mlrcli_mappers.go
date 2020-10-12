@@ -11,6 +11,7 @@ import (
 
 // ----------------------------------------------------------------
 var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
+	mappers.AltkvSetup,
 	mappers.BootstrapSetup,
 	mappers.CatSetup,
 	mappers.CheckSetup,
