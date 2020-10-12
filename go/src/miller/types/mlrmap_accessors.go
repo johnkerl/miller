@@ -196,6 +196,24 @@ func (this *Mlrmap) Remove(key *string) bool {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrmap) MoveToHead(key *string) {
+	pe := this.findEntry(key)
+	if pe != nil {
+		this.unlink(pe)
+		this.linkAtHead(pe)
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *Mlrmap) MoveToTail(key *string) {
+	pe := this.findEntry(key)
+	if pe != nil {
+		this.unlink(pe)
+		this.linkAtTail(pe)
+	}
+}
+
+// ----------------------------------------------------------------
 // E.g. '$name[1]["foo"] = "bar"' or '$*["foo"][1] = "bar"'
 // In the former case the indices are ["name", 1, "foo"] and in the latter case
 // the indices are ["foo", 1]. See also indexed-lvalues.md.
@@ -439,6 +457,39 @@ func (this *Mlrmap) unlink(pe *mlrmapEntry) {
 		delete(this.keysToEntries, *pe.Key)
 	}
 	this.FieldCount--
+}
+
+// ----------------------------------------------------------------
+// Does not check for duplicate keys
+func (this *Mlrmap) linkAtHead(pe *mlrmapEntry) {
+	if this.Head == nil {
+		pe.Prev = nil
+		pe.Next = nil
+		this.Head = pe
+		this.Tail = pe
+	} else {
+		pe.Prev   = nil;
+		pe.Next   = this.Head;
+		this.Head.Prev = pe;
+		this.Head = pe;
+	}
+	this.FieldCount++
+}
+
+// Does not check for duplicate keys
+func (this *Mlrmap) linkAtTail(pe *mlrmapEntry) {
+	if this.Head == nil {
+		pe.Prev = nil
+		pe.Next = nil
+		this.Head = pe
+		this.Tail = pe
+	} else {
+		pe.Prev   = this.Tail;
+		pe.Next   = nil;
+		this.Tail.Next = pe;
+		this.Tail = pe;
+	}
+	this.FieldCount++
 }
 
 // ----------------------------------------------------------------

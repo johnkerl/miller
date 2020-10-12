@@ -129,6 +129,7 @@ func mapperSortParseCLI(
 
 		} else {
 			mapperSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			os.Exit(1)
 		}
 	}
 
@@ -138,6 +139,7 @@ func mapperSortParseCLI(
 
 	if len(groupByFieldNameList) == 0 {
 		mapperSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		os.Exit(1)
 	}
 
 	mapper, _ := NewMapperSort(

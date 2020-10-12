@@ -130,6 +130,16 @@ Usage: ./mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 
 ================================================================
+Usage: ./mlr reorder [options]
+Moves specified names to start of record, or end of record.
+Options:
+ -e Put specified field names at record end: default is to put them at record start
+ -f Field names to reorder
+Examples:
+./mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
+./mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+
+================================================================
 Usage: ./mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
 See also ./mlr bootstrap and ./mlr shuffle.

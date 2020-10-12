@@ -40,6 +40,19 @@ func SortStrings(strings []string) {
 	})
 }
 
+func ReverseStringList(strings []string) {
+	n := len(strings)
+	i := 0
+	j := n - 1
+	for i < j {
+		temp := strings[i]
+		strings[i] = strings[j]
+		strings[j] = temp
+		i++
+		j--
+	}
+}
+
 func SortedStrings(strings []string) []string {
 	copy := make([]string, len(strings))
 	for i, s := range strings {

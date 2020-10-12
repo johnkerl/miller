@@ -85,3 +85,6 @@ run_mlr --from u/remove-empty-columns.csv --icsv --opprint remove-empty-columns
 
 run_mlr --icsv --opprint fill-down -f z       u/remove-empty-columns.csv
 run_mlr --icsv --opprint fill-down -f a,b,c,d u/remove-empty-columns.csv
+
+run_mlr --icsv --opprint reorder -f x,i    u/s.dkvp
+run_mlr --icsv --opprint reorder -f x,i -e u/s.dkvp

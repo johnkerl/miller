@@ -62,6 +62,7 @@ func mapperSampleParseCLI(
 
 	if *pSampleCount < 0 {
 		mapperSampleUsage(os.Stderr, args[0], verb, flagSet)
+		os.Exit(1)
 	}
 
 	// Find out how many flags were consumed by this verb and advance for the
