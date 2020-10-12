@@ -44,6 +44,14 @@ Examples:
   ./mlr cut -x -f hostname,status
 
 ================================================================
+Usage: ./mlr decimate [options]
+Passes through one of every n records, optionally by category.
+ -b (default false) Decimate by printing first of every n.
+ -e (default false) Decimate by printing last of every n (default).
+ -g Optional group-by-field names for decimate counts, e.g. a,b,c
+ -n (default 10) Decimation factor.
+
+================================================================
 Usage: ./mlr fill-down [options]
 Passes through the last n records, optionally by category.
  ---only-if-absent (default false) Synonym for -a

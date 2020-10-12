@@ -4,6 +4,7 @@ TOP OF LIST:
 * UDFs
 * local vars w/ typing
 * Check for "Options:" in all mappers
+* check for `f.Value` reassigned in all mappers -- reflects true default?
 
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
