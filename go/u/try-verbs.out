@@ -557,3 +557,17 @@ b c  d
 - 11 12
 6 -  8
 2 3  4
+
+----------------------------------------------------------------
+mlr --icsv --opprint fill-down -f z u/remove-empty-columns.csv
+a b c  d
+- 2 3  4
+- 6 -  8
+- - 11 12
+
+----------------------------------------------------------------
+mlr --icsv --opprint fill-down -f a,b,c,d u/remove-empty-columns.csv
+a b c  d
+- 2 3  4
+- 6 3  8
+- 6 11 12

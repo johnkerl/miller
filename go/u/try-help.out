@@ -44,6 +44,16 @@ Examples:
   ./mlr cut -x -f hostname,status
 
 ================================================================
+Usage: ./mlr fill-down [options]
+Passes through the last n records, optionally by category.
+ ---only-if-absent (default false) Synonym for -a
+ --a (default false) If a given record has a missing value for a given field, fill that from
+the corresponding value from a previous record, if any.
+By default, a 'missing' field either is absent, or has the empty-string value.
+With -a, a field is 'missing' only if it is absent.
+ -f (default ) Field names for fill-down
+
+================================================================
 Usage: ./mlr filter [options] {DSL expression}
 TODO: put detailed on-line help here.
  -f (default ) File containing a DSL expression.
