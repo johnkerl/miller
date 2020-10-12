@@ -28,6 +28,9 @@ func RandFloat64() float64 {
 func RandUint32() uint32 {
 	return generator.Uint32()
 }
+func RandInt63() int64 {
+	return generator.Int63()
+}
 func RandRange(lowInclusive, highExclusive int) int {
 	if lowInclusive == highExclusive {
 		return lowInclusive

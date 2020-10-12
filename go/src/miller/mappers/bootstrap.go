@@ -75,7 +75,7 @@ func mapperBootstrapUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o,
 		`Emits an n-sample, with replacement, of the input records.
-See also %s bootstrap and %s sample.
+See also %s sample and %s shuffle.
 `, argv0, argv0)
 	fmt.Fprintf(o, "Options:\n")
 

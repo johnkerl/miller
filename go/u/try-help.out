@@ -5,7 +5,7 @@ Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
 ================================================================
 Usage: ./mlr bootstrap [options]
 Emits an n-sample, with replacement, of the input records.
-See also ./mlr bootstrap and ./mlr sample.
+See also ./mlr sample and ./mlr shuffle.
 Options:
  -n Number of samples to output. Defaults to number of input records.
     Must be non-negative.
@@ -128,6 +128,14 @@ Omits fields which are empty on every input row. Non-streaming.
 ================================================================
 Usage: ./mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
+
+================================================================
+Usage: ./mlr sample [options]
+Reservoir sampling (subsampling without replacement), optionally by category.
+See also ./mlr bootstrap and ./mlr shuffle.
+Options:
+ -g Optional: group-by-field names for samples, e.g. a,b,c
+ -k Required: number of records to output in total, or by group if using -g.
 
 ================================================================
 Usage: ./mlr shuffle {no options}

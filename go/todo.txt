@@ -5,13 +5,15 @@ TOP OF LIST:
 * local vars w/ typing
 * Check for "Options:" in all mappers
 
-* default ifs/ofs to space not comma for nidx. & what else did i miss?
+! more copy-on-retain for concurrent pointer-mods !
+  o make a thorough audit, and warn everywhere
+  o either do copy for all retainers, or treat inrecs as immutable ...
 
 * sliding-window averages (C + Go)
 
 * some more verbs
-  o altkv decimate having-fields remove-empty-columns reorder
-  o stats1 stats2
+  o easies first
+  o join, stats1, stats2
 
 * double-check rand-seeding
   o all rand invocations should go through the seeder for UT/other determinism
