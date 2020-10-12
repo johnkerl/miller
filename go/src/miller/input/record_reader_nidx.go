@@ -72,7 +72,7 @@ func (this *RecordReaderNIDX) processHandle(
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
-			record := recordFromNIDXLine(&line)
+			record := recordFromNIDXLine(&line, &this.ifs)
 
 			context.UpdateForInputRecord(record)
 			inputChannel <- types.NewRecordAndContext(
@@ -86,9 +86,10 @@ func (this *RecordReaderNIDX) processHandle(
 // ----------------------------------------------------------------
 func recordFromNIDXLine(
 	line *string,
+	ifs *string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	values := strings.Split(*line, " ") // TODO: repifs ...
+	values := strings.Split(*line, *ifs) // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {
 		i++

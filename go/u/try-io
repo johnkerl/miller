@@ -70,6 +70,21 @@ d=2,e=5,f=6
 d=3,e=5,f=6
 EOF
 
+# To-do: port format-specific default separators from C.
+# E.g. NIDX's IFS should default to space.
+echo 'a,b,c,d,e,f' | run_mlr --inidx --oxtab cat
+echo 'a b c d e f' | run_mlr --inidx --oxtab cat
+
+echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs , --oxtab cat
+echo 'a b c d e f' | run_mlr --inidx --ifs , --oxtab cat
+echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs ' ' --oxtab cat
+echo 'a b c d e f' | run_mlr --inidx --ifs ' ' --oxtab cat
+
+echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs comma --oxtab cat
+echo 'a b c d e f' | run_mlr --inidx --ifs comma --oxtab cat
+echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs space --oxtab cat
+echo 'a b c d e f' | run_mlr --inidx --ifs space --oxtab cat
+
 run_mlr --itsv --ocsv cat u/s.tsv
 run_mlr --icsv --otsv cat u/s.tsv
 run_mlr --icsv --otsv cat u/s.csv

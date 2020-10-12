@@ -28,7 +28,7 @@ var SEPARATOR_NAMES_TO_VALUES = map[string]string{
 	"crlfcrlf":  "\r\n\r\n",
 	"tab":       "\t",
 	"space":     " ",
-	"comma":     ":",
+	"comma":     ",",
 	"pipe":      "|",
 	"slash":     "/",
 	"colon":     ":",
@@ -40,8 +40,10 @@ func SeparatorFromArg(name string) string {
 	sep, ok := SEPARATOR_NAMES_TO_VALUES[name]
 	if !ok {
 		// xxx temp
-		fmt.Fprintf(os.Stderr, "Miller: could not handle separator \"%s\".\n", name)
-		os.Exit(1)
+		//fmt.Fprintf(os.Stderr, "Miller: could not handle separator \"%s\".\n", name)
+		//os.Exit(1)
+		// It's OK if they do '--ifs ,' -- just pass it back.
+		return name
 	}
 	return sep
 	//	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
