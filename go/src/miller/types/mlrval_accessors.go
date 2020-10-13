@@ -66,6 +66,10 @@ func (this *Mlrval) IsFloat() bool {
 	return this.mvtype == MT_FLOAT
 }
 
+func (this *Mlrval) IsNumeric() bool {
+	return this.mvtype == MT_INT || this.mvtype == MT_FLOAT
+}
+
 func (this *Mlrval) IsBool() bool {
 	return this.mvtype == MT_BOOL
 }
