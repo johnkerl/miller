@@ -1787,6 +1787,31 @@ func MlrvalTruncate(ma, mb *Mlrval) Mlrval {
 }
 
 // ================================================================
+func MlrvalLStrip(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_STRING {
+		return MlrvalFromString(strings.TrimLeft(ma.printrep, " \t"))
+	} else {
+		return *ma
+	}
+}
+
+func MlrvalRStrip(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_STRING {
+		return MlrvalFromString(strings.TrimRight(ma.printrep, " \t"))
+	} else {
+		return *ma
+	}
+}
+
+func MlrvalStrip(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_STRING {
+		return MlrvalFromString(strings.Trim(ma.printrep, " \t"))
+	} else {
+		return *ma
+	}
+}
+
+// ================================================================
 func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_FLOAT {
 		return MlrvalFromString(lib.Sec2GMT(ma.floatval, 0))

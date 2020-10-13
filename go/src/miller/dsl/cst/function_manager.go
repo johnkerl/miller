@@ -221,6 +221,21 @@ Leaves non-numbers as-is.`,
 		help:      "Hyperbolic tangent.",
 		unaryFunc: types.MlrvalTanh,
 	},
+	{
+		name:      "lstrip",
+		help:      "Strip leading whitespace from string.",
+		unaryFunc: types.MlrvalLStrip,
+	},
+	{
+		name:      "rstrip",
+		help:      "Strip trailing whitespace from string.",
+		unaryFunc: types.MlrvalRStrip,
+	},
+	{
+		name:      "strip",
+		help:      "Strip leading and trailing whitespace from string.",
+		unaryFunc: types.MlrvalStrip,
+	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions
