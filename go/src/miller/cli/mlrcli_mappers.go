@@ -33,6 +33,7 @@ var MAPPER_LOOKUP_TABLE = []mapping.MapperSetup{
 	mappers.RenameSetup,
 	mappers.ReorderSetup,
 	mappers.SampleSetup,
+	mappers.Sec2GMTSetup,
 	mappers.ShuffleSetup,
 	mappers.SkipTrivialRecordsSetup,
 	mappers.SortSetup,

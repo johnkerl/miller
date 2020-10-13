@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Sec2gmt(epochSeconds float64, numDecimalPlaces int) string {
+func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
 	if numDecimalPlaces > 9 {
 		numDecimalPlaces = 9
 	}

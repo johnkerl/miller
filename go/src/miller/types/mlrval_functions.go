@@ -1789,9 +1789,9 @@ func MlrvalTruncate(ma, mb *Mlrval) Mlrval {
 // ================================================================
 func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_FLOAT {
-		return MlrvalFromString(lib.Sec2gmt(ma.floatval, 0))
+		return MlrvalFromString(lib.Sec2GMT(ma.floatval, 0))
 	} else if ma.mvtype == MT_INT {
-		return MlrvalFromString(lib.Sec2gmt(float64(ma.intval), 0))
+		return MlrvalFromString(lib.Sec2GMT(float64(ma.intval), 0))
 	} else {
 		return *ma
 	}
@@ -1803,9 +1803,9 @@ func MlrvalSec2GMTBinary(ma, mb *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 	if ma.mvtype == MT_FLOAT {
-		return MlrvalFromString(lib.Sec2gmt(ma.floatval, int(mb.intval)))
+		return MlrvalFromString(lib.Sec2GMT(ma.floatval, int(mb.intval)))
 	} else if ma.mvtype == MT_INT {
-		return MlrvalFromString(lib.Sec2gmt(float64(ma.intval), int(mb.intval)))
+		return MlrvalFromString(lib.Sec2GMT(float64(ma.intval), int(mb.intval)))
 	} else {
 		return *ma
 	}

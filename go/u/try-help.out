@@ -163,6 +163,17 @@ Options:
  -k Required: number of records to output in total, or by group if using -g.
 
 ================================================================
+Usage: ./mlr sec2gmt [options] {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
+  ./mlr sec2gmt time1,time2
+is the same as
+  ./mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+Options:
+-1 through -9: format the seconds using 1..9 decimal places, respectively.
+
+================================================================
 Usage: ./mlr shuffle {no options}
 Outputs records randomly permuted. No output records are produced until
 all input records are read. See also ./mlr bootstrap and ./mlr sample.
