@@ -1733,6 +1733,8 @@ func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
 }
 
 // ================================================================
+// TODO: make a variant which allows compiling the regexp once and reusing it
+// on each record
 func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
 	if ma.IsErrorOrAbsent() {
 		return *ma
@@ -1809,6 +1811,29 @@ func MlrvalStrip(ma *Mlrval) Mlrval {
 	} else {
 		return *ma
 	}
+}
+
+// ----------------------------------------------------------------
+func MlrvalCollapseWhitespace(ma *Mlrval) Mlrval {
+	return MlrvalCollapseWhitespaceRegexp(ma, WhitespaceRegexp())
+}
+
+func MlrvalCollapseWhitespaceRegexp(ma *Mlrval, whitespaceRegexp *regexp.Regexp) Mlrval {
+	if ma.mvtype == MT_STRING {
+		return MlrvalFromString(whitespaceRegexp.ReplaceAllString(ma.printrep, " "))
+	} else {
+		return *ma
+	}
+}
+
+func WhitespaceRegexp() *regexp.Regexp {
+	return regexp.MustCompile("\\s+")
+}
+
+// ----------------------------------------------------------------
+func MlrvalCleanWhitespace(ma *Mlrval) Mlrval {
+	temp := MlrvalCollapseWhitespaceRegexp(ma, WhitespaceRegexp())
+	return MlrvalStrip(&temp)
 }
 
 // ================================================================

@@ -222,6 +222,16 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalTanh,
 	},
 	{
+		name:      "clean_whitespace",
+		help:      "Same as collapse_whitespace and strip.",
+		unaryFunc: types.MlrvalCleanWhitespace,
+	},
+	{
+		name:      "collapse_whitespace",
+		help:      "Strip repeated whitespace from string.",
+		unaryFunc: types.MlrvalCollapseWhitespace,
+	},
+	{
 		name:      "lstrip",
 		help:      "Strip leading whitespace from string.",
 		unaryFunc: types.MlrvalLStrip,
