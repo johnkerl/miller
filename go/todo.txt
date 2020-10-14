@@ -46,9 +46,6 @@ TOP OF LIST:
 CATEGORIES:
 
 * widen verb coverage
-  o count
-  o repeat
-  o focus on calendar/DST/TZ improvements
 
 * widen CLI coverage
   o --c2x et al. -- fold in markdown
@@ -67,7 +64,6 @@ CATEGORIES:
   o non-lite DKVP reader/writer
   o comment-filtering-compaosed io.Reader
   o make a pprint reader w/ width-detect
-  o '_' as empty-marker in pprint -- ? backwards-incompatible if so ...
 
 * widen DSL coverage
   ! print/dump/emit w/ redirect options

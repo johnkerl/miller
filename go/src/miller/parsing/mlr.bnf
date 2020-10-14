@@ -1412,11 +1412,8 @@ TripleForUpdate
 //	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
 //}
 
-//// Begin/end
 //Statement(A) ::= FuncBlock(B).  { A = B; }
 //Statement(A) ::= SubrBlock(B).  { A = B; }
-//Statement(A) ::= BeginBlock(B). { A = B; }
-//Statement(A) ::= EndBlock(B).   { A = B; }
 
 //Statement(A) ::= md_token_subr_call FcnOrSubrCall(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
