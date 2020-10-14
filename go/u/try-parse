@@ -105,3 +105,11 @@ echo; run_mlr -n put -v 'nr=NR; $nr=nr'
 
 echo; run_mlr -n put -v 'for (i = 0; i < 10; i += 1) { $x += i }'
 echo; run_mlr -n put -v 'for (;;) {}'
+
+echo; run_mlr -n put -v 'func f(){}'
+echo; run_mlr -n put -v 'func f(a){}'
+echo; run_mlr -n put -v 'func f(a,){}'
+echo; run_mlr -n put -v 'func f(a,b){}'
+echo; run_mlr -n put -v 'func f(a,b,){}'
+echo; run_mlr -n put -v 'func f(a,b,c){}'
+echo; run_mlr -n put -v 'func f(a,b,c,){}'

@@ -1268,3 +1268,111 @@ RAW AST:
         * StatementBlock
         * StatementBlock
 
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(){}
+DSL EXPRESSION:
+func f(){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(a){}
+DSL EXPRESSION:
+func f(a){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "a"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(a,){}
+DSL EXPRESSION:
+func f(a,){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "a"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(a,b){}
+DSL EXPRESSION:
+func f(a,b){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "a"
+            * Parameter
+                * ParameterName "b"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(a,b,){}
+DSL EXPRESSION:
+func f(a,b,){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "a"
+            * Parameter
+                * ParameterName "b"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(a,b,c){}
+DSL EXPRESSION:
+func f(a,b,c){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "a"
+            * Parameter
+                * ParameterName "b"
+            * Parameter
+                * ParameterName "c"
+        * StatementBlock
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(a,b,c,){}
+DSL EXPRESSION:
+func f(a,b,c,){}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "a"
+            * Parameter
+                * ParameterName "b"
+            * Parameter
+                * ParameterName "c"
+        * StatementBlock
+

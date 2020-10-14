@@ -76,12 +76,12 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
 		hasMultipleArities: true,
 	},
 	{
-		name:      "sec2gmt",
-		help:      `Formats seconds since epoch (integer part)
+		name: "sec2gmt",
+		help: `Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 Leaves non-numbers as-is.`,
-		unaryFunc: types.MlrvalSec2GMTUnary,
-		binaryFunc: types.MlrvalSec2GMTBinary,
+		unaryFunc:          types.MlrvalSec2GMTUnary,
+		binaryFunc:         types.MlrvalSec2GMTBinary,
 		hasMultipleArities: true,
 	},
 

@@ -163,28 +163,33 @@ md_token_if       : 'i' 'f' ;
 md_token_in       : 'i' 'n' ;
 md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
 
-//md_token_all      : 'a' 'l' 'l' ;
+md_token_func     : 'f' 'u' 'n' 'c' ;
+//md_token_subr     : 's' 'u' 'b' 'r' ;
+
 //md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
 //md_token_call     : 'c' 'a' 'l' 'l' ;
 //md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
-//md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
-//md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_func     : 'f' 'u' 'n' 'c' ;
-//md_token_print    : 'p' 'r' 'i' 'n' 't' ;
-//md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
 //md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
-//md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
-//md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
-//md_token_subr     : 's' 'u' 'b' 'r' ;
-//md_token_tee      : 't' 'e' 'e' ;
+
 //md_token_unset    : 'u' 'n' 's' 'e' 't' ;
 
-//md_token_map_type   : 'm' 'a' 'p' ;
+//md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
+//md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
+//md_token_print    : 'p' 'r' 'i' 'n' 't' ;
+//md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+//md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
+//md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
+//md_token_tee      : 't' 'e' 'e' ;
+
+//md_token_all      : 'a' 'l' 'l' ;
+
+md_token_int_type     : 'i' 'n' 't' ;
+md_token_float_type   : 'f' 'l' 'o' 'a' 't' ;
 //md_token_num_type   : 'n' 'u' 'm' ;
-md_token_int_type   : 'i' 'n' 't' ;
-md_token_float_type : 'f' 'l' 'o' 'a' 't' ;
 //md_token_bool_type  : 'b' 'o' 'o' 'l' ;
 //md_token_str_type   : 's' 't' 'r' ;
+//md_token_map_type   : 'm' 'a' 'p' ;
+//md_token_array_type : 'a' 'r' 'r' 'a' 'y';
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -1168,6 +1173,8 @@ BracefulStatement
   | IfChain
   | WhileLoop
   | ForLoop
+  | FuncBlock
+  // | SubrBlock
 ;
 
 BeginBlock
@@ -1268,7 +1275,7 @@ ForLoopKeyOnly
      dsl.NodeTypeForLoopKeyOnly,
 	 );
  >>
- ;
+;
 
 // ----------------------------------------------------------------
 // for(k, v in $*) { ... }
@@ -1292,7 +1299,7 @@ ForLoopKeyValue
      dsl.NodeTypeForLoopKeyValue,
 	 );
  >>
- ;
+;
 
 // ForLoopMultipleKeysValue
 
@@ -1351,7 +1358,7 @@ TripleForLoop
      dsl.NodeTypeTripleForLoop,
 	 );
  >>
- ;
+;
 
 TripleForStart
   : empty
@@ -1376,6 +1383,85 @@ TripleForUpdate
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
   | TripleForUpdate "," Assignment
     <<dsl.AppendChild($0, $2) >>
+;
+
+// ================================================================
+// FUNCTION AND SUBROUTINE DEFINITIONS
+
+FuncBlock
+  : md_token_func
+	  md_token_non_sigil_name
+    "("
+    FuncOrSubrParameterList
+    ")"
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeBinary(
+      $1,
+      $3, // parameter list
+      $5, // { ... }
+      dsl.NodeTypeFunctionDefinition,
+    );
+  >>
+;
+
+// With return-type annotation
+//FuncBlock ::= md_token_func
+//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//	md_token_colon Typedecl(M)
+//	"{" StatementBlock(B) "}".
+//{
+//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+//	mlr_dsl_ast_node_replace_text(B, "func_block");
+//	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
+//}
+
+// ----------------------------------------------------------------
+//SubrBlock(C) ::= md_token_subr
+//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//	"{" StatementBlock(B) "}".
+//{
+//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+//	mlr_dsl_ast_node_replace_text(B, "subr_block");
+//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
+//}
+
+// ----------------------------------------------------------------
+FuncOrSubrParameterList
+  : empty
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeParameterList) >>
+  | FuncOrSubrNonEmptyParameterList
+    << dsl.Wrap($0) >>
+;
+
+FuncOrSubrNonEmptyParameterList
+  : FuncOrSubrParameter
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeParameterList) >>
+  | FuncOrSubrParameter ","
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeParameterList) >>
+  | FuncOrSubrParameter "," FuncOrSubrNonEmptyParameterList
+    << dsl.PrependChild($2, $0) >>
+;
+
+FuncOrSubrParameter
+  : FuncOrSubrParameterName
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeParameter) >>
+
+  // TODO: with typename
+  // | Typedecl FuncOrSubrParameterName
+  ;
+
+//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
+//}
+//FuncOrSubrParameter(A) ::= Typedecl(T) md_token_non_sigil_name(N). {
+//	A = mlr_dsl_ast_node_alloc(N->text, T->type);
+//}
+
+// In GOCC this seemingly no-op rule converts the token md_token_non_sigil_name
+// to an AST node FuncOrSubrParameterName
+FuncOrSubrParameterName
+  : md_token_non_sigil_name
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeParameterName) >>
   ;
 
 // ================================================================
@@ -1411,9 +1497,6 @@ TripleForUpdate
 //Statement(A) ::= md_token_return. {
 //	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
 //}
-
-//Statement(A) ::= FuncBlock(B).  { A = B; }
-//Statement(A) ::= SubrBlock(B).  { A = B; }
 
 //Statement(A) ::= md_token_subr_call FcnOrSubrCall(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
@@ -1475,67 +1558,6 @@ TripleForUpdate
 //}
 //Statement(A) ::= md_token_continue(O). {
 //	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
-//}
-
-// ================================================================
-// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
-// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
-// * On the "a" we make a function sub-AST called "anon(a)".
-// * On the "b" we append the next argument to get "anon(a,b)".
-// * On the "c" we append the next argument to get "anon(a,b,c)".
-// * On the "f" we change the function name to get "f(a,b,c)".
-
-//FuncBlock(C) ::= md_token_func_def
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "func_block");
-//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B);
-//}
-
-//FuncBlock(C) ::= md_token_func_def
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	md_token_colon Typedecl(M)
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "func_block");
-//	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
-//}
-
-//SubrBlock(C) ::= md_token_subr_def
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "subr_block");
-//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
-//}
-
-//FuncOrSubrParameterList(A) ::= . {
-//	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-//}
-//FuncOrSubrParameterList(A) ::= FuncOrSubrNonEmptyParameterList(B). {
-//	A = B;
-//}
-//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B) ",". {
-//	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-//}
-//FuncOrSubrNonEmptyParameterList(A) ::= FuncOrSubrParameter(B) ","
-//	FuncOrSubrNonEmptyParameterList(C).
-//{
-//	A = mlr_dsl_ast_node_prepend_arg(C, B);
-//}
-
-//FuncOrSubrParameter(A) ::= md_token_non_sigil_name(B). {
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
-//}
-//FuncOrSubrParameter(A) ::= Typedecl(T) md_token_non_sigil_name(N). {
-//	A = mlr_dsl_ast_node_alloc(N->text, T->type);
 //}
 
 //Typedecl(A) ::= md_token_var(B).     { A = B; A->type = MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION; }

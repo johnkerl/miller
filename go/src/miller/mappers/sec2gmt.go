@@ -143,7 +143,7 @@ func (this *MapperSec2GMT) Map(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // Not end of record stream
-		for _, fieldName := range(this.fieldNameList) {
+		for _, fieldName := range this.fieldNameList {
 			value := inrec.Get(&fieldName)
 			if value != nil {
 				floatval, ok := value.GetFloatValue()

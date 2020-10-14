@@ -223,6 +223,7 @@ var TokMap = TokenMap{
 		"md_token_do",
 		"md_token_for",
 		"md_token_in",
+		"md_token_func",
 	},
 
 	idMap: map[string]Type{
@@ -330,5 +331,6 @@ var TokMap = TokenMap{
 		"md_token_do":                 101,
 		"md_token_for":                102,
 		"md_token_in":                 103,
+		"md_token_func":               104,
 	},
 }

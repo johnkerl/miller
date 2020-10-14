@@ -59,6 +59,9 @@ func BuildStatementNode(
 	case dsl.NodeTypeTripleForLoop:
 		return BuildTripleForLoopNode(astNode)
 
+	case dsl.NodeTypeFunctionDefinition:
+		return nil, nil // xxx temp
+
 	default:
 		return nil, errors.New(
 			"CST BuildStatementNode: unhandled AST node " + string(astNode.Type),

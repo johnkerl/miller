@@ -171,3 +171,4 @@ NITS/NON-IMMEDIATE:
 * relnotes: label b,i,x vs x,i,b change
 * put -- multiple -f? as in C impl?
 * emit { int : string } results in absent-something :^/
+* doc note 'array' is now a keyword
