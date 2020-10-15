@@ -10,6 +10,16 @@ TOP OF LIST:
   o make sure they aren't double-broken or double-continued when nested
   o comment block-exit at all block-types -- no double-pass-back from loops; do pass-back from if/cond
 
+* CST validators
+  o begin/end hygiene:
+    - AST tree-walk / CST build: must be at top level
+    - tree-walk begin/end to check for invalids ($-anything etc)
+    - bare-boolean last statement in main block, & not in begin/end
+  o prohibit NR etc at LHS; 1+2=3+4; etc
+  o begin/end non-nested
+  o enforce return-value iff in a function; return-void iff in a subroutine
+  o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
+
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
   o either do copy for all retainers, or treat inrecs as immutable ...
@@ -35,10 +45,6 @@ TOP OF LIST:
   - what about csvlite-style -- ? needs a --dkvplite ?
 
 * clean up 'mlr --help' to not advertise things it doesn't do yet
-
-* CST validators
-  - prohibit NR etc at LHS; 1+2=3+4; etc
-  - begin/end non-nested
 
 * ASV? golang csv package parameterizes comma but not crlf :(
 
@@ -74,12 +80,6 @@ CATEGORIES:
   o c/reg_test/run reorgs
   o err-return for array/map get/put if incorrect types ... currently go-void ...
     ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
-  o begin/end hygiene:
-    - AST tree-walk / CST build: must be at top level
-    - tree-walk begin/end to check for invalids ($-anything etc)
-    - bare-boolean last statement in main block, & not in begin/end
-  o enforce return-value iff in a function; return-void iff in a subroutine
-  o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
   o typed localvars
   o for-knv
   * profile mand.mlr & check for need for idx-assign

@@ -27,6 +27,11 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
 
+	// TODO:
+	// * Pass 1 to locate and install UDFs defined at top level (hoisting
+	//   definitions above callsites)
+	// * Pass 2 to handle everything else
+
 	cstRoot := BuildEmptyRoot()
 
 	// They can do mlr put '': there are simply zero statements.
