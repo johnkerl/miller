@@ -139,6 +139,5 @@ func (this *IfChainNode) Execute(state *State) (*BlockExitPayload, error) {
 			break
 		}
 	}
-	// TODO
 	return nil, nil
 }

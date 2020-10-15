@@ -52,15 +52,14 @@ func (this *CondBlockNode) Execute(state *State) (*BlockExitPayload, error) {
 		// TODO: line-number/token info for the DSL expression.
 		return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 	}
-	var blockExitPayload *BlockExitPayload = nil
-	var err error = nil
 	if boolValue == true {
-		blockExitPayload, err = this.statementBlockNode.Execute(state)
+		blockExitPayload, err := this.statementBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
+		if blockExitPayload != nil {
+			return blockExitPayload, nil
+		}
 	}
-	// xxx there should be no break/continue/return from conds.
-	// assert this at CST-build time as well as at CST-execute time.
-	return blockExitPayload, nil
+	return nil, nil
 }

@@ -159,9 +159,6 @@ func BuildForLoopKeyValueNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error
 func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error) {
 	mlrval := this.indexableNode.Evaluate(state)
 
-	var blockExitPayload *BlockExitPayload = nil
-	var err error = nil
-
 	if mlrval.IsMap() {
 
 		mapval := mlrval.GetMap()
@@ -177,7 +174,7 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 				state.stack.BindVariable(this.valueVariableName, pe.Value)
 			}
 			// The loop body will push its own frame
-			blockExitPayload, err = this.statementBlockNode.Execute(state)
+			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -210,7 +207,7 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 				state.stack.BindVariable(this.valueVariableName, &element)
 			}
 			// The loop body will push its own frame
-			blockExitPayload, err = this.statementBlockNode.Execute(state)
+			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -230,7 +227,7 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 		return nil, errors.New("Miller: looped-over item is not a map.")
 	}
 
-	return blockExitPayload, nil
+	return nil, nil
 }
 
 // ================================================================
@@ -363,9 +360,6 @@ func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 //
 
 func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) {
-	var blockExitPayload *BlockExitPayload = nil
-	var err error = nil
-
 	// Make a frame for the loop variables.
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
@@ -373,7 +367,7 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 	// Use ExecuteFrameless here, otherwise the start-statements would be
 	// within an ephemeral, isolated frame and not accessible to the remaining
 	// parts of the for-loop.
-	blockExitPayload, err = this.startBlockNode.ExecuteFrameless(state)
+	_, err := this.startBlockNode.ExecuteFrameless(state)
 	if err != nil {
 		return nil, err
 	}
@@ -393,7 +387,7 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 			}
 		}
 
-		blockExitPayload, err = this.bodyBlockNode.Execute(state)
+		blockExitPayload, err := this.bodyBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
@@ -410,7 +404,7 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 
 		// The loop body will push its own frame.
 		state.stack.PushStackFrame()
-		blockExitPayload, err = this.updateBlockNode.ExecuteFrameless(state)
+		_, err = this.updateBlockNode.ExecuteFrameless(state)
 		if err != nil {
 			state.stack.PopStackFrame()
 			return nil, err
@@ -418,5 +412,5 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 		state.stack.PopStackFrame()
 	}
 
-	return blockExitPayload, nil
+	return nil, nil
 }
