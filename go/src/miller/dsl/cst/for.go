@@ -181,6 +181,15 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 			if err != nil {
 				return nil, err
 			}
+			if blockExitPayload != nil {
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					break
+				}
+				// If continue, keep going -- this means the body was exited
+				// early but we keep going at this level
+			}
+			// TODO: handle return statements
+			// TODO: runtime errors for any other types
 		}
 
 	} else if mlrval.IsArray() {
@@ -205,6 +214,15 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 			if err != nil {
 				return nil, err
 			}
+			if blockExitPayload != nil {
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					break
+				}
+				// If continue, keep going -- this means the body was exited
+				// early but we keep going at this level
+			}
+			// TODO: handle return statements
+			// TODO: runtime errors for any other types
 		}
 
 	} else {
@@ -379,6 +397,16 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 		if err != nil {
 			return nil, err
 		}
+		if blockExitPayload != nil {
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+				break
+			}
+			// If continue, keep going -- this means the body was exited
+			// early but we keep going at this level. In particular we still
+			// need to execute the update-block.
+		}
+		// TODO: handle return statements
+		// TODO: runtime errors for any other types
 
 		// The loop body will push its own frame.
 		state.stack.PushStackFrame()

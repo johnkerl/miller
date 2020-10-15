@@ -92,11 +92,17 @@ func (this *StatementBlockNode) Execute(state *State) (*BlockExitPayload, error)
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 	for _, statement := range this.executables {
-		_, err := statement.Execute(state)
+		blockExitPayload, err := statement.Execute(state)
 		if err != nil {
 			return nil, err
 		}
+		if blockExitPayload != nil {
+			if blockExitPayload.blockExitStatus != BLOCK_EXIT_RUN_TO_END {
+				return blockExitPayload, nil
+			}
+		}
 	}
+
 	return nil, nil
 }
 
@@ -109,10 +115,16 @@ func (this *StatementBlockNode) Execute(state *State) (*BlockExitPayload, error)
 
 func (this *StatementBlockNode) ExecuteFrameless(state *State) (*BlockExitPayload, error) {
 	for _, statement := range this.executables {
-		_, err := statement.Execute(state)
+		blockExitPayload, err := statement.Execute(state)
 		if err != nil {
 			return nil, err
 		}
+		if blockExitPayload != nil {
+			if blockExitPayload.blockExitStatus != BLOCK_EXIT_RUN_TO_END {
+				return blockExitPayload, nil
+			}
+		}
 	}
+
 	return nil, nil
 }

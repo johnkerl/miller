@@ -129,9 +129,12 @@ func (this *IfChainNode) Execute(state *State) (*BlockExitPayload, error) {
 			return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 		}
 		if boolValue == true {
-			_, err := ifItem.statementBlockNode.Execute(state)
+			blockExitPayload, err := ifItem.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
+			}
+			if blockExitPayload != nil {
+				return blockExitPayload, nil
 			}
 			break
 		}

@@ -7,6 +7,7 @@ TOP OF LIST:
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * break/continue for loops
   o Execute() needs break/continue/(someday-throw)/return-void/return-value retval-enum
+  o make sure they aren't double-broken or double-continued when nested
 
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere

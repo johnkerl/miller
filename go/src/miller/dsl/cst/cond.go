@@ -60,5 +60,7 @@ func (this *CondBlockNode) Execute(state *State) (*BlockExitPayload, error) {
 			return nil, err
 		}
 	}
+	// xxx there should be no break/continue/return from conds.
+	// assert this at CST-build time as well as at CST-execute time.
 	return blockExitPayload, nil
 }

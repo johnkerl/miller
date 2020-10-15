@@ -64,6 +64,15 @@ func (this *WhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
 		if err != nil {
 			return nil, err
 		}
+		if blockExitPayload != nil {
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+				break
+			}
+			// If continue, keep going -- this means the body was exited
+			// early but we keep going at this level
+		}
+		// TODO: handle return statements
+		// TODO: runtime errors for any other types
 	}
 	return blockExitPayload, nil
 }
@@ -112,6 +121,15 @@ func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
 		if err != nil {
 			return nil, err
 		}
+		if blockExitPayload != nil {
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+				break
+			}
+			// If continue, keep going -- this means the body was exited
+			// early but we keep going at this level
+		}
+		// TODO: handle return statements
+		// TODO: runtime errors for any other types
 
 		condition := this.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()

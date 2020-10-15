@@ -25,7 +25,7 @@ func BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
 }
 
 func (this *BreakNode) Execute(state *State) (*BlockExitPayload, error) {
-	return &BlockExitPayload {
+	return &BlockExitPayload{
 		BLOCK_EXIT_BREAK,
 		nil,
 	}, nil
@@ -44,7 +44,7 @@ func BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
 }
 
 func (this *ContinueNode) Execute(state *State) (*BlockExitPayload, error) {
-	return &BlockExitPayload {
+	return &BlockExitPayload{
 		BLOCK_EXIT_CONTINUE,
 		nil,
 	}, nil
@@ -70,13 +70,14 @@ func BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
 
 func (this *ReturnNode) Execute(state *State) (*BlockExitPayload, error) {
 	if this.returnValueExpression == nil {
-		return &BlockExitPayload {
+		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VOID,
 			nil,
 		}, nil
 	} else {
+		// This can be of type MT_ERROR but there is no Go-level error return
 		returnValue := this.returnValueExpression.Evaluate(state)
-		return &BlockExitPayload {
+		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VALUE,
 			&returnValue,
 		}, nil
