@@ -93,8 +93,8 @@ type StatementBlockNode struct {
 type BlockExitStatus int
 
 const (
-	BLOCK_EXIT_RUN_TO_END   BlockExitStatus = 0 // xxx maybe eliminate; fold into nil-payload
-	BLOCK_EXIT_BREAK                        = 1
+	// BLOCK_EXIT_RUN_TO_END is implemented as *BlockExitPayload being nil
+	BLOCK_EXIT_BREAK        BlockExitStatus = 1
 	BLOCK_EXIT_CONTINUE                     = 2
 	BLOCK_EXIT_RETURN_VOID                  = 3
 	BLOCK_EXIT_RETURN_VALUE                 = 4
