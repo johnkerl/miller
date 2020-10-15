@@ -113,3 +113,12 @@ echo; run_mlr -n put -v 'func f(a,b){}'
 echo; run_mlr -n put -v 'func f(a,b,){}'
 echo; run_mlr -n put -v 'func f(a,b,c){}'
 echo; run_mlr -n put -v 'func f(a,b,c,){}'
+
+echo; run_mlr -n put -v 'func f(){return 1}'
+echo; run_mlr -n put -v 'func f(a){return 1}'
+echo; run_mlr -n put -v 'func f(a,){return 1}'
+echo; run_mlr -n put -v 'func f(a,b){return 1}'
+echo; run_mlr -n put -v 'func f(a,b,){return 1}'
+echo; run_mlr -n put -v 'func f(a,b,c){return 1}'
+echo; run_mlr -n put -v 'func f(a,b,c,){return 1}'
+

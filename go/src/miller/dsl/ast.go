@@ -63,6 +63,7 @@ const (
 	NodeTypeParameterList        = "ParameterList"
 	NodeTypeParameter            = "Parameter"
 	NodeTypeParameterName        = "ParameterName"
+	NodeTypeReturn               = "Return"
 
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =

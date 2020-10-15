@@ -5,6 +5,7 @@ TOP OF LIST:
 * local vars w/ typing
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
+* break/continue for loops
 
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
@@ -74,8 +75,8 @@ CATEGORIES:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
     - bare-boolean last statement in main block, & not in begin/end
+  o enforce return-value iff in a function; return-void iff in a subroutine
   o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
-  o UDFs
   o typed localvars
   o for-knv
   * profile mand.mlr & check for need for idx-assign

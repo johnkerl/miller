@@ -162,26 +162,13 @@ md_token_for      : 'f' 'o' 'r' ;
 md_token_if       : 'i' 'f' ;
 md_token_in       : 'i' 'n' ;
 md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
+//md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
+//md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
 
 md_token_func     : 'f' 'u' 'n' 'c' ;
 //md_token_subr     : 's' 'u' 'b' 'r' ;
-
-//md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
 //md_token_call     : 'c' 'a' 'l' 'l' ;
-//md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
-//md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
-
-//md_token_unset    : 'u' 'n' 's' 'e' 't' ;
-
-//md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
-//md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_print    : 'p' 'r' 'i' 'n' 't' ;
-//md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
-//md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
-//md_token_tee      : 't' 'e' 'e' ;
-
-//md_token_all      : 'a' 'l' 'l' ;
+md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
 
 md_token_int_type     : 'i' 'n' 't' ;
 md_token_float_type   : 'f' 'l' 'o' 'a' 't' ;
@@ -190,6 +177,17 @@ md_token_float_type   : 'f' 'l' 'o' 'a' 't' ;
 //md_token_str_type   : 's' 't' 'r' ;
 //md_token_map_type   : 'm' 'a' 'p' ;
 //md_token_array_type : 'a' 'r' 'r' 'a' 'y';
+
+//md_token_unset    : 'u' 'n' 's' 'e' 't' ;
+//md_token_all      : 'a' 'l' 'l' ;
+
+//md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
+//md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
+//md_token_print    : 'p' 'r' 'i' 'n' 't' ;
+//md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+//md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
+//md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
+//md_token_tee      : 't' 'e' 'e' ;
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -346,6 +344,7 @@ BracelessStatement
   | EdumpStatement
   // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
+  | ReturnStatement
 ;
 
 Assignment
@@ -1464,6 +1463,24 @@ FuncOrSubrParameterName
     << dsl.NewASTNodeZary($0, dsl.NodeTypeParameterName) >>
   ;
 
+//Statement : md_token_call FcnOrSubrCall(B). {
+//	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
+//}
+
+// ----------------------------------------------------------------
+// Return statements for user-defined functions and subroutines
+
+ReturnStatement
+  // For user-defined functions: return a value
+  : md_token_return Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeReturn) >>
+
+  // For user-defined subroutines
+  // | md_token_return
+  //    << dsl.NewASTNodeZary($0, dsl.NodeTypeReturn) >>
+
+  ;
+
 // ================================================================
 // ================================================================
 // ================================================================
@@ -1478,29 +1495,6 @@ FuncOrSubrParameterName
 //Statement(A) ::= UntypedLocalDefinition(B).    { A = B; }
 //Statement(A) ::= TypedLocalDefinition(B).    { A = B; }
 //TypedLocalDefinition : {type} ...
-
-// ----------------------------------------------------------------
-//// For user-defined functions
-//Statement(A) ::= md_token_return Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//Statement(A) ::= md_token_return MapLiteral(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//Statement(A) ::= md_token_return md_token_full_srec(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//Statement(A) ::= md_token_return md_token_full_oosvar(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
-//}
-//// For user-defined subroutines
-//Statement(A) ::= md_token_return. {
-//	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
-//}
-
-//Statement(A) ::= md_token_subr_call FcnOrSubrCall(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
-//}
 
 // Not valid in begin/end since they refer to srecs:
 // xxx enforce that in the AST/CST, not here in the grammar -- much simpler.
