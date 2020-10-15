@@ -47,8 +47,8 @@ func BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *WhileLoopNode) Execute(state *State) (*BlockExitStatus, error) {
-	var blockExitStatus *BlockExitStatus = nil
+func (this *WhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
+	var blockExitPayload *BlockExitPayload = nil
 	var err error = nil
 	for {
 		condition := this.conditionNode.Evaluate(state)
@@ -60,12 +60,12 @@ func (this *WhileLoopNode) Execute(state *State) (*BlockExitStatus, error) {
 		if boolValue != true {
 			break
 		}
-		blockExitStatus, err = this.statementBlockNode.Execute(state)
+		blockExitPayload, err = this.statementBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return blockExitStatus, nil
+	return blockExitPayload, nil
 }
 
 // ================================================================
@@ -104,11 +104,11 @@ func BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitStatus, error) {
-	var blockExitStatus *BlockExitStatus = nil
+func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
+	var blockExitPayload *BlockExitPayload = nil
 	var err error = nil
 	for {
-		blockExitStatus, err = this.statementBlockNode.Execute(state)
+		blockExitPayload, err = this.statementBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
@@ -123,5 +123,5 @@ func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitStatus, error) {
 			break
 		}
 	}
-	return blockExitStatus, nil
+	return blockExitPayload, nil
 }

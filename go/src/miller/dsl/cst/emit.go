@@ -35,7 +35,7 @@ func BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	}, nil
 }
 
-func (this *EmitStatementNode) Execute(state *State) (*BlockExitStatus, error) {
+func (this *EmitStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 	emitResult := this.emitEvaluable.Evaluate(state)
 
 	if emitResult.IsAbsent() {
@@ -111,7 +111,7 @@ func BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	return &DumpStatementNode{}, nil
 }
 
-func (this *DumpStatementNode) Execute(state *State) (*BlockExitStatus, error) {
+func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 	fmt.Fprint(os.Stdout, state.Oosvars.String())
 	return nil, nil
 }
@@ -128,7 +128,7 @@ func BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	return &EdumpStatementNode{}, nil
 }
 
-func (this *EdumpStatementNode) Execute(state *State) (*BlockExitStatus, error) {
+func (this *EdumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 	fmt.Fprint(os.Stderr, state.Oosvars.String())
 	return nil, nil
 }

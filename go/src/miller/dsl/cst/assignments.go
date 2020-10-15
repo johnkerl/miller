@@ -56,7 +56,7 @@ func NewAssignmentNode(
 	}
 }
 
-func (this *AssignmentNode) Execute(state *State) (*BlockExitStatus, error) {
+func (this *AssignmentNode) Execute(state *State) (*BlockExitPayload, error) {
 	rvalue := this.rvalueNode.Evaluate(state)
 	if !rvalue.IsAbsent() {
 		err := this.lvalueNode.Assign(&rvalue, state)

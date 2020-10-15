@@ -33,7 +33,7 @@ func BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	}, nil
 }
 
-func (this *FilterStatementNode) Execute(state *State) (*BlockExitStatus, error) {
+func (this *FilterStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 
 	filterResult := this.filterEvaluable.Evaluate(state)
 

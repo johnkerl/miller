@@ -62,8 +62,12 @@ func BuildStatementNode(
 	case dsl.NodeTypeFunctionDefinition:
 		return nil, nil // xxx temp
 
+	case dsl.NodeTypeBreak:
+		return BuildBreakNode(astNode)
+	case dsl.NodeTypeContinue:
+		return BuildContinueNode(astNode)
 	case dsl.NodeTypeReturn:
-		return nil, nil // xxx temp
+		return BuildReturnNode(astNode)
 
 	default:
 		return nil, errors.New(

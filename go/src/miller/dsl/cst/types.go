@@ -50,7 +50,7 @@ type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
 // ----------------------------------------------------------------
 // This is for all statements and statemnt blocks within the CST.
 type IExecutable interface {
-	Execute(state *State) (*BlockExitStatus, error)
+	Execute(state *State) (*BlockExitPayload, error)
 }
 
 // ================================================================
