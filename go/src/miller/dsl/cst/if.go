@@ -117,7 +117,7 @@ func BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *IfChainNode) Execute(state *State) error {
+func (this *IfChainNode) Execute(state *State) (*BlockExitStatus, error) {
 	for _, ifItem := range this.ifItems {
 		condition := types.MlrvalFromTrue()
 		if ifItem.conditionNode != nil {
@@ -126,16 +126,16 @@ func (this *IfChainNode) Execute(state *State) error {
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
-			return errors.New("Miller: conditional expression did not evaluate to boolean.")
+			return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 		}
 		if boolValue == true {
-			err := ifItem.statementBlockNode.Execute(state)
+			_, err := ifItem.statementBlockNode.Execute(state)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			break
 		}
 	}
 	// TODO
-	return nil
+	return nil, nil
 }

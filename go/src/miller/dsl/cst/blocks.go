@@ -88,16 +88,16 @@ func BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) 
 }
 
 // ----------------------------------------------------------------
-func (this *StatementBlockNode) Execute(state *State) error {
+func (this *StatementBlockNode) Execute(state *State) (*BlockExitStatus, error) {
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 	for _, statement := range this.executables {
-		err := statement.Execute(state)
+		_, err := statement.Execute(state)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return nil, nil
 }
 
 // Assumes the caller has wrapped PushStackFrame() / PopStackFrame().  That
@@ -107,12 +107,12 @@ func (this *StatementBlockNode) Execute(state *State) error {
 // the 'i = 0' and 'i += 1' are StatementBlocks and if they pushed their
 // own stack frame then the 'i=0' would be in an evanescent, isolated frame.
 
-func (this *StatementBlockNode) ExecuteFrameless(state *State) error {
+func (this *StatementBlockNode) ExecuteFrameless(state *State) (*BlockExitStatus, error) {
 	for _, statement := range this.executables {
-		err := statement.Execute(state)
+		_, err := statement.Execute(state)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return nil, nil
 }

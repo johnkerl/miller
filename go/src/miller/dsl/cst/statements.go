@@ -62,6 +62,9 @@ func BuildStatementNode(
 	case dsl.NodeTypeFunctionDefinition:
 		return nil, nil // xxx temp
 
+	case dsl.NodeTypeReturn:
+		return nil, nil // xxx temp
+
 	default:
 		return nil, errors.New(
 			"CST BuildStatementNode: unhandled AST node " + string(astNode.Type),

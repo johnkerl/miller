@@ -50,13 +50,7 @@ type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
 // ----------------------------------------------------------------
 // This is for all statements and statemnt blocks within the CST.
 type IExecutable interface {
-	Execute(state *State) error
-}
-
-// ----------------------------------------------------------------
-// Also implements IExecutable
-type StatementBlockNode struct {
-	executables []IExecutable
+	Execute(state *State) (*BlockExitStatus, error)
 }
 
 // ================================================================
@@ -76,4 +70,39 @@ type IAssignable interface {
 // put '$[$a . $b]' = $x + $y'.
 type IEvaluable interface {
 	Evaluate(state *State) types.Mlrval
+}
+
+// ================================================================
+// For blocks of statements: the main put/filter block; begin/end blocks;
+// for/while-loop bodies; user-defined functions/subroutines.
+
+// ----------------------------------------------------------------
+// Also implements IExecutable
+type StatementBlockNode struct {
+	executables []IExecutable
+}
+
+// ----------------------------------------------------------------
+// Things a block of statements can do:
+// * execute all the way to the end without a return
+// * break
+// * continue
+// * (throw an exception if the Miller DSL were to support that)
+// * return void
+// * return a value
+type BlockExitStatus int
+
+const (
+	BLOCK_EXIT_RUN_TO_END   BlockExitStatus = 0
+	BLOCK_EXIT_BREAK                        = 1
+	BLOCK_EXIT_CONTINUE                     = 2
+	BLOCK_EXIT_RETURN_VOID                  = 3
+	BLOCK_EXIT_RETURN_VALUE                 = 4
+)
+
+type BlockExitPayload struct {
+	blockExitStatus BlockExitStatus
+	// No multiple return yet in the Miller DSL -- if there were, this would be
+	// an array.
+	blockReturnValue *types.Mlrval
 }

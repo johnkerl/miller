@@ -47,23 +47,25 @@ func BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *WhileLoopNode) Execute(state *State) error {
+func (this *WhileLoopNode) Execute(state *State) (*BlockExitStatus, error) {
+	var blockExitStatus *BlockExitStatus = nil
+	var err error = nil
 	for {
 		condition := this.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
-			return errors.New("Miller: conditional expression did not evaluate to boolean.")
+			return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 		}
 		if boolValue != true {
 			break
 		}
-		err := this.statementBlockNode.Execute(state)
+		blockExitStatus, err = this.statementBlockNode.Execute(state)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return blockExitStatus, nil
 }
 
 // ================================================================
@@ -102,22 +104,24 @@ func BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *DoWhileLoopNode) Execute(state *State) error {
+func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitStatus, error) {
+	var blockExitStatus *BlockExitStatus = nil
+	var err error = nil
 	for {
-		err := this.statementBlockNode.Execute(state)
+		blockExitStatus, err = this.statementBlockNode.Execute(state)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		condition := this.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
-			return errors.New("Miller: conditional expression did not evaluate to boolean.")
+			return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 		}
 		if boolValue == false {
 			break
 		}
 	}
-	return nil
+	return blockExitStatus, nil
 }

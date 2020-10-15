@@ -33,17 +33,17 @@ func BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	}, nil
 }
 
-func (this *FilterStatementNode) Execute(state *State) error {
+func (this *FilterStatementNode) Execute(state *State) (*BlockExitStatus, error) {
 
 	filterResult := this.filterEvaluable.Evaluate(state)
 
 	if filterResult.IsAbsent() {
-		return nil
+		return nil, nil
 	}
 
 	boolValue, isBool := filterResult.GetBoolValue()
 	if !isBool {
-		return errors.New(
+		return nil, errors.New(
 			"Miller: expression does not evaluate to boolean: got " +
 				filterResult.GetTypeName() + ".",
 		)
@@ -51,5 +51,5 @@ func (this *FilterStatementNode) Execute(state *State) error {
 
 	state.FilterResult = boolValue
 
-	return nil
+	return nil, nil
 }

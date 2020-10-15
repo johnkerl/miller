@@ -56,13 +56,13 @@ func NewAssignmentNode(
 	}
 }
 
-func (this *AssignmentNode) Execute(state *State) error {
+func (this *AssignmentNode) Execute(state *State) (*BlockExitStatus, error) {
 	rvalue := this.rvalueNode.Evaluate(state)
 	if !rvalue.IsAbsent() {
 		err := this.lvalueNode.Assign(&rvalue, state)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return nil, nil
 }

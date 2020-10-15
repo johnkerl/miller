@@ -89,7 +89,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteBeginBlocks(state *State) error {
 	for _, beginBlock := range this.beginBlocks {
-		err := beginBlock.Execute(state)
+		_, err := beginBlock.Execute(state)
 		if err != nil {
 			return err
 		}
@@ -99,14 +99,14 @@ func (this *RootNode) ExecuteBeginBlocks(state *State) error {
 
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteMainBlock(state *State) (outrec *types.Mlrmap, err error) {
-	err = this.mainBlock.Execute(state)
+	_, err = this.mainBlock.Execute(state)
 	return state.Inrec, err
 }
 
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteEndBlocks(state *State) error {
 	for _, endBlock := range this.endBlocks {
-		err := endBlock.Execute(state)
+		_, err := endBlock.Execute(state)
 		if err != nil {
 			return err
 		}

@@ -35,11 +35,11 @@ func BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	}, nil
 }
 
-func (this *EmitStatementNode) Execute(state *State) error {
+func (this *EmitStatementNode) Execute(state *State) (*BlockExitStatus, error) {
 	emitResult := this.emitEvaluable.Evaluate(state)
 
 	if emitResult.IsAbsent() {
-		return nil
+		return nil, nil
 	}
 
 	if emitResult.IsMap() {
@@ -57,7 +57,7 @@ func (this *EmitStatementNode) Execute(state *State) error {
 	//		&context,
 	//	)
 
-	return nil
+	return nil, nil
 }
 
 // cases:
@@ -111,9 +111,9 @@ func BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	return &DumpStatementNode{}, nil
 }
 
-func (this *DumpStatementNode) Execute(state *State) error {
+func (this *DumpStatementNode) Execute(state *State) (*BlockExitStatus, error) {
 	fmt.Fprint(os.Stdout, state.Oosvars.String())
-	return nil
+	return nil, nil
 }
 
 // ----------------------------------------------------------------
@@ -128,7 +128,7 @@ func BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	return &EdumpStatementNode{}, nil
 }
 
-func (this *EdumpStatementNode) Execute(state *State) error {
+func (this *EdumpStatementNode) Execute(state *State) (*BlockExitStatus, error) {
 	fmt.Fprint(os.Stderr, state.Oosvars.String())
-	return nil
+	return nil, nil
 }

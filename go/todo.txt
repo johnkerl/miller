@@ -6,6 +6,7 @@ TOP OF LIST:
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * break/continue for loops
+  o Execute() needs break/continue/(someday-throw)/return-void/return-value retval-enum
 
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
@@ -81,6 +82,7 @@ CATEGORIES:
   o for-knv
   * profile mand.mlr & check for need for idx-assign
   o indexed localvars at LHS
+  o multiple-valued return/assign -- ?
 
 * beyond:
   o support 'x[1]["a"]' etc notation in various verbs?

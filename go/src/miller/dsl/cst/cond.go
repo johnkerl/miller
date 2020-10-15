@@ -42,7 +42,7 @@ func BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *CondBlockNode) Execute(state *State) error {
+func (this *CondBlockNode) Execute(state *State) (*BlockExitStatus, error) {
 	condition := types.MlrvalFromTrue()
 	if this.conditionNode != nil {
 		condition = this.conditionNode.Evaluate(state)
@@ -50,13 +50,15 @@ func (this *CondBlockNode) Execute(state *State) error {
 	boolValue, isBool := condition.GetBoolValue()
 	if !isBool {
 		// TODO: line-number/token info for the DSL expression.
-		return errors.New("Miller: conditional expression did not evaluate to boolean.")
+		return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 	}
+	var blockExitStatus *BlockExitStatus = nil
+	var err error = nil
 	if boolValue == true {
-		err := this.statementBlockNode.Execute(state)
+		blockExitStatus, err = this.statementBlockNode.Execute(state)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return blockExitStatus, nil
 }
