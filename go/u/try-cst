@@ -291,3 +291,7 @@ echo; echo 'x= a     b '|mlr --ojson put '$y = lstrip($x)'
 echo; echo 'x= a     b '|mlr --ojson put '$y = rstrip($x)'
 echo; echo 'x= a     b '|mlr --ojson put '$y = collapse_whitespace($x)'
 echo; echo 'x= a     b '|mlr --ojson put '$y = clean_whitespace($x)'
+
+echo; run_mlr --from u/s.dkvp put 'for (i = 0; i < NR; i += 1) { $i += i }'
+echo; run_mlr --from u/s.dkvp put 'for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }'
+echo; run_mlr --from u/s.dkvp put 'for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }'

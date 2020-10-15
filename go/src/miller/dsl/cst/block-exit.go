@@ -18,7 +18,8 @@ type BreakNode struct {
 
 func BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBreak)
-	lib.InternalCodingErrorIf(astNode.Children != nil)
+	lib.InternalCodingErrorIf(astNode.Children == nil)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 
 	return &BreakNode{}, nil
 }
@@ -36,7 +37,8 @@ type ContinueNode struct {
 
 func BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeContinue)
-	lib.InternalCodingErrorIf(astNode.Children != nil)
+	lib.InternalCodingErrorIf(astNode.Children == nil)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 
 	return &ContinueNode{}, nil
 }
@@ -55,7 +57,8 @@ type ReturnNode struct {
 
 func BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeReturn)
-	if astNode.Children == nil {
+	lib.InternalCodingErrorIf(astNode.Children == nil)
+	if len(astNode.Children) == 0 {
 		return &ReturnNode{nil}, nil
 	} else if len(astNode.Children) == 1 {
 		return &ReturnNode{nil}, nil

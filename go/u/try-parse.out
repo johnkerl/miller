@@ -1271,6 +1271,113 @@ RAW AST:
 
 
 ----------------------------------------------------------------
+mlr -n put -v for (i = 0; i < NR; i += 1) { $i += i }
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { $i += i }
+RAW AST:
+* StatementBlock
+    * TripleForLoop "for"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * IntLiteral "0"
+        * StatementBlock
+            * BareBoolean
+                * Operator "<"
+                    * LocalVariable "i"
+                    * ContextVariable "NR"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * Operator "+"
+                    * LocalVariable "i"
+                    * IntLiteral "1"
+        * StatementBlock
+            * Assignment "="
+                * DirectFieldValue "i"
+                * Operator "+"
+                    * DirectFieldValue "i"
+                    * LocalVariable "i"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
+RAW AST:
+* StatementBlock
+    * TripleForLoop "for"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * IntLiteral "0"
+        * StatementBlock
+            * BareBoolean
+                * Operator "<"
+                    * LocalVariable "i"
+                    * ContextVariable "NR"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * Operator "+"
+                    * LocalVariable "i"
+                    * IntLiteral "1"
+        * StatementBlock
+            * IfChain
+                * IfItem "if"
+                    * Operator "=="
+                        * LocalVariable "i"
+                        * IntLiteral "2"
+                    * StatementBlock
+                        * Continue "continue"
+            * Assignment "="
+                * DirectFieldValue "i"
+                * Operator "+"
+                    * DirectFieldValue "i"
+                    * LocalVariable "i"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
+RAW AST:
+* StatementBlock
+    * TripleForLoop "for"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * IntLiteral "0"
+        * StatementBlock
+            * BareBoolean
+                * Operator "<"
+                    * LocalVariable "i"
+                    * ContextVariable "NR"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "i"
+                * Operator "+"
+                    * LocalVariable "i"
+                    * IntLiteral "1"
+        * StatementBlock
+            * IfChain
+                * IfItem "if"
+                    * Operator "=="
+                        * LocalVariable "i"
+                        * IntLiteral "2"
+                    * StatementBlock
+                        * Break "break"
+            * Assignment "="
+                * DirectFieldValue "i"
+                * Operator "+"
+                    * DirectFieldValue "i"
+                    * LocalVariable "i"
+
+
+
+----------------------------------------------------------------
 mlr -n put -v func f(){}
 DSL EXPRESSION:
 func f(){}
