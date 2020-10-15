@@ -60,7 +60,9 @@ func BuildStatementNode(
 		return BuildTripleForLoopNode(astNode)
 
 	case dsl.NodeTypeFunctionDefinition:
-		return nil, nil // xxx temp
+		return nil, errors.New(
+			"Miller: functions may only be declared at top level.",
+		)
 
 	case dsl.NodeTypeBreak:
 		return BuildBreakNode(astNode)

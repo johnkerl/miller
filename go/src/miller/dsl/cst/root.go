@@ -2,7 +2,6 @@ package cst
 
 import (
 	"errors"
-
 	"miller/dsl"
 	"miller/types"
 )
@@ -27,11 +26,6 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
 
-	// TODO:
-	// * Pass 1 to locate and install UDFs defined at top level (hoisting
-	//   definitions above callsites)
-	// * Pass 2 to handle everything else
-
 	cstRoot := BuildEmptyRoot()
 
 	// They can do mlr put '': there are simply zero statements.
@@ -45,6 +39,22 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 		)
 	}
 	astChildren := ast.RootNode.Children
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Pass 1 to locate and install UDFs defined at top level (hoisting
+	// definitions above callsites).
+	//
+	// TODO: handle f calls g vs. g calls f -- need a resolver pass.
+	for _, astChild := range astChildren {
+		if astChild.Type == dsl.NodeTypeFunctionDefinition {
+			// TODO
+			//fmt.Printf("UDF stub: found function %s\n", string(astChild.Token.Lit))
+		}
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Pass 2 to handle everyting else besides functions definitions, ignoring
+	// them when they are encountered.
 
 	// Example AST:
 	//
@@ -69,6 +79,10 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	//         * IntLiteral "4"
 
 	for _, astChild := range astChildren {
+		if astChild.Type == dsl.NodeTypeFunctionDefinition {
+			continue; // Installed in the previous pass
+		}
+
 		if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
 			statementBlockNode, err := BuildStatementBlockNodeFromBeginOrEnd(astChild)
 			if err != nil {
