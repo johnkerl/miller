@@ -57,6 +57,8 @@ const (
 	NodeTypeForLoopKeyOnly  = "ForLoopKeyOnly"
 	NodeTypeForLoopKeyValue = "ForLoopKeyValue"
 	NodeTypeTripleForLoop   = "TripleForLoop"
+	NodeTypeBreak           = "Break"
+	NodeTypeContinue        = "Continue"
 
 	NodeTypeFunctionDefinition   = "FunctionDefinition"
 	NodeTypeSubroutineDefinition = "SubroutineDefinition"

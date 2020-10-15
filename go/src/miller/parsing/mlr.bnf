@@ -162,8 +162,8 @@ md_token_for      : 'f' 'o' 'r' ;
 md_token_if       : 'i' 'f' ;
 md_token_in       : 'i' 'n' ;
 md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
-//md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
-//md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
+md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
+md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
 
 md_token_func     : 'f' 'u' 'n' 'c' ;
 //md_token_subr     : 's' 'u' 'b' 'r' ;
@@ -344,6 +344,8 @@ BracelessStatement
   | EdumpStatement
   // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
+  | BreakStatement
+  | ContinueStatement
   | ReturnStatement
 ;
 
@@ -1383,6 +1385,17 @@ TripleForUpdate
   | TripleForUpdate "," Assignment
     <<dsl.AppendChild($0, $2) >>
 ;
+
+// ----------------------------------------------------------------
+BreakStatement
+  : md_token_break
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeBreak) >>
+  ;
+
+ContinueStatement
+  : md_token_continue
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeContinue) >>
+  ;
 
 // ================================================================
 // FUNCTION AND SUBROUTINE DEFINITIONS
