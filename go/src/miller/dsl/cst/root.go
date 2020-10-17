@@ -12,7 +12,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildEmptyRoot() *RootNode {
+func NewEmptyRoot() *RootNode {
 	return &RootNode{
 		beginBlocks: make([]*StatementBlockNode, 0),
 		mainBlock:   NewStatementBlockNode(),
@@ -26,7 +26,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
 
-	cstRoot := BuildEmptyRoot()
+	cstRoot := NewEmptyRoot()
 
 	// They can do mlr put '': there are simply zero statements.
 	if ast.RootNode.Type == dsl.NodeTypeEmptyStatement {
@@ -84,7 +84,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 		}
 
 		if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
-			statementBlockNode, err := BuildStatementBlockNodeFromBeginOrEnd(astChild)
+			statementBlockNode, err := cstRoot.BuildStatementBlockNodeFromBeginOrEnd(astChild)
 			if err != nil {
 				return nil, err
 			}
@@ -95,7 +95,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 				cstRoot.endBlocks = append(cstRoot.endBlocks, statementBlockNode)
 			}
 		} else {
-			statementNode, err := BuildStatementNode(astChild)
+			statementNode, err := cstRoot.BuildStatementNode(astChild)
 			if err != nil {
 				return nil, err
 			}

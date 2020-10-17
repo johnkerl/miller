@@ -17,35 +17,35 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	if astNode.Children == nil {
-		return BuildLeafNode(astNode)
+		return this.BuildLeafNode(astNode)
 	}
 
 	switch astNode.Type {
 
 	case dsl.NodeTypeArrayLiteral:
-		return BuildArrayLiteralNode(astNode)
+		return this.BuildArrayLiteralNode(astNode)
 
 	case dsl.NodeTypeMapLiteral:
-		return BuildMapLiteralNode(astNode)
+		return this.BuildMapLiteralNode(astNode)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
-		return BuildArrayOrMapIndexAccessNode(astNode)
+		return this.BuildArrayOrMapIndexAccessNode(astNode)
 
 	case dsl.NodeTypeArraySliceAccess:
-		return BuildArraySliceAccessNode(astNode)
+		return this.BuildArraySliceAccessNode(astNode)
 
 	case dsl.NodeTypeIndirectFieldValue:
-		return BuildIndirectFieldValueNode(astNode)
+		return this.BuildIndirectFieldValueNode(astNode)
 
 	// Operators are just functions with infix syntax so we treat them like
 	// functions in the CST.
 	case dsl.NodeTypeOperator:
-		return BuildFunctionCallsiteNode(astNode)
+		return this.BuildFunctionCallsiteNode(astNode)
 	case dsl.NodeTypeFunctionCallsite:
-		return BuildFunctionCallsiteNode(astNode)
+		return this.BuildFunctionCallsiteNode(astNode)
 
 	}
 
@@ -63,11 +63,11 @@ type IndirectFieldValueNode struct {
 	fieldNameEvaluable IEvaluable
 }
 
-func BuildIndirectFieldValueNode(astNode *dsl.ASTNode) (*IndirectFieldValueNode, error) {
+func (this *RootNode) BuildIndirectFieldValueNode(astNode *dsl.ASTNode) (*IndirectFieldValueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	fieldNameEvaluable, err := BuildEvaluableNode(astNode.Children[0])
+	fieldNameEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}

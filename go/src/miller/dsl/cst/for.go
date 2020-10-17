@@ -30,7 +30,7 @@ import (
 //                         * LocalVariable "k"
 //                         * LocalVariable "k"
 
-func BuildForLoopKeyOnlyNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error) {
+func (this *RootNode) BuildForLoopKeyOnlyNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopKeyOnly)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 
@@ -45,12 +45,12 @@ func BuildForLoopKeyOnlyNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error)
 	// TODO: error if loop-over node isn't Mappable (inasmuch as can be
 	// detected at CST-build time)
 	// TODO: support arrays too.
-	indexableNode, err := BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func NewForLoopKeyValueNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func BuildForLoopKeyValueNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error) {
+func (this *RootNode) BuildForLoopKeyValueNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopKeyValue)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
@@ -123,12 +123,12 @@ func BuildForLoopKeyValueNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error
 
 	// TODO: error if loop-over node isn't Mappable (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -305,7 +305,7 @@ func NewTripleForLoopNode(
 //                     * DirectFieldValue "i"
 //                     * LocalVariable "i"
 
-func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
+func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTripleForLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
@@ -320,7 +320,7 @@ func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 	lib.InternalCodingErrorIf(updateBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 
-	startBlockNode, err := BuildStatementBlockNode(startBlockASTNode)
+	startBlockNode, err := this.BuildStatementBlockNode(startBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -332,18 +332,18 @@ func BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 		lib.InternalCodingErrorIf(bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean)
 		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
 
-		continuationExpressionNode, err = BuildEvaluableNode(bareBooleanASTNode.Children[0])
+		continuationExpressionNode, err = this.BuildEvaluableNode(bareBooleanASTNode.Children[0])
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	updateBlockNode, err := BuildStatementBlockNode(updateBlockASTNode)
+	updateBlockNode, err := this.BuildStatementBlockNode(updateBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	bodyBlockNode, err := BuildStatementBlockNode(bodyBlockASTNode)
+	bodyBlockNode, err := this.BuildStatementBlockNode(bodyBlockASTNode)
 	if err != nil {
 		return nil, err
 	}

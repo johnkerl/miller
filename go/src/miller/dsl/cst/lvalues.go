@@ -12,37 +12,37 @@ import (
 // statement.
 
 // ----------------------------------------------------------------
-func BuildAssignableNode(
+func (this *RootNode) BuildAssignableNode(
 	astNode *dsl.ASTNode,
 ) (IAssignable, error) {
 
 	switch astNode.Type {
 
 	case dsl.NodeTypeDirectFieldValue:
-		return BuildDirectFieldValueLvalueNode(astNode)
+		return this.BuildDirectFieldValueLvalueNode(astNode)
 		break
 	case dsl.NodeTypeIndirectFieldValue:
-		return BuildIndirectFieldValueLvalueNode(astNode)
+		return this.BuildIndirectFieldValueLvalueNode(astNode)
 		break
 	case dsl.NodeTypeFullSrec:
-		return BuildFullSrecLvalueNode(astNode)
+		return this.BuildFullSrecLvalueNode(astNode)
 		break
 
 	case dsl.NodeTypeDirectOosvarValue:
-		return BuildDirectOosvarValueLvalueNode(astNode)
+		return this.BuildDirectOosvarValueLvalueNode(astNode)
 		break
 	case dsl.NodeTypeIndirectOosvarValue:
-		return BuildIndirectOosvarValueLvalueNode(astNode)
+		return this.BuildIndirectOosvarValueLvalueNode(astNode)
 		break
 	case dsl.NodeTypeFullOosvar:
-		return BuildFullOosvarLvalueNode(astNode)
+		return this.BuildFullOosvarLvalueNode(astNode)
 		break
 	case dsl.NodeTypeLocalVariable:
-		return BuildLocalVariableLvalueNode(astNode)
+		return this.BuildLocalVariableLvalueNode(astNode)
 		break
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
-		return BuildIndexedLvalueNode(astNode)
+		return this.BuildIndexedLvalueNode(astNode)
 		break
 	}
 
@@ -56,7 +56,7 @@ type DirectFieldValueLvalueNode struct {
 	lhsFieldName *types.Mlrval
 }
 
-func BuildDirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildDirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
 
 	lhsFieldName := types.MlrvalFromString(string(astNode.Token.Lit))
@@ -102,11 +102,11 @@ type IndirectFieldValueLvalueNode struct {
 	lhsFieldNameExpression IEvaluable
 }
 
-func BuildIndirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildIndirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	lhsFieldNameExpression, err := BuildEvaluableNode(astNode.Children[0])
+	lhsFieldNameExpression, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 type FullSrecLvalueNode struct {
 }
 
-func BuildFullSrecLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildFullSrecLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullSrec)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(astNode.Children != nil)
@@ -198,7 +198,7 @@ type DirectOosvarValueLvalueNode struct {
 	lhsOosvarName *types.Mlrval
 }
 
-func BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectOosvarValue)
 
 	lhsOosvarName := types.MlrvalFromString(string(astNode.Token.Lit))
@@ -244,12 +244,12 @@ type IndirectOosvarValueLvalueNode struct {
 	lhsOosvarNameExpression IEvaluable
 }
 
-func BuildIndirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildIndirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectOosvarValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
-	lhsOosvarNameExpression, err := BuildEvaluableNode(astNode.Children[0])
+	lhsOosvarNameExpression, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +301,7 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 type FullOosvarLvalueNode struct {
 }
 
-func BuildFullOosvarLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildFullOosvarLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFullOosvar)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(astNode.Children != nil)
@@ -341,7 +341,7 @@ type LocalVariableLvalueNode struct {
 	variableName string
 }
 
-func BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
 
 	variableName := string(astNode.Token.Lit)
@@ -393,7 +393,7 @@ type IndexedLvalueNode struct {
 	indexEvaluables []IEvaluable
 }
 
-func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
 	lib.InternalCodingErrorIf(astNode == nil)
 
@@ -421,14 +421,14 @@ func BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 		if walkerNode.Type == dsl.NodeTypeArrayOrMapIndexAccess {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
-			indexEvaluable, err := BuildEvaluableNode(walkerNode.Children[1])
+			indexEvaluable, err := this.BuildEvaluableNode(walkerNode.Children[1])
 			if err != nil {
 				return nil, err
 			}
 			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
 			walkerNode = walkerNode.Children[0]
 		} else {
-			baseLvalue, err = BuildAssignableNode(walkerNode)
+			baseLvalue, err = this.BuildAssignableNode(walkerNode)
 			if err != nil {
 				return nil, err
 			}

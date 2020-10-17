@@ -16,7 +16,7 @@ type ArrayLiteralNode struct {
 	evaluables []IEvaluable
 }
 
-func BuildArrayLiteralNode(
+func (this *RootNode) BuildArrayLiteralNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayLiteral)
@@ -27,7 +27,7 @@ func BuildArrayLiteralNode(
 	evaluables := make([]IEvaluable, 0)
 
 	for _, astChild := range astNode.Children {
-		element, err := BuildEvaluableNode(astChild)
+		element, err := this.BuildEvaluableNode(astChild)
 		if err != nil {
 			return nil, err
 		}
@@ -52,7 +52,7 @@ type ArrayOrMapIndexAccessNode struct {
 	indexEvaluable IEvaluable
 }
 
-func BuildArrayOrMapIndexAccessNode(
+func (this *RootNode) BuildArrayOrMapIndexAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
@@ -61,11 +61,11 @@ func BuildArrayOrMapIndexAccessNode(
 	baseASTNode := astNode.Children[0]
 	indexASTNode := astNode.Children[1]
 
-	baseEvaluable, err := BuildEvaluableNode(baseASTNode)
+	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
-	indexEvaluable, err := BuildEvaluableNode(indexASTNode)
+	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -92,14 +92,14 @@ func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) types.Mlrval {
 }
 
 // ----------------------------------------------------------------
-func BuildArraySliceAccessNode(
+func (this *RootNode) BuildArraySliceAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceAccess)
 
 	// TODO
 
-	return BuildPanicNode(astNode)
+	return this.BuildPanicNode(astNode)
 }
 
 //	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
@@ -131,7 +131,7 @@ type MapLiteralNode struct {
 	// needs array of key/value Mlrval pairs
 }
 
-func BuildMapLiteralNode(
+func (this *RootNode) BuildMapLiteralNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeMapLiteral)
@@ -146,11 +146,11 @@ func BuildMapLiteralNode(
 		astKey := astChild.Children[0]
 		astValue := astChild.Children[1]
 
-		cstKey, err := BuildEvaluableNode(astKey)
+		cstKey, err := this.BuildEvaluableNode(astKey)
 		if err != nil {
 			return nil, err
 		}
-		cstValue, err := BuildEvaluableNode(astValue)
+		cstValue, err := this.BuildEvaluableNode(astValue)
 		if err != nil {
 			return nil, err
 		}

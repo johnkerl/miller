@@ -11,7 +11,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildAssignmentNode(
+func (this *RootNode) BuildAssignmentNode(
 	astNode *dsl.ASTNode,
 ) (*AssignmentNode, error) {
 
@@ -24,12 +24,12 @@ func BuildAssignmentNode(
 	lhsASTNode := astNode.Children[0]
 	rhsASTNode := astNode.Children[1]
 
-	lvalueNode, err := BuildAssignableNode(lhsASTNode)
+	lvalueNode, err := this.BuildAssignableNode(lhsASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	rvalueNode, err := BuildEvaluableNode(rhsASTNode)
+	rvalueNode, err := this.BuildEvaluableNode(rhsASTNode)
 	if err != nil {
 		return nil, err
 	}

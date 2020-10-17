@@ -12,7 +12,7 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func BuildStatementNode(
+func (this *RootNode) BuildStatementNode(
 	astNode *dsl.ASTNode,
 ) (IExecutable, error) {
 
@@ -22,22 +22,22 @@ func BuildStatementNode(
 	switch astNode.Type {
 
 	case dsl.NodeTypeAssignment:
-		statement, err = BuildAssignmentNode(astNode)
+		statement, err = this.BuildAssignmentNode(astNode)
 		if err != nil {
 			return nil, err
 		}
 
 	case dsl.NodeTypeFilterStatement:
-		return BuildFilterStatementNode(astNode)
+		return this.BuildFilterStatementNode(astNode)
 	case dsl.NodeTypeBareBoolean:
-		return BuildFilterStatementNode(astNode)
+		return this.BuildFilterStatementNode(astNode)
 
 	case dsl.NodeTypeEmitStatement:
-		return BuildEmitStatementNode(astNode)
+		return this.BuildEmitStatementNode(astNode)
 	case dsl.NodeTypeDumpStatement:
-		return BuildDumpStatementNode(astNode)
+		return this.BuildDumpStatementNode(astNode)
 	case dsl.NodeTypeEdumpStatement:
-		return BuildEdumpStatementNode(astNode)
+		return this.BuildEdumpStatementNode(astNode)
 
 	case dsl.NodeTypeBeginBlock:
 		return nil, nil // xxx temp -- only valid at top level; say so here w/ error
@@ -45,19 +45,19 @@ func BuildStatementNode(
 		return nil, nil // xxx temp -- only valid at top level; say so here w/ error
 
 	case dsl.NodeTypeIfChain:
-		return BuildIfChainNode(astNode)
+		return this.BuildIfChainNode(astNode)
 	case dsl.NodeTypeCondBlock:
-		return BuildCondBlockNode(astNode)
+		return this.BuildCondBlockNode(astNode)
 	case dsl.NodeTypeWhileLoop:
-		return BuildWhileLoopNode(astNode)
+		return this.BuildWhileLoopNode(astNode)
 	case dsl.NodeTypeDoWhileLoop:
-		return BuildDoWhileLoopNode(astNode)
+		return this.BuildDoWhileLoopNode(astNode)
 	case dsl.NodeTypeForLoopKeyOnly:
-		return BuildForLoopKeyOnlyNode(astNode)
+		return this.BuildForLoopKeyOnlyNode(astNode)
 	case dsl.NodeTypeForLoopKeyValue:
-		return BuildForLoopKeyValueNode(astNode)
+		return this.BuildForLoopKeyValueNode(astNode)
 	case dsl.NodeTypeTripleForLoop:
-		return BuildTripleForLoopNode(astNode)
+		return this.BuildTripleForLoopNode(astNode)
 
 	case dsl.NodeTypeFunctionDefinition:
 		return nil, errors.New(
@@ -65,11 +65,11 @@ func BuildStatementNode(
 		)
 
 	case dsl.NodeTypeBreak:
-		return BuildBreakNode(astNode)
+		return this.BuildBreakNode(astNode)
 	case dsl.NodeTypeContinue:
-		return BuildContinueNode(astNode)
+		return this.BuildContinueNode(astNode)
 	case dsl.NodeTypeReturn:
-		return BuildReturnNode(astNode)
+		return this.BuildReturnNode(astNode)
 
 	default:
 		return nil, errors.New(

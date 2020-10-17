@@ -22,11 +22,11 @@ type EmitStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
 
-	emitEvaluable, err := BuildEvaluableNode(astNode.Children[0])
+	emitEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ type DumpStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (this *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 	return &DumpStatementNode{}, nil
@@ -122,7 +122,7 @@ type EdumpStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 	return &EdumpStatementNode{}, nil

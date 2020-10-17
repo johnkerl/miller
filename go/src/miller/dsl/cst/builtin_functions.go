@@ -17,7 +17,7 @@ import (
 // prefix, like 'max(1,2)'. Both parse to the same AST shape.
 // ================================================================
 
-func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(
 		astNode.Type != dsl.NodeTypeFunctionCallsite &&
 			astNode.Type != dsl.NodeTypeOperator,
@@ -32,17 +32,17 @@ func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	builtinFunctionInfo := BuiltinFunctionManagerInstance.LookUp(functionName)
 	if builtinFunctionInfo != nil {
 		if builtinFunctionInfo.hasMultipleArities { // E.g. "+" and "-"
-			return BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return this.BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.zaryFunc != nil {
-			return BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return this.BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.unaryFunc != nil {
-			return BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return this.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.binaryFunc != nil {
-			return BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return this.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.ternaryFunc != nil {
-			return BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return this.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.variadicFunc != nil {
-			return BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
+			return this.BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else {
 			return nil, errors.New(
 				"CST BuildFunctionCallsiteNode: function not implemented yet: " +
@@ -58,16 +58,16 @@ func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 }
 
 // ----------------------------------------------------------------
-func BuildMultipleArityFunctionCallsiteNode(
+func (this *RootNode) BuildMultipleArityFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
 	if callsiteArity == 1 && builtinFunctionInfo.unaryFunc != nil {
-		return BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		return this.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
 	if callsiteArity == 2 && builtinFunctionInfo.binaryFunc != nil {
-		return BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		return this.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
 
 	return nil, errors.New(
@@ -83,7 +83,7 @@ type ZaryFunctionCallsiteNode struct {
 	zaryFunc types.ZaryFunc
 }
 
-func BuildZaryFunctionCallsiteNode(
+func (this *RootNode) BuildZaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -114,7 +114,7 @@ type UnaryFunctionCallsiteNode struct {
 	evaluable1 IEvaluable
 }
 
-func BuildUnaryFunctionCallsiteNode(
+func (this *RootNode) BuildUnaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -132,7 +132,7 @@ func BuildUnaryFunctionCallsiteNode(
 		)
 	}
 
-	evaluable1, err := BuildEvaluableNode(astNode.Children[0])
+	evaluable1, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ type BinaryFunctionCallsiteNode struct {
 	evaluable2 IEvaluable
 }
 
-func BuildBinaryFunctionCallsiteNode(
+func (this *RootNode) BuildBinaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -173,24 +173,24 @@ func BuildBinaryFunctionCallsiteNode(
 		)
 	}
 
-	evaluable1, err := BuildEvaluableNode(astNode.Children[0])
+	evaluable1, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	evaluable2, err := BuildEvaluableNode(astNode.Children[1])
+	evaluable2, err := this.BuildEvaluableNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}
 
 	// Special short-circuiting cases
 	if builtinFunctionInfo.name == "&&" {
-		return BuildLogicalANDOperatorNode(
+		return this.BuildLogicalANDOperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
 	}
 	if builtinFunctionInfo.name == "||" {
-		return BuildLogicalOROperatorNode(
+		return this.BuildLogicalOROperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
@@ -217,7 +217,7 @@ type TernaryFunctionCallsiteNode struct {
 	evaluable3  IEvaluable
 }
 
-func BuildTernaryFunctionCallsiteNode(
+func (this *RootNode) BuildTernaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -235,16 +235,16 @@ func BuildTernaryFunctionCallsiteNode(
 		)
 	}
 
-	evaluable1, err := BuildEvaluableNode(astNode.Children[0])
-	evaluable2, err := BuildEvaluableNode(astNode.Children[1])
-	evaluable3, err := BuildEvaluableNode(astNode.Children[2])
+	evaluable1, err := this.BuildEvaluableNode(astNode.Children[0])
+	evaluable2, err := this.BuildEvaluableNode(astNode.Children[1])
+	evaluable3, err := this.BuildEvaluableNode(astNode.Children[2])
 	if err != nil {
 		return nil, err
 	}
 
 	// Special short-circuiting case
 	if builtinFunctionInfo.name == "?:" {
-		return BuildStandardTernaryOperatorNode(
+		return this.BuildStandardTernaryOperatorNode(
 			evaluable1,
 			evaluable2,
 			evaluable3,
@@ -272,7 +272,7 @@ type VariadicFunctionCallsiteNode struct {
 	evaluables   []IEvaluable
 }
 
-func BuildVariadicFunctionCallsiteNode(
+func (this *RootNode) BuildVariadicFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -281,7 +281,7 @@ func BuildVariadicFunctionCallsiteNode(
 
 	var err error = nil
 	for i, astChildNode := range astNode.Children {
-		evaluables[i], err = BuildEvaluableNode(astChildNode)
+		evaluables[i], err = this.BuildEvaluableNode(astChildNode)
 		if err != nil {
 			return nil, err
 		}
@@ -304,7 +304,7 @@ func (this *VariadicFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 // ================================================================
 type LogicalANDOperatorNode struct{ a, b IEvaluable }
 
-func BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
+func (this *RootNode) BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOperatorNode {
 	return &LogicalANDOperatorNode{a: a, b: b}
 }
 
@@ -375,7 +375,7 @@ func (this *LogicalANDOperatorNode) Evaluate(state *State) types.Mlrval {
 // ================================================================
 type LogicalOROperatorNode struct{ a, b IEvaluable }
 
-func BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
+func (this *RootNode) BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROperatorNode {
 	return &LogicalOROperatorNode{a: a, b: b}
 }
 
@@ -415,7 +415,7 @@ func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
 // ================================================================
 type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
 
-func BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
+func (this *RootNode) BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
 	return &StandardTernaryOperatorNode{a: a, b: b, c: c}
 }
 func (this *StandardTernaryOperatorNode) Evaluate(state *State) types.Mlrval {

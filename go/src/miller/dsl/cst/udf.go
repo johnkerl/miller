@@ -5,9 +5,8 @@ package cst
 // ================================================================
 
 type Signature struct {
-	functionName string
+	functionName   string
 	parameterNames []string
 	// todo: parameter typedecls
 	// todo: return-value typedecls
 }
-

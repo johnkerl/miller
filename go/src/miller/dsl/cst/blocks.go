@@ -21,7 +21,7 @@ func (this *StatementBlockNode) AppendStatementNode(executable IExecutable) {
 }
 
 // ----------------------------------------------------------------
-func BuildStatementBlockNodeFromBeginOrEnd(
+func (this *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	astBeginOrEndNode *dsl.ASTNode,
 ) (*StatementBlockNode, error) {
 
@@ -61,7 +61,7 @@ func BuildStatementBlockNodeFromBeginOrEnd(
 
 	astStatementBlockNode := astBeginOrEndNode.Children[0]
 	lib.InternalCodingErrorIf(astStatementBlockNode.Type != dsl.NodeTypeStatementBlock)
-	statementBlockNode, err := BuildStatementBlockNode(astStatementBlockNode)
+	statementBlockNode, err := this.BuildStatementBlockNode(astStatementBlockNode)
 	if err != nil {
 		return nil, err
 	} else {
@@ -70,7 +70,7 @@ func BuildStatementBlockNodeFromBeginOrEnd(
 }
 
 // ----------------------------------------------------------------
-func BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) {
+func (this *RootNode) BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeStatementBlock)
 
 	statementBlockNode := NewStatementBlockNode()
@@ -78,7 +78,7 @@ func BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) 
 	astChildren := astNode.Children
 
 	for _, astChild := range astChildren {
-		statement, err := BuildStatementNode(astChild)
+		statement, err := this.BuildStatementNode(astChild)
 		if err != nil {
 			return nil, err
 		}

@@ -18,13 +18,13 @@ type FilterStatementNode struct {
 
 // ----------------------------------------------------------------
 // TODO: disallow bare boolean except for final statement in 'mlr filter' ...
-func BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (this *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(
 		astNode.Type != dsl.NodeTypeFilterStatement &&
 			astNode.Type != dsl.NodeTypeBareBoolean)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
 
-	filterEvaluable, err := BuildEvaluableNode(astNode.Children[0])
+	filterEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
