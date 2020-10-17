@@ -13,6 +13,7 @@ TOP OF LIST:
     - parameter names with implicit/explicit arity
     - function pointer for Execute
 	o Pass 1 AST-walk to find callsites and populate expected signatures
+    - make a linked list of Signatures (one for UDF, another for UDS)?
 	o Pass 2 compile and install UDFs
 	o Pass 3 update callsites
 * put -s ...

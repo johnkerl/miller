@@ -44,7 +44,7 @@ type RootNode struct {
 
 // ----------------------------------------------------------------
 // Many functions have this signature. This type-alias is for function-name
-// lookup tablees.
+// lookup tables.
 type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
 
 // ----------------------------------------------------------------
