@@ -14,6 +14,44 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
+func (this *RootNode) BuildBuiltinFunctionCallsiteNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(
+		astNode.Type != dsl.NodeTypeFunctionCallsite &&
+			astNode.Type != dsl.NodeTypeOperator,
+	)
+	lib.InternalCodingErrorIf(astNode.Token == nil)
+	lib.InternalCodingErrorIf(astNode.Children == nil)
+
+	functionName := string(astNode.Token.Lit)
+
+	builtinFunctionInfo := BuiltinFunctionManagerInstance.LookUp(functionName)
+	if builtinFunctionInfo != nil {
+		if builtinFunctionInfo.hasMultipleArities { // E.g. "+" and "-"
+			return this.BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.zaryFunc != nil {
+			return this.BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.unaryFunc != nil {
+			return this.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.binaryFunc != nil {
+			return this.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.ternaryFunc != nil {
+			return this.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.variadicFunc != nil {
+			return this.BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else {
+			return nil, errors.New(
+				"CST BuildFunctionCallsiteNode: builtin function not implemented yet: " +
+					functionName,
+			)
+		}
+	}
+
+	return nil, nil // not found
+}
+
+// ----------------------------------------------------------------
 func (this *RootNode) BuildMultipleArityFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,

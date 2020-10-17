@@ -38,27 +38,12 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 	// 	return nil, err
 	// }
 
-	// xxx move this paragraph to the other file as a top-level function there
-	builtinFunctionInfo := BuiltinFunctionManagerInstance.LookUp(functionName)
-	if builtinFunctionInfo != nil {
-		if builtinFunctionInfo.hasMultipleArities { // E.g. "+" and "-"
-			return this.BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else if builtinFunctionInfo.zaryFunc != nil {
-			return this.BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else if builtinFunctionInfo.unaryFunc != nil {
-			return this.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else if builtinFunctionInfo.binaryFunc != nil {
-			return this.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else if builtinFunctionInfo.ternaryFunc != nil {
-			return this.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else if builtinFunctionInfo.variadicFunc != nil {
-			return this.BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else {
-			return nil, errors.New(
-				"CST BuildFunctionCallsiteNode: builtin function not implemented yet: " +
-					functionName,
-			)
-		}
+	builtinFunctionCallsiteNode, err := this.BuildBuiltinFunctionCallsiteNode(astNode)
+	if err != nil {
+		return nil, err
+	}
+	if builtinFunctionCallsiteNode != nil {
+		return builtinFunctionCallsiteNode, nil
 	}
 
 	// retval := NewUDFCallsitePlaceholder(name, arity)
