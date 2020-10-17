@@ -80,7 +80,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 
 	for _, astChild := range astChildren {
 		if astChild.Type == dsl.NodeTypeFunctionDefinition {
-			continue; // Installed in the previous pass
+			continue // Installed in the previous pass
 		}
 
 		if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {

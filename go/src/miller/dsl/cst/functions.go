@@ -27,6 +27,8 @@ func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	functionName := string(astNode.Token.Lit)
 
+	// TODO: try UDFs first
+
 	functionInfo := BuiltinFunctionManager.LookUp(functionName)
 	if functionInfo != nil {
 		if functionInfo.hasMultipleArities { // E.g. "+" and "-"

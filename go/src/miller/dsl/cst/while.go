@@ -68,6 +68,12 @@ func (this *WhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
 			}
 			// If continue, keep going -- this means the body was exited
 			// early but we keep going at this level
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+				return blockExitPayload, nil
+			}
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+				return blockExitPayload, nil
+			}
 		}
 		// TODO: handle return statements
 		// TODO: runtime errors for any other types
@@ -123,6 +129,12 @@ func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
 			}
 			// If continue, keep going -- this means the body was exited
 			// early but we keep going at this level
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+				return blockExitPayload, nil
+			}
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+				return blockExitPayload, nil
+			}
 		}
 		// TODO: handle return statements
 		// TODO: runtime errors for any other types

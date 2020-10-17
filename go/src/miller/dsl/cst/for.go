@@ -184,6 +184,12 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 				}
 				// If continue, keep going -- this means the body was exited
 				// early but we keep going at this level
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+					return blockExitPayload, nil
+				}
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+					return blockExitPayload, nil
+				}
 			}
 			// TODO: handle return statements
 			// TODO: runtime errors for any other types
@@ -217,6 +223,12 @@ func (this *ForLoopKeyValueNode) Execute(state *State) (*BlockExitPayload, error
 				}
 				// If continue, keep going -- this means the body was exited
 				// early but we keep going at this level
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+					return blockExitPayload, nil
+				}
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+					return blockExitPayload, nil
+				}
 			}
 			// TODO: handle return statements
 			// TODO: runtime errors for any other types
@@ -398,6 +410,12 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 			// If continue, keep going -- this means the body was exited
 			// early but we keep going at this level. In particular we still
 			// need to execute the update-block.
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+				return blockExitPayload, nil
+			}
+			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+				return blockExitPayload, nil
+			}
 		}
 		// TODO: handle return statements
 		// TODO: runtime errors for any other types
