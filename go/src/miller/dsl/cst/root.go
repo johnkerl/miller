@@ -28,29 +28,35 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 
 	cstRoot := NewEmptyRoot()
 
+	err := cstRoot.buildMainPass(ast)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: UDF-resolver after-pass
+
+	return cstRoot, nil
+}
+
+// ----------------------------------------------------------------
+// This builds the CST almost entirely. The only afterwork is that user-defined
+// functions may be called before they are defined, so a follow-up pass will
+// need to resolve those callsites.
+
+func (this *RootNode) buildMainPass(ast *dsl.AST) error {
+
 	// They can do mlr put '': there are simply zero statements.
 	if ast.RootNode.Type == dsl.NodeTypeEmptyStatement {
-		return cstRoot, nil
+		return nil
 	}
 
 	if ast.RootNode.Type != dsl.NodeTypeStatementBlock {
-		return nil, errors.New(
+		return errors.New(
 			"CST root build: non-statement-block AST root node unhandled",
 		)
 	}
 	astChildren := ast.RootNode.Children
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Pass 1 to locate and install UDFs defined at top level (hoisting
-	// definitions above callsites).
-	//
-	// TODO: handle f calls g vs. g calls f -- need a resolver pass.
-	for _, astChild := range astChildren {
-		if astChild.Type == dsl.NodeTypeFunctionDefinition {
-			// TODO
-			//fmt.Printf("UDF stub: found function %s\n", string(astChild.Token.Lit))
-		}
-	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Pass 2 to handle everyting else besides functions definitions, ignoring
@@ -79,30 +85,34 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	//         * IntLiteral "4"
 
 	for _, astChild := range astChildren {
-		if astChild.Type == dsl.NodeTypeFunctionDefinition {
-			continue // Installed in the previous pass
-		}
 
-		if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
-			statementBlockNode, err := cstRoot.BuildStatementBlockNodeFromBeginOrEnd(astChild)
+		// TODO: fill out
+		if astChild.Type == dsl.NodeTypeFunctionDefinition {
+			// TODO
+			//fmt.Printf("UDF stub: found function %s\n", string(astChild.Token.Lit))
+			// UDFManager.Install(...)
+
+		} else if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
+			statementBlockNode, err := this.BuildStatementBlockNodeFromBeginOrEnd(astChild)
 			if err != nil {
-				return nil, err
+				return err
 			}
 
 			if astChild.Type == dsl.NodeTypeBeginBlock {
-				cstRoot.beginBlocks = append(cstRoot.beginBlocks, statementBlockNode)
+				this.beginBlocks = append(this.beginBlocks, statementBlockNode)
 			} else {
-				cstRoot.endBlocks = append(cstRoot.endBlocks, statementBlockNode)
+				this.endBlocks = append(this.endBlocks, statementBlockNode)
 			}
 		} else {
-			statementNode, err := cstRoot.BuildStatementNode(astChild)
+			statementNode, err := this.BuildStatementNode(astChild)
 			if err != nil {
-				return nil, err
+				return err
 			}
-			cstRoot.mainBlock.AppendStatementNode(statementNode)
+			this.mainBlock.AppendStatementNode(statementNode)
 		}
 	}
-	return cstRoot, nil
+
+	return nil
 }
 
 // ----------------------------------------------------------------

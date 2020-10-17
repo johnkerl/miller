@@ -6,7 +6,9 @@ package cst
 
 type Signature struct {
 	functionName   string
+	arity          int // Computable from len(parameterNames) at callee, not at caller
 	parameterNames []string
-	// todo: parameter typedecls
-	// todo: return-value typedecls
+
+	// TODO: parameter typedecls
+	// TODO: return-value typedecls
 }
