@@ -457,5 +457,6 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 }
 
 // ================================================================
-// Standard singleton. UDFs are still to come. :)
+// This is a singleton so the online-help functions can query it for listings,
+// online help, etc.
 var BuiltinFunctionManagerInstance *BuiltinFunctionManager = NewBuiltinFunctionManager()
