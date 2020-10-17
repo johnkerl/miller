@@ -13,7 +13,7 @@ import (
 // ================================================================
 
 // ================================================================
-type FunctionInfo struct {
+type BuiltinFunctionInfo struct {
 	name string
 	// class      string -- "math", "time", "typing", "maps", etc
 	help               string
@@ -38,7 +38,7 @@ type FunctionInfo struct {
 //} func_class_t;
 
 // ================================================================
-var BUILTIN_FUNCTION_LOOKUP_TABLE = []FunctionInfo{
+var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 
 	// ----------------------------------------------------------------
 	// Zary built-in functions
@@ -400,62 +400,62 @@ Leaves non-numbers as-is.`,
 }
 
 // ================================================================
-type FunctionManager struct {
+type BuiltinFunctionManager struct {
 	// We need both the array and the hashmap since Go maps are not
 	// insertion-order-preserving: to produce a sensical help-all-functions
 	// list, etc., we want the original ordering.
-	lookupTable *[]FunctionInfo
-	hashTable   map[string]*FunctionInfo
+	lookupTable *[]BuiltinFunctionInfo
+	hashTable   map[string]*BuiltinFunctionInfo
 }
 
-func NewFunctionManager() *FunctionManager {
+func NewBuiltinFunctionManager() *BuiltinFunctionManager {
 	// TODO: temp -- one big one -- pending UDFs
 	lookupTable := &BUILTIN_FUNCTION_LOOKUP_TABLE
 	hashTable := hashifyLookupTable(lookupTable)
-	return &FunctionManager{
+	return &BuiltinFunctionManager{
 		lookupTable: lookupTable,
 		hashTable:   hashTable,
 	}
 }
 
-func (this *FunctionManager) LookUp(functionName string) *FunctionInfo {
+func (this *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
 	return this.hashTable[functionName]
 }
 
-func hashifyLookupTable(lookupTable *[]FunctionInfo) map[string]*FunctionInfo {
-	hashTable := make(map[string]*FunctionInfo)
-	for _, functionInfo := range *lookupTable {
+func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinFunctionInfo {
+	hashTable := make(map[string]*BuiltinFunctionInfo)
+	for _, builtinFunctionInfo := range *lookupTable {
 		// Each function name should appear only once in the table.  If it has
 		// multiple arities (e.g. unary and binary "-") there should be
 		// multiple function-pointers in a single row.
-		if hashTable[functionInfo.name] != nil {
+		if hashTable[builtinFunctionInfo.name] != nil {
 			fmt.Fprintf(
 				os.Stderr,
 				"Internal coding error: function name \"%s\" is non-unique",
-				functionInfo.name,
+				builtinFunctionInfo.name,
 			)
 			os.Exit(1)
 		}
-		clone := functionInfo
-		hashTable[functionInfo.name] = &clone
+		clone := builtinFunctionInfo
+		hashTable[builtinFunctionInfo.name] = &clone
 	}
 	return hashTable
 }
 
 // ----------------------------------------------------------------
-func (this *FunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
-	for _, functionInfo := range *this.lookupTable {
-		fmt.Fprintln(o, functionInfo.name)
+func (this *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
+	for _, builtinFunctionInfo := range *this.lookupTable {
+		fmt.Fprintln(o, builtinFunctionInfo.name)
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *FunctionManager) ListBuiltinFunctionUsages(o *os.File) {
-	for _, functionInfo := range *this.lookupTable {
-		fmt.Fprintf(o, "%-20s  %s\n", functionInfo.name, functionInfo.help)
+func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
+	for _, builtinFunctionInfo := range *this.lookupTable {
+		fmt.Fprintf(o, "%-20s  %s\n", builtinFunctionInfo.name, builtinFunctionInfo.help)
 	}
 }
 
 // ================================================================
 // Standard singleton. UDFs are still to come. :)
-var BuiltinFunctionManager *FunctionManager = NewFunctionManager()
+var BuiltinFunctionManagerInstance *BuiltinFunctionManager = NewBuiltinFunctionManager()

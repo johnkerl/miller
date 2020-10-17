@@ -223,7 +223,7 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		return true
 
 	} else if args[argi] == "--list-all-functions-raw" || args[argi] == "-F" {
-		cst.BuiltinFunctionManager.ListBuiltinFunctionsRaw(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
 		return true
 		//	} else if args[argi] == "--list-all-functions-as-table" {
 		//		fmgr_t* pfmgr = fmgr_alloc();
@@ -231,7 +231,7 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//		fmgr_free(pfmgr, nil);
 		//		return true;
 	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
-		cst.BuiltinFunctionManager.ListBuiltinFunctionUsages(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 		return true
 		//	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
 		//		checkArgCount(args, argi, argc, 2);

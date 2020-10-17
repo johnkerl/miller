@@ -29,20 +29,20 @@ func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	// TODO: try UDFs first
 
-	functionInfo := BuiltinFunctionManager.LookUp(functionName)
-	if functionInfo != nil {
-		if functionInfo.hasMultipleArities { // E.g. "+" and "-"
-			return BuildMultipleArityFunctionCallsiteNode(astNode, functionInfo)
-		} else if functionInfo.zaryFunc != nil {
-			return BuildZaryFunctionCallsiteNode(astNode, functionInfo)
-		} else if functionInfo.unaryFunc != nil {
-			return BuildUnaryFunctionCallsiteNode(astNode, functionInfo)
-		} else if functionInfo.binaryFunc != nil {
-			return BuildBinaryFunctionCallsiteNode(astNode, functionInfo)
-		} else if functionInfo.ternaryFunc != nil {
-			return BuildTernaryFunctionCallsiteNode(astNode, functionInfo)
-		} else if functionInfo.variadicFunc != nil {
-			return BuildVariadicFunctionCallsiteNode(astNode, functionInfo)
+	builtinFunctionInfo := BuiltinFunctionManagerInstance.LookUp(functionName)
+	if builtinFunctionInfo != nil {
+		if builtinFunctionInfo.hasMultipleArities { // E.g. "+" and "-"
+			return BuildMultipleArityFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.zaryFunc != nil {
+			return BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.unaryFunc != nil {
+			return BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.binaryFunc != nil {
+			return BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.ternaryFunc != nil {
+			return BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.variadicFunc != nil {
+			return BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else {
 			return nil, errors.New(
 				"CST BuildFunctionCallsiteNode: function not implemented yet: " +
@@ -60,20 +60,20 @@ func BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 // ----------------------------------------------------------------
 func BuildMultipleArityFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
-	functionInfo *FunctionInfo,
+	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
-	if callsiteArity == 1 && functionInfo.unaryFunc != nil {
-		return BuildUnaryFunctionCallsiteNode(astNode, functionInfo)
+	if callsiteArity == 1 && builtinFunctionInfo.unaryFunc != nil {
+		return BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
-	if callsiteArity == 2 && functionInfo.binaryFunc != nil {
-		return BuildBinaryFunctionCallsiteNode(astNode, functionInfo)
+	if callsiteArity == 2 && builtinFunctionInfo.binaryFunc != nil {
+		return BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
 
 	return nil, errors.New(
 		fmt.Sprintf(
 			"CST BuildMultipleArityFunctionCallsiteNode: function name not found: " +
-				functionInfo.name,
+				builtinFunctionInfo.name,
 		),
 	)
 }
@@ -85,7 +85,7 @@ type ZaryFunctionCallsiteNode struct {
 
 func BuildZaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
-	functionInfo *FunctionInfo,
+	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
 	expectedArity := 0
@@ -93,7 +93,7 @@ func BuildZaryFunctionCallsiteNode(
 		return nil, errors.New(
 			fmt.Sprintf(
 				"Miller: function %s invoked with %d argument%s; expected %d",
-				functionInfo.name,
+				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
 				expectedArity,
@@ -101,7 +101,7 @@ func BuildZaryFunctionCallsiteNode(
 		)
 	}
 
-	return &ZaryFunctionCallsiteNode{zaryFunc: functionInfo.zaryFunc}, nil
+	return &ZaryFunctionCallsiteNode{zaryFunc: builtinFunctionInfo.zaryFunc}, nil
 }
 
 func (this *ZaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
@@ -116,7 +116,7 @@ type UnaryFunctionCallsiteNode struct {
 
 func BuildUnaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
-	functionInfo *FunctionInfo,
+	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
 	expectedArity := 1
@@ -124,7 +124,7 @@ func BuildUnaryFunctionCallsiteNode(
 		return nil, errors.New(
 			fmt.Sprintf(
 				"Miller: function %s invoked with %d argument%s; expected %d",
-				functionInfo.name,
+				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
 				expectedArity,
@@ -138,7 +138,7 @@ func BuildUnaryFunctionCallsiteNode(
 	}
 
 	return &UnaryFunctionCallsiteNode{
-		unaryFunc:  functionInfo.unaryFunc,
+		unaryFunc:  builtinFunctionInfo.unaryFunc,
 		evaluable1: evaluable1,
 	}, nil
 }
@@ -157,7 +157,7 @@ type BinaryFunctionCallsiteNode struct {
 
 func BuildBinaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
-	functionInfo *FunctionInfo,
+	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
 	expectedArity := 2
@@ -165,7 +165,7 @@ func BuildBinaryFunctionCallsiteNode(
 		return nil, errors.New(
 			fmt.Sprintf(
 				"Miller: function %s invoked with %d argument%s; expected %d",
-				functionInfo.name,
+				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
 				expectedArity,
@@ -183,13 +183,13 @@ func BuildBinaryFunctionCallsiteNode(
 	}
 
 	// Special short-circuiting cases
-	if functionInfo.name == "&&" {
+	if builtinFunctionInfo.name == "&&" {
 		return BuildLogicalANDOperatorNode(
 			evaluable1,
 			evaluable2,
 		), nil
 	}
-	if functionInfo.name == "||" {
+	if builtinFunctionInfo.name == "||" {
 		return BuildLogicalOROperatorNode(
 			evaluable1,
 			evaluable2,
@@ -197,7 +197,7 @@ func BuildBinaryFunctionCallsiteNode(
 	}
 
 	return &BinaryFunctionCallsiteNode{
-		binaryFunc: functionInfo.binaryFunc,
+		binaryFunc: builtinFunctionInfo.binaryFunc,
 		evaluable1: evaluable1,
 		evaluable2: evaluable2,
 	}, nil
@@ -219,7 +219,7 @@ type TernaryFunctionCallsiteNode struct {
 
 func BuildTernaryFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
-	functionInfo *FunctionInfo,
+	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	callsiteArity := len(astNode.Children)
 	expectedArity := 3
@@ -227,7 +227,7 @@ func BuildTernaryFunctionCallsiteNode(
 		return nil, errors.New(
 			fmt.Sprintf(
 				"Miller: function %s invoked with %d argument%s; expected %d",
-				functionInfo.name,
+				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
 				expectedArity,
@@ -243,7 +243,7 @@ func BuildTernaryFunctionCallsiteNode(
 	}
 
 	// Special short-circuiting case
-	if functionInfo.name == "?:" {
+	if builtinFunctionInfo.name == "?:" {
 		return BuildStandardTernaryOperatorNode(
 			evaluable1,
 			evaluable2,
@@ -252,7 +252,7 @@ func BuildTernaryFunctionCallsiteNode(
 	}
 
 	return &TernaryFunctionCallsiteNode{
-		ternaryFunc: functionInfo.ternaryFunc,
+		ternaryFunc: builtinFunctionInfo.ternaryFunc,
 		evaluable1:  evaluable1,
 		evaluable2:  evaluable2,
 		evaluable3:  evaluable3,
@@ -274,7 +274,7 @@ type VariadicFunctionCallsiteNode struct {
 
 func BuildVariadicFunctionCallsiteNode(
 	astNode *dsl.ASTNode,
-	functionInfo *FunctionInfo,
+	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	evaluables := make([]IEvaluable, len(astNode.Children))
@@ -287,7 +287,7 @@ func BuildVariadicFunctionCallsiteNode(
 		}
 	}
 	return &VariadicFunctionCallsiteNode{
-		variadicFunc: functionInfo.variadicFunc,
+		variadicFunc: builtinFunctionInfo.variadicFunc,
 		evaluables:   evaluables,
 	}, nil
 }

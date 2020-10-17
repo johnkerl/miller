@@ -7,7 +7,7 @@ TOP OF LIST:
 	o Put the built-in and UDF function managers into the CST object, not singleton
   o Separate function manager for UDFs:
     - variadic/arities are different
-    - UDFs have argument-bindings; differet beast
+    - UDFs have argument-bindings; different beast
   o UDFInfo:
     - function name
     - parameter names with implicit/explicit arity
