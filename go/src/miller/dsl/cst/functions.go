@@ -15,6 +15,18 @@ import (
 // prefix, like 'max(1,2)'. Both parse to the same AST shape.
 // ================================================================
 
+// ----------------------------------------------------------------
+// Function lookup:
+//
+// * Try builtins first
+// * Absent a match there, try UDF lookup (UDF has been defined before being called)
+// * Absent a match there:
+//   o Make a UDF-placeholder node with present signature but nil function-pointer
+//   o Append that node to CST to-be-resolved list
+//   o On a next pass, we will walk that list resolving against all encountered
+//     UDF definitions
+//     - Error then if still unresolvable
+
 func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(
 		astNode.Type != dsl.NodeTypeFunctionCallsite &&
@@ -25,25 +37,18 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 
 	functionName := string(astNode.Token.Lit)
 
-	// * Try already-found UDFs first
-	// * Try builtins second
-	// * Absent either of those, make a UDF-placeholder with present signature but nil function-pointer
-	//   o Append node to CST to-be-resolved list
-	// * Next pass: we will walk that list resolving against all encountered UDF definitions
-	//   o Error then if unresolvable
-
-	// callsiteArity := len(astNode.Children)
-	// udfInfo, err := this.udfManager.LookUp(functionName, callsiteArity)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	builtinFunctionCallsiteNode, err := this.BuildBuiltinFunctionCallsiteNode(astNode)
 	if err != nil {
 		return nil, err
 	}
 	if builtinFunctionCallsiteNode != nil {
 		return builtinFunctionCallsiteNode, nil
+	}
+
+	callsiteArity := len(astNode.Children)
+	udfEvaluableNode := this.udfManager.LookUp(functionName, callsiteArity)
+	if udfEvaluableNode != nil {
+		return udfEvaluableNode, nil
 	}
 
 	// retval := NewUDFCallsitePlaceholder(name, arity)

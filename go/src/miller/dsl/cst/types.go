@@ -40,6 +40,7 @@ type RootNode struct {
 	beginBlocks []*StatementBlockNode
 	mainBlock   *StatementBlockNode
 	endBlocks   []*StatementBlockNode
+	udfManager  *UDFManager
 }
 
 // ----------------------------------------------------------------

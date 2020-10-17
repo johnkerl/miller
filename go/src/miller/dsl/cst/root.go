@@ -17,6 +17,7 @@ func NewEmptyRoot() *RootNode {
 		beginBlocks: make([]*StatementBlockNode, 0),
 		mainBlock:   NewStatementBlockNode(),
 		endBlocks:   make([]*StatementBlockNode, 0),
+		udfManager:  NewUDFManager(),
 	}
 }
 
