@@ -1,0 +1,10 @@
+$fg = f(g($i));
+$gf = g(f($i));
+
+func f(x) {
+  return x**2
+}
+
+func g(x) {
+  return 3*x
+}
