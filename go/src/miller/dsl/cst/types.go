@@ -1,6 +1,8 @@
 package cst
 
 import (
+	"container/list"
+
 	"miller/dsl"
 	"miller/types"
 )
@@ -37,10 +39,11 @@ type State struct {
 
 // ----------------------------------------------------------------
 type RootNode struct {
-	beginBlocks []*StatementBlockNode
-	mainBlock   *StatementBlockNode
-	endBlocks   []*StatementBlockNode
-	udfManager  *UDFManager
+	beginBlocks                 []*StatementBlockNode
+	mainBlock                   *StatementBlockNode
+	endBlocks                   []*StatementBlockNode
+	udfManager                  *UDFManager
+	unresolvedFunctionCallsites *list.List
 }
 
 // ----------------------------------------------------------------

@@ -22,8 +22,7 @@ import (
 //   o Make a UDF-placeholder node with present signature but nil function-pointer
 //   o Append that node to CST to-be-resolved list
 //   o On a next pass, we will walk that list resolving against all encountered
-//     UDF definitions
-//     - Error then if still unresolvable
+//     UDF definitions. (It will be an error then if it's still unresolvable.)
 
 func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(
@@ -35,6 +34,9 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 
 	functionName := string(astNode.Token.Lit)
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Look for a builtin function with the given name.
+
 	builtinFunctionCallsiteNode, err := this.BuildBuiltinFunctionCallsiteNode(astNode)
 	if err != nil {
 		return nil, err
@@ -43,20 +45,26 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		return builtinFunctionCallsiteNode, nil
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Look for a user-defined function with the given name.
+
 	callsiteArity := len(astNode.Children)
 	udf, err := this.udfManager.LookUp(functionName, callsiteArity)
 	if err != nil {
 		return nil, err
 	}
 
-    // AST snippet for '$z = f($x, $y)':
-    //     * Assignment "="
-    //         * DirectFieldValue "z"
-    //         * FunctionCallsite "f"
-    //             * DirectFieldValue "x"
-    //             * DirectFieldValue "y"
+	// AST snippet for '$z = f($x, $y)':
+	// * Assignment "="
+	//     * DirectFieldValue "z"
+	//     * FunctionCallsite "f"
+	//         * DirectFieldValue "x"
+	//         * DirectFieldValue "y"
+	//
+	// Here we need to make an array of our arguments at the callsite, to be
+	// paired up with the parameters within he function definition at runtime.
 	argumentNodes := make([]IEvaluable, callsiteArity)
-	for i, argumentASTNode := range(astNode.Children) {
+	for i, argumentASTNode := range astNode.Children {
 		argumentNode, err := this.BuildEvaluableNode(argumentASTNode)
 		if err != nil {
 			return nil, err
@@ -64,20 +72,17 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		argumentNodes[i] = argumentNode
 	}
 
-	udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
-	return udfCallsiteNode, nil
-
-	// TODO:
-	// retval := NewUDFPlaceholder(name, arity)
-	// this.RememberUDFCallsitePlaceholder(retval)
-	// return retval, nil
-
-	// TODO: move to builder
-	//	return nil, errors.New(
-	//		"CST BuildFunctionCallsiteNode: function name not found: " +
-	//			functionName,
-	//	)
+	if udf == nil {
+		// Mark this as unresolved for an after-pass to see if a UDF with this
+		// name/arity has been defined farther down in the DSL expression after
+		// this callsite. This happens example when a function is called before
+		// it's defined.
+		udf = NewUnresolvedUDF(functionName, callsiteArity)
+		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
+		this.rememberUnresolvedFunctionCallsite(udfCallsiteNode)
+		return udfCallsiteNode, nil
+	} else {
+		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
+		return udfCallsiteNode, nil
+	}
 }
-
-// ----------------------------------------------------------------
-// TODO: resolver function

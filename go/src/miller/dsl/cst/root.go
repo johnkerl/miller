@@ -1,7 +1,9 @@
 package cst
 
 import (
+	"container/list"
 	"errors"
+
 	"miller/dsl"
 	"miller/types"
 )
@@ -14,10 +16,11 @@ import (
 // ----------------------------------------------------------------
 func NewEmptyRoot() *RootNode {
 	return &RootNode{
-		beginBlocks: make([]*StatementBlockNode, 0),
-		mainBlock:   NewStatementBlockNode(),
-		endBlocks:   make([]*StatementBlockNode, 0),
-		udfManager:  NewUDFManager(),
+		beginBlocks:                 make([]*StatementBlockNode, 0),
+		mainBlock:                   NewStatementBlockNode(),
+		endBlocks:                   make([]*StatementBlockNode, 0),
+		udfManager:                  NewUDFManager(),
+		unresolvedFunctionCallsites: list.New(),
 	}
 }
 
@@ -30,12 +33,14 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	cstRoot := NewEmptyRoot()
 
 	err := cstRoot.buildMainPass(ast)
-
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO: UDF-resolver after-pass
+	err = cstRoot.resolveFunctionCallsites()
+	if err != nil {
+		return nil, err
+	}
 
 	return cstRoot, nil
 }
@@ -83,7 +88,6 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 
 	for _, astChild := range astChildren {
 
-		// TODO: fill out
 		if astChild.Type == dsl.NodeTypeFunctionDefinition {
 			err := this.BuildAndInstallUDF(astChild)
 			if err != nil {
@@ -110,6 +114,45 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 		}
 	}
 
+	return nil
+}
+
+// This is invoked within the buildMainPass call tree whenever a function is
+// called before it's defined.
+func (this *RootNode) rememberUnresolvedFunctionCallsite(udfCallsite *UDFCallsite) {
+	this.unresolvedFunctionCallsites.PushBack(udfCallsite)
+}
+
+// After-pass after buildMainPass returns, in case a function was called before
+// it was defined. It may be the case that:
+//
+// * A user-defined function was called before it was defined, and was actually defined.
+// * A user-defined function was called before it was defined, and it was not actually defined.
+// * The user misspelled the name of a built-in function.
+//
+// So, our error message should reflect all those options.
+
+func (this *RootNode) resolveFunctionCallsites() error {
+	for this.unresolvedFunctionCallsites.Len() > 0 {
+		unresolvedFunctionCallsite := this.unresolvedFunctionCallsites.Remove(
+			this.unresolvedFunctionCallsites.Front(),
+		).(*UDFCallsite)
+
+		functionName := unresolvedFunctionCallsite.udf.signature.functionName
+		callsiteArity := unresolvedFunctionCallsite.udf.signature.arity
+
+		udf, err := this.udfManager.LookUp(functionName, callsiteArity)
+		if err != nil {
+			return err
+		}
+		if udf == nil {
+			return errors.New(
+				"Miller: function name not found: " + functionName,
+			)
+		}
+
+		unresolvedFunctionCallsite.udf = udf
+	}
 	return nil
 }
 

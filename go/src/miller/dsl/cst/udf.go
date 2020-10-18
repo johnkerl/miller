@@ -51,6 +51,17 @@ func NewUDF(
 	}
 }
 
+// For when a function is called before being defined. This gives us something
+// to go back and fill in later once we've encountered the function definition.
+func NewUnresolvedUDF(
+	functionName string,
+	callsiteArity int,
+) *UDF {
+	signature := NewSignature(functionName, callsiteArity, nil)
+	udf := NewUDF(signature, nil)
+	return udf
+}
+
 // ----------------------------------------------------------------
 type UDFCallsite struct {
 	argumentNodes []IEvaluable
@@ -72,29 +83,43 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	lib.InternalCodingErrorIf(this.udf == nil)
 	lib.InternalCodingErrorIf(this.udf.functionBody == nil)
 
+	// Evaluate and pair up the callsite arguments with our parameters,
+	// positionally.
+
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 
-	// TODO: argument-parameter bindings
 	for i, parameterName := range this.udf.signature.parameterNames {
 		argument := this.argumentNodes[i].Evaluate(state)
 		state.stack.BindVariable(parameterName, &argument)
-		//fmt.Println("BIND", parameterName, argument.String())
 	}
 
+	// Execute the function body.
 	blockExitPayload, err := this.udf.functionBody.Execute(state)
+
+	// TODO: rethink error-propagation here: blockExitPayload.blockReturnValue
+	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
+	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		// TODO: rethink error-propagation here
 		return types.MlrvalFromError()
 	}
-	if blockExitPayload == nil { // Fell off end of function with no return
+
+	// Fell off end of function with no return
+	if blockExitPayload == nil {
 		return types.MlrvalFromAbsent()
 	}
+
+	// TODO: should be an internal coding error. This would be break or
+	// continue not in a loop, or return-void, both of which should have been
+	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		// TODO: rethink error-propagation here
 		return types.MlrvalFromAbsent()
 	}
+
+	// Definitely a Miller internal coding error if the user put 'return x' in
+	// their UDF but we lost the return value.
 	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue == nil)
+
 	return *blockExitPayload.blockReturnValue
 }
 
