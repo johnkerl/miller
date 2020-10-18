@@ -8,6 +8,8 @@ TOP OF LIST:
   o dump w/ arg
   o strlen
   o substr
+  o take another look at mlr -n -- ?
+  o array/map length somehow?
 
 * UDS
 * put -s ...
@@ -192,3 +194,5 @@ NITS/NON-IMMEDIATE:
 * put -- multiple -f? as in C impl?
 * emit { int : string } results in absent-something :^/
 * doc note 'array' is now a keyword
+* dump is now redundant? print @*
+* double-check dump CR-terminators depending on expression type

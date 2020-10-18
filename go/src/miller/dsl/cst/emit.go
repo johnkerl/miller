@@ -1,9 +1,6 @@
 package cst
 
 import (
-	"fmt"
-	"os"
-
 	"miller/dsl"
 	"miller/lib"
 	"miller/types"
@@ -98,37 +95,3 @@ func (this *EmitStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 //         "sum": 5.6
 //       }
 //     ]
-
-// ----------------------------------------------------------------
-type DumpStatementNode struct {
-	// TODO: redirect options
-}
-
-// ----------------------------------------------------------------
-func (this *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
-	return &DumpStatementNode{}, nil
-}
-
-func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	fmt.Fprint(os.Stdout, state.Oosvars.String())
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
-type EdumpStatementNode struct {
-	// TODO: redirect options
-}
-
-// ----------------------------------------------------------------
-func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
-	return &EdumpStatementNode{}, nil
-}
-
-func (this *EdumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	fmt.Fprint(os.Stderr, state.Oosvars.String())
-	return nil, nil
-}

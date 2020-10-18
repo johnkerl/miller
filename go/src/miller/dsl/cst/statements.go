@@ -38,11 +38,23 @@ func (this *RootNode) BuildStatementNode(
 		return this.BuildDumpStatementNode(astNode)
 	case dsl.NodeTypeEdumpStatement:
 		return this.BuildEdumpStatementNode(astNode)
+	case dsl.NodeTypePrintStatement:
+		return this.BuildPrintStatementNode(astNode)
+	case dsl.NodeTypeEprintStatement:
+		return this.BuildEprintStatementNode(astNode)
+	case dsl.NodeTypePrintnStatement:
+		return this.BuildPrintnStatementNode(astNode)
+	case dsl.NodeTypeEprintnStatement:
+		return this.BuildEprintnStatementNode(astNode)
 
 	case dsl.NodeTypeBeginBlock:
-		return nil, nil // xxx temp -- only valid at top level; say so here w/ error
+		return nil, errors.New(
+			"Miller: begin blocks may only be declared at top level.",
+		)
 	case dsl.NodeTypeEndBlock:
-		return nil, nil // xxx temp -- only valid at top level; say so here w/ error
+		return nil, errors.New(
+			"Miller: end blocks may only be declared at top level.",
+		)
 
 	case dsl.NodeTypeIfChain:
 		return this.BuildIfChainNode(astNode)
