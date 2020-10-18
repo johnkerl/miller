@@ -182,10 +182,10 @@ md_token_float_type   : 'f' 'l' 'o' 'a' 't' ;
 //md_token_unset    : 'u' 'n' 's' 'e' 't' ;
 //md_token_all      : 'a' 'l' 'l' ;
 
-//md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
-//md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_print    : 'p' 'r' 'i' 'n' 't' ;
-//md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+md_token_print    : 'p' 'r' 'i' 'n' 't' ;
+md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
+md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 //md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
 //md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
 //md_token_tee      : 't' 'e' 'e' ;
@@ -343,6 +343,10 @@ BracelessStatement
   | EmitStatement
   | DumpStatement
   | EdumpStatement
+  | PrintStatement
+  | EprintStatement
+  | PrintnStatement
+  | EprintnStatement
   // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
   | BreakStatement
@@ -410,11 +414,43 @@ EmitStatement
 DumpStatement
   : md_token_dump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeDumpStatement) >>
+  | md_token_dump Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeDumpStatement) >>
   ;
 
 EdumpStatement
-  : md_token_edump // xxx more to do
+  : md_token_edump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEdumpStatement) >>
+  | md_token_edump Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEdumpStatement) >>
+  ;
+
+PrintStatement
+  : md_token_print
+    << dsl.NewASTNodeZary($0, dsl.NodeTypePrintStatement) >>
+  | md_token_print Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintStatement) >>
+  ;
+
+EprintStatement
+  : md_token_eprint
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintStatement) >>
+  | md_token_eprint Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEprintStatement) >>
+  ;
+
+PrintnStatement
+  : md_token_printn
+    << dsl.NewASTNodeZary($0, dsl.NodeTypePrintnStatement) >>
+  | md_token_printn Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintnStatement) >>
+  ;
+
+EprintnStatement
+  : md_token_eprintn
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintnStatement) >>
+  | md_token_eprintn Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEprintnStatement) >>
   ;
 
 // ----------------------------------------------------------------

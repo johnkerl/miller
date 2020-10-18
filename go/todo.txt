@@ -3,7 +3,12 @@ TOP OF LIST:
 
 * window.mlr, window2.mlr -> doc somewhere
 
-! DSL comments
+* UDF nexts:
+  o print/printn
+  o dump w/ arg
+  o strlen
+  o substr
+
 * UDS
 * put -s ...
 * local vars w/ typing; UDFs with typing at parameters & retvals
@@ -26,6 +31,8 @@ TOP OF LIST:
     - in a UDS or not
     - is last statement in main block
     - is on LHS of assignment
+
+! parse errors need some context somehow
 
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
