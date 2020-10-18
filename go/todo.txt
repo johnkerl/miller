@@ -3,14 +3,11 @@ TOP OF LIST:
 
 * window.mlr, window2.mlr -> doc somewhere
 
+* UDS
 * put -s ...
 * local vars w/ typing; UDFs with typing at parameters & retvals
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
-* break/continue for loops
-  o Execute() needs break/continue/(someday-throw)/return-void/return-value retval-enum
-  o make sure they aren't double-broken or double-continued when nested
-  o comment block-exit at all block-types -- no double-pass-back from loops; do pass-back from if/cond
 
 * CST validators
   o begin/end hygiene:
@@ -21,6 +18,13 @@ TOP OF LIST:
   o begin/end non-nested
   o enforce return-value iff in a function; return-void iff in a subroutine
   o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
+  o states:
+    - at top level or not
+    - in begin/end or not
+    - in a UDF or not
+    - in a UDS or not
+    - is last statement in main block
+    - is on LHS of assignment
 
 ! more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
