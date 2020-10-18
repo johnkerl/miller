@@ -54,6 +54,7 @@ _hexdig : '0'-'9' | 'a'-'f' | 'A'-'F';
 _bindig : '0'-'1' ;
 _idchar : _letter | _decdig | '_' ;
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
+!comment : '#'  {.} '\n' ;
 
 // ----------------------------------------------------------------
 // STRING/INT/FLOAT/BOOLEAN LITERALS
