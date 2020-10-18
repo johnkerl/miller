@@ -4,11 +4,11 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
-  o print/printn
-  o dump w/ arg
   o strlen
   o substr
-  o take another look at mlr -n -- ?
+  o take another look at mlr -n and seqgen -- ?
+    - rand-walk seqgen-then example
+    - mlr -n put -f mand.mlr
   o array/map length somehow?
 
 * UDS

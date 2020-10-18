@@ -1708,6 +1708,14 @@ func NumericDescendingComparator(ma *Mlrval, mb *Mlrval) int {
 }
 
 // ================================================================
+func MlrvalStrlen(ma *Mlrval) Mlrval {
+	if !ma.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	return MlrvalFromInt64(int64(len(ma.printrep)))
+}
+
+// ================================================================
 func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
 	if ma.IsErrorOrAbsent() {
 		return *ma

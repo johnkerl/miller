@@ -246,6 +246,11 @@ Leaves non-numbers as-is.`,
 		help:      "Strip leading and trailing whitespace from string.",
 		unaryFunc: types.MlrvalStrip,
 	},
+	{
+		name:      "strlen",
+		help:      "String length.",
+		unaryFunc: types.MlrvalStrlen,
+	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions
