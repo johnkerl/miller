@@ -70,7 +70,10 @@ func (this *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildStatementBlockNode(astNode *dsl.ASTNode) (*StatementBlockNode, error) {
+func (this *RootNode) BuildStatementBlockNode(
+	astNode *dsl.ASTNode,
+) (*StatementBlockNode, error) {
+
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeStatementBlock)
 
 	statementBlockNode := NewStatementBlockNode()

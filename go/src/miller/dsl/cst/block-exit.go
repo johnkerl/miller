@@ -61,7 +61,11 @@ func (this *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error)
 	if len(astNode.Children) == 0 {
 		return &ReturnNode{nil}, nil
 	} else if len(astNode.Children) == 1 {
-		return &ReturnNode{nil}, nil
+		returnValueExpression, err := this.BuildEvaluableNode(astNode.Children[0])
+		if err != nil {
+			return nil, err
+		}
+		return &ReturnNode{returnValueExpression}, nil
 	} else {
 		lib.InternalCodingErrorIf(true)
 	}

@@ -1473,7 +1473,7 @@ FuncOrSubrParameter
 // to an AST node FuncOrSubrParameterName
 FuncOrSubrParameterName
   : md_token_non_sigil_name
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeParameterName) >>
+    << dsl.NewASTNode($0, dsl.NodeTypeParameterName) >>
   ;
 
 //Statement : md_token_call FcnOrSubrCall(B). {

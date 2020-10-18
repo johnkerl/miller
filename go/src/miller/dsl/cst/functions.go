@@ -1,8 +1,6 @@
 package cst
 
 import (
-	"errors"
-
 	"miller/dsl"
 	"miller/lib"
 )
@@ -46,17 +44,40 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 	}
 
 	callsiteArity := len(astNode.Children)
-	udfEvaluableNode := this.udfManager.LookUp(functionName, callsiteArity)
-	if udfEvaluableNode != nil {
-		return udfEvaluableNode, nil
+	udf, err := this.udfManager.LookUp(functionName, callsiteArity)
+	if err != nil {
+		return nil, err
 	}
 
-	// retval := NewUDFCallsitePlaceholder(name, arity)
+    // AST snippet for '$z = f($x, $y)':
+    //     * Assignment "="
+    //         * DirectFieldValue "z"
+    //         * FunctionCallsite "f"
+    //             * DirectFieldValue "x"
+    //             * DirectFieldValue "y"
+	argumentNodes := make([]IEvaluable, callsiteArity)
+	for i, argumentASTNode := range(astNode.Children) {
+		argumentNode, err := this.BuildEvaluableNode(argumentASTNode)
+		if err != nil {
+			return nil, err
+		}
+		argumentNodes[i] = argumentNode
+	}
+
+	udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
+	return udfCallsiteNode, nil
+
+	// TODO:
+	// retval := NewUDFPlaceholder(name, arity)
 	// this.RememberUDFCallsitePlaceholder(retval)
 	// return retval, nil
 
-	return nil, errors.New(
-		"CST BuildFunctionCallsiteNode: function name not found: " +
-			functionName,
-	)
+	// TODO: move to builder
+	//	return nil, errors.New(
+	//		"CST BuildFunctionCallsiteNode: function name not found: " +
+	//			functionName,
+	//	)
 }
+
+// ----------------------------------------------------------------
+// TODO: resolver function

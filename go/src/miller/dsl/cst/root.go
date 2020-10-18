@@ -59,10 +59,6 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 	}
 	astChildren := ast.RootNode.Children
 
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Pass 2 to handle everyting else besides functions definitions, ignoring
-	// them when they are encountered.
-
 	// Example AST:
 	//
 	// $ mlr put -v 'begin{@a=1;@b=2} $x=3; $y=4' s
@@ -89,9 +85,10 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 
 		// TODO: fill out
 		if astChild.Type == dsl.NodeTypeFunctionDefinition {
-			// TODO
-			//fmt.Printf("UDF stub: found function %s\n", string(astChild.Token.Lit))
-			// UDFManager.Install(...)
+			err := this.BuildAndInstallUDF(astChild)
+			if err != nil {
+				return err
+			}
 
 		} else if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
 			statementBlockNode, err := this.BuildStatementBlockNodeFromBeginOrEnd(astChild)

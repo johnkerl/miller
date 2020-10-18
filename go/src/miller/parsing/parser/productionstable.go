@@ -2561,13 +2561,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FuncOrSubrParameterName : md_token_non_sigil_name	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeParameterName) >>`,
+		String: `FuncOrSubrParameterName : md_token_non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeParameterName) >>`,
 		Id:         "FuncOrSubrParameterName",
 		NTType:     76,
 		Index:      209,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeParameterName)
+			return dsl.NewASTNode(X[0], dsl.NodeTypeParameterName)
 		},
 	},
 	ProdTabEntry{
