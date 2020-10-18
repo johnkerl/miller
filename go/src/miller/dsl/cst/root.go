@@ -66,7 +66,7 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 
 	// Example AST:
 	//
-	// $ mlr put -v 'begin{@a=1;@b=2} $x=3; $y=4' s
+	// $ mlr put -v 'begin{@a=1;@b=2} $x=3; $y=4' myfile.dkvp
 	// DSL EXPRESSION:
 	// begin{@a=1;@b=2} $x=3; $y=4
 	// RAW AST:

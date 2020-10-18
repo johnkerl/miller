@@ -3,21 +3,8 @@ TOP OF LIST:
 
 * window.mlr, window2.mlr -> doc somewhere
 
-* UDFs
-	o Put the built-in and UDF function managers into the CST object, not singleton
-  o Separate function manager for UDFs:
-    - variadic/arities are different
-    - UDFs have argument-bindings; different beast
-  o UDFInfo:
-    - function name
-    - parameter names with implicit/explicit arity
-    - function pointer for Execute
-	o Pass 1 AST-walk to find callsites and populate expected signatures
-    - make a linked list of Signatures (one for UDF, another for UDS)?
-	o Pass 2 compile and install UDFs
-	o Pass 3 update callsites
 * put -s ...
-* local vars w/ typing
+* local vars w/ typing; UDFs with typing at parameters & retvals
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * break/continue for loops
