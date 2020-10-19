@@ -35,6 +35,7 @@ const (
 	NodeTypeIndirectOosvarValue = "IndirectOosvarValue"
 	NodeTypeFullOosvar          = "FullOosvar"
 	NodeTypeLocalVariable       = "LocalVariable"
+	NodeTypeTypedecl            = "Typedecl"
 
 	NodeTypeStatementBlock   = "StatementBlock"
 	NodeTypeAssignment       = "Assignment"

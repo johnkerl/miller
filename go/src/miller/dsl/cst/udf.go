@@ -199,11 +199,12 @@ func (this *UDFManager) Install(udf *UDF) {
 func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionDefinition)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
 	functionName := string(astNode.Token.Lit)
 	parameterListASTNode := astNode.Children[0]
 	functionBodyASTNode := astNode.Children[1]
+	// TODO: optional typedecl 3rd arg
 
 	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)

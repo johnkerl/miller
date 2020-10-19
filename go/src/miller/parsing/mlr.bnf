@@ -171,13 +171,14 @@ md_token_func     : 'f' 'u' 'n' 'c' ;
 //md_token_call     : 'c' 'a' 'l' 'l' ;
 md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
 
-md_token_int_type     : 'i' 'n' 't' ;
-md_token_float_type   : 'f' 'l' 'o' 'a' 't' ;
-//md_token_num_type   : 'n' 'u' 'm' ;
-//md_token_bool_type  : 'b' 'o' 'o' 'l' ;
-//md_token_str_type   : 's' 't' 'r' ;
-//md_token_map_type   : 'm' 'a' 'p' ;
-//md_token_array_type : 'a' 'r' 'r' ;
+md_token_arr_type   : 'a' 'r' 'r' ;
+md_token_bool_type  : 'b' 'o' 'o' 'l' ;
+md_token_float_type : 'f' 'l' 'o' 'a' 't' ;
+md_token_int_type   : 'i' 'n' 't' ;
+md_token_map_type   : 'm' 'a' 'p' ;
+md_token_num_type   : 'n' 'u' 'm' ;
+md_token_str_type   : 's' 't' 'r' ;
+md_token_var_type   : 'v' 'a' 'r' ;
 
 //md_token_unset    : 'u' 'n' 's' 'e' 't' ;
 //md_token_all      : 'a' 'l' 'l' ;
@@ -359,42 +360,25 @@ Assignment
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
 ;
 
-// In progress: expand Lvalue syntax here and prohibit it in the CST builder.
-// This is to eliminate LR-1 conflicts on bare-boolean and awkish conds.  As a
-// side effect, by allowing things like '1+2=3+4' here in the grammar and
-// prohibiting them in the CST builder, we can more easily make more detailed
-// error messages.
-Lvalue : Rvalue ;
+// Semantically there are far fewer things which are valid lvalues than valid
+// rvalues. For example, in '1+2=3+4', the right-hand side is fine while the
+// left-hand side is not.
+//
+// We can limit the things expressible on the left-hand side here in the AST,
+// via Lvalue production rules much narrower than Rvalue production rules.
+// However, this results in LR-1 conflicts for bare-boolean and awkish-cond
+// expressions which start with something of rvalue form -- the parser needs
+// more than one lookahead symbol to realize what's going on.
+//
+// Instead, we use the same production rule for lvalues and rvalues here in the
+// grammar, deferring lvalue restrictions to the CST builder where we have more
+// flexibility -- as well as more expressive ability in our error messages.
 
-//// A BaseValue is anything on the left-hand side of an assignment, excluding
-//// the indexing -- e.g. @a is a BaseValue and an Lvalue; @a[1][2][3] is an
-//// Lvalue which is an indexed Lvalue.
-//Lvalue
-//  : BaseLvalue
-//  | IndexedLvalue
-//  // | SlicedLvalue -- like $text[3:7] = "interpolated"
-//  // | ENVValue -- only ENV["foo"] but not arbitrarily indexable like ENV["foo"]["bar"]
-//;
-
-//BaseLvalue
-//  : FieldValue
-//  | OosvarValue
-//  // positional field name $[[3]]
-//  // positional field value $[[[3]]]
-//  | FullSrec
-//  | FullOosvar
-//  // local variable abcd
-//;
-
-//IndexedLvalue
-//  : Lvalue "[" Rvalue "]" 
-//    << dsl.NewASTNodeBinary(
-//      dsl.NewASTToken("[]", $1),
-//      $0,
-//      $2,
-//      dsl.NodeTypeArrayOrMapIndexAccess,
-//    )>>
-//;
+Lvalue
+  : Rvalue
+  | Typedecl LocalVariable
+    << dsl.AppendChild($1, $0) >>
+  ;
 
 BareBoolean
   : Rvalue
@@ -530,6 +514,33 @@ FullOosvar
 LocalVariable
   : md_token_non_sigil_name
     << dsl.NewASTNode($0, dsl.NodeTypeLocalVariable) >>
+  ;
+
+Typedecl
+  : md_token_arr_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_bool_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_float_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_int_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_map_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_num_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_str_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | md_token_var_type
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
   ;
 
 // ----------------------------------------------------------------
@@ -1438,6 +1449,8 @@ ContinueStatement
 // FUNCTION AND SUBROUTINE DEFINITIONS
 
 FuncBlock
+
+  // Without return-type annotation
   : md_token_func
 	  md_token_non_sigil_name
     "("
@@ -1452,18 +1465,27 @@ FuncBlock
       dsl.NodeTypeFunctionDefinition,
     );
   >>
-;
 
-// With return-type annotation
-//FuncBlock ::= md_token_func
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	md_token_colon Typedecl(M)
-//	"{" StatementBlock(B) "}".
-//{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "func_block");
-//	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
-//}
+  // With return-type annotation
+  | md_token_func
+	  md_token_non_sigil_name
+    "("
+    FuncOrSubrParameterList
+    ")"
+    ":"
+    Typedecl
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeTernary(
+      $1,
+      $3, // parameter list
+      $7, // {...}
+      $6, // return type
+      dsl.NodeTypeFunctionDefinition,
+    );
+  >>
+
+;
 
 // ----------------------------------------------------------------
 //SubrBlock(C) ::= md_token_subr
@@ -1493,24 +1515,36 @@ FuncOrSubrNonEmptyParameterList
 ;
 
 FuncOrSubrParameter
-  : FuncOrSubrParameterName
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeParameter) >>
+  // Untyped parameter, e.g. "x". Produce this AST:
+  // Parameter
+  // -> ParameterName "x"
+  : UntypedFuncOrSubrParameterName
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeParameter,
+    ) >>
 
-  // TODO: with typename
-  // | Typedecl FuncOrSubrParameterName
+  // Typed parameter, e.g. "num x". Produce this AST:
+  // Parameter
+  // -> ParameterName "x"
+  //   -> Typedecl "num"
+  | TypedFuncOrSubrParameterName
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeParameter,
+    ) >>
   ;
 
-//	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
-//}
-//FuncOrSubrParameter(A) ::= Typedecl(T) md_token_non_sigil_name(N). {
-//	A = mlr_dsl_ast_node_alloc(N->text, T->type);
-//}
-
-// In GOCC this seemingly no-op rule converts the token md_token_non_sigil_name
-// to an AST node FuncOrSubrParameterName
-FuncOrSubrParameterName
+UntypedFuncOrSubrParameterName
   : md_token_non_sigil_name
     << dsl.NewASTNode($0, dsl.NodeTypeParameterName) >>
+  ;
+
+TypedFuncOrSubrParameterName
+  : Typedecl UntypedFuncOrSubrParameterName
+    << dsl.AppendChild($1, $0) >>
   ;
 
 //Statement : md_token_call FcnOrSubrCall(B). {
@@ -1584,15 +1618,6 @@ ReturnStatement
 //Statement(A) ::= PrintnWrite(B).  { A = B; }
 //Statement(A) ::= PrintnAppend(B). { A = B; }
 //Statement(A) ::= PrintnPipe(B).   { A = B; }
-
-//Typedecl(A) ::= md_token_var_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_num_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_int_typeB).    { A = B; A->type = MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION;     }
-//Typedecl(A) ::= md_token_float_type(B). { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
-//Typedecl(A) ::= md_token_str_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
-//Typedecl(A) ::= md_token_bool_type(B).  { A = B; A->type = MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_map_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
-//Typedecl(A) ::= md_token_arr_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
 
 //// ----------------------------------------------------------------
 //md_filter(A) ::= md_token_filter(O) Rvalue(B). {

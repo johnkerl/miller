@@ -10,6 +10,7 @@ TOP OF LIST:
   o regexes & associated functions -- necessary or not?
 
 ! put -s ...
+! is_x and asserting_x
 ! local vars w/ typing; UDFs with typing at parameters & retvals
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
