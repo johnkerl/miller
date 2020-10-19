@@ -232,6 +232,11 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalCollapseWhitespace,
 	},
 	{
+		name:      "length",
+		help:      "Counts number of top-level entries in array/map. Scalars have length 1.",
+		unaryFunc: types.MlrvalLength,
+	},
+	{
 		name:      "lstrip",
 		help:      "Strip leading whitespace from string.",
 		unaryFunc: types.MlrvalLStrip,

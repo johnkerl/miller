@@ -1744,6 +1744,25 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 	}
 }
 
+// Map/array count. Scalars (including strings) have length 1.
+func MlrvalLength(ma *Mlrval) Mlrval {
+	switch ma.mvtype {
+	case MT_ERROR:
+		return MlrvalFromInt64(0)
+		break
+	case MT_ABSENT:
+		return MlrvalFromInt64(0)
+		break
+	case MT_ARRAY:
+		return MlrvalFromInt64(int64(len(ma.arrayval)))
+		break
+	case MT_MAP:
+		return MlrvalFromInt64(int64(ma.mapval.FieldCount))
+		break
+	}
+	return MlrvalFromInt64(1)
+}
+
 // ================================================================
 func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
 	if ma.IsErrorOrAbsent() {

@@ -293,6 +293,7 @@ echo; echo 'x= a     b '|mlr --ojson put '$y = collapse_whitespace($x)'
 echo; echo 'x= a     b '|mlr --ojson put '$y = clean_whitespace($x)'
 
 echo; run_mlr --from u/s.dkvp put '$z = strlen($a)'
+
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 0, 0)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 0, 7)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 1, 7)'
@@ -301,6 +302,15 @@ echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 2, 5)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 2, 3)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 3, 3)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 4, 3)'
+
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length($x)'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length($y)'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length($nonesuch)'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length($*)'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length([])'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length([5,6,7])'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length({})'
+echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length({"a":5,"b":6,"c":7})'
 
 echo; run_mlr --from u/s.dkvp put '$si = 0; for (i = 0; i < NR; i += 1) { if (i == 2) { $si += 0   } $si += i }'
 echo; run_mlr --from u/s.dkvp put '$si = 0; for (i = 0; i < NR; i += 1) { if (i == 2) { $si += 100 } $si += i }'

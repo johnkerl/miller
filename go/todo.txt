@@ -7,7 +7,7 @@ TOP OF LIST:
   o take another look at mlr -n and seqgen -- ?
     - rand-walk seqgen-then example
     - mlr -n put -f mand.mlr
-  o array/map length somehow?
+  o array/map length function
   o regexes & associated functions -- necessary or not?
   o forkv
 
