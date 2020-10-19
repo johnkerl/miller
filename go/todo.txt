@@ -10,6 +10,8 @@ TOP OF LIST:
     - rand-walk seqgen-then example
     - mlr -n put -f mand.mlr
   o array/map length somehow?
+  o regexes & associated functions -- necessary or not?
+  o forkv
 
 * UDS
 * put -s ...

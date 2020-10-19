@@ -177,7 +177,7 @@ md_token_float_type   : 'f' 'l' 'o' 'a' 't' ;
 //md_token_bool_type  : 'b' 'o' 'o' 'l' ;
 //md_token_str_type   : 's' 't' 'r' ;
 //md_token_map_type   : 'm' 'a' 'p' ;
-//md_token_array_type : 'a' 'r' 'r' 'a' 'y';
+//md_token_array_type : 'a' 'r' 'r' ;
 
 //md_token_unset    : 'u' 'n' 's' 'e' 't' ;
 //md_token_all      : 'a' 'l' 'l' ;
@@ -1549,11 +1549,6 @@ ReturnStatement
 // Not valid in begin/end since they refer to srecs:
 // xxx enforce that in the AST/CST, not here in the grammar -- much simpler.
 
-//// Valid in begin/end since they don't refer to srecs (although the RHSs might):
-//Statement(A) ::= BareBoolean(B).          { A = B; }
-//Statement(A) ::= OosvarAssignment(B).     { A = B; }
-//Statement(A) ::= FullOosvarAssignment(B). { A = B; }
-//Statement(A) ::= md_filter(B).            { A = B; }
 //Statement(A) ::= md_unset(B).             { A = B; }
 
 //Statement(A) ::= TeeWrite(B).          { A = B; }
@@ -1583,34 +1578,21 @@ ReturnStatement
 //Statement(A) ::= DumpWrite(B).    { A = B; }
 //Statement(A) ::= DumpAppend(B).   { A = B; }
 //Statement(A) ::= DumpPipe(B).     { A = B; }
-//Statement(A) ::= md_print(B).     { A = B; }
-//Statement(A) ::= md_eprint(B).    { A = B; }
 //Statement(A) ::= PrintWrite(B).   { A = B; }
 //Statement(A) ::= PrintAppend(B).  { A = B; }
 //Statement(A) ::= PrintPipe(B).    { A = B; }
-//Statement(A) ::= md_printn(B).    { A = B; }
-//Statement(A) ::= md_eprintn(B).   { A = B; }
 //Statement(A) ::= PrintnWrite(B).  { A = B; }
 //Statement(A) ::= PrintnAppend(B). { A = B; }
 //Statement(A) ::= PrintnPipe(B).   { A = B; }
 
-// Valid only within for/while, but we accept them here syntactically and
-// reject them in the AST-to-CST conversion, where we can produce much more
-// informative error messages:
-//Statement(A) ::= md_token_break(O). {
-//	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_BREAK);
-//}
-//Statement(A) ::= md_token_continue(O). {
-//	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
-//}
-
-//Typedecl(A) ::= md_token_var(B).     { A = B; A->type = MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_numeric(B). { A = B; A->type = MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_int(B).     { A = B; A->type = MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION;     }
-//Typedecl(A) ::= md_token_float(B).   { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
-//Typedecl(A) ::= md_token_string_literal(B).  { A = B; A->type = MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION;  }
-//Typedecl(A) ::= md_token_boolean(B). { A = B; A->type = MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION; }
-//Typedecl(A) ::= md_token_map(B).     { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
+//Typedecl(A) ::= md_token_var_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION; }
+//Typedecl(A) ::= md_token_num_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION; }
+//Typedecl(A) ::= md_token_int_typeB).    { A = B; A->type = MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION;     }
+//Typedecl(A) ::= md_token_float_type(B). { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
+//Typedecl(A) ::= md_token_str_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION;   }
+//Typedecl(A) ::= md_token_bool_type(B).  { A = B; A->type = MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION; }
+//Typedecl(A) ::= md_token_map_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
+//Typedecl(A) ::= md_token_arr_type(B).   { A = B; A->type = MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION;     }
 
 //// ----------------------------------------------------------------
 //md_filter(A) ::= md_token_filter(O) Rvalue(B). {
