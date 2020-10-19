@@ -7,17 +7,15 @@ TOP OF LIST:
   o take another look at mlr -n and seqgen -- ?
     - rand-walk seqgen-then example
     - mlr -n put -f mand.mlr
-  o array/map length function
   o regexes & associated functions -- necessary or not?
-  o forkv
 
-* UDS
-* put -s ...
-* local vars w/ typing; UDFs with typing at parameters & retvals
+! put -s ...
+! local vars w/ typing; UDFs with typing at parameters & retvals
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
+* UDS
 
-* CST validators
+! CST validators
   o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
@@ -33,10 +31,11 @@ TOP OF LIST:
     - in a UDS or not
     - is last statement in main block
     - is on LHS of assignment
+  o mlr_expect_fail macro
 
 ! parse errors need some context somehow
 
-! more copy-on-retain for concurrent pointer-mods !
+* more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
   o either do copy for all retainers, or treat inrecs as immutable ...
 

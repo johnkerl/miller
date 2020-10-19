@@ -1,14 +1,13 @@
 # Status of the Go port
 
-* This is not necessarily a full Go port of Miller. At the moment, it's a little spot for some experimentation. Things are very rough and very iterative and very incomplete. I don't commit to finishing a Go port but I very much hope to.
-* One reason Miller exists is to be a useful tool for myself and others; another is it's fun to write. At bare minimum, I'll re-teach myself some Go.
-* In all likelihood, though, this will turn into a full port which will someday become Miller 6.0. As noted below, this will be a win both at the source-code level, and for users of Miller.
+* This will be a full Go port of Miller. Things are very rough and very iterative and very incomplete. I don't have a firm timeline but I suspect it will take a few more months of late-evening/spare-time work.
+* The released Go port will become Miller 6.0. As noted below, this will be a win both at the source-code level, and for users of Miller.
 * I hope to retain backward compatibility at the command-line level as much as possible.
 * In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
 
 # Trying out the Go port
 
-* Caveat: *lots* of things present in the C implementaiton are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it doesn't work *yet*.
+* Caveat: *lots* of things present in the C implementation are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it doesn't work *yet*.
 * That said, if anyone is interested in playing around with it and giving early feedback, I'll be happy for it.
 * Building:
   * Clone the Miller repo
