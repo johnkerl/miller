@@ -1605,3 +1605,45 @@ RAW AST:
             * Return "return"
                 * IntLiteral "1"
 
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(x, y) { z = 3}
+DSL EXPRESSION:
+func f(x, y) { z = 3}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "x"
+            * Parameter
+                * ParameterName "y"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "z"
+                * IntLiteral "3"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v func f(var x, var y): var { var z = 3}
+DSL EXPRESSION:
+func f(var x, var y): var { var z = 3}
+RAW AST:
+* StatementBlock
+    * FunctionDefinition "f"
+        * ParameterList
+            * Parameter
+                * ParameterName "x"
+                    * Typedecl "var"
+            * Parameter
+                * ParameterName "y"
+                    * Typedecl "var"
+        * StatementBlock
+            * Assignment "="
+                * LocalVariable "z"
+                    * Typedecl "var"
+                * IntLiteral "3"
+        * Typedecl "var"
+

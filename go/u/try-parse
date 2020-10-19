@@ -126,3 +126,5 @@ echo; run_mlr -n put -v 'func f(a,b,){return 1}'
 echo; run_mlr -n put -v 'func f(a,b,c){return 1}'
 echo; run_mlr -n put -v 'func f(a,b,c,){return 1}'
 
+echo; run_mlr -n put -v 'func f(x, y) { z = 3}'
+echo; run_mlr -n put -v 'func f(var x, var y): var { var z = 3}'

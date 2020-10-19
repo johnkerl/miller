@@ -217,7 +217,12 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		parameterNameASTNode := parameterASTNode.Children[0]
 
 		lib.InternalCodingErrorIf(parameterNameASTNode.Type != dsl.NodeTypeParameterName)
-		lib.InternalCodingErrorIf(parameterNameASTNode.Children != nil)
+		if parameterNameASTNode.Children == nil {
+			// untyped parameter
+		} else {
+			// typed parameter
+			lib.InternalCodingErrorIf(len(parameterNameASTNode.Children) != 1)
+		}
 
 		parameterNames[i] = string(parameterNameASTNode.Token.Lit)
 	}
