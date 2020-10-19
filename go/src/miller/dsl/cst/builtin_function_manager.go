@@ -392,6 +392,12 @@ Leaves non-numbers as-is.`,
 		name:        "gsub",
 		ternaryFunc: types.MlrvalGsub,
 	},
+	{
+		name: "substr",
+		help: `substr(s,m,n) gives substring of s from 1-up position m to n
+inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
+		ternaryFunc: types.MlrvalSubstr,
+	},
 
 	// Variadic built-in functions
 	{

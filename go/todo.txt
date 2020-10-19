@@ -4,8 +4,6 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
-  o strlen
-  o substr
   o take another look at mlr -n and seqgen -- ?
     - rand-walk seqgen-then example
     - mlr -n put -f mand.mlr
@@ -185,6 +183,7 @@ NITS/NON-IMMEDIATE:
   o if so, update r.mds
 * keep or get rid of $[[[ ]]] ... ?
 * 1-up note from mlrval_collections -> doc6
+  o substr -- not backward-compatible
   o example of key-stringify to get truly awkish associative-array behavior
   o also $1 vs $[1] -- the former 'sticks' with input-data ordering.
   o moral: miller is a name-indexed tool as its primary purpose. positional

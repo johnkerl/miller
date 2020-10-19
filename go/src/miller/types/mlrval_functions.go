@@ -1716,6 +1716,35 @@ func MlrvalStrlen(ma *Mlrval) Mlrval {
 }
 
 // ================================================================
+// substr(s,m,n) gives substring of s from 1-up position m to n inclusive.
+// Negative indices -len .. -1 alias to 0 .. len-1.
+
+func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
+	if !ma.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mb.IsInt() {
+		return MlrvalFromError()
+	}
+	if !mc.IsInt() {
+		return MlrvalFromError()
+	}
+	strlen := int64(len(ma.printrep))
+
+	// Convert from negative-aliased 1-up to positive-only 0-up
+	m, mok := unaliasArrayLengthIndex(strlen, mb.intval)
+	n, nok := unaliasArrayLengthIndex(strlen, mc.intval)
+
+	if !mok || !nok {
+		return MlrvalFromString("")
+	} else {
+		// Note Golang slice indices are 0-up, and the 1st index is inclusive
+		// while the 2nd is exclusive.
+		return MlrvalFromString(ma.printrep[m : n+1])
+	}
+}
+
+// ================================================================
 func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
 	if ma.IsErrorOrAbsent() {
 		return *ma
