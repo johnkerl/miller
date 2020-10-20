@@ -256,6 +256,11 @@ Leaves non-numbers as-is.`,
 		help:      "String length.",
 		unaryFunc: types.MlrvalStrlen,
 	},
+	{
+		name:      "typeof",
+		help:      "Convert argument to type of argument (e.g. \"str\"). For debug.",
+		unaryFunc: types.MlrvalTypeof,
+	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions

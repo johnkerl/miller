@@ -5,6 +5,7 @@ TOP OF LIST:
 
 * UDF nexts:
   o string/int functions
+  o typeof functio
   o is_x and asserting_x
   o put -s ...
   o take another look at mlr -n and seqgen -- ?

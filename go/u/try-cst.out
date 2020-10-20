@@ -3241,3 +3241,16 @@ a=wye,b=wye,i=3,x=0.20460330576630303,y=6
 a=eks,b=wye,i=4,x=0.38139939387114097,y=6
 mlr --from u/s.dkvp put func f(x): str { return 2*x} $y=f(3)
 mlr --from u/s.dkvp put func f(x): arr { return 2*x} $y=f(3)
+
+----------------------------------------------------------------
+mlr --idkvp --opprint --from u/s.dkvp put 
+  for (k, v in $*) {
+    $["t".k] = typeof(v)
+  }
+  $tnonesuch = typeof($nonesuch)
+
+a   b   i x                   y                   ta  tb  ti  tx    ty    tnonesuch
+pan pan 1 0.3467901443380824  0.7268028627434533  str str int float float absent
+eks pan 2 0.7586799647899636  0.5221511083334797  str str int float float absent
+wye wye 3 0.20460330576630303 0.33831852551664776 str str int float float absent
+eks wye 4 0.38139939387114097 0.13418874328430463 str str int float float absent
