@@ -345,6 +345,7 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
 
 	variableName := string(astNode.Token.Lit)
+	// TODO: type-gated mlrval
 	return NewLocalVariableLvalueNode(variableName), nil
 }
 

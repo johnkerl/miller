@@ -108,5 +108,5 @@ type BlockExitPayload struct {
 	blockExitStatus BlockExitStatus
 	// No multiple return yet in the Miller DSL -- if there were, this would be
 	// an array.
-	blockReturnValue *types.Mlrval
+	blockReturnValue *types.Mlrval // TODO: TypeGatedMlrval
 }

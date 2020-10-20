@@ -17,7 +17,7 @@ import (
 type Signature struct {
 	functionName   string
 	arity          int // Computable from len(parameterNames) at callee, not at caller
-	parameterNames []string
+	parameterNames []string // TODO: type-gated names
 
 	// TODO: parameter typedecls
 	// TODO: return-value typedecls

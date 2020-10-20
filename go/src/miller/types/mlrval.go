@@ -106,17 +106,36 @@ var TYPE_NAMES = [MT_DIM]string{
 	"map",
 }
 
-// TODO: comment more re typedecls
-type MVTypeMask int
+// ----------------------------------------------------------------
+// For typed assignments in the DSL
 
-const (
-	MT_TYPE_MASK_STRING MVTypeMask = (1 << MT_STRING) | (1 << MT_VOID)
-	MT_TYPE_MASK_INT               = 1 << MT_INT
-	MT_TYPE_MASK_FLOAT             = 1 << MT_FLOAT
-	MT_TYPE_MASK_NUM               = (1 << MT_INT) | (1 << MT_FLOAT)
-	MT_TYPE_MASK_BOOL              = 1 << MT_BOOL
-	MT_TYPE_MASK_ARRAY             = 1 << MT_ARRAY
-	MT_TYPE_MASK_MAP               = 1 << MT_MAP
-	MT_TYPE_MASK_VAR               = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
-		(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
-)
+// TODO: comment more re typedecls
+const MT_TYPE_MASK_STRING = (1 << MT_STRING) | (1 << MT_VOID)
+const MT_TYPE_MASK_INT = 1 << MT_INT
+const MT_TYPE_MASK_FLOAT = 1 << MT_FLOAT
+const MT_TYPE_MASK_NUM = (1 << MT_INT) | (1 << MT_FLOAT)
+const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
+const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
+const MT_TYPE_MASK_MAP = 1 << MT_MAP
+const MT_TYPE_MASK_VAR = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
+	(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
+
+var typeNameToMaskMap = map[string]int{
+	"var":    MT_TYPE_MASK_VAR,
+	"string": MT_TYPE_MASK_STRING,
+	"int":    MT_TYPE_MASK_INT,
+	"float":  MT_TYPE_MASK_FLOAT,
+	"num":    MT_TYPE_MASK_NUM,
+	"bool":   MT_TYPE_MASK_BOOL,
+	"arr":    MT_TYPE_MASK_ARRAY,
+	"map":    MT_TYPE_MASK_MAP,
+}
+
+func TypeNameToMask(typeName string) (mask int, present bool) {
+	retval := typeNameToMaskMap[typeName]
+	if retval != 0 {
+		return retval, true
+	} else {
+		return 0, false
+	}
+}

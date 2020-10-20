@@ -40,6 +40,8 @@ func (this *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, er
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
 
+	// TODO: get type-gate mask
+
 	return &ContinueNode{}, nil
 }
 
@@ -80,7 +82,7 @@ func (this *ReturnNode) Execute(state *State) (*BlockExitPayload, error) {
 		}, nil
 	} else {
 		// This can be of type MT_ERROR but there is no Go-level error return
-		returnValue := this.returnValueExpression.Evaluate(state)
+		returnValue := this.returnValueExpression.Evaluate(state) // TODO: TypeGatedMlrval
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VALUE,
 			&returnValue,
