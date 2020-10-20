@@ -338,20 +338,37 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 
 // ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
-	variableName string
+	typeGatedMlrvalName *types.TypeGatedMlrvalName
 }
 
 func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
 
 	variableName := string(astNode.Token.Lit)
+	typeName := "var"
+	if astNode.Children != nil { // typed, like 'num x = 3'
+		typeNode := astNode.Children[0]
+		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
+		typeName = string(typeNode.Token.Lit)
+	}
+	typeGatedMlrvalName, err := types.NewTypeGatedMlrvalName(
+		variableName,
+		typeName,
+	)
+	if err != nil {
+		return nil, err
+	}
 	// TODO: type-gated mlrval
-	return NewLocalVariableLvalueNode(variableName), nil
+	return NewLocalVariableLvalueNode(
+		typeGatedMlrvalName,
+	), nil
 }
 
-func NewLocalVariableLvalueNode(variableName string) *LocalVariableLvalueNode {
+func NewLocalVariableLvalueNode(
+	typeGatedMlrvalName *types.TypeGatedMlrvalName,
+) *LocalVariableLvalueNode {
 	return &LocalVariableLvalueNode{
-		variableName: variableName,
+		typeGatedMlrvalName: typeGatedMlrvalName,
 	}
 }
 
@@ -370,7 +387,11 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	if indices == nil {
-		state.stack.SetVariable(this.variableName, rvalue)
+		err := this.typeGatedMlrvalName.Check(rvalue)
+		if err != nil {
+			return err
+		}
+		state.stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
 		return nil
 	} else {
 		// TODO

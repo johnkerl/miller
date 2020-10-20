@@ -98,11 +98,11 @@ var TYPE_NAMES = [MT_DIM]string{
 	"error",
 	"absent",
 	"void",
-	"string",
+	"str",
 	"int",
 	"float",
 	"bool",
-	"array",
+	"arr",
 	"map",
 }
 
@@ -121,14 +121,14 @@ const MT_TYPE_MASK_VAR = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
 	(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
 
 var typeNameToMaskMap = map[string]int{
-	"var":    MT_TYPE_MASK_VAR,
-	"string": MT_TYPE_MASK_STRING,
-	"int":    MT_TYPE_MASK_INT,
-	"float":  MT_TYPE_MASK_FLOAT,
-	"num":    MT_TYPE_MASK_NUM,
-	"bool":   MT_TYPE_MASK_BOOL,
-	"arr":    MT_TYPE_MASK_ARRAY,
-	"map":    MT_TYPE_MASK_MAP,
+	"var":   MT_TYPE_MASK_VAR,
+	"str":   MT_TYPE_MASK_STRING,
+	"int":   MT_TYPE_MASK_INT,
+	"float": MT_TYPE_MASK_FLOAT,
+	"num":   MT_TYPE_MASK_NUM,
+	"bool":  MT_TYPE_MASK_BOOL,
+	"arr":   MT_TYPE_MASK_ARRAY,
+	"map":   MT_TYPE_MASK_MAP,
 }
 
 func TypeNameToMask(typeName string) (mask int, present bool) {
@@ -138,4 +138,8 @@ func TypeNameToMask(typeName string) (mask int, present bool) {
 	} else {
 		return 0, false
 	}
+}
+
+func (this *Mlrval) GetTypeBit() int {
+	return 1 << this.mvtype
 }

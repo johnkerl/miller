@@ -2,13 +2,32 @@
 
 set -euo pipefail
 
+# ================================================================
+path_to_mlr="./mlr"
+
 run_mlr() {
   # Use just "mlr" for info messages
   echo
   echo ----------------------------------------------------------------
   echo mlr "$@"
-  ./mlr "$@"
+  $path_to_mlr "$@"
 }
+
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+  echo mlr "$@"
+  # Use path to mlr for invoking the command
+  set +e
+  $path_to_mlr "$@"
+  status=$?
+  if [ $status -ne 1 ]; then
+    echo "Exit status was $status; expected 1."
+  fi
+  set -e
+  test $status -eq 1
+  # since set -e
+}
+# ================================================================
 
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put ''
 
@@ -398,3 +417,9 @@ echo; run_mlr --from u/s.dkvp --opprint put '
 echo; run_mlr --opprint --from u/ten.dkvp put -f u/f.mlr
 echo; run_mlr --opprint --from u/ten.dkvp put -f u/ff.mlr
 echo; run_mlr --opprint --from u/ten.dkvp put -f u/fg.mlr
+
+run_mlr         --from u/s.dkvp put 'var x = 3'
+run_mlr         --from u/s.dkvp put 'int x = 3'
+run_mlr         --from u/s.dkvp put 'num x = 3'
+mlr_expect_fail --from u/s.dkvp put 'str x = 3'
+mlr_expect_fail --from u/s.dkvp put 'arr x = 3'
