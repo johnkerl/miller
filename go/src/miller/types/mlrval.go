@@ -105,3 +105,18 @@ var TYPE_NAMES = [MT_DIM]string{
 	"array",
 	"map",
 }
+
+// TODO: comment more re typedecls
+type MVTypeMask int
+
+const (
+	MT_TYPE_MASK_STRING MVTypeMask = (1 << MT_STRING) | (1 << MT_VOID)
+	MT_TYPE_MASK_INT               = 1 << MT_INT
+	MT_TYPE_MASK_FLOAT             = 1 << MT_FLOAT
+	MT_TYPE_MASK_NUM               = (1 << MT_INT) | (1 << MT_FLOAT)
+	MT_TYPE_MASK_BOOL              = 1 << MT_BOOL
+	MT_TYPE_MASK_ARRAY             = 1 << MT_ARRAY
+	MT_TYPE_MASK_MAP               = 1 << MT_MAP
+	MT_TYPE_MASK_VAR               = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
+		(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
+)

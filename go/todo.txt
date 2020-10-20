@@ -4,14 +4,14 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
+  o typedecls
+  o is_x and asserting_x
+  o put -s ...
   o take another look at mlr -n and seqgen -- ?
     - rand-walk seqgen-then example
     - mlr -n put -f mand.mlr
   o regexes & associated functions -- necessary or not?
 
-! put -s ...
-! is_x and asserting_x
-! local vars w/ typing; UDFs with typing at parameters & retvals
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
