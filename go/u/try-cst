@@ -448,3 +448,11 @@ run_mlr --idkvp --opprint --from u/s.dkvp put '
   }
   $tnonesuch = typeof($nonesuch)
 '
+
+run_mlr --idkvp --opprint --from u/s.dkvp put '
+  for (k, v in $*) {
+    $["s".k] = string(v)
+  }
+  $snonesuch = string($nonesuch)
+'
+

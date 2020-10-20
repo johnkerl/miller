@@ -1721,6 +1721,11 @@ func MlrvalTypeof(ma *Mlrval) Mlrval {
 }
 
 // ================================================================
+func MlrvalToString(ma *Mlrval) Mlrval {
+	return MlrvalFromString(ma.String())
+}
+
+// ================================================================
 // substr(s,m,n) gives substring of s from 1-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 

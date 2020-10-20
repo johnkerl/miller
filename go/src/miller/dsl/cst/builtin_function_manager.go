@@ -247,6 +247,11 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalRStrip,
 	},
 	{
+		name:      "string",
+		help:      "Convert int/float/bool/string/array/map to string.",
+		unaryFunc: types.MlrvalToString,
+	},
+	{
 		name:      "strip",
 		help:      "Strip leading and trailing whitespace from string.",
 		unaryFunc: types.MlrvalStrip,
