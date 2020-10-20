@@ -590,6 +590,14 @@ Assignment
       dsl.NodeTypeAssignment,
     ) >>
 
+  | Lvalue "??=" Rvalue
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("=", $1),
+      $0,
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("??", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NodeTypeAssignment,
+    ) >>
+
   | Lvalue "|=" Rvalue
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", $1),
@@ -730,7 +738,13 @@ LogicalXORTerm
 ;
 
 LogicalAndTerm
-  : LogicalAndTerm "&&" EqneTerm
+  : LogicalAndTerm "&&" AbsentCoalesceTerm
+    << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AbsentCoalesceTerm
+;
+
+AbsentCoalesceTerm
+  : AbsentCoalesceTerm "??" EqneTerm
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | EqneTerm
 ;

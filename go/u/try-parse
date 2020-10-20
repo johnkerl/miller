@@ -38,6 +38,9 @@ echo; run_mlr -n put -v '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff'
 echo; run_mlr -n put -v '$z=0x7fffffffffffffff  * 0x7fffffffffffffff'
 echo; run_mlr -n put -v '$z=0x7fffffffffffffff .* 0x7fffffffffffffff'
 
+echo; run_mlr -n put -v '$y = 1 * 2 ?? 3'
+echo; run_mlr -n put -v '$y = 1 ?? 2 * 3'
+
 echo; run_mlr -n put -v '$z = []'
 echo; run_mlr -n put -v '$z = [1,]'
 echo; run_mlr -n put -v '$z = [1,2]'

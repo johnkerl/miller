@@ -369,6 +369,38 @@ RAW AST:
 
 
 ----------------------------------------------------------------
+mlr -n put -v $y = 1 * 2 ?? 3
+DSL EXPRESSION:
+$y = 1 * 2 ?? 3
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "y"
+        * Operator "??"
+            * Operator "*"
+                * IntLiteral "1"
+                * IntLiteral "2"
+            * IntLiteral "3"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v $y = 1 ?? 2 * 3
+DSL EXPRESSION:
+$y = 1 ?? 2 * 3
+RAW AST:
+* StatementBlock
+    * Assignment "="
+        * DirectFieldValue "y"
+        * Operator "??"
+            * IntLiteral "1"
+            * Operator "*"
+                * IntLiteral "2"
+                * IntLiteral "3"
+
+
+
+----------------------------------------------------------------
 mlr -n put -v $z = []
 DSL EXPRESSION:
 $z = []

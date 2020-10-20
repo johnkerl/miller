@@ -117,6 +117,12 @@ echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  || %%%panic%%%'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = true  ? 4 : %%%panic%%%'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = false ? %%%panic%%% : 5'
 
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = $x ?? %%%panic%%%'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = $x ?? 999'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = $nonesuch ?? 999'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$y ??= 999'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z ??= 999'
+
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$z = "abc\"def\"ghi"'
 
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put -v '$i += 2'

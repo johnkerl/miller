@@ -14,6 +14,9 @@ TOP OF LIST:
   o regexes & associated functions -- necessary or not?
   o ?? operator for absent-overrides -- ?
 
+* UT:
+  o 2> tmpfiles w aftercat -- ?
+
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
@@ -200,3 +203,4 @@ NITS/NON-IMMEDIATE:
 * doc note 'array' is now a keyword
 * dump is now redundant? print @*
 * double-check dump CR-terminators depending on expression type
+* doc nullish-coalesece, along with its precedence

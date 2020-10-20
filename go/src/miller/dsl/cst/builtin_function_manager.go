@@ -334,7 +334,11 @@ Leaves non-numbers as-is.`,
 		binaryFunc: BinaryShortCircuitPlaceholder,
 	},
 	{
-		name:       "^&",
+		name:       "??",
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+	{
+		name:       "^^",
 		binaryFunc: types.MlrvalLogicalXOR,
 	},
 	{

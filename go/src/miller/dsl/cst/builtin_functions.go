@@ -189,6 +189,12 @@ func (this *RootNode) BuildBinaryFunctionCallsiteNode(
 			evaluable2,
 		), nil
 	}
+	if builtinFunctionInfo.name == "??" {
+		return this.BuildAbsentCoalesceOperatorNode(
+			evaluable1,
+			evaluable2,
+		), nil
+	}
 
 	return &BinaryFunctionCallsiteNode{
 		binaryFunc: builtinFunctionInfo.binaryFunc,
@@ -375,7 +381,7 @@ func (this *RootNode) BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROper
 
 // This is different from most of the evaluator functions in that it does
 // short-circuiting: since is logical OR, the second argument is not evaluated
-// if the first argumeent is false.
+// if the first argument is false.
 //
 // See the disposition-matrix discussion for LogicalANDOperator.
 func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
@@ -404,6 +410,27 @@ func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
 		return bout
 	}
 	return types.MlrvalLogicalOR(&aout, &bout)
+}
+
+// ================================================================
+type AbsentCoalesceOperatorNode struct{ a, b IEvaluable }
+
+func (this *RootNode) BuildAbsentCoalesceOperatorNode(a, b IEvaluable) *AbsentCoalesceOperatorNode {
+	return &AbsentCoalesceOperatorNode{a: a, b: b}
+}
+
+// This is different from most of the evaluator functions in that it does
+// short-circuiting: the second argument is not evaluated if the first
+// argument is not absent.
+func (this *AbsentCoalesceOperatorNode) Evaluate(state *State) types.Mlrval {
+	aout := this.a.Evaluate(state)
+	atype := aout.GetType()
+	if atype != types.MT_ABSENT {
+		return aout
+	}
+
+	bout := this.b.Evaluate(state)
+	return bout
 }
 
 // ================================================================
