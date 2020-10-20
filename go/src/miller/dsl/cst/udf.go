@@ -19,6 +19,7 @@ type Signature struct {
 	functionName            string
 	arity                   int // Computable from len(typeGatedParameterNames) at callee, not at caller
 	typeGatedParameterNames []*types.TypeGatedMlrvalName
+	typeGatedReturnValue    *types.TypeGatedMlrvalName
 
 	// TODO: parameter typedecls
 	// TODO: return-value typedecls
@@ -28,11 +29,13 @@ func NewSignature(
 	functionName string,
 	arity int,
 	typeGatedParameterNames []*types.TypeGatedMlrvalName,
+	typeGatedReturnValue *types.TypeGatedMlrvalName,
 ) *Signature {
 	return &Signature{
 		functionName:            functionName,
 		arity:                   arity,
 		typeGatedParameterNames: typeGatedParameterNames,
+		typeGatedReturnValue:    typeGatedReturnValue,
 	}
 }
 
@@ -58,7 +61,7 @@ func NewUnresolvedUDF(
 	functionName string,
 	callsiteArity int,
 ) *UDF {
-	signature := NewSignature(functionName, callsiteArity, nil)
+	signature := NewSignature(functionName, callsiteArity, nil, nil)
 	udf := NewUDF(signature, nil)
 	return udf
 }
@@ -131,6 +134,16 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	// Definitely a Miller internal coding error if the user put 'return x' in
 	// their UDF but we lost the return value.
 	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue == nil)
+
+	err = this.udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
+	if err != nil {
+		// TODO: put error-return in the Evaluate API
+		fmt.Fprint(
+			os.Stderr,
+			err,
+		)
+		os.Exit(1)
+	}
 
 	return *blockExitPayload.blockReturnValue
 }
@@ -216,7 +229,17 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	functionName := string(astNode.Token.Lit)
 	parameterListASTNode := astNode.Children[0]
 	functionBodyASTNode := astNode.Children[1]
-	// TODO: optional typedecl 3rd arg
+
+	returnValueTypeName := "var"
+	if len(astNode.Children) == 3 {
+		typeNode := astNode.Children[2]
+		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
+		returnValueTypeName = string(typeNode.Token.Lit)
+	}
+	typeGatedReturnValue, err := types.NewTypeGatedMlrvalName(
+		"function return value",
+		returnValueTypeName,
+	)
 
 	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
@@ -248,7 +271,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		typeGatedParameterNames[i] = typeGatedParameterName
 	}
 
-	signature := NewSignature(functionName, arity, typeGatedParameterNames)
+	signature := NewSignature(functionName, arity, typeGatedParameterNames, typeGatedReturnValue)
 
 	functionBody, err := this.BuildStatementBlockNode(functionBodyASTNode)
 	if err != nil {
