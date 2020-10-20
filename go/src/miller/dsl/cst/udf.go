@@ -3,6 +3,7 @@ package cst
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -15,9 +16,9 @@ import (
 
 // ----------------------------------------------------------------
 type Signature struct {
-	functionName   string
-	arity          int      // Computable from len(parameterNames) at callee, not at caller
-	parameterNames []string // TODO: type-gated names
+	functionName            string
+	arity                   int // Computable from len(typeGatedParameterNames) at callee, not at caller
+	typeGatedParameterNames []*types.TypeGatedMlrvalName
 
 	// TODO: parameter typedecls
 	// TODO: return-value typedecls
@@ -26,12 +27,12 @@ type Signature struct {
 func NewSignature(
 	functionName string,
 	arity int,
-	parameterNames []string,
+	typeGatedParameterNames []*types.TypeGatedMlrvalName,
 ) *Signature {
 	return &Signature{
-		functionName:   functionName,
-		arity:          arity,
-		parameterNames: parameterNames,
+		functionName:            functionName,
+		arity:                   arity,
+		typeGatedParameterNames: typeGatedParameterNames,
 	}
 }
 
@@ -89,9 +90,20 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 
-	for i, parameterName := range this.udf.signature.parameterNames {
+	for i, typeGatedParameterName := range this.udf.signature.typeGatedParameterNames {
 		argument := this.argumentNodes[i].Evaluate(state)
-		state.stack.BindVariable(parameterName, &argument)
+
+		err := typeGatedParameterName.Check(&argument)
+		if err != nil {
+			// TODO: put error-return in the Evaluate API
+			fmt.Fprint(
+				os.Stderr,
+				err,
+			)
+			os.Exit(1)
+		}
+
+		state.stack.BindVariable(typeGatedParameterName.Name, &argument)
 	}
 
 	// Execute the function body.
@@ -209,25 +221,34 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
 	arity := len(parameterListASTNode.Children)
-	parameterNames := make([]string, arity)
+	typeGatedParameterNames := make([]*types.TypeGatedMlrvalName, arity)
 	for i, parameterASTNode := range parameterListASTNode.Children {
 		lib.InternalCodingErrorIf(parameterASTNode.Type != dsl.NodeTypeParameter)
 		lib.InternalCodingErrorIf(parameterASTNode.Children == nil)
 		lib.InternalCodingErrorIf(len(parameterASTNode.Children) != 1)
-		parameterNameASTNode := parameterASTNode.Children[0]
+		typeGatedParameterNameASTNode := parameterASTNode.Children[0]
 
-		lib.InternalCodingErrorIf(parameterNameASTNode.Type != dsl.NodeTypeParameterName)
-		if parameterNameASTNode.Children == nil {
-			// untyped parameter
-		} else {
-			// typed parameter
-			lib.InternalCodingErrorIf(len(parameterNameASTNode.Children) != 1)
+		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != dsl.NodeTypeParameterName)
+		variableName := string(typeGatedParameterNameASTNode.Token.Lit)
+		typeName := "var"
+		if typeGatedParameterNameASTNode.Children != nil { // typed parameter like 'num x'
+			lib.InternalCodingErrorIf(len(typeGatedParameterNameASTNode.Children) != 1)
+			typeNode := typeGatedParameterNameASTNode.Children[0]
+			lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
+			typeName = string(typeNode.Token.Lit)
+		}
+		typeGatedParameterName, err := types.NewTypeGatedMlrvalName(
+			variableName,
+			typeName,
+		)
+		if err != nil {
+			return err
 		}
 
-		parameterNames[i] = string(parameterNameASTNode.Token.Lit)
+		typeGatedParameterNames[i] = typeGatedParameterName
 	}
 
-	signature := NewSignature(functionName, arity, parameterNames)
+	signature := NewSignature(functionName, arity, typeGatedParameterNames)
 
 	functionBody, err := this.BuildStatementBlockNode(functionBodyASTNode)
 	if err != nil {
