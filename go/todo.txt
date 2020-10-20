@@ -4,13 +4,15 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
-  o typedecls
+  o string/int functions
   o is_x and asserting_x
   o put -s ...
   o take another look at mlr -n and seqgen -- ?
     - rand-walk seqgen-then example
-    - mlr -n put -f mand.mlr
+    - mlr -n put -f sieve.mlr
+    - mlr --from /dev/null put -f sieve.mlr
   o regexes & associated functions -- necessary or not?
+  o ?? operator for absent-overrides -- ?
 
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
@@ -98,7 +100,8 @@ CATEGORIES:
     ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
   o typed localvars
   o for-knv
-  * profile mand.mlr & check for need for idx-assign
+  o profile mand.mlr & check for need for idx-assign
+    -> most definitely needed
   o indexed localvars at LHS
   o multiple-valued return/assign -- ?
     - array destructure at LHS for multi-retval assign (maps too?)
