@@ -143,7 +143,22 @@ func validdteASTAux(
 	}
 
 	// Check: enforce return-value iff in a function; return-void iff in a subroutine
-	//   o TODO
+	if astNode.Type == dsl.NodeTypeReturn {
+		if inUDF {
+			if len(astNode.Children) != 1 {
+				return errors.New(
+					"Miller: return statements in func blocks must return a value.",
+				)
+			}
+		}
+		if inUDS {
+			if len(astNode.Children) != 0 {
+				return errors.New(
+					"Miller: return statements in subr blocks must not return a value.",
+				)
+			}
+		}
+	}
 
 	// Check: filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
 	//   o TODO
