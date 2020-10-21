@@ -3194,7 +3194,9 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 mlr --from u/s.dkvp put str x = 3
+Miller: couldn't assign variable str x from value int 3
 mlr --from u/s.dkvp put arr x = 3
+Miller: couldn't assign variable arr x from value int 3
 
 ----------------------------------------------------------------
 mlr --from u/s.dkvp put func f(var x) { return 2*x} $y=f(3)
@@ -3217,7 +3219,9 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=6
 a=wye,b=wye,i=3,x=0.20460330576630303,y=6
 a=eks,b=wye,i=4,x=0.38139939387114097,y=6
 mlr --from u/s.dkvp put func f(str x) { return 2*x} $y=f(3)
+Miller: couldn't assign variable str x from value int 3
 mlr --from u/s.dkvp put func f(arr x) { return 2*x} $y=f(3)
+Miller: couldn't assign variable arr x from value int 3
 
 ----------------------------------------------------------------
 mlr --from u/s.dkvp put func f(x): var { return 2*x} $y=f(3)
@@ -3240,7 +3244,9 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=6
 a=wye,b=wye,i=3,x=0.20460330576630303,y=6
 a=eks,b=wye,i=4,x=0.38139939387114097,y=6
 mlr --from u/s.dkvp put func f(x): str { return 2*x} $y=f(3)
+Miller: couldn't assign variable str function return value from value int 6
 mlr --from u/s.dkvp put func f(x): arr { return 2*x} $y=f(3)
+Miller: couldn't assign variable arr function return value from value int 6
 
 ----------------------------------------------------------------
 mlr --idkvp --opprint --from u/s.dkvp put 

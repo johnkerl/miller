@@ -3,19 +3,6 @@ TOP OF LIST:
 
 * window.mlr, window2.mlr -> doc somewhere
 
-* UDF nexts:
-  o is_x and asserting_x
-  o put -s ...
-  o regexes & associated functions -- necessary or not?
-  o json_parse / json_stringify functions?
-
-* UT:
-  o 2> tmpfiles w aftercat -- ?
-
-* Check for "Options:" in all mappers
-* check for `f.Value` reassigned in all mappers -- reflects true default?
-* UDS
-
 ! CST validators
   o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
@@ -33,6 +20,17 @@ TOP OF LIST:
     - is last statement in main block
     - is on LHS of assignment
   o mlr_expect_fail macro
+
+* UDF nexts:
+  o is_x and asserting_x
+  o put -s ...
+  o check for multiple put -f; any/multiple put -e
+  o regexes & associated functions -- necessary or not?
+  o json_parse / json_stringify functions?
+
+* Check for "Options:" in all mappers
+* check for `f.Value` reassigned in all mappers -- reflects true default?
+* UDS
 
 ! parse errors need some context somehow
 
