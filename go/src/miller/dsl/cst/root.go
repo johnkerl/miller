@@ -33,7 +33,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	// Check for things that are syntax errors but not done in the AST for
 	// pragmatic reasons. For example, $anything in begin/end blocks;
 	// begin/end/func not at top level; etc.
-	err := validationPass(ast)
+	err := ValidateAST(ast)
 	if err != nil {
 		return nil, err
 	}
@@ -51,10 +51,6 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	}
 
 	return cstRoot, nil
-}
-
-func validationPass(ast *dsl.AST) error {
-	return nil
 }
 
 // ----------------------------------------------------------------
