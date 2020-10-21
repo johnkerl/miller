@@ -4,15 +4,9 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
-  o string/int/float/bool functions
   o is_x and asserting_x
   o put -s ...
-  o take another look at mlr -n and seqgen -- ?
-    - rand-walk seqgen-then example
-    - mlr -n put -f sieve.mlr
-    - mlr --from /dev/null put -f sieve.mlr
   o regexes & associated functions -- necessary or not?
-  o ?? operator for absent-overrides -- ?
   o json_parse / json_stringify functions?
 
 * UT:

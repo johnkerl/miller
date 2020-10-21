@@ -63,11 +63,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	if options.FileNames != nil { // nil if mlr -n
-		err = stream.Stream(options, recordMappers)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
-			os.Exit(1)
-		}
+	err = stream.Stream(options, recordMappers)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+		os.Exit(1)
 	}
 }

@@ -132,6 +132,7 @@ type MapperPut struct {
 	cstState             *cst.State
 	callCount            int64
 	suppressOutputRecord bool
+	executedBeginBlocks  bool
 }
 
 func NewMapperPut(
@@ -168,6 +169,7 @@ func NewMapperPut(
 		cstState:             cstState,
 		callCount:            0,
 		suppressOutputRecord: suppressOutputRecord,
+		executedBeginBlocks:  false,
 	}, nil
 }
 
@@ -204,6 +206,7 @@ func (this *MapperPut) Map(
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
+			this.executedBeginBlocks = true
 		}
 
 		this.cstState.Update(inrec, &context)
@@ -224,6 +227,16 @@ func (this *MapperPut) Map(
 			}
 		}
 	} else {
+
+		// If there were no input records then we never executed the
+		// begin-blocks. Do so now.
+		if this.executedBeginBlocks == false {
+			err := this.cstRootNode.ExecuteBeginBlocks(this.cstState)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+		}
 
 		// Execute the end { ... } after the last input record
 		err := this.cstRootNode.ExecuteEndBlocks(this.cstState)

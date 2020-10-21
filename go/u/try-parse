@@ -94,9 +94,7 @@ echo; run_mlr -n put -v 'if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } e
 echo; run_mlr -n put -v 'for (k in $*) { emit { k : k } }'
 
 echo; run_mlr -n put -v 'begin {}'
-echo; run_mlr -n put -v 'begin {1}'
 echo; run_mlr -n put -v 'end {}'
-echo; run_mlr -n put -v 'end {1}'
 echo; run_mlr -n put -v 'if (1) {}'
 echo; run_mlr -n put -v 'if (1) {2}'
 echo; run_mlr -n put -v 'for (k in $*) {}'

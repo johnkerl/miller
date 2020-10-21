@@ -1126,19 +1126,6 @@ RAW AST:
 
 
 ----------------------------------------------------------------
-mlr -n put -v begin {1}
-DSL EXPRESSION:
-begin {1}
-RAW AST:
-* StatementBlock
-    * BeginBlock
-        * StatementBlock
-            * BareBoolean
-                * IntLiteral "1"
-
-
-
-----------------------------------------------------------------
 mlr -n put -v end {}
 DSL EXPRESSION:
 end {}
@@ -1146,19 +1133,6 @@ RAW AST:
 * StatementBlock
     * EndBlock
         * StatementBlock
-
-
-
-----------------------------------------------------------------
-mlr -n put -v end {1}
-DSL EXPRESSION:
-end {1}
-RAW AST:
-* StatementBlock
-    * EndBlock
-        * StatementBlock
-            * BareBoolean
-                * IntLiteral "1"
 
 
 

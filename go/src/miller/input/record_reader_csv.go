@@ -33,17 +33,19 @@ func (this *RecordReaderCSV) Read(
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
-	if len(filenames) == 0 { // read from stdin
-		handle := os.Stdin
-		this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
-	} else {
-		for _, filename := range filenames {
-			handle, err := os.Open(filename)
-			if err != nil {
-				errorChannel <- err
-			} else {
-				this.processHandle(handle, filename, &context, inputChannel, errorChannel)
-				handle.Close()
+	if filenames != nil { // nil for mlr -n
+		if len(filenames) == 0 { // read from stdin
+			handle := os.Stdin
+			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+		} else {
+			for _, filename := range filenames {
+				handle, err := os.Open(filename)
+				if err != nil {
+					errorChannel <- err
+				} else {
+					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					handle.Close()
+				}
 			}
 		}
 	}

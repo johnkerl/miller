@@ -463,3 +463,7 @@ run_mlr --j2p --from u/typecast.json put '
   $float   = float($a);
   $boolean = boolean($a);
 ' then reorder -f t,a
+
+run_mlr -n put -f u/sieve.mlr
+run_mlr --from /dev/null put -f u/sieve.mlr
+run_mlr --from u/s.dkvp put -q -f u/sieve.mlr
