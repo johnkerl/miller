@@ -30,9 +30,17 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
 
+	// Check for things that are syntax errors but not done in the AST for
+	// pragmatic reasons. For example, $anything in begin/end blocks;
+	// begin/end/func not at top level; etc.
+	err := validationPass(ast)
+	if err != nil {
+		return nil, err
+	}
+
 	cstRoot := NewEmptyRoot()
 
-	err := cstRoot.buildMainPass(ast)
+	err = cstRoot.buildMainPass(ast)
 	if err != nil {
 		return nil, err
 	}
@@ -43,6 +51,10 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	}
 
 	return cstRoot, nil
+}
+
+func validationPass(ast *dsl.AST) error {
+	return nil
 }
 
 // ----------------------------------------------------------------
