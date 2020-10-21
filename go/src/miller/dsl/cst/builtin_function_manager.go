@@ -246,11 +246,28 @@ Leaves non-numbers as-is.`,
 		help:      "Strip trailing whitespace from string.",
 		unaryFunc: types.MlrvalRStrip,
 	},
+
 	{
 		name:      "string",
 		help:      "Convert int/float/bool/string/array/map to string.",
 		unaryFunc: types.MlrvalToString,
 	},
+	{
+		name:      "int",
+		help:      "Convert int/float/bool/string to int.",
+		unaryFunc: types.MlrvalToInt,
+	},
+	{
+		name:      "float",
+		help:      "Convert int/float/bool/string to float.",
+		unaryFunc: types.MlrvalToFloat,
+	},
+	{
+		name:      "boolean",
+		help:      "Convert int/float/bool/string to boolean.",
+		unaryFunc: types.MlrvalToBoolean,
+	},
+
 	{
 		name:      "strip",
 		help:      "Strip leading and trailing whitespace from string.",

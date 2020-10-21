@@ -82,3 +82,22 @@ func TryInt64FromString(input string) (int64, bool) {
 		return 0, false
 	}
 }
+
+func TryFloat64FromString(input string) (float64, bool) {
+	ival, err := strconv.ParseFloat(input, 64)
+	if err == nil {
+		return ival, true
+	} else {
+		return 0, false
+	}
+}
+
+func TryBoolFromBoolString(input string) (bool, bool) {
+	if input == "true" {
+		return true, true
+	} else if input == "false" {
+		return false, true
+	} else {
+		return false, false
+	}
+}

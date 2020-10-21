@@ -2,7 +2,6 @@ package types
 
 import (
 	"errors"
-	"strconv"
 
 	"miller/lib"
 )
@@ -108,7 +107,7 @@ func MlrvalFromInt64(input int64) Mlrval {
 // xxx comment why two -- one for from parsed user data; other for from math ops
 // xxx comment assummption is input-string already deemed parseable so no error return
 func MlrvalFromFloat64String(input string) Mlrval {
-	fval, ok := tryFloat64FromString(input)
+	fval, ok := lib.TryFloat64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	lib.InternalCodingErrorIf(!ok)
 	return Mlrval{
@@ -133,15 +132,6 @@ func MlrvalFromFloat64(input float64) Mlrval {
 		boolval:       false,
 		arrayval:      nil,
 		mapval:        nil,
-	}
-}
-
-func tryFloat64FromString(input string) (float64, bool) {
-	ival, err := strconv.ParseFloat(input, 64)
-	if err == nil {
-		return ival, true
-	} else {
-		return 0, false
 	}
 }
 
@@ -188,16 +178,6 @@ func MlrvalFromBoolString(input string) Mlrval {
 	// else panic
 }
 
-func tryBoolFromBoolString(input string) (bool, bool) {
-	if input == "true" {
-		return true, true
-	} else if input == "false" {
-		return false, true
-	} else {
-		return false, false
-	}
-}
-
 func MlrvalFromInferredType(input string) Mlrval {
 	// xxx the parsing has happened so stash it ...
 	// xxx emphasize the invariant that a non-invalid printrep always
@@ -207,12 +187,12 @@ func MlrvalFromInferredType(input string) Mlrval {
 		return MlrvalFromInt64String(input)
 	}
 
-	_, fok := tryFloat64FromString(input)
+	_, fok := lib.TryFloat64FromString(input)
 	if fok {
 		return MlrvalFromFloat64String(input)
 	}
 
-	_, bok := tryBoolFromBoolString(input)
+	_, bok := lib.TryBoolFromBoolString(input)
 	if bok {
 		return MlrvalFromBoolString(input)
 	}

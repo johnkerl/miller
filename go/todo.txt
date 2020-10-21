@@ -4,8 +4,7 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
-  o string/int functions
-  o typeof functio
+  o string/int/float/bool functions
   o is_x and asserting_x
   o put -s ...
   o take another look at mlr -n and seqgen -- ?
@@ -14,6 +13,7 @@ TOP OF LIST:
     - mlr --from /dev/null put -f sieve.mlr
   o regexes & associated functions -- necessary or not?
   o ?? operator for absent-overrides -- ?
+  o json_parse / json_stringify functions?
 
 * UT:
   o 2> tmpfiles w aftercat -- ?
@@ -205,3 +205,5 @@ NITS/NON-IMMEDIATE:
 * dump is now redundant? print @*
 * double-check dump CR-terminators depending on expression type
 * doc nullish-coalesece, along with its precedence
+* ordering of builtin functions in mlr -f output ........
+  ? primarily by type, secondarily by name?
