@@ -3267,3 +3267,26 @@ pan pan 1 0.3467901443380824  0.7268028627434533  pan pan 1  0.3467901443380824 
 eks pan 2 0.7586799647899636  0.5221511083334797  eks pan 2  0.7586799647899636  0.5221511083334797  (absent)
 wye wye 3 0.20460330576630303 0.33831852551664776 wye wye 3  0.20460330576630303 0.33831852551664776 (absent)
 eks wye 4 0.38139939387114097 0.13418874328430463 eks wye 4  0.38139939387114097 0.13418874328430463 (absent)
+
+----------------------------------------------------------------
+mlr --j2p --from u/typecast.json put 
+  $t       = typeof($a);
+  $string  = string($a);
+  $int     = int($a);
+  $float   = float($a);
+  $boolean = boolean($a);
+ then reorder -f t,a
+t     a     string int     float   boolean
+str   abc   abc    (error) (error) (error)
+int   0     0      0       0       false
+int   2     2      2       2       true
+float 0.0   0.0    0       0.0     false
+float 2.3   2.3    2       2.3     true
+bool  false false  0       0       false
+bool  true  true   1       1       true
+str   0     0      0       0       (error)
+str   2     2      2       2       (error)
+str   0.0   0.0    (error) 0       (error)
+str   2.3   2.3    (error) 2.3     (error)
+str   false false  (error) (error) false
+str   true  true   (error) (error) true

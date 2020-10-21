@@ -456,3 +456,10 @@ run_mlr --idkvp --opprint --from u/s.dkvp put '
   $snonesuch = string($nonesuch)
 '
 
+run_mlr --j2p --from u/typecast.json put '
+  $t       = typeof($a);
+  $string  = string($a);
+  $int     = int($a);
+  $float   = float($a);
+  $boolean = boolean($a);
+' then reorder -f t,a
