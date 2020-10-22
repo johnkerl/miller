@@ -842,12 +842,12 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $i += 2
 DSL EXPRESSION:
 $i += 2
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "i"
-        * Operator "+"
-            * DirectFieldValue "i"
-            * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "i"
+        * operator "+"
+            * direct field value "i"
+            * int literal "2"
 
 a   b   i x                   y
 pan pan 3 0.3467901443380824  0.7268028627434533
@@ -861,12 +861,12 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $i *= 2
 DSL EXPRESSION:
 $i *= 2
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "i"
-        * Operator "*"
-            * DirectFieldValue "i"
-            * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "i"
+        * operator "*"
+            * direct field value "i"
+            * int literal "2"
 
 a   b   i x                   y
 pan pan 2 0.3467901443380824  0.7268028627434533
@@ -880,12 +880,12 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $i /= 2
 DSL EXPRESSION:
 $i /= 2
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "i"
-        * Operator "/"
-            * DirectFieldValue "i"
-            * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "i"
+        * operator "/"
+            * direct field value "i"
+            * int literal "2"
 
 a   b   i   x                   y
 pan pan 0.5 0.3467901443380824  0.7268028627434533
@@ -899,12 +899,12 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $i |= 2
 DSL EXPRESSION:
 $i |= 2
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "i"
-        * Operator "|"
-            * DirectFieldValue "i"
-            * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "i"
+        * operator "|"
+            * direct field value "i"
+            * int literal "2"
 
 a   b   i x                   y
 pan pan 3 0.3467901443380824  0.7268028627434533
@@ -918,17 +918,17 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $j = true; $j &&= $i < 2
 DSL EXPRESSION:
 $j = true; $j &&= $i < 2
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "j"
-        * BoolLiteral "true"
-    * Assignment "="
-        * DirectFieldValue "j"
-        * Operator "&&"
-            * DirectFieldValue "j"
-            * Operator "<"
-                * DirectFieldValue "i"
-                * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "j"
+        * bool literal "true"
+    * assignment "="
+        * direct field value "j"
+        * operator "&&"
+            * direct field value "j"
+            * operator "<"
+                * direct field value "i"
+                * int literal "2"
 
 a   b   i x                   y                   j
 pan pan 1 0.3467901443380824  0.7268028627434533  true
@@ -1478,11 +1478,11 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $new = $["a"]
 DSL EXPRESSION:
 $new = $["a"]
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "new"
-        * IndirectFieldValue "$[]"
-            * StringLiteral "a"
+* statement block
+    * assignment "="
+        * direct field value "new"
+        * indirect field value "$[]"
+            * string literal "a"
 
 a   b   i x                   y                   new
 pan pan 1 0.3467901443380824  0.7268028627434533  pan
@@ -1496,11 +1496,11 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $["new"] = $a
 DSL EXPRESSION:
 $["new"] = $a
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * IndirectFieldValue "$[]"
-            * StringLiteral "new"
-        * DirectFieldValue "a"
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * string literal "new"
+        * direct field value "a"
 
 a   b   i x                   y                   new
 pan pan 1 0.3467901443380824  0.7268028627434533  pan
@@ -1514,12 +1514,12 @@ mlr --from u/s.dkvp --idkvp --opprint put -v ${new} = $a . $b
 DSL EXPRESSION:
 ${new} = $a . $b
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "new"
-        * Operator "."
-            * DirectFieldValue "a"
-            * DirectFieldValue "b"
+* statement block
+    * assignment "="
+        * direct field value "new"
+        * operator "."
+            * direct field value "a"
+            * direct field value "b"
 
 a   b   i x                   y                   new
 pan pan 1 0.3467901443380824  0.7268028627434533  panpan
@@ -1533,12 +1533,12 @@ mlr --from u/s.dkvp --idkvp --opprint put -v $new = ${a} . ${b}
 DSL EXPRESSION:
 $new = ${a} . ${b}
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "new"
-        * Operator "."
-            * DirectFieldValue "a"
-            * DirectFieldValue "b"
+* statement block
+    * assignment "="
+        * direct field value "new"
+        * operator "."
+            * direct field value "a"
+            * direct field value "b"
 
 a   b   i x                   y                   new
 pan pan 1 0.3467901443380824  0.7268028627434533  panpan
@@ -2204,10 +2204,10 @@ mlr -n put -v $z=max()
 DSL EXPRESSION:
 $z=max()
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
 
 
 
@@ -2216,11 +2216,11 @@ mlr -n put -v $z=max(1)
 DSL EXPRESSION:
 $z=max(1)
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
-            * IntLiteral "1"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
+            * int literal "1"
 
 
 
@@ -2229,11 +2229,11 @@ mlr -n put -v $z=max(1,)
 DSL EXPRESSION:
 $z=max(1,)
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
-            * IntLiteral "1"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
+            * int literal "1"
 
 
 
@@ -2242,12 +2242,12 @@ mlr -n put -v $z=max(1,2)
 DSL EXPRESSION:
 $z=max(1,2)
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
-            * IntLiteral "1"
-            * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
+            * int literal "1"
+            * int literal "2"
 
 
 
@@ -2256,12 +2256,12 @@ mlr -n put -v $z=max(1,2,)
 DSL EXPRESSION:
 $z=max(1,2,)
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
-            * IntLiteral "1"
-            * IntLiteral "2"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
+            * int literal "1"
+            * int literal "2"
 
 
 
@@ -2270,13 +2270,13 @@ mlr -n put -v $z=max(1,2,3)
 DSL EXPRESSION:
 $z=max(1,2,3)
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
-            * IntLiteral "1"
-            * IntLiteral "2"
-            * IntLiteral "3"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
 
 
 
@@ -2285,13 +2285,13 @@ mlr -n put -v $z=max(1,2,3,)
 DSL EXPRESSION:
 $z=max(1,2,3,)
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * DirectFieldValue "z"
-        * FunctionCallsite "max"
-            * IntLiteral "1"
-            * IntLiteral "2"
-            * IntLiteral "3"
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * function callsite "max"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
 
 
 
@@ -2765,32 +2765,32 @@ mlr --from u/s.dkvp put -v j = 2; for (i = 0; i < NR; i += 1) { $i += i }
 DSL EXPRESSION:
 j = 2; for (i = 0; i < NR; i += 1) { $i += i }
 RAW AST:
-* StatementBlock
-    * Assignment "="
-        * LocalVariable "j"
-        * IntLiteral "2"
-    * TripleForLoop "for"
-        * StatementBlock
-            * Assignment "="
-                * LocalVariable "i"
-                * IntLiteral "0"
-        * StatementBlock
-            * BareBoolean
-                * Operator "<"
-                    * LocalVariable "i"
-                    * ContextVariable "NR"
-        * StatementBlock
-            * Assignment "="
-                * LocalVariable "i"
-                * Operator "+"
-                    * LocalVariable "i"
-                    * IntLiteral "1"
-        * StatementBlock
-            * Assignment "="
-                * DirectFieldValue "i"
-                * Operator "+"
-                    * DirectFieldValue "i"
-                    * LocalVariable "i"
+* statement block
+    * assignment "="
+        * local variable "j"
+        * int literal "2"
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * context variable "NR"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * local variable "i"
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=3,x=0.7586799647899636,y=0.5221511083334797

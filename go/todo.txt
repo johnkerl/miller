@@ -5,22 +5,7 @@ TOP OF LIST:
 
 ! CST validators
   o rethink camel-casing of node-types for display to user ...
-  o begin/end hygiene:
-    - AST tree-walk / CST build: must be at top level
-    - tree-walk begin/end to check for invalids ($-anything etc)
-    - bare-boolean last statement in main block, & not in begin/end
-  o prohibit NR etc at LHS; 1+2=3+4; etc
-  o begin/end non-nested
-  o enforce return-value iff in a function; return-void iff in a subroutine
-  o filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
-  o states:
-    - at top level or not
-    - in begin/end or not
-    - in a UDF or not
-    - in a UDS or not
-    - is last statement in main block
-    - is on LHS of assignment
-  o mlr_expect_fail macro
+  o bare-boolean last statement in main block, & not in begin/end
 
 * UDF nexts:
   o ENV
