@@ -99,7 +99,7 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *DirectFieldValueLvalueNode) Unassign(
+func (this *DirectFieldValueLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO: indexed
@@ -165,7 +165,7 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *IndirectFieldValueLvalueNode) Unassign(
+func (this *IndirectFieldValueLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO
@@ -210,7 +210,7 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 	return nil
 }
 
-func (this *FullSrecLvalueNode) Unassign(
+func (this *FullSrecLvalueNode) Unset(
 	state *State,
 ) {
 	state.Inrec.Clear()
@@ -262,7 +262,7 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *DirectOosvarValueLvalueNode) Unassign(
+func (this *DirectOosvarValueLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO
@@ -328,7 +328,7 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *IndirectOosvarValueLvalueNode) Unassign(
+func (this *IndirectOosvarValueLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO
@@ -373,7 +373,7 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 	return nil
 }
 
-func (this *FullOosvarLvalueNode) Unassign(
+func (this *FullOosvarLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO: indexed
@@ -443,7 +443,7 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *LocalVariableLvalueNode) Unassign(
+func (this *LocalVariableLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO
@@ -546,7 +546,7 @@ func (this *IndexedLvalueNode) AssignIndexed(
 	return nil // not reached
 }
 
-func (this *IndexedLvalueNode) Unassign(
+func (this *IndexedLvalueNode) Unset(
 	state *State,
 ) {
 	// TODO
