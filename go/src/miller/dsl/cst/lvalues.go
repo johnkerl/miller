@@ -108,6 +108,16 @@ func (this *DirectFieldValueLvalueNode) Unset(
 	state.Inrec.Remove(&name)
 }
 
+func (this *DirectFieldValueLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	// TODO: indexed
+	lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
+	name := this.lhsFieldName.String()
+	state.Inrec.Remove(&name)
+}
+
 // ----------------------------------------------------------------
 type IndirectFieldValueLvalueNode struct {
 	lhsFieldNameExpression IEvaluable
@@ -171,6 +181,13 @@ func (this *IndirectFieldValueLvalueNode) Unset(
 	// TODO
 }
 
+func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	// TODO
+}
+
 // ----------------------------------------------------------------
 type FullSrecLvalueNode struct {
 }
@@ -214,6 +231,13 @@ func (this *FullSrecLvalueNode) Unset(
 	state *State,
 ) {
 	state.Inrec.Clear()
+}
+
+func (this *FullSrecLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	// TODO
 }
 
 // ----------------------------------------------------------------
@@ -263,6 +287,13 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 }
 
 func (this *DirectOosvarValueLvalueNode) Unset(
+	state *State,
+) {
+	// TODO
+}
+
+func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
 	state *State,
 ) {
 	// TODO
@@ -334,6 +365,13 @@ func (this *IndirectOosvarValueLvalueNode) Unset(
 	// TODO
 }
 
+func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	// TODO
+}
+
 // ----------------------------------------------------------------
 type FullOosvarLvalueNode struct {
 }
@@ -378,6 +416,13 @@ func (this *FullOosvarLvalueNode) Unset(
 ) {
 	// TODO: indexed
 	state.Oosvars.Clear()
+}
+
+func (this *FullOosvarLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	// TODO
 }
 
 // ----------------------------------------------------------------
@@ -444,6 +489,13 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 }
 
 func (this *LocalVariableLvalueNode) Unset(
+	state *State,
+) {
+	// TODO
+}
+
+func (this *LocalVariableLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
 	state *State,
 ) {
 	// TODO
@@ -547,6 +599,13 @@ func (this *IndexedLvalueNode) AssignIndexed(
 }
 
 func (this *IndexedLvalueNode) Unset(
+	state *State,
+) {
+	// TODO
+}
+
+func (this *IndexedLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
 	state *State,
 ) {
 	// TODO

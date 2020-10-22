@@ -68,6 +68,8 @@ type IAssignable interface {
 	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *State) error
 
 	Unset(state *State)
+
+	UnsetIndexed(indices []*types.Mlrval, state *State)
 }
 
 // ================================================================

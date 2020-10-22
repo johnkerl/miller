@@ -5,6 +5,7 @@ TOP OF LIST:
 
 * UDF nexts:
   o unset
+    - extraneous check output; wut
   o ENV
   o is_x and asserting_x
   o put -s ...
