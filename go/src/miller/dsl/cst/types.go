@@ -66,6 +66,8 @@ type IAssignable interface {
 	// For non-indexed assignment, which is the normal case, indices can be
 	// zero-length or nil.
 	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *State) error
+
+	Unassign()
 }
 
 // ================================================================

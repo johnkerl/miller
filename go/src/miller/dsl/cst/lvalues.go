@@ -56,7 +56,9 @@ type DirectFieldValueLvalueNode struct {
 	lhsFieldName *types.Mlrval
 }
 
-func (this *RootNode) BuildDirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildDirectFieldValueLvalueNode(
+	astNode *dsl.ASTNode,
+) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
 
 	lhsFieldName := types.MlrvalFromString(string(astNode.Token.Lit))
@@ -95,6 +97,10 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 			rvalue,
 		)
 	}
+}
+
+func (this *DirectFieldValueLvalueNode) Unassign() {
+	// TODO
 }
 
 // ----------------------------------------------------------------
@@ -154,6 +160,10 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
+func (this *IndirectFieldValueLvalueNode) Unassign() {
+	// TODO
+}
+
 // ----------------------------------------------------------------
 type FullSrecLvalueNode struct {
 }
@@ -191,6 +201,10 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 		return err
 	}
 	return nil
+}
+
+func (this *FullSrecLvalueNode) Unassign() {
+	// TODO
 }
 
 // ----------------------------------------------------------------
@@ -239,12 +253,18 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
+func (this *DirectOosvarValueLvalueNode) Unassign() {
+	// TODO
+}
+
 // ----------------------------------------------------------------
 type IndirectOosvarValueLvalueNode struct {
 	lhsOosvarNameExpression IEvaluable
 }
 
-func (this *RootNode) BuildIndirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildIndirectOosvarValueLvalueNode(
+	astNode *dsl.ASTNode,
+) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectOosvarValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
@@ -297,6 +317,10 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
+func (this *IndirectOosvarValueLvalueNode) Unassign() {
+	// TODO
+}
+
 // ----------------------------------------------------------------
 type FullOosvarLvalueNode struct {
 }
@@ -334,6 +358,10 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 		return err
 	}
 	return nil
+}
+
+func (this *FullOosvarLvalueNode) Unassign() {
+	// TODO
 }
 
 // ----------------------------------------------------------------
@@ -397,6 +425,10 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 		// TODO
 		return errors.New("Indexed local-variable assignment has not been implemented yet.")
 	}
+}
+
+func (this *LocalVariableLvalueNode) Unassign() {
+	// TODO
 }
 
 // ----------------------------------------------------------------
@@ -494,4 +526,8 @@ func (this *IndexedLvalueNode) AssignIndexed(
 	// We are the delegator, not the delegatee
 	lib.InternalCodingErrorIf(true)
 	return nil // not reached
+}
+
+func (this *IndexedLvalueNode) Unassign() {
+	// TODO
 }
