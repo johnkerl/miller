@@ -3402,3 +3402,15 @@ mlr -n put func f() { break }
 Miller: break statements are only valid within for/do/while loops.
 mlr -n put func f() { continue }
 Miller: break statements are only valid within for/do/while loops.
+
+----------------------------------------------------------------
+mlr -n put -v true
+DSL EXPRESSION:
+true
+RAW AST:
+* statement block
+    * bare boolean
+        * bool literal "true"
+
+mlr -n put -v begin{true}
+Miller: begin/end blocks cannot have bare booleans: there is no record to filter

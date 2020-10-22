@@ -109,6 +109,15 @@ func validateASTAux(
 		}
 	}
 
+	// Check: filter statements cannot be in begin/end
+	if inBeginOrEnd {
+		if astNode.Type == dsl.NodeTypeBareBoolean {
+			return errors.New(
+				"Miller: begin/end blocks cannot have bare booleans: there is no record to filter",
+			)
+		}
+	}
+
 	// Check: break/continue outside of loop
 	if !inLoop {
 		if astNode.Type == dsl.NodeTypeBreak {

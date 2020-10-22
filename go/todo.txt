@@ -3,10 +3,6 @@ TOP OF LIST:
 
 * window.mlr, window2.mlr -> doc somewhere
 
-! CST validators
-  ? bare-boolean last statement in main block, & not in begin/end
-    ? or nah? why restrict ...
-
 * UDF nexts:
   o ENV
   o unset
@@ -187,3 +183,5 @@ NITS/NON-IMMEDIATE:
 * doc nullish-coalesece, along with its precedence
 * ordering of builtin functions in mlr -f output ........
   ? primarily by type, secondarily by name?
+* CST validators: remove references to bare-boolean last statement in main block
+  - this is a feature
