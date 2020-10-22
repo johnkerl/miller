@@ -1,6 +1,6 @@
 # Status of the Go port
 
-* This will be a full Go port of Miller. Things are very rough and very iterative and very incomplete. I don't have a firm timeline but I suspect it will take a few more months of late-evening/spare-time work.
+* This will be a full Go port of [Miller](https://miller.readthedocs.io/). Things are very rough and very iterative and very incomplete. I don't have a firm timeline but I suspect it will take a few more months of late-evening/spare-time work.
 * The released Go port will become Miller 6.0. As noted below, this will be a win both at the source-code level, and for users of Miller.
 * I hope to retain backward compatibility at the command-line level as much as possible.
 * In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
