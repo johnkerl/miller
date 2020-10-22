@@ -4,8 +4,8 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 ! CST validators
-  o rethink camel-casing of node-types for display to user ...
-  o bare-boolean last statement in main block, & not in begin/end
+  ? bare-boolean last statement in main block, & not in begin/end
+    ? or nah? why restrict ...
 
 * UDF nexts:
   o ENV

@@ -174,11 +174,9 @@ func validateASTAux(
 		}
 	}
 
-	// Check: bare-boolean last statement in main block, & not in begin/end
-	//   o TODO
-
-	// Check: take another look at ast.go -- what about filter in begin/end? etc.
-	//   o TODO
+	// Check: ENV disallowed at left-hand side of assignment? or nah?
+	// Needs to be supported for system() ...
+	// * TODO
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Treewalk
