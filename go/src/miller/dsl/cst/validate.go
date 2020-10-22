@@ -2,6 +2,7 @@ package cst
 
 import (
 	"errors"
+	"fmt"
 
 	"miller/dsl"
 )
@@ -29,7 +30,7 @@ func ValidateAST(ast *dsl.AST) error {
 
 	if ast.RootNode.Children != nil {
 		for _, astChild := range ast.RootNode.Children {
-			return validdteASTAux(
+			return validateASTAux(
 				astChild,
 				atTopLevel,
 				inLoop,
@@ -46,7 +47,7 @@ func ValidateAST(ast *dsl.AST) error {
 }
 
 // ----------------------------------------------------------------
-func validdteASTAux(
+func validateASTAux(
 	astNode *dsl.ASTNode,
 	atTopLevel bool,
 	inLoop bool,
@@ -160,13 +161,20 @@ func validdteASTAux(
 		}
 	}
 
-	// Check: filter / bare-boolean needs thorough UT on things like 'mlr put '1+2=3+4'
-	//   o TODO
+	// Check: prohibit NR etc at LHS; 1+2=3+4; etc
+	if isAssignmentLHS {
+		ok := VALID_LHS_NODE_TYPES[astNode.Type]
+		if !ok {
+			return errors.New(
+				fmt.Sprintf(
+					"Miller: %s is not valid on the left-hand side of an assignment.",
+					astNode.Type,
+				),
+			)
+		}
+	}
 
 	// Check: bare-boolean last statement in main block, & not in begin/end
-	//   o TODO
-
-	// Check: prohibit NR etc at LHS; 1+2=3+4; etc
 	//   o TODO
 
 	// Check: take another look at ast.go -- what about filter in begin/end? etc.
@@ -177,10 +185,8 @@ func validdteASTAux(
 
 	if astNode.Children != nil {
 		for i, astChild := range astNode.Children {
-			if astNode.Type == dsl.NodeTypeAssignment && i == 0 {
-				nextIsAssignmentLHS = true
-			}
-			err := validdteASTAux(
+			nextIsAssignmentLHS = astNode.Type == dsl.NodeTypeAssignment && i == 0
+			err := validateASTAux(
 				astChild,
 				nextAtTopLevel,
 				nextInLoop,
@@ -197,4 +203,16 @@ func validdteASTAux(
 	}
 
 	return nil
+}
+
+var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
+	dsl.NodeTypeArrayOrMapIndexAccess: true,
+	dsl.NodeTypeArraySliceAccess:      true,
+	dsl.NodeTypeDirectFieldValue:      true,
+	dsl.NodeTypeIndirectFieldValue:    true,
+	dsl.NodeTypeFullSrec:              true,
+	dsl.NodeTypeDirectOosvarValue:     true,
+	dsl.NodeTypeIndirectOosvarValue:   true,
+	dsl.NodeTypeFullOosvar:            true,
+	dsl.NodeTypeLocalVariable:         true,
 }

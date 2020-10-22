@@ -4,6 +4,7 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 ! CST validators
+  o rethink camel-casing of node-types for display to user ...
   o begin/end hygiene:
     - AST tree-walk / CST build: must be at top level
     - tree-walk begin/end to check for invalids ($-anything etc)
@@ -22,6 +23,8 @@ TOP OF LIST:
   o mlr_expect_fail macro
 
 * UDF nexts:
+  o ENV
+  o unset
   o is_x and asserting_x
   o put -s ...
   o check for multiple put -f; any/multiple put -e

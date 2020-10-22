@@ -1587,16 +1587,6 @@ ReturnStatement
 // ================================================================
 // ================================================================
 
-// ----------------------------------------------------------------
-//// Local-variable definitions at the current scope
-// xxx make TypedLocalDefinition with subcases for type-literals
-//Statement(A) ::= UntypedLocalDefinition(B).    { A = B; }
-//Statement(A) ::= TypedLocalDefinition(B).    { A = B; }
-//TypedLocalDefinition : {type} ...
-
-// Not valid in begin/end since they refer to srecs:
-// xxx enforce that in the AST/CST, not here in the grammar -- much simpler.
-
 //Statement(A) ::= md_unset(B).             { A = B; }
 
 //Statement(A) ::= TeeWrite(B).          { A = B; }
@@ -1632,11 +1622,6 @@ ReturnStatement
 //Statement(A) ::= PrintnWrite(B).  { A = B; }
 //Statement(A) ::= PrintnAppend(B). { A = B; }
 //Statement(A) ::= PrintnPipe(B).   { A = B; }
-
-//// ----------------------------------------------------------------
-//md_filter(A) ::= md_token_filter(O) Rvalue(B). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
-//}
 
 //// ----------------------------------------------------------------
 //md_unset(A) ::= md_token_unset(O) md_token_all(B). {
