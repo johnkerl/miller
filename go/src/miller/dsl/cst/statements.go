@@ -27,6 +27,12 @@ func (this *RootNode) BuildStatementNode(
 			return nil, err
 		}
 
+	case dsl.NodeTypeUnset:
+		statement, err = this.BuildUnsetNode(astNode)
+		if err != nil {
+			return nil, err
+		}
+
 	case dsl.NodeTypeFilterStatement:
 		return this.BuildFilterStatementNode(astNode)
 	case dsl.NodeTypeBareBoolean:

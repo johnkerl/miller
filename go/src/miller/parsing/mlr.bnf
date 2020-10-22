@@ -180,7 +180,7 @@ md_token_num_type   : 'n' 'u' 'm' ;
 md_token_str_type   : 's' 't' 'r' ;
 md_token_var_type   : 'v' 'a' 'r' ;
 
-//md_token_unset    : 'u' 'n' 's' 'e' 't' ;
+md_token_unset    : 'u' 'n' 's' 'e' 't' ;
 //md_token_all      : 'a' 'l' 'l' ;
 
 md_token_print    : 'p' 'r' 'i' 'n' 't' ;
@@ -339,6 +339,7 @@ StatementBlockInBraces
 
 BracelessStatement
   : Assignment
+  | Unset
   | BareBoolean
   | FilterStatement
   | EmitStatement
@@ -358,6 +359,11 @@ BracelessStatement
 Assignment
   : Lvalue "=" Rvalue
     << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeAssignment) >>
+;
+
+Unset
+  : md_token_unset Lvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeUnset) >>
 ;
 
 // Semantically there are far fewer things which are valid lvalues than valid
@@ -1587,8 +1593,6 @@ ReturnStatement
 // ================================================================
 // ================================================================
 
-//Statement(A) ::= md_unset(B).             { A = B; }
-
 //Statement(A) ::= TeeWrite(B).          { A = B; }
 //Statement(A) ::= TeeAppend(B).         { A = B; }
 //Statement(A) ::= TeePipe(B).           { A = B; }
@@ -1622,47 +1626,3 @@ ReturnStatement
 //Statement(A) ::= PrintnWrite(B).  { A = B; }
 //Statement(A) ::= PrintnAppend(B). { A = B; }
 //Statement(A) ::= PrintnPipe(B).   { A = B; }
-
-//// ----------------------------------------------------------------
-//md_unset(A) ::= md_token_unset(O) md_token_all(B). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
-//}
-//md_unset(A) ::= md_token_unset(O) md_token_full_oosvar(B). {
-//	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_UNSET, B);
-//}
-//md_unset(A) ::= md_token_unset(O) UnsetArgs(B). {
-//	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-//}
-//// Need to invalidate "emit @a," -- use some non-empty-args expr.
-//UnsetArgs(A) ::= . {
-//	A = mlr_dsl_ast_node_alloc_zary("temp", MD_AST_NODE_TYPE_UNSET);
-//}
-
-//UnsetArgs(A) ::= DirectFieldValue(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-//UnsetArgs(A) ::= IndirectFieldValue(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-//UnsetArgs(A) ::= PositionalSrecValue(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-//UnsetArgs(A) ::= md_token_full_srec(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-//UnsetArgs(A) ::= OosvarKeylist(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-//UnsetArgs(A) ::= NonindexedLocalVariable(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-//UnsetArgs(A) ::= IndexedLocalVariable(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
-//}
-
-//UnsetArgs(A) ::= UnsetArgs(B) "," DirectFieldValue(C). {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}
-//UnsetArgs(A) ::= UnsetArgs(B) "," OosvarKeylist(C). {
-//	A = mlr_dsl_ast_node_append_arg(B, C);
-//}

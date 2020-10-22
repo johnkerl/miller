@@ -1653,3 +1653,61 @@ RAW AST:
                 * int literal "3"
         * type declaration "var"
 
+
+
+----------------------------------------------------------------
+mlr -n put -v unset $x
+DSL EXPRESSION:
+unset $x
+RAW AST:
+* statement block
+    * unset "unset"
+        * direct field value "x"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v unset $*
+DSL EXPRESSION:
+unset $*
+RAW AST:
+* statement block
+    * unset "unset"
+        * full record "$*"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v unset @x
+DSL EXPRESSION:
+unset @x
+RAW AST:
+* statement block
+    * unset "unset"
+        * direct oosvar value "x"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v unset @*
+DSL EXPRESSION:
+unset @*
+RAW AST:
+* statement block
+    * unset "unset"
+        * full oosvar "@*"
+
+
+
+----------------------------------------------------------------
+mlr -n put -v unset x
+DSL EXPRESSION:
+unset x
+RAW AST:
+* statement block
+    * unset "unset"
+        * local variable "x"
+
+
+mlr -n put -v unset 3
+Miller: int literal is not valid for unset statement.

@@ -37,8 +37,10 @@ const (
 	NodeTypeLocalVariable       = "local variable"
 	NodeTypeTypedecl            = "type declaration"
 
-	NodeTypeStatementBlock   = "statement block"
-	NodeTypeAssignment       = "assignment"
+	NodeTypeStatementBlock = "statement block"
+	NodeTypeAssignment     = "assignment"
+	NodeTypeUnset          = "unset"
+
 	NodeTypeBareBoolean      = "bare boolean"
 	NodeTypeFilterStatement  = "filter statement"
 	NodeTypeEmitStatement    = "emit statement"

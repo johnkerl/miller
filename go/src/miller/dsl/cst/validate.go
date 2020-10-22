@@ -22,6 +22,7 @@ func ValidateAST(ast *dsl.AST) error {
 	inUDS := false
 	isMainBlockLastStatement := false
 	isAssignmentLHS := false
+	isUnset := false
 
 	// They can do mlr put '': there are simply zero statements.
 	if ast.RootNode.Type == dsl.NodeTypeEmptyStatement {
@@ -39,6 +40,7 @@ func ValidateAST(ast *dsl.AST) error {
 				inUDS,
 				isMainBlockLastStatement,
 				isAssignmentLHS,
+				isUnset,
 			)
 		}
 	}
@@ -56,6 +58,7 @@ func validateASTAux(
 	inUDS bool,
 	isMainBlockLastStatement bool, // TODO -- keep this or not ...
 	isAssignmentLHS bool,
+	isUnset bool,
 ) error {
 	nextAtTopLevel := false
 	nextInLoop := inLoop
@@ -63,6 +66,7 @@ func validateASTAux(
 	nextInUDF := inUDF
 	nextInUDS := inUDS
 	nextIsAssignmentLHS := isAssignmentLHS
+	nextIsUnset := isUnset
 
 	// Check: begin/end/func/subr must be at top-level
 	if astNode.Type == dsl.NodeTypeBeginBlock {
@@ -183,6 +187,19 @@ func validateASTAux(
 		}
 	}
 
+	// Check: prohibit NR etc at LHS; 1+2=3+4; etc
+	if isUnset {
+		ok := VALID_LHS_NODE_TYPES[astNode.Type]
+		if !ok {
+			return errors.New(
+				fmt.Sprintf(
+					"Miller: %s is not valid for unset statement.",
+					astNode.Type,
+				),
+			)
+		}
+	}
+
 	// Check: ENV disallowed at left-hand side of assignment? or nah?
 	// Needs to be supported for system() ...
 	// * TODO
@@ -193,6 +210,7 @@ func validateASTAux(
 	if astNode.Children != nil {
 		for i, astChild := range astNode.Children {
 			nextIsAssignmentLHS = astNode.Type == dsl.NodeTypeAssignment && i == 0
+			nextIsUnset = astNode.Type == dsl.NodeTypeUnset
 			err := validateASTAux(
 				astChild,
 				nextAtTopLevel,
@@ -202,6 +220,7 @@ func validateASTAux(
 				nextInUDS,
 				isMainBlockLastStatement,
 				nextIsAssignmentLHS,
+				nextIsUnset,
 			)
 			if err != nil {
 				return err

@@ -2,16 +2,36 @@
 
 set -euo pipefail
 
+# ================================================================
+path_to_mlr="./mlr"
+
 run_mlr() {
   # Use just "mlr" for info messages
   echo
   echo ----------------------------------------------------------------
   echo mlr "$@"
-  ./mlr "$@"
+  $path_to_mlr "$@"
 }
 
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+  echo mlr "$@"
+  # Use path to mlr for invoking the command
+  set +e
+  stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 )
+  status=$?
+  echo "${stderr_capture}"
+  if [ $status -ne 1 ]; then
+    echo "Exit status was $status; expected 1."
+  fi
+  set -e
+  test $status -eq 1
+  # since set -e
+}
+# ================================================================
+
 # With mlr -n put v, we are only parsing the DSL expression into an AST and
-# then CST, but not executingit
+# then CST, but not executin git
 
 echo; run_mlr -n put -v '$y = 1 || 2'
 echo; run_mlr -n put -v '$y = 1 || 2 || 3'
@@ -129,3 +149,10 @@ echo; run_mlr -n put -v 'func f(a,b,c,){return 1}'
 
 echo; run_mlr -n put -v 'func f(x, y) { z = 3}'
 echo; run_mlr -n put -v 'func f(var x, var y): var { var z = 3}'
+
+echo; run_mlr -n put -v 'unset $x'
+echo; run_mlr -n put -v 'unset $*'
+echo; run_mlr -n put -v 'unset @x'
+echo; run_mlr -n put -v 'unset @*'
+echo; run_mlr -n put -v 'unset x'
+echo; mlr_expect_fail -n put -v 'unset 3'
