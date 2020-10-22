@@ -4,8 +4,8 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
-  o ENV
   o unset
+  o ENV
   o is_x and asserting_x
   o put -s ...
   o check for multiple put -f; any/multiple put -e

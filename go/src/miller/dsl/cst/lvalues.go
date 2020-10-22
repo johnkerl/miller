@@ -99,8 +99,13 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *DirectFieldValueLvalueNode) Unassign() {
-	// TODO
+func (this *DirectFieldValueLvalueNode) Unassign(
+	state *State,
+) {
+	// TODO: indexed
+	lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
+	name := this.lhsFieldName.String()
+	state.Inrec.Remove(&name)
 }
 
 // ----------------------------------------------------------------
@@ -160,7 +165,9 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *IndirectFieldValueLvalueNode) Unassign() {
+func (this *IndirectFieldValueLvalueNode) Unassign(
+	state *State,
+) {
 	// TODO
 }
 
@@ -203,8 +210,10 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 	return nil
 }
 
-func (this *FullSrecLvalueNode) Unassign() {
-	// TODO
+func (this *FullSrecLvalueNode) Unassign(
+	state *State,
+) {
+	state.Inrec.Clear()
 }
 
 // ----------------------------------------------------------------
@@ -253,7 +262,9 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *DirectOosvarValueLvalueNode) Unassign() {
+func (this *DirectOosvarValueLvalueNode) Unassign(
+	state *State,
+) {
 	// TODO
 }
 
@@ -317,7 +328,9 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *IndirectOosvarValueLvalueNode) Unassign() {
+func (this *IndirectOosvarValueLvalueNode) Unassign(
+	state *State,
+) {
 	// TODO
 }
 
@@ -360,8 +373,11 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 	return nil
 }
 
-func (this *FullOosvarLvalueNode) Unassign() {
-	// TODO
+func (this *FullOosvarLvalueNode) Unassign(
+	state *State,
+) {
+	// TODO: indexed
+	state.Oosvars.Clear()
 }
 
 // ----------------------------------------------------------------
@@ -427,7 +443,9 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *LocalVariableLvalueNode) Unassign() {
+func (this *LocalVariableLvalueNode) Unassign(
+	state *State,
+) {
 	// TODO
 }
 
@@ -528,6 +546,8 @@ func (this *IndexedLvalueNode) AssignIndexed(
 	return nil // not reached
 }
 
-func (this *IndexedLvalueNode) Unassign() {
+func (this *IndexedLvalueNode) Unassign(
+	state *State,
+) {
 	// TODO
 }
