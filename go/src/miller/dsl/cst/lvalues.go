@@ -102,7 +102,6 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 func (this *DirectFieldValueLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO: indexed
 	lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
 	name := this.lhsFieldName.String()
 	state.Inrec.Remove(&name)
@@ -113,9 +112,9 @@ func (this *DirectFieldValueLvalueNode) UnsetIndexed(
 	state *State,
 ) {
 	// TODO: indexed
-	lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
-	name := this.lhsFieldName.String()
-	state.Inrec.Remove(&name)
+	//lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
+	//name := this.lhsFieldName.String()
+	//state.Inrec.Remove(&name)
 }
 
 // ----------------------------------------------------------------
@@ -178,7 +177,9 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 func (this *IndirectFieldValueLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO
+	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
+	name := lhsFieldName.String()
+	state.Inrec.Remove(&name)
 }
 
 func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
@@ -289,7 +290,8 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 func (this *DirectOosvarValueLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO
+	name := this.lhsOosvarName.String()
+	state.Oosvars.Remove(&name)
 }
 
 func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
@@ -362,7 +364,8 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 func (this *IndirectOosvarValueLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO
+	name := this.lhsOosvarNameExpression.Evaluate(state).String()
+	state.Oosvars.Remove(&name)
 }
 
 func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
@@ -414,7 +417,6 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 func (this *FullOosvarLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO: indexed
 	state.Oosvars.Clear()
 }
 
@@ -491,7 +493,7 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 func (this *LocalVariableLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO
+	state.stack.UnsetVariable(this.typeGatedMlrvalName.Name)
 }
 
 func (this *LocalVariableLvalueNode) UnsetIndexed(

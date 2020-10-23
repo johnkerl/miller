@@ -66,6 +66,16 @@ func (this *Stack) SetVariable(name string, mlrval *types.Mlrval) {
 	this.BindVariable(name, mlrval)
 }
 
+func (this *Stack) UnsetVariable(name string) {
+	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
+		stackFrame := entry.Value.(*StackFrame)
+		if stackFrame.Has(name) {
+			stackFrame.Unset(name)
+			return
+		}
+	}
+}
+
 // Returns nil on no-such
 func (this *Stack) ReadVariable(name string) *types.Mlrval {
 
@@ -112,6 +122,11 @@ func (this *StackFrame) Clear() {
 
 func (this *StackFrame) Set(name string, mlrval *types.Mlrval) {
 	this.vars[name] = mlrval.Copy()
+}
+
+func (this *StackFrame) Unset(name string) {
+	value := types.MlrvalFromAbsent()
+	this.vars[name] = &value
 }
 
 // Returns nil on no such

@@ -1593,36 +1593,36 @@ ReturnStatement
 // ================================================================
 // ================================================================
 
-//Statement(A) ::= TeeWrite(B).          { A = B; }
-//Statement(A) ::= TeeAppend(B).         { A = B; }
-//Statement(A) ::= TeePipe(B).           { A = B; }
-//Statement(A) ::= md_emitf(B).          { A = B; }
-//Statement(A) ::= EmitfWrite(B).        { A = B; }
-//Statement(A) ::= EmitfAppend(B).       { A = B; }
-//Statement(A) ::= EmitfPipe(B).         { A = B; }
-//Statement(A) ::= md_emitp(B).          { A = B; }
-//Statement(A) ::= EmitpWrite(B).        { A = B; }
-//Statement(A) ::= EmitpAppend(B).       { A = B; }
-//Statement(A) ::= EmitpPipe(B).         { A = B; }
 //Statement(A) ::= md_emit(B).           { A = B; }
-//Statement(A) ::= EmitWrite(B).         { A = B; }
+//Statement(A) ::= md_emitf(B).          { A = B; }
+//Statement(A) ::= md_emitp(B).          { A = B; }
+
+//Statement(A) ::= DumpAppend(B).        { A = B; }
+//Statement(A) ::= DumpPipe(B).          { A = B; }
+//Statement(A) ::= DumpWrite(B).         { A = B; }
 //Statement(A) ::= EmitAppend(B).        { A = B; }
-//Statement(A) ::= EmitPipe(B).          { A = B; }
-//Statement(A) ::= EmitpLashed(B).       { A = B; }
-//Statement(A) ::= EmitpLashedWrite(B).  { A = B; }
-//Statement(A) ::= EmitpLashedAppend(B). { A = B; }
-//Statement(A) ::= EmitpLashedPipe(B).   { A = B; }
 //Statement(A) ::= EmitLashed(B).        { A = B; }
-//Statement(A) ::= EmitLashedWrite(B).   { A = B; }
 //Statement(A) ::= EmitLashedAppend(B).  { A = B; }
 //Statement(A) ::= EmitLashedPipe(B).    { A = B; }
-
-//Statement(A) ::= DumpWrite(B).    { A = B; }
-//Statement(A) ::= DumpAppend(B).   { A = B; }
-//Statement(A) ::= DumpPipe(B).     { A = B; }
-//Statement(A) ::= PrintWrite(B).   { A = B; }
-//Statement(A) ::= PrintAppend(B).  { A = B; }
-//Statement(A) ::= PrintPipe(B).    { A = B; }
-//Statement(A) ::= PrintnWrite(B).  { A = B; }
-//Statement(A) ::= PrintnAppend(B). { A = B; }
-//Statement(A) ::= PrintnPipe(B).   { A = B; }
+//Statement(A) ::= EmitLashedWrite(B).   { A = B; }
+//Statement(A) ::= EmitPipe(B).          { A = B; }
+//Statement(A) ::= EmitWrite(B).         { A = B; }
+//Statement(A) ::= EmitfAppend(B).       { A = B; }
+//Statement(A) ::= EmitfPipe(B).         { A = B; }
+//Statement(A) ::= EmitfWrite(B).        { A = B; }
+//Statement(A) ::= EmitpAppend(B).       { A = B; }
+//Statement(A) ::= EmitpLashed(B).       { A = B; }
+//Statement(A) ::= EmitpLashedAppend(B). { A = B; }
+//Statement(A) ::= EmitpLashedPipe(B).   { A = B; }
+//Statement(A) ::= EmitpLashedWrite(B).  { A = B; }
+//Statement(A) ::= EmitpPipe(B).         { A = B; }
+//Statement(A) ::= EmitpWrite(B).        { A = B; }
+//Statement(A) ::= PrintAppend(B).       { A = B; }
+//Statement(A) ::= PrintPipe(B).         { A = B; }
+//Statement(A) ::= PrintWrite(B).        { A = B; }
+//Statement(A) ::= PrintnAppend(B).      { A = B; }
+//Statement(A) ::= PrintnPipe(B).        { A = B; }
+//Statement(A) ::= PrintnWrite(B).       { A = B; }
+//Statement(A) ::= TeeAppend(B).         { A = B; }
+//Statement(A) ::= TeePipe(B).           { A = B; }
+//Statement(A) ::= TeeWrite(B).          { A = B; }
