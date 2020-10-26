@@ -166,6 +166,13 @@ func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 	}
 }
 
+func (this *Mlrmap) RemoveWithPositionalIndex(position int64) {
+	mapEntry := this.findEntryByPositionalIndex(position)
+	if mapEntry != nil {
+		this.unlink(mapEntry)
+	}
+}
+
 // ----------------------------------------------------------------
 func (this *Mlrmap) Clear() {
 	this.FieldCount = 0
