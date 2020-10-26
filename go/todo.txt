@@ -14,6 +14,7 @@ TOP OF LIST:
   o check for multiple put -f; any/multiple put -e
   o regexes & associated functions -- necessary or not?
   o json_parse / json_stringify functions?
+  !! strlen for UTF-8; wat
 
 !! [[]] etc to avoid inadvertent sequentials for int indices on maps.
   this should happen intentionally, not accidentally.

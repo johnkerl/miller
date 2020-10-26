@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"miller/lib"
 )
@@ -1712,7 +1713,7 @@ func MlrvalStrlen(ma *Mlrval) Mlrval {
 	if !ma.IsStringOrVoid() {
 		return MlrvalFromError()
 	}
-	return MlrvalFromInt64(int64(len(ma.printrep)))
+	return MlrvalFromInt64(int64(utf8.RuneCountInString(ma.printrep)))
 }
 
 // ================================================================
