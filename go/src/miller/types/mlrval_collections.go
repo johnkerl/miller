@@ -399,3 +399,118 @@ func putIndexedOnArray(
 
 	return nil
 }
+
+// ----------------------------------------------------------------
+func (this *Mlrval) UnsetIndexed(indices []*Mlrval) error {
+	lib.InternalCodingErrorIf(len(indices) < 1)
+
+	if this.mvtype == MT_MAP {
+		return unsetIndexedOnMap(this.mapval, indices)
+
+	} else if this.mvtype == MT_ARRAY {
+		return unsetIndexedOnArray(&this.arrayval, indices)
+
+	} else {
+		return errors.New(
+			"Miller: cannot unset index variable which is neither map nor array.",
+		)
+	}
+}
+
+// ----------------------------------------------------------------
+// Helper function for Mlrval.UnsetIndexed, for mlrvals of map type.
+func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
+	numIndices := len(indices)
+
+	// lib.InternalCodingErrorIf(numIndices == 0) -- ?
+	if numIndices == 0 {
+		// TODO
+		return nil
+	}
+
+	baseIndex := indices[0]
+
+	// If last index, then unset.
+	if numIndices == 1 {
+		if baseIndex.mvtype == MT_STRING {
+			baseMap.Remove(&baseIndex.printrep)
+			return nil
+		} else if baseIndex.mvtype == MT_INT {
+			// TODO:
+			// * RemoveByPositionalIndex
+			return nil
+		} else {
+			return errors.New(
+				"Miller: map indices must be string or positional int; got " +
+					baseIndex.GetTypeName(),
+			)
+		}
+	}
+
+	// If not last index, then recurse.
+	if baseIndex.mvtype == MT_STRING {
+		// Base is map, index is string
+		baseValue := baseMap.Get(&baseIndex.printrep)
+		return baseValue.UnsetIndexed(indices[1:])
+
+	} else if baseIndex.mvtype == MT_INT {
+		// Base is map, index is int
+		baseValue := baseMap.GetWithPositionalIndex(baseIndex.intval)
+		baseValue.UnsetIndexed(indices[1:])
+
+	} else {
+		// Base is map, index is invalid type
+		return errors.New(
+			"Miller: map indices must be string or positional int; got " + baseIndex.GetTypeName(),
+		)
+	}
+
+	return nil
+}
+
+// ----------------------------------------------------------------
+// Helper function for Mlrval.PutIndexed, for mlrvals of array type.
+func unsetIndexedOnArray(
+	baseArray *[]Mlrval,
+	indices []*Mlrval,
+) error {
+	numIndices := len(indices)
+
+	// lib.InternalCodingErrorIf(numIndices == 0) -- ?
+	if numIndices == 0 {
+		// TODO
+		return nil
+	}
+
+	baseIndex := indices[0]
+
+	// If last index, then unset.
+	if numIndices == 1 {
+		if baseIndex.mvtype == MT_INT {
+			// TODO: implmement it
+			return nil
+		} else {
+			return errors.New(
+				"Miller: arrays indices must be int; got " +
+					baseIndex.GetTypeName(),
+			)
+		}
+	}
+
+	// If not last index, then recurse.
+	if baseIndex.mvtype == MT_INT {
+		// Base is array, index is int
+		// TODO
+		//baseValue := baseMap.GetWithPositionalIndex(baseIndex.intval)
+		//baseValue.UnsetIndexed(indices[1:])
+		return nil
+
+	} else {
+		// Base is array, index is invalid type
+		return errors.New(
+			"Miller: map indices must be string or positional int; got " + baseIndex.GetTypeName(),
+		)
+	}
+
+	return nil
+}

@@ -29,6 +29,7 @@ int type_mask_from_name(char* name) {
 	else if (streq(name, "numeric")) { return TYPE_MASK_NUMERIC; }
 	else if (streq(name, "num"))     { return TYPE_MASK_NUMERIC; }
 	else if (streq(name, "boolean")) { return TYPE_MASK_BOOLEAN; }
+	else if (streq(name, "bool"))    { return TYPE_MASK_BOOLEAN; }
 	else if (streq(name, "map"))     { return TYPE_MASK_MAP;     }
 	else if (streq(name, "var"))     { return TYPE_MASK_ANY;     }
 	else if (streq(name, "any"))     { return TYPE_MASK_ANY;     }

@@ -4,6 +4,8 @@ TOP OF LIST:
 * window.mlr, window2.mlr -> doc somewhere
 
 * UDF nexts:
+  ! double-check $-anything in begin/end
+  ! implement indexed-localvar assignment
   o unset
     - extraneous check output; wut
   o ENV
@@ -13,6 +15,8 @@ TOP OF LIST:
   o regexes & associated functions -- necessary or not?
   o json_parse / json_stringify functions?
 
+!! [[]] etc to avoid inadvertent sequentials for int indices on maps.
+  this should happen intentionally, not accidentally.
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
@@ -186,3 +190,6 @@ NITS/NON-IMMEDIATE:
   ? primarily by type, secondarily by name?
 * CST validators: remove references to bare-boolean last statement in main block
   - this is a feature
+* good example of wording for why/when to make a breaking release:
+  https://webpack.js.org/blog/2020-10-10-webpack-5-release/
+* unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
