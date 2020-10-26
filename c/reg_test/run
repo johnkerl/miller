@@ -1949,6 +1949,16 @@ announce UTF-8 STRLEN
 run_mlr --inidx --ifs comma --oxtab put '$s1=strlen($1);$s2=strlen($2);$s3=strlen($3);$s4=strlen($4)' $indir/utf8-align.dkvp
 
 # ----------------------------------------------------------------
+announce TRUNCATE
+
+for n in 0 1 2 3 4 5; do
+    echo "x=abcd" | run_mlr put '$y=truncate($x, '$n')'
+done
+for n in 0 1 2 3 4 5; do
+    echo "x=abcdefgh" | run_mlr put '$y=truncate($x, '$n')'
+done
+
+# ----------------------------------------------------------------
 announce STATS1/STEP INT/FLOAT
 
 run_mlr --opprint step      -a rsum,delta,counter  -f x,y,z $indir/int-float.dkvp

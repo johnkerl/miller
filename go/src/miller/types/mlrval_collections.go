@@ -430,8 +430,7 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 			baseMap.Remove(&baseIndex.printrep)
 			return nil
 		} else if baseIndex.mvtype == MT_INT {
-			// TODO:
-			// * RemoveByPositionalIndex
+			baseMap.RemoveWithPositionalIndex(baseIndex.intval)
 			return nil
 		} else {
 			return errors.New(

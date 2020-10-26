@@ -23,6 +23,7 @@ TOP OF LIST:
 * UDS
 
 ! parse errors need some context somehow
+? ;; is parse error; also {...};
 
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
@@ -194,3 +195,4 @@ NITS/NON-IMMEDIATE:
 * good example of wording for why/when to make a breaking release:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
+* make truncate() UTF8-friendly

@@ -215,6 +215,8 @@ mv_t s_s_clean_whitespace_func(mv_t* pval1);
 
 mv_t s_s_system_func(mv_t* pval1);
 
+mv_t s_si_truncate_func(mv_t* pval1, mv_t* pval2);
+
 mv_t s_xx_dot_func(mv_t* pval1, mv_t* pval2);
 
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);

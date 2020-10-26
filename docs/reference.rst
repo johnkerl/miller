@@ -795,7 +795,7 @@ Examples:
     Functions for the filter and put verbs:
        + + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~
        !=~ > >= < <= && || ^^ ! ? : . gsub regextract regextract_or_else strlen sub
-       ssub substr tolower toupper capitalize lstrip rstrip strip
+       ssub substr tolower toupper truncate capitalize lstrip rstrip strip
        collapse_whitespace clean_whitespace system abs acos acosh asin asinh atan
        atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10
        log1p logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin

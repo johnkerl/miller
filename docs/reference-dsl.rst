@@ -2620,6 +2620,8 @@ Built-in functions for filter and put, summary
 +----------------------------+------------+----------+
 | ``toupper``                | string     | 1        |
 +----------------------------+------------+----------+
+| ``truncate``               | string     | 2        |
++----------------------------+------------+----------+
 | ``capitalize``             | string     | 1        |
 +----------------------------+------------+----------+
 | ``lstrip``                 | string     | 1        |
@@ -4713,6 +4715,17 @@ toupper
 ::
 
     toupper (class=string #args=1): Convert string to uppercase.
+
+
+
+.. _reference-dsl-truncate:
+
+truncate
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    truncate (class=string #args=2): Truncates string first argument to max length of int second argument.
 
 
 

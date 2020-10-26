@@ -136,6 +136,11 @@ rval_evaluator_t* rval_evaluator_alloc_from_f_s_func(mv_unary_func_t* pfunc, rva
 rval_evaluator_t* rval_evaluator_alloc_from_i_s_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_x_x_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 
+rval_evaluator_t* rval_evaluator_alloc_from_s_si_func(
+	mv_binary_func_t* pfunc,
+	rval_evaluator_t* parg1,
+	rval_evaluator_t* parg2);
+
 rval_evaluator_t* rval_evaluator_alloc_from_x_xi_func(
 	mv_binary_func_t* pfunc,
 	rval_evaluator_t* parg1,

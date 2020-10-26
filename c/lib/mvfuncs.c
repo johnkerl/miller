@@ -490,6 +490,23 @@ mv_t s_s_system_func(mv_t* pval1) {
 	return retval;
 }
 
+mv_t s_si_truncate_func(mv_t* pval1, mv_t* pval2) {
+	char* string = pval1->u.strv;
+	int len = strlen(string);
+	int maxlen = pval2->u.intv;
+
+	if (len <= maxlen) {
+		return *pval1;
+	} else {
+		char* buf = mlr_malloc_or_die(maxlen+1);
+		strncpy(buf, string, maxlen);
+		buf[len] = 0;
+		mv_free(pval1);
+		pval1->u.strv = NULL;
+		return mv_from_string_with_free(buf);
+	}
+}
+
 // ----------------------------------------------------------------
 mv_t s_s_lstrip_func(mv_t* pval1) {
 	if (!isspace(pval1->u.strv[0])) {

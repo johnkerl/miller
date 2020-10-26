@@ -102,19 +102,22 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 func (this *DirectFieldValueLvalueNode) Unset(
 	state *State,
 ) {
-	lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
-	name := this.lhsFieldName.String()
-	state.Inrec.Remove(&name)
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *DirectFieldValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO: indexed
-	//lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
-	//name := this.lhsFieldName.String()
-	//state.Inrec.Remove(&name)
+	if indices == nil {
+		lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
+		name := this.lhsFieldName.String()
+		state.Inrec.Remove(&name)
+	} else {
+		state.Inrec.UnsetIndexed(
+			append([]*types.Mlrval{this.lhsFieldName}, indices...),
+		)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -177,16 +180,22 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 func (this *IndirectFieldValueLvalueNode) Unset(
 	state *State,
 ) {
-	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
-	name := lhsFieldName.String()
-	state.Inrec.Remove(&name)
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
+	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
+	if indices == nil {
+		name := lhsFieldName.String()
+		state.Inrec.Remove(&name)
+	} else {
+		state.Inrec.UnsetIndexed(
+			append([]*types.Mlrval{&lhsFieldName}, indices...),
+		)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -231,14 +240,18 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 func (this *FullSrecLvalueNode) Unset(
 	state *State,
 ) {
-	state.Inrec.Clear()
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *FullSrecLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
+	if indices == nil {
+		state.Inrec.Clear()
+	} else {
+		state.Inrec.UnsetIndexed(indices)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -290,15 +303,22 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 func (this *DirectOosvarValueLvalueNode) Unset(
 	state *State,
 ) {
-	name := this.lhsOosvarName.String()
-	state.Oosvars.Remove(&name)
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
+	if indices == nil {
+		name := this.lhsOosvarName.String()
+		state.Oosvars.Remove(&name)
+	} else {
+		// TODO
+		//state.Inrec.UnsetIndexed(
+			//append([]*types.Mlrval{&lhsFieldName}, indices...),
+		//)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -364,8 +384,7 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 func (this *IndirectOosvarValueLvalueNode) Unset(
 	state *State,
 ) {
-	name := this.lhsOosvarNameExpression.Evaluate(state).String()
-	state.Oosvars.Remove(&name)
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
@@ -373,6 +392,18 @@ func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
 	state *State,
 ) {
 	// TODO
+	//name := this.lhsOosvarNameExpression.Evaluate(state).String()
+	//state.Oosvars.Remove(&name)
+
+//	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
+//	if indices == nil {
+//		name := lhsFieldName.String()
+//		state.Inrec.Remove(&name)
+//	} else {
+//		state.Inrec.UnsetIndexed(
+//			append([]*types.Mlrval{&lhsFieldName}, indices...),
+//		)
+//	}
 }
 
 // ----------------------------------------------------------------
@@ -417,14 +448,21 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 func (this *FullOosvarLvalueNode) Unset(
 	state *State,
 ) {
-	state.Oosvars.Clear()
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *FullOosvarLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
+	if indices == nil {
+		state.Oosvars.Clear()
+	} else {
+		// TODO
+		//state.Inrec.UnsetIndexed(
+			//append([]*types.Mlrval{&lhsFieldName}, indices...),
+		//)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -493,14 +531,21 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 func (this *LocalVariableLvalueNode) Unset(
 	state *State,
 ) {
-	state.stack.UnsetVariable(this.typeGatedMlrvalName.Name)
+	this.UnsetIndexed(nil, state)
 }
 
 func (this *LocalVariableLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
+	if indices == nil {
+		state.stack.UnsetVariable(this.typeGatedMlrvalName.Name)
+	} else {
+		// TODO
+		//state.Inrec.UnsetIndexed(
+			//append([]*types.Mlrval{&lhsFieldName}, indices...),
+		//)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -603,12 +648,20 @@ func (this *IndexedLvalueNode) AssignIndexed(
 func (this *IndexedLvalueNode) Unset(
 	state *State,
 ) {
-	// TODO
+	indices := make([]*types.Mlrval, len(this.indexEvaluables))
+
+	for i, indexEvaluable := range this.indexEvaluables {
+		index := indexEvaluable.Evaluate(state)
+		indices[i] = &index
+	}
+
+	this.baseLvalue.UnsetIndexed(indices, state)
 }
 
 func (this *IndexedLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
+	// We are the delegator, not the delegatee
+	lib.InternalCodingErrorIf(true)
 }

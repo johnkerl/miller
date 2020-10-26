@@ -241,6 +241,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"inclusive. Negative indices -len .. -1 alias to 0 .. len-1."},
 	{FUNC_CLASS_STRING, "tolower",  1,0, "Convert string to lowercase."},
 	{FUNC_CLASS_STRING, "toupper",  1,0, "Convert string to uppercase."},
+	{FUNC_CLASS_STRING, "truncate",   2,0, "Truncates string first argument to max length of int second argument."},
 	{FUNC_CLASS_STRING, "capitalize",  1,0, "Convert string's first character to uppercase."},
 	{FUNC_CLASS_STRING, "lstrip",  1,0,  "Strip leading whitespace from string."},
 	{FUNC_CLASS_STRING, "rstrip",  1,0,  "Strip trailing whitespace from string."},
@@ -1288,6 +1289,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "strptime")) { return rval_evaluator_alloc_from_x_ss_func(i_ss_strptime_func, parg1, parg2);
 	} else if (streq(fnnm, "strptime_local")) { return rval_evaluator_alloc_from_x_ss_func(i_ss_strptime_local_func, parg1, parg2);
 	} else if (streq(fnnm, "urandrange")) { return rval_evaluator_alloc_from_f_ff_func(f_ff_urandrange_func, parg1, parg2);
+	} else if (streq(fnnm, "truncate"))        { return rval_evaluator_alloc_from_s_si_func(s_si_truncate_func,  parg1, parg2);
 	} else  { return NULL; }
 }
 
