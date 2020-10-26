@@ -421,13 +421,7 @@ func (this *Mlrval) UnsetIndexed(indices []*Mlrval) error {
 // Helper function for Mlrval.UnsetIndexed, for mlrvals of map type.
 func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	numIndices := len(indices)
-
-	// lib.InternalCodingErrorIf(numIndices == 0) -- ?
-	if numIndices == 0 {
-		// TODO
-		return nil
-	}
-
+	lib.InternalCodingErrorIf(numIndices < 1)
 	baseIndex := indices[0]
 
 	// If last index, then unset.
@@ -475,41 +469,39 @@ func unsetIndexedOnArray(
 	indices []*Mlrval,
 ) error {
 	numIndices := len(indices)
+	lib.InternalCodingErrorIf(numIndices < 1)
+	mindex := indices[0]
 
-	// lib.InternalCodingErrorIf(numIndices == 0) -- ?
-	if numIndices == 0 {
-		// TODO
-		return nil
+	if mindex.mvtype != MT_INT {
+		return errors.New(
+			"Array index must be int, but was " +
+				mindex.GetTypeName() +
+				".",
+		)
 	}
-
-	baseIndex := indices[0]
+	zindex, inBounds := unaliasArrayIndex(baseArray, mindex.intval)
 
 	// If last index, then unset.
 	if numIndices == 1 {
-		if baseIndex.mvtype == MT_INT {
-			// TODO: implmement it
-			return nil
+		if inBounds {
+			(*baseArray)[zindex] = MlrvalFromAbsent()
+		} else if mindex.intval == 0 {
+			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
 		} else {
-			return errors.New(
-				"Miller: arrays indices must be int; got " +
-					baseIndex.GetTypeName(),
-			)
+			// TODO: improve wording
+			return errors.New("Miller: array index out of bounds for unset.");
 		}
-	}
-
-	// If not last index, then recurse.
-	if baseIndex.mvtype == MT_INT {
-		// Base is array, index is int
-		// TODO
-		//baseValue := baseMap.GetWithPositionalIndex(baseIndex.intval)
-		//baseValue.UnsetIndexed(indices[1:])
-		return nil
-
 	} else {
-		// Base is array, index is invalid type
-		return errors.New(
-			"Miller: map indices must be string or positional int; got " + baseIndex.GetTypeName(),
-		)
+		// More indices remain; recurse
+		if inBounds {
+			return (*baseArray)[zindex].UnsetIndexed(indices[1:])
+		} else if mindex.intval == 0 {
+			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+		} else {
+			// TODO: improve wording
+			return errors.New("Miller: array index out of bounds for unset.");
+		}
+
 	}
 
 	return nil
