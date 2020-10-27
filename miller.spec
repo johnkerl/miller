@@ -4,7 +4,7 @@ Version: 5.9.1
 Release: 1%{?dist}
 License: BSD
 Source: https://github.com/johnkerl/miller/releases/download/%{version}/mlr-%{version}.tar.gz
-URL: http://johnkerl.org/miller/doc
+URL: https://miller.readthedocs.io
 BuildRequires: gcc
 BuildRequires: flex >= 2.5.35
 
