@@ -56,10 +56,10 @@ mlrg_SOURCES=	${mlr_SOURCES}
 # * gprof mlrp gmon.out > myfile.txt
 # Note: works on Linux; not on OSX. On FreeBSD it sounds like it'll need an
 # extra -lc on the link line.
-mlrp_CFLAGS=	-g -pg ${AM_CFLAGS}
-mlrp_LDFLAGS=	${mlr_LDFLAGS}
-mlrp_LDADD=	${mlr_LDADD}
-mlrp_SOURCES=	${mlr_SOURCES}
+#mlrp_CFLAGS=	-g -pg ${AM_CFLAGS}
+#mlrp_LDFLAGS=	${mlr_LDFLAGS}
+#mlrp_LDADD=	${mlr_LDADD}
+#mlrp_SOURCES=	${mlr_SOURCES}
 
 # ================================================================
 # Run this after unit-test expected output has changed, and is verified to be
