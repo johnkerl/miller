@@ -314,10 +314,9 @@ func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
 		name := this.lhsOosvarName.String()
 		state.Oosvars.Remove(&name)
 	} else {
-		// TODO
-		//state.Inrec.UnsetIndexed(
-			//append([]*types.Mlrval{&lhsFieldName}, indices...),
-		//)
+		state.Oosvars.UnsetIndexed(
+			append([]*types.Mlrval{this.lhsOosvarName}, indices...),
+		)
 	}
 }
 
@@ -391,19 +390,16 @@ func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *State,
 ) {
-	// TODO
-	//name := this.lhsOosvarNameExpression.Evaluate(state).String()
-	//state.Oosvars.Remove(&name)
+	name := this.lhsOosvarNameExpression.Evaluate(state)
 
-//	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
-//	if indices == nil {
-//		name := lhsFieldName.String()
-//		state.Inrec.Remove(&name)
-//	} else {
-//		state.Inrec.UnsetIndexed(
-//			append([]*types.Mlrval{&lhsFieldName}, indices...),
-//		)
-//	}
+	if indices == nil {
+		sname := name.String()
+		state.Oosvars.Remove(&sname)
+	} else {
+		state.Oosvars.UnsetIndexed(
+			append([]*types.Mlrval{&name}, indices...),
+		)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -458,10 +454,7 @@ func (this *FullOosvarLvalueNode) UnsetIndexed(
 	if indices == nil {
 		state.Oosvars.Clear()
 	} else {
-		// TODO
-		//state.Inrec.UnsetIndexed(
-			//append([]*types.Mlrval{&lhsFieldName}, indices...),
-		//)
+		state.Oosvars.UnsetIndexed(indices)
 	}
 }
 
