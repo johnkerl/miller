@@ -8,6 +8,8 @@ TOP OF LIST:
   ! implement indexed-localvar assignment
   o unset
     - extraneous check output; wut
+    ? should unset on an array element slip the rest up??
+      > regardless, document it clearly.
   o ENV
   o is_x and asserting_x
   o put -s ...

@@ -483,7 +483,7 @@ func unsetIndexedOnArray(
 	// If last index, then unset.
 	if numIndices == 1 {
 		if inBounds {
-			(*baseArray)[zindex] = MlrvalFromAbsent()
+			(*baseArray)[zindex] = MlrvalFromString("") // TODO: comment why ""
 		} else if mindex.intval == 0 {
 			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
 		} else {
