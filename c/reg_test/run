@@ -452,6 +452,11 @@ run_mlr sort -f x $indir/sort-het.dkvp
 run_mlr sort -r x $indir/sort-het.dkvp
 
 # ----------------------------------------------------------------
+announce SORT-WITHIN-RECORDS
+
+run_mlr sort-within-records $indir/sort-within-records.dkvp
+
+# ----------------------------------------------------------------
 announce JOIN
 
 run_mlr --opprint join -s                -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp

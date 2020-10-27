@@ -108,8 +108,8 @@ static void mapper_sort_within_records_free(mapper_t* pmapper, context_t* _) {
 // ----------------------------------------------------------------
 // For qsort
 static int key_comparator(const void* pva, const void* pvb) {
-	const char* pa = pva;
-	const char* pb = pvb;
+    const char *pa = *(const char**)pva;
+    const char *pb = *(const char**)pvb;
 	return strcmp(pa, pb);
 }
 
@@ -148,6 +148,7 @@ static sllv_t* mapper_sort_within_records_process(lrec_t* pinrec, context_t* pct
 	}
 	lrec_free(pinrec);
 	lhmsv_free(keys_to_entries);
+	free(keys_array);
 
 	return sllv_single(poutrec);
 }

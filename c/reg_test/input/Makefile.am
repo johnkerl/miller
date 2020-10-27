@@ -175,6 +175,7 @@ EXTRA_DIST=	\
 		small-non-nested-wrapped.json \
 		small-non-nested.json \
 		sort-het.dkvp \
+		sort-within-records.dkvp \
 		space-pad.dkvp \
 		space-pad.nidx \
 		space-pad.pprint \
