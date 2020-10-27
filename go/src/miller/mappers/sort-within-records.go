@@ -34,6 +34,9 @@ func mapperSortWithinRecordsParseCLI(
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
 
+	// TODO: allow sort by key or value?
+	// TODO: allow sort ascendending/descending?
+
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
