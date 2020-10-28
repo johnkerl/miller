@@ -6,10 +6,7 @@ TOP OF LIST:
 * UDF nexts:
   ! double-check $-anything in begin/end
   ! implement indexed-localvar assignment
-  o unset
-    - extraneous check output; wut
-    ? should unset on an array element slip the rest up??
-      > regardless, document it clearly.
+  o mlr_expect_fail extraneous check output; wut
   o ENV
   o is_x and asserting_x
   o put -s ...
@@ -198,3 +195,5 @@ NITS/NON-IMMEDIATE:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
 * make truncate() UTF8-friendly
+* (absent) print on dump -- should simply be empty
+* document array-unset as shiftback

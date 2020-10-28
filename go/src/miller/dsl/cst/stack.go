@@ -59,7 +59,7 @@ func (this *Stack) BindVariable(
 
 func (this *Stack) BindVariableIndexed(
 	name string,
-    indices []*types.Mlrval,
+	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) {
 	this.stackFrames.Front().Value.(*StackFrame).SetIndexed(name, indices, mlrval)
@@ -91,7 +91,7 @@ func (this *Stack) UnsetVariable(name string) {
 // ----------------------------------------------------------------
 func (this *Stack) SetVariableIndexed(
 	name string,
-    indices []*types.Mlrval,
+	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
@@ -106,7 +106,7 @@ func (this *Stack) SetVariableIndexed(
 
 func (this *Stack) UnsetVariableIndexed(
 	name string,
-    indices []*types.Mlrval,
+	indices []*types.Mlrval,
 ) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
@@ -183,10 +183,10 @@ func (this *StackFrame) Unset(name string) {
 
 func (this *StackFrame) SetIndexed(
 	name string,
-    indices []*types.Mlrval,
+	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) {
-	value := this.Get(name);
+	value := this.Get(name)
 	if value == nil {
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
@@ -212,9 +212,9 @@ func (this *StackFrame) SetIndexed(
 
 func (this *StackFrame) UnsetIndexed(
 	name string,
-    indices []*types.Mlrval,
+	indices []*types.Mlrval,
 ) {
-	value := this.Get(name);
+	value := this.Get(name)
 	if value == nil {
 		return
 	}
