@@ -2220,7 +2220,7 @@ func MlrvalMapSelect(mlrvals []*Mlrval) Mlrval {
 			newKeys[selectArg.printrep] = true
 		} else if selectArg.mvtype == MT_ARRAY {
 			for _, element := range selectArg.arrayval {
-				if selectArg.mvtype == MT_STRING {
+				if element.mvtype == MT_STRING {
 					newKeys[element.printrep] = true
 				} else {
 					return MlrvalFromError()
@@ -2257,7 +2257,7 @@ func MlrvalMapExcept(mlrvals []*Mlrval) Mlrval {
 			newMap.Remove(&exceptArg.printrep)
 		} else if exceptArg.mvtype == MT_ARRAY {
 			for _, element := range exceptArg.arrayval {
-				if exceptArg.mvtype == MT_STRING {
+				if element.mvtype == MT_STRING {
 					newMap.Remove(&element.printrep)
 				} else {
 					return MlrvalFromError()
