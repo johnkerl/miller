@@ -227,6 +227,11 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalTanh,
 	},
 	{
+		name:      "bitcount",
+		help:      "Count of 1-bits.",
+		unaryFunc: types.MlrvalBitCount,
+	},
+	{
 		name:      "clean_whitespace",
 		help:      "Same as collapse_whitespace and strip.",
 		unaryFunc: types.MlrvalCleanWhitespace,
@@ -435,8 +440,8 @@ map/array, same as length.`,
 		name: "urandrange",
 	},
 	{
-		name:      "atan2",
-		help:      "Two-argument arctangent.",
+		name:       "atan2",
+		help:       "Two-argument arctangent.",
 		binaryFunc: types.MlrvalAtan2,
 	},
 	{

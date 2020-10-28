@@ -281,6 +281,44 @@ func MlrvalBitwiseNOT(ma *Mlrval) Mlrval {
 }
 
 // ================================================================
+// Bit-count
+// https://en.wikipedia.org/wiki/Hamming_weight
+
+const _m01 uint64 = 0x5555555555555555
+const _m02 uint64 = 0x3333333333333333
+const _m04 uint64 = 0x0f0f0f0f0f0f0f0f
+const _m08 uint64 = 0x00ff00ff00ff00ff
+const _m16 uint64 = 0x0000ffff0000ffff
+const _m32 uint64 = 0x00000000ffffffff
+
+func bitcount_i_i(ma *Mlrval) Mlrval {
+	a := uint64(ma.intval)
+	a = (a & _m01) + ((a >> 1) & _m01)
+	a = (a & _m02) + ((a >> 2) & _m02)
+	a = (a & _m04) + ((a >> 4) & _m04)
+	a = (a & _m08) + ((a >> 8) & _m08)
+	a = (a & _m16) + ((a >> 16) & _m16)
+	a = (a & _m32) + ((a >> 32) & _m32)
+	return MlrvalFromInt64(int64(a))
+}
+
+var bitcount_dispositions = [MT_DIM]UnaryFunc{
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*VOID   */ _void1,
+	/*STRING */ _erro1,
+	/*INT    */ bitcount_i_i,
+	/*FLOAT  */ _erro1,
+	/*BOOL   */ _erro1,
+	/*ARRAY  */ _absn1,
+	/*MAP    */ _absn1,
+}
+
+func MlrvalBitCount(ma *Mlrval) Mlrval {
+	return bitcount_dispositions[ma.mvtype](ma)
+}
+
+// ================================================================
 // Go math-library functions
 
 func ourSgn(a float64) float64 {
