@@ -289,6 +289,11 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalToUpper,
 	},
 	{
+		name:      "capitalize",
+		help:      "Convert string's first character to uppercase.",
+		unaryFunc: types.MlrvalCapitalize,
+	},
+	{
 		name:      "typeof",
 		help:      "Convert argument to type of argument (e.g. \"str\"). For debug.",
 		unaryFunc: types.MlrvalTypeof,

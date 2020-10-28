@@ -1069,3 +1069,10 @@ run_mlr --from u/s.dkvp put -q '
   }
 '
 
+# ----------------------------------------------------------------
+run_mlr --from u/s.dkvp --opprint put '
+  $u = toupper($a);
+  $l = tolower($u);
+  $c = capitalize($l);
+'
+

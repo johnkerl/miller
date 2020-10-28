@@ -2028,6 +2028,23 @@ func MlrvalToLower(ma *Mlrval) Mlrval {
 	}
 }
 
+func MlrvalCapitalize(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_STRING {
+		if ma.printrep == "" {
+			return *ma
+		} else {
+			runes := []rune(ma.printrep)
+			rfirst := runes[0]
+			rrest := runes[1:]
+			sfirst := strings.ToUpper(string(rfirst))
+			srest := string(rrest)
+			return MlrvalFromString(sfirst + srest)
+		}
+	} else {
+		return *ma
+	}
+}
+
 // ----------------------------------------------------------------
 func MlrvalCleanWhitespace(ma *Mlrval) Mlrval {
 	temp := MlrvalCollapseWhitespaceRegexp(ma, WhitespaceRegexp())
