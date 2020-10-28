@@ -279,6 +279,16 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalStrlen,
 	},
 	{
+		name:      "tolower",
+		help:      "Convert string to lowercase.",
+		unaryFunc: types.MlrvalToLower,
+	},
+	{
+		name:      "toupper",
+		help:      "Convert string to uppercase.",
+		unaryFunc: types.MlrvalToUpper,
+	},
+	{
 		name:      "typeof",
 		help:      "Convert argument to type of argument (e.g. \"str\"). For debug.",
 		unaryFunc: types.MlrvalTypeof,

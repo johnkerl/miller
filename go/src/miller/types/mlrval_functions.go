@@ -2007,6 +2007,27 @@ func WhitespaceRegexp() *regexp.Regexp {
 	return regexp.MustCompile("\\s+")
 }
 
+// ================================================================
+func MlrvalToUpper(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_STRING {
+		return MlrvalFromString(strings.ToUpper(ma.printrep))
+	} else if ma.mvtype == MT_VOID {
+		return *ma
+	} else {
+		return *ma
+	}
+}
+
+func MlrvalToLower(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_STRING {
+		return MlrvalFromString(strings.ToLower(ma.printrep))
+	} else if ma.mvtype == MT_VOID {
+		return *ma
+	} else {
+		return *ma
+	}
+}
+
 // ----------------------------------------------------------------
 func MlrvalCleanWhitespace(ma *Mlrval) Mlrval {
 	temp := MlrvalCollapseWhitespaceRegexp(ma, WhitespaceRegexp())
