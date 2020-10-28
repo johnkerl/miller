@@ -147,6 +147,7 @@ func NewMapperPut(
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
 			os.Args[0])
+		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
 	if verbose {
