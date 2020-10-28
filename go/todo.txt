@@ -3,9 +3,11 @@ TOP OF LIST:
 
 * window.mlr, window2.mlr -> doc somewhere
 
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o note json types: string, number, boolean, null, object, array.
+
 * UDF nexts:
   ! double-check $-anything in begin/end
-  ! implement indexed-localvar assignment
   o mlr_expect_fail extraneous check output; wut
   o ENV
   o is_x and asserting_x
@@ -29,6 +31,7 @@ TOP OF LIST:
   o either do copy for all retainers, or treat inrecs as immutable ...
 
 * sliding-window averages into mapper step (C + Go)
+* stats1 rank
 
 * some more verbs
   o easies first
@@ -39,9 +42,6 @@ TOP OF LIST:
 
 * comment-handling
   - delegator for CSV ...
-
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o note json types: string, number, boolean, null, object, array.
 
 ! quoted NIDX
   - how with whitespace regex -- ?
