@@ -338,6 +338,10 @@ map/array, same as length.`,
 		binaryFunc: types.MlrvalPow,
 	},
 	{
+		name:       "pow",
+		binaryFunc: types.MlrvalPow,
+	},
+	{
 		name:       ".+",
 		binaryFunc: types.MlrvalDotPlus,
 	},
