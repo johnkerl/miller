@@ -7,13 +7,14 @@ TOP OF LIST:
   o note json types: string, number, boolean, null, object, array.
 
 * UDF nexts:
+  ! more functions
   ! double-check $-anything in begin/end
+  ! put -s ...
+  ! check for multiple put -f; any/multiple put -e
+  ! regexes & associated functions -- necessary or not?
   o mlr_expect_fail extraneous check output; wut
   o ENV
   o is_x and asserting_x
-  o put -s ...
-  o check for multiple put -f; any/multiple put -e
-  o regexes & associated functions -- necessary or not?
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
 
@@ -23,7 +24,6 @@ TOP OF LIST:
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
 
-! parse errors need some context somehow
 ? ;; is parse error; also {...};
 
 * more copy-on-retain for concurrent pointer-mods !
@@ -57,6 +57,44 @@ TOP OF LIST:
   o copy over all operator help-strings from ../c
 
 ----------------------------------------------------------------
+FUNCTIONS:
+
+  !=~
+  =~
+
+  asserting_absent asserting_bool asserting_boolean asserting_empty
+  asserting_empty_map asserting_float asserting_int asserting_map
+  asserting_nonempty_map asserting_not_empty asserting_not_map asserting_not_null
+  asserting_null asserting_numeric asserting_present asserting_string
+
+  is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
+  is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
+  is_present is_string
+
+  joink joinkv joinv
+  splitkv splitkvx splitnv splitnvx
+
+  mapdiff mapexcept mapselect mapsum haskey depth leafcount
+
+  madd mmul msub mexp
+
+  sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
+  dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
+  strftime strftime_local strptime strptime_local
+
+  atan2 pow sgn qnorm roundm invqnorm logifit
+
+  bitcount
+
+  capitalize tolower toupper
+
+  fmtnum hexfmt
+
+  regextract regextract_or_else sub
+
+  system
+
+----------------------------------------------------------------
 CATEGORIES:
 
 * widen verb coverage
@@ -88,7 +126,6 @@ CATEGORIES:
   o for-knv
   o profile mand.mlr & check for need for idx-assign
     -> most definitely needed
-  o indexed localvars at LHS
   o multiple-valued return/assign -- ?
     - array destructure at LHS for multi-retval assign (maps too?)
 
@@ -197,3 +234,4 @@ NITS/NON-IMMEDIATE:
 * make truncate() UTF8-friendly
 * (absent) print on dump -- should simply be empty
 * document array-unset as shiftback
+! error if UDF has same name as built-in
