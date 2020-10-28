@@ -429,6 +429,13 @@ map/array, same as length.`,
 		name:       "truncate",
 		binaryFunc: types.MlrvalTruncate,
 	},
+	{
+		name: "haskey",
+		help: `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
+Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.`,
+		binaryFunc: types.MlrvalHasKey,
+	},
 
 	//pow (class=math #args=2): Exponentiation; same as **.
 	//roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is

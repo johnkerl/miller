@@ -61,7 +61,7 @@ FUNCTIONS:
 
   =~ !=~
 
-  mapdiff mapexcept mapselect mapsum haskey leafcount
+  mapdiff mapexcept mapselect mapsum
 
   asserting_absent asserting_bool asserting_boolean asserting_empty
   asserting_empty_map asserting_float asserting_int asserting_map
@@ -92,7 +92,7 @@ FUNCTIONS:
   system
 
 ----------------------------------------------------------------
-k depth
+k depth haskey leafcount
 
 k capitalize tolower toupper
 

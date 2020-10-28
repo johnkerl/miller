@@ -2177,6 +2177,32 @@ func MlrvalLeafCount(ma *Mlrval) Mlrval {
 	return leafcount_dispositions[ma.mvtype](ma)
 }
 
+// ----------------------------------------------------------------
+func has_key_in_array(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype != MT_INT {
+		return MlrvalFromError()
+	}
+	_, ok := unaliasArrayIndex(&ma.arrayval, mb.intval)
+	return MlrvalFromBool(ok)
+}
+
+func has_key_in_map(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype != MT_STRING {
+		return MlrvalFromError()
+	}
+	return MlrvalFromBool(ma.mapval.Has(&mb.printrep))
+}
+
+func MlrvalHasKey(ma, mb *Mlrval) Mlrval {
+	if ma.mvtype == MT_ARRAY {
+		return has_key_in_array(ma, mb)
+	} else if ma.mvtype == MT_MAP {
+		return has_key_in_map(ma, mb)
+	} else {
+		return MlrvalFromError()
+	}
+}
+
 // ================================================================
 func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_FLOAT {
