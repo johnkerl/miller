@@ -56,11 +56,12 @@ TOP OF LIST:
   o others in mlrcli_parse.go
   o copy over all operator help-strings from ../c
 
-----------------------------------------------------------------
+================================================================
 FUNCTIONS:
 
-  !=~
-  =~
+  =~ !=~
+
+  mapdiff mapexcept mapselect mapsum haskey leafcount
 
   asserting_absent asserting_bool asserting_boolean asserting_empty
   asserting_empty_map asserting_float asserting_int asserting_map
@@ -74,8 +75,6 @@ FUNCTIONS:
   joink joinkv joinv
   splitkv splitkvx splitnv splitnvx
 
-  mapdiff mapexcept mapselect mapsum haskey depth leafcount
-
   madd mmul msub mexp
 
   sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
@@ -86,8 +85,6 @@ FUNCTIONS:
 
   bitcount
 
-  capitalize tolower toupper
-
   fmtnum hexfmt
 
   regextract regextract_or_else sub
@@ -95,6 +92,11 @@ FUNCTIONS:
   system
 
 ----------------------------------------------------------------
+k depth
+
+k capitalize tolower toupper
+
+================================================================
 CATEGORIES:
 
 * widen verb coverage

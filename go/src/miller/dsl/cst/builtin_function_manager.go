@@ -298,6 +298,11 @@ Leaves non-numbers as-is.`,
 		help:      "Convert argument to type of argument (e.g. \"str\"). For debug.",
 		unaryFunc: types.MlrvalTypeof,
 	},
+	{
+		name:      "depth",
+		help:      "Prints maximum depth of map/array. Scalars have depth 0.",
+		unaryFunc: types.MlrvalDepth,
+	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions
