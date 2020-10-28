@@ -467,6 +467,26 @@ Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller
 inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 		ternaryFunc: types.MlrvalSubstr,
 	},
+	{
+		name:        "madd",
+		help:        `a + b mod m (integers)`,
+		ternaryFunc: types.MlrvalModAdd,
+	},
+	{
+		name:        "msub",
+		help:        `a - b mod m (integers)`,
+		ternaryFunc: types.MlrvalModSub,
+	},
+	{
+		name:        "mmul",
+		help:        `a * b mod m (integers)`,
+		ternaryFunc: types.MlrvalModMul,
+	},
+	{
+		name:        "mexp",
+		help:        `a ** b mod m (integers)`,
+		ternaryFunc: types.MlrvalModExp,
+	},
 
 	// Variadic built-in functions
 	{

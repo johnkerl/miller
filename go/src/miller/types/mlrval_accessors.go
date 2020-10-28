@@ -14,6 +14,10 @@ func GetTypeName(mvtype MVType) string {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrval) IsLegit() bool {
+	return this.mvtype > MT_VOID
+}
+
 func (this *Mlrval) IsErrorOrAbsent() bool {
 	return this.mvtype == MT_ERROR || this.mvtype == MT_ABSENT
 }

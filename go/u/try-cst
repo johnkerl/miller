@@ -1153,3 +1153,10 @@ run_mlr --from u/abixy-het put -q 'o = mapselect({"a":999}, "b", "nonesuch"); du
 
 run_mlr --from u/abixy-het put -q 'o = mapselect($*, ["b", "nonesuch"]); dump o'
 run_mlr --from u/abixy-het put -q 'o = mapexcept($*, ["b", "nonesuch"]); dump o'
+
+run_mlr --c2p --from u/mod.csv put '
+  $add = madd($a, $b, $m);
+  $sub = msub($a, $b, $m);
+  $mul = mmul($a, $b, $m);
+  $exp = mexp($a, $b, $m);
+'

@@ -61,8 +61,6 @@ FUNCTIONS:
 
   =~ !=~
 
-  mapselect mapexcept mapsum mapdiff
-
   asserting_absent asserting_bool asserting_boolean asserting_empty
   asserting_empty_map asserting_float asserting_int asserting_map
   asserting_nonempty_map asserting_not_empty asserting_not_map asserting_not_null
@@ -75,7 +73,7 @@ FUNCTIONS:
   joink joinkv joinv
   splitkv splitkvx splitnv splitnvx
 
-  madd mmul msub mexp
+  madd msub mmul mexp
 
   sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
   dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
@@ -95,8 +93,8 @@ FUNCTIONS:
   system
 
 ----------------------------------------------------------------
+k mapselect mapexcept mapsum mapdiff
 k depth haskey leafcount
-
 k capitalize tolower toupper
 
 ================================================================

@@ -977,6 +977,94 @@ func MlrvalModulus(ma, mb *Mlrval) Mlrval {
 	return modulus_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }
 
+// ================================================================
+// Pythonic
+func mlrmod(a, m int64) int64 {
+	retval := a % m
+	if retval < 0 {
+		retval += m
+	}
+	return retval
+}
+
+type i_iii_func func(a, b, m int64) int64
+
+func imodadd(a, b, m int64) int64 {
+	return mlrmod(a+b, m)
+}
+func imodsub(a, b, m int64) int64 {
+	return mlrmod(a-b, m)
+}
+func imodmul(a, b, m int64) int64 {
+	return mlrmod(a*b, m)
+}
+func imodexp(a, e, m int64) int64 {
+	if e == 0 {
+		return 1
+	}
+	if e == 1 {
+		return a
+	}
+	// We assume our caller has verified the exponent is not negative
+
+	// Repeated-squaring algorithm
+	apower := a
+	c := int64(1)
+	u := uint64(e)
+
+	for u != 0 {
+		if (u & 1) == 1 {
+			c = mlrmod(c*apower, m)
+		}
+		u >>= 1
+		apower = mlrmod(apower*apower, m)
+	}
+	return c
+}
+
+func imodop(ma, mb, mc *Mlrval, iop i_iii_func) Mlrval {
+	if !ma.IsLegit() {
+		return *ma
+	}
+	if !mb.IsLegit() {
+		return *mb
+	}
+	if !mc.IsLegit() {
+		return *mc
+	}
+	if !ma.IsInt() {
+		return MlrvalFromError()
+	}
+	if !mb.IsInt() {
+		return MlrvalFromError()
+	}
+	if !mc.IsInt() {
+		return MlrvalFromError()
+	}
+
+	return MlrvalFromInt64(iop(ma.intval, mb.intval, mc.intval))
+}
+
+func MlrvalModAdd(ma, mb, mc *Mlrval) Mlrval {
+	return imodop(ma, mb, mc, imodadd)
+}
+
+func MlrvalModSub(ma, mb, mc *Mlrval) Mlrval {
+	return imodop(ma, mb, mc, imodsub)
+}
+
+func MlrvalModMul(ma, mb, mc *Mlrval) Mlrval {
+	return imodop(ma, mb, mc, imodmul)
+}
+
+func MlrvalModExp(ma, mb, mc *Mlrval) Mlrval {
+	// Pre-check for negative exponent
+	if mb.mvtype == MT_INT && mb.intval < 0 {
+		return MlrvalFromError()
+	}
+	return imodop(ma, mb, mc, imodexp)
+}
+
 // ----------------------------------------------------------------
 // Bitwise AND
 
