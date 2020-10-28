@@ -303,6 +303,12 @@ Leaves non-numbers as-is.`,
 		help:      "Prints maximum depth of map/array. Scalars have depth 0.",
 		unaryFunc: types.MlrvalDepth,
 	},
+	{
+		name: "leafcount",
+		help: `Counts total number of terminal values in map/array. For single-level
+map/array, same as length.`,
+		unaryFunc: types.MlrvalLeafCount,
+	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions

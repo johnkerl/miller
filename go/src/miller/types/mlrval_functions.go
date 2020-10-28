@@ -2117,6 +2117,67 @@ func MlrvalDepth(ma *Mlrval) Mlrval {
 }
 
 // ================================================================
+func leafcount_from_array(ma *Mlrval) Mlrval {
+	sumChildLeafCount := 0
+	for _, child := range ma.arrayval {
+		// Golang initialization loop if we do this :(
+		// childLeafCount := MlrvalLeafCount(&child)
+
+		childLeafCount := MlrvalFromInt64(1)
+		if child.mvtype == MT_ARRAY {
+			childLeafCount = leafcount_from_array(&child)
+		} else if child.mvtype == MT_MAP {
+			childLeafCount = leafcount_from_map(&child)
+		}
+
+		iChildLeafCount := int(childLeafCount.intval)
+		sumChildLeafCount += iChildLeafCount
+	}
+	return MlrvalFromInt64(int64(sumChildLeafCount))
+}
+
+func leafcount_from_map(ma *Mlrval) Mlrval {
+	sumChildLeafCount := 0
+	for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		child := pe.Value
+
+		// Golang initialization loop if we do this :(
+		// childLeafCount := MlrvalLeafCount(child)
+
+		childLeafCount := MlrvalFromInt64(1)
+		if child.mvtype == MT_ARRAY {
+			childLeafCount = leafcount_from_array(child)
+		} else if child.mvtype == MT_MAP {
+			childLeafCount = leafcount_from_map(child)
+		}
+
+		iChildLeafCount := int(childLeafCount.intval)
+		sumChildLeafCount += iChildLeafCount
+	}
+	return MlrvalFromInt64(int64(sumChildLeafCount))
+}
+
+func leafcount_from_scalar(ma *Mlrval) Mlrval {
+	return MlrvalFromInt64(1)
+}
+
+var leafcount_dispositions = [MT_DIM]UnaryFunc{
+	/*ERROR  */ _erro1,
+	/*ABSENT */ _absn1,
+	/*VOID   */ leafcount_from_scalar,
+	/*STRING */ leafcount_from_scalar,
+	/*INT    */ leafcount_from_scalar,
+	/*FLOAT  */ leafcount_from_scalar,
+	/*BOOL   */ leafcount_from_scalar,
+	/*ARRAY  */ leafcount_from_array,
+	/*MAP    */ leafcount_from_map,
+}
+
+func MlrvalLeafCount(ma *Mlrval) Mlrval {
+	return leafcount_dispositions[ma.mvtype](ma)
+}
+
+// ================================================================
 func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_FLOAT {
 		return MlrvalFromString(lib.Sec2GMT(ma.floatval, 0))
