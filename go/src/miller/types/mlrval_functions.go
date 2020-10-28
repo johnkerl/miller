@@ -2204,6 +2204,126 @@ func MlrvalHasKey(ma, mb *Mlrval) Mlrval {
 }
 
 // ================================================================
+func MlrvalMapSelect(mlrvals []*Mlrval) Mlrval {
+	if len(mlrvals) < 1 {
+		return MlrvalFromError()
+	}
+	if mlrvals[0].mvtype != MT_MAP {
+		return MlrvalFromError()
+	}
+	oldmap := mlrvals[0].mapval
+	newMap := NewMlrmap()
+
+	newKeys := make(map[string]bool)
+	for _, selectArg := range mlrvals[1:] {
+		if selectArg.mvtype == MT_STRING {
+			newKeys[selectArg.printrep] = true
+		} else if selectArg.mvtype == MT_ARRAY {
+			for _, element := range selectArg.arrayval {
+				if selectArg.mvtype == MT_STRING {
+					newKeys[element.printrep] = true
+				} else {
+					return MlrvalFromError()
+				}
+			}
+		} else {
+			return MlrvalFromError()
+		}
+	}
+
+	for pe := oldmap.Head; pe != nil; pe = pe.Next {
+		oldKey := *pe.Key
+		_, present := newKeys[oldKey]
+		if present {
+			newMap.PutCopy(&oldKey, oldmap.Get(&oldKey))
+		}
+	}
+
+	return MlrvalFromMap(newMap)
+}
+
+// ----------------------------------------------------------------
+func MlrvalMapExcept(mlrvals []*Mlrval) Mlrval {
+	if len(mlrvals) < 1 {
+		return MlrvalFromError()
+	}
+	if mlrvals[0].mvtype != MT_MAP {
+		return MlrvalFromError()
+	}
+	newMap := mlrvals[0].mapval.Copy()
+
+	for _, exceptArg := range mlrvals[1:] {
+		if exceptArg.mvtype == MT_STRING {
+			newMap.Remove(&exceptArg.printrep)
+		} else if exceptArg.mvtype == MT_ARRAY {
+			for _, element := range exceptArg.arrayval {
+				if exceptArg.mvtype == MT_STRING {
+					newMap.Remove(&element.printrep)
+				} else {
+					return MlrvalFromError()
+				}
+			}
+		} else {
+			return MlrvalFromError()
+		}
+	}
+
+	return MlrvalFromMap(newMap)
+}
+
+// ----------------------------------------------------------------
+func MlrvalMapSum(mlrvals []*Mlrval) Mlrval {
+	if len(mlrvals) == 0 {
+		return MlrvalEmptyMap()
+	}
+	if len(mlrvals) == 1 {
+		return *mlrvals[0]
+	}
+	if mlrvals[0].mvtype != MT_MAP {
+		return MlrvalFromError()
+	}
+	newMap := mlrvals[0].mapval.Copy()
+
+	for _, otherMapArg := range mlrvals[1:] {
+		if otherMapArg.mvtype != MT_MAP {
+			return MlrvalFromError()
+		}
+
+		for pe := otherMapArg.mapval.Head; pe != nil; pe = pe.Next {
+			newMap.PutCopy(pe.Key, pe.Value)
+		}
+	}
+
+	return MlrvalFromMap(newMap)
+}
+
+// ----------------------------------------------------------------
+func MlrvalMapDiff(mlrvals []*Mlrval) Mlrval {
+	if len(mlrvals) == 0 {
+		return MlrvalEmptyMap()
+	}
+	if len(mlrvals) == 1 {
+		return *mlrvals[0]
+	}
+	if mlrvals[0].mvtype != MT_MAP {
+		return MlrvalFromError()
+	}
+	newMap := mlrvals[0].mapval.Copy()
+
+	for _, otherMapArg := range mlrvals[1:] {
+		if otherMapArg.mvtype != MT_MAP {
+			return MlrvalFromError()
+		}
+
+		for pe := otherMapArg.mapval.Head; pe != nil; pe = pe.Next {
+			newMap.Remove(pe.Key)
+		}
+	}
+
+	return MlrvalFromMap(newMap)
+}
+
+// ================================================================
 func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_FLOAT {
 		return MlrvalFromString(lib.Sec2GMT(ma.floatval, 0))

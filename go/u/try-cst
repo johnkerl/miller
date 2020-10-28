@@ -1115,3 +1115,39 @@ run_mlr --oxtab --from u/s.dkvp head -n 1 then put '
   $hk14 = haskey([10,20,30], -1);
   $hk15 = haskey([10,20,30], "a");
 '
+
+# ----------------------------------------------------------------
+run_mlr --from u/abixy-het put -q 'o = mapsum(); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff(); dump o'
+mlr_expect_fail --from u/abixy-het put -q 'o = mapexcept(); dump o'
+mlr_expect_fail --from u/abixy-het put -q 'o = mapselect(); dump o'
+
+run_mlr --from u/abixy-het put -q 'o = mapsum($*); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapsum({"a":999}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff($*); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff({"a":999}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapexcept($*); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapexcept({"a":999}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect($*); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect({"a":999}); dump o'
+
+run_mlr --from u/abixy-het put -q 'o = mapsum($*, {"a":999}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapsum({"a":999}, $*); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff($*, {"a":999}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff({"a":999}, $*); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapexcept($*, "a"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapexcept({"a":999}, "a"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapexcept({"a":999}, "nonesuch"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect($*, "a"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect({"a":999}, "a"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect({"a":999}, "nonesuch"); dump o'
+
+run_mlr --from u/abixy-het put -q 'o = mapsum($*, {"a":999}, {"b": 444}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapsum({"a":999}, $*, {"b": 444}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff($*, {"a":999}, {"b": 444}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapdiff({"a":999}, $*, {"b": 444}); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapexcept($*, "a", "b"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect({"a":999}, "b", "nonesuch"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect($*, "a", "b"); dump o'
+run_mlr --from u/abixy-het put -q 'o = mapselect({"a":999}, "b", "nonesuch"); dump o'
+

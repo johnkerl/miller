@@ -477,6 +477,37 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 		name:         "min",
 		variadicFunc: types.MlrvalVariadicMin,
 	},
+
+	{
+		name: "mapselect",
+		help: `Returns a map with only keys from remaining arguments set.
+Remaining arguments can be strings or arrays of string.
+E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
+and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
+		variadicFunc: types.MlrvalMapSelect,
+	},
+	{
+		name: "mapexcept",
+		help: `Returns a map with keys from remaining arguments, if any, unset.
+Remaining arguments can be strings or arrays of string.
+E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
+and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
+		variadicFunc: types.MlrvalMapExcept,
+	},
+	{
+		name: "mapsum",
+		help: `With 0 args, returns empty map. With >= 1 arg, returns a map with
+key-value pairs from all arguments. Rightmost collisions win, e.g.
+'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
+		variadicFunc: types.MlrvalMapSum,
+	},
+	{
+		name: "mapdiff",
+		help: `With 0 args, returns empty map. With 1 arg, returns copy of arg.
+With 2 or more, returns copy of arg 1 with all keys from any of remaining
+argument maps removed.`,
+		variadicFunc: types.MlrvalMapDiff,
+	},
 }
 
 // ================================================================

@@ -61,7 +61,7 @@ FUNCTIONS:
 
   =~ !=~
 
-  mapdiff mapexcept mapselect mapsum
+  mapselect mapexcept mapsum mapdiff
 
   asserting_absent asserting_bool asserting_boolean asserting_empty
   asserting_empty_map asserting_float asserting_int asserting_map
@@ -87,7 +87,10 @@ FUNCTIONS:
 
   fmtnum hexfmt
 
-  regextract regextract_or_else sub
+  sub
+  https://play.golang.org/p/ihtuIU-WEYG
+
+  regextract regextract_or_else
 
   system
 
@@ -237,3 +240,4 @@ NITS/NON-IMMEDIATE:
 * (absent) print on dump -- should simply be empty
 * document array-unset as shiftback
 ! error if UDF has same name as built-in
+* huge commenting pass

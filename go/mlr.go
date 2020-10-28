@@ -46,17 +46,11 @@ func main() {
 
 		fmt.Fprintf(os.Stderr, "CPU profile started.\n")
 		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\n")
-		//	c := make(chan os.Signal)
-		//	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-		//	go func() {
-		//		<-c
-		//		pprof.StopCPUProfile()
-		//		os.Exit(0)
-		//	}()
 	}
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Start of Miller main per se
+
 	options, recordMappers, err := cli.ParseCommandLine(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
