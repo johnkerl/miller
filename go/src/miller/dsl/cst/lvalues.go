@@ -516,8 +516,9 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 		state.stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
 		return nil
 	} else {
-		// TODO
-		return errors.New("Indexed local-variable assignment has not been implemented yet.")
+		// TODO: propagate error return
+		state.stack.SetVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+		return nil
 	}
 }
 
@@ -534,10 +535,7 @@ func (this *LocalVariableLvalueNode) UnsetIndexed(
 	if indices == nil {
 		state.stack.UnsetVariable(this.typeGatedMlrvalName.Name)
 	} else {
-		// TODO
-		//state.Inrec.UnsetIndexed(
-			//append([]*types.Mlrval{&lhsFieldName}, indices...),
-		//)
+		state.stack.UnsetVariableIndexed(this.typeGatedMlrvalName.Name, indices)
 	}
 }
 

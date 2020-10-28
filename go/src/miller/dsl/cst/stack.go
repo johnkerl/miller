@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 
+	"miller/lib"
 	"miller/types"
 )
 
@@ -49,8 +50,19 @@ func (this *Stack) PopStackFrame() {
 //   }
 //   $z = z        <-- z should be 2 or 3, not 1
 //
-func (this *Stack) BindVariable(name string, mlrval *types.Mlrval) {
+func (this *Stack) BindVariable(
+	name string,
+	mlrval *types.Mlrval,
+) {
 	this.stackFrames.Front().Value.(*StackFrame).Set(name, mlrval)
+}
+
+func (this *Stack) BindVariableIndexed(
+	name string,
+    indices []*types.Mlrval,
+	mlrval *types.Mlrval,
+) {
+	this.stackFrames.Front().Value.(*StackFrame).SetIndexed(name, indices, mlrval)
 }
 
 // Used for the above BindVariable example where we look for outer-scope names,
@@ -76,6 +88,36 @@ func (this *Stack) UnsetVariable(name string) {
 	}
 }
 
+// ----------------------------------------------------------------
+func (this *Stack) SetVariableIndexed(
+	name string,
+    indices []*types.Mlrval,
+	mlrval *types.Mlrval,
+) {
+	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
+		stackFrame := entry.Value.(*StackFrame)
+		if stackFrame.Has(name) {
+			stackFrame.SetIndexed(name, indices, mlrval)
+			return
+		}
+	}
+	this.BindVariableIndexed(name, indices, mlrval)
+}
+
+func (this *Stack) UnsetVariableIndexed(
+	name string,
+    indices []*types.Mlrval,
+) {
+	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
+		stackFrame := entry.Value.(*StackFrame)
+		if stackFrame.Has(name) {
+			stackFrame.UnsetIndexed(name, indices)
+			return
+		}
+	}
+}
+
+// ----------------------------------------------------------------
 // Returns nil on no-such
 func (this *Stack) ReadVariable(name string) *types.Mlrval {
 
@@ -116,6 +158,16 @@ func NewStackFrame() *StackFrame {
 	}
 }
 
+// Returns nil on no such
+func (this *StackFrame) Get(name string) *types.Mlrval {
+	return this.vars[name]
+}
+
+// Returns nil on no such
+func (this *StackFrame) Has(name string) bool {
+	return this.vars[name] != nil
+}
+
 func (this *StackFrame) Clear() {
 	this.vars = make(map[string]*types.Mlrval)
 }
@@ -129,12 +181,42 @@ func (this *StackFrame) Unset(name string) {
 	this.vars[name] = &value
 }
 
-// Returns nil on no such
-func (this *StackFrame) Get(name string) *types.Mlrval {
-	return this.vars[name]
+func (this *StackFrame) SetIndexed(
+	name string,
+    indices []*types.Mlrval,
+	mlrval *types.Mlrval,
+) {
+	value := this.Get(name);
+	if value == nil {
+		lib.InternalCodingErrorIf(len(indices) < 1)
+		leadingIndex := indices[0]
+		if leadingIndex.IsString() {
+			newval := types.MlrvalEmptyMap()
+			newval.PutIndexed(indices, mlrval)
+			this.Set(name, &newval)
+		} else if leadingIndex.IsInt() {
+			newval := types.MlrvalEmptyArray()
+			newval.PutIndexed(indices, mlrval)
+			this.Set(name, &newval)
+		} else {
+			// TODO:
+			// return errors.New("...");
+		}
+	} else {
+		// TODO: propagate error return.
+		// For example maybe the variable exists and is an array but
+		// the leading index is a string.
+		_ = value.PutIndexed(indices, mlrval)
+	}
 }
 
-// Returns nil on no such
-func (this *StackFrame) Has(name string) bool {
-	return this.vars[name] != nil
+func (this *StackFrame) UnsetIndexed(
+	name string,
+    indices []*types.Mlrval,
+) {
+	value := this.Get(name);
+	if value == nil {
+		return
+	}
+	value.UnsetIndexed(indices)
 }
