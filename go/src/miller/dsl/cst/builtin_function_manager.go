@@ -197,6 +197,11 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalRound,
 	},
 	{
+		name:      "sgn",
+		help:      ` +1, 0, -1 for positive, zero, negative input respectively.`,
+		unaryFunc: types.MlrvalSgn,
+	},
+	{
 		name:      "sin",
 		help:      "Trigonometric sine.",
 		unaryFunc: types.MlrvalSin,
@@ -424,6 +429,11 @@ map/array, same as length.`,
 	},
 	{
 		name: "urandrange",
+	},
+	{
+		name:      "atan2",
+		help:      "Two-argument arctangent.",
+		binaryFunc: types.MlrvalAtan2,
 	},
 	{
 		name:       "truncate",

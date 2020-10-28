@@ -73,8 +73,6 @@ FUNCTIONS:
   joink joinkv joinv
   splitkv splitkvx splitnv splitnvx
 
-  madd msub mmul mexp
-
   sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
   dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
   strftime strftime_local strptime strptime_local
@@ -93,6 +91,7 @@ FUNCTIONS:
   system
 
 ----------------------------------------------------------------
+k madd msub mmul mexp
 k mapselect mapexcept mapsum mapdiff
 k depth haskey leafcount
 k capitalize tolower toupper

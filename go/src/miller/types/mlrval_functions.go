@@ -283,6 +283,18 @@ func MlrvalBitwiseNOT(ma *Mlrval) Mlrval {
 // ================================================================
 // Go math-library functions
 
+func ourSgn(a float64) float64 {
+	if a > 0 {
+		return 1.0
+	} else if a < 0 {
+		return -1.0
+	} else if a == 0 {
+		return 0.0
+	} else {
+		return math.NaN()
+	}
+}
+
 func math_unary_f_i(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
 	return MlrvalFromFloat64(f(float64(ma.intval)))
 }
@@ -290,6 +302,7 @@ func math_unary_f_f(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
 	return MlrvalFromFloat64(f(ma.floatval))
 }
 
+// Disposition vector for unary mathlib functions
 var mudispo = [MT_DIM]mathLibUnaryFuncWrapper{
 	/*ERROR  */ _math_unary_erro1,
 	/*ABSENT */ _math_unary_absn1,
@@ -322,6 +335,7 @@ func MlrvalLog(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Log) }
 func MlrvalLog10(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Log10) }
 func MlrvalLog1p(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Log1p) }
 func MlrvalRound(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Round) }
+func MlrvalSgn(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, ourSgn) }
 func MlrvalSin(ma *Mlrval) Mlrval   { return mudispo[ma.mvtype](ma, math.Sin) }
 func MlrvalSinh(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Sinh) }
 func MlrvalSqrt(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Sqrt) }
@@ -330,8 +344,6 @@ func MlrvalTanh(ma *Mlrval) Mlrval  { return mudispo[ma.mvtype](ma, math.Tanh) }
 
 // TODO: port from C
 //func MlrvalInvqnorm(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, math.Invqnorm) }
-//func MlrvalMax(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Max) }
-//func MlrvalMin(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Min) }
 //func MlrvalQnorm(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Qnorm) }
 //func MlrvalSgn(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Sgn) }
 
@@ -721,6 +733,37 @@ func MlrvalPow(ma, mb *Mlrval) Mlrval {
 }
 
 // ================================================================
+func atan2_f_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Atan2(float64(ma.intval), float64(mb.intval)))
+}
+func atan2_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Atan2(float64(ma.intval), mb.floatval))
+}
+func atan2_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Atan2(ma.floatval, float64(mb.intval)))
+}
+func atan2_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(math.Atan2(ma.floatval, mb.floatval))
+}
+
+var atan2_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	//           ERROR  ABSENT VOID   STRING INT    FLOAT  BOOL ARRAY MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
+	/*VOID   */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _void, _erro, atan2_f_ii, atan2_f_if, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _void, _erro, atan2_f_fi, atan2_f_ff, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+}
+
+func MlrvalAtan2(ma, mb *Mlrval) Mlrval {
+	return atan2_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+
+// ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
@@ -1005,9 +1048,9 @@ func imodexp(a, e, m int64) int64 {
 	if e == 1 {
 		return a
 	}
-	// We assume our caller has verified the exponent is not negative
 
-	// Repeated-squaring algorithm
+	// Repeated-squaring algorithm.
+	// We assume our caller has verified the exponent is not negative.
 	apower := a
 	c := int64(1)
 	u := uint64(e)
