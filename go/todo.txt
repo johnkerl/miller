@@ -77,7 +77,7 @@ FUNCTIONS:
   dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
   strftime strftime_local strptime strptime_local
 
-  qnorm roundm invqnorm logifit
+  roundm logifit
 
   bitcount
 
@@ -91,7 +91,7 @@ FUNCTIONS:
   system
 
 ----------------------------------------------------------------
-k atan2 pow sgn
+k atan2 pow sgn qnorm invqnorm
 k madd msub mmul mexp
 k mapselect mapexcept mapsum mapdiff
 k depth haskey leafcount

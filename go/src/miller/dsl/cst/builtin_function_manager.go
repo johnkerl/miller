@@ -177,6 +177,12 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalFloor,
 	},
 	{
+		name:      "invqnorm",
+		help:      `Inverse of normal cumulative distribution function.
+Note that invqorm(urand()) is normally distributed.`,
+		unaryFunc: types.MlrvalInvqnorm,
+	},
+	{
 		name:      "log",
 		help:      "Natural (base-e) logarithm.",
 		unaryFunc: types.MlrvalLog,
@@ -190,6 +196,11 @@ Leaves non-numbers as-is.`,
 		name:      "log1p",
 		help:      "log(1-x).",
 		unaryFunc: types.MlrvalLog1p,
+	},
+	{
+		name:      "qnorm",
+		help:      `Normal cumulative distribution function.`,
+		unaryFunc: types.MlrvalQnorm,
 	},
 	{
 		name:      "round",
