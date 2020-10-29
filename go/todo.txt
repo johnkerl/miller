@@ -61,6 +61,15 @@ TOP OF LIST:
 ================================================================
 FUNCTIONS:
 
+  asserting_absent asserting_bool asserting_boolean asserting_empty
+  asserting_empty_map asserting_float asserting_int asserting_map
+  asserting_nonempty_map asserting_not_empty asserting_not_map asserting_not_null
+  asserting_null asserting_numeric asserting_present asserting_string
+
+  is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
+  is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
+  is_present is_string
+
   sub
   (https://play.golang.org/p/ihtuIU-WEYG)
 
@@ -76,15 +85,6 @@ FUNCTIONS:
   sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
   dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
   strftime strftime_local strptime strptime_local
-
-  asserting_absent asserting_bool asserting_boolean asserting_empty
-  asserting_empty_map asserting_float asserting_int asserting_map
-  asserting_nonempty_map asserting_not_empty asserting_not_map asserting_not_null
-  asserting_null asserting_numeric asserting_present asserting_string
-
-  is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
-  is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
-  is_present is_string
 
 ----------------------------------------------------------------
 k =~ !=~
