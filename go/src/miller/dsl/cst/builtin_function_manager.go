@@ -177,8 +177,8 @@ Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalFloor,
 	},
 	{
-		name:      "invqnorm",
-		help:      `Inverse of normal cumulative distribution function.
+		name: "invqnorm",
+		help: `Inverse of normal cumulative distribution function.
 Note that invqorm(urand()) is normally distributed.`,
 		unaryFunc: types.MlrvalInvqnorm,
 	},
@@ -442,6 +442,12 @@ map/array, same as length.`,
 	{
 		name:       ">>>",
 		binaryFunc: types.MlrvalUnsignedRightShift,
+	},
+	{
+		name: "roundm",
+		help: `Round to nearest multiple of m: roundm($x,$m) is
+the same as round($x/$m)*$m.`,
+		binaryFunc: types.MlrvalRoundm,
 	},
 
 	{

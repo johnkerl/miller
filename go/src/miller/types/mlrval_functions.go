@@ -874,6 +874,41 @@ func MlrvalAtan2(ma, mb *Mlrval) Mlrval {
 }
 
 // ================================================================
+func mlr_roundm(x, m float64) float64 {
+	return math.Round(x/m) * m
+}
+
+func roundm_f_ii(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(mlr_roundm(float64(ma.intval), float64(mb.intval)))
+}
+func roundm_f_if(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(mlr_roundm(float64(ma.intval), mb.floatval))
+}
+func roundm_f_fi(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(mlr_roundm(ma.floatval, float64(mb.intval)))
+}
+func roundm_f_ff(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromFloat64(mlr_roundm(ma.floatval, mb.floatval))
+}
+
+var roundm_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	//           ERROR  ABSENT VOID   STRING INT    FLOAT  BOOL ARRAY MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
+	/*VOID   */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _void, _erro, roundm_f_ii, roundm_f_if, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _void, _erro, roundm_f_fi, roundm_f_ff, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+}
+
+func MlrvalRoundm(ma, mb *Mlrval) Mlrval {
+	return roundm_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+}
+
+// ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 

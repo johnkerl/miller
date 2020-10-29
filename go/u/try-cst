@@ -239,6 +239,11 @@ echo; run_mlr --from u/s.dkvp --opprint put '$c = cos(2*M_PI*NR/32); $s = sin(2*
 
 echo; run_mlr --from u/ten.dkvp --opprint put '$si = sgn($i-5); $sy = sgn($y); $t = atan2($y, $x); $p = $x ** $y; $q = pow($x, $y)'
 echo; run_mlr --opprint --from u/ten.dkvp put '$q = qnorm(-5 + $i); $r = 5 + invqnorm($q)'
+echo; run_mlr --opprint --from u/ten.dkvp put '
+  $r2 = roundm($i + $x, 2.0);
+  $r4 = roundm($i + $x, 4.0);
+'
+
 echo; run_mlr --from u/ten.dkvp --opprint put '$nx = bitcount($x); $ni = bitcount($i)'
 
 echo; run_mlr --from u/s.dkvp --opprint put 'filter NR > 2'
