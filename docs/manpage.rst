@@ -140,7 +140,8 @@ This is simply a copy of what you should see on running **man mlr** at a command
     	group-by group-like having-fields head histogram join label least-frequent
     	merge-fields most-frequent nest nothing put regularize remove-empty-columns
     	rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
-    	skip-trivial-records sort stats1 stats2 step tac tail tee top uniq unsparsify
+    	skip-trivial-records sort sort-within-records stats1 stats2 step tac tail tee
+    	top uniq unsparsify
     
        FUNCTION LIST
     	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
@@ -1234,6 +1235,10 @@ This is simply a copy of what you should see on running **man mlr** at a command
     	 mlr sort -f a,b -nr x,y,z
            which is the same as:
     	 mlr sort -f a -f b -nr x -nr y -nr z
+    
+       sort-within-records
+           Usage: mlr sort-within-records [no options]
+           Outputs records sorted lexically ascending by keys.
     
        stats1
            Usage: mlr stats1 [options]
@@ -2370,4 +2375,4 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
     
     
-    				  2020-10-26			     MILLER(1)
+    				  2020-10-29			     MILLER(1)

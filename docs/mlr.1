@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2020-10-26
+.\"      Date: 2020-10-29
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2020-10-26" "\ \&" "\ \&"
+.TH "MILLER" "1" "2020-10-29" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,7 +173,8 @@ output separator to the given value.
  group-by group-like having-fields head histogram join label least-frequent
  merge-fields most-frequent nest nothing put regularize remove-empty-columns
  rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
- skip-trivial-records sort stats1 stats2 step tac tail tee top uniq unsparsify
+ skip-trivial-records sort sort-within-records stats1 stats2 step tac tail tee
+ top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -1599,6 +1600,16 @@ Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
   mlr sort -f a -f b -nr x -nr y -nr z
+.fi
+.if n \{\
+.RE
+.SS "sort-within-records"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sort-within-records [no options]
+Outputs records sorted lexically ascending by keys.
 .fi
 .if n \{\
 .RE
