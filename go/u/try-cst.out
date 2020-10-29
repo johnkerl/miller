@@ -3494,87 +3494,87 @@ mlr -n put -v begin{true}
 Miller: begin/end blocks cannot have bare booleans: there is no record to filter
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[0]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[0]; dump $v
 [1, 2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[1]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[1]; dump $v
 [2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[2]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[2]; dump $v
 [1, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[3]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[3]; dump $v
 [1, 2, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[4]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[4]; dump $v
 [1, 2, 3, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[5]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[5]; dump $v
 [1, 2, 3, 4]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[6]; dump $v
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[6]; dump $v
 [1, 2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[0]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[0]; dump @v }
 [1, 2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[1]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[1]; dump @v }
 [2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[2]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[2]; dump @v }
 [1, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[3]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[3]; dump @v }
 [1, 2, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[4]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[4]; dump @v }
 [1, 2, 3, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[5]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[5]; dump @v }
 [1, 2, 3, 4]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[6]; dump @v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[6]; dump @v }
 [1, 2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[0]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[0]; dump v }
 [1, 2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[1]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[1]; dump v }
 [2, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[2]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[2]; dump v }
 [1, 3, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[3]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[3]; dump v }
 [1, 2, 4, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[4]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[4]; dump v }
 [1, 2, 3, 5]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[5]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[5]; dump v }
 [1, 2, 3, 4]
 
 ----------------------------------------------------------------
-mlr --from s head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[6]; dump v }
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[6]; dump v }
 [1, 2, 3, 4, 5]
 
 ----------------------------------------------------------------
