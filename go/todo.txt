@@ -61,8 +61,6 @@ TOP OF LIST:
 ================================================================
 FUNCTIONS:
 
-  =~ !=~
-
   sub
   (https://play.golang.org/p/ihtuIU-WEYG)
 
@@ -89,6 +87,7 @@ FUNCTIONS:
   is_present is_string
 
 ----------------------------------------------------------------
+k =~ !=~
 k urandint urandrange
 k hexfmt
 k bitcount

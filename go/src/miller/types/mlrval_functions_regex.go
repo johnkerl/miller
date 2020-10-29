@@ -60,6 +60,33 @@ func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
 }
 
 // ================================================================
+// TODO: make a variant which allows compiling the regexp once and reusing it
+// on each record
 func MlrvalStringMatchesRegexp(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(false) // false
+	if !ma.IsLegit() {
+		return *ma
+	}
+	if !mb.IsLegit() {
+		return *mb
+	}
+	if !ma.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	if !mb.IsStringOrVoid() {
+		return MlrvalFromError()
+	}
+	// TODO: better exception-handling
+	re := regexp.MustCompile(mb.printrep)
+	return MlrvalFromBool(
+		re.MatchString(ma.printrep),
+	)
+}
+
+func MlrvalStringDoesNotMatchRegexp(ma, mb *Mlrval) Mlrval {
+	matches := MlrvalStringMatchesRegexp(ma, mb)
+	if matches.mvtype == MT_BOOL {
+		return MlrvalFromBool(!matches.boolval)
+	} else {
+		return matches // error, absent, etc.
+	}
 }

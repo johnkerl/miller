@@ -407,6 +407,18 @@ map/array, same as length.`,
 		name:       "<=",
 		binaryFunc: types.MlrvalLessThanOrEquals,
 	},
+	{
+		name: "=~",
+		help: `String (left-hand side) matches regex (right-hand
+side), e.g. '$name =~ "^a.*b$"'.`,
+		binaryFunc: types.MlrvalStringMatchesRegexp,
+	},
+	{
+		name: "!=~",
+		help: `String (left-hand side) does not match regex (right-hand
+side), e.g. '$name !=~ "^a.*b$"'.`,
+		binaryFunc: types.MlrvalStringDoesNotMatchRegexp,
+	},
 
 	{
 		name:       "&&",
