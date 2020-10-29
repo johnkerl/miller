@@ -8,6 +8,7 @@ TOP OF LIST:
 
 * UDF nexts:
   ! more functions
+  * split up mlrval_functions.go
   ! double-check $-anything in begin/end
   ! put -s ...
   ! check for multiple put -f; any/multiple put -e
@@ -63,10 +64,7 @@ FUNCTIONS:
 
   joink joinkv joinv
   splitkv splitkvx splitnv splitnvx
-
-  bitcount
-
-  fmtnum hexfmt
+fmtnum
 
   sub
   https://play.golang.org/p/ihtuIU-WEYG
@@ -89,6 +87,8 @@ FUNCTIONS:
   is_present is_string
 
 ----------------------------------------------------------------
+k hexfmt
+k bitcount
 k atan2 pow sgn qnorm invqnorm roundm
 k logifit
 k madd msub mmul mexp

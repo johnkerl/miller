@@ -5,6 +5,7 @@ import (
 	"math"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -1692,6 +1693,15 @@ func MlrvalLogicalXOR(ma, mb *Mlrval) Mlrval {
 		return MlrvalFromBool(ma.boolval != mb.boolval)
 	} else {
 		return MlrvalFromError()
+	}
+}
+
+// ================================================================
+func MlrvalHexfmt(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_INT {
+		return MlrvalFromString("0x" + strconv.FormatUint(uint64(ma.intval), 16))
+	} else {
+		return *ma
 	}
 }
 

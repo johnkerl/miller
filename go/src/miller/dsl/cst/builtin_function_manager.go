@@ -288,6 +288,11 @@ Note that invqorm(urand()) is normally distributed.`,
 		help:      "Convert int/float/bool/string to boolean.",
 		unaryFunc: types.MlrvalToBoolean,
 	},
+	{
+		name:      "hexfmt",
+		help:      `Convert int to hex string, e.g. 255 to "0xff".`,
+		unaryFunc: types.MlrvalHexfmt,
+	},
 
 	{
 		name:      "strip",
