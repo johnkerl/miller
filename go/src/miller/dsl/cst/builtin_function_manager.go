@@ -457,10 +457,16 @@ the same as round($x/$m)*$m.`,
 
 	{
 		name: "urandint",
+		help: `Integer uniformly distributed between inclusive
+integer endpoints.`,
+		binaryFunc: types.MlrvalUrandInt,
 	},
 	{
-		name: "urandrange",
+		name:       "urandrange",
+		help:       `Floating-point numbers uniformly distributed on the interval [a, b).`,
+		binaryFunc: types.MlrvalUrandRange,
 	},
+
 	{
 		name:       "atan2",
 		help:       "Two-argument arctangent.",
