@@ -85,60 +85,6 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 }
 
 // ================================================================
-func MlrvalSsub(ma, mb, mc *Mlrval) Mlrval {
-	if ma.IsErrorOrAbsent() {
-		return *ma
-	}
-	if mb.IsErrorOrAbsent() {
-		return *mb
-	}
-	if mc.IsErrorOrAbsent() {
-		return *mc
-	}
-	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	if !mb.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	if !mc.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	return MlrvalFromString(
-		strings.Replace(ma.printrep, mb.printrep, mc.printrep, 1),
-	)
-}
-
-// ================================================================
-// TODO: make a variant which allows compiling the regexp once and reusing it
-// on each record
-func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
-	if ma.IsErrorOrAbsent() {
-		return *ma
-	}
-	if mb.IsErrorOrAbsent() {
-		return *mb
-	}
-	if mc.IsErrorOrAbsent() {
-		return *mc
-	}
-	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	if !mb.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	if !mc.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	// TODO: better exception-handling
-	re := regexp.MustCompile(mb.printrep)
-	return MlrvalFromString(
-		re.ReplaceAllString(ma.printrep, mc.printrep),
-	)
-}
-
-// ================================================================
 func MlrvalTruncate(ma, mb *Mlrval) Mlrval {
 	if ma.IsErrorOrAbsent() {
 		return *ma
