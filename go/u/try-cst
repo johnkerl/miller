@@ -243,6 +243,7 @@ echo; run_mlr --opprint --from u/ten.dkvp put '
   $r2 = roundm($i + $x, 2.0);
   $r4 = roundm($i + $x, 4.0);
 '
+echo; run_mlr --opprint --from u/ten.dkvp put '$z=logifit($i,$x,$y)'
 
 echo; run_mlr --from u/ten.dkvp --opprint put '$nx = bitcount($x); $ni = bitcount($i)'
 

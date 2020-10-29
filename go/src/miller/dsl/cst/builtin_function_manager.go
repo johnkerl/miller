@@ -523,6 +523,12 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 		help:        `a ** b mod m (integers)`,
 		ternaryFunc: types.MlrvalModExp,
 	},
+	{
+		name: "logifit",
+		help: ` Given m and b from logistic regression, compute fit:
+$yhat=logifit($x,$m,$b).`,
+		ternaryFunc: types.MlrvalLogifit,
+	},
 
 	// Variadic built-in functions
 	{

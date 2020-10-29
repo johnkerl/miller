@@ -909,6 +909,35 @@ func MlrvalRoundm(ma, mb *Mlrval) Mlrval {
 }
 
 // ================================================================
+func MlrvalLogifit(ma, mb, mc *Mlrval) Mlrval {
+	if !ma.IsLegit() {
+		return *ma
+	}
+	if !mb.IsLegit() {
+		return *mb
+	}
+	if !mc.IsLegit() {
+		return *mc
+	}
+
+	// int/float OK; rest not
+	x, xok := ma.GetFloatValue()
+	if !xok {
+		return MlrvalFromError()
+	}
+	m, mok := mb.GetFloatValue()
+	if !mok {
+		return MlrvalFromError()
+	}
+	b, bok := mc.GetFloatValue()
+	if !bok {
+		return MlrvalFromError()
+	}
+
+	return MlrvalFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
+}
+
+// ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
