@@ -1,0 +1,35 @@
+#!/bin/bash
+
+us=$(basename $0)
+set -euo pipefail
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 {.bnf file}" 1>&2
+  exit 1
+fi
+bnf="$1"
+dir=./parserfoo
+verbose="true"
+#verbose="false"
+
+mkdir -p $dir
+
+export GOPATH=$(pwd)
+
+# Build the bin/gocc executable:
+go get github.com/goccmack/gocc
+
+rm -f $dir/*.txt
+if [ "$verbose" = "true" ]; then
+  lr1="$dir/LR1_conflicts.txt"
+  bin/gocc -v -o $dir $bnf || expand -2 $lr1
+else
+  bin/gocc -o $dir $bnf
+fi
+
+# Code-gen directories:
+#   $dir/errors/
+#   $dir/lexer/
+#   $dir/parser/
+#   $dir/token/
+#   $dir/util/

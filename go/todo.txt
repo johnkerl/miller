@@ -8,7 +8,6 @@ TOP OF LIST:
 
 * UDF nexts:
   ! more functions
-  * split up mlrval_functions.go
   ! double-check $-anything in begin/end
   ! put -s ...
   ! check for multiple put -f; any/multiple put -e
@@ -61,6 +60,8 @@ TOP OF LIST:
 FUNCTIONS:
 
   =~ !=~
+
+  urandint urandrange
 
   joink joinkv joinv
   splitkv splitkvx splitnv splitnvx
