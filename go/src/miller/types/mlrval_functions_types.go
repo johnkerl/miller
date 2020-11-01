@@ -1,6 +1,9 @@
 package types
 
 import (
+	"fmt"
+	"os"
+
 	"miller/lib"
 )
 
@@ -120,10 +123,10 @@ func MlrvalToBoolean(ma *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalIsIsAbsent(ma *Mlrval) Mlrval {
+func MlrvalIsAbsent(ma *Mlrval) Mlrval {
 	return MlrvalFromBool(ma.mvtype == MT_ABSENT)
 }
-func MlrvalIsIsError(ma *Mlrval) Mlrval {
+func MlrvalIsError(ma *Mlrval) Mlrval {
 	return MlrvalFromBool(ma.mvtype == MT_ERROR)
 }
 func MlrvalIsBool(ma *Mlrval) Mlrval {
@@ -192,4 +195,98 @@ func MlrvalIsPresent(ma *Mlrval) Mlrval {
 }
 func MlrvalIsString(ma *Mlrval) Mlrval {
 	return MlrvalFromBool(ma.mvtype == MT_STRING || ma.mvtype == MT_VOID)
+}
+
+// ----------------------------------------------------------------
+func assertingCommon(ma, check *Mlrval, description string) Mlrval {
+	if check.IsFalse() {
+		// TODO: get context as in the C impl
+		//fprintf(stderr, "%s: %s type-assertion failed at NR=%lld FNR=%lld FILENAME=%s\n",
+		//MLR_GLOBALS.bargv0, pstate->desc, pvars->pctx->nr, pvars->pctx->fnr, pvars->pctx->filename);
+		//exit(1);
+		fmt.Fprintf(
+			os.Stderr,
+			"Miller: %s type-assertion failed.\n",
+			description,
+		)
+		os.Exit(1)
+	}
+	return *ma
+}
+
+func MlrvalAssertingAbsent(ma *Mlrval) Mlrval {
+	check := MlrvalIsAbsent(ma)
+	return assertingCommon(ma, &check, "is_absent")
+}
+func MlrvalAssertingError(ma *Mlrval) Mlrval {
+	check := MlrvalIsError(ma)
+	return assertingCommon(ma, &check, "is_error")
+}
+func MlrvalAssertingBool(ma *Mlrval) Mlrval {
+	check := MlrvalIsBool(ma)
+	return assertingCommon(ma, &check, "is_bool")
+}
+func MlrvalAssertingBoolean(ma *Mlrval) Mlrval {
+	check := MlrvalIsBoolean(ma)
+	return assertingCommon(ma, &check, "is_boolean")
+}
+func MlrvalAssertingEmpty(ma *Mlrval) Mlrval {
+	check := MlrvalIsEmpty(ma)
+	return assertingCommon(ma, &check, "is_empty")
+}
+func MlrvalAssertingEmptyMap(ma *Mlrval) Mlrval {
+	check := MlrvalIsEmptyMap(ma)
+	return assertingCommon(ma, &check, "is_empty_map")
+}
+func MlrvalAssertingFloat(ma *Mlrval) Mlrval {
+	check := MlrvalIsFloat(ma)
+	return assertingCommon(ma, &check, "is_float")
+}
+func MlrvalAssertingInt(ma *Mlrval) Mlrval {
+	check := MlrvalIsInt(ma)
+	return assertingCommon(ma, &check, "is_int")
+}
+func MlrvalAssertingMap(ma *Mlrval) Mlrval {
+	check := MlrvalIsMap(ma)
+	return assertingCommon(ma, &check, "is_map")
+}
+func MlrvalAssertingArray(ma *Mlrval) Mlrval {
+	check := MlrvalIsArray(ma)
+	return assertingCommon(ma, &check, "is_array")
+}
+func MlrvalAssertingNonEmptyMap(ma *Mlrval) Mlrval {
+	check := MlrvalIsNonEmptyMap(ma)
+	return assertingCommon(ma, &check, "is_non_empty_map")
+}
+func MlrvalAssertingNotEmpty(ma *Mlrval) Mlrval {
+	check := MlrvalIsNotEmpty(ma)
+	return assertingCommon(ma, &check, "is_not_empty")
+}
+func MlrvalAssertingNotMap(ma *Mlrval) Mlrval {
+	check := MlrvalIsNotMap(ma)
+	return assertingCommon(ma, &check, "is_not_map")
+}
+func MlrvalAssertingNotArray(ma *Mlrval) Mlrval {
+	check := MlrvalIsNotArray(ma)
+	return assertingCommon(ma, &check, "is_not_array")
+}
+func MlrvalAssertingNotNull(ma *Mlrval) Mlrval {
+	check := MlrvalIsNotNull(ma)
+	return assertingCommon(ma, &check, "is_not_null")
+}
+func MlrvalAssertingNull(ma *Mlrval) Mlrval {
+	check := MlrvalIsNull(ma)
+	return assertingCommon(ma, &check, "is_null")
+}
+func MlrvalAssertingNumeric(ma *Mlrval) Mlrval {
+	check := MlrvalIsNumeric(ma)
+	return assertingCommon(ma, &check, "is_numeric")
+}
+func MlrvalAssertingPresent(ma *Mlrval) Mlrval {
+	check := MlrvalIsPresent(ma)
+	return assertingCommon(ma, &check, "is_present")
+}
+func MlrvalAssertingString(ma *Mlrval) Mlrval {
+	check := MlrvalIsString(ma)
+	return assertingCommon(ma, &check, "is_string")
 }
