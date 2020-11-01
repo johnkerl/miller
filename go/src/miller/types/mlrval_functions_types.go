@@ -123,6 +123,9 @@ func MlrvalToBoolean(ma *Mlrval) Mlrval {
 func MlrvalIsIsAbsent(ma *Mlrval) Mlrval {
 	return MlrvalFromBool(ma.mvtype == MT_ABSENT)
 }
+func MlrvalIsIsError(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_ERROR)
+}
 func MlrvalIsBool(ma *Mlrval) Mlrval {
 	return MlrvalFromBool(ma.mvtype == MT_BOOL)
 }
