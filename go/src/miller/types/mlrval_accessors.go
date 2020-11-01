@@ -104,7 +104,7 @@ func (this *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 	}
 }
 
-func (this *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
+func (this *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) {
 	if this.mvtype == MT_FLOAT {
 		return this.floatval, true
 	} else if this.mvtype == MT_INT {

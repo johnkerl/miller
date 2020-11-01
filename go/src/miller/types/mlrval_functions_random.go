@@ -58,8 +58,8 @@ func MlrvalUrandRange(ma, mb *Mlrval) Mlrval {
 	if !mb.IsLegit() {
 		return *mb
 	}
-	a, aok := ma.GetFloatValue()
-	b, bok := mb.GetFloatValue()
+	a, aok := ma.GetNumericToFloatValue()
+	b, bok := mb.GetNumericToFloatValue()
 	if !aok {
 		return MlrvalFromError()
 	}

@@ -251,15 +251,15 @@ func MlrvalLogifit(ma, mb, mc *Mlrval) Mlrval {
 	}
 
 	// int/float OK; rest not
-	x, xok := ma.GetFloatValue()
+	x, xok := ma.GetNumericToFloatValue()
 	if !xok {
 		return MlrvalFromError()
 	}
-	m, mok := mb.GetFloatValue()
+	m, mok := mb.GetNumericToFloatValue()
 	if !mok {
 		return MlrvalFromError()
 	}
-	b, bok := mc.GetFloatValue()
+	b, bok := mc.GetNumericToFloatValue()
 	if !bok {
 		return MlrvalFromError()
 	}

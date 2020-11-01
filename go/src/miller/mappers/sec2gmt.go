@@ -146,7 +146,7 @@ func (this *MapperSec2GMT) Map(
 		for _, fieldName := range this.fieldNameList {
 			value := inrec.Get(&fieldName)
 			if value != nil {
-				floatval, ok := value.GetFloatValue()
+				floatval, ok := value.GetNumericToFloatValue()
 				if ok {
 					newValue := types.MlrvalFromString(lib.Sec2GMT(floatval, this.numDecimalPlaces))
 					inrec.PutReference(&fieldName, &newValue)
