@@ -118,3 +118,75 @@ var to_boolean_dispositions = [MT_DIM]UnaryFunc{
 func MlrvalToBoolean(ma *Mlrval) Mlrval {
 	return to_boolean_dispositions[ma.mvtype](ma)
 }
+
+// ----------------------------------------------------------------
+func MlrvalIsIsAbsent(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_ABSENT)
+}
+func MlrvalIsBool(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_BOOL)
+}
+func MlrvalIsBoolean(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_BOOL)
+}
+func MlrvalIsEmpty(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_VOID {
+		return MlrvalFromTrue()
+	}
+	if ma.mvtype == MT_STRING {
+		if ma.printrep == "" {
+			return MlrvalFromTrue()
+		}
+	}
+	return MlrvalFromFalse()
+}
+func MlrvalIsEmptyMap(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_MAP && ma.mapval.FieldCount == 0)
+}
+func MlrvalIsFloat(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_FLOAT)
+}
+func MlrvalIsInt(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_INT)
+}
+func MlrvalIsMap(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_MAP)
+}
+func MlrvalIsArray(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_ARRAY)
+}
+func MlrvalIsNonEmptyMap(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_MAP && ma.mapval.FieldCount != 0)
+}
+func MlrvalIsNotEmpty(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_VOID {
+		return MlrvalFromFalse()
+	}
+	if ma.mvtype == MT_STRING {
+		if ma.printrep == "" {
+			return MlrvalFromFalse()
+		}
+	}
+	return MlrvalFromTrue()
+}
+func MlrvalIsNotMap(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype != MT_MAP)
+}
+func MlrvalIsNotArray(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype != MT_ARRAY)
+}
+func MlrvalIsNotNull(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype != MT_ABSENT && ma.mvtype != MT_VOID)
+}
+func MlrvalIsNull(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_ABSENT || ma.mvtype == MT_VOID)
+}
+func MlrvalIsNumeric(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_INT || ma.mvtype == MT_FLOAT)
+}
+func MlrvalIsPresent(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype != MT_ABSENT)
+}
+func MlrvalIsString(ma *Mlrval) Mlrval {
+	return MlrvalFromBool(ma.mvtype == MT_STRING || ma.mvtype == MT_VOID)
+}

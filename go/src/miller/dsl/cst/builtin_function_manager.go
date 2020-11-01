@@ -319,6 +319,98 @@ Note that invqorm(urand()) is normally distributed.`,
 		help:      "Convert string's first character to uppercase.",
 		unaryFunc: types.MlrvalCapitalize,
 	},
+
+	{
+		name: "is_absent",
+		help: "False if field is present in input, true otherwise",
+		unaryFunc: types.MlrvalIsIsAbsent,
+	},
+	{
+		name: "is_bool",
+		help: "True if field is present with boolean value. Synonymous with is_boolean.",
+		unaryFunc: types.MlrvalIsBool,
+	},
+	{
+		name: "is_boolean",
+		help: "True if field is present with boolean value. Synonymous with is_bool.",
+		unaryFunc: types.MlrvalIsBoolean,
+	},
+	{
+		name: "is_empty",
+		help: "True if field is present in input with empty string value, false otherwise.",
+		unaryFunc: types.MlrvalIsEmpty,
+	},
+	{
+		name: "is_empty_map",
+		help: "True if argument is a map which is empty.",
+		unaryFunc: types.MlrvalIsEmptyMap,
+	},
+	{
+		name: "is_float",
+		help: "True if field is present with value inferred to be float",
+		unaryFunc: types.MlrvalIsFloat,
+	},
+	{
+		name: "is_int",
+		help: "True if field is present with value inferred to be int",
+		unaryFunc: types.MlrvalIsInt,
+	},
+	{
+		name: "is_map",
+		help: "True if argument is a map.",
+		unaryFunc: types.MlrvalIsMap,
+	},
+	{
+		name: "is_array",
+		help: "True if argument is an array.",
+		unaryFunc: types.MlrvalIsArray,
+	},
+	{
+		name: "is_nonempty_map",
+		help: "True if argument is a map which is non-empty.",
+		unaryFunc: types.MlrvalIsNonEmptyMap,
+	},
+	{
+		name: "is_not_empty",
+		help: "False if field is present in input with empty value, true otherwise",
+		unaryFunc: types.MlrvalIsNotEmpty,
+	},
+	{
+		name: "is_not_map",
+		help: "True if argument is not a map.",
+		unaryFunc: types.MlrvalIsNotMap,
+	},
+	{
+		name: "is_not_array",
+		help: "True if argument is not an array.",
+		unaryFunc: types.MlrvalIsNotArray,
+	},
+	{
+		name: "is_not_null",
+		help: "False if argument is null (empty or absent), true otherwise.",
+		unaryFunc: types.MlrvalIsNotNull,
+	},
+	{
+		name: "is_null",
+		help: "True if argument is null (empty or absent), false otherwise.",
+		unaryFunc: types.MlrvalIsNull,
+	},
+	{
+		name: "is_numeric",
+		help: "True if field is present with value inferred to be int or float",
+		unaryFunc: types.MlrvalIsNumeric,
+	},
+	{
+		name: "is_present",
+		help: "True if field is present in input, false otherwise.",
+		unaryFunc: types.MlrvalIsPresent,
+	},
+	{
+		name: "is_string",
+		help: "True if field is present with string (including empty-string) value",
+		unaryFunc: types.MlrvalIsString,
+	},
+
 	{
 		name:      "typeof",
 		help:      "Convert argument to type of argument (e.g. \"str\"). For debug.",
