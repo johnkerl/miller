@@ -250,3 +250,4 @@ NITS/NON-IMMEDIATE:
 * go exe 17MB, wut. try to discover. (gocc presumably but verify.)
 * fill-down make columns required. also, --all.
 * check triple-dash at mlr fill-down-h ; check others
+* doc that multi-arg print interleaves spaces; they can strcat to avoid

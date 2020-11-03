@@ -286,7 +286,7 @@ func (this *RootNode) BuildNFNode() *NFNode {
 	return &NFNode{}
 }
 func (this *NFNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromInt64(state.Context.NF)
+	return types.MlrvalFromInt64(state.Inrec.FieldCount)
 }
 
 // ----------------------------------------------------------------
