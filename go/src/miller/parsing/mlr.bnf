@@ -404,43 +404,80 @@ EmitStatement
 DumpStatement
   : md_token_dump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeDumpStatement) >>
-  | md_token_dump Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeDumpStatement) >>
+  | md_token_dump FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeDumpStatement,
+      ),
+      $1,
+    ) >>
   ;
 
 EdumpStatement
   : md_token_edump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEdumpStatement) >>
-  | md_token_edump Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEdumpStatement) >>
+  | md_token_edump FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeEdumpStatement,
+      ),
+      $1,
+    ) >>
   ;
 
 PrintStatement
   : md_token_print
     << dsl.NewASTNodeZary($0, dsl.NodeTypePrintStatement) >>
-  | md_token_print Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintStatement) >>
+
+  | md_token_print FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypePrintStatement,
+      ),
+      $1,
+    ) >>
   ;
 
 EprintStatement
   : md_token_eprint
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintStatement) >>
-  | md_token_eprint Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEprintStatement) >>
+  | md_token_eprint FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeEprintStatement,
+      ),
+      $1,
+    ) >>
   ;
 
 PrintnStatement
   : md_token_printn
     << dsl.NewASTNodeZary($0, dsl.NodeTypePrintnStatement) >>
-  | md_token_printn Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintnStatement) >>
+  | md_token_printn FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypePrintnStatement,
+      ),
+      $1,
+    ) >>
   ;
 
 EprintnStatement
   : md_token_eprintn
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintnStatement) >>
-  | md_token_eprintn Rvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEprintnStatement) >>
+  | md_token_eprintn FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeEprintnStatement,
+      ),
+      $1,
+    ) >>
   ;
 
 // ----------------------------------------------------------------

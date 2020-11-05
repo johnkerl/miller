@@ -351,13 +351,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : md_token_dump Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeDumpStatement) >>`,
+		String: `DumpStatement : md_token_dump FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypeDumpStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "DumpStatement",
 		NTType:     11,
 		Index:      33,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeDumpStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypeDumpStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{
@@ -371,13 +383,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EdumpStatement : md_token_edump Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEdumpStatement) >>`,
+		String: `EdumpStatement : md_token_edump FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypeEdumpStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "EdumpStatement",
 		NTType:     12,
 		Index:      35,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEdumpStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypeEdumpStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{
@@ -391,13 +415,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : md_token_print Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypePrintStatement) >>`,
+		String: `PrintStatement : md_token_print FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypePrintStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "PrintStatement",
 		NTType:     13,
 		Index:      37,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypePrintStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypePrintStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{
@@ -411,13 +447,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EprintStatement : md_token_eprint Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEprintStatement) >>`,
+		String: `EprintStatement : md_token_eprint FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypeEprintStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "EprintStatement",
 		NTType:     14,
 		Index:      39,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEprintStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypeEprintStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{
@@ -431,13 +479,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : md_token_printn Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypePrintnStatement) >>`,
+		String: `PrintnStatement : md_token_printn FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypePrintnStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "PrintnStatement",
 		NTType:     15,
 		Index:      41,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypePrintnStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypePrintnStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{
@@ -451,13 +511,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EprintnStatement : md_token_eprintn Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEprintnStatement) >>`,
+		String: `EprintnStatement : md_token_eprintn FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypeEprintnStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "EprintnStatement",
 		NTType:     16,
 		Index:      43,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEprintnStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypeEprintnStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{

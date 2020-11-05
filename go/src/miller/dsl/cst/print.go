@@ -15,8 +15,8 @@ import (
 // ================================================================
 type DumpStatementNode struct {
 	// TODO: redirect options
-	ostream    *os.File
-	expression IEvaluable
+	ostream     *os.File
+	expressions []IEvaluable
 }
 
 // ----------------------------------------------------------------
@@ -35,35 +35,31 @@ func (this *RootNode) BuildDumpxStatementNode(
 	astNode *dsl.ASTNode,
 	ostream *os.File,
 ) (IExecutable, error) {
-	var expression IEvaluable = nil
-	var err error = nil
-
-	if len(astNode.Children) == 0 {
-		// OK
-	} else if len(astNode.Children) == 1 {
-		expression, err = this.BuildEvaluableNode(astNode.Children[0])
+	expressions := make([]IEvaluable, len(astNode.Children))
+	for i, childNode := range astNode.Children {
+		expression, err := this.BuildEvaluableNode(childNode)
 		if err != nil {
 			return nil, err
 		}
-	} else {
-		// Should not have been allowed by the BNF grammar
-		lib.InternalCodingErrorIf(true)
+		expressions[i] = expression
 	}
 
 	return &DumpStatementNode{
 		ostream,
-		expression,
+		expressions,
 	}, nil
 }
 
 // ----------------------------------------------------------------
 func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	if this.expression == nil { // 'dump' without argument means 'dump @*'
+	if len(this.expressions) == 0 { // 'dump' without argument means 'dump @*'
 		// Not Fprintln since JSON output is LF-terminated already
 		fmt.Fprint(this.ostream, state.Oosvars.String())
 	} else {
-		evaluation := this.expression.Evaluate(state)
-		fmt.Fprintln(this.ostream, evaluation.String())
+		for _, expression := range this.expressions {
+			evaluation := expression.Evaluate(state)
+			fmt.Fprintln(this.ostream, evaluation.String())
+		}
 	}
 
 	return nil, nil
@@ -72,9 +68,9 @@ func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 // ================================================================
 type PrintStatementNode struct {
 	// TODO: redirect options
-	ostream    *os.File
-	terminator string
-	expression IEvaluable
+	ostream     *os.File
+	terminator  string
+	expressions []IEvaluable
 }
 
 // ----------------------------------------------------------------
@@ -120,33 +116,35 @@ func (this *RootNode) BuildPrintxStatementNode(
 	ostream *os.File,
 	terminator string,
 ) (IExecutable, error) {
-	var expression IEvaluable = nil
-	var err error = nil
-	if len(astNode.Children) == 0 {
-		// OK
-	} else if len(astNode.Children) == 1 {
-		expression, err = this.BuildEvaluableNode(astNode.Children[0])
+	expressions := make([]IEvaluable, len(astNode.Children))
+	for i, childNode := range astNode.Children {
+		expression, err := this.BuildEvaluableNode(childNode)
 		if err != nil {
 			return nil, err
 		}
-	} else {
-		// Should not have been allowed by the BNF grammar
-		lib.InternalCodingErrorIf(true)
+		expressions[i] = expression
 	}
 
 	return &PrintStatementNode{
 		ostream,
 		terminator,
-		expression,
+		expressions,
 	}, nil
 }
 
 // ----------------------------------------------------------------
 func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	if this.expression != nil {
-		evaluation := this.expression.Evaluate(state)
-		fmt.Fprint(this.ostream, evaluation.String())
+	if len(this.expressions) == 0 {
+		fmt.Fprintf(this.ostream, this.terminator)
+	} else {
+		for i, expression := range this.expressions {
+			if i > 0 {
+				fmt.Fprint(this.ostream, " ")
+			}
+			evaluation := expression.Evaluate(state)
+			fmt.Fprint(this.ostream, evaluation.String())
+		}
+		fmt.Fprintf(this.ostream, this.terminator)
 	}
-	fmt.Fprintf(this.ostream, this.terminator)
 	return nil, nil
 }
