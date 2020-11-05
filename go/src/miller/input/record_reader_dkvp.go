@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/types"
 )
 
@@ -88,7 +89,7 @@ func recordFromDKVPLine(
 	ips *string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	pairs := strings.Split(*line, *ifs)
+	pairs := lib.SplitString(*line, *ifs)
 	for _, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)
 		key := kv[0]
