@@ -161,7 +161,7 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
-	fprintf(o, "  %s %s 'FNR == 2          (second record in each file)'\n", argv0, verb);
+	fprintf(o, "  %s %s 'FNR == 2'         (second record in each file)\n", argv0, verb);
 	fprintf(o, "  %s %s 'urand() < 0.001'  (subsampling)\n", argv0, verb);
 	fprintf(o, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
 	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
