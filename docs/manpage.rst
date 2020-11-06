@@ -639,7 +639,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
            Examples:
     	 mlr filter 'log10($count) > 4.0'
-    	 mlr filter 'FNR == 2	       (second record in each file)'
+    	 mlr filter 'FNR == 2'	       (second record in each file)
     	 mlr filter 'urand() < 0.001'  (subsampling)
     	 mlr filter '$color != "blue" && $value > 4.2'
     	 mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
