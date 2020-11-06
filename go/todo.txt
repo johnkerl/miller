@@ -10,11 +10,12 @@ TOP OF LIST:
   o i want this pattern over and over
 
 * UDF nexts:
+  ! check for multiple put -f; any/multiple put -e
+    > non-flag copy from sort
   ! more functions
   ! function metadata, w/ sort-by, for online help
   ! double-check $-anything in begin/end
   ! put -s ...
-  ! check for multiple put -f; any/multiple put -e
   ! regexes & associated functions -- necessary or not?
   o mlr_expect_fail extraneous check output; wut
   o ENV
@@ -248,3 +249,6 @@ NITS/NON-IMMEDIATE:
 * fill-down make columns required. also, --all.
 * check triple-dash at mlr fill-down-h ; check others
 * doc that multi-arg print interleaves spaces; they can strcat to avoid
+* clean up unused exitCode arg in sort/put usage.
+  o also document pre/post conditions for flag and non-flag usages x all mappers
+* need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/

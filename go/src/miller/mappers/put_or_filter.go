@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/dsl"
@@ -45,63 +46,81 @@ func mapperPutParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
-	pExpressionFileName := flagSet.String(
-		"f",
-		"",
-		`File containing a DSL expression.`,
-	)
-	pVerbose := flagSet.Bool(
-		"v",
-		false,
-		`Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.`,
-	)
-	pSuppressOutputRecord := flagSet.Bool(
-		"q",
-		false,
-		`Does not include the modified record in the output stream.
-    Useful for when all desired output is in begin and/or end blocks.`,
-	)
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
-		}
-		mapperPutUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
-
 	dslString := ""
-	if *pExpressionFileName != "" {
-		// Get the DSL string from the user-specified filename
-		data, err := ioutil.ReadFile(*pExpressionFileName)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression: ", args[0], verb)
-			fmt.Println(err)
-			return nil
+	verbose := false
+	suppressOutputRecord := false
+	needExpressionArg := true
+
+	// Parse local flags.
+	//
+	// Unlike other mappers, we can't use flagSet here. The syntax of 'mlr put'
+	// and 'mlr filter' is they need to be able to take -f and/or -e more than
+	// once, and Go flags can't handle that.
+
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
+
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			mapperPutUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			return nil // help intentionally requested
+
+		} else if args[argi] == "-f" {
+			checkArgCountPut(args, argi, argc, 2)
+
+			// Get a DSL string from the user-specified filename
+			data, err := ioutil.ReadFile(args[argi+1])
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression: ", args[0], verb)
+				fmt.Println(err)
+				return nil
+			}
+			if dslString != "" {
+				dslString += ";\n"
+			}
+			dslString += string(data)
+
+			needExpressionArg = false
+			argi += 2
+
+		} else if args[argi] == "-e" {
+			checkArgCountPut(args, argi, argc, 2)
+
+			// Get a DSL string from the user-specified filename
+			if dslString != "" {
+				dslString += ";\n"
+			}
+			dslString += args[argi+1]
+
+			needExpressionArg = false
+			argi += 2
+
+		} else if args[argi] == "-v" {
+			verbose = true
+			argi++
+		} else if args[argi] == "-q" {
+			suppressOutputRecord = true
+			argi++
+		} else {
+			mapperPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			os.Exit(1)
 		}
-		dslString = string(data)
-	} else {
+	}
+
+	// If they've used either of 'mlr put -f {filename}' or 'mlr put -e
+	// {expression}' then that specifies their DSL expression. But if they've
+	// done neither then we expect 'mlr put {expression}'.
+	if needExpressionArg {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
-			flagSet.Usage()
+			mapperPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
 		}
 		dslString = args[argi]
 		argi += 1
 	}
 
-	mapper, err := NewMapperPut(dslString, *pVerbose, *pSuppressOutputRecord)
+	mapper, err := NewMapperPut(dslString, verbose, suppressOutputRecord)
 	if err != nil {
 		// Error message already printed out
 		os.Exit(1)
@@ -111,18 +130,33 @@ func mapperPutParseCLI(
 	return mapper
 }
 
+// For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
+// this let us see if the "10" slot exists.
+func checkArgCountPut(args []string, argi int, argc int, n int) {
+	if (argc - argi) < n {
+		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
+		mapperPutUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
+		os.Exit(1)
+	}
+}
+
 func mapperPutUsage(
 	o *os.File,
+	exitCode int,
+	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	argv0 string,
 	verb string,
-	flagSet *flag.FlagSet,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", argv0, verb)
 	fmt.Fprintf(o, "TODO: put detailed on-line help here.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o,
+		` -f {file name} File containing a DSL expression.
+ -q (default false) Does not include the modified record in the output stream.
+    Useful for when all desired output is in begin and/or end blocks.
+ -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.
+`)
 }
 
 // ----------------------------------------------------------------

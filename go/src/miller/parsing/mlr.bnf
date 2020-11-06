@@ -851,12 +851,12 @@ MuldivTerm
 ;
 
 UnaryOpTerm
-  : "+"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "-"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | ".+" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | ".-" PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "!"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
-  | "~"  PowTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  : "+"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "-"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".+" UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | ".-" UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "!"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
+  | "~"  UnaryOpTerm << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeOperator) >>
   | PowTerm
 ;
 
