@@ -14,6 +14,8 @@ type RecordWriterCSV struct {
 	csvWriter *csv.Writer
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader   *string
+	// Only write one blank line for schema changes / blank input lines
+	justWroteEmptyLine bool
 	doHeaderlessOutput bool
 }
 
@@ -25,6 +27,7 @@ func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV
 	return &RecordWriterCSV{
 		csvWriter:          csvWriter,
 		lastJoinedHeader:   nil,
+		justWroteEmptyLine: false,
 		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 	}
 }
@@ -37,12 +40,24 @@ func (this *RecordWriterCSV) Write(
 		return
 	}
 
-	// TODO: heterogeneity. keep previous header and reset if need.
+	if outrec.FieldCount == 0 {
+		if !this.justWroteEmptyLine {
+			os.Stdout.WriteString("\n")
+		}
+		joinedHeader := ""
+		this.lastJoinedHeader = &joinedHeader
+		this.justWroteEmptyLine = true
+		return
+	}
+
 	needToPrintHeader := false
 	joinedHeader := strings.Join(outrec.GetKeys(), ",")
 	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
 		if this.lastJoinedHeader != nil {
-			os.Stdout.WriteString("\n")
+			if !this.justWroteEmptyLine {
+				os.Stdout.WriteString("\n")
+			}
+			this.justWroteEmptyLine = true
 		}
 		this.lastJoinedHeader = &joinedHeader
 		needToPrintHeader = true
@@ -66,4 +81,5 @@ func (this *RecordWriterCSV) Write(
 	}
 	this.csvWriter.Write(fields)
 	this.csvWriter.Flush()
+	this.justWroteEmptyLine = false
 }
