@@ -262,6 +262,7 @@ func (this *MapperPut) Map(
 			}
 		}
 	} else {
+		this.cstState.Update(nil, &context)
 
 		// If there were no input records then we never executed the
 		// begin-blocks. Do so now.

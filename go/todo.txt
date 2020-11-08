@@ -256,3 +256,4 @@ NITS/NON-IMMEDIATE:
 * clean up unused exitCode arg in sort/put usage.
   o also document pre/post conditions for flag and non-flag usages x all mappers
 * need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
+? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl

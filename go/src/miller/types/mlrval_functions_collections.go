@@ -26,16 +26,7 @@ func MlrvalLength(ma *Mlrval) Mlrval {
 func depth_from_array(ma *Mlrval) Mlrval {
 	maxChildDepth := 0
 	for _, child := range ma.arrayval {
-		// Golang initialization loop if we do this :(
-		// childDepth := MlrvalDepth(&child)
-
-		childDepth := MlrvalFromInt64(0)
-		if child.mvtype == MT_ARRAY {
-			childDepth = depth_from_array(&child)
-		} else if child.mvtype == MT_MAP {
-			childDepth = depth_from_map(&child)
-		}
-
+		childDepth := MlrvalDepth(&child)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
 			maxChildDepth = iChildDepth
@@ -48,17 +39,7 @@ func depth_from_map(ma *Mlrval) Mlrval {
 	maxChildDepth := 0
 	for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
-
-		// Golang initialization loop if we do this :(
-		// childDepth := MlrvalDepth(child)
-
-		childDepth := MlrvalFromInt64(0)
-		if child.mvtype == MT_ARRAY {
-			childDepth = depth_from_array(child)
-		} else if child.mvtype == MT_MAP {
-			childDepth = depth_from_map(child)
-		}
-
+		childDepth := MlrvalDepth(child)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
 			maxChildDepth = iChildDepth
@@ -71,16 +52,22 @@ func depth_from_scalar(ma *Mlrval) Mlrval {
 	return MlrvalFromInt64(0)
 }
 
-var depth_dispositions = [MT_DIM]UnaryFunc{
-	/*ERROR  */ _erro1,
-	/*ABSENT */ _absn1,
-	/*VOID   */ depth_from_scalar,
-	/*STRING */ depth_from_scalar,
-	/*INT    */ depth_from_scalar,
-	/*FLOAT  */ depth_from_scalar,
-	/*BOOL   */ depth_from_scalar,
-	/*ARRAY  */ depth_from_array,
-	/*MAP    */ depth_from_map,
+// We get a Golang "initialization loop" due to recursive depth computation
+// if this is defined statically. So, we use a "package init" function.
+var depth_dispositions = [MT_DIM]UnaryFunc{}
+
+func init() {
+	depth_dispositions = [MT_DIM]UnaryFunc{
+		/*ERROR  */ _erro1,
+		/*ABSENT */ _absn1,
+		/*VOID   */ depth_from_scalar,
+		/*STRING */ depth_from_scalar,
+		/*INT    */ depth_from_scalar,
+		/*FLOAT  */ depth_from_scalar,
+		/*BOOL   */ depth_from_scalar,
+		/*ARRAY  */ depth_from_array,
+		/*MAP    */ depth_from_map,
+	}
 }
 
 func MlrvalDepth(ma *Mlrval) Mlrval {
