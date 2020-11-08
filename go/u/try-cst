@@ -268,6 +268,20 @@ echo; run_mlr --from u/s.dkvp --opprint filter -x 'NR > 2'
 echo; run_mlr --from u/s.dkvp --opprint put -q '@sum[$a] += $i; emit {"sum": @sum}'
 
 # ----------------------------------------------------------------
+echo; run_mlr --opprint --from u/s.dkvp put          '@sum += 1; $z=@sum'
+echo; run_mlr --opprint --from u/s.dkvp put -s sum=0 '@sum += 1; $z=@sum'
+echo; run_mlr --opprint --from u/s.dkvp put -s sum=8 '@sum += 1; $z=@sum'
+
+echo; run_mlr --opprint --from u/ten.dkvp put -s a=0 -s b=1 '
+  @c = @a + @b;
+  $fa = @a;
+  $fb = @b;
+  $fc = @c;
+  @a = @b;
+  @b = @c;
+'
+
+# ----------------------------------------------------------------
 echo; run_mlr --from u/s.dkvp put -q '@sum += $x; @count += 1; dump'
 echo; run_mlr --from u/s.dkvp put -q '@sum += $x; @count += 1; dump @sum'
 echo; run_mlr --from u/s.dkvp put -q '@sum += $x; @count += 1; dump @sum, @count'

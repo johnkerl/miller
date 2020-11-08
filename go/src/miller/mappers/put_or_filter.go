@@ -52,6 +52,7 @@ func mapperPutParseCLI(
 	invertFilter := false
 	suppressOutputRecord := false
 	needExpressionArg := true
+	presets := make([]string, 0)
 
 	// Parse local flags.
 	//
@@ -97,6 +98,16 @@ func mapperPutParseCLI(
 			needExpressionArg = false
 			argi += 2
 
+		} else if args[argi] == "-s" {
+			// E.g.
+			//   mlr put -s sum=0
+			// is like
+			//   mlr put -s 'begin {@sum = 0}'
+			checkArgCountPut(args, argi, argc, 2)
+			presets = append(presets, args[argi+1])
+
+			argi += 2
+
 		} else if args[argi] == "-v" {
 			verbose = true
 			argi++
@@ -124,6 +135,17 @@ func mapperPutParseCLI(
 		dslString = args[argi]
 		argi += 1
 	}
+
+	// E.g.
+	//   mlr put -s sum=0
+	// is like
+	//   mlr put -s 'begin {@sum = 0}'
+	presetExpression := "begin {\n"
+	for _, preset := range presets {
+		presetExpression += "@" + preset + ";"
+	}
+	presetExpression += "}\n"
+	dslString = presetExpression + dslString
 
 	mapper, err := NewMapperPut(
 		dslString,
