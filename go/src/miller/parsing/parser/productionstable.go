@@ -2678,7 +2678,7 @@ var productionsTable = ProdTab{
      X[2], // k, etc.
      X[4], // $*, etc.
      X[6], // { ... }
-     dsl.NodeTypeForLoopKeyOnly,
+     dsl.NodeTypeForLoopOneVariable,
 	 ); >>`,
 		Id:         "ForLoopKeyOnly",
 		NTType:     71,
@@ -2690,7 +2690,7 @@ var productionsTable = ProdTab{
 				X[2], // k, etc.
 				X[4], // $*, etc.
 				X[6], // { ... }
-				dsl.NodeTypeForLoopKeyOnly,
+				dsl.NodeTypeForLoopOneVariable,
 			)
 		},
 	},
@@ -2701,7 +2701,7 @@ var productionsTable = ProdTab{
      X[4], // v, etc.
      X[6], // $*, etc.
      X[8], // { ... }
-     dsl.NodeTypeForLoopKeyValue,
+     dsl.NodeTypeForLoopTwoVariable,
 	 ); >>`,
 		Id:         "ForLoopKeyValue",
 		NTType:     72,
@@ -2714,7 +2714,7 @@ var productionsTable = ProdTab{
 				X[4], // v, etc.
 				X[6], // $*, etc.
 				X[8], // { ... }
-				dsl.NodeTypeForLoopKeyValue,
+				dsl.NodeTypeForLoopTwoVariable,
 			)
 		},
 	},

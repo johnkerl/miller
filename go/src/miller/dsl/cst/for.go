@@ -31,7 +31,7 @@ import (
 //                         * LocalVariable "k"
 
 func (this *RootNode) BuildForLoopKeyOnlyNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopKeyOnly)
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopOneVariable)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 
 	keyVariableASTNode := astNode.Children[0]
@@ -105,7 +105,7 @@ func NewForLoopKeyValueNode(
 //                         * LocalVariable "v"
 
 func (this *RootNode) BuildForLoopKeyValueNode(astNode *dsl.ASTNode) (*ForLoopKeyValueNode, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopKeyValue)
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopTwoVariable)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
 	keyVariableASTNode := astNode.Children[0]

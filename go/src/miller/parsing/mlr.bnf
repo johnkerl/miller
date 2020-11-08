@@ -1378,7 +1378,7 @@ ForLoopKeyOnly
      $2, // k, etc.
      $4, // $*, etc.
      $6, // { ... }
-     dsl.NodeTypeForLoopKeyOnly,
+     dsl.NodeTypeForLoopOneVariable,
 	 );
  >>
 ;
@@ -1402,7 +1402,7 @@ ForLoopKeyValue
      $4, // v, etc.
      $6, // $*, etc.
      $8, // { ... }
-     dsl.NodeTypeForLoopKeyValue,
+     dsl.NodeTypeForLoopTwoVariable,
 	 );
  >>
 ;

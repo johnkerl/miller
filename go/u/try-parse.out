@@ -1102,7 +1102,7 @@ DSL EXPRESSION:
 for (k in $*) { emit { k : k } }
 RAW AST:
 * statement block
-    * key-only for-loop "for"
+    * single-variable for-loop "for"
         * local variable "k"
         * full record "$*"
         * statement block
@@ -1170,7 +1170,7 @@ DSL EXPRESSION:
 for (k in $*) {}
 RAW AST:
 * statement block
-    * key-only for-loop "for"
+    * single-variable for-loop "for"
         * local variable "k"
         * full record "$*"
         * statement block
@@ -1183,7 +1183,7 @@ DSL EXPRESSION:
 for (k in $*) {2}
 RAW AST:
 * statement block
-    * key-only for-loop "for"
+    * single-variable for-loop "for"
         * local variable "k"
         * full record "$*"
         * statement block
