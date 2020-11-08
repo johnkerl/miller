@@ -68,6 +68,8 @@ TOP OF LIST:
   o others in mlrcli_parse.go
   o copy over all operator help-strings from ../c
 
+* $map.attr1.attr2 syntax for DSL -- ? needs override of "." operator w/ symbols ... ?
+
 ================================================================
 FUNCTIONS:
 
