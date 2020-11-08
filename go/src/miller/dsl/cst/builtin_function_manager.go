@@ -730,6 +730,10 @@ Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller
 		ternaryFunc: types.MlrvalSsub,
 	},
 	{
+		name:        "sub",
+		ternaryFunc: types.MlrvalSub,
+	},
+	{
 		name:        "gsub",
 		ternaryFunc: types.MlrvalGsub,
 	},

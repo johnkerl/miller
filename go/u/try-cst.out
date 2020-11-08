@@ -900,13 +900,9 @@ eks wye 4 0.38139939387114097 0.13418874328430463 abc"def"ghi
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $i += 2
 DSL EXPRESSION:
-begin {
-}
 $i += 2
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "i"
         * operator "+"
@@ -923,13 +919,9 @@ eks wye 6 0.38139939387114097 0.13418874328430463
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $i *= 2
 DSL EXPRESSION:
-begin {
-}
 $i *= 2
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "i"
         * operator "*"
@@ -946,13 +938,9 @@ eks wye 8 0.38139939387114097 0.13418874328430463
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $i /= 2
 DSL EXPRESSION:
-begin {
-}
 $i /= 2
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "i"
         * operator "/"
@@ -969,13 +957,9 @@ eks wye 2   0.38139939387114097 0.13418874328430463
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $i |= 2
 DSL EXPRESSION:
-begin {
-}
 $i |= 2
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "i"
         * operator "|"
@@ -992,13 +976,9 @@ eks wye 6 0.38139939387114097 0.13418874328430463
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $j = true; $j &&= $i < 2
 DSL EXPRESSION:
-begin {
-}
 $j = true; $j &&= $i < 2
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "j"
         * bool literal "true"
@@ -1556,13 +1536,9 @@ mlr --from u/s.dkvp --idkvp --ojson put $*["a"] = {}
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $new = $["a"]
 DSL EXPRESSION:
-begin {
-}
 $new = $["a"]
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "new"
         * indirect field value "$[]"
@@ -1578,13 +1554,9 @@ eks wye 4 0.38139939387114097 0.13418874328430463 eks
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $["new"] = $a
 DSL EXPRESSION:
-begin {
-}
 $["new"] = $a
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * indirect field value "$[]"
             * string literal "new"
@@ -1600,13 +1572,9 @@ eks wye 4 0.38139939387114097 0.13418874328430463 eks
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v ${new} = $a . $b
 DSL EXPRESSION:
-begin {
-}
 ${new} = $a . $b
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "new"
         * operator "."
@@ -1623,13 +1591,9 @@ eks wye 4 0.38139939387114097 0.13418874328430463 ekswye
 ----------------------------------------------------------------
 mlr --from u/s.dkvp --idkvp --opprint put -v $new = ${a} . ${b}
 DSL EXPRESSION:
-begin {
-}
 $new = ${a} . ${b}
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "new"
         * operator "."
@@ -2298,13 +2262,9 @@ mlr --from u/2.dkvp --ojson put @a = 3; @a["x"]=4;@a["x"]["x"]=5; $new=@a
 ----------------------------------------------------------------
 mlr -n put -v $z=max()
 DSL EXPRESSION:
-begin {
-}
 $z=max()
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2314,13 +2274,9 @@ RAW AST:
 ----------------------------------------------------------------
 mlr -n put -v $z=max(1)
 DSL EXPRESSION:
-begin {
-}
 $z=max(1)
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2331,13 +2287,9 @@ RAW AST:
 ----------------------------------------------------------------
 mlr -n put -v $z=max(1,)
 DSL EXPRESSION:
-begin {
-}
 $z=max(1,)
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2348,13 +2300,9 @@ RAW AST:
 ----------------------------------------------------------------
 mlr -n put -v $z=max(1,2)
 DSL EXPRESSION:
-begin {
-}
 $z=max(1,2)
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2366,13 +2314,9 @@ RAW AST:
 ----------------------------------------------------------------
 mlr -n put -v $z=max(1,2,)
 DSL EXPRESSION:
-begin {
-}
 $z=max(1,2,)
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2384,13 +2328,9 @@ RAW AST:
 ----------------------------------------------------------------
 mlr -n put -v $z=max(1,2,3)
 DSL EXPRESSION:
-begin {
-}
 $z=max(1,2,3)
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2403,13 +2343,9 @@ RAW AST:
 ----------------------------------------------------------------
 mlr -n put -v $z=max(1,2,3,)
 DSL EXPRESSION:
-begin {
-}
 $z=max(1,2,3,)
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * direct field value "z"
         * function callsite "max"
@@ -2844,6 +2780,10 @@ mlr put $y=ssub($x, "e", "X")
 x=eeee,y=Xeee
 
 ----------------------------------------------------------------
+mlr put $y=sub($x, "e", "X")
+x=eeee,y=Xeee
+
+----------------------------------------------------------------
 mlr put $y=gsub($x, "e", "X")
 x=eeee,y=XXXX
 
@@ -3124,13 +3064,9 @@ a=eks,b=wye,i=10,x=0.38139939387114097,y=0.13418874328430463
 ----------------------------------------------------------------
 mlr --from u/s.dkvp put -v j = 2; for (i = 0; i < NR; i += 1) { $i += i }
 DSL EXPRESSION:
-begin {
-}
 j = 2; for (i = 0; i < NR; i += 1) { $i += i }
 RAW AST:
 * statement block
-    * begin block
-        * statement block
     * assignment "="
         * local variable "j"
         * int literal "2"
@@ -3746,36 +3682,3058 @@ mlr --from u/s.dkvp put -q -f u/sieve.mlr
 89
 97
 mlr -n put begin{begin{}}
-Miller: begin blocks may only be declared at top level.
+Miller: begin blocks can only be at top level.
 mlr -n put begin{end{}}
-Miller: end blocks may only be declared at top level.
+Miller: end blocks can only be at top level.
 mlr -n put end{begin{}}
-Miller: begin blocks may only be declared at top level.
+Miller: begin blocks can only be at top level.
 mlr -n put end{end{}}
-Miller: end blocks may only be declared at top level.
+Miller: end blocks can only be at top level.
 mlr -n put begin { func f(x) { return 2*x} }
-Miller: functions may only be declared at top level.
+Miller: func blocks can only be at top level.
 mlr -n put begin { emit $x }
-panic: runtime error: invalid memory address or nil pointer dereference
-[signal SIGSEGV: segmentation violation code=0x1 addr=0x18 pc=0x1113716]
+Miller: begin/end blocks cannot refer to records via $x, $*, etc.
+mlr -n put return 3
+Miller: return statements are only valid within func/subr blocks.
+mlr -n put break
+Miller: break statements are only valid within for/do/while loops.
+mlr -n put continue
+Miller: break statements are only valid within for/do/while loops.
+mlr -n put func f() { break }
+Miller: break statements are only valid within for/do/while loops.
+mlr -n put func f() { continue }
+Miller: break statements are only valid within for/do/while loops.
 
-goroutine 21 [running]:
-miller/types.(*Mlrmap).findEntry(0x0, 0xc00008e3e0, 0x0)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/types/mlrmap_accessors.go:434 +0x26
-miller/types.(*Mlrmap).Get(...)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/types/mlrmap_accessors.go:119
-miller/dsl/cst.(*DirectFieldRvalueNode).Evaluate(0xc00008e3e0, 0xc0000905a0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, ...)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/dsl/cst/leaves.go:83 +0x72
-miller/dsl/cst.(*EmitStatementNode).Execute(0xc00008e3f0, 0xc0000905a0, 0xc000104008, 0xc000102090, 0xc000033eb8)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/dsl/cst/emit.go:36 +0x55
-miller/dsl/cst.(*StatementBlockNode).Execute(0xc0000a60e0, 0xc0000905a0, 0x0, 0x0, 0x0)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/dsl/cst/blocks.go:98 +0x123
-miller/dsl/cst.(*RootNode).ExecuteBeginBlocks(0xc0000ea000, 0xc0000905a0, 0xc0000d5980, 0x0)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/dsl/cst/root.go:170 +0x6f
-miller/mappers.(*MapperPut).Map(0xc0000905d0, 0xc000100000, 0xc0000d5800)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/mappers/put_or_filter.go:308 +0x493
-miller/mapping.runSingleMapper(0xc0000d57a0, 0x1246120, 0xc0000905d0, 0xc0000d5800)
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/mapping/chain_mapper.go:51 +0x6b
-created by miller/mapping.ChainMapper
-	/Users/kerl/pub_http_internet/miller-releases/miller-head/go/src/miller/mapping/chain_mapper.go:36 +0x16a
-Exit status was 2; expected 1.
+----------------------------------------------------------------
+mlr -n put -v true
+DSL EXPRESSION:
+true
+RAW AST:
+* statement block
+    * bare boolean
+        * bool literal "true"
+
+mlr -n put -v begin{true}
+Miller: begin/end blocks cannot have bare booleans: there is no record to filter
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[0]; dump $v
+[1, 2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[1]; dump $v
+[2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[2]; dump $v
+[1, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[3]; dump $v
+[1, 2, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[4]; dump $v
+[1, 2, 3, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[5]; dump $v
+[1, 2, 3, 4]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[6]; dump $v
+[1, 2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[0]; dump @v }
+[1, 2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[1]; dump @v }
+[2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[2]; dump @v }
+[1, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[3]; dump @v }
+[1, 2, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[4]; dump @v }
+[1, 2, 3, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[5]; dump @v }
+[1, 2, 3, 4]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[6]; dump @v }
+[1, 2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[0]; dump v }
+[1, 2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[1]; dump v }
+[2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[2]; dump v }
+[1, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[3]; dump v }
+[1, 2, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[4]; dump v }
+[1, 2, 3, 5]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[5]; dump v }
+[1, 2, 3, 4]
+
+----------------------------------------------------------------
+mlr --from u/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[6]; dump v }
+[1, 2, 3, 4, 5]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"];
+    dump @v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"]["x"];
+    dump @v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1];
+    dump @v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {
+    "y": 1
+  }
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1]["x"];
+    dump @v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {},
+  {
+    "y": 1
+  }
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"];
+    dump @v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"][2];
+    dump @v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1];
+    dump @v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["w", "x"]
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  @v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1][2];
+    dump @v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["u"],
+  ["w", "x"]
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"];
+    dump $v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"]["x"];
+    dump $v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1];
+    dump $v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {
+    "y": 1
+  }
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1]["x"];
+    dump $v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {},
+  {
+    "y": 1
+  }
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"];
+    dump $v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"][2];
+    dump $v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1];
+    dump $v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["w", "x"]
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1][2];
+    dump $v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["u"],
+  ["w", "x"]
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $* = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*;
+    dump $*;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $* = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"];
+    dump $*;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $* = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"]["x"];
+    dump $*;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $* = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*;
+    dump $*;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $* = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"];
+    dump $*;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  $* = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"][2];
+    dump $*;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"];
+    dump v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"]["x"];
+    dump v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1];
+    dump v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {
+    "y": 1
+  }
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1]["x"];
+    dump v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {},
+  {
+    "y": 1
+  }
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"];
+    dump v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"][2];
+    dump v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+(absent)
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1];
+    dump v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["w", "x"]
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp put -q 
+  v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1][2];
+    dump v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["u"],
+  ["w", "x"]
+]
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp --opprint put 
+  $u = toupper($a);
+  $l = tolower($u);
+  $c = capitalize($l);
+
+a   b   i x                   y                   u   l   c
+pan pan 1 0.3467901443380824  0.7268028627434533  PAN pan Pan
+eks pan 2 0.7586799647899636  0.5221511083334797  EKS eks Eks
+wye wye 3 0.20460330576630303 0.33831852551664776 WYE wye Wye
+eks wye 4 0.38139939387114097 0.13418874328430463 EKS eks Eks
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put $z = $a =~ ".[ak]."
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=true
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=true
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=true
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,z=false
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,z=false
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,z=true
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,z=false
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,z=true
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put $z = $a !=~ ".[ak]."
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=false
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=false
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=false
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,z=true
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,z=true
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,z=false
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,z=true
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,z=false
+
+----------------------------------------------------------------
+mlr --opprint --from u/s.dkvp put 
+  $dx = depth($x);
+  $dn = depth($nonesuch);
+  $da1 = depth([1,2,3]);
+  $da2 = depth([1,[4,5,6],3]);
+  $da3 = depth([1,{"s":4,"t":[7,8,9],"u":6},3]);
+  $dm1 = depth({"s":1,"t":2,"u":3});
+  $dm2 = depth({"s":1,"t":[4,5,6],"u":3});
+  $dm3 = depth({"s":1,"t":[4,$*,6],"u":3});
+
+a   b   i x                   y                   dx da1 da2 da3 dm1 dm2 dm3
+pan pan 1 0.3467901443380824  0.7268028627434533  0  1   2   3   1   2   3
+eks pan 2 0.7586799647899636  0.5221511083334797  0  1   2   3   1   2   3
+wye wye 3 0.20460330576630303 0.33831852551664776 0  1   2   3   1   2   3
+eks wye 4 0.38139939387114097 0.13418874328430463 0  1   2   3   1   2   3
+
+----------------------------------------------------------------
+mlr --opprint --from u/s.dkvp put 
+  $lcx = leafcount($x);
+  $lcn = leafcount($nonesuch);
+  $lca1 = leafcount([1,2,3]);
+  $lca2 = leafcount([1,[4,5,6],3]);
+  $lca3 = leafcount([1,{"s":4,"t":[7,8,9],"u":6},3]);
+  $lcm1 = leafcount({"s":1,"t":2,"u":3});
+  $lcm2 = leafcount({"s":1,"t":[4,5,6],"u":3});
+  $lcm3 = leafcount({"s":1,"t":[4,{"x":8, "y": 9},6],"u":3});
+
+a   b   i x                   y                   lcx lca1 lca2 lca3 lcm1 lcm2 lcm3
+pan pan 1 0.3467901443380824  0.7268028627434533  1   3    5    7    3    5    6
+eks pan 2 0.7586799647899636  0.5221511083334797  1   3    5    7    3    5    6
+wye wye 3 0.20460330576630303 0.33831852551664776 1   3    5    7    3    5    6
+eks wye 4 0.38139939387114097 0.13418874328430463 1   3    5    7    3    5    6
+
+----------------------------------------------------------------
+mlr --oxtab --from u/s.dkvp head -n 1 then put 
+  $hk01 = haskey($x, $a);
+  $hk02 = haskey($nonesuch, $a);
+  $hk03 = haskey($*, 7);
+  $hk04 = haskey($*, "a");
+  $hk05 = haskey($*, "nonesuch");
+  $hk06 = haskey([10,20,30], 0);
+  $hk07 = haskey([10,20,30], 1);
+  $hk08 = haskey([10,20,30], 2);
+  $hk09 = haskey([10,20,30], 3);
+  $hk10 = haskey([10,20,30], 4);
+  $hk11 = haskey([10,20,30], -4);
+  $hk12 = haskey([10,20,30], -3);
+  $hk13 = haskey([10,20,30], -2);
+  $hk14 = haskey([10,20,30], -1);
+  $hk15 = haskey([10,20,30], "a");
+
+a    pan
+b    pan
+i    1
+x    0.3467901443380824
+y    0.7268028627434533
+hk01 (error)
+hk02 (error)
+hk03 (error)
+hk04 true
+hk05 false
+hk06 false
+hk07 true
+hk08 true
+hk09 true
+hk10 false
+hk11 false
+hk12 true
+hk13 true
+hk14 true
+hk15 (error)
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum(); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff(); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+mlr --from u/abixy-het put -q o = mapexcept(); dump o
+Miller: couldn't assign variable var o from value error (error)
+mlr --from u/abixy-het put -q o = mapselect(); dump o
+Miller: couldn't assign variable var o from value error (error)
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum($*); dump o
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "a": "eks",
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum({"a":999}); dump o
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff($*); dump o
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "a": "eks",
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff({"a":999}); dump o
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept($*); dump o
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "a": "eks",
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept({"a":999}); dump o
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect($*); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect({"a":999}); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum($*, {"a":999}); dump o
+{
+  "a": 999,
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": 999,
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776,
+  "a": 999
+}
+{
+  "a": 999,
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "a": 999,
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": 999,
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": 999,
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": 999,
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059,
+  "a": 999
+}
+{
+  "a": 999,
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum({"a":999}, $*); dump o
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "a": 999,
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "a": "eks",
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "a": 999,
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff($*, {"a":999}); dump o
+{
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff({"a":999}, $*); dump o
+{}
+{}
+{
+  "a": 999
+}
+{}
+{}
+{}
+{}
+{}
+{
+  "a": 999
+}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept($*, "a"); dump o
+{
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "b": "pan",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "b": "pan",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "b": "zee",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "b": "wye",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "b": "wye",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept({"a":999}, "a"); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept({"a":999}, "nonesuch"); dump o
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect($*, "a"); dump o
+{
+  "a": "pan"
+}
+{
+  "a": "eks"
+}
+{}
+{
+  "a": "eks"
+}
+{
+  "a": "wye"
+}
+{
+  "a": "zee"
+}
+{
+  "a": "eks"
+}
+{
+  "a": "zee"
+}
+{}
+{
+  "a": "pan"
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect({"a":999}, "a"); dump o
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+{
+  "a": 999
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect({"a":999}, "nonesuch"); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum($*, {"a":999}, {"b": 444}); dump o
+{
+  "a": 999,
+  "b": 444,
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": 999,
+  "b": 444,
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "b": 444,
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776,
+  "a": 999
+}
+{
+  "a": 999,
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463,
+  "b": 444
+}
+{
+  "a": 999,
+  "b": 444,
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": 999,
+  "b": 444,
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": 999,
+  "b": 444,
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": 999,
+  "b": 444,
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059,
+  "a": 999,
+  "b": 444
+}
+{
+  "a": 999,
+  "b": 444,
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapsum({"a":999}, $*, {"b": 444}); dump o
+{
+  "a": "pan",
+  "b": 444,
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "b": 444,
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "a": 999,
+  "aaa": "wye",
+  "b": 444,
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "a": "eks",
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463,
+  "b": 444
+}
+{
+  "a": "wye",
+  "b": 444,
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": "zee",
+  "b": 444,
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": "eks",
+  "b": 444,
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": "zee",
+  "b": 444,
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "a": 999,
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059,
+  "b": 444
+}
+{
+  "a": "pan",
+  "b": 444,
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff($*, {"a":999}, {"b": 444}); dump o
+{
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 444}); dump o
+{}
+{}
+{
+  "a": 999
+}
+{}
+{}
+{}
+{}
+{}
+{
+  "a": 999
+}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept($*, "a", "b"); dump o
+{
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect({"a":999}, "b", "nonesuch"); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect($*, "a", "b"); dump o
+{
+  "a": "pan",
+  "b": "pan"
+}
+{
+  "a": "eks",
+  "b": "pan"
+}
+{
+  "b": "wye"
+}
+{
+  "a": "eks"
+}
+{
+  "a": "wye",
+  "b": "pan"
+}
+{
+  "a": "zee",
+  "b": "pan"
+}
+{
+  "a": "eks",
+  "b": "zee"
+}
+{
+  "a": "zee",
+  "b": "wye"
+}
+{}
+{
+  "a": "pan",
+  "b": "wye"
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect({"a":999}, "b", "nonesuch"); dump o
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+{}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapselect($*, ["b", "nonesuch"]); dump o
+{
+  "b": "pan"
+}
+{
+  "b": "pan"
+}
+{
+  "b": "wye"
+}
+{}
+{
+  "b": "pan"
+}
+{
+  "b": "pan"
+}
+{
+  "b": "zee"
+}
+{
+  "b": "wye"
+}
+{}
+{
+  "b": "wye"
+}
+
+----------------------------------------------------------------
+mlr --from u/abixy-het put -q o = mapexcept($*, ["b", "nonesuch"]); dump o
+{
+  "a": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+{
+  "aaa": "wye",
+  "i": 3,
+  "x": 0.20460330576630303,
+  "y": 0.33831852551664776
+}
+{
+  "a": "eks",
+  "bbb": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+{
+  "a": "wye",
+  "i": 5,
+  "xxx": 0.5732889198020006,
+  "y": 0.8636244699032729
+}
+{
+  "a": "zee",
+  "i": 6,
+  "x": 0.5271261600918548,
+  "y": 0.49322128674835697
+}
+{
+  "a": "eks",
+  "iii": 7,
+  "x": 0.6117840605678454,
+  "y": 0.1878849191181694
+}
+{
+  "a": "zee",
+  "i": 8,
+  "x": 0.5985540091064224,
+  "yyy": 0.976181385699006
+}
+{
+  "aaa": "hat",
+  "bbb": "wye",
+  "i": 9,
+  "x": 0.03144187646093577,
+  "y": 0.7495507603507059
+}
+{
+  "a": "pan",
+  "i": 10,
+  "x": 0.5026260055412137,
+  "y": 0.9526183602969864
+}
+
+----------------------------------------------------------------
+mlr --c2p --from u/mod.csv put 
+  $add = madd($a, $b, $m);
+  $sub = msub($a, $b, $m);
+  $mul = mmul($a, $b, $m);
+  $exp = mexp($a, $b, $m);
+
+a  b  m  add sub mul exp
+0  1  11 1   10  0   0
+1  0  11 1   1   0   1
+5  6  11 0   10  8   5
+7  8  11 4   10  1   9
+3  4  11 7   10  1   4
+-3 -4 11 4   1   1   (error)
+-3 4  11 1   4   10  4
+3  -4 11 10  7   10  (error)
+
+----------------------------------------------------------------
+mlr --opprint --from u/ten.dkvp put 
+  $ha = hexfmt($a);
+  $hx = hexfmt($x);
+  $hi = hexfmt($i);
+  $nhi = hexfmt(-$i);
+
+a   b   i  x                   y                    ha  hx                  hi  nhi
+pan pan 1  0.3467901443380824  0.7268028627434533   pan 0.3467901443380824  0x1 0xffffffffffffffff
+eks pan 2  0.7586799647899636  -0.5221511083334797  eks 0.7586799647899636  0x2 0xfffffffffffffffe
+wye wye 3  0.20460330576630303 0.33831852551664776  wye 0.20460330576630303 0x3 0xfffffffffffffffd
+eks wye 4  0.38139939387114097 -0.13418874328430463 eks 0.38139939387114097 0x4 0xfffffffffffffffc
+wye pan 5  0.5732889198020006  0.8636244699032729   wye 0.5732889198020006  0x5 0xfffffffffffffffb
+zee pan 6  0.5271261600918548  -0.49322128674835697 zee 0.5271261600918548  0x6 0xfffffffffffffffa
+eks zee 7  0.6117840605678454  0.1878849191181694   eks 0.6117840605678454  0x7 0xfffffffffffffff9
+zee wye 8  0.5985540091064224  0.976181385699006    zee 0.5985540091064224  0x8 0xfffffffffffffff8
+hat wye 9  0.03144187646093577 -0.7495507603507059  hat 0.03144187646093577 0x9 0xfffffffffffffff7
+pan wye 10 0.5026260055412137  0.9526183602969864   pan 0.5026260055412137  0xa 0xfffffffffffffff6
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_a       = is_absent       ($a);
+  @is_present_a      = is_present      ($a);
+  @is_empty_a        = is_empty        ($a);
+  @is_not_empty_a    = is_not_empty    ($a);
+  @is_null_a         = is_null         ($a);
+  @is_not_null_a     = is_not_null     ($a);
+  @is_bool_a         = is_bool         ($a);
+  @is_boolean_a      = is_boolean      ($a);
+  @is_float_a        = is_float        ($a);
+  @is_int_a          = is_int          ($a);
+  @is_numeric_a      = is_numeric      ($a);
+  @is_string_a       = is_string       ($a);
+  @is_map_a          = is_map          ($a);
+  @is_not_map_a      = is_not_map      ($a);
+  @is_empty_map_a    = is_empty_map    ($a);
+  @is_nonempty_map_a = is_nonempty_map ($a);
+  @is_array_a        = is_array        ($a);
+  @is_not_array_a    = is_not_array    ($a);
+  dump;
+
+{
+  "is_absent_a": false,
+  "is_present_a": true,
+  "is_empty_a": false,
+  "is_not_empty_a": true,
+  "is_null_a": false,
+  "is_not_null_a": true,
+  "is_bool_a": false,
+  "is_boolean_a": false,
+  "is_float_a": false,
+  "is_int_a": false,
+  "is_numeric_a": false,
+  "is_string_a": true,
+  "is_map_a": false,
+  "is_not_map_a": true,
+  "is_empty_map_a": false,
+  "is_nonempty_map_a": false,
+  "is_array_a": false,
+  "is_not_array_a": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_x       = is_absent       ($x);
+  @is_present_x      = is_present      ($x);
+  @is_empty_x        = is_empty        ($x);
+  @is_not_empty_x    = is_not_empty    ($x);
+  @is_null_x         = is_null         ($x);
+  @is_not_null_x     = is_not_null     ($x);
+  @is_bool_x         = is_bool         ($x);
+  @is_boolean_x      = is_boolean      ($x);
+  @is_float_x        = is_float        ($x);
+  @is_int_x          = is_int          ($x);
+  @is_numeric_x      = is_numeric      ($x);
+  @is_string_x       = is_string       ($x);
+  @is_map_x          = is_map          ($x);
+  @is_not_map_x      = is_not_map      ($x);
+  @is_empty_map_x    = is_empty_map    ($x);
+  @is_nonempty_map_x = is_nonempty_map ($x);
+  @is_array_x        = is_array        ($x);
+  @is_not_array_x    = is_not_array    ($x);
+  dump;
+
+{
+  "is_absent_x": false,
+  "is_present_x": true,
+  "is_empty_x": false,
+  "is_not_empty_x": true,
+  "is_null_x": false,
+  "is_not_null_x": true,
+  "is_bool_x": false,
+  "is_boolean_x": false,
+  "is_float_x": true,
+  "is_int_x": false,
+  "is_numeric_x": true,
+  "is_string_x": false,
+  "is_map_x": false,
+  "is_not_map_x": true,
+  "is_empty_map_x": false,
+  "is_nonempty_map_x": false,
+  "is_array_x": false,
+  "is_not_array_x": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_i       = is_absent       ($i);
+  @is_present_i      = is_present      ($i);
+  @is_empty_i        = is_empty        ($i);
+  @is_not_empty_i    = is_not_empty    ($i);
+  @is_null_i         = is_null         ($i);
+  @is_not_null_i     = is_not_null     ($i);
+  @is_bool_i         = is_bool         ($i);
+  @is_boolean_i      = is_boolean      ($i);
+  @is_float_i        = is_float        ($i);
+  @is_int_i          = is_int          ($i);
+  @is_numeric_i      = is_numeric      ($i);
+  @is_string_i       = is_string       ($i);
+  @is_map_i          = is_map          ($i);
+  @is_not_map_i      = is_not_map      ($i);
+  @is_empty_map_i    = is_empty_map    ($i);
+  @is_nonempty_map_i = is_nonempty_map ($i);
+  @is_array_i        = is_array        ($i);
+  @is_not_array_i    = is_not_array    ($i);
+  dump;
+
+{
+  "is_absent_i": false,
+  "is_present_i": true,
+  "is_empty_i": false,
+  "is_not_empty_i": true,
+  "is_null_i": false,
+  "is_not_null_i": true,
+  "is_bool_i": false,
+  "is_boolean_i": false,
+  "is_float_i": false,
+  "is_int_i": true,
+  "is_numeric_i": true,
+  "is_string_i": false,
+  "is_map_i": false,
+  "is_not_map_i": true,
+  "is_empty_map_i": false,
+  "is_nonempty_map_i": false,
+  "is_array_i": false,
+  "is_not_array_i": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_nonesuch       = is_absent       ($nonesuch);
+  @is_present_nonesuch      = is_present      ($nonesuch);
+  @is_empty_nonesuch        = is_empty        ($nonesuch);
+  @is_not_empty_nonesuch    = is_not_empty    ($nonesuch);
+  @is_null_nonesuch         = is_null         ($nonesuch);
+  @is_not_null_nonesuch     = is_not_null     ($nonesuch);
+  @is_bool_nonesuch         = is_bool         ($nonesuch);
+  @is_boolean_nonesuch      = is_boolean      ($nonesuch);
+  @is_float_nonesuch        = is_float        ($nonesuch);
+  @is_int_nonesuch          = is_int          ($nonesuch);
+  @is_numeric_nonesuch      = is_numeric      ($nonesuch);
+  @is_string_nonesuch       = is_string       ($nonesuch);
+  @is_map_nonesuch          = is_map          ($nonesuch);
+  @is_not_map_nonesuch      = is_not_map      ($nonesuch);
+  @is_empty_map_nonesuch    = is_empty_map    ($nonesuch);
+  @is_nonempty_map_nonesuch = is_nonempty_map ($nonesuch);
+  @is_array_nonesuch        = is_array        ($nonesuch);
+  @is_not_array_nonesuch    = is_not_array    ($nonesuch);
+  dump;
+
+{
+  "is_absent_nonesuch": true,
+  "is_present_nonesuch": false,
+  "is_empty_nonesuch": false,
+  "is_not_empty_nonesuch": true,
+  "is_null_nonesuch": true,
+  "is_not_null_nonesuch": false,
+  "is_bool_nonesuch": false,
+  "is_boolean_nonesuch": false,
+  "is_float_nonesuch": false,
+  "is_int_nonesuch": false,
+  "is_numeric_nonesuch": false,
+  "is_string_nonesuch": false,
+  "is_map_nonesuch": false,
+  "is_not_map_nonesuch": true,
+  "is_empty_map_nonesuch": false,
+  "is_nonempty_map_nonesuch": false,
+  "is_array_nonesuch": false,
+  "is_not_array_nonesuch": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_dollar_star       = is_absent       ($*);
+  @is_present_dollar_star      = is_present      ($*);
+  @is_empty_dollar_star        = is_empty        ($*);
+  @is_not_empty_dollar_star    = is_not_empty    ($*);
+  @is_null_dollar_star         = is_null         ($*);
+  @is_not_null_dollar_star     = is_not_null     ($*);
+  @is_bool_dollar_star         = is_bool         ($*);
+  @is_boolean_dollar_star      = is_boolean      ($*);
+  @is_float_dollar_star        = is_float        ($*);
+  @is_int_dollar_star          = is_int          ($*);
+  @is_numeric_dollar_star      = is_numeric      ($*);
+  @is_string_dollar_star       = is_string       ($*);
+  @is_map_dollar_star          = is_map          ($*);
+  @is_not_map_dollar_star      = is_not_map      ($*);
+  @is_empty_map_dollar_star    = is_empty_map    ($*);
+  @is_nonempty_map_dollar_star = is_nonempty_map ($*);
+  @is_array_dollar_star        = is_array        ($*);
+  @is_not_array_dollar_star    = is_not_array    ($*);
+  dump;
+
+{
+  "is_absent_dollar_star": false,
+  "is_present_dollar_star": true,
+  "is_empty_dollar_star": false,
+  "is_not_empty_dollar_star": true,
+  "is_null_dollar_star": false,
+  "is_not_null_dollar_star": true,
+  "is_bool_dollar_star": false,
+  "is_boolean_dollar_star": false,
+  "is_float_dollar_star": false,
+  "is_int_dollar_star": false,
+  "is_numeric_dollar_star": false,
+  "is_string_dollar_star": false,
+  "is_map_dollar_star": true,
+  "is_not_map_dollar_star": false,
+  "is_empty_map_dollar_star": false,
+  "is_nonempty_map_dollar_star": true,
+  "is_array_dollar_star": false,
+  "is_not_array_dollar_star": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_empty_map       = is_absent       ({});
+  @is_present_empty_map      = is_present      ({});
+  @is_empty_empty_map        = is_empty        ({});
+  @is_not_empty_empty_map    = is_not_empty    ({});
+  @is_null_empty_map         = is_null         ({});
+  @is_not_null_empty_map     = is_not_null     ({});
+  @is_bool_empty_map         = is_bool         ({});
+  @is_boolean_empty_map      = is_boolean      ({});
+  @is_float_empty_map        = is_float        ({});
+  @is_int_empty_map          = is_int          ({});
+  @is_numeric_empty_map      = is_numeric      ({});
+  @is_string_empty_map       = is_string       ({});
+  @is_map_empty_map          = is_map          ({});
+  @is_not_map_empty_map      = is_not_map      ({});
+  @is_empty_map_empty_map    = is_empty_map    ({});
+  @is_nonempty_map_empty_map = is_nonempty_map ({});
+  @is_array_empty_map        = is_array        ({});
+  @is_not_array_empty_map    = is_not_array    ({});
+  dump;
+
+{
+  "is_absent_empty_map": false,
+  "is_present_empty_map": true,
+  "is_empty_empty_map": false,
+  "is_not_empty_empty_map": true,
+  "is_null_empty_map": false,
+  "is_not_null_empty_map": true,
+  "is_bool_empty_map": false,
+  "is_boolean_empty_map": false,
+  "is_float_empty_map": false,
+  "is_int_empty_map": false,
+  "is_numeric_empty_map": false,
+  "is_string_empty_map": false,
+  "is_map_empty_map": true,
+  "is_not_map_empty_map": false,
+  "is_empty_map_empty_map": true,
+  "is_nonempty_map_empty_map": false,
+  "is_array_empty_map": false,
+  "is_not_array_empty_map": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_empty_map       = is_absent       ({});
+  @is_present_empty_map      = is_present      ({});
+  @is_empty_empty_map        = is_empty        ({});
+  @is_not_empty_empty_map    = is_not_empty    ({});
+  @is_null_empty_map         = is_null         ({});
+  @is_not_null_empty_map     = is_not_null     ({});
+  @is_bool_empty_map         = is_bool         ({});
+  @is_boolean_empty_map      = is_boolean      ({});
+  @is_float_empty_map        = is_float        ({});
+  @is_int_empty_map          = is_int          ({});
+  @is_numeric_empty_map      = is_numeric      ({});
+  @is_string_empty_map       = is_string       ({});
+  @is_map_empty_map          = is_map          ({});
+  @is_not_map_empty_map      = is_not_map      ({});
+  @is_empty_map_empty_map    = is_empty_map    ({});
+  @is_nonempty_map_empty_map = is_nonempty_map ({});
+  @is_array_empty_map        = is_array        ({});
+  @is_not_array_empty_map    = is_not_array    ({});
+  dump;
+
+{
+  "is_absent_empty_map": false,
+  "is_present_empty_map": true,
+  "is_empty_empty_map": false,
+  "is_not_empty_empty_map": true,
+  "is_null_empty_map": false,
+  "is_not_null_empty_map": true,
+  "is_bool_empty_map": false,
+  "is_boolean_empty_map": false,
+  "is_float_empty_map": false,
+  "is_int_empty_map": false,
+  "is_numeric_empty_map": false,
+  "is_string_empty_map": false,
+  "is_map_empty_map": true,
+  "is_not_map_empty_map": false,
+  "is_empty_map_empty_map": true,
+  "is_nonempty_map_empty_map": false,
+  "is_array_empty_map": false,
+  "is_not_array_empty_map": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  $a = "";
+  @is_absent_empty       = is_absent       ($a);
+  @is_present_empty      = is_present      ($a);
+  @is_empty_empty        = is_empty        ($a);
+  @is_not_empty_empty    = is_not_empty    ($a);
+  @is_null_empty         = is_null         ($a);
+  @is_not_null_empty     = is_not_null     ($a);
+  @is_bool_empty         = is_bool         ($a);
+  @is_boolean_empty      = is_boolean      ($a);
+  @is_float_empty        = is_float        ($a);
+  @is_int_empty          = is_int          ($a);
+  @is_numeric_empty      = is_numeric      ($a);
+  @is_string_empty       = is_string       ($a);
+  @is_map_empty          = is_map          ($a);
+  @is_not_map_empty      = is_not_map      ($a);
+  @is_empty_map_empty    = is_empty_map    ($a);
+  @is_nonempty_map_empty = is_nonempty_map ($a);
+  @is_array_empty        = is_array        ($a);
+  @is_not_array_empty    = is_not_array    ($a);
+  dump;
+
+{
+  "is_absent_empty": false,
+  "is_present_empty": true,
+  "is_empty_empty": true,
+  "is_not_empty_empty": false,
+  "is_null_empty": false,
+  "is_not_null_empty": true,
+  "is_bool_empty": false,
+  "is_boolean_empty": false,
+  "is_float_empty": false,
+  "is_int_empty": false,
+  "is_numeric_empty": false,
+  "is_string_empty": true,
+  "is_map_empty": false,
+  "is_not_map_empty": true,
+  "is_empty_map_empty": false,
+  "is_nonempty_map_empty": false,
+  "is_array_empty": false,
+  "is_not_array_empty": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @is_absent_array       = is_absent       ([1,2,3]);
+  @is_present_array      = is_present      ([1,2,3]);
+  @is_empty_array        = is_empty        ([1,2,3]);
+  @is_not_empty_array    = is_not_empty    ([1,2,3]);
+  @is_null_array         = is_null         ([1,2,3]);
+  @is_not_null_array     = is_not_null     ([1,2,3]);
+  @is_bool_array         = is_bool         ([1,2,3]);
+  @is_boolean_array      = is_boolean      ([1,2,3]);
+  @is_float_array        = is_float        ([1,2,3]);
+  @is_int_array          = is_int          ([1,2,3]);
+  @is_numeric_array      = is_numeric      ([1,2,3]);
+  @is_string_array       = is_string       ([1,2,3]);
+  @is_map_array          = is_map          ([1,2,3]);
+  @is_not_map_array      = is_not_map      ([1,2,3]);
+  @is_empty_map_array    = is_empty_map    ([1,2,3]);
+  @is_nonempty_map_array = is_nonempty_map ([1,2,3]);
+  @is_array_array        = is_array        ([1,2,3]);
+  @is_not_array_array    = is_not_array    ([1,2,3]);
+  dump;
+
+{
+  "is_absent_array": false,
+  "is_present_array": true,
+  "is_empty_array": false,
+  "is_not_empty_array": true,
+  "is_null_array": false,
+  "is_not_null_array": true,
+  "is_bool_array": false,
+  "is_boolean_array": false,
+  "is_float_array": false,
+  "is_int_array": false,
+  "is_numeric_array": false,
+  "is_string_array": false,
+  "is_map_array": false,
+  "is_not_map_array": true,
+  "is_empty_map_array": false,
+  "is_nonempty_map_array": false,
+  "is_array_array": true,
+  "is_not_array_array": false
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  v = [1,2,3];
+  @is_absent_array_in_bounds       = is_absent       (v[1]);
+  @is_present_array_in_bounds      = is_present      (v[1]);
+  @is_empty_array_in_bounds        = is_empty        (v[1]);
+  @is_not_empty_array_in_bounds    = is_not_empty    (v[1]);
+  @is_null_array_in_bounds         = is_null         (v[1]);
+  @is_not_null_array_in_bounds     = is_not_null     (v[1]);
+  @is_bool_array_in_bounds         = is_bool         (v[1]);
+  @is_boolean_array_in_bounds      = is_boolean      (v[1]);
+  @is_float_array_in_bounds        = is_float        (v[1]);
+  @is_int_array_in_bounds          = is_int          (v[1]);
+  @is_numeric_array_in_bounds      = is_numeric      (v[1]);
+  @is_string_array_in_bounds       = is_string       (v[1]);
+  @is_map_array_in_bounds          = is_map          (v[1]);
+  @is_not_map_array_in_bounds      = is_not_map      (v[1]);
+  @is_empty_map_array_in_bounds    = is_empty_map    (v[1]);
+  @is_nonempty_map_array_in_bounds = is_nonempty_map (v[1]);
+  @is_array_in_bounds_array        = is_array        (v[1]);
+  @is_not_array_in_bounds_array    = is_not_array    (v[1]);
+  dump;
+
+{
+  "is_absent_array_in_bounds": false,
+  "is_present_array_in_bounds": true,
+  "is_empty_array_in_bounds": false,
+  "is_not_empty_array_in_bounds": true,
+  "is_null_array_in_bounds": false,
+  "is_not_null_array_in_bounds": true,
+  "is_bool_array_in_bounds": false,
+  "is_boolean_array_in_bounds": false,
+  "is_float_array_in_bounds": false,
+  "is_int_array_in_bounds": true,
+  "is_numeric_array_in_bounds": true,
+  "is_string_array_in_bounds": false,
+  "is_map_array_in_bounds": false,
+  "is_not_map_array_in_bounds": true,
+  "is_empty_map_array_in_bounds": false,
+  "is_nonempty_map_array_in_bounds": false,
+  "is_array_in_bounds_array": false,
+  "is_not_array_in_bounds_array": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  v = [1,2,3];
+  @is_absent_array_out_of_bounds       = is_absent       (v[4]);
+  @is_present_array_out_of_bounds      = is_present      (v[4]);
+  @is_empty_array_out_of_bounds        = is_empty        (v[4]);
+  @is_not_empty_array_out_of_bounds    = is_not_empty    (v[4]);
+  @is_null_array_out_of_bounds         = is_null         (v[4]);
+  @is_not_null_array_out_of_bounds     = is_not_null     (v[4]);
+  @is_bool_array_out_of_bounds         = is_bool         (v[4]);
+  @is_boolean_array_out_of_bounds      = is_boolean      (v[4]);
+  @is_float_array_out_of_bounds        = is_float        (v[4]);
+  @is_int_array_out_of_bounds          = is_int          (v[4]);
+  @is_numeric_array_out_of_bounds      = is_numeric      (v[4]);
+  @is_string_array_out_of_bounds       = is_string       (v[4]);
+  @is_map_array_out_of_bounds          = is_map          (v[4]);
+  @is_not_map_array_out_of_bounds      = is_not_map      (v[4]);
+  @is_empty_map_array_out_of_bounds    = is_empty_map    (v[4]);
+  @is_nonempty_map_array_out_of_bounds = is_nonempty_map (v[4]);
+  @is_array_out_of_bounds_array        = is_array        (v[4]);
+  @is_not_array_out_of_bounds_array    = is_not_array    (v[4]);
+  dump;
+
+{
+  "is_absent_array_out_of_bounds": false,
+  "is_present_array_out_of_bounds": true,
+  "is_empty_array_out_of_bounds": false,
+  "is_not_empty_array_out_of_bounds": true,
+  "is_null_array_out_of_bounds": false,
+  "is_not_null_array_out_of_bounds": true,
+  "is_bool_array_out_of_bounds": false,
+  "is_boolean_array_out_of_bounds": false,
+  "is_float_array_out_of_bounds": false,
+  "is_int_array_out_of_bounds": false,
+  "is_numeric_array_out_of_bounds": false,
+  "is_string_array_out_of_bounds": false,
+  "is_map_array_out_of_bounds": false,
+  "is_not_map_array_out_of_bounds": true,
+  "is_empty_map_array_out_of_bounds": false,
+  "is_nonempty_map_array_out_of_bounds": false,
+  "is_array_out_of_bounds_array": false,
+  "is_not_array_out_of_bounds_array": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  v = [1,2,3];
+  @is_absent_array_out_of_bounds       = is_absent       (v[0]);
+  @is_present_array_out_of_bounds      = is_present      (v[0]);
+  @is_empty_array_out_of_bounds        = is_empty        (v[0]);
+  @is_not_empty_array_out_of_bounds    = is_not_empty    (v[0]);
+  @is_null_array_out_of_bounds         = is_null         (v[0]);
+  @is_not_null_array_out_of_bounds     = is_not_null     (v[0]);
+  @is_bool_array_out_of_bounds         = is_bool         (v[0]);
+  @is_boolean_array_out_of_bounds      = is_boolean      (v[0]);
+  @is_float_array_out_of_bounds        = is_float        (v[0]);
+  @is_int_array_out_of_bounds          = is_int          (v[0]);
+  @is_numeric_array_out_of_bounds      = is_numeric      (v[0]);
+  @is_string_array_out_of_bounds       = is_string       (v[0]);
+  @is_map_array_out_of_bounds          = is_map          (v[0]);
+  @is_not_map_array_out_of_bounds      = is_not_map      (v[0]);
+  @is_empty_map_array_out_of_bounds    = is_empty_map    (v[0]);
+  @is_nonempty_map_array_out_of_bounds = is_nonempty_map (v[0]);
+  @is_array_out_of_bounds_array        = is_array        (v[0]);
+  @is_not_array_out_of_bounds_array    = is_not_array    (v[0]);
+  dump;
+
+{
+  "is_absent_array_out_of_bounds": false,
+  "is_present_array_out_of_bounds": true,
+  "is_empty_array_out_of_bounds": false,
+  "is_not_empty_array_out_of_bounds": true,
+  "is_null_array_out_of_bounds": false,
+  "is_not_null_array_out_of_bounds": true,
+  "is_bool_array_out_of_bounds": false,
+  "is_boolean_array_out_of_bounds": false,
+  "is_float_array_out_of_bounds": false,
+  "is_int_array_out_of_bounds": false,
+  "is_numeric_array_out_of_bounds": false,
+  "is_string_array_out_of_bounds": false,
+  "is_map_array_out_of_bounds": false,
+  "is_not_map_array_out_of_bounds": true,
+  "is_empty_map_array_out_of_bounds": false,
+  "is_nonempty_map_array_out_of_bounds": false,
+  "is_array_out_of_bounds_array": false,
+  "is_not_array_out_of_bounds_array": true
+}
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @asserting_present_x                = asserting_present      ($x);
+  @asserting_not_empty_x              = asserting_not_empty    ($x);
+  @asserting_not_null_x               = asserting_not_null     ($x);
+  @asserting_float_x                  = asserting_float        ($x);
+  @asserting_int_i                    = asserting_int          ($i);
+  @asserting_numeric_x                = asserting_numeric      ($x);
+  @asserting_numeric_i                = asserting_numeric      ($i);
+  @asserting_string_b                 = asserting_string       ($b);
+  @asserting_map_dollar_star          = asserting_map          ($*);
+  @asserting_not_map_x                = asserting_not_map      ($x);
+  @asserting_empty_map_curlies        = asserting_empty_map    ({});
+  @asserting_nonempty_map_dollar_star = asserting_nonempty_map ($*);
+  @asserting_array_braces             = asserting_array        ([]);
+  @asserting_not_array_x              = asserting_not_array    ($x);
+  dump;
+
+{
+  "asserting_present_x": 0.3467901443380824,
+  "asserting_not_empty_x": 0.3467901443380824,
+  "asserting_not_null_x": 0.3467901443380824,
+  "asserting_float_x": 0.3467901443380824,
+  "asserting_int_i": 1,
+  "asserting_numeric_x": 0.3467901443380824,
+  "asserting_numeric_i": 1,
+  "asserting_string_b": "pan",
+  "asserting_map_dollar_star": {
+    "a": "pan",
+    "b": "pan",
+    "i": 1,
+    "x": 0.3467901443380824,
+    "y": 0.7268028627434533
+  },
+  "asserting_not_map_x": 0.3467901443380824,
+  "asserting_empty_map_curlies": {},
+  "asserting_nonempty_map_dollar_star": {
+    "a": "pan",
+    "b": "pan",
+    "i": 1,
+    "x": 0.3467901443380824,
+    "y": 0.7268028627434533
+  },
+  "asserting_array_braces": [],
+  "asserting_not_array_x": 0.3467901443380824
+}
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @asserting_absent_x = asserting_absent($x);
+
+Miller: is_absent type-assertion failed at NR=1 FNR=1 FILENAME=u/s.dkvp
+mlr --from u/s.dkvp head -n 1 then put -q 
+  @asserting_empty_x = asserting_empty($x);
+  dump;
+
+Miller: is_empty type-assertion failed at NR=1 FNR=1 FILENAME=u/s.dkvp

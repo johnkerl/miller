@@ -325,7 +325,9 @@ echo; run_mlr --from u/s.dkvp put 'NR == 2 { $z = 100 }'
 echo; run_mlr --from u/s.dkvp put 'NR != 2 { $z = 100 }'
 
 echo x=eeee | run_mlr put '$y=ssub($x, "e", "X")'
+echo x=eeee | run_mlr put '$y=sub($x, "e", "X")'
 echo x=eeee | run_mlr put '$y=gsub($x, "e", "X")'
+
 echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, -1)'
 echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 0)'
 echo; run_mlr --opprint --from u/s.dkvp put '$z = truncate($a, 1)'
