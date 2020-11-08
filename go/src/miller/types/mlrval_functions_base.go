@@ -53,6 +53,10 @@ type ZaryFunc func() Mlrval
 // Function-pointer type for unary-operator disposition vectors.
 type UnaryFunc func(*Mlrval) Mlrval
 
+// The asserting_{type} need access to the context to say things like 'Assertion ... failed
+// at filename {FILENAME} record number {NR}'.
+type ContextualUnaryFunc func(*Mlrval, *Context) Mlrval
+
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64

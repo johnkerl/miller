@@ -16,15 +16,16 @@ TOP OF LIST:
 * UDF nexts:
   ! check for multiple put -f; any/multiple put -e
     > non-flag copy from sort
-  * filter -x
-  ! more functions
-  ! function metadata, w/ sort-by, for online help
-  ! double-check $-anything in begin/end
   ! put -s ...
-  ! regexes & associated functions -- necessary or not?
+  * filter -x
+  ! asserting_x
+    > needs context support (as in the C impl) to be more useful
+  o more functions
+  o function metadata, w/ sort-by, for online help
+  o double-check $-anything in begin/end
+  o regexes & associated functions -- necessary or not?
   o mlr_expect_fail extraneous check output; wut
   o ENV
-  o is_x and asserting_x
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
@@ -259,3 +260,4 @@ NITS/NON-IMMEDIATE:
   o also document pre/post conditions for flag and non-flag usages x all mappers
 * need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
 ? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
+* doc one-variable for is over keys for maps, elements for arrays

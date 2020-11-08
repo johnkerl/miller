@@ -34,6 +34,8 @@ func (this *RootNode) BuildBuiltinFunctionCallsiteNode(
 			return this.BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.unaryFunc != nil {
 			return this.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.contextualUnaryFunc != nil {
+			return this.BuildContextualUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.binaryFunc != nil {
 			return this.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.ternaryFunc != nil {
@@ -140,6 +142,46 @@ func (this *RootNode) BuildUnaryFunctionCallsiteNode(
 func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	return this.unaryFunc(&arg1)
+}
+
+// ----------------------------------------------------------------
+type ContextualUnaryFunctionCallsiteNode struct {
+	contextualUnaryFunc types.ContextualUnaryFunc
+	evaluable1          IEvaluable
+}
+
+func (this *RootNode) BuildContextualUnaryFunctionCallsiteNode(
+	astNode *dsl.ASTNode,
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) (IEvaluable, error) {
+	callsiteArity := len(astNode.Children)
+	expectedArity := 1
+	if callsiteArity != expectedArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: function %s invoked with %d argument%s; expected %d",
+				builtinFunctionInfo.name,
+				callsiteArity,
+				lib.Plural(callsiteArity),
+				expectedArity,
+			),
+		)
+	}
+
+	evaluable1, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+
+	return &ContextualUnaryFunctionCallsiteNode{
+		contextualUnaryFunc: builtinFunctionInfo.contextualUnaryFunc,
+		evaluable1:          evaluable1,
+	}, nil
+}
+
+func (this *ContextualUnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+	arg1 := this.evaluable1.Evaluate(state)
+	return this.contextualUnaryFunc(&arg1, state.Context)
 }
 
 // ----------------------------------------------------------------

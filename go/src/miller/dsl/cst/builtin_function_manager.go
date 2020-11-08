@@ -16,13 +16,14 @@ import (
 type BuiltinFunctionInfo struct {
 	name string
 	// class      string -- "math", "time", "typing", "maps", etc
-	help               string
-	hasMultipleArities bool
-	zaryFunc           types.ZaryFunc
-	unaryFunc          types.UnaryFunc
-	binaryFunc         types.BinaryFunc
-	ternaryFunc        types.TernaryFunc
-	variadicFunc       types.VariadicFunc
+	help                string
+	hasMultipleArities  bool
+	zaryFunc            types.ZaryFunc
+	unaryFunc           types.UnaryFunc
+	contextualUnaryFunc types.ContextualUnaryFunc // asserting_{typename}
+	binaryFunc          types.BinaryFunc
+	ternaryFunc         types.TernaryFunc
+	variadicFunc        types.VariadicFunc
 }
 
 //// ----------------------------------------------------------------
@@ -420,115 +421,115 @@ Note that invqorm(urand()) is normally distributed.`,
 		name: "asserting_absent",
 		help: `Aborts with an error if is_absent on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingAbsent,
+		contextualUnaryFunc: types.MlrvalAssertingAbsent,
 	},
 	{
 		name: "asserting_error",
 		help: `Aborts with an error if is_error on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingError,
+		contextualUnaryFunc: types.MlrvalAssertingError,
 	},
 	{
 		name: "asserting_bool",
 		help: `Aborts with an error if is_bool on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingBool,
+		contextualUnaryFunc: types.MlrvalAssertingBool,
 	},
 	{
 		name: "asserting_boolean",
 		help: `Aborts with an error if is_boolean on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingBoolean,
+		contextualUnaryFunc: types.MlrvalAssertingBoolean,
 	},
 	{
 		name: "asserting_empty",
 		help: `Aborts with an error if is_empty on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingEmpty,
+		contextualUnaryFunc: types.MlrvalAssertingEmpty,
 	},
 	{
 		name: "asserting_empty_map",
 		help: `Aborts with an error if is_empty_map on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingEmptyMap,
+		contextualUnaryFunc: types.MlrvalAssertingEmptyMap,
 	},
 	{
 		name: "asserting_float",
 		help: `Aborts with an error if is_float on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingFloat,
+		contextualUnaryFunc: types.MlrvalAssertingFloat,
 	},
 	{
 		name: "asserting_int",
 		help: `Aborts with an error if is_int on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingInt,
+		contextualUnaryFunc: types.MlrvalAssertingInt,
 	},
 	{
 		name: "asserting_map",
 		help: `Aborts with an error if is_map on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingMap,
+		contextualUnaryFunc: types.MlrvalAssertingMap,
 	},
 	{
 		name: "asserting_array",
 		help: `Aborts with an error if is_array on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingArray,
+		contextualUnaryFunc: types.MlrvalAssertingArray,
 	},
 	{
 		name: "asserting_nonempty_map",
 		help: `Aborts with an error if is_nonempty_map on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNonEmptyMap,
+		contextualUnaryFunc: types.MlrvalAssertingNonEmptyMap,
 	},
 	{
 		name: "asserting_not_empty",
 		help: `Aborts with an error if is_not_empty on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNotEmpty,
+		contextualUnaryFunc: types.MlrvalAssertingNotEmpty,
 	},
 	{
 		name: "asserting_not_map",
 		help: `Aborts with an error if is_not_map on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNotMap,
+		contextualUnaryFunc: types.MlrvalAssertingNotMap,
 	},
 	{
 		name: "asserting_not_array",
 		help: `Aborts with an error if is_not_array on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNotArray,
+		contextualUnaryFunc: types.MlrvalAssertingNotArray,
 	},
 	{
 		name: "asserting_not_null",
 		help: `Aborts with an error if is_not_null on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNotNull,
+		contextualUnaryFunc: types.MlrvalAssertingNotNull,
 	},
 	{
 		name: "asserting_null",
 		help: `Aborts with an error if is_null on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNull,
+		contextualUnaryFunc: types.MlrvalAssertingNull,
 	},
 	{
 		name: "asserting_numeric",
 		help: `Aborts with an error if is_numeric on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingNumeric,
+		contextualUnaryFunc: types.MlrvalAssertingNumeric,
 	},
 	{
 		name: "asserting_present",
 		help: `Aborts with an error if is_present on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingPresent,
+		contextualUnaryFunc: types.MlrvalAssertingPresent,
 	},
 	{
 		name: "asserting_string",
 		help: `Aborts with an error if is_string on the argument returns false,
 else returns its argument.`,
-		unaryFunc: types.MlrvalAssertingString,
+		contextualUnaryFunc: types.MlrvalAssertingString,
 	},
 
 	{

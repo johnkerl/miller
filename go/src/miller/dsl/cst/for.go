@@ -32,7 +32,7 @@ import (
 
 // ================================================================
 type ForLoopOneVariableNode struct {
-	variableName  string
+	variableName       string
 	indexableNode      IEvaluable
 	statementBlockNode *StatementBlockNode
 }
