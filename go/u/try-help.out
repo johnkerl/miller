@@ -72,6 +72,8 @@ With -a, a field is 'missing' only if it is absent.
 Usage: ./mlr filter [options] {DSL expression}
 TODO: put detailed on-line help here.
  -f {file name} File containing a DSL expression.
+ -x (default false) Prints records for which {expression} evaluates to false, not true,
+    i.e. invert the sense of the filter expression.
  -q (default false) Does not include the modified record in the output stream.
     Useful for when all desired output is in begin and/or end blocks.
  -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
@@ -126,6 +128,8 @@ produced other output.
 Usage: ./mlr put [options] {DSL expression}
 TODO: put detailed on-line help here.
  -f {file name} File containing a DSL expression.
+ -x (default false) Prints records for which {expression} evaluates to false, not true,
+    i.e. invert the sense of the filter expression.
  -q (default false) Does not include the modified record in the output stream.
     Useful for when all desired output is in begin and/or end blocks.
  -v (default false) Prints the expressions's AST (abstract syntax tree), which gives

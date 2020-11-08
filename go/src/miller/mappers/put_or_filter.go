@@ -10,6 +10,7 @@ import (
 	"miller/clitypes"
 	"miller/dsl"
 	"miller/dsl/cst"
+	"miller/lib"
 	"miller/mapping"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
@@ -48,6 +49,7 @@ func mapperPutParseCLI(
 
 	dslString := ""
 	verbose := false
+	invertFilter := false
 	suppressOutputRecord := false
 	needExpressionArg := true
 
@@ -98,6 +100,9 @@ func mapperPutParseCLI(
 		} else if args[argi] == "-v" {
 			verbose = true
 			argi++
+		} else if args[argi] == "-x" {
+			invertFilter = true
+			argi++
 		} else if args[argi] == "-q" {
 			suppressOutputRecord = true
 			argi++
@@ -120,7 +125,12 @@ func mapperPutParseCLI(
 		argi += 1
 	}
 
-	mapper, err := NewMapperPut(dslString, verbose, suppressOutputRecord)
+	mapper, err := NewMapperPut(
+		dslString,
+		verbose,
+		invertFilter,
+		suppressOutputRecord,
+	)
 	if err != nil {
 		// Error message already printed out
 		os.Exit(1)
@@ -151,6 +161,8 @@ func mapperPutUsage(
 	fmt.Fprintf(o, "TODO: put detailed on-line help here.\n")
 	fmt.Fprintf(o,
 		` -f {file name} File containing a DSL expression.
+ -x (default false) Prints records for which {expression} evaluates to false, not true,
+    i.e. invert the sense of the filter expression.
  -q (default false) Does not include the modified record in the output stream.
     Useful for when all desired output is in begin and/or end blocks.
  -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
@@ -165,6 +177,7 @@ type MapperPut struct {
 	cstRootNode          *cst.RootNode
 	cstState             *cst.State
 	callCount            int64
+	invertFilter         bool
 	suppressOutputRecord bool
 	executedBeginBlocks  bool
 }
@@ -172,6 +185,7 @@ type MapperPut struct {
 func NewMapperPut(
 	dslString string,
 	verbose bool,
+	invertFilter bool,
 	suppressOutputRecord bool,
 ) (*MapperPut, error) {
 	astRootNode, err := BuildASTFromString(dslString)
@@ -203,6 +217,7 @@ func NewMapperPut(
 		cstRootNode:          cstRootNode,
 		cstState:             cstState,
 		callCount:            0,
+		invertFilter:         invertFilter,
 		suppressOutputRecord: suppressOutputRecord,
 		executedBeginBlocks:  false,
 	}, nil
@@ -254,7 +269,8 @@ func (this *MapperPut) Map(
 		}
 
 		if !this.suppressOutputRecord {
-			if this.cstState.FilterResult == true {
+			wantToPrint := lib.BooleanXOR(this.cstState.FilterResult, this.invertFilter)
+			if wantToPrint {
 				outputChannel <- types.NewRecordAndContext(
 					outrec,
 					&context,
