@@ -261,3 +261,4 @@ NITS/NON-IMMEDIATE:
 * need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
 ? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
 * doc one-variable for is over keys for maps, elements for arrays
+* asserting_{type}: os.Exit(1) -> return nil, err flow?

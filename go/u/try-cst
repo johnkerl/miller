@@ -1433,46 +1433,74 @@ run_mlr --from u/s.dkvp head -n 1 then put -q '
 
 run_mlr --from u/s.dkvp head -n 1 then put -q '
   v = [1,2,3];
-  @is_absent_array_out_ofbounds       = is_absent       (v[4]);
-  @is_present_array_out_ofbounds      = is_present      (v[4]);
-  @is_empty_array_out_ofbounds        = is_empty        (v[4]);
-  @is_not_empty_array_out_ofbounds    = is_not_empty    (v[4]);
-  @is_null_array_out_ofbounds         = is_null         (v[4]);
-  @is_not_null_array_out_ofbounds     = is_not_null     (v[4]);
-  @is_bool_array_out_ofbounds         = is_bool         (v[4]);
-  @is_boolean_array_out_ofbounds      = is_boolean      (v[4]);
-  @is_float_array_out_ofbounds        = is_float        (v[4]);
-  @is_int_array_out_ofbounds          = is_int          (v[4]);
-  @is_numeric_array_out_ofbounds      = is_numeric      (v[4]);
-  @is_string_array_out_ofbounds       = is_string       (v[4]);
-  @is_map_array_out_ofbounds          = is_map          (v[4]);
-  @is_not_map_array_out_ofbounds      = is_not_map      (v[4]);
-  @is_empty_map_array_out_ofbounds    = is_empty_map    (v[4]);
-  @is_nonempty_map_array_out_ofbounds = is_nonempty_map (v[4]);
-  @is_array_out_ofbounds_array        = is_array        (v[4]);
-  @is_not_array_out_ofbounds_array    = is_not_array    (v[4]);
+  @is_absent_array_out_of_bounds       = is_absent       (v[4]);
+  @is_present_array_out_of_bounds      = is_present      (v[4]);
+  @is_empty_array_out_of_bounds        = is_empty        (v[4]);
+  @is_not_empty_array_out_of_bounds    = is_not_empty    (v[4]);
+  @is_null_array_out_of_bounds         = is_null         (v[4]);
+  @is_not_null_array_out_of_bounds     = is_not_null     (v[4]);
+  @is_bool_array_out_of_bounds         = is_bool         (v[4]);
+  @is_boolean_array_out_of_bounds      = is_boolean      (v[4]);
+  @is_float_array_out_of_bounds        = is_float        (v[4]);
+  @is_int_array_out_of_bounds          = is_int          (v[4]);
+  @is_numeric_array_out_of_bounds      = is_numeric      (v[4]);
+  @is_string_array_out_of_bounds       = is_string       (v[4]);
+  @is_map_array_out_of_bounds          = is_map          (v[4]);
+  @is_not_map_array_out_of_bounds      = is_not_map      (v[4]);
+  @is_empty_map_array_out_of_bounds    = is_empty_map    (v[4]);
+  @is_nonempty_map_array_out_of_bounds = is_nonempty_map (v[4]);
+  @is_array_out_of_bounds_array        = is_array        (v[4]);
+  @is_not_array_out_of_bounds_array    = is_not_array    (v[4]);
   dump;
 '
 
 run_mlr --from u/s.dkvp head -n 1 then put -q '
   v = [1,2,3];
-  @is_absent_array_out_ofbounds       = is_absent       (v[0]);
-  @is_present_array_out_ofbounds      = is_present      (v[0]);
-  @is_empty_array_out_ofbounds        = is_empty        (v[0]);
-  @is_not_empty_array_out_ofbounds    = is_not_empty    (v[0]);
-  @is_null_array_out_ofbounds         = is_null         (v[0]);
-  @is_not_null_array_out_ofbounds     = is_not_null     (v[0]);
-  @is_bool_array_out_ofbounds         = is_bool         (v[0]);
-  @is_boolean_array_out_ofbounds      = is_boolean      (v[0]);
-  @is_float_array_out_ofbounds        = is_float        (v[0]);
-  @is_int_array_out_ofbounds          = is_int          (v[0]);
-  @is_numeric_array_out_ofbounds      = is_numeric      (v[0]);
-  @is_string_array_out_ofbounds       = is_string       (v[0]);
-  @is_map_array_out_ofbounds          = is_map          (v[0]);
-  @is_not_map_array_out_ofbounds      = is_not_map      (v[0]);
-  @is_empty_map_array_out_ofbounds    = is_empty_map    (v[0]);
-  @is_nonempty_map_array_out_ofbounds = is_nonempty_map (v[0]);
-  @is_array_out_ofbounds_array        = is_array        (v[0]);
-  @is_not_array_out_ofbounds_array    = is_not_array    (v[0]);
+  @is_absent_array_out_of_bounds       = is_absent       (v[0]);
+  @is_present_array_out_of_bounds      = is_present      (v[0]);
+  @is_empty_array_out_of_bounds        = is_empty        (v[0]);
+  @is_not_empty_array_out_of_bounds    = is_not_empty    (v[0]);
+  @is_null_array_out_of_bounds         = is_null         (v[0]);
+  @is_not_null_array_out_of_bounds     = is_not_null     (v[0]);
+  @is_bool_array_out_of_bounds         = is_bool         (v[0]);
+  @is_boolean_array_out_of_bounds      = is_boolean      (v[0]);
+  @is_float_array_out_of_bounds        = is_float        (v[0]);
+  @is_int_array_out_of_bounds          = is_int          (v[0]);
+  @is_numeric_array_out_of_bounds      = is_numeric      (v[0]);
+  @is_string_array_out_of_bounds       = is_string       (v[0]);
+  @is_map_array_out_of_bounds          = is_map          (v[0]);
+  @is_not_map_array_out_of_bounds      = is_not_map      (v[0]);
+  @is_empty_map_array_out_of_bounds    = is_empty_map    (v[0]);
+  @is_nonempty_map_array_out_of_bounds = is_nonempty_map (v[0]);
+  @is_array_out_of_bounds_array        = is_array        (v[0]);
+  @is_not_array_out_of_bounds_array    = is_not_array    (v[0]);
+  dump;
+'
+
+run_mlr --from u/s.dkvp head -n 1 then put -q '
+  @asserting_present_x                = asserting_present      ($x);
+  @asserting_not_empty_x              = asserting_not_empty    ($x);
+  @asserting_not_null_x               = asserting_not_null     ($x);
+  @asserting_float_x                  = asserting_float        ($x);
+  @asserting_int_i                    = asserting_int          ($i);
+  @asserting_numeric_x                = asserting_numeric      ($x);
+  @asserting_numeric_i                = asserting_numeric      ($i);
+  @asserting_string_b                 = asserting_string       ($b);
+  @asserting_map_dollar_star          = asserting_map          ($*);
+  @asserting_not_map_x                = asserting_not_map      ($x);
+  @asserting_empty_map_curlies        = asserting_empty_map    ({});
+  @asserting_nonempty_map_dollar_star = asserting_nonempty_map ($*);
+  @asserting_array_braces             = asserting_array        ([]);
+  @asserting_not_array_x              = asserting_not_array    ($x);
+  dump;
+'
+
+mlr_expect_fail --from u/s.dkvp head -n 1 then put -q '
+  @asserting_absent_x = asserting_absent($x);
+'
+
+
+mlr_expect_fail --from u/s.dkvp head -n 1 then put -q '
+  @asserting_empty_x = asserting_empty($x);
   dump;
 '
