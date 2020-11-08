@@ -142,3 +142,13 @@ func _i0__(ma, mb *Mlrval) Mlrval {
 func _f0__(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(0.0)
 }
+
+// Return boolean true (binary)
+func _true(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(true)
+}
+
+// Return boolean false (binary)
+func _fals(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromBool(false)
+}

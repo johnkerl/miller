@@ -9,9 +9,12 @@ TOP OF LIST:
 ! come up with some kind of blank-line trigger for miller and a condition for it .....
   o i want this pattern over and over
 
+! csvlite
+
 * UDF nexts:
   ! check for multiple put -f; any/multiple put -e
     > non-flag copy from sort
+  * filter -x
   ! more functions
   ! function metadata, w/ sort-by, for online help
   ! double-check $-anything in begin/end
@@ -41,6 +44,7 @@ TOP OF LIST:
 
 * some more verbs
   o easies first
+  o having-fields -x feature ... or something
   o join, stats1, stats2
 
 * double-check rand-seeding
