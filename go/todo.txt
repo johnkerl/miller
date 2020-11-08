@@ -1,6 +1,9 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! nidx @ 10-min
+! text-put @ 10-min
+
 * window.mlr, window2.mlr -> doc somewhere
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
@@ -250,3 +253,9 @@ NITS/NON-IMMEDIATE:
 * doc one-variable for is over keys for maps, elements for arrays
 * asserting_{type}: os.Exit(1) -> return nil, err flow?
 * test put/filter w/ various combinations of -s/-e/-f
+* math operators on map? array? e.g. a<b for contains? (prefer functions ...)
+* more text examples in mlr-put doc
+* mt_void keep-or-not .......
+  o check dispo matrices
+  o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
+  o comment clearly regardless
