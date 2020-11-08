@@ -13,7 +13,7 @@ import (
 // ostream *os.File in constructors/factory
 type RecordWriterPPRINT struct {
 	records *list.List
-	// For detecting schema changes: we print a newline and the new header
+	// For detecting schema changes: we print a newline and the new header.
 }
 
 func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriterPPRINT {
@@ -59,8 +59,8 @@ func (this *RecordWriterPPRINT) Write(
 			if *lastJoinedHeader != joinedHeader {
 				// Print and free old batch
 				this.writeHeterogenousList(batch)
-				os.Stdout.WriteString("\n")
 				// Print a newline
+				os.Stdout.WriteString("\n")
 				// Start a new batch
 				batch = list.New()
 				batch.PushBack(record)

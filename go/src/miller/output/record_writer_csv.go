@@ -11,12 +11,12 @@ import (
 
 // ostream *os.File in constructors/factory
 type RecordWriterCSV struct {
-	csvWriter *csv.Writer
+	csvWriter          *csv.Writer
+	doHeaderlessOutput bool
 	// For reporting schema changes: we print a newline and the new header
-	lastJoinedHeader   *string
+	lastJoinedHeader *string
 	// Only write one blank line for schema changes / blank input lines
 	justWroteEmptyLine bool
-	doHeaderlessOutput bool
 }
 
 func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
@@ -26,9 +26,9 @@ func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV
 
 	return &RecordWriterCSV{
 		csvWriter:          csvWriter,
+		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
-		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 	}
 }
 
