@@ -16,6 +16,7 @@ TOP OF LIST:
 * UDF nexts:
   ! mixing put -f/-e requires fixing "};" issue
   o more functions (see below)
+    - next: joink joinkv joinv splitkv splitkvx splitnv splitnvx *splita
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
   o regexes & associated functions -- necessary or not?
