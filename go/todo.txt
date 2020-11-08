@@ -71,24 +71,39 @@ TOP OF LIST:
 ================================================================
 FUNCTIONS:
 
-  fmtnum
+* fmtnum
 
-  joink joinkv joinv
+* joink joinv joinkv
   o map/array -> string
+    - joink([1,2,3], ",") -> "1,2,3"
+    - joinv([3,4,5], ",") -> "3,4,5"
+    - joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
+    - joink({"a":3,"b":4,"c":5}, ",") -> "a,b,c"
+    - joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
+    - joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
 
-  splitkv splitkvx splitnv splitnvx *splita
+* splitkv splitkvx splitnv splitnvx *splita
   o string -> map / *array
+    - splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
+    - splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
+    - splitnv("a=3,b=4,c=5", "=", ",") -> {"1":3,"2":4,"3":5}
+    - splitnvx("a=3,b=4,c=5", "=", ",") -> {"1":"3","2":"4","3":"5"}
+    - splitak("a=3,b=4,c=5", "=", ",") -> ["a","b","c"]
+    - splitav("a=3,b=4,c=5", "=", ",") -> [3,4,5]
+    - splita("3,4,5", ",") -> [3,4,5]
+    - splitax("3,4,5", ",") -> ["3","4","5"]
 
-  regextract regextract_or_else
+* regextract regextract_or_else
 
-  system
+* system
 
-  sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
-  dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
-  strftime strftime_local strptime strptime_local
+* sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
+* dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
+* strftime strftime_local strptime strptime_local
 
 ----------------------------------------------------------------
 k =~ !=~
+k sub
 k urandint urandrange
 k hexfmt
 k bitcount
