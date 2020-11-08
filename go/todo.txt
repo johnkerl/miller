@@ -67,13 +67,13 @@ TOP OF LIST:
 ================================================================
 FUNCTIONS:
 
-  sub
-  (https://play.golang.org/p/ihtuIU-WEYG)
-
   fmtnum
 
   joink joinkv joinv
-  splitkv splitkvx splitnv splitnvx
+  o map/array -> string
+
+  splitkv splitkvx splitnv splitnvx *splita
+  o string -> map / *array
 
   regextract regextract_or_else
 
