@@ -4,15 +4,13 @@ TOP OF LIST:
 ! nidx @ 10-min
 ! text-put @ 10-min
 
-* window.mlr, window2.mlr -> doc somewhere
-
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o note json types: string, number, boolean, null, object, array.
-
 ! come up with some kind of blank-line trigger for miller and a condition for it .....
   o i want this pattern over and over
   o also: creach feature
   o justWroteEmptyLine -> pprint too ...
+
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o note json types: string, number, boolean, null, object, array.
 
 ! csvlite
 
@@ -259,3 +257,4 @@ NITS/NON-IMMEDIATE:
   o check dispo matrices
   o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
   o comment clearly regardless
+* window.mlr, window2.mlr -> doc somewhere
