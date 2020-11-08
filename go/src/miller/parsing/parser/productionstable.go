@@ -2643,7 +2643,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoop : ForLoopKeyOnly	<<  >>`,
+		String: `ForLoop : ForLoopOneVariable	<<  >>`,
 		Id:         "ForLoop",
 		NTType:     70,
 		Index:      214,
@@ -2653,7 +2653,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoop : ForLoopKeyValue	<<  >>`,
+		String: `ForLoop : ForLoopTwoVariable	<<  >>`,
 		Id:         "ForLoop",
 		NTType:     70,
 		Index:      215,
@@ -2673,14 +2673,14 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopKeyOnly : md_token_for "(" LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeTernary(
+		String: `ForLoopOneVariable : md_token_for "(" LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeTernary(
      X[0], // "for"
      X[2], // k, etc.
      X[4], // $*, etc.
      X[6], // { ... }
      dsl.NodeTypeForLoopOneVariable,
 	 ); >>`,
-		Id:         "ForLoopKeyOnly",
+		Id:         "ForLoopOneVariable",
 		NTType:     71,
 		Index:      217,
 		NumSymbols: 7,
@@ -2695,7 +2695,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopKeyValue : md_token_for "(" LocalVariable "," LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+		String: `ForLoopTwoVariable : md_token_for "(" LocalVariable "," LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
      X[0], // "for"
      X[2], // k, etc.
      X[4], // v, etc.
@@ -2703,7 +2703,7 @@ var productionsTable = ProdTab{
      X[8], // { ... }
      dsl.NodeTypeForLoopTwoVariable,
 	 ); >>`,
-		Id:         "ForLoopKeyValue",
+		Id:         "ForLoopTwoVariable",
 		NTType:     72,
 		Index:      218,
 		NumSymbols: 9,

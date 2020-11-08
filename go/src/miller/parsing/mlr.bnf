@@ -1356,15 +1356,15 @@ DoWhileLoop
 
 // ----------------------------------------------------------------
 ForLoop
-  : ForLoopKeyOnly
-  | ForLoopKeyValue
+  : ForLoopOneVariable
+  | ForLoopTwoVariable
   // | ForLoopMultipleKeysValue
   | TripleForLoop
   ;
 
 // ----------------------------------------------------------------
 // for(k in $*) { ... }
-ForLoopKeyOnly
+ForLoopOneVariable
   : md_token_for
     "("
 		  LocalVariable
@@ -1385,7 +1385,7 @@ ForLoopKeyOnly
 
 // ----------------------------------------------------------------
 // for(k, v in $*) { ... }
-ForLoopKeyValue
+ForLoopTwoVariable
   : md_token_for
     "("
 		  LocalVariable
