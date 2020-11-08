@@ -174,6 +174,40 @@ func (this *Mlrmap) RemoveWithPositionalIndex(position int64) {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrmap) Equals(that *Mlrmap) bool {
+	if this.FieldCount != this.FieldCount {
+		return false
+	}
+	if !this.Contains(that) {
+		return false
+	}
+	if !that.Contains(this) {
+		return false
+	}
+	return true
+}
+
+// True if this contains that, i.e. if that is contained by this.
+// * If any key of that is not a key of this, return false.
+// * If any key of that has a value unequal to this' value at the same key, return false.
+// * Else return true
+func (this *Mlrmap) Contains(that *Mlrmap) bool {
+	for pe := that.Head; pe != nil; pe = pe.Next {
+		if !this.Has(pe.Key) {
+			return false
+		}
+		thisval := this.Get(pe.Key)
+		thatval := pe.Value
+		meq := MlrvalEquals(thisval, thatval)
+		eq, _ := meq.GetBoolValue()
+		if !eq {
+			return false
+		}
+	}
+	return true
+}
+
+// ----------------------------------------------------------------
 func (this *Mlrmap) Clear() {
 	this.FieldCount = 0
 	// Assuming everything unreferenced is getting GC'ed by the Go runtime
