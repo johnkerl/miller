@@ -71,9 +71,9 @@ func (this *RootNode) BuildStatementNode(
 	case dsl.NodeTypeDoWhileLoop:
 		return this.BuildDoWhileLoopNode(astNode)
 	case dsl.NodeTypeForLoopOneVariable:
-		return this.BuildForLoopKeyOnlyNode(astNode)
+		return this.BuildForLoopOneVariableNode(astNode)
 	case dsl.NodeTypeForLoopTwoVariable:
-		return this.BuildForLoopKeyValueNode(astNode)
+		return this.BuildForLoopTwoVariableNode(astNode)
 	case dsl.NodeTypeTripleForLoop:
 		return this.BuildTripleForLoopNode(astNode)
 

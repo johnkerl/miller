@@ -2920,35 +2920,35 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=11
 
 
 ----------------------------------------------------------------
-mlr --from u/s.dkvp head -n 1 then put -q for (k in [3,4,5]) { emit { "foo" : "bar" } }
+mlr --from u/s.dkvp head -n 1 then put -q for (e in [3,4,5]) { emit { "foo" : "bar" } }
 foo=bar
 foo=bar
 foo=bar
 
 
 ----------------------------------------------------------------
-mlr --from u/s.dkvp head -n 1 then put -q for (k in [3,4,5]) { emit { "foo" : k } }
+mlr --from u/s.dkvp head -n 1 then put -q for (e in [3,4,5]) { emit { "foo" : e } }
+foo=3
+foo=4
+foo=5
+
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q for (i,e in [3,4,5]) { emit { "foo" : "bar" } }
+foo=bar
+foo=bar
+foo=bar
+
+
+----------------------------------------------------------------
+mlr --from u/s.dkvp head -n 1 then put -q for (i,e in [3,4,5]) { emit { "foo" : i } }
 foo=1
 foo=2
 foo=3
 
 
 ----------------------------------------------------------------
-mlr --from u/s.dkvp head -n 1 then put -q for (k,v in [3,4,5]) { emit { "foo" : "bar" } }
-foo=bar
-foo=bar
-foo=bar
-
-
-----------------------------------------------------------------
-mlr --from u/s.dkvp head -n 1 then put -q for (k,v in [3,4,5]) { emit { "foo" : k } }
-foo=1
-foo=2
-foo=3
-
-
-----------------------------------------------------------------
-mlr --from u/s.dkvp head -n 1 then put -q for (k,v in [3,4,5]) { emit { "foo" : v } }
+mlr --from u/s.dkvp head -n 1 then put -q for (i,e in [3,4,5]) { emit { "foo" : e } }
 foo=3
 foo=4
 foo=5

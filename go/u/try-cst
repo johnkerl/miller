@@ -322,12 +322,12 @@ echo; run_mlr --from u/s.dkvp put '$z = 0; do {$z += 1} while ($z < $i)'
 echo; run_mlr --from u/s.dkvp put '$z = 10; while ($z < $i) {$z += 1}'
 echo; run_mlr --from u/s.dkvp put '$z = 10; do {$z += 1} while ($z < $i)'
 
-echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k in [3,4,5]) { emit { "foo" : "bar" } }'
-echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k in [3,4,5]) { emit { "foo" : k } }'
+echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (e in [3,4,5]) { emit { "foo" : "bar" } }'
+echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (e in [3,4,5]) { emit { "foo" : e } }'
 
-echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k,v in [3,4,5]) { emit { "foo" : "bar" } }'
-echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k,v in [3,4,5]) { emit { "foo" : k } }'
-echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (k,v in [3,4,5]) { emit { "foo" : v } }'
+echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (i,e in [3,4,5]) { emit { "foo" : "bar" } }'
+echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (i,e in [3,4,5]) { emit { "foo" : i } }'
+echo; run_mlr --from u/s.dkvp head -n 1 then put -q 'for (i,e in [3,4,5]) { emit { "foo" : e } }'
 
 echo; run_mlr --from u/s.dkvp put 'nr=NR; $nr=nr'
 
