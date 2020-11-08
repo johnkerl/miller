@@ -140,12 +140,14 @@ func mapperPutParseCLI(
 	//   mlr put -s sum=0
 	// is like
 	//   mlr put -s 'begin {@sum = 0}'
-	presetExpression := "begin {\n"
-	for _, preset := range presets {
-		presetExpression += "@" + preset + ";"
+	if len(presets) > 0 {
+		presetExpression := "begin {\n"
+		for _, preset := range presets {
+			presetExpression += "@" + preset + ";"
+		}
+		presetExpression += "}\n"
+		dslString = presetExpression + dslString
 	}
-	presetExpression += "}\n"
-	dslString = presetExpression + dslString
 
 	mapper, err := NewMapperPut(
 		dslString,
@@ -217,6 +219,9 @@ func NewMapperPut(
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
 			os.Args[0])
+		if verbose {
+			fmt.Fprintln(os.Stderr, dslString)
+		}
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
