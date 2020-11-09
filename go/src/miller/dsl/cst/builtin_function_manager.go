@@ -679,6 +679,12 @@ side), e.g. '$name !=~ "^a.*b$"'.`,
 the same as round($x/$m)*$m.`,
 		binaryFunc: types.MlrvalRoundm,
 	},
+	{
+		name: "fmtnum",
+		help: `Convert int/float/bool to string using
+printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.`,
+		binaryFunc: types.MlrvalFmtNum,
+	},
 
 	{
 		name: "urandint",

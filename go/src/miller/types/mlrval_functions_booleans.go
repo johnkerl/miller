@@ -1,5 +1,9 @@
 package types
 
+import (
+	"miller/lib"
+)
+
 // ----------------------------------------------------------------
 // Boolean expressions for ==, !=, >, >=, <, <=
 
@@ -154,25 +158,17 @@ func ne_b_bb(ma, mb *Mlrval) Mlrval {
 // We could say ordering on bool is error, but, Miller allows
 // sorting on bool so it should allow ordering on bool.
 
-func b2i(b bool) int {
-	if b == false {
-		return 0
-	} else {
-		return 1
-	}
-}
-
 func gt_b_bb(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(b2i(ma.boolval) > b2i(mb.boolval))
+	return MlrvalFromBool(lib.BoolToInt(ma.boolval) > lib.BoolToInt(mb.boolval))
 }
 func ge_b_bb(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(b2i(ma.boolval) >= b2i(mb.boolval))
+	return MlrvalFromBool(lib.BoolToInt(ma.boolval) >= lib.BoolToInt(mb.boolval))
 }
 func lt_b_bb(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(b2i(ma.boolval) < b2i(mb.boolval))
+	return MlrvalFromBool(lib.BoolToInt(ma.boolval) < lib.BoolToInt(mb.boolval))
 }
 func le_b_bb(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromBool(b2i(ma.boolval) <= b2i(mb.boolval))
+	return MlrvalFromBool(lib.BoolToInt(ma.boolval) <= lib.BoolToInt(mb.boolval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

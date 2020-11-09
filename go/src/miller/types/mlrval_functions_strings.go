@@ -1,10 +1,13 @@
 package types
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"miller/lib"
 )
 
 // ================================================================
@@ -204,4 +207,49 @@ func MlrvalHexfmt(ma *Mlrval) Mlrval {
 	} else {
 		return *ma
 	}
+}
+
+// ----------------------------------------------------------------
+func fmtnum_is(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromString(
+		fmt.Sprintf(
+			mb.printrep,
+			ma.intval,
+		),
+	)
+}
+
+func fmtnum_fs(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromString(
+		fmt.Sprintf(
+			mb.printrep,
+			ma.floatval,
+		),
+	)
+}
+
+func fmtnum_bs(ma, mb *Mlrval) Mlrval {
+	return MlrvalFromString(
+		fmt.Sprintf(
+			mb.printrep,
+			lib.BoolToInt(ma.boolval),
+		),
+	)
+}
+
+var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	//       .  ERROR   ABSENT VOID   STRING INT    FLOAT  BOOL   ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _erro, _absn, _erro, _erro, _erro, _erro, _erro},
+	/*VOID   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*STRING */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _absn, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro},
+	/*FLOAT  */ {_erro, _absn, _erro, fmtnum_fs, _erro, _erro, _erro, _erro, _erro},
+	/*BOOL   */ {_erro, _absn, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro},
+	/*ARRAY  */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+}
+
+func MlrvalFmtNum(ma, mb *Mlrval) Mlrval {
+	return fmtnum_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }

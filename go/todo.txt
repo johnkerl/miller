@@ -17,7 +17,6 @@ TOP OF LIST:
 * UDF nexts:
   ! mixing put -f/-e requires fixing "};" issue
   o more functions (see below)
-    - next: splitkv splitkvx splitnv splitnvx *splita
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
   o regexes & associated functions -- necessary or not?
@@ -69,21 +68,7 @@ TOP OF LIST:
 * $map.attr1.attr2 syntax for DSL -- ? needs override of "." operator w/ symbols ... ?
 
 ================================================================
-FUNCTIONS:
-
-* fmtnum
-
-* splitkv splitkvx splitnv splitnvx *splita
-  o string -> map / *array
-    - splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
-    - splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
-    - splitnv("a=3,b=4,c=5", "=", ",") -> {"1":3,"2":4,"3":5}
-    - splitnvx("a=3,b=4,c=5", "=", ",") -> {"1":"3","2":"4","3":"5"}
-
-    - splitak("a=3,b=4,c=5", "=", ",") -> ["a","b","c"]
-    - splitav("a=3,b=4,c=5", "=", ",") -> [3,4,5]
-    - splita("3,4,5", ",") -> [3,4,5]
-    - splitax("3,4,5", ",") -> ["3","4","5"]
+REMAINING FUNCTIONS:
 
 * regextract regextract_or_else
 
@@ -92,19 +77,6 @@ FUNCTIONS:
 * sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
 * dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
 * strftime strftime_local strptime strptime_local
-
-----------------------------------------------------------------
-k =~ !=~
-k sub
-k urandint urandrange
-k hexfmt
-k bitcount
-k atan2 pow sgn qnorm invqnorm roundm
-k logifit
-k madd msub mmul mexp
-k mapselect mapexcept mapsum mapdiff
-k depth haskey leafcount
-k capitalize tolower toupper
 
 ================================================================
 CATEGORIES:
@@ -267,3 +239,5 @@ NITS/NON-IMMEDIATE:
   o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
   o comment clearly regardless
 * window.mlr, window2.mlr -> doc somewhere
+* bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
+* fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly

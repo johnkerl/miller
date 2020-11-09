@@ -1236,6 +1236,11 @@ run_mlr --opprint --from u/ten.dkvp put '
   $nhi = hexfmt(-$i);
 '
 
+run_mlr --opprint --from u/ten.dkvp put '
+  $hi = "0x".fmtnum($i, "%04x");
+  $ex = fmtnum($x, "%8.3e");
+'
+
 # ----------------------------------------------------------------
 run_mlr --from u/s.dkvp head -n 1 then put -q '
   @is_absent_a       = is_absent       ($a);
