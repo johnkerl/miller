@@ -78,6 +78,9 @@ REMAINING FUNCTIONS:
 * dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
 * strftime strftime_local strptime strptime_local
 
+https://github.com/lestrrat-go/strftime
+https://github.com/pbnjay/strptime
+
 ================================================================
 CATEGORIES:
 
