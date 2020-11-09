@@ -709,6 +709,17 @@ Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller
 		binaryFunc: types.MlrvalHasKey,
 	},
 
+	{
+		name:       "joink",
+		help:       `Makes string from map/array keys. E.g. 'joink($*, ",")'.`,
+		binaryFunc: types.MlrvalJoinK,
+	},
+	{
+		name:       "joinv",
+		help:       `Makes string from map keys. E.g. 'joinv(mymap, ",")'.`,
+		binaryFunc: types.MlrvalJoinV,
+	},
+
 	//pow (class=math #args=2): Exponentiation; same as **.
 	//roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
 	//urandrange (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
@@ -768,6 +779,11 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 		help: ` Given m and b from logistic regression, compute fit:
 $yhat=logifit($x,$m,$b).`,
 		ternaryFunc: types.MlrvalLogifit,
+	},
+	{
+		name:        "joinkv",
+		help:        `Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'.`,
+		ternaryFunc: types.MlrvalJoinKV,
 	},
 
 	// Variadic built-in functions

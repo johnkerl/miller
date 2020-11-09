@@ -1532,3 +1532,20 @@ mlr_expect_fail --from u/s.dkvp head -n 1 then put -q '
   @asserting_empty_x = asserting_empty($x);
   dump;
 '
+
+# ----------------------------------------------------------------
+echo; run_mlr -n put 'end { print joink({}, ",") }'
+echo; run_mlr -n put 'end { print joinv({}, ",") }'
+echo; run_mlr -n put 'end { print joinkv({}, "=", ",") }'
+
+echo; run_mlr -n put 'end { print joink({"a":1,"b":2}, ",") }'
+echo; run_mlr -n put 'end { print joinv({"a":1,"b":2}, ",") }'
+echo; run_mlr -n put 'end { print joinkv({"a":1,"b":2}, "=", ",") }'
+
+echo; run_mlr -n put 'end { print joink([], ",") }'
+echo; run_mlr -n put 'end { print joinv([], ",") }'
+echo; run_mlr -n put 'end { print joinkv([], "=", ",") }'
+
+echo; run_mlr -n put 'end { print joink(["a","b"], ",") }'
+echo; run_mlr -n put 'end { print joinv(["a","b"], ",") }'
+echo; run_mlr -n put 'end { print joinkv(["a","b"], "=", ",") }'

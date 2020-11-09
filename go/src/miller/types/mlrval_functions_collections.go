@@ -1,6 +1,9 @@
 package types
 
-import ()
+import (
+	"bytes"
+	"strconv"
+)
 
 // ================================================================
 // Map/array count. Scalars (including strings) have length 1.
@@ -279,4 +282,115 @@ func MlrvalMapDiff(mlrvals []*Mlrval) Mlrval {
 	}
 
 	return MlrvalFromMap(newMap)
+}
+
+// ================================================================
+func MlrvalJoinK(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype != MT_STRING {
+		return MlrvalFromError()
+	}
+	fieldSeparator := mb.printrep
+	if ma.mvtype == MT_MAP {
+		var buffer bytes.Buffer
+
+		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			buffer.WriteString(*pe.Key)
+			if pe.Next != nil {
+				buffer.WriteString(fieldSeparator)
+			}
+		}
+
+		return MlrvalFromString(buffer.String())
+	} else if ma.mvtype == MT_ARRAY {
+		var buffer bytes.Buffer
+
+		for i, _ := range ma.arrayval {
+			if i > 0 {
+				buffer.WriteString(fieldSeparator)
+			}
+			// Miller userspace array indices are 1-up
+			buffer.WriteString(strconv.Itoa(i + 1))
+		}
+
+		return MlrvalFromString(buffer.String())
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+// ----------------------------------------------------------------
+func MlrvalJoinV(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype != MT_STRING {
+		return MlrvalFromError()
+	}
+	fieldSeparator := mb.printrep
+
+	if ma.mvtype == MT_MAP {
+		var buffer bytes.Buffer
+
+		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			buffer.WriteString(pe.Value.String())
+			if pe.Next != nil {
+				buffer.WriteString(fieldSeparator)
+			}
+		}
+
+		return MlrvalFromString(buffer.String())
+	} else if ma.mvtype == MT_ARRAY {
+		var buffer bytes.Buffer
+
+		for i, element := range ma.arrayval {
+			if i > 0 {
+				buffer.WriteString(fieldSeparator)
+			}
+			buffer.WriteString(element.String())
+		}
+
+		return MlrvalFromString(buffer.String())
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+// ----------------------------------------------------------------
+func MlrvalJoinKV(ma, mb, mc *Mlrval) Mlrval {
+	if mb.mvtype != MT_STRING {
+		return MlrvalFromError()
+	}
+	pairSeparator := mb.printrep
+	if mc.mvtype != MT_STRING {
+		return MlrvalFromError()
+	}
+	fieldSeparator := mc.printrep
+
+	if ma.mvtype == MT_MAP {
+		var buffer bytes.Buffer
+
+		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			buffer.WriteString(*pe.Key)
+			buffer.WriteString(pairSeparator)
+			buffer.WriteString(pe.Value.String())
+			if pe.Next != nil {
+				buffer.WriteString(fieldSeparator)
+			}
+		}
+
+		return MlrvalFromString(buffer.String())
+	} else if ma.mvtype == MT_ARRAY {
+		var buffer bytes.Buffer
+
+		for i, element := range ma.arrayval {
+			if i > 0 {
+				buffer.WriteString(fieldSeparator)
+			}
+			// Miller userspace array indices are 1-up
+			buffer.WriteString(strconv.Itoa(i + 1))
+			buffer.WriteString(pairSeparator)
+			buffer.WriteString(element.String())
+		}
+
+		return MlrvalFromString(buffer.String())
+	} else {
+		return MlrvalFromError()
+	}
 }
