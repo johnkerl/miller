@@ -1972,7 +1972,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
            (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
     
        joinv
-           (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
+           (class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
     
        leafcount
            (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
@@ -2375,4 +2375,4 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
     
     
-    				  2020-10-29			     MILLER(1)
+    				  2020-11-09			     MILLER(1)

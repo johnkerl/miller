@@ -433,7 +433,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"'haskey(mymap, mykey)'. Error if 1st argument is not a map."},
 	{FUNC_CLASS_MAPS, "joink",         2,0, "Makes string from map keys. E.g. 'joink($*, \",\")'."},
 	{FUNC_CLASS_MAPS, "joinkv",        3,0, "Makes string from map key-value pairs. E.g. 'joinkv(@v[2], \"=\", \",\")'"},
-	{FUNC_CLASS_MAPS, "joinv",         2,0, "Makes string from map keys. E.g. 'joinv(mymap, \",\")'."},
+	{FUNC_CLASS_MAPS, "joinv",         2,0, "Makes string from map values. E.g. 'joinv(mymap, \",\")'."},
 	{FUNC_CLASS_MAPS, "leafcount",     1,0, "Counts total number of terminal values in hashmap. For single-level maps,\n"
 		"same as length."},
 	{FUNC_CLASS_MAPS, "length",        1,0, "Counts number of top-level entries in hashmap. Scalars have length 1."},

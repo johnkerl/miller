@@ -710,14 +710,30 @@ Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller
 	},
 
 	{
-		name:       "joink",
-		help:       `Makes string from map/array keys. E.g. 'joink($*, ",")'.`,
+		name: "joink",
+		help: `Makes string from map/array keys. Examples:
+joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
+joink([1,2,3], ",") = "1,2,3".`,
 		binaryFunc: types.MlrvalJoinK,
 	},
 	{
-		name:       "joinv",
-		help:       `Makes string from map keys. E.g. 'joinv(mymap, ",")'.`,
+		name: "joinv",
+		help: `Makes string from map/array values.
+joinv([3,4,5], ",") = "3,4,5"
+joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
 		binaryFunc: types.MlrvalJoinV,
+	},
+	{
+		name: "splita",
+		help: `Splits string into array with type inference. Example:
+splita("3,4,5", ",") = [3,4,5]`,
+		binaryFunc: types.MlrvalSplitA,
+	},
+	{
+		name: "splitax",
+		help: `Splits string into array without type inference. Example:
+splita("3,4,5", ",") = ["3","4","5"]`,
+		binaryFunc: types.MlrvalSplitAX,
 	},
 
 	//pow (class=math #args=2): Exponentiation; same as **.
@@ -781,9 +797,56 @@ $yhat=logifit($x,$m,$b).`,
 		ternaryFunc: types.MlrvalLogifit,
 	},
 	{
-		name:        "joinkv",
-		help:        `Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'.`,
+		name: "joinkv",
+		help: `Makes string from map/array key-value pairs. Examples:
+joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
 		ternaryFunc: types.MlrvalJoinKV,
+	},
+
+	{
+		name: "splitkv",
+		help: `Splits string by separators into map with type inference. Example:
+splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
+		ternaryFunc: types.MlrvalSplitKV,
+	},
+	{
+		name: "splitkvx",
+		help: `Splits string by separators into map without type inference (keys and
+values are strings). Example:
+splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
+		ternaryFunc: types.MlrvalSplitKVX,
+	},
+	{
+		name: "splitnv",
+		help: `Splits string by separator into integer-indexed map with type inference. Example:
+splitnv("a=3,b=4,c=5", "=", ",") = {"1":3,"2":4,"3":5}`,
+		ternaryFunc: types.MlrvalSplitNV,
+	},
+	{
+		name: "splitnvx",
+		help: `Splits string by separator into integer-indexed map without type
+inference (values are strings). Example:
+splitnvx("a=3,b=4,c=5", "=", ",") = {"1":"3","2":"4","3":"5"}`,
+		ternaryFunc: types.MlrvalSplitNVX,
+	},
+	{
+		name: "splitak",
+		help: `Splits keys out of string representation of map into array. Example:
+splitak("a=3,b=4,c=5", "=", ",") = ["a","b","c"]`,
+		ternaryFunc: types.MlrvalSplitAK,
+	},
+	{
+		name: "splitav",
+		help: `Splits type-inferred values out of string representation of map into array. Example:
+splitav("a=3,b=4,c=5", "=", ",") = [3,4,5]`,
+		ternaryFunc: types.MlrvalSplitAV,
+	},
+	{
+		name: "splitavx",
+		help: `Splits non-type-inferred values out of string representation of map into array. Example:
+splitav("a=3,b=4,c=5", "=", ",") = ["3","4","5"]`,
+		ternaryFunc: types.MlrvalSplitAVX,
 	},
 
 	// Variadic built-in functions
@@ -880,7 +943,10 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
 
 // ----------------------------------------------------------------
 func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
-	for _, builtinFunctionInfo := range *this.lookupTable {
+	for i, builtinFunctionInfo := range *this.lookupTable {
+		if i > 0 {
+			fmt.Fprintln(o)
+		}
 		fmt.Fprintf(o, "%-20s  %s\n", builtinFunctionInfo.name, builtinFunctionInfo.help)
 	}
 }
