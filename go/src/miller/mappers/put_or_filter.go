@@ -1,6 +1,7 @@
 package mappers
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -136,21 +137,9 @@ func mapperPutParseCLI(
 		argi += 1
 	}
 
-	// E.g.
-	//   mlr put -s sum=0
-	// is like
-	//   mlr put -s 'begin {@sum = 0}'
-	if len(presets) > 0 {
-		presetExpression := "begin {\n"
-		for _, preset := range presets {
-			presetExpression += "@" + preset + ";"
-		}
-		presetExpression += "}\n"
-		dslString = presetExpression + dslString
-	}
-
 	mapper, err := NewMapperPut(
 		dslString,
+		presets,
 		verbose,
 		invertFilter,
 		suppressOutputRecord,
@@ -208,6 +197,7 @@ type MapperPut struct {
 
 func NewMapperPut(
 	dslString string,
+	presets []string,
 	verbose bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
@@ -237,6 +227,28 @@ func NewMapperPut(
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
+	}
+
+	// E.g.
+	//   mlr put -s sum=0
+	// is like
+	//   mlr put -s 'begin {@sum = 0}'
+	if len(presets) > 0 {
+		for _, preset := range presets {
+			pair := strings.SplitN(preset, "=", 2)
+			if len(pair) != 2 {
+				return nil, errors.New(
+					fmt.Sprintf(
+						"Miller: missing \"=\" in preset expression \"%s\".",
+						preset,
+					),
+				)
+			}
+			key := pair[0]
+			svalue := pair[1]
+			mvalue := types.MlrvalFromInferredType(svalue)
+			cstState.Oosvars.PutCopy(&key, &mvalue)
+		}
 	}
 
 	return &MapperPut{

@@ -16,6 +16,7 @@ TOP OF LIST:
 
 * UDF nexts:
   ! mixing put -f/-e requires fixing "};" issue
+  ! -s convert to CST-evals, not parser-input-hacking
   o more functions (see below)
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
@@ -25,6 +26,8 @@ TOP OF LIST:
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
+
+* smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
 
 !! [[]] etc to avoid inadvertent sequentials for int indices on maps.
   this should happen intentionally, not accidentally.
