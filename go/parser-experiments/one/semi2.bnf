@@ -1,0 +1,23 @@
+!whitespace : ' ' | '\t' | '\n' | '\r' ;
+
+Root
+  : StatementBlock
+;
+
+StatementBlock
+  : empty
+  | ";" StatementBlock
+  | BracelessStatement
+  | BracefulStatement
+  | BracelessStatement ";" StatementBlock
+  | BracefulStatement  ";" BracelessStatement
+  | BracefulStatement      BracelessStatement
+;
+
+BracelessStatement
+  : "x"
+;
+
+BracefulStatement
+  : "{" StatementBlock "}"
+;
