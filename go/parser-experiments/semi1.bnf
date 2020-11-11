@@ -1,3 +1,5 @@
+!whitespace : ' ' | '\t' | '\n' | '\r' ;
+
 Root
   : StatementBlock
 ;

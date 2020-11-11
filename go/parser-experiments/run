@@ -1,3 +1,9 @@
 #!/bin/bash
 
-./build "$@" && echo && main
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 {.bnf file} [expressions]" 1>&2
+  exit 1
+fi
+bnf="$1"
+shift
+./build $bnf && echo && main "$@"
