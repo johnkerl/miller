@@ -7,15 +7,15 @@ TOP OF LIST:
 * justWroteEmptyLine -> pprint too ...
 
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
-  * use:
+  o use:
     - %
     - 0 - " " + "'"
     - number for min field width
     - "." and precision width
     - s   d i o u x X   e E f F g G
     - "%%"
-  * need a parser for validity, and a mapper to Go-builtin formats
-  * need to pull out the printed type & use that for casting/ignoring. examples:
+  o need a parser for validity, and a mapper to Go-builtin formats
+  o need to pull out the printed type & use that for casting/ignoring. examples:
     - %d int: ok
     - %d float: int(x) then ok
     - %d string: convert to %s
@@ -26,12 +26,15 @@ TOP OF LIST:
     - %s float: convert to %f
     - %s string: ok
 
+* --pprint --barred
+
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
 
 ! csvlite
   - het input
-* csv het input
+
+! csv het input
   o golang csv-reader blank-line issue ...
 
 * UDF nexts:
@@ -52,7 +55,7 @@ TOP OF LIST:
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
 
-? ;; is parse error; also {...};
+! ";;" is parse error; also "{...};"
 
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
