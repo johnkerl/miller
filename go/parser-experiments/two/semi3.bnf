@@ -1,35 +1,54 @@
-// ----------------------------------------------------------------
+// ================================================================
 // LEXER
 
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
 
-// ----------------------------------------------------------------
+// ================================================================
 // IMPORT
 
 << import "dsl" >>
 
-// ----------------------------------------------------------------
+// ================================================================
 // PARSER
 
+// ----------------------------------------------------------------
 Root
   : StatementBlock
    << dsl.NewAST($0) >>
 ;
 
+// ----------------------------------------------------------------
 StatementBlock
   : empty
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+
   | ";" StatementBlock
+    << dsl.Wrap($1) >>
+
   | BracelessStatement
+    << dsl.Wrap($0) >>
+
   | BracefulStatement
+    << dsl.Wrap($0) >>
+
   | BracelessStatement ";" StatementBlock
-  | BracefulStatement  ";" BracelessStatement
-  | BracefulStatement      BracelessStatement
+    <<dsl.PrependChild($2, $0) >>
+
+  | BracefulStatement ";" BracelessStatement
+    << dsl.NewASTNodeBinary(nil, $0, $2, dsl.NodeTypeStatementBlock) >>
+
+  | BracefulStatement BracelessStatement
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
 ;
 
+// ----------------------------------------------------------------
 BracelessStatement
   : "x"
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeStatement) >>
 ;
 
+// ----------------------------------------------------------------
 BracefulStatement
   : "{" StatementBlock "}"
+    << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeStatementBlock) >>
 ;

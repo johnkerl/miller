@@ -27,13 +27,16 @@ func parseOne(input string) {
 
 func main() {
 	if len(os.Args) == 1 {
-		inputs := []string{
-			// Expect pass
+
+		fmt.Println("EXPECT OK")
+		goods := []string{
 			"",
 			";",
 			";;",
 			"x",
 			"x;x",
+			"x;x;x",
+			"x;x;x;x",
 			"x;",
 			"x;;",
 			";x",
@@ -46,14 +49,23 @@ func main() {
 			"x; { x; x }",
 			"{ x; x } x",
 			"{ x; x } ; x",
+			"{};{}",
+			"{} {}",
+		}
+		for _, input := range goods {
+			parseOne(input)
+		}
 
-			// Expect fail
+		fmt.Println()
+		fmt.Println("EXPECT FAIL")
+		bads := []string{
 			"x x",
 			"x {}",
 		}
-		for _, input := range inputs {
+		for _, input := range bads {
 			parseOne(input)
 		}
+
 	} else {
 		for _, arg := range os.Args[1:] {
 			parseOne(arg)
