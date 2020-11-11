@@ -10,6 +10,8 @@ StatementBlock
   | BracelessStatement
   | BracefulStatement
   | BracelessStatement ";" StatementBlock
+  | BracefulStatement  ";" BracefulStatement
+  | BracefulStatement      BracefulStatement
   | BracefulStatement  ";" BracelessStatement
   | BracefulStatement      BracelessStatement
 ;

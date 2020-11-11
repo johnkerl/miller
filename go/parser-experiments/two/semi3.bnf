@@ -26,13 +26,19 @@ StatementBlock
     << dsl.Wrap($1) >>
 
   | BracelessStatement
-    << dsl.Wrap($0) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   | BracefulStatement
-    << dsl.Wrap($0) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   | BracelessStatement ";" StatementBlock
     <<dsl.PrependChild($2, $0) >>
+
+  | BracefulStatement ";" BracefulStatement
+    << dsl.NewASTNodeBinary(nil, $0, $2, dsl.NodeTypeStatementBlock) >>
+
+  | BracefulStatement BracefulStatement
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
 
   | BracefulStatement ";" BracelessStatement
     << dsl.NewASTNodeBinary(nil, $0, $2, dsl.NodeTypeStatementBlock) >>
@@ -50,5 +56,5 @@ BracelessStatement
 // ----------------------------------------------------------------
 BracefulStatement
   : "{" StatementBlock "}"
-    << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeStatementBlock) >>
+    << dsl.Wrap($1) >>
 ;
