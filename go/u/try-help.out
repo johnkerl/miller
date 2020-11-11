@@ -81,6 +81,14 @@ TODO: put detailed on-line help here.
     Miller's grammar, to stdout.
 
 ================================================================
+Usage: ./mlr gap [options]
+Emits an empty record every n records, or when certain values change.
+ -g (default ) Print a gap whenever values of these fields (e.g. a,b,c) changes
+ -n (default -1) Print a gap every n records.
+One of -f or -g is required.
+-n is ignored if -g is present.
+
+================================================================
 Usage: ./mlr grep [options] {regular expression}
 Passes through records which match the regular expression.
 Options:

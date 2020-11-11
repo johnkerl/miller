@@ -2,13 +2,33 @@
 
 set -euo pipefail
 
+# ================================================================
+path_to_mlr="./mlr"
+
 run_mlr() {
   # Use just "mlr" for info messages
   echo
   echo ----------------------------------------------------------------
   echo mlr "$@"
-  ./mlr "$@"
+  $path_to_mlr "$@"
 }
+
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+  echo mlr "$@"
+  # Use path to mlr for invoking the command
+  set +e
+  stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 )
+  status=$?
+  echo "${stderr_capture}"
+  if [ $status -ne 1 ]; then
+    echo "Exit status was $status; expected 1."
+  fi
+  set -e
+  test $status -eq 1
+  # since set -e
+}
+# ================================================================
 
 run_mlr --opprint cat           u/s.dkvp
 run_mlr --opprint cat -n        u/s.dkvp
@@ -109,3 +129,9 @@ run_mlr --from u/s.dkvp --opprint put '$t = $i + 0.123456789' then sec2gmt -6 a,
 run_mlr --from u/s.dkvp --opprint put '$t = $i + 0.123456789' then sec2gmt -7 a,t
 run_mlr --from u/s.dkvp --opprint put '$t = $i + 0.123456789' then sec2gmt -8 a,t
 run_mlr --from u/s.dkvp --opprint put '$t = $i + 0.123456789' then sec2gmt -9 a,t
+
+mlr_expect_fail --from u/ten.dkvp gap
+run_mlr --from u/ten.dkvp gap -n 4
+run_mlr --from u/ten.dkvp gap -g a
+run_mlr --from u/ten.dkvp sort -f a then gap -g a
+run_mlr --from u/ten.dkvp sort -f a,b then gap -g a,b

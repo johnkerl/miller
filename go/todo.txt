@@ -4,19 +4,38 @@ TOP OF LIST:
 ! nidx @ 10-min
 ! text-put @ 10-min
 
-! come up with some kind of blank-line trigger for miller and a condition for it .....
-  o i want this pattern over and over
-  o also: creach feature
-  o justWroteEmptyLine -> pprint too ...
+* justWroteEmptyLine -> pprint too ...
+
+! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
+  * use:
+    - %
+    - 0 - " " + "'"
+    - number for min field width
+    - "." and precision width
+    - s   d i o u x X   e E f F g G
+    - "%%"
+  * need a parser for validity, and a mapper to Go-builtin formats
+  * need to pull out the printed type & use that for casting/ignoring. examples:
+    - %d int: ok
+    - %d float: int(x) then ok
+    - %d string: convert to %s
+    - %f int: float(x) thenok
+    - %f float: as is
+    - %f string: convert to %s
+    - %s int: convert to %d
+    - %s float: convert to %f
+    - %s string: ok
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
 
 ! csvlite
+  - het input
+* csv het input
+  o golang csv-reader blank-line issue ...
 
 * UDF nexts:
   ! mixing put -f/-e requires fixing "};" issue
-  ! -s convert to CST-evals, not parser-input-hacking
   o more functions (see below)
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
@@ -26,8 +45,6 @@ TOP OF LIST:
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
-
-* smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
 
 !! [[]] etc to avoid inadvertent sequentials for int indices on maps.
   this should happen intentionally, not accidentally.
@@ -247,3 +264,4 @@ NITS/NON-IMMEDIATE:
 * window.mlr, window2.mlr -> doc somewhere
 * bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
 * fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly
+* mlrdoc for new go-only verbs
