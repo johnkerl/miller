@@ -5,6 +5,7 @@ Root
 StatementBlock
   : ";"
   | BracelessStatement
+  | ";" BracelessStatement
   | BracefulStatement
   | BracelessStatement ";" NonEmptyStatementBlock
   | BracefulStatement      NonEmptyStatementBlock

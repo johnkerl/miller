@@ -1,0 +1,27 @@
+Root
+  : StatementBlock
+;
+
+// OK:     'x  ;  {}'
+// OK:     'x  ;  x'
+// Not OK: 'x     x'
+// Not OK: 'x     {}'
+// OK:     '{} ;  x'
+// OK:     '{}    x'
+
+StatementBlock
+  : empty
+  | BracelessStatement
+  | BracefulStatement
+  | BracelessStatement ";" StatementBlock
+  | BracefulStatement  ";" BracelessStatement
+  | BracefulStatement      BracelessStatement
+;
+
+BracelessStatement
+  : "x"
+;
+
+BracefulStatement
+  : "{" StatementBlock "}"
+;

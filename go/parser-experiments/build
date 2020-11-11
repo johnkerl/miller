@@ -5,15 +5,11 @@
 us=$(basename $0)
 set -euo pipefail
 
-bnf="./semi.bnf"
-if [ $# -eq 0 ]; then
-  bnf="./semi.bnf"
-elif [ $# -eq 1 ]; then
-  bnf="$1"
-else
+if [ $# -ne 1 ]; then
   echo "Usage: $0 [.bnf file]" 1>&2
   exit 1
 fi
+bnf="$1"
 
 dir=src/experimental
 #verbose="true"
