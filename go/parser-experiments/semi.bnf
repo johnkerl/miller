@@ -1,0 +1,26 @@
+Root
+  : StatementBlock
+;
+
+StatementBlock
+  : ";"
+  | BracelessStatement
+  | BracefulStatement
+  | BracelessStatement ";" NonEmptyStatementBlock
+  | BracefulStatement      NonEmptyStatementBlock
+;
+
+NonEmptyStatementBlock
+  : BracelessStatement
+  | BracelessStatement ";" StatementBlock
+  | BracefulStatement
+  | BracefulStatement      StatementBlock
+;
+
+BracelessStatement
+  : "x"
+;
+
+BracefulStatement
+  : "{" StatementBlock "}"
+;

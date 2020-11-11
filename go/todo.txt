@@ -6,6 +6,8 @@ TOP OF LIST:
 
 * justWroteEmptyLine -> pprint too ...
 
+* walk.txt bug?
+
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   * use:
     - %
