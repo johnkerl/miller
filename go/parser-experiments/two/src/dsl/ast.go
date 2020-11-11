@@ -111,6 +111,12 @@ func NewASTNodeBinary(
 	return NewASTNodeBinaryNestable(itok, childA, childB, nodeType), nil
 }
 
+func NewASTNodeTernary(itok, childA, childB, childC interface{}, nodeType TNodeType) (*ASTNode, error) {
+	parent := NewASTNodeNestable(itok, nodeType)
+	convertToTernary(parent, childA, childB, childC)
+	return parent, nil
+}
+
 func convertToZary(iparent interface{}) {
 	parent := iparent.(*ASTNode)
 	children := make([]*ASTNode, 0)
@@ -130,6 +136,15 @@ func convertToBinary(iparent interface{}, childA, childB interface{}) {
 	children := make([]*ASTNode, 2)
 	children[0] = childA.(*ASTNode)
 	children[1] = childB.(*ASTNode)
+	parent.Children = children
+}
+
+func convertToTernary(iparent interface{}, childA, childB, childC interface{}) {
+	parent := iparent.(*ASTNode)
+	children := make([]*ASTNode, 3)
+	children[0] = childA.(*ASTNode)
+	children[1] = childB.(*ASTNode)
+	children[2] = childC.(*ASTNode)
 	parent.Children = children
 }
 

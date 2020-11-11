@@ -19,32 +19,52 @@ Root
 
 // ----------------------------------------------------------------
 StatementBlock
+
+  // ---------------------- Terminal rules
+
+  // Empty statement. This allows for 'mlr put ""', as well as repeated semicolons.
   : empty
     << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
 
-  | ";" StatementBlock
-    << dsl.Wrap($1) >>
-
+  // Things not ending in a curly brace, like assignments -- and also do-while.
   | BracelessStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
+  // Things ending in a curly brace, like for/do/while, begin/end, and awkish-conds
   | BracefulStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
+  // ---------------------- Recursive rules
+
+  // So statements can start with a semicolon
+  | ";" StatementBlock
+    << dsl.Wrap($1) >>
+
+  // Normal case for sequential statements like '$x=1; $y=2'
   | BracelessStatement ";" StatementBlock
     <<dsl.PrependChild($2, $0) >>
 
-  | BracefulStatement ";" BracefulStatement
-    << dsl.NewASTNodeBinary(nil, $0, $2, dsl.NodeTypeStatementBlock) >>
+  // For 'begin {...} ; $x=1'
+  | BracefulStatement ";" StatementBlock
+    <<dsl.PrependChild($2, $0) >>
 
-  | BracefulStatement BracefulStatement
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+  // These are for things like 'begin {...} begin {...} ...' -- where people
+  // shouldn't have to put semicolons after the closing curly braces.
+  //
+  // We get LR-1 conflicts with the following, so we need a pair of more
+  // explicit lookahead-by-more production rules instead. (By using ternaries
+  // we are effectively getting lookahead-by-two.)
+  //
+  // | BracefulStatement StatementBlock
+  //    <<dsl.PrependChild($1, $0) >>
 
-  | BracefulStatement ";" BracelessStatement
-    << dsl.NewASTNodeBinary(nil, $0, $2, dsl.NodeTypeStatementBlock) >>
+  // E.g. 'begin {...} begin {...} $x=1'
+  | BracefulStatement BracefulStatement StatementBlock
+    << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
 
-  | BracefulStatement BracelessStatement
-    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+  // E.g. 'begin {...} $x=1'
+  | BracefulStatement BracelessStatement StatementBlock
+    << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
 ;
 
 // ----------------------------------------------------------------
