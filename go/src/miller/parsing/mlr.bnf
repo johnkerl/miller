@@ -298,7 +298,7 @@ Root
 ;
 
 // ----------------------------------------------------------------
-// A StatemeentBlock is a sequence of statemnts: either the stuff in between
+// A StatementBlock is a sequence of statemnts: either the stuff in between
 // (but not including) the curly braces in things like 'if (NR > 2) { $x = 1;
 // $y = 2 }', or, top-level Miller DSL statements like '$x = 1; $y = 2'.
 
