@@ -2,6 +2,11 @@
 TOP OF LIST:
 
 ! mlr unsparsify -f (#387)
+  o C impl
+  o C UT
+    mlr --opprint unsparsify -f a,b,i,x,y,aaa,bbb,xxx,iii,yyy then regularize reg_test/input/abixy-het
+  o mlrdoc
+  o Go impl + UT
 
 ! nidx @ 10-min
 ! text-put @ 10-min
