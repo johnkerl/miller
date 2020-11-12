@@ -16,6 +16,17 @@ func MlrvalSystimeInt() Mlrval {
 	return MlrvalFromInt64(time.Now().Unix())
 }
 
+var startTime float64
+
+func init() {
+	startTime = float64(time.Now().UnixNano()) / 1.0e9
+}
+func MlrvalUptime() Mlrval {
+	return MlrvalFromFloat64(
+		float64(time.Now().UnixNano())/1.0e9 - startTime,
+	)
+}
+
 // ================================================================
 func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_FLOAT {
