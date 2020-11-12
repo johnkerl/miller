@@ -347,8 +347,9 @@ NonEmptyStatementBlock
   // shouldn't have to put semicolons after the closing curly braces.
   //
   // We get LR-1 conflicts with the following, so we need a pair of more
-  // explicit lookahead-by-more production rules instead. (By using ternaries
-  // we are effectively getting lookahead-by-two.)
+  // explicit lookahead-by-more production rules instead. (By using two
+  // Statement rules and a (recursive) StatementBlock rule, with
+  // PrependTwoChildren, we are effectively getting lookahead-by-two.)
   //
   // | BracefulStatement StatementBlock
   //    <<dsl.PrependChild($1, $0) >>
