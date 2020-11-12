@@ -32,6 +32,15 @@ mlr_expect_fail() {
 
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put ''
 
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$x=1; $y=2'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$x=1; $y=2;'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put '; $x=1'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put ';;;;;'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put 'begin{} $x=1; end{}'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put 'begin{}; $x=1; end{}'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put 'begin{} $x=1;;; end{}'
+echo; run_mlr --from u/s.dkvp --idkvp --opprint put ';;;begin{} ;;; end{};;'
+
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$i'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$i+$x'
 echo; run_mlr --from u/s.dkvp --idkvp --opprint put '$j=$y+$x'
