@@ -62,9 +62,18 @@ StatementBlock
   | BracefulStatement BracefulStatement StatementBlock
     << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
 
+//  // E.g. 'begin {...} $x=1'
+//  | BracefulStatement BracelessStatement StatementBlock
+//    << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
+
   // E.g. 'begin {...} $x=1'
-  | BracefulStatement BracelessStatement StatementBlock
-    << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
+  | BracefulStatement BracelessStatement
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+
+  // E.g. 'begin {...} $x=1'
+  | BracefulStatement BracelessStatement ";"
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+
 ;
 
 // ----------------------------------------------------------------
