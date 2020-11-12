@@ -49,6 +49,11 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 		zaryFunc: types.MlrvalSystime,
 	},
 	{
+		name:     "uptime",
+		help:     "help string will go here",
+		zaryFunc: types.MlrvalUptime,
+	},
+	{
 		name:     "systimeint",
 		help:     "help string will go here",
 		zaryFunc: types.MlrvalSystimeInt,

@@ -139,6 +139,8 @@ static sllv_t* mapper_seqgen_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 		lrec_put(poutrec, pstate->field_name, mv_alloc_format_val(&counter), FREE_ENTRY_VALUE);
+		pctx->nr++;
+		pctx->fnr++;
 		sllv_append(poutrecs, poutrec);
 	}
 	sllv_append(poutrecs, NULL);

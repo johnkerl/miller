@@ -1,10 +1,19 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! mlr unsparsify -f (#387)
+  o C impl
+  o C UT
+    mlr --opprint unsparsify -f a,b,i,x,y,aaa,bbb,xxx,iii,yyy then regularize reg_test/input/abixy-het
+  o mlrdoc
+  o Go impl + UT
+
 ! nidx @ 10-min
 ! text-put @ 10-min
 
 * justWroteEmptyLine -> pprint too ...
+
+* walk.txt bug?
 
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:
@@ -38,7 +47,7 @@ TOP OF LIST:
   o golang csv-reader blank-line issue ...
 
 * UDF nexts:
-  ! mixing put -f/-e requires fixing "};" issue
+  o UT for mixing put -f/-e
   o more functions (see below)
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
