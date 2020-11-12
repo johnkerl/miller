@@ -69,6 +69,13 @@ func main() {
 			"{x; x;} x",
 			"{x; x;} x;",
 			"{x; x;} {};",
+			"{} x; {}",
+			"{} x; {};",
+			"{} x; x; {}",
+			"{} x; x; {};",
+			"{} x; x; x; {}",
+			"{} x; x; x; {};",
+			"{} {} ;;; {;;} x; x; x; x; x; {}",
 		}
 		for _, input := range goods {
 			if parseOne(input) == false {

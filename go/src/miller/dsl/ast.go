@@ -339,6 +339,18 @@ func PrependChild(iparent interface{}, ichild interface{}) (*ASTNode, error) {
 	return parent, nil
 }
 
+func PrependTwoChildren(iparent interface{}, ichildA, ichildB interface{}) (*ASTNode, error) {
+	parent := iparent.(*ASTNode)
+	childA := ichildA.(*ASTNode)
+	childB := ichildB.(*ASTNode)
+	if parent.Children == nil {
+		convertToBinary(iparent, ichildA, ichildB)
+	} else {
+		parent.Children = append([]*ASTNode{childA, childB}, parent.Children...)
+	}
+	return parent, nil
+}
+
 func AppendChild(iparent interface{}, child interface{}) (*ASTNode, error) {
 	parent := iparent.(*ASTNode)
 	if parent.Children == nil {

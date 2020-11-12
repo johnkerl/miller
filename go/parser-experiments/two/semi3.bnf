@@ -17,17 +17,23 @@ Root
    << dsl.NewAST($0) >>
 ;
 
-// ----------------------------------------------------------------
+// ================================================================
 StatementBlock
-
-  // ---------------------- Terminal rules
 
   // Empty statement. This allows for 'mlr put ""', as well as repeated semicolons.
   : empty
     << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
 
+  | NonEmptyStatementBlock
+    << dsl.Wrap($0) >>
+;
+
+// ----------------------------------------------------------------
+NonEmptyStatementBlock
+  // ---------------------- Terminal rules
+
   // Things not ending in a curly brace, like assignments -- and also do-while.
-  | BracelessStatement
+  : BracelessStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
   // Things ending in a curly brace, like for/do/while, begin/end, and awkish-conds
@@ -60,20 +66,18 @@ StatementBlock
 
   // E.g. 'begin {...} begin {...} $x=1'
   | BracefulStatement BracefulStatement StatementBlock
-    << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
-
-//  // E.g. 'begin {...} $x=1'
-//  | BracefulStatement BracelessStatement StatementBlock
-//    << dsl.NewASTNodeTernary(nil, $0, $1, $2, dsl.NodeTypeStatementBlock) >>
+    <<dsl.PrependTwoChildren($2, $0, $1) >>
 
   // E.g. 'begin {...} $x=1'
   | BracefulStatement BracelessStatement
     << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
 
-  // E.g. 'begin {...} $x=1'
+  // E.g. 'begin {...} $x=1 ;'
   | BracefulStatement BracelessStatement ";"
     << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
 
+  | BracefulStatement BracelessStatement ";" NonEmptyStatementBlock
+    <<dsl.PrependTwoChildren($3, $0, $1) >>
 ;
 
 // ----------------------------------------------------------------

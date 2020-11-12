@@ -291,48 +291,91 @@ md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // ================================================================
 // TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL
 
-Root :
-  : empty // mlr put ' ' is OK: this is zero statements
-    << dsl.NewAST(dsl.NewASTNodeEmptyNestable(dsl.NodeTypeEmptyStatement)) >>
-  | StatementBlock
-    <<dsl.NewAST($0) >>
+// ----------------------------------------------------------------
+Root
+  : StatementBlock
+   << dsl.NewAST($0) >>
 ;
 
-// Braceful statements are things like 'begin{...}', 'end{...}', 'if{...}', etc.
-// Braceless statements are everything else -- such as assignments, subroutine
-// calls, bare booleans.
+// ----------------------------------------------------------------
+// A StatemeentBlock is a sequence of statemnts: either the stuff in between
+// (but not including) the curly braces in things like 'if (NR > 2) { $x = 1;
+// $y = 2 }', or, top-level Miller DSL statements like '$x = 1; $y = 2'.
+
 StatementBlock
 
+  // Empty statement. This allows for 'mlr put ""', as well as repeated semicolons.
+  : empty
+    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
+
+  | NonEmptyStatementBlock
+    << dsl.Wrap($0) >>
+;
+
+// ----------------------------------------------------------------
+// NonEmptyStatementBlock is split out from StatementBlock to avoid LR-1
+// conflicts in parsing things like 'begin {...} x=1; y=2; end{...}' wherein we
+// want to avoid forcing people to type a semicolon after the first closing
+// brace.
+
+NonEmptyStatementBlock
+  // ---------------------- Terminal rules
+
+  // Things not ending in a curly brace, like assignments -- and also do-while.
   : BracelessStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
-  | BracelessStatement ";" StatementBlock
-    <<dsl.PrependChild($2, $0) >>
-
-  // Semicolons are separators, not terminators, in the Miller DSL -- most
-  // importantly people can say '$x = 3' without '$x = 3;'.  However, we do
-  // allow trailing semicolons.
-  | BracelessStatement ";"
-    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
-
+  // Things ending in a curly brace, like for/do/while, begin/end, and awkish-conds
   | BracefulStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
-  // They don't need the semicolon in 'begin {@a = 1}; $x = 2'
-  | BracefulStatement StatementBlock
-    <<dsl.PrependChild($1, $0) >>
+  // ---------------------- Recursive rules
 
+  // So statements can start with a semicolon
+  | ";" StatementBlock
+    << dsl.Wrap($1) >>
+
+  // Normal case for sequential statements like '$x=1; $y=2'
+  | BracelessStatement ";" StatementBlock
+    <<dsl.PrependChild($2, $0) >>
+
+  // For 'begin {...} ; $x=1'
+  | BracefulStatement ";" StatementBlock
+    <<dsl.PrependChild($2, $0) >>
+
+  // These are for things like 'begin {...} begin {...} ...' -- where people
+  // shouldn't have to put semicolons after the closing curly braces.
+  //
+  // We get LR-1 conflicts with the following, so we need a pair of more
+  // explicit lookahead-by-more production rules instead. (By using ternaries
+  // we are effectively getting lookahead-by-two.)
+  //
+  // | BracefulStatement StatementBlock
+  //    <<dsl.PrependChild($1, $0) >>
+
+  // E.g. 'begin {...} begin {...} $x=1'
+  | BracefulStatement BracefulStatement StatementBlock
+    <<dsl.PrependTwoChildren($2, $0, $1) >>
+
+  // E.g. 'begin {...} $x=1'
+  | BracefulStatement BracelessStatement
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+
+  // E.g. 'begin {...} $x=1 ;'
+  | BracefulStatement BracelessStatement ";"
+    << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeStatementBlock) >>
+
+  | BracefulStatement BracelessStatement ";" NonEmptyStatementBlock
+    <<dsl.PrependTwoChildren($3, $0, $1) >>
 ;
 
+// ----------------------------------------------------------------
+// Simply a keystroke-saver for all the various if/for/do/while/begin/end/etc
+// which use curly-braced bodies.
 StatementBlockInBraces
-  // Defining StatementBlock to be emptyable would have been more elegant ...
-  // I got LR-1 conflicts though. :^/
-  : "{" "}"
-    << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
-
-  | "{" StatementBlock "}"
+  : "{" StatementBlock "}"
     << dsl.Wrap($1) >>
-  ;
+;
 
 // ================================================================
 // ASSIGMENT STATEMENTS
@@ -384,22 +427,22 @@ Lvalue
   : Rvalue
   | Typedecl LocalVariable
     << dsl.AppendChild($1, $0) >>
-  ;
+;
 
 BareBoolean
   : Rvalue
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeBareBoolean) >>
-  ;
+;
 
 FilterStatement
   : md_token_filter Rvalue
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
-  ;
+;
 
 EmitStatement
   : md_token_emit Rvalue // xxx more to do
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
-  ;
+;
 
 DumpStatement
   : md_token_dump
@@ -412,7 +455,7 @@ DumpStatement
       ),
       $1,
     ) >>
-  ;
+;
 
 EdumpStatement
   : md_token_edump
@@ -425,7 +468,7 @@ EdumpStatement
       ),
       $1,
     ) >>
-  ;
+;
 
 PrintStatement
   : md_token_print
@@ -439,7 +482,7 @@ PrintStatement
       ),
       $1,
     ) >>
-  ;
+;
 
 EprintStatement
   : md_token_eprint
@@ -452,7 +495,7 @@ EprintStatement
       ),
       $1,
     ) >>
-  ;
+;
 
 PrintnStatement
   : md_token_printn
@@ -465,7 +508,7 @@ PrintnStatement
       ),
       $1,
     ) >>
-  ;
+;
 
 EprintnStatement
   : md_token_eprintn
@@ -478,7 +521,7 @@ EprintnStatement
       ),
       $1,
     ) >>
-  ;
+;
 
 // ----------------------------------------------------------------
 FieldValue
@@ -557,7 +600,7 @@ FullOosvar
 LocalVariable
   : md_token_non_sigil_name
     << dsl.NewASTNode($0, dsl.NodeTypeLocalVariable) >>
-  ;
+;
 
 Typedecl
   : md_token_arr_type
@@ -584,7 +627,7 @@ Typedecl
   | md_token_var_type
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  ;
+;
 
 // ----------------------------------------------------------------
 // REWRITE COMPOUND ASSIGNMENT OPERATORS
@@ -1299,7 +1342,7 @@ EndBlock
 CondBlock
   := Rvalue StatementBlockInBraces
     << dsl.NewASTNodeBinary(nil, $0, $1, dsl.NodeTypeCondBlock) >>
-  ;
+;
 
 // ================================================================
 // IF-STATEMENTS
@@ -1312,29 +1355,29 @@ IfChain
   : IfElifStar
   | IfElifStar ElseBlock
     << dsl.AppendChild($0, $1) >>
-  ;
+;
 
 IfElifStar
   : IfBlock
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeIfChain) >>
   | IfElifStar ElifBlock
     << dsl.AppendChild($0, $1) >>
-  ;
+;
 
 IfBlock
   : md_token_if "(" Rvalue ")" StatementBlockInBraces
     << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
-  ;
+;
 
 ElifBlock
   : md_token_elif "(" Rvalue ")" StatementBlockInBraces
     << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
-  ;
+;
 
 ElseBlock
   : md_token_else StatementBlockInBraces
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIfItem) >>
-  ;
+;
 
 // ================================================================
 // WHILE AND DO-WHILE -LOOPS
@@ -1342,12 +1385,12 @@ ElseBlock
 WhileLoop
   : md_token_while "(" Rvalue ")" StatementBlockInBraces
     << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeWhileLoop) >>
-  ;
+;
 
 DoWhileLoop
   : md_token_do StatementBlockInBraces md_token_while "(" Rvalue ")"
     << dsl.NewASTNodeBinary($0, $1, $4, dsl.NodeTypeDoWhileLoop) >>
-  ;
+;
 
 // ================================================================
 // FOR-LOOPS
@@ -1360,7 +1403,7 @@ ForLoop
   | ForLoopTwoVariable
   // | ForLoopMultipleKeysValue
   | TripleForLoop
-  ;
+;
 
 // ----------------------------------------------------------------
 // for(k in $*) { ... }
@@ -1473,14 +1516,14 @@ TripleForStart
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
   | TripleForStart "," Assignment
     <<dsl.AppendChild($0, $2) >>
-  ;
+;
 
 TripleForContinuation
   : empty
     << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
   | BracelessStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
-  ;
+;
 
 TripleForUpdate
   : empty
@@ -1495,12 +1538,12 @@ TripleForUpdate
 BreakStatement
   : md_token_break
     << dsl.NewASTNodeZary($0, dsl.NodeTypeBreak) >>
-  ;
+;
 
 ContinueStatement
   : md_token_continue
     << dsl.NewASTNodeZary($0, dsl.NodeTypeContinue) >>
-  ;
+;
 
 // ================================================================
 // FUNCTION AND SUBROUTINE DEFINITIONS
@@ -1592,17 +1635,17 @@ FuncOrSubrParameter
       $0,
       dsl.NodeTypeParameter,
     ) >>
-  ;
+;
 
 UntypedFuncOrSubrParameterName
   : md_token_non_sigil_name
     << dsl.NewASTNode($0, dsl.NodeTypeParameterName) >>
-  ;
+;
 
 TypedFuncOrSubrParameterName
   : Typedecl UntypedFuncOrSubrParameterName
     << dsl.AppendChild($1, $0) >>
-  ;
+;
 
 //Statement : md_token_call FcnOrSubrCall(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
@@ -1620,7 +1663,7 @@ ReturnStatement
   // | md_token_return
   //    << dsl.NewASTNodeZary($0, dsl.NodeTypeReturn) >>
 
-  ;
+;
 
 // ================================================================
 // ================================================================
