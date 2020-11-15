@@ -238,6 +238,8 @@ a value. This verb retains all input before producing any output.
 Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 'a=,b=3,c=4'.
+ -f (default ) Specify field names to be operated on. Any other fields won't be
+modified, and operation will be streaming.
  -fill-with (default ) Prepend field {name} to each record with record-counter starting at 1
 
 ================================================================

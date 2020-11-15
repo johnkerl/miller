@@ -118,7 +118,7 @@ func mapperPutParseCLI(
 			suppressOutputRecord = true
 			argi++
 
-		// TODO: move these to mlr auxents?
+			// TODO: move these to mlr auxents?
 		} else if args[argi] == "-d" {
 			printASTOnly = true
 			printASTSingleLine = false

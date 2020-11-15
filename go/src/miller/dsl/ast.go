@@ -176,7 +176,7 @@ func (this *ASTNode) PrintParexAux(depth int) {
 		fmt.Print(this.Text())
 		fmt.Println()
 
-	} else if this.  ChildrenAreAllLeaves() {
+	} else if this.ChildrenAreAllLeaves() {
 		for i := 0; i < depth; i++ {
 			fmt.Print("    ")
 		}

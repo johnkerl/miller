@@ -42,6 +42,13 @@ func mapperUnsparsifyParseCLI(
 		"Prepend field {name} to each record with record-counter starting at 1",
 	)
 
+	pSpecifiedFieldNames := flagSet.String(
+		"f",
+		"",
+		`Specify field names to be operated on. Any other fields won't be
+modified, and operation will be streaming.`,
+	)
+
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,7 +65,10 @@ func mapperUnsparsifyParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	mapper, _ := NewMapperUnsparsify(*pFillerString)
+	mapper, _ := NewMapperUnsparsify(
+		*pFillerString,
+		*pSpecifiedFieldNames,
+	)
 
 	*pargi = argi
 	return mapper
@@ -88,19 +98,33 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 
 // ----------------------------------------------------------------
 type MapperUnsparsify struct {
-	fillerString       string
+	fillerMlrval       types.Mlrval
 	recordsAndContexts *list.List
 	fieldNamesSeen     *lib.OrderedMap
+	recordMapperFunc   mapping.RecordMapperFunc
 }
 
 func NewMapperUnsparsify(
 	fillerString string,
+	specifiedFieldNames string,
 ) (*MapperUnsparsify, error) {
 
+	specifiedFieldNameList := lib.SplitString(specifiedFieldNames, ",")
+	fieldNamesSeen := lib.NewOrderedMap()
+	for _, specifiedFieldName := range specifiedFieldNameList {
+		fieldNamesSeen.Put(specifiedFieldName, specifiedFieldName)
+	}
+
 	this := &MapperUnsparsify{
-		fillerString:       fillerString,
+		fillerMlrval:       types.MlrvalFromString(fillerString),
 		recordsAndContexts: list.New(),
-		fieldNamesSeen:     lib.NewOrderedMap(),
+		fieldNamesSeen:     fieldNamesSeen,
+	}
+
+	if len(specifiedFieldNameList) == 0 {
+		this.recordMapperFunc = this.mapNonStreaming
+	} else {
+		this.recordMapperFunc = this.mapStreaming
 	}
 
 	return this, nil
@@ -108,6 +132,14 @@ func NewMapperUnsparsify(
 
 // ----------------------------------------------------------------
 func (this *MapperUnsparsify) Map(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	this.recordMapperFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+func (this *MapperUnsparsify) mapNonStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -121,7 +153,6 @@ func (this *MapperUnsparsify) Map(
 		}
 		this.recordsAndContexts.PushBack(inrecAndContext)
 	} else {
-		fillerMlrval := types.MlrvalFromString(this.fillerString)
 		for e := this.recordsAndContexts.Front(); e != nil; e = e.Next() {
 			outrecAndContext := e.Value.(*types.RecordAndContext)
 			outrec := outrecAndContext.Record
@@ -130,7 +161,7 @@ func (this *MapperUnsparsify) Map(
 			for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 				fieldName := pe.Key
 				if !outrec.Has(&fieldName) {
-					newrec.PutCopy(&fieldName, &fillerMlrval)
+					newrec.PutCopy(&fieldName, &this.fillerMlrval)
 				} else {
 					newrec.PutReference(&fieldName, outrec.Get(&fieldName))
 				}
@@ -139,6 +170,27 @@ func (this *MapperUnsparsify) Map(
 			outputChannel <- types.NewRecordAndContext(newrec, &outrecAndContext.Context)
 		}
 
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *MapperUnsparsify) mapStreaming(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	inrec := inrecAndContext.Record
+	if inrec != nil { // not end of record stream
+
+		for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
+			if !inrec.Has(&pe.Key) {
+				inrec.PutCopy(&pe.Key, &this.fillerMlrval)
+			}
+		}
+
+		outputChannel <- inrecAndContext // end-of-stream marker
+
+	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
