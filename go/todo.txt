@@ -5,6 +5,15 @@ TOP OF LIST:
   o mlrdoc
   o Go impl + UT
 
+* parser:
+  o iterative LALR grok
+    - jackson notes
+    - gocc .txt/.go for simple grammars
+  o find/bookmark/grok rob's lexer slides
+  o iterate on a parser-generator with JSON config file
+    no need to bootstrap a parser for the parser-generator language
+  o try to get clear-token/line-number info for gocc parse-error messages
+
 ! nidx @ 10-min
 ! text-put @ 10-min
 

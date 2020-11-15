@@ -1,0 +1,52 @@
+begin {
+  # INPUT PARAMETERS
+  # They can do 'mlr put -s window_size=4 -s input_field_names=x,y ...'
+  if (is_absent(@window_size)) {
+    @window_size = 3;
+  }
+  # In Miller 6 (Go port) we'll have arrays and you'll be able to do
+  # @input_field_names = ["x", "y"].
+  if (is_absent(@input_field_names)) {
+    @input_field_names = splitnv("x,y", ",")
+  } else {
+    @input_field_names = splitnv(@input_field_names, ",")
+  }
+
+  # INITIALIZATION
+  @output_field_names = {};
+  for (_, name in @input_field_names) {
+    @output_field_names[name] = name . "_avg";
+  }
+  for (_, name in @input_field_names) {
+    for (i = 0; i < @window_size; i+=1) {
+      @windows[name][i] = 0;
+    }
+  }
+  # dump;
+}
+
+# Slide the windows
+for (_, name in @input_field_names) {
+  for (i = 1; i < @window_size; i+=1) {
+    @windows[name][i-1] = @windows[name][i];
+  }
+}
+# Update the windows with new data
+for (_, name in @input_field_names) {
+  @windows[name][@window_size - 1] = $[name];
+}
+
+# Compute the averages
+sums = {};
+for (_, name in @input_field_names) {
+  for (i = 0; i < @window_size; i+=1) {
+    sums[name] += @windows[name][i];
+  }
+}
+denominator = @window_size;
+if (NR < @window_size) {
+    denominator = NR
+}
+for (_, name in @input_field_names) {
+  $[@output_field_names[name]] = sums[name] / denominator;
+}

@@ -5,16 +5,24 @@
 us=$(basename $0)
 set -euo pipefail
 
-if [ $# -ne 1 ]; then
+verbose="false"
+
+if [ $# -eq 1 ]; then
+  bnf="$1"
+elif [ $# -eq 2 ]; then
+  if [ "$1" = "-v" ]; then
+    verbose="true"
+  else
+    echo "Usage: $0 {.bnf file}" 1>&2
+    exit 1
+  fi
+  bnf="$2"
+else
   echo "Usage: $0 {.bnf file}" 1>&2
   exit 1
 fi
-bnf="$1"
 
 dir=src/experimental
-#verbose="true"
-verbose="false"
-
 mkdir -p $dir
 
 # ----------------------------------------------------------------

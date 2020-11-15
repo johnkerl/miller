@@ -1,0 +1,62 @@
+begin {
+  # Input parameters
+  # They can do 'mlr put -s input_field_names=x,y ...'
+  if (is_absent(@window_size_backward)) {
+    @window_size_backward = 3;
+  }
+  if (is_absent(@window_size_forward)) {
+    @window_size_forward = 3;
+  }
+  # In Miller 6 (Go port) we'll have arrays and you'll be able to do
+  # @input_field_names = ["x", "y"].
+  if (is_absent(@input_field_names)) {
+    @input_field_names = splitnv("x,y", ",")
+  } else {
+    @input_field_names = splitnv(@input_field_names, ",")
+  }
+
+  # Initialization
+  @window_size = @window_size_backward + 1 + @window_size_forward;
+  @center_record_index = @window_size_backward; # index 0-up
+  @output_field_names = {};
+  for (_, name in @input_field_names) {
+    @output_field_names[name] = name . "_avg";
+  }
+  @window_records = {};
+  # dump;
+}
+
+# Slide the windows, then update them with new data
+for (i = 1; i < @window_size; i+=1) {
+  @window_records[i-1] = @window_records[i]
+}
+@window_records[@window_size-1] = $*;
+
+# Compute the averages
+
+denominator = @window_size;
+if (NR < @window_size) {
+    denominator = NR
+}
+
+sums = {};
+for (_, name in @input_field_names) {
+  sums[name] = 0.0;
+  for (i = 0; i < denominator; i+=1) {
+    # Windows are filled in from the end, not the beginning, so index backward
+    int j = @window_size - 1 - i;
+    sums[name] += float(@window_records[j][name]);
+  }
+}
+
+# Emit the record from the window center, with averages attached to it
+print "HMM?";
+print NR;
+if (NR > @center_record_index) {
+print "YUP!";
+  output_record = @window_records[@center_record_index];
+  for (_, name in @input_field_names) {
+    output_record[@output_field_names[name]] = sums[name] / denominator;
+  }
+  emit output_record
+}
