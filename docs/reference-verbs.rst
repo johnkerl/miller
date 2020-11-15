@@ -3337,3 +3337,12 @@ Examples:
     v w a b u
     1 2 - - -
 
+::
+
+    $ mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
+    a b v u w x
+    1 2 3 - - -
+    - 2 - 1 - -
+    1 - 2 - - 3
+    - - 1 - 2 -
+
