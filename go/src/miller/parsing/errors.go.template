@@ -67,7 +67,8 @@ func (e *Error) Error() string {
 		}
 		fmt.Fprintf(w, "Expected one of: ")
 		for _, expected := range e.ExpectedTokens {
-			fmt.Fprintf(w, "%s ", expected)
+      // Spelling convention within the Miller BNF
+			fmt.Fprintf(w, "%s ", strings.ReplaceAll(expected, "md_token_", ""))
 		}
 	}
 	return w.String()

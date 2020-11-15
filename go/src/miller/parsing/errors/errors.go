@@ -44,7 +44,6 @@ func (e *Error) String() string {
 
 func (e *Error) Error() string {
 	w := new(strings.Builder)
-	//fmt.Fprintf(w, "Error in S%d: %s, %s", e.StackTop, token.TokMap.TokenString(e.ErrorToken), e.ErrorToken.Pos.String())
 	fmt.Fprintf(
 		w,
 		"Parse error on token \"%s\" at line %d columnn %d.\n",
@@ -68,7 +67,8 @@ func (e *Error) Error() string {
 		}
 		fmt.Fprintf(w, "Expected one of: ")
 		for _, expected := range e.ExpectedTokens {
-			fmt.Fprintf(w, "%s ", expected)
+      // Spelling convention within the Miller BNF
+			fmt.Fprintf(w, "%s ", strings.ReplaceAll(expected, "md_token_", ""))
 		}
 	}
 	return w.String()

@@ -12,8 +12,6 @@ TOP OF LIST:
 ! nidx @ 10-min
 ! text-put @ 10-min
 
-* justWroteEmptyLine -> pprint too ...
-
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:
     - %
@@ -36,14 +34,16 @@ TOP OF LIST:
 
 * --pprint --barred
 
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o note json types: string, number, boolean, null, object, array.
-
 ! csvlite
   - het input
 
 ! csv het input
   o golang csv-reader blank-line issue ...
+
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o note json types: string, number, boolean, null, object, array.
+
+* justWroteEmptyLine -> pprint too ...
 
 * UDF nexts:
   o UT for mixing put -f/-e

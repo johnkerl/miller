@@ -1716,7 +1716,7 @@ mlr -n put -f u/lex-error.mlr
 ./mlr: cannot parse DSL expression.
 Parse error on token "`" at line 20 columnn 3.
 Please check for missing semicolon.
-Expected one of: ; { } md_token_unset md_token_filter md_token_emit md_token_dump md_token_edump md_token_print md_token_eprint md_token_printn md_token_eprintn md_token_field_name $[ md_token_braced_field_name md_token_full_srec md_token_oosvar_name @[ md_token_braced_oosvar_name md_token_full_oosvar md_token_non_sigil_name md_token_arr_type md_token_bool_type md_token_float_type md_token_int_type md_token_map_type md_token_num_type md_token_str_type md_token_var_type + - .+ .- ! ~ ( md_token_string_literal md_token_int_literal md_token_float_literal md_token_boolean_literal md_token_M_PI md_token_M_E md_token_panic [ md_token_IPS md_token_IFS md_token_IRS md_token_OPS md_token_OFS md_token_ORS md_token_NF md_token_NR md_token_FNR md_token_FILENAME md_token_FILENUM md_token_begin md_token_end md_token_if md_token_while md_token_do md_token_for md_token_break md_token_continue md_token_func md_token_return 
+Expected one of: ; { } unset filter emit dump edump print eprint printn eprintn field_name $[ braced_field_name full_srec oosvar_name @[ braced_oosvar_name full_oosvar non_sigil_name arr_type bool_type float_type int_type map_type num_type str_type var_type + - .+ .- ! ~ ( string_literal int_literal float_literal boolean_literal M_PI M_E panic [ IPS IFS IRS OPS OFS ORS NF NR FNR FILENAME FILENUM begin end if while do for break continue func return 
 
 mlr -n put -f u/parse-error.mlr
 ./mlr: cannot parse DSL expression.
