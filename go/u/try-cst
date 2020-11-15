@@ -405,6 +405,7 @@ echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 2, 5)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 2, 3)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 3, 3)'
 echo; echo "x=abcdefg" | run_mlr put '$y = substr($x, 4, 3)'
+echo; echo "x=1234567" | run_mlr put '$y = substr($x, 2, 5)'
 
 echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length($x)'
 echo; echo "x=1,y=abcdefg,z=3" | run_mlr put '$n = length($y)'

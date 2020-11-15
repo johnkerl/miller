@@ -1,13 +1,25 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* parser:
+* parser-fu:
   o iterative LALR grok
     - jackson notes
     - gocc .txt/.go for simple grammars
   o find/bookmark/grok rob's lexer slides
   o iterate on a parser-generator with JSON config file
     no need to bootstrap a parser for the parser-generator language
+
+! csvlite
+  - het input
+
+! csv het input
+  o golang csv-reader blank-line issue ...
+
+* --pprint --barred
+* justWroteEmptyLine -> pprint too ...
+
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o note json types: string, number, boolean, null, object, array.
 
 ! nidx @ 10-min
 ! text-put @ 10-min
@@ -32,21 +44,9 @@ TOP OF LIST:
     - %s float: convert to %f
     - %s string: ok
 
-* --pprint --barred
-
-! csvlite
-  - het input
-
-! csv het input
-  o golang csv-reader blank-line issue ...
-
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o note json types: string, number, boolean, null, object, array.
-
-* justWroteEmptyLine -> pprint too ...
-
 * UDF nexts:
   o UT for mixing put -f/-e
+  o make possible substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290
   o more functions (see below)
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
@@ -56,6 +56,11 @@ TOP OF LIST:
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
+  o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
+  o put -n https://github.com/johnkerl/miller/issues/77#issuecomment-370375671
+  o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
+
+* bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
 
 !! [[]] etc to avoid inadvertent sequentials for int indices on maps.
   this should happen intentionally, not accidentally.

@@ -64,7 +64,13 @@ func MlrvalDot(ma, mb *Mlrval) Mlrval {
 
 func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
+		if ma.IsNumeric() {
+			// JIT-stringify, if not already (e.g. intval scanned from string
+			// in input-file data)
+			ma.setPrintRep()
+		} else {
+			return MlrvalFromError()
+		}
 	}
 	if !mb.IsInt() {
 		return MlrvalFromError()
