@@ -268,6 +268,12 @@ run_mlr tac /dev/null
 run_mlr --opprint unsparsify $indir/abixy
 run_mlr --opprint unsparsify $indir/abixy-het
 
+run_mlr --opprint unsparsify -f nonesuch $indir/abixy-het
+run_mlr --opprint unsparsify -f a,b,i,x,y $indir/abixy-het
+run_mlr --opprint unsparsify -f aaa,bbb,xxx,iii,yyy $indir/abixy-het
+run_mlr --opprint unsparsify -f a,b,i,x,y,aaa,bbb,xxx,iii,yyy $indir/abixy-het
+run_mlr --opprint unsparsify -f a,b,i,x,y,aaa,bbb,xxx,iii,yyy then regularize $indir/abixy-het
+
 run_mlr --csv skip-trivial-records $indir/trivial-records.csv
 run_mlr --csv remove-empty-columns $indir/remove-empty-columns.csv
 
