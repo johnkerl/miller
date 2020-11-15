@@ -1,6 +1,7 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * parser-fu:
   o iterative LALR grok
     - jackson notes
@@ -8,6 +9,7 @@ TOP OF LIST:
   o find/bookmark/grok rob's lexer slides
   o iterate on a parser-generator with JSON config file
     no need to bootstrap a parser for the parser-generator language
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ! csvlite
   - het input
@@ -44,9 +46,11 @@ TOP OF LIST:
     - %s float: convert to %f
     - %s string: ok
 
+! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+  o done-reading back-channels in stream.go
+
 * UDF nexts:
   o UT for mixing put -f/-e
-  o make possible substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290
   o more functions (see below)
   o function metadata, w/ sort-by, for online help
   o double-check $-anything in begin/end
@@ -100,6 +104,34 @@ TOP OF LIST:
   o copy over all operator help-strings from ../c
 
 * $map.attr1.attr2 syntax for DSL -- ? needs override of "." operator w/ symbols ... ?
+
+================================================================
+REMAINING VERBS:
+
+seqgen
+having-fields
+repeat
+
+bar
+clean-whitespace
+count-distinct
+format-values
+fraction
+histogram
+least-frequent
+most-frequent
+sec2gmtdate
+tee
+top
+uniq
+
+nest
+reshape
+step
+join
+merge-fields
+stats1
+stats2
 
 ================================================================
 REMAINING FUNCTIONS:
@@ -279,3 +311,5 @@ NITS/NON-IMMEDIATE:
 * mlrdoc for new go-only verbs
 * ast-parex separate mlr auxents entrypoint?
 * port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
+* doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
+  o xref to 1-up note.
