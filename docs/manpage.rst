@@ -1413,12 +1413,14 @@ This is simply a copy of what you should see on running **man mlr** at a command
        unsparsify
            Usage: mlr unsparsify [options]
            Prints records with the union of field names over all input records.
-           For field names absent in a given record but present in others, fills in
-           a value. This verb retains all input before producing any output.
+           For field names absent in a given record but present in others, fills in a
+           value. Without -f, this verb retains all input before producing any output.
     
            Options:
            --fill-with {filler string}  What to fill absent fields with. Defaults to
     				    the empty string.
+           -f {a,b,c} Specify field names to be operated on. Any other fields won't be
+    				    modified, and operation will be streaming.
     
            Example: if the input is two records, one being 'a=1,b=2' and the other
            being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
@@ -2375,4 +2377,4 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
     
     
-    				  2020-11-09			     MILLER(1)
+    				  2020-11-15			     MILLER(1)

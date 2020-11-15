@@ -1268,3 +1268,7 @@ POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify data/sparse.json}}HERE
 
 POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json}}HERE
 
+::
+
+POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json}}HERE
+

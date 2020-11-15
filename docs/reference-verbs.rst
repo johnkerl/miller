@@ -3273,12 +3273,14 @@ unsparsify
     $ mlr unsparsify --help
     Usage: mlr unsparsify [options]
     Prints records with the union of field names over all input records.
-    For field names absent in a given record but present in others, fills in
-    a value. This verb retains all input before producing any output.
+    For field names absent in a given record but present in others, fills in a
+    value. Without -f, this verb retains all input before producing any output.
     
     Options:
     --fill-with {filler string}  What to fill absent fields with. Defaults to
                                  the empty string.
+    -f {a,b,c} Specify field names to be operated on. Any other fields won't be
+                                 modified, and operation will be streaming.
     
     Example: if the input is two records, one being 'a=1,b=2' and the other
     being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
@@ -3319,4 +3321,19 @@ Examples:
     missing 2       missing 1       missing missing
     1       missing 2       missing 3       missing
     missing missing 1       missing missing 2
+
+::
+
+    $ mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json
+    a b v u
+    1 2 3 -
+    
+    u b a
+    1 2 -
+    
+    a v x b u
+    1 2 3 - -
+    
+    v w a b u
+    1 2 - - -
 
