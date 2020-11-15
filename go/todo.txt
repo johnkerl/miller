@@ -1,10 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! mlr unsparsify -f (#387)
-  o mlrdoc
-  o Go impl + UT
-
 * parser:
   o iterative LALR grok
     - jackson notes
@@ -12,21 +8,11 @@ TOP OF LIST:
   o find/bookmark/grok rob's lexer slides
   o iterate on a parser-generator with JSON config file
     no need to bootstrap a parser for the parser-generator language
-  o try to get clear-token/line-number info for gocc parse-error messages
 
 ! nidx @ 10-min
 ! text-put @ 10-min
 
 * justWroteEmptyLine -> pprint too ...
-
-:) more parex
-  o split out separate files for accessor/print
-  o escape " -> \"
-  o needs node-to-text method
-  o needs help-strings
-  o then good to go
-
-* walk.txt bug?
 
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:
@@ -76,8 +62,6 @@ TOP OF LIST:
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
-
-! ";;" is parse error; also "{...};"
 
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
@@ -178,7 +162,6 @@ MAYBE:
 GOCC UPSTREAMS:
 
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
-* research customization of error-handling ... line numbers in particular ...
 
 ----------------------------------------------------------------
 DEV NOTES:
@@ -232,7 +215,6 @@ NITS/NON-IMMEDIATE:
     - make a force-single-line writer
     - make a jsonparse DSL function -- ?
   d other formats: use JSON marshaler for collection types, maybe double-quoted
-* better error-identification in the lexer / parser
   o research gocc support
   o maybe a case for hand-roll
 * ICE on scan of 0xffffffffffffffff
@@ -291,3 +273,4 @@ NITS/NON-IMMEDIATE:
 * fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly
 * mlrdoc for new go-only verbs
 * ast-parex separate mlr auxents entrypoint?
+* port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)

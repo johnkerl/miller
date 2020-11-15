@@ -156,3 +156,6 @@ echo; run_mlr -n put -v 'unset @x'
 echo; run_mlr -n put -v 'unset @*'
 echo; run_mlr -n put -v 'unset x'
 echo; mlr_expect_fail -n put -v 'unset 3'
+
+echo; mlr_expect_fail -n put -f u/lex-error.mlr
+echo; mlr_expect_fail -n put -f u/parse-error.mlr
