@@ -46,10 +46,10 @@ type TWriterOptions struct {
 	OFS                 string
 	OPS                 string
 	HeaderlessCSVOutput bool
+	BarredPprintOutput  bool
 
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;
-	//	pprint_barred bool;
 	//	stack_json_output_vertically bool;
 	//	wrap_json_output_in_outer_list bool;
 	//	json_quote_int_keys bool;

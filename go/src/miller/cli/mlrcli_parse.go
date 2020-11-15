@@ -637,9 +637,9 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		//		writerOptions.right_align_pprint = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--barred" {
-		//		writerOptions.pprint_barred = true;
-		//		argi += 1;
+	} else if args[argi] == "--barred" {
+		writerOptions.BarredPprintOutput = true
+		argi += 1
 		//
 		//	} else if args[argi] == "--quote-all" {
 		//		writerOptions.oquoting = QUOTE_ALL;

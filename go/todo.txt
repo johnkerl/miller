@@ -17,7 +17,6 @@ TOP OF LIST:
 ! csv het input
   o golang csv-reader blank-line issue ...
 
-* --pprint --barred
 * justWroteEmptyLine -> pprint too ...
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
