@@ -13,6 +13,13 @@ TOP OF LIST:
 
 * justWroteEmptyLine -> pprint too ...
 
+:) more parex
+  o split out separate files for accessor/print
+  o escape " -> \"
+  o needs node-to-text method
+  o needs help-strings
+  o then good to go
+
 * walk.txt bug?
 
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf

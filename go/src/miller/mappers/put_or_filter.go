@@ -50,6 +50,8 @@ func mapperPutParseCLI(
 
 	dslString := ""
 	verbose := false
+	printASTOnly := false
+	printASTSingleLine := false
 	invertFilter := false
 	suppressOutputRecord := false
 	needExpressionArg := true
@@ -109,15 +111,27 @@ func mapperPutParseCLI(
 
 			argi += 2
 
-		} else if args[argi] == "-v" {
-			verbose = true
-			argi++
 		} else if args[argi] == "-x" {
 			invertFilter = true
 			argi++
 		} else if args[argi] == "-q" {
 			suppressOutputRecord = true
 			argi++
+
+		// TODO: move these to mlr auxents?
+		} else if args[argi] == "-d" {
+			printASTOnly = true
+			printASTSingleLine = false
+			argi++
+		} else if args[argi] == "-D" {
+			printASTOnly = true
+			printASTSingleLine = true
+			argi++
+
+		} else if args[argi] == "-v" {
+			verbose = true
+			argi++
+
 		} else {
 			mapperPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
@@ -135,6 +149,21 @@ func mapperPutParseCLI(
 		}
 		dslString = args[argi]
 		argi += 1
+	}
+
+	if printASTOnly {
+		astRootNode, err := BuildASTFromStringWithMessage(dslString, false)
+		if err == nil {
+			if printASTSingleLine {
+				astRootNode.PrintParexOneLine()
+			} else {
+				astRootNode.PrintParex()
+			}
+			os.Exit(0)
+		} else {
+			// error message already printed out
+			os.Exit(1)
+		}
 	}
 
 	mapper, err := NewMapperPut(
@@ -202,19 +231,13 @@ func NewMapperPut(
 	invertFilter bool,
 	suppressOutputRecord bool,
 ) (*MapperPut, error) {
-	astRootNode, err := BuildASTFromString(dslString)
+
+	astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
 	if err != nil {
-		// Leave this out until we get better control over the error-messaging.
-		// At present it's overly parser-internal, and confusing. :(
-		// fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-			os.Args[0])
-		if verbose {
-			fmt.Fprintln(os.Stderr, dslString)
-		}
-		fmt.Fprintln(os.Stderr, err)
+		// Error message already printed out
 		return nil, err
 	}
+
 	if verbose {
 		fmt.Println("DSL EXPRESSION:")
 		fmt.Println(dslString)
@@ -262,11 +285,28 @@ func NewMapperPut(
 	}, nil
 }
 
+func BuildASTFromStringWithMessage(dslString string, verbose bool) (*dsl.AST, error) {
+	astRootNode, err := BuildASTFromString(dslString)
+	if err != nil {
+		// Leave this out until we get better control over the error-messaging.
+		// At present it's overly parser-internal, and confusing. :(
+		// fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
+			os.Args[0])
+		if verbose {
+			fmt.Fprintln(os.Stderr, dslString)
+		}
+		fmt.Fprintln(os.Stderr, err)
+		return nil, err
+	} else {
+		return astRootNode, nil
+	}
+}
+
 // xxx note (package cycle) why not a dsl.AST constructor :(
 // xxx maybe split out dsl into two packages ... and/or put the ast.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
 func BuildASTFromString(dslString string) (*dsl.AST, error) {
-
 	theLexer := lexer.NewLexer([]byte(dslString))
 	theParser := parser.NewParser()
 	interfaceAST, err := theParser.Parse(theLexer)

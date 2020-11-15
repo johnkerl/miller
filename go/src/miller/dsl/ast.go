@@ -107,6 +107,14 @@ func (this *AST) Print() {
 	this.RootNode.Print()
 }
 
+func (this *AST) PrintParex() {
+	this.RootNode.PrintParex()
+}
+
+func (this *AST) PrintParexOneLine() {
+	this.RootNode.PrintParexOneLine()
+}
+
 // ----------------------------------------------------------------
 type ASTNode struct {
 	Token    *token.Token // Nil for tokenless/structural nodes
@@ -133,6 +141,7 @@ type ASTNode struct {
 	// * node.Executor.Execute(inrec, state) ?
 }
 
+// ----------------------------------------------------------------
 func (this *ASTNode) Print() {
 	this.PrintAux(0)
 }
@@ -144,8 +153,6 @@ func (this *ASTNode) PrintAux(depth int) {
 	fmt.Print("* " + this.Type)
 
 	if tok != nil {
-		//fmt.Printf(" \"%s\" \"%s\"",
-		//	token.TokMap.Id(tok.Type), string(tok.Lit))
 		fmt.Printf(" \"%s\"", string(tok.Lit))
 	}
 	fmt.Println()
@@ -156,6 +163,86 @@ func (this *ASTNode) PrintAux(depth int) {
 	}
 }
 
+// ----------------------------------------------------------------
+func (this *ASTNode) PrintParex() {
+	this.PrintParexAux(0)
+}
+
+func (this *ASTNode) PrintParexAux(depth int) {
+	if this.IsLeaf() {
+		for i := 0; i < depth; i++ {
+			fmt.Print("    ")
+		}
+		fmt.Print(this.Text())
+		fmt.Println()
+
+	} else if this.  ChildrenAreAllLeaves() {
+		for i := 0; i < depth; i++ {
+			fmt.Print("    ")
+		}
+		fmt.Print("(")
+		fmt.Print(this.Text())
+
+		for _, child := range this.Children {
+			fmt.Print(" ")
+			fmt.Print(child.Text())
+		}
+		fmt.Println(")")
+
+	} else {
+		for i := 0; i < depth; i++ {
+			fmt.Print("    ")
+		}
+		fmt.Print("(")
+		fmt.Print(this.Text())
+		fmt.Println()
+
+		for _, child := range this.Children {
+			child.PrintParexAux(depth + 1)
+		}
+
+		for i := 0; i < depth; i++ {
+			fmt.Print("    ")
+		}
+		fmt.Println(")")
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *ASTNode) PrintParexOneLine() {
+	this.PrintParexOneLineAux()
+	fmt.Println()
+}
+
+func (this *ASTNode) PrintParexOneLineAux() {
+	if this.IsLeaf() {
+		fmt.Print(this.Text())
+	} else {
+		fmt.Print("(")
+		fmt.Print(this.Text())
+		for _, child := range this.Children {
+			fmt.Print(" ")
+			child.PrintParexOneLineAux()
+		}
+		fmt.Print(")")
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *ASTNode) IsLeaf() bool {
+	return this.Children == nil || len(this.Children) == 0
+}
+
+func (this *ASTNode) ChildrenAreAllLeaves() bool {
+	for _, child := range this.Children {
+		if !child.IsLeaf() {
+			return false
+		}
+	}
+	return true
+}
+
+// ----------------------------------------------------------------
 func NewASTNode(itok interface{}, nodeType TNodeType) (*ASTNode, error) {
 	return NewASTNodeNestable(itok, nodeType), nil
 }
@@ -401,4 +488,137 @@ func NewASTToken(iliteral interface{}, iclonee interface{}) *token.Token {
 		Lit:  []byte(literal),
 		Pos:  clonee.Pos,
 	}
+}
+
+// ----------------------------------------------------------------
+func (this *ASTNode) Text() string {
+	tokenText := ""
+	if this.Token != nil {
+		tokenText = string(this.Token.Lit)
+	}
+
+	switch this.Type {
+
+	case NodeTypeEmptyStatement:
+		return "empty"
+	case NodeTypeStringLiteral:
+		return "\"" + strings.ReplaceAll(tokenText, "\"", "\\\"") + "\""
+	case NodeTypeIntLiteral:
+		return tokenText
+	case NodeTypeFloatLiteral:
+		return tokenText
+	case NodeTypeBoolLiteral:
+		return tokenText
+	case NodeTypeArrayLiteral:
+		return tokenText
+	case NodeTypeMapLiteral:
+		return tokenText
+	case NodeTypeMapLiteralKeyValuePair:
+		return tokenText
+
+	case NodeTypeArrayOrMapIndexAccess:
+		return "[]"
+	case NodeTypeArraySliceAccess:
+		return "[:]"
+	case NodeTypeArraySliceEmptyLowerIndex:
+		return "array-slice-empty-lower-index"
+	case NodeTypeArraySliceEmptyUpperIndex:
+		return "array-slice-empty-upper-index"
+	case NodeTypeContextVariable:
+		return tokenText
+	case NodeTypeConstant:
+		return tokenText
+
+	case NodeTypeDirectFieldValue:
+		return "$" + tokenText
+	case NodeTypeIndirectFieldValue:
+		return "$[" + tokenText + "]"
+	case NodeTypeFullSrec:
+		return tokenText
+	case NodeTypeDirectOosvarValue:
+		return "@" + tokenText
+	case NodeTypeIndirectOosvarValue:
+		return "@[" + tokenText + "]"
+	case NodeTypeFullOosvar:
+		return tokenText
+	case NodeTypeLocalVariable:
+		return tokenText
+	case NodeTypeTypedecl:
+		return tokenText
+
+	case NodeTypeStatementBlock:
+		return "statement-block"
+	case NodeTypeAssignment:
+		return tokenText
+	case NodeTypeUnset:
+		return tokenText
+
+	case NodeTypeBareBoolean:
+		return "bare-boolean"
+	case NodeTypeFilterStatement:
+		return tokenText
+	case NodeTypeEmitStatement:
+		return tokenText
+	case NodeTypeDumpStatement:
+		return tokenText
+	case NodeTypeEdumpStatement:
+		return tokenText
+	case NodeTypePrintStatement:
+		return tokenText
+	case NodeTypeEprintStatement:
+		return tokenText
+		return tokenText
+	case NodeTypePrintnStatement:
+		return tokenText
+	case NodeTypeEprintnStatement:
+		return tokenText
+
+	case NodeTypeOperator:
+		return tokenText
+	case NodeTypeFunctionCallsite:
+		return tokenText
+
+	case NodeTypeBeginBlock:
+		return "begin"
+	case NodeTypeEndBlock:
+		return "end"
+	case NodeTypeIfChain:
+		return "if-chain"
+	case NodeTypeIfItem:
+		return tokenText
+	case NodeTypeCondBlock:
+		return "cond"
+	case NodeTypeWhileLoop:
+		return tokenText
+	case NodeTypeDoWhileLoop:
+		return tokenText
+	case NodeTypeForLoopOneVariable:
+		return tokenText
+	case NodeTypeForLoopTwoVariable:
+		return tokenText
+	case NodeTypeTripleForLoop:
+		return tokenText
+	case NodeTypeBreak:
+		return tokenText
+	case NodeTypeContinue:
+		return tokenText
+
+	case NodeTypeFunctionDefinition:
+		return "func"
+	case NodeTypeSubroutineDefinition:
+		return "subr"
+	case NodeTypeParameterList:
+		return "parameters"
+	case NodeTypeParameter:
+		return "parameter"
+	case NodeTypeParameterName:
+		return tokenText
+	case NodeTypeReturn:
+		return tokenText
+
+	case NodeTypePanic:
+		return tokenText
+
+	}
+	return "[ERROR]"
 }
