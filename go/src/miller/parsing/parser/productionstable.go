@@ -321,7 +321,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Unset : md_token_unset Lvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeUnset) >>`,
+		String: `Unset : unset Lvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeUnset) >>`,
 		Id:         "Unset",
 		NTType:     7,
 		Index:      30,
@@ -361,7 +361,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FilterStatement : md_token_filter Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeFilterStatement) >>`,
+		String: `FilterStatement : filter Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeFilterStatement) >>`,
 		Id:         "FilterStatement",
 		NTType:     10,
 		Index:      34,
@@ -371,7 +371,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EmitStatement : md_token_emit Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEmitStatement) >>`,
+		String: `EmitStatement : emit Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEmitStatement) >>`,
 		Id:         "EmitStatement",
 		NTType:     11,
 		Index:      35,
@@ -381,7 +381,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : md_token_dump	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeDumpStatement) >>`,
+		String: `DumpStatement : dump	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeDumpStatement) >>`,
 		Id:         "DumpStatement",
 		NTType:     12,
 		Index:      36,
@@ -391,7 +391,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DumpStatement : md_token_dump FcnArgs	<< dsl.AdoptChildren(
+		String: `DumpStatement : dump FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
         dsl.NodeTypeDumpStatement,
@@ -413,7 +413,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EdumpStatement : md_token_edump	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeEdumpStatement) >>`,
+		String: `EdumpStatement : edump	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeEdumpStatement) >>`,
 		Id:         "EdumpStatement",
 		NTType:     13,
 		Index:      38,
@@ -423,7 +423,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EdumpStatement : md_token_edump FcnArgs	<< dsl.AdoptChildren(
+		String: `EdumpStatement : edump FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
         dsl.NodeTypeEdumpStatement,
@@ -445,7 +445,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : md_token_print	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypePrintStatement) >>`,
+		String: `PrintStatement : print	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypePrintStatement) >>`,
 		Id:         "PrintStatement",
 		NTType:     14,
 		Index:      40,
@@ -455,7 +455,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintStatement : md_token_print FcnArgs	<< dsl.AdoptChildren(
+		String: `PrintStatement : print FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
         dsl.NodeTypePrintStatement,
@@ -477,7 +477,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EprintStatement : md_token_eprint	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeEprintStatement) >>`,
+		String: `EprintStatement : eprint	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeEprintStatement) >>`,
 		Id:         "EprintStatement",
 		NTType:     15,
 		Index:      42,
@@ -487,7 +487,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EprintStatement : md_token_eprint FcnArgs	<< dsl.AdoptChildren(
+		String: `EprintStatement : eprint FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
         dsl.NodeTypeEprintStatement,
@@ -509,7 +509,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : md_token_printn	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypePrintnStatement) >>`,
+		String: `PrintnStatement : printn	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypePrintnStatement) >>`,
 		Id:         "PrintnStatement",
 		NTType:     16,
 		Index:      44,
@@ -519,7 +519,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PrintnStatement : md_token_printn FcnArgs	<< dsl.AdoptChildren(
+		String: `PrintnStatement : printn FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
         dsl.NodeTypePrintnStatement,
@@ -541,7 +541,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EprintnStatement : md_token_eprintn	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeEprintnStatement) >>`,
+		String: `EprintnStatement : eprintn	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeEprintnStatement) >>`,
 		Id:         "EprintnStatement",
 		NTType:     17,
 		Index:      46,
@@ -551,7 +551,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EprintnStatement : md_token_eprintn FcnArgs	<< dsl.AdoptChildren(
+		String: `EprintnStatement : eprintn FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
         dsl.NodeTypeEprintnStatement,
@@ -603,7 +603,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DirectFieldValue : md_token_field_name	<< dsl.NewASTNodeStripDollarOrAtSign(X[0], dsl.NodeTypeDirectFieldValue) >>`,
+		String: `DirectFieldValue : field_name	<< dsl.NewASTNodeStripDollarOrAtSign(X[0], dsl.NodeTypeDirectFieldValue) >>`,
 		Id:         "DirectFieldValue",
 		NTType:     19,
 		Index:      51,
@@ -623,7 +623,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BracedFieldValue : md_token_braced_field_name	<< dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces(X[0], dsl.NodeTypeDirectFieldValue) >>`,
+		String: `BracedFieldValue : braced_field_name	<< dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces(X[0], dsl.NodeTypeDirectFieldValue) >>`,
 		Id:         "BracedFieldValue",
 		NTType:     21,
 		Index:      53,
@@ -633,7 +633,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FullSrec : md_token_full_srec	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullSrec) >>`,
+		String: `FullSrec : full_srec	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullSrec) >>`,
 		Id:         "FullSrec",
 		NTType:     22,
 		Index:      54,
@@ -673,7 +673,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DirectOosvarValue : md_token_oosvar_name	<< dsl.NewASTNodeStripDollarOrAtSign(X[0], dsl.NodeTypeDirectOosvarValue) >>`,
+		String: `DirectOosvarValue : oosvar_name	<< dsl.NewASTNodeStripDollarOrAtSign(X[0], dsl.NodeTypeDirectOosvarValue) >>`,
 		Id:         "DirectOosvarValue",
 		NTType:     24,
 		Index:      58,
@@ -693,7 +693,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BracedOosvarValue : md_token_braced_oosvar_name	<< dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces(X[0], dsl.NodeTypeDirectOosvarValue) >>`,
+		String: `BracedOosvarValue : braced_oosvar_name	<< dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces(X[0], dsl.NodeTypeDirectOosvarValue) >>`,
 		Id:         "BracedOosvarValue",
 		NTType:     26,
 		Index:      60,
@@ -703,7 +703,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FullOosvar : md_token_full_oosvar	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar) >>`,
+		String: `FullOosvar : full_oosvar	<< dsl.NewASTNode(X[0], dsl.NodeTypeFullOosvar) >>`,
 		Id:         "FullOosvar",
 		NTType:     27,
 		Index:      61,
@@ -713,7 +713,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `LocalVariable : md_token_non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeLocalVariable) >>`,
+		String: `LocalVariable : non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeLocalVariable) >>`,
 		Id:         "LocalVariable",
 		NTType:     28,
 		Index:      62,
@@ -723,7 +723,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_arr_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : arr	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      63,
@@ -733,7 +733,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_bool_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : bool	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      64,
@@ -743,7 +743,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_float_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : float	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      65,
@@ -753,7 +753,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_int_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : int	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      66,
@@ -763,7 +763,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_map_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : map	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      67,
@@ -773,7 +773,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_num_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : num	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      68,
@@ -783,7 +783,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_str_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : str	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      69,
@@ -793,7 +793,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Typedecl : md_token_var_type	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
+		String: `Typedecl : var	<< dsl.NewASTNode(X[0], dsl.NodeTypeTypedecl) >>`,
 		Id:         "Typedecl",
 		NTType:     29,
 		Index:      70,
@@ -1783,7 +1783,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_string_literal	<< dsl.NewASTNodeStripDoubleQuotePair(
+		String: `MlrvalOrFunction : string_literal	<< dsl.NewASTNodeStripDoubleQuotePair(
     X[0],
     dsl.NodeTypeStringLiteral,
   ) >>`,
@@ -1799,7 +1799,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
+		String: `MlrvalOrFunction : int_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeIntLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     48,
 		Index:      152,
@@ -1809,7 +1809,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
+		String: `MlrvalOrFunction : float_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeFloatLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     48,
 		Index:      153,
@@ -1819,7 +1819,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
+		String: `MlrvalOrFunction : boolean_literal	<< dsl.NewASTNode(X[0], dsl.NodeTypeBoolLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     48,
 		Index:      154,
@@ -1829,7 +1829,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_M_PI	<< dsl.NewASTNode(
+		String: `MlrvalOrFunction : const_M_PI	<< dsl.NewASTNode(
       X[0],
       dsl.NodeTypeConstant,
     ) >>`,
@@ -1845,7 +1845,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_M_E	<< dsl.NewASTNode(
+		String: `MlrvalOrFunction : const_M_E	<< dsl.NewASTNode(
       X[0],
       dsl.NodeTypeConstant,
     ) >>`,
@@ -1861,7 +1861,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : md_token_panic	<< dsl.NewASTNode(X[0], dsl.NodeTypePanic) >>`,
+		String: `MlrvalOrFunction : panic	<< dsl.NewASTNode(X[0], dsl.NodeTypePanic) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     48,
 		Index:      157,
@@ -2101,7 +2101,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_IPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_IPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      172,
@@ -2111,7 +2111,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_IFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_IFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      173,
@@ -2121,7 +2121,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_IRS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_IRS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      174,
@@ -2131,7 +2131,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_OPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_OPS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      175,
@@ -2141,7 +2141,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_OFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_OFS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      176,
@@ -2151,7 +2151,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_ORS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_ORS	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      177,
@@ -2161,7 +2161,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_NF	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_NF	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      178,
@@ -2171,7 +2171,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_NR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_NR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      179,
@@ -2181,7 +2181,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_FNR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_FNR	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      180,
@@ -2191,7 +2191,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_FILENAME	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_FILENAME	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      181,
@@ -2201,7 +2201,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : md_token_FILENUM	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_FILENUM	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     54,
 		Index:      182,
@@ -2411,7 +2411,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionName : md_token_non_sigil_name	<<  >>`,
+		String: `FunctionName : non_sigil_name	<<  >>`,
 		Id:         "FunctionName",
 		NTType:     58,
 		Index:      193,
@@ -2421,7 +2421,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionName : md_token_int_type	<<  >>`,
+		String: `FunctionName : int	<<  >>`,
 		Id:         "FunctionName",
 		NTType:     58,
 		Index:      194,
@@ -2431,7 +2431,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionName : md_token_float_type	<<  >>`,
+		String: `FunctionName : float	<<  >>`,
 		Id:         "FunctionName",
 		NTType:     58,
 		Index:      195,
@@ -2563,7 +2563,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BeginBlock : md_token_begin StatementBlockInBraces	<< dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeBeginBlock) >>`,
+		String: `BeginBlock : begin StatementBlockInBraces	<< dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeBeginBlock) >>`,
 		Id:         "BeginBlock",
 		NTType:     61,
 		Index:      206,
@@ -2573,7 +2573,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EndBlock : md_token_end StatementBlockInBraces	<< dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeEndBlock) >>`,
+		String: `EndBlock : end StatementBlockInBraces	<< dsl.NewASTNodeUnary(nil, X[1], dsl.NodeTypeEndBlock) >>`,
 		Id:         "EndBlock",
 		NTType:     62,
 		Index:      207,
@@ -2633,7 +2633,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `IfBlock : md_token_if "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem) >>`,
+		String: `IfBlock : if "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem) >>`,
 		Id:         "IfBlock",
 		NTType:     66,
 		Index:      213,
@@ -2643,7 +2643,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ElifBlock : md_token_elif "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem) >>`,
+		String: `ElifBlock : elif "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeIfItem) >>`,
 		Id:         "ElifBlock",
 		NTType:     67,
 		Index:      214,
@@ -2653,7 +2653,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ElseBlock : md_token_else StatementBlockInBraces	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIfItem) >>`,
+		String: `ElseBlock : else StatementBlockInBraces	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeIfItem) >>`,
 		Id:         "ElseBlock",
 		NTType:     68,
 		Index:      215,
@@ -2663,7 +2663,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `WhileLoop : md_token_while "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeWhileLoop) >>`,
+		String: `WhileLoop : while "(" Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(X[0], X[2], X[4], dsl.NodeTypeWhileLoop) >>`,
 		Id:         "WhileLoop",
 		NTType:     69,
 		Index:      216,
@@ -2673,7 +2673,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `DoWhileLoop : md_token_do StatementBlockInBraces md_token_while "(" Rvalue ")"	<< dsl.NewASTNodeBinary(X[0], X[1], X[4], dsl.NodeTypeDoWhileLoop) >>`,
+		String: `DoWhileLoop : do StatementBlockInBraces while "(" Rvalue ")"	<< dsl.NewASTNodeBinary(X[0], X[1], X[4], dsl.NodeTypeDoWhileLoop) >>`,
 		Id:         "DoWhileLoop",
 		NTType:     70,
 		Index:      217,
@@ -2713,7 +2713,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopOneVariable : md_token_for "(" LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeTernary(
+		String: `ForLoopOneVariable : for "(" LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeTernary(
      X[0], // "for"
      X[2], // k, etc.
      X[4], // $*, etc.
@@ -2735,7 +2735,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ForLoopTwoVariable : md_token_for "(" LocalVariable "," LocalVariable md_token_in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+		String: `ForLoopTwoVariable : for "(" LocalVariable "," LocalVariable in Rvalue ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
      X[0], // "for"
      X[2], // k, etc.
      X[4], // v, etc.
@@ -2759,7 +2759,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `TripleForLoop : md_token_for "(" TripleForStart ";" TripleForContinuation ";" TripleForUpdate ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
+		String: `TripleForLoop : for "(" TripleForStart ";" TripleForContinuation ";" TripleForUpdate ")" StatementBlockInBraces	<< dsl.NewASTNodeQuaternary(
      X[0], // for
      X[2], // start
      X[4], // continuation
@@ -2863,7 +2863,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BreakStatement : md_token_break	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeBreak) >>`,
+		String: `BreakStatement : break	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeBreak) >>`,
 		Id:         "BreakStatement",
 		NTType:     78,
 		Index:      232,
@@ -2873,7 +2873,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContinueStatement : md_token_continue	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeContinue) >>`,
+		String: `ContinueStatement : continue	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeContinue) >>`,
 		Id:         "ContinueStatement",
 		NTType:     79,
 		Index:      233,
@@ -2883,7 +2883,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FuncBlock : md_token_func md_token_non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
+		String: `FuncBlock : func non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
       X[1],
       X[3], // parameter list
       X[5], // { ... }
@@ -2903,7 +2903,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FuncBlock : md_token_func md_token_non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeTernary(
+		String: `FuncBlock : func non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeTernary(
       X[1],
       X[3], // parameter list
       X[7], // {...}
@@ -3011,7 +3011,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `UntypedFuncOrSubrParameterName : md_token_non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeParameterName) >>`,
+		String: `UntypedFuncOrSubrParameterName : non_sigil_name	<< dsl.NewASTNode(X[0], dsl.NodeTypeParameterName) >>`,
 		Id:         "UntypedFuncOrSubrParameterName",
 		NTType:     84,
 		Index:      243,
@@ -3031,7 +3031,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ReturnStatement : md_token_return Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeReturn) >>`,
+		String: `ReturnStatement : return Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeReturn) >>`,
 		Id:         "ReturnStatement",
 		NTType:     86,
 		Index:      245,

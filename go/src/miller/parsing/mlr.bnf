@@ -13,7 +13,7 @@
 //
 // * Lexical items are either literals inlined within the syntactical section,
 //   such as "/", or snake-cased named tokens within the lexical section, such
-//   as md_token_field_name.
+//   as field_name.
 //
 // * Syntactical items are all camel-cased, such as MapLiteral.
 //
@@ -72,13 +72,13 @@ _string_literal_element
   | ( '\\' '"' )
   | '\u0100'-'\U0010FFFF'
 ;
-md_token_string_literal : '"' {_string_literal_element} '"' ;
+string_literal : '"' {_string_literal_element} '"' ;
 
-// md_token_regexi : \"([^\\\"]|\\.)*\"\i ;
+// regexi : \"([^\\\"]|\\.)*\"\i ;
 
 // Notes on int literals:
 // * Leading minus sign is handled via the unary-minus operator, not here.
-md_token_int_literal
+int_literal
   : _decdig { _decdig }
   | '0' 'x' _hexdig { _hexdig }
   | '0' 'b' _bindig { _bindig }
@@ -98,7 +98,7 @@ md_token_int_literal
 //   .2e3
 //   .2e-3 1.e-3
 _scinotE : 'e' | 'E' ;
-md_token_float_literal
+float_literal
   : _decdig { _decdig} '.' { _decdig }
   | _decdig { _decdig}                        _scinotE     _decdig { _decdig}
   | _decdig { _decdig}                        _scinotE '-' _decdig { _decdig}
@@ -108,38 +108,41 @@ md_token_float_literal
   |         { _decdig} '.' _decdig { _decdig} _scinotE '-' _decdig { _decdig}
 ;
 
-md_token_M_PI : 'M' '_' 'P' 'I' ;
-md_token_M_E  : 'M' '_' 'E' ;
+const_M_PI : 'M' '_' 'P' 'I' ;
+const_M_E  : 'M' '_' 'E' ;
 
 // Notes on boolean literals:
 // * true and false should be defined here rather than as "true" / "false"
 //   within the grammar below -- this forces them to be keywords, not legal as
 //   variable names. We want them as keywords -- we don't want to allow things
 //   like 'true = 3'.
-_md_token_true : 't' 'r' 'u' 'e' ;
-_md_token_false : 'f' 'a' 'l' 's' 'e';
-md_token_boolean_literal : ( _md_token_true | _md_token_false );
+_literal_true : 't' 'r' 'u' 'e' ;
+_literal_false : 'f' 'a' 'l' 's' 'e';
+boolean_literal : ( _literal_true | _literal_false );
 
 // ----------------------------------------------------------------
 // MILLER CONTEXT VARIABLES
 // ----------------------------------------------------------------
 
-md_token_IPS : 'I' 'P' 'S' ;
-md_token_IFS : 'I' 'F' 'S' ;
-md_token_IRS : 'I' 'R' 'S' ;
+// I want to call these simply "IPS" et al. but GOCC is has case semantics for
+// token names.
 
-md_token_OPS : 'O' 'P' 'S' ;
-md_token_OFS : 'O' 'F' 'S' ;
-md_token_ORS : 'O' 'R' 'S' ;
+ctx_IPS : 'I' 'P' 'S' ;
+ctx_IFS : 'I' 'F' 'S' ;
+ctx_IRS : 'I' 'R' 'S' ;
 
-md_token_NF  : 'N' 'F' ;
-md_token_NR  : 'N' 'R' ;
-md_token_FNR : 'F' 'N' 'R' ;
+ctx_OPS : 'O' 'P' 'S' ;
+ctx_OFS : 'O' 'F' 'S' ;
+ctx_ORS : 'O' 'R' 'S' ;
 
-md_token_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
-md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
+ctx_NF  : 'N' 'F' ;
+ctx_NR  : 'N' 'R' ;
+ctx_FNR : 'F' 'N' 'R' ;
 
-// md_token_ENV   : 'E' 'N' 'V' ;
+ctx_FILENAME : 'F' 'I' 'L' 'E' 'N' 'A' 'M' 'E' ;
+ctx_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
+
+// ENV   : 'E' 'N' 'V' ;
 
 // ----------------------------------------------------------------
 // MILLER KEYWORDS
@@ -150,46 +153,46 @@ md_token_FILENUM  : 'F' 'I' 'L' 'E' 'N' 'U' 'M' ;
 //   in dsl/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
 // * true and false (boolean literals) are also keywords, defined above.
 
-md_token_begin    : 'b' 'e' 'g' 'i' 'n' ;
-md_token_do       : 'd' 'o' ;
-md_token_dump     : 'd' 'u' 'm' 'p' ;
-md_token_edump    : 'e' 'd' 'u' 'm' 'p' ;
-md_token_elif     : 'e' 'l' 'i' 'f' ;
-md_token_else     : 'e' 'l' 's' 'e' ;
-md_token_emit     : 'e' 'm' 'i' 't' ;
-md_token_end      : 'e' 'n' 'd' ;
-md_token_filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
-md_token_for      : 'f' 'o' 'r' ;
-md_token_if       : 'i' 'f' ;
-md_token_in       : 'i' 'n' ;
-md_token_while    : 'w' 'h' 'i' 'l' 'e' ;
-md_token_break    : 'b' 'r' 'e' 'a' 'k' ;
-md_token_continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
+begin    : 'b' 'e' 'g' 'i' 'n' ;
+do       : 'd' 'o' ;
+dump     : 'd' 'u' 'm' 'p' ;
+edump    : 'e' 'd' 'u' 'm' 'p' ;
+elif     : 'e' 'l' 'i' 'f' ;
+else     : 'e' 'l' 's' 'e' ;
+emit     : 'e' 'm' 'i' 't' ;
+end      : 'e' 'n' 'd' ;
+filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
+for      : 'f' 'o' 'r' ;
+if       : 'i' 'f' ;
+in       : 'i' 'n' ;
+while    : 'w' 'h' 'i' 'l' 'e' ;
+break    : 'b' 'r' 'e' 'a' 'k' ;
+continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
 
-md_token_func     : 'f' 'u' 'n' 'c' ;
-//md_token_subr     : 's' 'u' 'b' 'r' ;
-//md_token_call     : 'c' 'a' 'l' 'l' ;
-md_token_return   : 'r' 'e' 't' 'u' 'r' 'n' ;
+func     : 'f' 'u' 'n' 'c' ;
+//subr     : 's' 'u' 'b' 'r' ;
+//call     : 'c' 'a' 'l' 'l' ;
+return   : 'r' 'e' 't' 'u' 'r' 'n' ;
 
-md_token_arr_type   : 'a' 'r' 'r' ;
-md_token_bool_type  : 'b' 'o' 'o' 'l' ;
-md_token_float_type : 'f' 'l' 'o' 'a' 't' ;
-md_token_int_type   : 'i' 'n' 't' ;
-md_token_map_type   : 'm' 'a' 'p' ;
-md_token_num_type   : 'n' 'u' 'm' ;
-md_token_str_type   : 's' 't' 'r' ;
-md_token_var_type   : 'v' 'a' 'r' ;
+arr   : 'a' 'r' 'r' ;
+bool  : 'b' 'o' 'o' 'l' ;
+float : 'f' 'l' 'o' 'a' 't' ;
+int   : 'i' 'n' 't' ;
+map   : 'm' 'a' 'p' ;
+num   : 'n' 'u' 'm' ;
+str   : 's' 't' 'r' ;
+var   : 'v' 'a' 'r' ;
 
-md_token_unset    : 'u' 'n' 's' 'e' 't' ;
-//md_token_all      : 'a' 'l' 'l' ;
+unset    : 'u' 'n' 's' 'e' 't' ;
+//all      : 'a' 'l' 'l' ;
 
-md_token_print    : 'p' 'r' 'i' 'n' 't' ;
-md_token_printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
-md_token_eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
-md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//md_token_stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
-//md_token_stdout   : 's' 't' 'd' 'o' 'u' 't' ;
-//md_token_tee      : 't' 'e' 'e' ;
+print    : 'p' 'r' 'i' 'n' 't' ;
+printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
+eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
+//stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
+//stdout   : 's' 't' 'd' 'o' 'u' 't' ;
+//tee      : 't' 'e' 'e' ;
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -201,7 +204,7 @@ md_token_eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 // Also note: if we omit the '$' here and include it in the parser section
 // below as "$", then we get an LR-1 conflict. So this must be dealt with at
 // the AST level.
-md_token_field_name : '$' _idchar { _idchar } ;
+field_name : '$' _idchar { _idchar } ;
 
 // This is for literal strings but where the field name might have spaces in it
 // or somesuch.
@@ -214,22 +217,22 @@ _braced_char
   | ( '\\' '{' ) | ( '\\' '}' )
   | '\u0100'-'\U0010FFFF'
 ;
-md_token_braced_field_name: '$' '{' _braced_char { _braced_char } '}' ;
+braced_field_name: '$' '{' _braced_char { _braced_char } '}' ;
 
-md_token_full_srec : '$' '*' ;
+full_srec : '$' '*' ;
 
-md_token_oosvar_name : '@' _idchar { _idchar } ;
+oosvar_name : '@' _idchar { _idchar } ;
 
 // This is for literal strings but where the oosvar name might have spaces in it
 // or somesuch.
-md_token_braced_oosvar_name: '@' '{' _braced_char { _braced_char } '}' ;
+braced_oosvar_name: '@' '{' _braced_char { _braced_char } '}' ;
 
-md_token_full_oosvar : '@' '*' ;
+full_oosvar : '@' '*' ;
 
 // ----------------------------------------------------------------
 // FUNCTIONS AND LOCAL VARIABLES
 
-md_token_non_sigil_name : _idchar { _idchar } ;
+non_sigil_name : _idchar { _idchar } ;
 
 // ----------------------------------------------------------------
 // PANIC TOKEN
@@ -238,7 +241,7 @@ md_token_non_sigil_name : _idchar { _idchar } ;
 // This is for testing short-circuiting of "&&", "||", etc in the CST.  The
 // sole job of the CST evaluator for this token is to panic the process -- so
 // we'll know if we're evaluating something we should not.
-md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
+panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 
 
 // ================================================================
@@ -406,7 +409,7 @@ Assignment
 ;
 
 Unset
-  : md_token_unset Lvalue
+  : unset Lvalue
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeUnset) >>
 ;
 
@@ -436,19 +439,19 @@ BareBoolean
 ;
 
 FilterStatement
-  : md_token_filter Rvalue
+  : filter Rvalue
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
 ;
 
 EmitStatement
-  : md_token_emit Rvalue // xxx more to do
+  : emit Rvalue // xxx more to do
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
 ;
 
 DumpStatement
-  : md_token_dump
+  : dump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeDumpStatement) >>
-  | md_token_dump FcnArgs
+  | dump FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
@@ -459,9 +462,9 @@ DumpStatement
 ;
 
 EdumpStatement
-  : md_token_edump
+  : edump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEdumpStatement) >>
-  | md_token_edump FcnArgs
+  | edump FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
@@ -472,10 +475,10 @@ EdumpStatement
 ;
 
 PrintStatement
-  : md_token_print
+  : print
     << dsl.NewASTNodeZary($0, dsl.NodeTypePrintStatement) >>
 
-  | md_token_print FcnArgs
+  | print FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
@@ -486,9 +489,9 @@ PrintStatement
 ;
 
 EprintStatement
-  : md_token_eprint
+  : eprint
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintStatement) >>
-  | md_token_eprint FcnArgs
+  | eprint FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
@@ -499,9 +502,9 @@ EprintStatement
 ;
 
 PrintnStatement
-  : md_token_printn
+  : printn
     << dsl.NewASTNodeZary($0, dsl.NodeTypePrintnStatement) >>
-  | md_token_printn FcnArgs
+  | printn FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
@@ -512,9 +515,9 @@ PrintnStatement
 ;
 
 EprintnStatement
-  : md_token_eprintn
+  : eprintn
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintnStatement) >>
-  | md_token_eprintn FcnArgs
+  | eprintn FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
@@ -534,12 +537,12 @@ FieldValue
   // ...
 ;
 
-// Note: the field name is "$name" not "name" since md_token_field_name
+// Note: the field name is "$name" not "name" since field_name
 // includes the '$'.  If we omit the '$' there and include it in the parser
 // section here as "$", then we get an LR-1 conflict. So this must be dealt
 // with at the AST level. Hence the NewASTNodeStripDollarOrAtSign.
 DirectFieldValue
-  : md_token_field_name
+  : field_name
     << dsl.NewASTNodeStripDollarOrAtSign($0, dsl.NodeTypeDirectFieldValue) >>
 ;
 
@@ -553,12 +556,12 @@ IndirectFieldValue
 // * Braced is '${name}' -- note no double-quotes. This is for when the field
 //   name has spaces or somesuch in it.
 BracedFieldValue
-  : md_token_braced_field_name
+  : braced_field_name
     << dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectFieldValue) >>
 ;
 
 FullSrec
-  : md_token_full_srec
+  : full_srec
   << dsl.NewASTNode($0, dsl.NodeTypeFullSrec) >>
 ;
 
@@ -569,12 +572,12 @@ OosvarValue
   | BracedOosvarValue
 ;
 
-// Note: the oosvar name is "@name" not "name" since md_token_oosvar_name
+// Note: the oosvar name is "@name" not "name" since oosvar_name
 // includes the '@'.  If we omit the '@' there and include it in the parser
 // section here as "$", then we get an LR-1 conflict. So this must be dealt
 // with at the AST level. Hence the NewASTNodeStripDollarOrAtSign.
 DirectOosvarValue
-  : md_token_oosvar_name
+  : oosvar_name
     << dsl.NewASTNodeStripDollarOrAtSign($0, dsl.NodeTypeDirectOosvarValue) >>
 ;
 
@@ -588,44 +591,44 @@ IndirectOosvarValue
 // * Braced is '@{name}' -- note no double-quotes. This is for when the oosvar
 //   name has spaces or somesuch in it.
 BracedOosvarValue
-  : md_token_braced_oosvar_name
+  : braced_oosvar_name
     << dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectOosvarValue) >>
 ;
 
 FullOosvar
-  : md_token_full_oosvar
+  : full_oosvar
   << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
 ;
 
 // ----------------------------------------------------------------
 LocalVariable
-  : md_token_non_sigil_name
+  : non_sigil_name
     << dsl.NewASTNode($0, dsl.NodeTypeLocalVariable) >>
 ;
 
 Typedecl
-  : md_token_arr_type
+  : arr
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_bool_type
+  | bool
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_float_type
+  | float
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_int_type
+  | int
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_map_type
+  | map
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_num_type
+  | num
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_str_type
+  | str
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
-  | md_token_var_type
+  | var
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 
 ;
@@ -946,39 +949,39 @@ MlrvalOrFunction
 // ----------------------------------------------------------------
 // STRING/INT/FLOAT/BOOL LITERALS
 
-// As with '$' on md_token_field_name, so too for md_token_string_literal we
+// As with '$' on field_name, so too for string_literal we
 // get LR-1 conflicts if we attempt to put the double quotes here.  Hence the
 // quote-stripper AST method. Also, since string literals can have
 // backslash-escaped double-quotes like "...\"...\"...", we also unbackslash
 // in the same method.
 MlrvalOrFunction
-  : md_token_string_literal  << dsl.NewASTNodeStripDoubleQuotePair(
+  : string_literal  << dsl.NewASTNodeStripDoubleQuotePair(
     $0,
     dsl.NodeTypeStringLiteral,
   ) >>
 
-  | md_token_int_literal
+  | int_literal
     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
 
-  | md_token_float_literal
+  | float_literal
     << dsl.NewASTNode($0, dsl.NodeTypeFloatLiteral) >>
 
-  | md_token_boolean_literal
+  | boolean_literal
     << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
 
-  | md_token_M_PI 
+  | const_M_PI 
     << dsl.NewASTNode(
       $0,
       dsl.NodeTypeConstant,
     ) >>
 
-  | md_token_M_E
+  | const_M_E
     << dsl.NewASTNode(
       $0,
       dsl.NodeTypeConstant,
     ) >>
 
-  | md_token_panic
+  | panic
     << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
 ;
 
@@ -986,7 +989,7 @@ MlrvalOrFunction
 //	A = B;
 //}
 
-//md_regexi(A) ::= md_token_regexi(B). {
+//md_regexi(A) ::= regexi(B). {
 //	char* input = B->text;
 //	char* stripped = &input[1];
 //	int len = strlen(input);
@@ -1143,20 +1146,20 @@ MapLiteralKeyValuePair
 MlrvalOrFunction : ContextVariable ;
 
 ContextVariable
-  : md_token_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  : ctx_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
-  | md_token_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
-  | md_token_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FNR << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
-  | md_token_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | md_token_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FILENAME << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FILENUM  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 ;
 
 // ----------------------------------------------------------------
@@ -1164,7 +1167,7 @@ ContextVariable
 //	A = B;
 //}
 
-//EnvIndex(A) ::= md_token_env(B) "[" Rvalue(C) "]". {
+//EnvIndex(A) ::= env(B) "[" Rvalue(C) "]". {
 //	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 //}
 
@@ -1277,14 +1280,14 @@ FcnOrSubrCall
     ) >>
 ;
 
-// For most functions it suffices to use the md_token_non_sigil_name pattern.
+// For most functions it suffices to use the non_sigil_name pattern.
 // But int and float are keywords in the lexer so we need to spell those out
 // explicitly.  (They're type-decl keywords but they're also the names of
 // type-conversion functions.)
 FunctionName
-  : md_token_non_sigil_name
-  | md_token_int_type
-  | md_token_float_type
+  : non_sigil_name
+  | int
+  | float
 ;
 
 // ----------------------------------------------------------------
@@ -1328,11 +1331,11 @@ BracefulStatement
 ;
 
 BeginBlock
-  : md_token_begin StatementBlockInBraces
+  : begin StatementBlockInBraces
     << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeBeginBlock) >>
 ;
 EndBlock
-  : md_token_end StatementBlockInBraces
+  : end StatementBlockInBraces
     << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeEndBlock) >>
 ;
 // ================================================================
@@ -1366,17 +1369,17 @@ IfElifStar
 ;
 
 IfBlock
-  : md_token_if "(" Rvalue ")" StatementBlockInBraces
+  : if "(" Rvalue ")" StatementBlockInBraces
     << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
 ;
 
 ElifBlock
-  : md_token_elif "(" Rvalue ")" StatementBlockInBraces
+  : elif "(" Rvalue ")" StatementBlockInBraces
     << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeIfItem) >>
 ;
 
 ElseBlock
-  : md_token_else StatementBlockInBraces
+  : else StatementBlockInBraces
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeIfItem) >>
 ;
 
@@ -1384,12 +1387,12 @@ ElseBlock
 // WHILE AND DO-WHILE -LOOPS
 
 WhileLoop
-  : md_token_while "(" Rvalue ")" StatementBlockInBraces
+  : while "(" Rvalue ")" StatementBlockInBraces
     << dsl.NewASTNodeBinary($0, $2, $4, dsl.NodeTypeWhileLoop) >>
 ;
 
 DoWhileLoop
-  : md_token_do StatementBlockInBraces md_token_while "(" Rvalue ")"
+  : do StatementBlockInBraces while "(" Rvalue ")"
     << dsl.NewASTNodeBinary($0, $1, $4, dsl.NodeTypeDoWhileLoop) >>
 ;
 
@@ -1409,10 +1412,10 @@ ForLoop
 // ----------------------------------------------------------------
 // for(k in $*) { ... }
 ForLoopOneVariable
-  : md_token_for
+  : for
     "("
 		  LocalVariable
-		  md_token_in
+		  in
       Rvalue
 	  ")"
  	  StatementBlockInBraces
@@ -1430,12 +1433,12 @@ ForLoopOneVariable
 // ----------------------------------------------------------------
 // for(k, v in $*) { ... }
 ForLoopTwoVariable
-  : md_token_for
+  : for
     "("
 		  LocalVariable
       ","
 		  LocalVariable
-		  md_token_in
+		  in
       Rvalue
 	  ")"
    	StatementBlockInBraces
@@ -1456,9 +1459,9 @@ ForLoopTwoVariable
 //// for((k1, k2), v in @*) { ... }
 //// for((k1, k2, k3), v in @*) { ... }
 //ForLoopMultipleKeysValue(A) ::=
-//	md_token_for(F) "("
+//	for(F) "("
 //		"(" ForMapKeylist(L) ")" "," LocalVariable(V)
-//		md_token_in md_token_full_oosvar
+//		in full_oosvar
 //	")"
 //	"{"
 //		StatementBlock(S)
@@ -1489,7 +1492,7 @@ ForLoopTwoVariable
 // ----------------------------------------------------------------
 TripleForLoop
   :
-  	md_token_for
+  	for
     "("
     TripleForStart
     ";"
@@ -1537,12 +1540,12 @@ TripleForUpdate
 
 // ----------------------------------------------------------------
 BreakStatement
-  : md_token_break
+  : break
     << dsl.NewASTNodeZary($0, dsl.NodeTypeBreak) >>
 ;
 
 ContinueStatement
-  : md_token_continue
+  : continue
     << dsl.NewASTNodeZary($0, dsl.NodeTypeContinue) >>
 ;
 
@@ -1552,8 +1555,8 @@ ContinueStatement
 FuncBlock
 
   // Without return-type annotation
-  : md_token_func
-	  md_token_non_sigil_name
+  : func
+	  non_sigil_name
     "("
     FuncOrSubrParameterList
     ")"
@@ -1568,8 +1571,8 @@ FuncBlock
   >>
 
   // With return-type annotation
-  | md_token_func
-	  md_token_non_sigil_name
+  | func
+	  non_sigil_name
     "("
     FuncOrSubrParameterList
     ")"
@@ -1589,8 +1592,8 @@ FuncBlock
 ;
 
 // ----------------------------------------------------------------
-//SubrBlock(C) ::= md_token_subr
-//	md_token_non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//SubrBlock(C) ::= subr
+//	non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
 //	"{" StatementBlock(B) "}".
 //{
 //	A = mlr_dsl_ast_node_set_function_name(A, F->text);
@@ -1639,7 +1642,7 @@ FuncOrSubrParameter
 ;
 
 UntypedFuncOrSubrParameterName
-  : md_token_non_sigil_name
+  : non_sigil_name
     << dsl.NewASTNode($0, dsl.NodeTypeParameterName) >>
 ;
 
@@ -1648,7 +1651,7 @@ TypedFuncOrSubrParameterName
     << dsl.AppendChild($1, $0) >>
 ;
 
-//Statement : md_token_call FcnOrSubrCall(B). {
+//Statement : call FcnOrSubrCall(B). {
 //	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
 //}
 
@@ -1657,11 +1660,11 @@ TypedFuncOrSubrParameterName
 
 ReturnStatement
   // For user-defined functions: return a value
-  : md_token_return Rvalue
+  : return Rvalue
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeReturn) >>
 
   // For user-defined subroutines
-  // | md_token_return
+  // | return
   //    << dsl.NewASTNodeZary($0, dsl.NodeTypeReturn) >>
 
 ;

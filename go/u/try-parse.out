@@ -1716,10 +1716,19 @@ mlr -n put -f u/lex-error.mlr
 ./mlr: cannot parse DSL expression.
 Parse error on token "`" at line 20 columnn 3.
 Please check for missing semicolon.
-Expected one of: ; { } unset filter emit dump edump print eprint printn eprintn field_name $[ braced_field_name full_srec oosvar_name @[ braced_oosvar_name full_oosvar non_sigil_name arr_type bool_type float_type int_type map_type num_type str_type var_type + - .+ .- ! ~ ( string_literal int_literal float_literal boolean_literal M_PI M_E panic [ IPS IFS IRS OPS OFS ORS NF NR FNR FILENAME FILENUM begin end if while do for break continue func return 
+Expected one of:
+  ; { } unset filter emit dump edump print eprint printn eprintn field_name
+  $[ braced_field_name full_srec oosvar_name @[ braced_oosvar_name full_oosvar
+  non_sigil_name arr bool float int map num str var + - .+ .- ! ~ ( string_literal
+  int_literal float_literal boolean_literal const_M_PI const_M_E panic [ ctx_IPS
+  ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS ctx_NF ctx_NR ctx_FNR ctx_FILENAME
+  ctx_FILENUM begin end if while do for break continue func return
 
 mlr -n put -f u/parse-error.mlr
 ./mlr: cannot parse DSL expression.
 Parse error on token "x" at line 20 columnn 5.
 Please check for missing semicolon.
-Expected one of: ; { } = ||= ^^= &&= ??= |= ^= <<= >>= >>>= += .= -= *= /= //= %= **= ? || ^^ && ?? =~ !=~ == != > >= < <= | ^ & << >> >>> + - .+ .- . * / // % .* ./ .// ** ( [ 
+Expected one of:
+  ; { } = ||= ^^= &&= ??= |= ^= <<= >>= >>>= += .= -= *= /= //= %= **= ? ||
+  ^^ && ?? =~ !=~ == != > >= < <= | ^ & << >> >>> + - .+ .- . * / // % .*
+  ./ .// ** ( [

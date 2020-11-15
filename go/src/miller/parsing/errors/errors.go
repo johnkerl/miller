@@ -65,11 +65,30 @@ func (e *Error) Error() string {
 		if suggestSemicolons {
 			fmt.Fprintf(w, "Please check for missing semicolon.\n")
 		}
-		fmt.Fprintf(w, "Expected one of: ")
+
+		fmt.Fprintf(w, "Expected one of:\n")
+
+		//for _, expected := range e.ExpectedTokens {
+		//fmt.Fprintf(w, "%s ", expected)
+		//}
+
+		// Print a carriage return every so often, in case there are many possible
+		// next tokens.
+		line := ""
 		for _, expected := range e.ExpectedTokens {
-      // Spelling convention within the Miller BNF
-			fmt.Fprintf(w, "%s ", strings.ReplaceAll(expected, "md_token_", ""))
+			if line != "" {
+				line += " "
+			}
+			line += expected
+			if len(line) > 70 {
+				fmt.Fprintf(w, "  %s\n", line)
+				line = ""
+			}
 		}
+		if line != "" {
+			fmt.Fprintf(w, "  %s\n", line)
+		}
+
 	}
 	return w.String()
 }
