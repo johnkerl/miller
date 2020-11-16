@@ -8,6 +8,8 @@ func Create(readerOptions *clitypes.TReaderOptions) IRecordReader {
 	switch readerOptions.InputFileFormat {
 	case "csv":
 		return NewRecordReaderCSV(readerOptions)
+	case "csvlite":
+		return NewRecordReaderCSVLite(readerOptions)
 	case "dkvp":
 		return NewRecordReaderDKVP(readerOptions)
 	case "json":

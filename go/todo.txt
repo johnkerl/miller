@@ -27,6 +27,8 @@ TOP OF LIST:
 ! nidx @ 10-min
 ! text-put @ 10-min
 
+! allow ragged csv input
+
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:
     - %
@@ -49,6 +51,9 @@ TOP OF LIST:
 
 ! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
   o done-reading back-channels in stream.go
+    https://gobyexample.com/non-blocking-channel-operations
+
+! fixed-width pprint input-scanner
 
 * UDF nexts:
   o UT for mixing put -f/-e

@@ -97,3 +97,11 @@ run_mlr --ocsv cat u/het.dkvp
 run_mlr --ocsv --headerless-csv-output cat u/het.dkvp
 run_mlr --icsv --ojson cat u/implicit.csv
 run_mlr --implicit-csv-header --icsv --ojson cat u/implicit.csv
+
+run_mlr --icsvlite --ojson cat u/s.csv
+run_mlr --icsvlite --implicit-csv-header --ojson cat u/implicit.csv
+
+run_mlr --icsvlite --opprint cat u/het-a1.csv u/het-a2.csv
+run_mlr --icsvlite --opprint cat u/het-b1.csv u/het-b2.csv
+run_mlr --icsvlite --opprint cat u/het-c1.csv
+run_mlr --icsvlite --opprint cat u/het-d1.csv

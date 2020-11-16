@@ -402,21 +402,21 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.InputFileFormat = "csv"
 		argi += 1
 
-		//	} else if args[argi] == "--icsvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--icsvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		argi += 1
+
 	} else if args[argi] == "--itsv" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		argi += 1
-		//	} else if args[argi] == "--itsvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = "\t";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--itsvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = "\t"
+		argi += 1
+
 		//	} else if args[argi] == "--iasv" {
-		//		readerOptions.InputFileFormat = "csv";
+		//		readerOptions.InputFileFormat = "csvlite";
 		//		readerOptions.IFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
 		//		argi += 1;
@@ -428,7 +428,7 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--iusv" {
-		//		readerOptions.InputFileFormat = "csv";
+		//		readerOptions.InputFileFormat = "csvlite";
 		//		readerOptions.IFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
 		//		argi += 1;
@@ -438,7 +438,7 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		//		readerOptions.IFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
 		//		argi += 1;
-		//
+
 	} else if args[argi] == "--idkvp" {
 		readerOptions.InputFileFormat = "dkvp"
 		argi += 1
@@ -567,10 +567,10 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		writerOptions.OutputFileFormat = "csv"
 		argi += 1
 
-		//	} else if args[argi] == "--ocsvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--ocsvlite" {
+		writerOptions.OutputFileFormat = "csv"
+		argi += 1
+
 	} else if args[argi] == "--otsv" {
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.OFS = "\t"
@@ -726,11 +726,11 @@ func parseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csv"
 		argi += 1
 
-		//	} else if args[argi] == "--csvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--csvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csv"
+		argi += 1
+
 	} else if args[argi] == "--tsv" {
 		readerOptions.InputFileFormat = "csv"
 		writerOptions.OutputFileFormat = "csv"
@@ -808,6 +808,7 @@ func parseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat = "xtab";
 		//		argi += 1;
 		//
+		// TODO: make a fixed-width scanner
 		//	} else if args[argi] == "--pprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
 		//		readerOptions.IFS              = " ";

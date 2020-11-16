@@ -1,5 +1,11 @@
-// Manually copied over the top of GOCC codegen so that we can customize
-// handling of error messages.
+// ================================================================
+// During the Miller build, after GOCC codegen and Go compile, this is copied
+// over the top of GOCC codegen so that we can customize handling of error
+// messages.
+//
+// Source:       src/miller/parsing/errors.go.template Destionation:
+// src/miller/parsing/errors/errors.go
+// ================================================================
 
 package errors
 
@@ -69,7 +75,7 @@ func (e *Error) Error() string {
 		fmt.Fprintf(w, "Expected one of:\n")
 
 		//for _, expected := range e.ExpectedTokens {
-		//fmt.Fprintf(w, "%s ", expected)
+		//  fmt.Fprintf(w, "%s ", expected)
 		//}
 
 		// Print a carriage return every so often, in case there are many possible

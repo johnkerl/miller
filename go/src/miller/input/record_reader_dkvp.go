@@ -14,6 +14,7 @@ import (
 type RecordReaderDKVP struct {
 	ifs string
 	ips string
+	// TODO: parameterize IRS
 }
 
 func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDKVP {
