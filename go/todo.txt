@@ -11,11 +11,12 @@ TOP OF LIST:
     no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! csvlite
-  - het input
+! ASV/USV as csvlite input; needs a csvlite record-writer
+! allow ragged csv input
 
 ! csv het input
   o golang csv-reader blank-line issue ...
+  ? maybe support this only in csvlite?
 
 * justWroteEmptyLine -> pprint too ...
 
@@ -27,7 +28,7 @@ TOP OF LIST:
 ! nidx @ 10-min
 ! text-put @ 10-min
 
-! allow ragged csv input
+* parex -> separate file; more ast.go splitups
 
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:

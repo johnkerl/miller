@@ -54,18 +54,19 @@ const (
 	NodeTypeOperator         = "operator"
 	NodeTypeFunctionCallsite = "function callsite"
 
-	NodeTypeBeginBlock         = "begin block"
-	NodeTypeEndBlock           = "end block"
-	NodeTypeIfChain            = "if-chain"
-	NodeTypeIfItem             = "if-item"
-	NodeTypeCondBlock          = "cond block"
-	NodeTypeWhileLoop          = "while loop"
-	NodeTypeDoWhileLoop        = "do-while`loop"
-	NodeTypeForLoopOneVariable = "single-variable for-loop"
-	NodeTypeForLoopTwoVariable = "double-variable for-loop"
-	NodeTypeTripleForLoop      = "triple-for loop"
-	NodeTypeBreak              = "break"
-	NodeTypeContinue           = "continue"
+	NodeTypeBeginBlock           = "begin block"
+	NodeTypeEndBlock             = "end block"
+	NodeTypeIfChain              = "if-chain"
+	NodeTypeIfItem               = "if-item"
+	NodeTypeCondBlock            = "cond block"
+	NodeTypeWhileLoop            = "while loop"
+	NodeTypeDoWhileLoop          = "do-while`loop"
+	NodeTypeForLoopOneVariable   = "single-variable for-loop"
+	NodeTypeForLoopTwoVariable   = "double-variable for-loop"
+	NodeTypeForLoopMultivariable = "multi-variable for-loop"
+	NodeTypeTripleForLoop        = "triple-for loop"
+	NodeTypeBreak                = "break"
+	NodeTypeContinue             = "continue"
 
 	NodeTypeFunctionDefinition   = "function definition"
 	NodeTypeSubroutineDefinition = "subroutine definition"
@@ -595,6 +596,8 @@ func (this *ASTNode) Text() string {
 	case NodeTypeForLoopOneVariable:
 		return tokenText
 	case NodeTypeForLoopTwoVariable:
+		return tokenText
+	case NodeTypeForLoopMultivariable:
 		return tokenText
 	case NodeTypeTripleForLoop:
 		return tokenText

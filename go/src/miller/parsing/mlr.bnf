@@ -1404,7 +1404,7 @@ DoWhileLoop
 ForLoop
   : ForLoopOneVariable
   | ForLoopTwoVariable
-  //| ForLoopMultipleKeysValue
+  | ForLoopMultivariable
   | TripleForLoop
 ;
 
@@ -1453,64 +1453,60 @@ ForLoopTwoVariable
  >>
 ;
 
-//// ----------------------------------------------------------------
-//// for((k1, k2), v in $*) { ... }
-//ForLoopMultipleKeysValue
-//  : for
-//    "("
-//      MultiIndex
-//      ","
-//      LocalVariable
-//      in
-//      Rvalue
-//    ")"
-//    StatementBlockInBraces
-// <<
-//   dsl.NewASTNodeQuaternary(
-//     $0, // "for"
-//     $2, // (k1, k2), etc.
-//     $4, // v, etc.
-//     $6, // $*, etc.
-//     $8, // { ... }
-//     dsl.NodeTypeForLoopTwoVariable,
-//   );
-// >>
-//;
+// ----------------------------------------------------------------
+// for((k1, k2), v in $*) { ... }
+ForLoopMultivariable
+  :
+    for
+    "("
+      "("
+        MultiIndex
+      ")"
+      ","
+      LocalVariable
+      in
+      Rvalue
+    ")"
+    StatementBlockInBraces
+ <<
+   dsl.NewASTNodeQuaternary(
+     $0, // "for"
+     $3, // (k1, k2), etc.
+     $6, // v, etc.
+     $8, // $*, etc.
+     $10, // { ... }
+     dsl.NodeTypeForLoopMultivariable,
+   );
+ >>
+;
 
-//MultiIndex
-//  : LocalVariable
-//    << dsl.NewASTNodeUnary(
-//      nil,
-//      $0,
-//      dsl.NodeTypeParameterList,
-//    ) >>
-//
-//  // Allow trailing final comma, especially for multiline statements
-//  | LocalVariable ","
-//    << dsl.NewASTNodeUnary(
-//      nil,
-//      $0,
-//      dsl.NodeTypeLocalVariable,
-//    ) >>
-//
-//  // Allow trailing final comma, especially for multiline statements
-//  | LocalVariable "," MultiIndex
-//    << dsl.PrependChild(
-//      $2,
-//      $0,
-//    ) >>
-//;
+MultiIndex
+
+  : LocalVariable "," LocalVariable
+    << dsl.NewASTNodeBinary(
+      nil,
+      $0,
+      $2,
+      dsl.NodeTypeParameterList,
+    ) >>
+
+  | MultiIndex "," LocalVariable
+    << dsl.AppendChild(
+      $0,
+      $2,
+    ) >>
+;
 
 // ----------------------------------------------------------------
 TripleForLoop
   :
     for
     "("
-    TripleForStart
-    ";"
-    TripleForContinuation
-    ";"
-    TripleForUpdate
+      TripleForStart
+      ";"
+      TripleForContinuation
+      ";"
+      TripleForUpdate
     ")"
     StatementBlockInBraces
  <<
