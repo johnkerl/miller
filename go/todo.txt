@@ -11,8 +11,6 @@ TOP OF LIST:
     no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! line/column caret at parse-error messages
-
 ! csvlite
   - het input
 
@@ -317,3 +315,5 @@ NITS/NON-IMMEDIATE:
 * doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
   o xref to 1-up note.
 * why error? mlr put '$y=true; $y &= $x<0.5' s
+* line/column caret at parse-error messages -- would require some GOCC refactoring
+  in order to get the full DSL string and the line/number info into the same method

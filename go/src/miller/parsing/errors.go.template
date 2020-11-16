@@ -75,7 +75,7 @@ func (e *Error) Error() string {
 		fmt.Fprintf(w, "Expected one of:\n")
 
 		//for _, expected := range e.ExpectedTokens {
-		//fmt.Fprintf(w, "%s ", expected)
+		//  fmt.Fprintf(w, "%s ", expected)
 		//}
 
 		// Print a carriage return every so often, in case there are many possible
