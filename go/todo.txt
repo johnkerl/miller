@@ -11,6 +11,8 @@ TOP OF LIST:
     no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+! .3 illegal at BNF! :(
+
 ! csvlite
   - het input
 
@@ -21,6 +23,8 @@ TOP OF LIST:
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o note json types: string, number, boolean, null, object, array.
+
+! for-multi
 
 ! nidx @ 10-min
 ! text-put @ 10-min
@@ -312,3 +316,4 @@ NITS/NON-IMMEDIATE:
 * port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
 * doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
   o xref to 1-up note.
+* why error? mlr put '$y=true; $y &= $x<0.5' s

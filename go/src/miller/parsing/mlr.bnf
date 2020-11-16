@@ -696,7 +696,7 @@ Assignment
       dsl.NodeTypeAssignment,
     ) >>
 
-  | Lvalue "^=" Rvalue
+  | Lvalue "&=" Rvalue
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", $1),
       $0,

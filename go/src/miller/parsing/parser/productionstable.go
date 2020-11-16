@@ -903,7 +903,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Assignment : Lvalue "^=" Rvalue	<< dsl.NewASTNodeBinary(
+		String: `Assignment : Lvalue "&=" Rvalue	<< dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", X[1]),
       X[0],
       dsl.NewASTNodeBinaryNestable(dsl.NewASTToken("^", X[1]), X[0], X[2], dsl.NodeTypeOperator),
