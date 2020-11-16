@@ -58,6 +58,16 @@ echo; run_mlr -n put -v '$z=0x7fffffffffffffff .+ 0x7fffffffffffffff'
 echo; run_mlr -n put -v '$z=0x7fffffffffffffff  * 0x7fffffffffffffff'
 echo; run_mlr -n put -v '$z=0x7fffffffffffffff .* 0x7fffffffffffffff'
 
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=2.3'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=2.'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=.3'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=2.3e4'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=2.e4'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=.3e4'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=2.3e-4'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=2.e-4'
+echo; run_mlr --opprint --from u/s.dkvp head -n 1 then put '$z=.3e-4'
+
 echo; run_mlr -n put -v '$y = 1 * 2 ?? 3'
 echo; run_mlr -n put -v '$y = 1 ?? 2 * 3'
 

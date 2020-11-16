@@ -11,7 +11,7 @@ TOP OF LIST:
     no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! .3 illegal at BNF! :(
+! line/column caret at parse-error messages
 
 ! csvlite
   - het input

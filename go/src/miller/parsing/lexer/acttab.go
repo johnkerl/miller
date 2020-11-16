@@ -333,7 +333,7 @@ var ActTab = ActionTable{
 		Ignore: "",
 	},
 	ActionRow{ // S78
-		Accept: 0,
+		Accept: 91,
 		Ignore: "",
 	},
 	ActionRow{ // S79

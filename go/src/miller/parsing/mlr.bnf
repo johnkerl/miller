@@ -99,7 +99,8 @@ int_literal
 //   .2e-3 1.e-3
 _scinotE : 'e' | 'E' ;
 float_literal
-  : _decdig { _decdig} '.' { _decdig }
+  :         { _decdig} '.' { _decdig }
+  | _decdig { _decdig} '.' { _decdig }
   | _decdig { _decdig}                        _scinotE     _decdig { _decdig}
   | _decdig { _decdig}                        _scinotE '-' _decdig { _decdig}
   | _decdig { _decdig} '.'         { _decdig} _scinotE     _decdig { _decdig}
@@ -124,8 +125,8 @@ boolean_literal : ( _literal_true | _literal_false );
 // MILLER CONTEXT VARIABLES
 // ----------------------------------------------------------------
 
-// I want to call these simply "IPS" et al. but GOCC is has case semantics for
-// token names.
+// I want to call these simply "IPS" et al. but GOCC is has leading-case (and
+// leading-underscore) semantics for token names.
 
 ctx_IPS : 'I' 'P' 'S' ;
 ctx_IFS : 'I' 'F' 'S' ;
