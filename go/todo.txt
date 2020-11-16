@@ -4,11 +4,11 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * parser-fu:
   o iterative LALR grok
-    - jackson notes
-    - gocc .txt/.go for simple grammars
-  o find/bookmark/grok rob's lexer slides
-  o iterate on a parser-generator with JSON config file
-    no need to bootstrap a parser for the parser-generator language
+- jackson notes
+- gocc .txt/.go for simple grammars
+o find/bookmark/grok rob's lexer slides
+o iterate on a parser-generator with JSON config file
+no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * parex -> separate file; more ast.go splitups
@@ -17,17 +17,19 @@ TOP OF LIST:
 
 ! for-multi
 
+! csvlite record-writer (parameterize ORS)
+  o $cli/*.go
 ! ASV/USV as csvlite input; needs a csvlite record-writer
 ! allow ragged csv input
 
 ! csv het input
-  o golang csv-reader blank-line issue ...
-  ? maybe support this only in csvlite?
+o golang csv-reader blank-line issue ...
+? maybe support this only in csvlite?
 
 * justWroteEmptyLine -> pprint too ...
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o note json types: string, number, boolean, null, object, array.
+o note json types: string, number, boolean, null, object, array.
 
 ! nidx @ 10-min
 ! text-put @ 10-min
