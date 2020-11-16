@@ -281,7 +281,7 @@ panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // this grammar from being overly complex, and (b) so we can get more
 // informative error messages.
 //
-// For clearer visuals on what the ASTs look like, you can do 
+// For clearer visuals on what the ASTs look like, you can do
 //
 //   mlr -n put -v 'your expression goes here'
 //
@@ -970,7 +970,7 @@ MlrvalOrFunction
   | boolean_literal
     << dsl.NewASTNode($0, dsl.NodeTypeBoolLiteral) >>
 
-  | const_M_PI 
+  | const_M_PI
     << dsl.NewASTNode(
       $0,
       dsl.NodeTypeConstant,
@@ -987,15 +987,15 @@ MlrvalOrFunction
 ;
 
 //MlrvalOrFunction(A) ::= md_regexi(B). {
-//	A = B;
+//  A = B;
 //}
 
 //md_regexi(A) ::= regexi(B). {
-//	char* input = B->text;
-//	char* stripped = &input[1];
-//	int len = strlen(input);
-//	stripped[len-3] = 0;
-//	A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
+//  char* input = B->text;
+//  char* stripped = &input[1];
+//  int len = strlen(input);
+//  stripped[len-3] = 0;
+//  A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
 //}
 
 // ================================================================
@@ -1165,11 +1165,11 @@ ContextVariable
 
 // ----------------------------------------------------------------
 //MlrvalOrFunction(A) ::= EnvIndex(B). {
-//	A = B;
+//  A = B;
 //}
 
 //EnvIndex(A) ::= env(B) "[" Rvalue(C) "]". {
-//	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
+//  A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 //}
 
 // ================================================================
@@ -1181,7 +1181,7 @@ ContextVariable
 MlrvalOrFunction : ArrayOrMapIndexAccess ;
 
 ArrayOrMapIndexAccess
-  : MlrvalOrFunction "[" Rvalue "]" 
+  : MlrvalOrFunction "[" Rvalue "]"
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -1194,7 +1194,7 @@ MlrvalOrFunction : ArraySliceAccess ;
 
 ArraySliceAccess
 
-  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]" 
+  : MlrvalOrFunction "[" Rvalue ":" Rvalue "]"
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -1203,7 +1203,7 @@ ArraySliceAccess
       dsl.NodeTypeArraySliceAccess,
     )>>
 
-  | MlrvalOrFunction "[" ":" Rvalue "]" 
+  | MlrvalOrFunction "[" ":" Rvalue "]"
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -1215,7 +1215,7 @@ ArraySliceAccess
       dsl.NodeTypeArraySliceAccess,
     )>>
 
-  | MlrvalOrFunction "[" Rvalue ":" "]" 
+  | MlrvalOrFunction "[" Rvalue ":" "]"
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -1227,7 +1227,7 @@ ArraySliceAccess
       dsl.NodeTypeArraySliceAccess,
     )>>
 
-  | MlrvalOrFunction "[" ":" "]" 
+  | MlrvalOrFunction "[" ":" "]"
     << dsl.NewASTNodeTernary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -1400,13 +1400,11 @@ DoWhileLoop
 // ================================================================
 // FOR-LOOPS
 
-// TODO: typedefs on localvars
-
 // ----------------------------------------------------------------
 ForLoop
   : ForLoopOneVariable
   | ForLoopTwoVariable
-  // | ForLoopMultipleKeysValue
+  //| ForLoopMultipleKeysValue
   | TripleForLoop
 ;
 
@@ -1415,11 +1413,11 @@ ForLoop
 ForLoopOneVariable
   : for
     "("
-		  LocalVariable
-		  in
+      LocalVariable
+      in
       Rvalue
-	  ")"
- 	  StatementBlockInBraces
+    ")"
+    StatementBlockInBraces
  <<
    dsl.NewASTNodeTernary(
      $0, // "for"
@@ -1427,7 +1425,7 @@ ForLoopOneVariable
      $4, // $*, etc.
      $6, // { ... }
      dsl.NodeTypeForLoopOneVariable,
-	 );
+   );
  >>
 ;
 
@@ -1436,13 +1434,13 @@ ForLoopOneVariable
 ForLoopTwoVariable
   : for
     "("
-		  LocalVariable
+      LocalVariable
       ","
-		  LocalVariable
-		  in
+      LocalVariable
+      in
       Rvalue
-	  ")"
-   	StatementBlockInBraces
+    ")"
+    StatementBlockInBraces
  <<
    dsl.NewASTNodeQuaternary(
      $0, // "for"
@@ -1451,57 +1449,70 @@ ForLoopTwoVariable
      $6, // $*, etc.
      $8, // { ... }
      dsl.NodeTypeForLoopTwoVariable,
-	 );
+   );
  >>
 ;
 
-// ForLoopMultipleKeysValue
+//// ----------------------------------------------------------------
+//// for((k1, k2), v in $*) { ... }
+//ForLoopMultipleKeysValue
+//  : for
+//    "("
+//      MultiIndex
+//      ","
+//      LocalVariable
+//      in
+//      Rvalue
+//    ")"
+//    StatementBlockInBraces
+// <<
+//   dsl.NewASTNodeQuaternary(
+//     $0, // "for"
+//     $2, // (k1, k2), etc.
+//     $4, // v, etc.
+//     $6, // $*, etc.
+//     $8, // { ... }
+//     dsl.NodeTypeForLoopTwoVariable,
+//   );
+// >>
+//;
 
-//// for((k1, k2), v in @*) { ... }
-//// for((k1, k2, k3), v in @*) { ... }
-//ForLoopMultipleKeysValue(A) ::=
-//	for(F) "("
-//		"(" ForMapKeylist(L) ")" "," LocalVariable(V)
-//		in full_oosvar
-//	")"
-//	"{"
-//		StatementBlock(S)
-//	"}".
-//{
-//	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
-//	A = mlr_dsl_ast_node_alloc_ternary(
-//		F->text,
-//		MD_AST_NODE_TYPE_FOR_OOSVAR,
-//		mlr_dsl_ast_node_alloc_binary(
-//			"key_and_value_variables",
-//			MD_AST_NODE_TYPE_FOR_VARIABLES,
-//			L,
-//			V
-//		),
-//		mlr_dsl_ast_node_alloc_zary("empty_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST),
-//		S
-//	);
-//}
-
-//ForMapKeylist(A) ::= ForLoopIndex(K). {
-//	A = mlr_dsl_ast_node_alloc_unary("key_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K);
-//}
-//ForMapKeylist(A) ::= ForMapKeylist(L) "," ForLoopIndex(K). {
-//	A = mlr_dsl_ast_node_append_arg(L, K);
-//}
+//MultiIndex
+//  : LocalVariable
+//    << dsl.NewASTNodeUnary(
+//      nil,
+//      $0,
+//      dsl.NodeTypeParameterList,
+//    ) >>
+//
+//  // Allow trailing final comma, especially for multiline statements
+//  | LocalVariable ","
+//    << dsl.NewASTNodeUnary(
+//      nil,
+//      $0,
+//      dsl.NodeTypeLocalVariable,
+//    ) >>
+//
+//  // Allow trailing final comma, especially for multiline statements
+//  | LocalVariable "," MultiIndex
+//    << dsl.PrependChild(
+//      $2,
+//      $0,
+//    ) >>
+//;
 
 // ----------------------------------------------------------------
 TripleForLoop
   :
-  	for
+    for
     "("
     TripleForStart
     ";"
     TripleForContinuation
     ";"
     TripleForUpdate
-  	")"
-   	StatementBlockInBraces
+    ")"
+    StatementBlockInBraces
  <<
    dsl.NewASTNodeQuaternary(
      $0, // for
@@ -1510,7 +1521,7 @@ TripleForLoop
      $6, // update
      $8, // body
      dsl.NodeTypeTripleForLoop,
-	 );
+   );
  >>
 ;
 
@@ -1557,7 +1568,7 @@ FuncBlock
 
   // Without return-type annotation
   : func
-	  non_sigil_name
+    non_sigil_name
     "("
     FuncOrSubrParameterList
     ")"
@@ -1573,7 +1584,7 @@ FuncBlock
 
   // With return-type annotation
   | func
-	  non_sigil_name
+    non_sigil_name
     "("
     FuncOrSubrParameterList
     ")"
@@ -1594,12 +1605,12 @@ FuncBlock
 
 // ----------------------------------------------------------------
 //SubrBlock(C) ::= subr
-//	non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//	"{" StatementBlock(B) "}".
+//  non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
+//  "{" StatementBlock(B) "}".
 //{
-//	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//	mlr_dsl_ast_node_replace_text(B, "subr_block");
-//	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
+//  A = mlr_dsl_ast_node_set_function_name(A, F->text);
+//  mlr_dsl_ast_node_replace_text(B, "subr_block");
+//  C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
 //}
 
 // ----------------------------------------------------------------
@@ -1653,7 +1664,7 @@ TypedFuncOrSubrParameterName
 ;
 
 //Statement : call FcnOrSubrCall(B). {
-//	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
+//  A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
 //}
 
 // ----------------------------------------------------------------
