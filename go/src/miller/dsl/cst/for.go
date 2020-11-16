@@ -297,6 +297,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 			mapkey := types.MlrvalFromString(*pe.Key)
 
 			state.stack.BindVariable(this.keyVariableName, &mapkey)
+			// TODO: comment-reap
 			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
 				state.stack.BindVariable(this.valueVariableName, pe.Value)
 			}
@@ -318,7 +319,6 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: handle return statements
 			// TODO: runtime errors for any other types
 		}
 
@@ -357,7 +357,6 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: handle return statements
 			// TODO: runtime errors for any other types
 		}
 

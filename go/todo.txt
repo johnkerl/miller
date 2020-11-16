@@ -72,6 +72,7 @@ TOP OF LIST:
   o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
 
 * bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
+  https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
 
 !! [[]] etc to avoid inadvertent sequentials for int indices on maps.
   this should happen intentionally, not accidentally.
