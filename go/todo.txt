@@ -11,8 +11,6 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! csv het input
-
 ! ixtab reader
 
 * justWroteEmptyLine -> pprint too ...
@@ -20,6 +18,9 @@ no need to bootstrap a parser for the parser-generator language
 ! for-multi
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
+  o "null can be added to any value, and returns the other value unchanged."
+  o "the length of null is 0"
 o note json types: string, number, boolean, null, object, array.
 
 ! nidx @ 10-min
