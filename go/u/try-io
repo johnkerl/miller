@@ -108,3 +108,5 @@ run_mlr --icsvlite --opprint cat u/het-d1.csv
 
 run_mlr --icsvlite --ojson --allow-ragged-csv-input cat u/ragged-short.csv
 run_mlr --icsvlite --ojson --allow-ragged-csv-input cat u/ragged-long.csv
+run_mlr --icsv     --ojson --allow-ragged-csv-input cat u/ragged-short.csv
+run_mlr --icsv     --ojson --allow-ragged-csv-input cat u/ragged-long.csv
