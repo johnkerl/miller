@@ -11,8 +11,6 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! allow ragged csv input
-  o do for csv too
 ! csv het input
 
 ! ixtab reader

@@ -629,3 +629,40 @@ mlr --icsvlite --ojson --allow-ragged-csv-input cat u/ragged-long.csv
   "b": 9,
   "c": 10
 }
+
+----------------------------------------------------------------
+mlr --icsv --ojson --allow-ragged-csv-input cat u/ragged-short.csv
+{
+  "a": 1,
+  "b": 2,
+  "c": 3
+}
+{
+  "a": 4,
+  "b": 5,
+  "c": ""
+}
+{
+  "a": 6,
+  "b": 7,
+  "c": 8
+}
+
+----------------------------------------------------------------
+mlr --icsv --ojson --allow-ragged-csv-input cat u/ragged-long.csv
+{
+  "a": 1,
+  "b": 2,
+  "c": 3
+}
+{
+  "a": 4,
+  "b": 5,
+  "c": 6,
+  "4": 7
+}
+{
+  "a": 8,
+  "b": 9,
+  "c": 10
+}
