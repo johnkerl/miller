@@ -8,6 +8,8 @@ func Create(writerOptions *clitypes.TWriterOptions) IRecordWriter {
 	switch writerOptions.OutputFileFormat {
 	case "csv":
 		return NewRecordWriterCSV(writerOptions)
+	case "csvlite":
+		return NewRecordWriterCSVLite(writerOptions)
 	case "dkvp":
 		return NewRecordWriterDKVP(writerOptions)
 	case "json":
