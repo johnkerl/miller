@@ -11,19 +11,17 @@ TOP OF LIST:
     no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-* parex -> separate file; more ast.go splitups
-
 * mlr main rmd dec map chain enc ovw
 
 ! for-multi
 
-! ASV/USV as csvlite input; needs a csvlite record-writer
+! need a csvlite record-writer
+! check string-buffer at all writers
+! ASV/USV as csvlite input
 ! allow ragged csv input
-
 ! csv het input
   o golang csv-reader blank-line issue ...
   ? maybe support this only in csvlite?
-
 * justWroteEmptyLine -> pprint too ...
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
