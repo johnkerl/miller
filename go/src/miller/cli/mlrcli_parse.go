@@ -367,9 +367,9 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.UseImplicitCSVHeader = false
 		argi += 1
 
-		//	} else if args[argi] == "--allow-ragged-csv-input" || args[argi] == "--ragged" {
-		//		readerOptions.allow_ragged_csv_input = true;
-		//		argi += 1;
+	} else if args[argi] == "--allow-ragged-csv-input" || args[argi] == "--ragged" {
+		readerOptions.AllowRaggedCSVInput = true
+		argi += 1
 
 		//	} else if args[argi] == "-i" {
 		//		checkArgCount(args, argi, argc, 2);

@@ -37,9 +37,9 @@ type RecordReaderCSVLite struct {
 	ifs                  string
 	irs                  string
 	useImplicitCSVHeader bool
+	allowRaggedCSVInput  bool
 
-	// TODO: port from C
-	//allowRaggedCSVInput bool
+	emptyStringMlrval types.Mlrval
 
 	// TODO: port from C
 	//	comment_handling_t comment_handling;
@@ -48,17 +48,16 @@ type RecordReaderCSVLite struct {
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSVLite(readerOptions *clitypes.TReaderOptions) *RecordReaderCSVLite {
-	// TODO: port from C
-	//	pstate->allow_ragged_csv_input  = allow_ragged_csv_input;
-
-	// TODO: port from C
-	//	pstate->comment_handling        = comment_handling;
-	//	pstate->comment_string          = comment_string;
-
 	return &RecordReaderCSVLite{
 		ifs:                  readerOptions.IFS,
 		irs:                  readerOptions.IRS,
 		useImplicitCSVHeader: readerOptions.UseImplicitCSVHeader,
+		allowRaggedCSVInput:  readerOptions.AllowRaggedCSVInput,
+
+		// TODO: port from C
+		//	pstate->comment_handling        = comment_handling;
+		//	pstate->comment_string          = comment_string;
+		emptyStringMlrval: types.MlrvalFromString(""),
 	}
 }
 
@@ -73,9 +72,21 @@ func (this *RecordReaderCSVLite) Read(
 		if len(filenames) == 0 { // read from stdin
 			handle := os.Stdin
 			if this.useImplicitCSVHeader {
-				this.processHandleImplicitCSVHeader(handle, "(stdin)", &context, inputChannel, errorChannel)
+				this.processHandleImplicitCSVHeader(
+					handle,
+					"(stdin)",
+					&context,
+					inputChannel,
+					errorChannel,
+				)
 			} else {
-				this.processHandleExplicitCSVHeader(handle, "(stdin)", &context, inputChannel, errorChannel)
+				this.processHandleExplicitCSVHeader(
+					handle,
+					"(stdin)",
+					&context,
+					inputChannel,
+					errorChannel,
+				)
 			}
 		} else {
 			for _, filename := range filenames {
@@ -84,9 +95,21 @@ func (this *RecordReaderCSVLite) Read(
 					errorChannel <- err
 				} else {
 					if this.useImplicitCSVHeader {
-						this.processHandleImplicitCSVHeader(handle, filename, &context, inputChannel, errorChannel)
+						this.processHandleImplicitCSVHeader(
+							handle,
+							filename,
+							&context,
+							inputChannel,
+							errorChannel,
+						)
 					} else {
-						this.processHandleExplicitCSVHeader(handle, filename, &context, inputChannel, errorChannel)
+						this.processHandleExplicitCSVHeader(
+							handle,
+							filename,
+							&context,
+							inputChannel,
+							errorChannel,
+						)
 					}
 					handle.Close()
 				}
@@ -137,12 +160,11 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				headerStrings = fields
 				// Get data lines on subsequent loop iterations
 			} else {
-				// TOOD:
-				// if allowRaggedCSVInput { ... }
-				if len(headerStrings) != len(fields) {
+				if !this.allowRaggedCSVInput && len(headerStrings) != len(fields) {
 					err := errors.New(
 						fmt.Sprintf(
-							"Miller: CSV header/data length mismatch %d != %d at filename %s line  %d.\n",
+							"Miller: CSV header/data length mismatch %d != %d "+
+								"at filename %s line  %d.\n",
 							len(headerStrings), len(fields), filename, inputLineNumber,
 						),
 					)
@@ -151,9 +173,34 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				}
 
 				record := types.NewMlrmap()
-				for i, field := range fields {
-					value := types.MlrvalFromInferredType(field)
-					record.PutCopy(&headerStrings[i], &value)
+				if !this.allowRaggedCSVInput {
+					for i, field := range fields {
+						value := types.MlrvalFromInferredType(field)
+						record.PutCopy(&headerStrings[i], &value)
+					}
+				} else {
+					nh := len(headerStrings)
+					nd := len(fields)
+					n := lib.IntMin2(nh, nd)
+					var i int
+					for i = 0; i < n; i++ {
+						value := types.MlrvalFromInferredType(fields[i])
+						record.PutCopy(&headerStrings[i], &value)
+					}
+					if nh < nd {
+						// if header shorter than data: use 1-up itoa keys
+						for i = nh; i < nd; i++ {
+							key := strconv.Itoa(i + 1)
+							value := types.MlrvalFromInferredType(fields[i])
+							record.PutCopy(&key, &value)
+						}
+					}
+					if nh > nd {
+						// if header longer than data: use "" values
+						for i = nd; i < nh; i++ {
+							record.PutCopy(&headerStrings[i], &this.emptyStringMlrval)
+						}
+					}
 				}
 
 				context.UpdateForInputRecord(record)
@@ -207,14 +254,11 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 					headerStrings[i] = strconv.Itoa(i + 1)
 				}
 			} else {
-				// TOOD:
-				// if allowRaggedCSVInput { ... }
-				// * if header shorter than data: use 1-up itoa keys
-				// * if header longer than data: use "" values
-				if len(headerStrings) != len(fields) {
+				if !this.allowRaggedCSVInput && len(headerStrings) != len(fields) {
 					err := errors.New(
 						fmt.Sprintf(
-							"Miller: CSV header/data length mismatch %d != %d at filename %s line  %d.\n",
+							"Miller: CSV header/data length mismatch %d != %d "+
+								"at filename %s line  %d.\n",
 							len(headerStrings), len(fields), filename, inputLineNumber,
 						),
 					)
@@ -224,9 +268,32 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			}
 
 			record := types.NewMlrmap()
-			for i, field := range fields {
-				value := types.MlrvalFromInferredType(field)
-				record.PutCopy(&headerStrings[i], &value)
+			if !this.allowRaggedCSVInput {
+				for i, field := range fields {
+					value := types.MlrvalFromInferredType(field)
+					record.PutCopy(&headerStrings[i], &value)
+				}
+			} else {
+				nh := len(headerStrings)
+				nd := len(fields)
+				n := lib.IntMin2(nh, nd)
+				var i int
+				for i = 0; i < n; i++ {
+					value := types.MlrvalFromInferredType(fields[i])
+					record.PutCopy(&headerStrings[i], &value)
+				}
+				if nh < nd {
+					// if header shorter than data: use 1-up itoa keys
+					key := strconv.Itoa(i + 1)
+					value := types.MlrvalFromInferredType(fields[i])
+					record.PutCopy(&key, &value)
+				}
+				if nh > nd {
+					// if header longer than data: use "" values
+					for i = nd; i < nh; i++ {
+						record.PutCopy(&headerStrings[i], &this.emptyStringMlrval)
+					}
+				}
 			}
 
 			context.UpdateForInputRecord(record)
