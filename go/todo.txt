@@ -11,13 +11,10 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-* mlr main rmd dec map chain enc ovw
-
 ! for-multi
 
 ! need a csvlite record-writer (parameterize ORS)
   o $cli/*.go
-! check string-buffer at all writers
 ! ASV/USV as csvlite input
 ! allow ragged csv input
 ! csv het input

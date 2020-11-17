@@ -1,6 +1,7 @@
 package output
 
 import (
+	"bytes"
 	"container/list"
 	"fmt"
 	"os"
@@ -25,7 +26,7 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 }
 
 // ----------------------------------------------------------------
-// xxx this is very naive at present -- needs copy from the C version.
+// TODO this is very naive at present -- needs copy from the C version.
 func (this *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
 ) {
@@ -134,28 +135,34 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 
 		// Print header line
 		if onFirst {
+			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if pe.Next != nil {
-					fmt.Printf("%-*s ", maxWidths[*pe.Key], *pe.Key)
+					buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[*pe.Key], *pe.Key))
 				} else {
-					fmt.Println(*pe.Key)
+					buffer.WriteString(*pe.Key)
+					buffer.WriteString("\n") // TODO: ORS
 				}
 			}
+			os.Stdout.WriteString(buffer.String())
 		}
 		onFirst = false
 
 		// Print data lines
+		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
 			if s == "" {
 				s = "-"
 			}
 			if pe.Next != nil {
-				fmt.Printf("%-*s ", maxWidths[*pe.Key], s)
+				buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[*pe.Key], s))
 			} else {
-				fmt.Println(s)
+				buffer.WriteString(s)
+				buffer.WriteString("\n") // TODO: ORS
 			}
 		}
+		os.Stdout.WriteString(buffer.String())
 	}
 }
 
@@ -197,63 +204,72 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 		// Print header line
 		if onFirst {
+			var buffer bytes.Buffer // faster than fmt.Print() separately
 
-			fmt.Print(horizontalStart)
+			buffer.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				fmt.Print(horizontalBars[*pe.Key])
+				buffer.WriteString(horizontalBars[*pe.Key])
 				if pe.Next != nil {
-					fmt.Print(horizontalMiddle)
+					buffer.WriteString(horizontalMiddle)
 				} else {
-					fmt.Println(horizontalEnd)
+					buffer.WriteString(horizontalEnd)
+					buffer.WriteString("\n") // TOOD: ORS
 				}
 			}
 
-			fmt.Print(verticalStart)
+			buffer.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				fmt.Printf("%-*s", maxWidths[*pe.Key], *pe.Key)
+				buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[*pe.Key], *pe.Key))
 				if pe.Next != nil {
-					fmt.Print(verticalMiddle)
+					buffer.WriteString(verticalMiddle)
 				} else {
-					fmt.Println(verticalEnd)
+					buffer.WriteString(verticalEnd)
+					buffer.WriteString("\n") // TOOD: ORS
 				}
 			}
 
-			fmt.Print(horizontalStart)
+			buffer.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				fmt.Print(horizontalBars[*pe.Key])
+				buffer.WriteString(horizontalBars[*pe.Key])
 				if pe.Next != nil {
-					fmt.Print(horizontalMiddle)
+					buffer.WriteString(horizontalMiddle)
 				} else {
-					fmt.Println(horizontalEnd)
+					buffer.WriteString(horizontalEnd)
+					buffer.WriteString("\n") // TOOD: ORS
 				}
 			}
 
+			os.Stdout.WriteString(buffer.String())
 		}
 		onFirst = false
 
 		// Print data lines
-		fmt.Print(verticalStart)
+		var buffer bytes.Buffer // faster than fmt.Print() separately
+		buffer.WriteString(verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
-			fmt.Printf("%-*s", maxWidths[*pe.Key], s)
+			buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[*pe.Key], s))
 			if pe.Next != nil {
-				fmt.Print(verticalMiddle)
+				buffer.WriteString(fmt.Sprint(verticalMiddle))
 			} else {
-				fmt.Println(verticalEnd)
+				buffer.WriteString(verticalEnd)
+				buffer.WriteString("\n") // TOOD: ORS
 			}
 		}
 
 		if e.Next() == nil {
-			fmt.Print(horizontalStart)
+			buffer.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				fmt.Print(horizontalBars[*pe.Key])
+				buffer.WriteString(horizontalBars[*pe.Key])
 				if pe.Next != nil {
-					fmt.Print(horizontalMiddle)
+					buffer.WriteString(horizontalMiddle)
 				} else {
-					fmt.Println(horizontalEnd)
+					buffer.WriteString(horizontalEnd)
+					buffer.WriteString("\n") // TOOD: ORS
 				}
 			}
 		}
 
+		os.Stdout.WriteString(buffer.String())
 	}
 }
