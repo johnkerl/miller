@@ -115,7 +115,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString('\n') // TODO: auto-detect
+		line, err := lineReader.ReadString(this.irs[0]) // xxx temp
 		if err == io.EOF {
 			err = nil
 			eof = true
@@ -124,7 +124,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		} else {
 			inputLineNumber++
 			// This is how to do a chomp:
-			line = strings.TrimRight(line, "\n")
+			line = strings.TrimRight(line, this.irs)
 
 			if line == "" {
 				// Reset to new schema
@@ -182,7 +182,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString('\n') // TODO: auto-detect
+		line, err := lineReader.ReadString(this.irs[0]) // xxx temp
 		if err == io.EOF {
 			err = nil
 			eof = true
@@ -191,7 +191,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		} else {
 			inputLineNumber++
 			// This is how to do a chomp:
-			line = strings.TrimRight(line, "\n")
+			line = strings.TrimRight(line, this.irs)
 
 			if line == "" {
 				// Reset to new schema

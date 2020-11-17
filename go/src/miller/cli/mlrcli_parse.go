@@ -12,6 +12,17 @@ import (
 	"miller/version"
 )
 
+const ASV_FS = "\x1f"
+const ASV_RS = "\x1e"
+const USV_FS = "\xe2\x90\x9f"
+const USV_RS = "\xe2\x90\x9e"
+
+// TODO: move somewhere else; maybe clitypes
+const ASV_FS_FOR_HELP = "0x1f"
+const ASV_RS_FOR_HELP = "0x1e"
+const USV_FS_FOR_HELP = "U+241F (UTF-8 0xe2909f)"
+const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
+
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
 	options clitypes.TOptions,
@@ -415,29 +426,29 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.IFS = "\t"
 		argi += 1
 
-		//	} else if args[argi] == "--iasv" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = ASV_FS;
-		//		readerOptions.IRS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iasvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = ASV_FS;
-		//		readerOptions.IRS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iusv" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = USV_FS;
-		//		readerOptions.IRS = USV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iusvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = USV_FS;
-		//		readerOptions.IRS = USV_RS;
-		//		argi += 1;
+	} else if args[argi] == "--iasv" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = ASV_FS
+		readerOptions.IRS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--iasvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = ASV_FS
+		readerOptions.IRS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--iusv" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = USV_FS
+		readerOptions.IRS = USV_RS
+		argi += 1
+
+	} else if args[argi] == "--iusvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = USV_FS
+		readerOptions.IRS = USV_RS
+		argi += 1
 
 	} else if args[argi] == "--idkvp" {
 		readerOptions.InputFileFormat = "dkvp"
@@ -581,30 +592,30 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		writerOptions.OFS = "\t"
 		argi += 1
 
-		//	} else if args[argi] == "--oasv" {
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.OFS = ASV_FS;
-		//		writerOptions.ORS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--oasvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		writerOptions.OFS = ASV_FS;
-		//		writerOptions.ORS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--ousv" {
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.OFS = USV_FS;
-		//		writerOptions.ORS = USV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--ousvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		writerOptions.OFS = USV_FS;
-		//		writerOptions.ORS = USV_RS;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--oasv" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = ASV_FS
+		writerOptions.ORS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--oasvlite" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = ASV_FS
+		writerOptions.ORS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--ousv" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = USV_FS
+		writerOptions.ORS = USV_RS
+		argi += 1
+
+	} else if args[argi] == "--ousvlite" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = USV_FS
+		writerOptions.ORS = USV_RS
+		argi += 1
+
 		//	} else if args[argi] == "--omd" {
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
@@ -746,7 +757,7 @@ func parseReaderWriterOptions(
 		argi += 1
 
 		//	} else if args[argi] == "--asv" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
+		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
 		//		readerOptions.IFS = ASV_FS;
 		//		writerOptions.OFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
@@ -762,7 +773,7 @@ func parseReaderWriterOptions(
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--usv" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
+		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
 		//		readerOptions.IFS = USV_FS;
 		//		writerOptions.OFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;

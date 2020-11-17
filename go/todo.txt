@@ -11,17 +11,14 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! for-multi
-
-! need a csvlite record-writer (parameterize ORS)
-  o $cli/*.go
-! ASV/USV as csvlite input
 ! allow ragged csv input
 ! csv het input
-  o golang csv-reader blank-line issue ...
-  ? maybe support this only in csvlite?
+
+! ixtab reader
 
 * justWroteEmptyLine -> pprint too ...
+
+! for-multi
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
 o note json types: string, number, boolean, null, object, array.
@@ -323,3 +320,5 @@ NITS/NON-IMMEDIATE:
 * why error? mlr put '$y=true; $y &= $x<0.5' s
 * line/column caret at parse-error messages -- would require some GOCC refactoring
   in order to get the full DSL string and the line/number info into the same method
+* csvlite rd/wr: comment for USV/ASV too. no need for escaping then.
+* comment schema-change supported only in csvlite reader, not csv reader

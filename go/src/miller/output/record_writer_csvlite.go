@@ -42,7 +42,7 @@ func (this *RecordWriterCSVLite) Write(
 
 	if outrec.FieldCount == 0 {
 		if !this.justWroteEmptyLine {
-			os.Stdout.WriteString("\n")
+			os.Stdout.WriteString(this.ors)
 		}
 		joinedHeader := ""
 		this.lastJoinedHeader = &joinedHeader
@@ -55,7 +55,7 @@ func (this *RecordWriterCSVLite) Write(
 	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
 		if this.lastJoinedHeader != nil {
 			if !this.justWroteEmptyLine {
-				os.Stdout.WriteString("\n")
+				os.Stdout.WriteString(this.ors)
 			}
 			this.justWroteEmptyLine = true
 		}
