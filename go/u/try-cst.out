@@ -3077,6 +3077,66 @@ y=0.5221511083334797
 
 
 ----------------------------------------------------------------
+mlr -n put -v for (k             in @*) {}
+DSL EXPRESSION:
+for (k             in @*) {}
+RAW AST:
+* statement block
+    * single-variable for-loop "for"
+        * local variable "k"
+        * full oosvar "@*"
+        * statement block
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for (k, v          in @*) {}
+DSL EXPRESSION:
+for (k, v          in @*) {}
+RAW AST:
+* statement block
+    * double-variable for-loop "for"
+        * local variable "k"
+        * local variable "v"
+        * full oosvar "@*"
+        * statement block
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for ((k1,k2),    v in @*) {}
+DSL EXPRESSION:
+for ((k1,k2),    v in @*) {}
+RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "k1"
+            * local variable "k2"
+        * local variable "v"
+        * full oosvar "@*"
+        * statement block
+
+
+
+----------------------------------------------------------------
+mlr -n put -v for ((k1,k2,k3), v in @*) {}
+DSL EXPRESSION:
+for ((k1,k2,k3), v in @*) {}
+RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "k1"
+            * local variable "k2"
+            * local variable "k3"
+        * local variable "v"
+        * full oosvar "@*"
+        * statement block
+
+
+
+----------------------------------------------------------------
 mlr --from u/s.dkvp put $z = 0; while ($z < $i) {$z += 1}
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=2

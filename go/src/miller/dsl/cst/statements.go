@@ -74,8 +74,8 @@ func (this *RootNode) BuildStatementNode(
 		return this.BuildForLoopOneVariableNode(astNode)
 	case dsl.NodeTypeForLoopTwoVariable:
 		return this.BuildForLoopTwoVariableNode(astNode)
-	//case dsl.NodeTypeForLoopMultivariable:
-	//return this.BuildForLoopMultivariableNode(astNode)
+	case dsl.NodeTypeForLoopMultivariable:
+		return this.BuildForLoopMultivariableNode(astNode)
 	case dsl.NodeTypeTripleForLoop:
 		return this.BuildTripleForLoopNode(astNode)
 

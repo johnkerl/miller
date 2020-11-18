@@ -297,10 +297,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 			mapkey := types.MlrvalFromString(*pe.Key)
 
 			state.stack.BindVariable(this.keyVariableName, &mapkey)
-			// TODO: comment-reap
-			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
-				state.stack.BindVariable(this.valueVariableName, pe.Value)
-			}
+			state.stack.BindVariable(this.valueVariableName, pe.Value)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -339,6 +336,194 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
 				state.stack.BindVariable(this.valueVariableName, &element)
 			}
+			// The loop body will push its own frame
+			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			if err != nil {
+				return nil, err
+			}
+			if blockExitPayload != nil {
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					break
+				}
+				// If continue, keep going -- this means the body was exited
+				// early but we keep going at this level
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+					return blockExitPayload, nil
+				}
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+					return blockExitPayload, nil
+				}
+			}
+			// TODO: runtime errors for any other types
+		}
+
+	} else {
+		// TODO: give more context
+		return nil, errors.New("Miller: looped-over item is not a map.")
+	}
+
+	return nil, nil
+}
+
+// ================================================================
+type ForLoopMultivariableNode struct {
+	keyVariableNames   []string
+	valueVariableName  string
+	indexableNode      IEvaluable
+	statementBlockNode *StatementBlockNode
+}
+
+func NewForLoopMultivariableNode(
+	keyVariableNames []string,
+	valueVariableName string,
+	indexableNode IEvaluable,
+	statementBlockNode *StatementBlockNode,
+) *ForLoopMultivariableNode {
+	return &ForLoopMultivariableNode{
+		keyVariableNames,
+		valueVariableName,
+		indexableNode,
+		statementBlockNode,
+	}
+}
+
+// ----------------------------------------------------------------
+// Sample AST:
+
+// mlr -n put -v 'for ((k1, k2), v in $*) { }'
+// DSL EXPRESSION:
+// for ((k1, k2), v in $*) { }
+// RAW AST:
+// * statement block
+//     * multi-variable for-loop "for"
+//         * parameter list
+//             * local variable "k1"
+//             * local variable "k2"
+//         * local variable "v"
+//         * full record "$*"
+//         * statement block
+
+func (this *RootNode) BuildForLoopMultivariableNode(
+	astNode *dsl.ASTNode,
+) (*ForLoopMultivariableNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopMultivariable)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
+
+	keyVariablesASTNode := astNode.Children[0]
+	valueVariableASTNode := astNode.Children[1]
+	indexableASTNode := astNode.Children[2]
+	blockASTNode := astNode.Children[3]
+
+	lib.InternalCodingErrorIf(keyVariablesASTNode.Type != dsl.NodeTypeParameterList)
+	lib.InternalCodingErrorIf(keyVariablesASTNode.Children == nil)
+	keyVariableNames := make([]string, len(keyVariablesASTNode.Children))
+	for i, keyVariableASTNode := range keyVariablesASTNode.Children {
+		lib.InternalCodingErrorIf(keyVariableASTNode.Token == nil)
+		keyVariableNames[i] = string(keyVariableASTNode.Token.Lit)
+	}
+
+	lib.InternalCodingErrorIf(valueVariableASTNode.Type != dsl.NodeTypeLocalVariable)
+	lib.InternalCodingErrorIf(valueVariableASTNode.Token == nil)
+	valueVariableName := string(valueVariableASTNode.Token.Lit)
+
+	// TODO: error if loop-over node isn't map/array (inasmuch as can be
+	// detected at CST-build time)
+	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewForLoopMultivariableNode(
+		keyVariableNames,
+		valueVariableName,
+		indexableNode,
+		statementBlockNode,
+	), nil
+}
+
+// ----------------------------------------------------------------
+// Note: The statement-block has its own push/pop for its localvars.
+// Meanwhile we need to restrict scope of the bindvar to the for-loop.
+//
+// So we have:
+//
+//   mlr put '
+//     x = 1;           <--- frame #1 main
+//     for (k in $*) {  <--- frame #2 for for-loop bindvars (right here)
+//       x = 2          <--- frame #3 for for-loop locals
+//     }
+//     x = 3;           <--- back in frame #1 main
+//   '
+//
+
+func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, error) {
+	mlrval := this.indexableNode.Evaluate(state)
+
+	if mlrval.IsMap() {
+
+		mapval := mlrval.GetMap()
+
+		// Make a frame for the loop variable(s)
+		state.stack.PushStackFrame()
+		defer state.stack.PopStackFrame()
+		for pe := mapval.Head; pe != nil; pe = pe.Next {
+			mapkey := types.MlrvalFromString(*pe.Key)
+
+			for _, keyVariableName := range this.keyVariableNames {
+				state.stack.BindVariable(keyVariableName, &mapkey)
+			}
+			state.stack.BindVariable(this.valueVariableName, pe.Value)
+
+			// TODO: recursive helper function
+
+			// The loop body will push its own frame
+			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			if err != nil {
+				return nil, err
+			}
+			if blockExitPayload != nil {
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					break
+				}
+				// If continue, keep going -- this means the body was exited
+				// early but we keep going at this level
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+					return blockExitPayload, nil
+				}
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+					return blockExitPayload, nil
+				}
+			}
+			// TODO: runtime errors for any other types
+		}
+
+	} else if mlrval.IsArray() {
+
+		arrayval := mlrval.GetArray()
+
+		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
+		// Go storage ("zindex") is 0-up.
+
+		// Make a frame for the loop variable(s)
+		state.stack.PushStackFrame()
+		defer state.stack.PopStackFrame()
+		for zindex, element := range arrayval {
+			mindex := types.MlrvalFromInt64(int64(zindex + 1))
+
+			for _, keyVariableName := range this.keyVariableNames {
+				state.stack.BindVariable(keyVariableName, &mindex)
+			}
+			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
+				state.stack.BindVariable(this.valueVariableName, &element)
+			}
+
+			// TODO: recursive helper function
+
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {

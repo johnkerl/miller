@@ -356,6 +356,11 @@ echo; run_mlr --from u/s.dkvp head -n 2 then put -q 'for (k,v in $*) { emit { "f
 echo; run_mlr --from u/s.dkvp head -n 2 then put -q 'for (k,v in $*) { emit { k: "bar" } }'
 echo; run_mlr --from u/s.dkvp head -n 2 then put -q 'for (k,v in $*) { emit { k : v } }'
 
+echo; run_mlr -n put -v 'for (k             in @*) {}'
+echo; run_mlr -n put -v 'for (k, v          in @*) {}'
+echo; run_mlr -n put -v 'for ((k1,k2),    v in @*) {}'
+echo; run_mlr -n put -v 'for ((k1,k2,k3), v in @*) {}'
+
 echo; run_mlr --from u/s.dkvp put '$z = 0; while ($z < $i) {$z += 1}'
 echo; run_mlr --from u/s.dkvp put '$z = 0; do {$z += 1} while ($z < $i)'
 echo; run_mlr --from u/s.dkvp put '$z = 10; while ($z < $i) {$z += 1}'
