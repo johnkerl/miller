@@ -137,7 +137,7 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					break
 				}
-				// If continue, keep going -- this means the body was exited
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
 					return blockExitPayload, nil
@@ -146,7 +146,6 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: runtime errors for any other types
 		}
 
 	} else if mlrval.IsArray() {
@@ -170,7 +169,7 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					break
 				}
-				// If continue, keep going -- this means the body was exited
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
 					return blockExitPayload, nil
@@ -179,12 +178,11 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: runtime errors for any other types
 		}
 
 	} else {
 		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map.")
+		return nil, errors.New("Miller: looped-over item is not a map or array.")
 	}
 
 	return nil, nil
@@ -307,7 +305,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					break
 				}
-				// If continue, keep going -- this means the body was exited
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
 					return blockExitPayload, nil
@@ -316,7 +314,6 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: runtime errors for any other types
 		}
 
 	} else if mlrval.IsArray() {
@@ -345,7 +342,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					break
 				}
-				// If continue, keep going -- this means the body was exited
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
 					return blockExitPayload, nil
@@ -354,12 +351,11 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: runtime errors for any other types
 		}
 
 	} else {
 		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map.")
+		return nil, errors.New("Miller: looped-over item is not a map or array.")
 	}
 
 	return nil, nil
@@ -490,7 +486,7 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					break
 				}
-				// If continue, keep going -- this means the body was exited
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
 					return blockExitPayload, nil
@@ -499,7 +495,6 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: runtime errors for any other types
 		}
 
 	} else if mlrval.IsArray() {
@@ -533,7 +528,7 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 					break
 				}
-				// If continue, keep going -- this means the body was exited
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
 					return blockExitPayload, nil
@@ -542,12 +537,11 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 					return blockExitPayload, nil
 				}
 			}
-			// TODO: runtime errors for any other types
 		}
 
 	} else {
 		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map.")
+		return nil, errors.New("Miller: looped-over item is not a map or array.")
 	}
 
 	return nil, nil
@@ -718,7 +712,7 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 			if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
 				break
 			}
-			// If continue, keep going -- this means the body was exited
+			// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 			// early but we keep going at this level. In particular we still
 			// need to execute the update-block.
 			if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
@@ -728,8 +722,6 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 				return blockExitPayload, nil
 			}
 		}
-		// TODO: handle return statements
-		// TODO: runtime errors for any other types
 
 		// The loop body will push its own frame.
 		state.stack.PushStackFrame()
