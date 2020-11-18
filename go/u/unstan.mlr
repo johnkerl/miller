@@ -22,15 +22,17 @@
 
 # Find array length
 n = 0;
+map keys = {};
 for (k, v in $*) {
   n = max(n, length(v));
+  keys[k] = k;
 }
 
 # Emit one record per array entry
 for (int i = 1; i <= n; i+=1) {
   map output_record = {};
-  for (k in $*) {
-    output_record[k] = $*[k][i];
+  for (k in keys) {
+    output_record[k] = $[k][i];
   }
   emit output_record;
 }
