@@ -110,3 +110,10 @@ run_mlr --icsvlite --ojson --allow-ragged-csv-input cat u/ragged-short.csv
 run_mlr --icsvlite --ojson --allow-ragged-csv-input cat u/ragged-long.csv
 run_mlr --icsv     --ojson --allow-ragged-csv-input cat u/ragged-short.csv
 run_mlr --icsv     --ojson --allow-ragged-csv-input cat u/ragged-long.csv
+
+run_mlr --ixtab --ojson cat u/test-1.xtab
+run_mlr --ixtab --ojson cat u/test-2.xtab
+run_mlr --ixtab --ojson cat u/test-3.xtab
+run_mlr --ixtab --ojson cat u/test-1.xtab u/test-2.xtab
+run_mlr --ixtab --ojson cat u/test-2.xtab u/test-1.xtab
+run_mlr --ixtab --ojson cat u/test-1.xtab u/test-2.xtab u/test-3.xtab

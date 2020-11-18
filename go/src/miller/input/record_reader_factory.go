@@ -16,6 +16,8 @@ func Create(readerOptions *clitypes.TReaderOptions) IRecordReader {
 		return NewRecordReaderJSON(readerOptions)
 	case "nidx":
 		return NewRecordReaderNIDX(readerOptions)
+	case "xtab":
+		return NewRecordReaderXTAB(readerOptions)
 	default:
 		return nil
 	}

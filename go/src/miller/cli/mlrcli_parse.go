@@ -462,10 +462,10 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.InputFileFormat = "nidx"
 		argi += 1
 
-		//	} else if args[argi] == "--ixtab" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--ixtab" {
+		readerOptions.InputFileFormat = "xtab"
+		argi += 1
+
 		//	} else if args[argi] == "--ipprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
 		//		readerOptions.IFS              = " ";
@@ -815,11 +815,11 @@ func parseReaderWriterOptions(
 		//		writerOptions.OFS = "\t";
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--xtab" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "xtab";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--xtab" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
+
 		// TODO: make a fixed-width scanner
 		//	} else if args[argi] == "--pprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
@@ -1052,33 +1052,33 @@ func parseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat        = "markdown";
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--x2c" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.ORS       = "auto";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2t" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.ORS       = "auto";
-		//		writerOptions.OFS       = "\t";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2d" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "dkvp";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2n" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "nidx";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2j" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "json";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2p" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "pprint";
-		//		argi += 1;
+	} else if args[argi] == "--x2c" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--x2t" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--x2d" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--x2n" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--x2j" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--x2p" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
 		//	} else if args[argi] == "--x2m" {
 		//		readerOptions.InputFileFormat = "xtab";
 		//		writerOptions.OutputFileFormat = "markdown";

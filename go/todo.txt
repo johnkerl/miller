@@ -11,8 +11,6 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! ixtab reader
-
 * justWroteEmptyLine -> pprint too ...
 
 ! for-multi

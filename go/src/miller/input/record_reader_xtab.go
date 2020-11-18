@@ -1,124 +1,151 @@
 package input
 
-// typedef struct _lrec_reader_stdio_xtab_state_t {
-// 	char*  ifs;
-// 	char*  ips;
-// 	int    ifslen;
-// 	int    ipslen;
-// 	int    allow_repeat_ips;
-// 	int    do_auto_line_term;
-// 	int    at_eof;
-// 	comment_handling_t comment_handling;
-// 	char*  comment_string;
-// 	size_t line_length;
-// } lrec_reader_stdio_xtab_state_t;
+import (
+	"bufio"
+	"container/list"
+	"errors"
+	"io"
+	"os"
+	"regexp"
+	"strings"
 
-// // ----------------------------------------------------------------
-// lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips,
-// 	comment_handling_t comment_handling, char* comment_string)
-// {
-// 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
-// 
-// 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
-// 	pstate->ifs               = ifs;
-// 	pstate->ips               = ips;
-// 	pstate->ifslen            = strlen(ifs);
-// 	pstate->ipslen            = strlen(ips);
-// 	pstate->allow_repeat_ips  = allow_repeat_ips;
-// 	pstate->do_auto_line_term = FALSE;
-// 	pstate->at_eof            = FALSE;
-// 	pstate->comment_handling  = comment_handling;
-// 	pstate->comment_string    = comment_string;
-// 	// This is used to track nominal line length over the file read. Bootstrap with a default length.
-// 	pstate->line_length       = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
-// 
-// 	if (streq(ifs, "auto")) {
-// 		pstate->do_auto_line_term = TRUE;
-// 		pstate->ifs = "\n";
-// 		pstate->ifslen = 1;
-// 	}
-// 
-// 	plrec_reader->pvstate       = (void*)pstate;
-// 	plrec_reader->popen_func    = file_reader_stdio_vopen;
-// 	plrec_reader->pclose_func   = file_reader_stdio_vclose;
-// 	plrec_reader->pprocess_func = lrec_reader_stdio_xtab_process;
-// 	plrec_reader->psof_func     = lrec_reader_stdio_xtab_sof;
-// 	plrec_reader->pfree_func    = lrec_reader_stdio_xtab_free;
-// 
-// 	return plrec_reader;
-// }
+	"miller/clitypes"
+	"miller/types"
+)
 
-// static void lrec_reader_stdio_xtab_sof(void* pvstate, void* pvhandle) {
-// 	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
-// 	pstate->at_eof = FALSE;
-// }
+type RecordReaderXTAB struct {
+	ifsRegex *regexp.Regexp
+	ifs      string
+	ips      string
+	irs      string
+	// TODO: parameterize IRS
 
-// // ----------------------------------------------------------------
-// static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx) {
-// 	FILE* input_stream = pvhandle;
-// 	lrec_reader_stdio_xtab_state_t* pstate = pvstate;
-// 
-// 	if (pstate->at_eof)
-// 		return NULL;
-// 
-// 	slls_t* pxtab_lines = slls_alloc();
-// 
-// 	while (TRUE) {
-// 		char* line = NULL;
-// 
-// 		if (pstate->comment_handling == COMMENTS_ARE_DATA) {
-// 			line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->ifs, pstate->ifslen,
-// 				&pstate->line_length);
-// 		} else {
-// 			line = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream,
-// 				pstate->ifs, pstate->ifslen, &pstate->line_length,
-// 				pstate->comment_handling, pstate->comment_string);
-// 		}
-// 
-// 		if (line == NULL) { // EOF
-// 			// EOF or blank line terminates the stanza.
-// 			pstate->at_eof = TRUE;
-// 			if (pxtab_lines->length == 0) {
-// 				slls_free(pxtab_lines);
-// 				return NULL;
-// 			} else {
-// 				return
-// 					lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
-// 			}
-// 
-// 		} else if (*line == '\0') {
-// 			free(line);
-// 			if (pxtab_lines->length > 0) {
-// 				return
-// 					lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
-// 			}
-// 
-// 		} else {
-// 			slls_append_with_free(pxtab_lines, line);
-// 		}
-// 	}
-// }
+	// TODO: port from C
+	// 	int    allow_repeat_ips;
+	// 	int    do_auto_line_term;
+	// 	int    at_eof;
+	// 	comment_handling_t comment_handling;
+	// 	char*  comment_string;
+}
 
-// lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipslen, int allow_repeat_ips) {
-// 	lrec_t* prec = lrec_xtab_alloc(pxtab_lines);
-// 
-// 	for (sllse_t* pe = pxtab_lines->phead; pe != NULL; pe = pe->pnext) {
-// 		char* line = pe->value;
-// 		char* p = line;
-// 		char* key = p;
-// 
-// 		while (*p != 0 && !streqn(p, ips, ipslen))
-// 			p++; // Advance by only 1 in case of subsequent match
-// 		if (*p == 0) {
-// 			lrec_put(prec, key, "", NO_FREE);
-// 		} else {
-// 			while (*p != 0 && streqn(p, ips, ipslen)) {
-// 				*p = 0;
-// 				p += ipslen;
-// 			}
-// 			lrec_put(prec, key, p, NO_FREE);
-// 		}
-// 	}
-// 
-// 	return prec;
-// }
+// ----------------------------------------------------------------
+func NewRecordReaderXTAB(readerOptions *clitypes.TReaderOptions) *RecordReaderXTAB {
+	return &RecordReaderXTAB{
+		// TODO: incorporate IFS
+		ifsRegex: regexp.MustCompile("\\s+"),
+		ifs:      readerOptions.IFS,
+		ips:      readerOptions.IPS,
+		irs:      "\n",
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *RecordReaderXTAB) Read(
+	filenames []string,
+	context types.Context,
+	inputChannel chan<- *types.RecordAndContext,
+	errorChannel chan error,
+) {
+	if filenames != nil { // nil for mlr -n
+		if len(filenames) == 0 { // read from stdin
+			handle := os.Stdin
+			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+		} else {
+			for _, filename := range filenames {
+				handle, err := os.Open(filename)
+				if err != nil {
+					errorChannel <- err
+				} else {
+					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					handle.Close()
+				}
+			}
+		}
+	}
+	inputChannel <- types.NewRecordAndContext(
+		nil, // signals end of input record stream
+		&context,
+	)
+}
+
+func (this *RecordReaderXTAB) processHandle(
+	handle *os.File,
+	filename string,
+	context *types.Context,
+	inputChannel chan<- *types.RecordAndContext,
+	errorChannel chan error,
+) {
+	context.UpdateForStartOfFile(filename)
+
+	lineReader := bufio.NewReader(handle)
+
+	linesForRecord := list.New()
+
+	eof := false
+	for !eof {
+		line, err := lineReader.ReadString(this.irs[0]) // xxx temp
+		if err == io.EOF {
+			err = nil
+			eof = true
+
+			if linesForRecord.Len() > 0 {
+				record, err := this.recordFromXTABLines(linesForRecord)
+				if err != nil {
+					errorChannel <- err
+					return
+				}
+				context.UpdateForInputRecord(record)
+				inputChannel <- types.NewRecordAndContext(record, context)
+				linesForRecord = list.New()
+			}
+		} else if err != nil {
+			errorChannel <- err
+		} else {
+			// This is how to do a chomp:
+			line = strings.TrimRight(line, this.irs)
+
+			if line == "" {
+				if linesForRecord.Len() > 0 {
+					record, err := this.recordFromXTABLines(linesForRecord)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
+					context.UpdateForInputRecord(record)
+					inputChannel <- types.NewRecordAndContext(record, context)
+					linesForRecord = list.New()
+				}
+			} else {
+				linesForRecord.PushBack(line)
+			}
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *RecordReaderXTAB) recordFromXTABLines(
+	lines *list.List,
+) (*types.Mlrmap, error) {
+	record := types.NewMlrmap()
+
+	for entry := lines.Front(); entry != nil; entry = entry.Next() {
+		line := entry.Value.(string)
+
+		// TODO -- incorporate IFS
+		kv := this.ifsRegex.Split(line, 2)
+		if len(kv) < 1 {
+			return nil, errors.New("Miller: internal coding error in XTAB reader")
+		}
+
+		key := kv[0]
+		if len(kv) == 1 {
+			value := types.MlrvalFromVoid()
+			record.PutReference(&key, &value)
+		} else {
+			value := types.MlrvalFromInferredType(kv[1])
+			record.PutReference(&key, &value)
+		}
+	}
+
+	return record, nil
+}
