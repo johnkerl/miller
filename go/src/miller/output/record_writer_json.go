@@ -27,6 +27,8 @@ func (this *RecordWriterJSON) Write(
 		return
 	}
 
+	// TODO: --jlistwrap using onFirst and outrec == nil
+
 	bytes, err := outrec.MarshalJSON()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

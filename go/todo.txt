@@ -14,6 +14,7 @@ no need to bootstrap a parser for the parser-generator language
 ! --istan --ostan
 
 * justWroteEmptyLine -> pprint too ...
+* check --jlistwrap
 
 ! for-multi
 
