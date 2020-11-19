@@ -117,3 +117,14 @@ run_mlr --ixtab --ojson cat u/test-3.xtab
 run_mlr --ixtab --ojson cat u/test-1.xtab u/test-2.xtab
 run_mlr --ixtab --ojson cat u/test-2.xtab u/test-1.xtab
 run_mlr --ixtab --ojson cat u/test-1.xtab u/test-2.xtab u/test-3.xtab
+
+run_mlr --ojson --from u/s.dkvp head -n 0
+run_mlr --ojson --from u/s.dkvp head -n 1
+run_mlr --ojson --from u/s.dkvp head -n 2
+run_mlr --ojson --from u/s.dkvp head -n 3
+
+run_mlr --jlistwrap --ojson --from u/s.dkvp head -n 0
+run_mlr --jlistwrap --ojson --from u/s.dkvp head -n 1
+run_mlr --jlistwrap --ojson --from u/s.dkvp head -n 2
+run_mlr --jlistwrap --ojson --from u/s.dkvp head -n 3
+

@@ -51,7 +51,7 @@ type TWriterOptions struct {
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;
 	//	stack_json_output_vertically bool;
-	//	wrap_json_output_in_outer_list bool;
+	WrapJSONOutputInOuterList bool
 	//	json_quote_int_keys bool;
 	//	json_quote_non_string_values bool;
 	//	output_json_flatten_separator string;

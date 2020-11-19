@@ -12,16 +12,18 @@ no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * justWroteEmptyLine -> pprint too ...
-* check --jlistwrap
+
+* new columns-to-arrays and arrays-to-columns for stan format
+
+! nidx @ 10-min
+! text-put @ 10-min
+
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
   o "null can be added to any value, and returns the other value unchanged."
   o "the length of null is 0"
-o note json types: string, number, boolean, null, object, array.
-
-! nidx @ 10-min
-! text-put @ 10-min
+  o note json types: string, number, boolean, null, object, array.
 
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:
@@ -49,8 +51,8 @@ o note json types: string, number, boolean, null, object, array.
 
 ! fixed-width pprint input-scanner
 
+
 * UDF nexts:
-  ? array append? need to be able to extend when indices aren't present
   o UT for mixing put -f/-e
   o more functions (see below)
   o function metadata, w/ sort-by, for online help

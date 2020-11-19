@@ -545,10 +545,10 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		//		writerOptions.stack_json_output_vertically = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--jlistwrap" {
-		//		writerOptions.wrap_json_output_in_outer_list = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--jlistwrap" {
+		writerOptions.WrapJSONOutputInOuterList = true
+		argi += 1
+
 		//	} else if args[argi] == "--jknquoteint" {
 		//		writerOptions.json_quote_int_keys = false;
 		//		argi += 1;
