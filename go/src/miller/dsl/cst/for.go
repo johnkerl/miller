@@ -330,9 +330,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 			mindex := types.MlrvalFromInt64(int64(zindex + 1))
 
 			state.stack.BindVariable(this.keyVariableName, &mindex)
-			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
-				state.stack.BindVariable(this.valueVariableName, &element)
-			}
+			state.stack.BindVariable(this.valueVariableName, &element)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -460,22 +458,103 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, error) {
 	mlrval := this.indexableNode.Evaluate(state)
 
-	if mlrval.IsMap() {
+	// Make a frame for the loop variables
+	state.stack.PushStackFrame()
+	defer state.stack.PopStackFrame()
 
+	return this.executeOuter(&mlrval, this.keyVariableNames, state)
+}
+
+// ----------------------------------------------------------------
+func (this *ForLoopMultivariableNode) executeOuter(
+	mlrval *types.Mlrval,
+	keyVariableNames []string,
+	state *State,
+) (*BlockExitPayload, error) {
+	if len(keyVariableNames) == 1 {
+		return this.executeInner(mlrval, keyVariableNames[0], state)
+	}
+	// else, recurse
+
+	if mlrval.IsMap() {
 		mapval := mlrval.GetMap()
 
-		// Make a frame for the loop variable(s)
-		state.stack.PushStackFrame()
-		defer state.stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(*pe.Key)
 
-			for _, keyVariableName := range this.keyVariableNames {
-				state.stack.BindVariable(keyVariableName, &mapkey)
-			}
-			state.stack.BindVariable(this.valueVariableName, pe.Value)
+			state.stack.BindVariable(keyVariableNames[0], &mapkey)
 
-			// TODO: recursive helper function
+			blockExitPayload, err := this.executeOuter(pe.Value, keyVariableNames[1:], state)
+			if err != nil {
+				return nil, err
+			}
+			if blockExitPayload != nil {
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					break
+				}
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
+				// early but we keep going at this level
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+					return blockExitPayload, nil
+				}
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+					return blockExitPayload, nil
+				}
+			}
+		}
+
+	} else if mlrval.IsArray() {
+		arrayval := mlrval.GetArray()
+
+		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
+		// Go storage ("zindex") is 0-up.
+
+		for zindex, element := range arrayval {
+			mindex := types.MlrvalFromInt64(int64(zindex + 1))
+
+			state.stack.BindVariable(keyVariableNames[0], &mindex)
+
+			blockExitPayload, err := this.executeOuter(&element, keyVariableNames[1:], state)
+			if err != nil {
+				return nil, err
+			}
+			if blockExitPayload != nil {
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					break
+				}
+				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
+				// early but we keep going at this level
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VOID {
+					return blockExitPayload, nil
+				}
+				if blockExitPayload.blockExitStatus == BLOCK_EXIT_RETURN_VALUE {
+					return blockExitPayload, nil
+				}
+			}
+		}
+
+	} else {
+		// TODO: give more context
+		return nil, errors.New("Miller: looped-over item is not a map or array.")
+	}
+
+	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *ForLoopMultivariableNode) executeInner(
+	mlrval *types.Mlrval,
+	keyVariableName string,
+	state *State,
+) (*BlockExitPayload, error) {
+	if mlrval.IsMap() {
+		mapval := mlrval.GetMap()
+
+		for pe := mapval.Head; pe != nil; pe = pe.Next {
+			mapkey := types.MlrvalFromString(*pe.Key)
+
+			state.stack.BindVariable(keyVariableName, &mapkey)
+			state.stack.BindVariable(this.valueVariableName, pe.Value)
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
@@ -498,26 +577,16 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 		}
 
 	} else if mlrval.IsArray() {
-
 		arrayval := mlrval.GetArray()
 
 		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
 		// Go storage ("zindex") is 0-up.
 
-		// Make a frame for the loop variable(s)
-		state.stack.PushStackFrame()
-		defer state.stack.PopStackFrame()
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt64(int64(zindex + 1))
 
-			for _, keyVariableName := range this.keyVariableNames {
-				state.stack.BindVariable(keyVariableName, &mindex)
-			}
-			if this.valueVariableName != "" { // 'for (k in ...)' not 'for (k,v in ...)'
-				state.stack.BindVariable(this.valueVariableName, &element)
-			}
-
-			// TODO: recursive helper function
+			state.stack.BindVariable(keyVariableName, &mindex)
+			state.stack.BindVariable(this.valueVariableName, &element)
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)

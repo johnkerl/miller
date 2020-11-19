@@ -324,3 +324,4 @@ NITS/NON-IMMEDIATE:
   in order to get the full DSL string and the line/number info into the same method
 * csvlite rd/wr: comment for USV/ASV too. no need for escaping then.
 * comment schema-change supported only in csvlite reader, not csv reader
+* for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...

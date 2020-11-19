@@ -1598,3 +1598,96 @@ echo; run_mlr --ojson --from u/s.dkvp put '$keys   = keys($*)'
 echo; run_mlr --ojson --from u/s.dkvp put '$values = values($*)'
 echo; run_mlr --ojson --from u/s.dkvp put '$keys   = keys([7,8,9])'
 echo; run_mlr --ojson --from u/s.dkvp put '$values = values([7,8,9])'
+
+# ----------------------------------------------------------------
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for (k in @*) {
+    print "k: ".k
+  }
+'
+
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for (k,v in @*) {
+    print
+      "k: ".k." ".
+      "v:".v;
+  }
+'
+
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for (k,v in @data) {
+    print
+      "k: ".k." ".
+      "v:".v;
+  }
+'
+
+echo; mlr_expect_fail --json --from u/for-multi.json put -q '
+  @data = $*;
+  for (k,v in @data["a"]) {
+    print
+      "k: ".k." ".
+      "v:".v;
+  }
+'
+
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2),v in @*) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "v:".v;
+  }
+'
+
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2),v in @data) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "v:".v;
+  }
+'
+
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2,k3),v in @*) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "k3: ".k3." ".
+      "v:".v;
+  }
+'
+
+echo; run_mlr --json --from u/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2,k3),v in @*) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "k3: ".k3." ".
+      "v:".v;
+    if (v == 5) {
+      break
+    }
+  }
+'
+
+echo; mlr_expect_fail --json --from u/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2,k3),v in @data) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "k3: ".k3." ".
+      "v:".v;
+  }
+'
+
+
