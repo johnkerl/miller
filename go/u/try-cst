@@ -1599,6 +1599,8 @@ echo; run_mlr --ojson --from u/s.dkvp put '$values = values($*)'
 echo; run_mlr --ojson --from u/s.dkvp put '$keys   = keys([7,8,9])'
 echo; run_mlr --ojson --from u/s.dkvp put '$values = values([7,8,9])'
 
+echo; mlr --ojson --from s put 'begin{@v=[]} @v = append(@v, NR); $v=@v'
+
 # ----------------------------------------------------------------
 echo; run_mlr --json --from u/for-multi.json put -q '
   @data = $*;

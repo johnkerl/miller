@@ -743,3 +743,15 @@ func MlrvalValues(ma *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 }
+
+// ----------------------------------------------------------------
+func MlrvalAppend(ma, mb *Mlrval) Mlrval {
+	if ma.mvtype != MT_ARRAY {
+		return MlrvalFromError()
+	}
+
+	macopy := ma.Copy()
+	mbcopy := mb.Copy()
+	macopy.ArrayAppend(mbcopy)
+	return *macopy
+}

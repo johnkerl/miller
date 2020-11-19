@@ -756,6 +756,11 @@ splita("3,4,5", ",") = [3,4,5]`,
 splita("3,4,5", ",") = ["3","4","5"]`,
 		binaryFunc: types.MlrvalSplitAX,
 	},
+	{
+		name:       "append",
+		help:       "Appends second argument to end of first argument, which must be an array.",
+		binaryFunc: types.MlrvalAppend,
+	},
 
 	//pow (class=math #args=2): Exponentiation; same as **.
 	//roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
