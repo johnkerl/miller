@@ -11,6 +11,8 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+* split up ../c/reg_test/run output into multiple files first -- ?
+
 * justWroteEmptyLine -> pprint too ...
 
 * new columns-to-arrays and arrays-to-columns for stan format
