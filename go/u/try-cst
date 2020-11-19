@@ -1593,3 +1593,8 @@ echo; run_mlr -n put 'end {print splitavx("a,b,c", "=", ",")}'
 
 echo; run_mlr -n put 'end {print splita("3,4,5", ",")}'
 echo; run_mlr -n put 'end {print splitax("3,4,5", ",")}'
+
+echo; run_mlr --ojson --from u/s.dkvp put '$keys   = keys($*)'
+echo; run_mlr --ojson --from u/s.dkvp put '$values = values($*)'
+echo; run_mlr --ojson --from u/s.dkvp put '$keys   = keys([7,8,9])'
+echo; run_mlr --ojson --from u/s.dkvp put '$values = values([7,8,9])'

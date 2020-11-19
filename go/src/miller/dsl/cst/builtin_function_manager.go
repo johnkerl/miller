@@ -553,6 +553,16 @@ else returns its argument.`,
 map/array, same as length.`,
 		unaryFunc: types.MlrvalLeafCount,
 	},
+	{
+		name:      "keys",
+		help:      "Returns array of keys of map or array",
+		unaryFunc: types.MlrvalKeys,
+	},
+	{
+		name:      "values",
+		help:      "Returns array of keys of map or array -- in the latter case, returns a copy of the array",
+		unaryFunc: types.MlrvalValues,
+	},
 
 	// ----------------------------------------------------------------
 	// Binary built-in functions

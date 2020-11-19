@@ -697,3 +697,49 @@ func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
 
 	return *retval
 }
+
+// ----------------------------------------------------------------
+func MlrvalKeys(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_MAP {
+		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
+		i := 0
+		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			retval.arrayval[i] = MlrvalFromString(*pe.Key)
+			i++
+		}
+		return *retval
+
+	} else if ma.mvtype == MT_ARRAY {
+		retval := NewSizedMlrvalArray(int64(len(ma.arrayval)))
+		for i, _ := range ma.arrayval {
+			retval.arrayval[i] = MlrvalFromInt64(int64(i + 1)) // Miller user-space indices are 1-up
+		}
+		return *retval
+
+	} else {
+		return MlrvalFromError()
+	}
+}
+
+// ----------------------------------------------------------------
+func MlrvalValues(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_MAP {
+		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
+		i := 0
+		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			retval.arrayval[i] = *pe.Value.Copy()
+			i++
+		}
+		return *retval
+
+	} else if ma.mvtype == MT_ARRAY {
+		retval := NewSizedMlrvalArray(int64(len(ma.arrayval)))
+		for i, value := range ma.arrayval {
+			retval.arrayval[i] = *value.Copy()
+		}
+		return *retval
+
+	} else {
+		return MlrvalFromError()
+	}
+}

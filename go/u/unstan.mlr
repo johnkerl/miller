@@ -22,11 +22,10 @@
 
 # Find array length
 n = 0;
-map keys = {};
 for (k, v in $*) {
   n = max(n, length(v));
-  keys[k] = k;
 }
+keys = keys($*);
 
 # Emit one record per array entry
 for (int i = 1; i <= n; i+=1) {

@@ -14,8 +14,6 @@ no need to bootstrap a parser for the parser-generator language
 * justWroteEmptyLine -> pprint too ...
 * check --jlistwrap
 
-! keys()/values() function: map -> array
-
 ! for-multi
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
