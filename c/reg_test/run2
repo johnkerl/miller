@@ -1,0 +1,167 @@
+#!/bin/sh
+
+# ================================================================
+# MILLER REGRESSION SCRIPT
+#
+# Miller has some source-code-level unit-test routines -- but the
+# vast majority of tests (thousands) are invoked here at the
+# command-line level.
+#
+# Output from various mlr command-line invocations, with prepared
+# inputs, is generated and then compared against stored expected
+# output.
+# ================================================================
+
+# ================================================================
+# Functions
+
+announce() {
+  echo >> $outfile
+  echo "================================================================" >> $outfile
+  echo "$@" >> $outfile
+  echo >> $outfile
+}
+
+mention() {
+  echo >> $outfile
+  echo ---------------------------------------------------------------- "$@" >> $outfile
+}
+
+# A key feature of this regression script is that it can be invoked from any
+# directory. Depending on the directory it's invoked from, the path to the mlr
+# executable may vary.  Nonetheless for debugging it's crucial that we echo out
+# each command being executed. See also diff -I below.
+run_mlr() {
+  # Use just "mlr" for info messages, not full path to mlr
+  if [ "$verbose" = "true" ]; then
+    echo mlr "$@"
+  fi
+  echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+  $path_to_mlr "$@" >> $outfile
+  echo >> $outfile
+  # since set -e
+  num_completed=`expr $num_completed + 1`
+}
+
+run_cat() {
+  if [ "$verbose" = "true" ]; then
+    echo cat "$@"
+  fi
+  echo cat "$@" >> $outfile
+  cat "$@" >> $outfile
+  echo >> $outfile
+}
+
+run_mlr_for_auxents() {
+  # Use just "mlr" for info messages
+  echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+  $path_to_mlr_for_auxents "$@" >> $outfile
+  # since set -e
+  num_completed=`expr $num_completed + 1`
+}
+
+run_mlr_for_auxents_no_output() {
+  # Use just "mlr" for info messages
+  echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+  $path_to_mlr_for_auxents "$@"
+  # since set -e
+  num_completed=`expr $num_completed + 1`
+}
+
+# Just cats a file while also announcing that fact.
+run_cat() {
+  if [ "$verbose" = "true" ]; then
+    echo cat "$@"
+  fi
+  echo cat "$@" >> $outfile # for diff at end
+  cat "$@" >> $outfile      # for diff at end
+  echo >> $outfile
+}
+
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+  if [ "$verbose" = "true" ]; then
+    echo mlr "$@"
+  fi
+  echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+  set +e
+  stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 >>$outfile )
+  status=$?
+  echo "${stderr_capture}" >> $outfile
+  if [ $status -ne 1 ]; then
+    echo "Exit status was $status; expected 1."
+    echo "Exit status was $status; expected 1." >> $outfile
+  fi
+  set -e
+  echo >> $outfile
+  test $status -eq 1
+  # since set -e
+  num_completed=`expr $num_completed + 1`
+}
+
+# ================================================================
+# Start of script
+
+ourdir=`dirname $0`
+srcdir=$ourdir/../..
+path_to_mlr=$srcdir/c/mlr
+if [ ! -x "$path_to_mlr" ]; then
+  echo "$0: Could not find path to mlr executable $path_to_mlr." 1>&2
+fi
+
+# Input/output locations
+indir=$ourdir/input
+expdir=$ourdir/expected
+outdir=$pwd/output-regtest
+reloutdir=./output-regtest
+outfile=$outdir/out
+expfile=$expdir/out
+
+# ----------------------------------------------------------------
+mkdir -p $outdir
+
+# Don't let the running user's .mlrrc affect the regression test
+export MLRRC="__none__"
+
+rm -rf $outdir
+mkdir -p $outdir
+touch $outfile
+echo
+
+num_completed=0
+verbose=false
+echo Using mlr executable $path_to_mlr
+
+# ================================================================
+# * Input-globals:
+#   o path_to_mlr
+#   o verbose
+#   o outfile (changes)
+#
+# * State-globals:
+#   o num_tried
+#   o num_passed
+#   o num_failed
+#
+# * Sketch:
+#   o Discover well-ordered *.case files
+#   o Contents are as now: announce, run_mlr, mlr_expect_fail
+#   o Count global #pass #fail, as well as per-case-file #pass #fail
+#   o Set verbose here
+#   o Execute each case file with redirected output. Only details if -v.
+
+# ================================================================
+# announce STATELESS MAPPERS
+#
+# run_mlr cat $indir/abixy
+# run_mlr cat /dev/null
+#
+# run_mlr cat -n $indir/abixy-het
+# run_mlr cat -N counter $indir/abixy-het
+
+. $ourdir/case-cat.sh
+. $ourdir/case-cut.sh
