@@ -14,6 +14,14 @@
 
 # ================================================================
 # Functions
+#
+# xxx note:
+# * side-global input $verbose
+# * side-global input $outfile
+# ... and why structured this way (so run_mlr lines can be compact)
+# * side-global in/out $num_invocations_tried
+# * side-global in/out $num_invocations_passed
+# * side-global in/out $num_invocations_failed
 
 announce() {
   echo >> $outfile
@@ -37,11 +45,16 @@ run_mlr() {
     echo mlr "$@"
   fi
   echo mlr "$@" >> $outfile
+  num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
   $path_to_mlr "$@" >> $outfile
+  status=$?
+  if [ $status -eq 0 ]; then
+    num_invocations_passed=`expr $num_invocations_passed + 1`
+  else
+    num_invocations_failed=`expr $num_invocations_failed + 1`
+  fi
   echo >> $outfile
-  # since set -e
-  num_completed=`expr $num_completed + 1`
 }
 
 run_cat() {
@@ -56,19 +69,31 @@ run_cat() {
 run_mlr_for_auxents() {
   # Use just "mlr" for info messages
   echo mlr "$@" >> $outfile
+  num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
   $path_to_mlr_for_auxents "$@" >> $outfile
-  # since set -e
-  num_completed=`expr $num_completed + 1`
+  status=$?
+  if [ $status -eq 0 ]; then
+    num_invocations_passed=`expr $num_invocations_passed + 1`
+  else
+    num_invocations_failed=`expr $num_invocations_failed + 1`
+  fi
+  echo >> $outfile
 }
 
 run_mlr_for_auxents_no_output() {
   # Use just "mlr" for info messages
   echo mlr "$@" >> $outfile
+  num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
   $path_to_mlr_for_auxents "$@"
-  # since set -e
-  num_completed=`expr $num_completed + 1`
+  status=$?
+  if [ $status -eq 0 ]; then
+    num_invocations_passed=`expr $num_invocations_passed + 1`
+  else
+    num_invocations_failed=`expr $num_invocations_failed + 1`
+  fi
+  echo >> $outfile
 }
 
 # Just cats a file while also announcing that fact.
@@ -87,8 +112,8 @@ mlr_expect_fail() {
     echo mlr "$@"
   fi
   echo mlr "$@" >> $outfile
+  num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
-  set +e
   stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 >>$outfile )
   status=$?
   echo "${stderr_capture}" >> $outfile
@@ -96,16 +121,18 @@ mlr_expect_fail() {
     echo "Exit status was $status; expected 1."
     echo "Exit status was $status; expected 1." >> $outfile
   fi
-  set -e
+  if [ $status -ne 0 ]; then
+    num_invocations_passed=`expr $num_invocations_passed + 1`
+  else
+    num_invocations_failed=`expr $num_invocations_failed + 1`
+  fi
   echo >> $outfile
-  test $status -eq 1
-  # since set -e
-  num_completed=`expr $num_completed + 1`
 }
 
 # ================================================================
 # Start of script
 
+pwd=$(pwd)
 ourdir=`dirname $0`
 srcdir=$ourdir/../..
 path_to_mlr=$srcdir/c/mlr
@@ -121,6 +148,11 @@ reloutdir=./output-regtest
 outfile=$outdir/out
 expfile=$expdir/out
 
+# TODO:
+# * verbose from -v
+# * case-files from remaining args
+verbose="false"
+
 # ----------------------------------------------------------------
 mkdir -p $outdir
 
@@ -130,22 +162,20 @@ export MLRRC="__none__"
 rm -rf $outdir
 mkdir -p $outdir
 touch $outfile
-echo
 
-num_completed=0
-verbose=false
 echo Using mlr executable $path_to_mlr
 
-# ================================================================
+# ----------------------------------------------------------------
+# TODO: comments:
 # * Input-globals:
 #   o path_to_mlr
 #   o verbose
 #   o outfile (changes)
 #
 # * State-globals:
-#   o num_tried
-#   o num_passed
-#   o num_failed
+#   o num_invocations_attempted
+#   o num_invocations_passed
+#   o num_invocations_failed
 #
 # * Sketch:
 #   o Discover well-ordered *.case files
@@ -153,15 +183,82 @@ echo Using mlr executable $path_to_mlr
 #   o Count global #pass #fail, as well as per-case-file #pass #fail
 #   o Set verbose here
 #   o Execute each case file with redirected output. Only details if -v.
+# ----------------------------------------------------------------
 
-# ================================================================
-# announce STATELESS MAPPERS
-#
-# run_mlr cat $indir/abixy
-# run_mlr cat /dev/null
-#
-# run_mlr cat -n $indir/abixy-het
-# run_mlr cat -N counter $indir/abixy-het
+# Over all cases:
+num_cases_attempted=0
+num_cases_passed=0
+num_cases_failed=0
 
-. $ourdir/case-cat.sh
-. $ourdir/case-cut.sh
+total_num_invocations_attempted=0
+
+for case_file in $ourdir/case-*.sh; do
+
+  # Per case:
+  num_invocations_attempted=0
+  num_invocations_passed=0
+  num_invocations_failed=0
+
+  if [ "$verbose" = "true" ] ; then
+    echo ""
+    echo "BEGIN $case_file"
+    echo ""
+  fi
+
+  case_name=$(basename $case_file)
+  outfile=$outdir/$case_name.out
+  expfile=$expdir/$case_name.out
+
+  num_cases_attempted=`expr $num_cases_attempted + 1`
+
+  # ----------------------------------------------------------------
+  # Run all invoctions in the case:
+  . $case_file
+  # ----------------------------------------------------------------
+
+  # There are two ways to fail:
+  # * Miller-command code was 0 not 1 (or vice versa) -- checked per-invocation
+  # * Expected/actual output mismatch -- checked per-case
+
+  case_passed=true
+  if [ $num_invocations_failed -ne 0 ]; then
+    case_passed=false
+  fi
+
+  diff_flag=""
+  if [ "$verbose" = "true" ]; then
+    diff_flag="-q"
+  fi
+  diff $diff_flag -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
+  status=$?
+  if [ $status -ne 0 ]; then
+    case_passed=false
+  fi
+
+  if [ $case_passed = "true" ]; then
+    echo "PASS  $case_file"
+    num_cases_passed=`expr $num_cases_passed + 1`
+  else
+    echo "FAIL  $case_file"
+    num_cases_failed=`expr $num_cases_failed + 1`
+  fi
+
+  total_num_invocations_attempted=`expr $num_cases_attempted + $num_invocations_attempted`
+done
+
+echo
+echo "NUMBER OF MILLER RUNS $total_num_invocations_attempted"
+echo "NUMBER OF CASES PASSED $num_cases_passed"
+echo "NUMBER OF CASES FAILED $num_cases_failed"
+echo
+
+# ----------------------------------------------------------------
+if [ $num_cases_failed -eq 0 ]; then
+  echo "PASS"
+  exit 0
+else
+  echo "FAIL"
+  exit 1
+fi
+
+# TODO: also (far more importantly) do the diffs

@@ -13,13 +13,6 @@
 # ================================================================
 
 # ----------------------------------------------------------------
-# Make sure the script fails if any commnand fails. Note that this
-# includes a mlr command which should not fail and does -- as well as
-# one which should fail and does not. (See the mlr_expect_fail
-# function below.)
-set -e
-
-# ----------------------------------------------------------------
 # Path to mlr executable, which for interactive development is
 # simply "./mlr".
 #
@@ -80,6 +73,8 @@ expfile=$expdir/out
 # Functions
 
 num_completed=0
+num_passed=0
+num_failed=0
 
 announce() {
   echo >> $outfile
@@ -103,9 +98,14 @@ run_mlr() {
   echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
   $path_to_mlr "$@" >> $outfile
-  echo >> $outfile
-  # since set -e
+  status=$?
   num_completed=`expr $num_completed + 1`
+  if [ $status -eq 0 ]; then
+    num_passed=`expr $num_passed + 1`
+  else
+    num_failed=`expr $num_failed + 1`
+  fi
+  echo >> $outfile
 }
 
 run_cat() {
@@ -120,8 +120,13 @@ run_mlr_for_auxents() {
   echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
   $path_to_mlr_for_auxents "$@" >> $outfile
-  # since set -e
+  status=$?
   num_completed=`expr $num_completed + 1`
+  if [ $status -eq 0 ]; then
+    num_passed=`expr $num_passed + 1`
+  else
+    num_failed=`expr $num_failed + 1`
+  fi
 }
 
 run_mlr_for_auxents_no_output() {
@@ -129,8 +134,13 @@ run_mlr_for_auxents_no_output() {
   echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
   $path_to_mlr_for_auxents "$@"
-  # since set -e
+  status=$?
   num_completed=`expr $num_completed + 1`
+  if [ $status -eq 0 ]; then
+    num_passed=`expr $num_passed + 1`
+  else
+    num_failed=`expr $num_failed + 1`
+  fi
 }
 
 # Just cats a file while also announcing that fact.
@@ -146,19 +156,20 @@ mlr_expect_fail() {
   echo mlr "$@"
   echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
-  set +e
   stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 >>$outfile )
   status=$?
+  num_completed=`expr $num_completed + 1`
+  if [ $status -eq 1 ]; then
+    num_passed=`expr $num_passed + 1`
+  else
+    num_failed=`expr $num_failed + 1`
+  fi
   echo "${stderr_capture}" >> $outfile
   if [ $status -ne 1 ]; then
     echo "Exit status was $status; expected 1."
     echo "Exit status was $status; expected 1." >> $outfile
   fi
-  set -e
   echo >> $outfile
-  test $status -eq 1
-  # since set -e
-  num_completed=`expr $num_completed + 1`
 }
 
 # ================================================================
