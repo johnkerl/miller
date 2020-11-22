@@ -222,7 +222,7 @@ num_cases_failed=0
 total_num_invocations_attempted=0
 
 if [ "$case_file_names" = "" ]; then
-    case_file_names=$(ls $ourdir/case-*.sh)
+    case_file_names=$(ls $ourdir/cases/case-*.sh)
 fi
 
 for case_file in $case_file_names; do
