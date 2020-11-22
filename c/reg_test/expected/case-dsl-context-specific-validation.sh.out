@@ -1,0 +1,456 @@
+
+
+---------------------------------------------------------------- non-top-level begin/end
+mlr put -v begin{begin{@x=1}}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="begin", type=BEGIN:
+                text="begin_block", type=STATEMENT_BLOCK:
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="begin", type=BEGIN:
+            text="begin_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=OOSVAR_ASSIGNMENT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="x", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+mlr: begin statements are only valid at top level.
+
+mlr put -v true{begin{@x=1}}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="true", type=BOOLEAN_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="begin", type=BEGIN:
+                text="begin_block", type=STATEMENT_BLOCK:
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=3 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="true", type=BOOLEAN_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="begin", type=BEGIN:
+                text="begin_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+mlr: begin statements are only valid at top level.
+
+mlr put -v end{end{@x=1}}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="end", type=END:
+                text="end_block", type=STATEMENT_BLOCK:
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="end", type=END:
+            text="end_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=OOSVAR_ASSIGNMENT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="x", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+mlr: end statements are only valid at top level.
+
+mlr put -v true{end{@x=1}}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="true", type=BOOLEAN_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="end", type=END:
+                text="end_block", type=STATEMENT_BLOCK:
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=3 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="true", type=BOOLEAN_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="end", type=END:
+                text="end_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+mlr: end statements are only valid at top level.
+
+
+---------------------------------------------------------------- srecs in begin/end
+mlr put -v begin{$x=1}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="x", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=SREC_ASSIGNMENT:
+            text="x", type=FIELD_NAME.
+            text="1", type=NUMERIC_LITERAL.
+mlr: assignments to $-variables are not valid within begin or end blocks.
+
+mlr put -v begin{@x=$y}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="x", type=STRING_LITERAL.
+                text="y", type=FIELD_NAME.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="x", type=STRING_LITERAL.
+            text="y", type=FIELD_NAME.
+mlr: statements involving $-variables are not valid within begin or end blocks.
+
+mlr put -v end{$x=1}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="x", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=SREC_ASSIGNMENT:
+            text="x", type=FIELD_NAME.
+            text="1", type=NUMERIC_LITERAL.
+mlr: assignments to $-variables are not valid within begin or end blocks.
+
+mlr put -v end{@x=$y}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="x", type=STRING_LITERAL.
+                text="y", type=FIELD_NAME.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="x", type=STRING_LITERAL.
+            text="y", type=FIELD_NAME.
+mlr: statements involving $-variables are not valid within begin or end blocks.
+
+mlr put -v begin{@v=$*}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+            text="$*", type=FULL_SREC.
+mlr: assignments from $-variables are not valid within begin or end blocks.
+
+mlr put -v end{$*=@v}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=FULL_SREC_ASSIGNMENT:
+            text="$*", type=FULL_SREC.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+mlr: assignments to $-variables are not valid within begin or end blocks.
+
+mlr put -v begin{unset $x}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="unset", type=UNSET:
+                text="x", type=FIELD_NAME.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="unset", type=UNSET:
+            text="x", type=FIELD_NAME.
+mlr: unset of $-variables is not valid within begin or end blocks.
+
+mlr put -v end{unset $x}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="unset", type=UNSET:
+                text="x", type=FIELD_NAME.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="unset", type=UNSET:
+            text="x", type=FIELD_NAME.
+mlr: unset of $-variables is not valid within begin or end blocks.
+
+mlr put -v begin{unset $*}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="unset", type=UNSET:
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="unset", type=UNSET:
+            text="$*", type=FULL_SREC.
+mlr: unset of $-variables is not valid within begin or end blocks.
+
+mlr put -v end{unset $*}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="unset", type=UNSET:
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="unset", type=UNSET:
+            text="$*", type=FULL_SREC.
+mlr: unset of $-variables is not valid within begin or end blocks.
+
+
+---------------------------------------------------------------- break/continue outside loop
+mlr put -v break
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="break", type=BREAK.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="break", type=BREAK.
+mlr: break statements are only valid within for, while, or do-while.
+
+mlr put -v continue
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="continue", type=CONTINUE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="continue", type=CONTINUE.
+mlr: break statements are only valid within for, while, or do-while.
+
+
+---------------------------------------------------------------- oosvars etc. in mlr filter
+mlr filter -v break
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="break", type=BREAK.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="break", type=BREAK.
+mlr: filter expressions must end in a final boolean statement.
+
+mlr filter -v continue
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="continue", type=CONTINUE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="continue", type=CONTINUE.
+mlr: filter expressions must end in a final boolean statement.
+
+
+---------------------------------------------------------------- expanded filter
+mlr --from ./reg_test/input/abixy filter 
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg_test/input/abixy filter -x 
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+
+mlr --from ./reg_test/input/abixy filter 
+  func f(n) {
+    return n - 1
+  }
+  f(NR) == 5
+
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+
+mlr --from ./reg_test/input/abixy filter 
+  subr s(n) {
+    print "NR is ".n
+  }
+  call s(NR);
+  false
+
+NR is 1
+NR is 2
+NR is 3
+NR is 4
+NR is 5
+NR is 6
+NR is 7
+NR is 8
+NR is 9
+NR is 10
+
+mlr --from ./reg_test/input/abixy filter 
+  int a = 5;
+  int b = 7;
+  a <= NR && NR <= b
+
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+
+mlr --from ./reg_test/input/abixy filter filter false
+mlr filter: expressions must not also contain the "filter" keyword.
+
+mlr --from ./reg_test/input/abixy filter filter false; true
+mlr filter: expressions must not also contain the "filter" keyword.
+

@@ -1,0 +1,29 @@
+run_mlr --from $indir/xyz2 --oxtab put '
+  a = {1:2, 3:4};
+  b = {1: {2:3, 4:5}};
+  @c = {1:2, 3:4};
+  @d = {1: {2:3, 4:5}};
+
+  $ta  = typeof(a);
+  $ta1 = typeof(a[1]);
+  $ta7 = typeof(a[7]);
+
+  $tb  = typeof(b);
+  $tb1 = typeof(b[1]);
+  $tb7 = typeof(b[7]);
+
+  $tc  = typeof(@c);
+  $tc1 = typeof(@c[1]);
+  $tc7 = typeof(@c[7]);
+
+  $td  = typeof(@d);
+  $td1 = typeof(@d[1]);
+  $td7 = typeof(@d[7]);
+
+  $te1 = typeof(6);
+  $te2 = typeof({6:4});
+
+  $tsa = typeof($a);
+  $tsx = typeof($x);
+  $ts  = typeof($*);
+'

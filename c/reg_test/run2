@@ -71,7 +71,7 @@ run_mlr_for_auxents() {
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
-  $path_to_mlr_for_auxents "$@" >> $outfile
+  $path_to_mlr "$@" >> $outfile
   status=$?
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -86,7 +86,7 @@ run_mlr_for_auxents_no_output() {
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
-  $path_to_mlr_for_auxents "$@"
+  $path_to_mlr "$@"
   status=$?
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`

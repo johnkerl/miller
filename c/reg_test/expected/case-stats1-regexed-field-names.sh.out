@@ -1,0 +1,92 @@
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum -g a,b -f i,x,y
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gr ^[a-h]$ --fr ^[i-z]$
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum -g a,b --fr ^[i-z]$
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gr ^[a-h]$ -f i,x,y
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gx ^[i-z]$ --fx ^[a-h]$
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum -g a,b --fx ^[a-h]$
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+
+mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gx ^[i-z]$ -f i,x,y
+a   b   i_sum x_sum    y_sum
+pan pan 1     0.346790 0.726803
+eks pan 2     0.758680 0.522151
+wye wye 3     0.204603 0.338319
+eks wye 4     0.381399 0.134189
+wye pan 5     0.573289 0.863624
+zee pan 6     0.527126 0.493221
+eks zee 7     0.611784 0.187885
+zee wye 8     0.598554 0.976181
+hat wye 9     0.031442 0.749551
+pan wye 10    0.502626 0.952618
+

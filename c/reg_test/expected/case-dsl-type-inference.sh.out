@@ -1,0 +1,1360 @@
+
+mlr --xtab put $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   151
+
+mlr --xtab put -F $y     = $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   151.000000
+
+mlr --xtab put -S $y     = $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   7576
+
+mlr --xtab filter 999   != $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+
+mlr --xtab filter -F 999   != $pi1 + $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+
+mlr --xtab filter -S "999" != $pi1 . $pi2 ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+
+mlr --oxtab put $s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);
+a  1
+b  2.0
+s  1
+t  2.000000
+u  3
+v  4.000000
+ts int
+tt float
+tu int
+tv float
+
+mlr --oxtab put -F $s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);
+a  1
+b  2.0
+s  1.000000
+t  2.000000
+u  3
+v  4.000000
+ts float
+tt float
+tu int
+tv float
+
+mlr --oxtab put -S $s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);
+a  1
+b  2.0
+s  1
+t  2.0
+u  3
+v  4.000000
+ts string
+tt string
+tu int
+tv float
+
+mlr --xtab put $y=abs($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
+
+mlr --xtab put $y=abs($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
+
+mlr --xtab put $y=abs($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=abs($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
+
+mlr --xtab put $y=abs($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
+
+mlr --xtab put $y=abs($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
+
+mlr --xtab put -F $y=abs($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
+
+mlr --xtab put -F $y=abs($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.200000
+
+mlr --xtab put -F $y=abs($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -F $y=abs($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
+
+mlr --xtab put -F $y=abs($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
+
+mlr --xtab put -F $y=abs($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=ceil($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   72.000000
+
+mlr --xtab put $y=ceil($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -71.000000
+
+mlr --xtab put $y=ceil($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=ceil($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
+
+mlr --xtab put $y=ceil($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75
+
+mlr --xtab put $y=ceil($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
+
+mlr --xtab put -F $y=floor($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.000000
+
+mlr --xtab put -F $y=floor($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -72.000000
+
+mlr --xtab put -F $y=floor($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -F $y=floor($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
+
+mlr --xtab put -F $y=floor($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75.000000
+
+mlr --xtab put -F $y=floor($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=round($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.000000
+
+mlr --xtab put $y=round($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -71.000000
+
+mlr --xtab put $y=round($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=round($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75
+
+mlr --xtab put $y=round($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75
+
+mlr --xtab put $y=round($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
+
+mlr --xtab put -F $y=round($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   71.000000
+
+mlr --xtab put -F $y=round($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -71.000000
+
+mlr --xtab put -F $y=round($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -F $y=round($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   75.000000
+
+mlr --xtab put -F $y=round($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -75.000000
+
+mlr --xtab put -F $y=round($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=sgn($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1.000000
+
+mlr --xtab put $y=sgn($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1.000000
+
+mlr --xtab put $y=sgn($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $y=sgn($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1
+
+mlr --xtab put $y=sgn($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1
+
+mlr --xtab put $y=sgn($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0
+
+mlr --xtab put -F $y=sgn($pf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1.000000
+
+mlr --xtab put -F $y=sgn($nf1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1.000000
+
+mlr --xtab put -F $y=sgn($zf) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put -F $y=sgn($pi1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   1.000000
+
+mlr --xtab put -F $y=sgn($ni1) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   -1.000000
+
+mlr --xtab put -F $y=sgn($zi) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+y   0.000000
+
+mlr --xtab put $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75
+max 76
+
+mlr --xtab put -F $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put -F $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put -F $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put -F $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75.000000
+max 76.000000
+
+mlr --xtab put $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75
+max 76
+
+mlr --xtab put -F $min=min($pf1,$pf2);$max=max($pf1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 73.400000
+
+mlr --xtab put -F $min=min($pf1,$pi2);$max=max($pf1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 71.200000
+max 76.000000
+
+mlr --xtab put -F $min=min($pi1,$pf2);$max=max($pi1,$pf2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 73.400000
+max 75.000000
+
+mlr --xtab put -F $min=min($pi1,$pi2);$max=max($pi1,$pi2) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+min 75.000000
+max 76.000000
+
+mlr --xtab put $sum=$pf1+$pf2;$diff=$pf1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  144.600000
+diff -2.200000
+
+mlr --xtab put $sum=$pf1+$pi2;$diff=$pf1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  147.200000
+diff -4.800000
+
+mlr --xtab put $sum=$pi1+$pf2;$diff=$pi1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  148.400000
+diff 1.600000
+
+mlr --xtab put $sum=$pi1+$pi2;$diff=$pi1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  151
+diff -1
+
+mlr --xtab put -F $sum=$pf1+$pf2;$diff=$pf1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  144.600000
+diff -2.200000
+
+mlr --xtab put -F $sum=$pf1+$pi2;$diff=$pf1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  147.200000
+diff -4.800000
+
+mlr --xtab put -F $sum=$pi1+$pf2;$diff=$pi1-$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  148.400000
+diff 1.600000
+
+mlr --xtab put -F $sum=$pi1+$pi2;$diff=$pi1-$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+sum  151.000000
+diff -1.000000
+
+mlr --xtab put $prod=$pf1*$pf2;$quot=$pf1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5226.080000
+quot 0.970027
+
+mlr --xtab put $prod=$pf1*$pi2;$quot=$pf1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5411.200000
+quot 0.936842
+
+mlr --xtab put $prod=$pi1*$pf2;$quot=$pi1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5505.000000
+quot 1.021798
+
+mlr --xtab put $prod=$pi1*$pi2;$quot=$pi1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5700
+quot 0.986842
+
+mlr --xtab put -F $prod=$pf1*$pf2;$quot=$pf1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5226.080000
+quot 0.970027
+
+mlr --xtab put -F $prod=$pf1*$pi2;$quot=$pf1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5411.200000
+quot 0.936842
+
+mlr --xtab put -F $prod=$pi1*$pf2;$quot=$pi1/$pf2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5505.000000
+quot 1.021798
+
+mlr --xtab put -F $prod=$pi1*$pi2;$quot=$pi1/$pi2 ./reg_test/input/mixed-types.xtab
+pf1  71.2
+nf1  -71.2
+zf   0.0
+pf2  73.4
+nf2  -73.4
+pi1  75
+ni1  -75
+zi   0
+pi2  76
+ni2  -76
+prod 5700.000000
+quot 0.986842
+
+mlr --xtab put $iquot=$pf1//$pf2;$mod=$pf1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put $iquot=$pf1//$pi2;$mod=$pf1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put $iquot=$pi1//$pf2;$mod=$pi1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 1.000000
+mod   1.600000
+
+mlr --xtab put $iquot=$pi1//$pi2;$mod=$pi1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0
+mod   75
+
+mlr --xtab put -F $iquot=$pf1//$pf2;$mod=$pf1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put -F $iquot=$pf1//$pi2;$mod=$pf1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   71.200000
+
+mlr --xtab put -F $iquot=$pi1//$pf2;$mod=$pi1%$pf2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 1.000000
+mod   1.600000
+
+mlr --xtab put -F $iquot=$pi1//$pi2;$mod=$pi1%$pi2 ./reg_test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+iquot 0.000000
+mod   75.000000
+
+mlr --xtab put $a=roundm($pf1,10.0);$b=roundm($pf1,-10.0) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   70.000000
+b   70.000000
+
+mlr --xtab put $a=roundm($pf1,10)  ;$b=roundm($pf1,-10)   ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   70.000000
+b   70.000000
+
+mlr --xtab put $a=roundm($pi1,10.0);$b=roundm($pi1,-10.0) ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   80.000000
+b   80.000000
+
+mlr --xtab put $a=roundm($pi1,10)  ;$b=roundm($pi1,-10)   ./reg_test/input/mixed-types.xtab
+pf1 71.2
+nf1 -71.2
+zf  0.0
+pf2 73.4
+nf2 -73.4
+pi1 75
+ni1 -75
+zi  0
+pi2 76
+ni2 -76
+a   70
+b   70
+
+mlr --oxtab put $z=$x+$y; $a=3+4; $b="3"."4"; $c="3"+4
+x 3
+y 4
+z 7
+a 7
+b 34
+c (error)
+

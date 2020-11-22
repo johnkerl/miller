@@ -1,0 +1,86 @@
+
+mlr --from ./reg_test/input/abixy put -q 
+  func f() {
+    return {
+      "a:".$a: $i,
+      "b:".$b: $y,
+      NR: NF,
+    }
+  }
+  for (k,v in f()) {
+    print "k=".k;
+    print "v=".v;
+  }
+  print
+
+k=a:pan
+v=1
+k=b:pan
+v=0.726803
+k=1
+v=5
+
+k=a:eks
+v=2
+k=b:pan
+v=0.522151
+k=2
+v=5
+
+k=a:wye
+v=3
+k=b:wye
+v=0.338319
+k=3
+v=5
+
+k=a:eks
+v=4
+k=b:wye
+v=0.134189
+k=4
+v=5
+
+k=a:wye
+v=5
+k=b:pan
+v=0.863624
+k=5
+v=5
+
+k=a:zee
+v=6
+k=b:pan
+v=0.493221
+k=6
+v=5
+
+k=a:eks
+v=7
+k=b:zee
+v=0.187885
+k=7
+v=5
+
+k=a:zee
+v=8
+k=b:wye
+v=0.976181
+k=8
+v=5
+
+k=a:hat
+v=9
+k=b:wye
+v=0.749551
+k=9
+v=5
+
+k=a:pan
+v=10
+k=b:wye
+v=0.952618
+k=10
+v=5
+
+

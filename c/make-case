@@ -7,4 +7,9 @@ fi
 name="$1"
 shift
 
-cat "$@" | uind -s > reg_test/case-${name}.sh
+sh=reg_test/case-${name}.sh
+if [ -f "$sh" ]; then
+    echo "Case file $sh already exists" 1>&2
+    exit 1
+fi
+cat "$@" | uind -s > $sh

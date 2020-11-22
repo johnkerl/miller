@@ -1,0 +1,495 @@
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z=9} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="a", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK:
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="z", type=STRING_LITERAL.
+                text="9", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="a", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="z", type=STRING_LITERAL.
+            text="9", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="a", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="z", type=STRING_LITERAL.
+                text="9", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="a", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="z", type=STRING_LITERAL.
+            text="9", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="a", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+            text="=", type=SREC_ASSIGNMENT:
+                text="t", type=FIELD_NAME.
+                text="2", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="z", type=STRING_LITERAL.
+                text="9", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="a", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="z", type=STRING_LITERAL.
+            text="9", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+            text="=", type=SREC_ASSIGNMENT:
+                text="t", type=FIELD_NAME.
+                text="2", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="a", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+            text="=", type=SREC_ASSIGNMENT:
+                text="t", type=FIELD_NAME.
+                text="2", type=NUMERIC_LITERAL.
+            text="=", type=SREC_ASSIGNMENT:
+                text="u", type=FIELD_NAME.
+                text="3", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="z", type=STRING_LITERAL.
+                text="9", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="a", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="z", type=STRING_LITERAL.
+            text="9", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+            text="=", type=SREC_ASSIGNMENT:
+                text="t", type=FIELD_NAME.
+                text="2", type=NUMERIC_LITERAL.
+            text="=", type=SREC_ASSIGNMENT:
+                text="u", type=FIELD_NAME.
+                text="3", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+
+
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="a", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="t", type=STRING_LITERAL.
+                    text=".", type=OPERATOR:
+                        text="u", type=STRING_LITERAL.
+                        text="5", type=FIELD_NAME.
+                text="2", type=NUMERIC_LITERAL.
+            text="emitf", type=EMITF:
+                text="emitf", type=EMITF:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="v", type=STRING_LITERAL.
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="w", type=STRING_LITERAL.
+                text="stream", type=STREAM:
+            text="dump", type=DUMP:
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+                text="all", type=FULL_OOSVAR.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="z", type=STRING_LITERAL.
+                text="9", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="a", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="z", type=STRING_LITERAL.
+            text="9", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="e", type=FIELD_NAME.
+        text="2", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="||", type=OPERATOR:
+            text="==", type=OPERATOR:
+                text="f", type=FIELD_NAME.
+                text="g", type=FIELD_NAME.
+            text="==", type=OPERATOR:
+                text="h", type=FIELD_NAME.
+                text="i", type=FIELD_NAME.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=SREC_ASSIGNMENT:
+                text="s", type=FIELD_NAME.
+                text="1", type=NUMERIC_LITERAL.
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="t", type=STRING_LITERAL.
+                    text=".", type=OPERATOR:
+                        text="u", type=STRING_LITERAL.
+                        text="5", type=FIELD_NAME.
+                text="2", type=NUMERIC_LITERAL.
+            text="emitf", type=EMITF:
+                text="emitf", type=EMITF:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="v", type=STRING_LITERAL.
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="w", type=STRING_LITERAL.
+                text="stream", type=STREAM:
+            text="dump", type=DUMP:
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+                text="all", type=FULL_OOSVAR.
+    text="=", type=SREC_ASSIGNMENT:
+        text="x", type=FIELD_NAME.
+        text="6", type=NUMERIC_LITERAL.
+
+
+mlr put -v begin{true{@x=1}}; true{@x=2}; end{true{@x=3}} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="cond", type=CONDITIONAL_BLOCK:
+                text="true", type=BOOLEAN_LITERAL.
+                text="cond_block", type=STATEMENT_BLOCK:
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="1", type=NUMERIC_LITERAL.
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="true", type=BOOLEAN_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="x", type=STRING_LITERAL.
+                text="2", type=NUMERIC_LITERAL.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="cond", type=CONDITIONAL_BLOCK:
+                text="true", type=BOOLEAN_LITERAL.
+                text="cond_block", type=STATEMENT_BLOCK:
+                    text="=", type=OOSVAR_ASSIGNMENT:
+                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                            text="x", type=STRING_LITERAL.
+                        text="3", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="cond", type=CONDITIONAL_BLOCK:
+            text="true", type=BOOLEAN_LITERAL.
+            text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=OOSVAR_ASSIGNMENT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="x", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="cond", type=CONDITIONAL_BLOCK:
+            text="true", type=BOOLEAN_LITERAL.
+            text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=OOSVAR_ASSIGNMENT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="x", type=STRING_LITERAL.
+                    text="3", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="true", type=BOOLEAN_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="x", type=STRING_LITERAL.
+                text="2", type=NUMERIC_LITERAL.
+
+

@@ -1,0 +1,101 @@
+
+mlr --ipprint --odkvp cat ./reg_test/input/a.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --ipprint --odkvp cat ./reg_test/input/b.pprint
+d=5,e=6,f=7
+
+mlr --ipprint --odkvp cat ./reg_test/input/c.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+
+mlr --ipprint --odkvp cat ./reg_test/input/d.pprint
+h=3,i=4,j=5
+m=8,n=9,o=10
+
+mlr --ipprint --odkvp cat ./reg_test/input/e.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --ipprint --odkvp cat ./reg_test/input/f.pprint
+
+mlr --ipprint --odkvp cat ./reg_test/input/g.pprint
+
+mlr --ipprint --odkvp cat ./reg_test/input/a.pprint ./reg_test/input/a.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --ipprint --odkvp cat ./reg_test/input/b.pprint ./reg_test/input/b.pprint
+d=5,e=6,f=7
+d=5,e=6,f=7
+
+mlr --ipprint --odkvp cat ./reg_test/input/c.pprint ./reg_test/input/c.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+
+mlr --ipprint --odkvp cat ./reg_test/input/d.pprint ./reg_test/input/d.pprint
+h=3,i=4,j=5
+m=8,n=9,o=10
+h=3,i=4,j=5
+m=8,n=9,o=10
+
+mlr --ipprint --odkvp cat ./reg_test/input/e.pprint ./reg_test/input/e.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --ipprint --odkvp cat ./reg_test/input/f.pprint ./reg_test/input/f.pprint
+
+mlr --ipprint --odkvp cat ./reg_test/input/g.pprint ./reg_test/input/g.pprint
+
+mlr --ipprint --odkvp cat ./reg_test/input/a.pprint ./reg_test/input/b.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+d=5,e=6,f=7
+
+mlr --ipprint --odkvp cat ./reg_test/input/b.pprint ./reg_test/input/c.pprint
+d=5,e=6,f=7
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+
+mlr --ipprint --odkvp cat ./reg_test/input/c.pprint ./reg_test/input/d.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+h=3,i=4,j=5
+m=8,n=9,o=10
+
+mlr --ipprint --odkvp cat ./reg_test/input/d.pprint ./reg_test/input/e.pprint
+h=3,i=4,j=5
+m=8,n=9,o=10
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --ipprint --odkvp cat ./reg_test/input/e.pprint ./reg_test/input/f.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --ipprint --odkvp cat ./reg_test/input/f.pprint ./reg_test/input/g.pprint
+
+mlr --ipprint --odkvp cat ./reg_test/input/a.pprint ./reg_test/input/b.pprint ./reg_test/input/c.pprint ./reg_test/input/d.pprint ./reg_test/input/e.pprint ./reg_test/input/f.pprint ./reg_test/input/g.pprint
+a=1,b=2,c=3
+a=4,b=5,c=6
+d=5,e=6,f=7
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+h=3,i=4,j=5
+m=8,n=9,o=10
+a=1,b=2,c=3
+a=4,b=5,c=6
+

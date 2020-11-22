@@ -1,0 +1,1101 @@
+
+
+---------------------------------------------------------------- IF/ELIF WITH ELSE
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR==1) {
+    $x = 2;
+    $y = 3
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="1", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="2", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="3", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="1", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="2", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="3", type=NUMERIC_LITERAL.
+
+i=1,x=2,y=3
+i=2,x=102,y=202
+i=3,x=103,y=203
+i=4,x=104,y=204
+i=5,x=105,y=205
+i=6,x=106,y=206
+i=7,x=107,y=207
+i=8,x=108,y=208
+i=9,x=109,y=209
+i=10,x=110,y=210
+i=11,x=111,y=211
+i=12,x=112,y=212
+i=13,x=113,y=213
+i=14,x=114,y=214
+i=15,x=115,y=215
+i=16,x=116,y=216
+i=17,x=117,y=217
+i=18,x=118,y=218
+i=19,x=119,y=219
+i=20,x=120,y=220
+i=21,x=121,y=221
+i=22,x=122,y=222
+i=23,x=123,y=223
+i=24,x=124,y=224
+i=25,x=125,y=225
+i=26,x=126,y=226
+i=27,x=127,y=227
+i=28,x=128,y=228
+i=29,x=129,y=229
+i=30,x=130,y=230
+i=31,x=131,y=231
+i=32,x=132,y=232
+i=33,x=133,y=233
+i=34,x=134,y=234
+i=35,x=135,y=235
+i=36,x=136,y=236
+i=37,x=137,y=237
+i=38,x=138,y=238
+i=39,x=139,y=239
+i=40,x=140,y=240
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 4) {
+    $x = 5;
+    $y = 6
+  } else {
+    $x = 1007;
+    $y = 1008
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="4", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="5", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="6", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1007", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1008", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="4", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="5", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="6", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1007", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1008", type=NUMERIC_LITERAL.
+
+i=1,x=1007,y=1008
+i=2,x=1007,y=1008
+i=3,x=1007,y=1008
+i=4,x=5,y=6
+i=5,x=1007,y=1008
+i=6,x=1007,y=1008
+i=7,x=1007,y=1008
+i=8,x=1007,y=1008
+i=9,x=1007,y=1008
+i=10,x=1007,y=1008
+i=11,x=1007,y=1008
+i=12,x=1007,y=1008
+i=13,x=1007,y=1008
+i=14,x=1007,y=1008
+i=15,x=1007,y=1008
+i=16,x=1007,y=1008
+i=17,x=1007,y=1008
+i=18,x=1007,y=1008
+i=19,x=1007,y=1008
+i=20,x=1007,y=1008
+i=21,x=1007,y=1008
+i=22,x=1007,y=1008
+i=23,x=1007,y=1008
+i=24,x=1007,y=1008
+i=25,x=1007,y=1008
+i=26,x=1007,y=1008
+i=27,x=1007,y=1008
+i=28,x=1007,y=1008
+i=29,x=1007,y=1008
+i=30,x=1007,y=1008
+i=31,x=1007,y=1008
+i=32,x=1007,y=1008
+i=33,x=1007,y=1008
+i=34,x=1007,y=1008
+i=35,x=1007,y=1008
+i=36,x=1007,y=1008
+i=37,x=1007,y=1008
+i=38,x=1007,y=1008
+i=39,x=1007,y=1008
+i=40,x=1007,y=1008
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 9) {
+    $x = 10;
+    $y = 11
+  } elif (NR == 12) {
+    $x = 13;
+    $y = 14
+  } else {
+    $x = 1015;
+    $y = 1016
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="9", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="10", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="11", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="12", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="13", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="14", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1015", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1016", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="9", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="10", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="11", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="12", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="13", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="14", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1015", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1016", type=NUMERIC_LITERAL.
+
+i=1,x=1015,y=1016
+i=2,x=1015,y=1016
+i=3,x=1015,y=1016
+i=4,x=1015,y=1016
+i=5,x=1015,y=1016
+i=6,x=1015,y=1016
+i=7,x=1015,y=1016
+i=8,x=1015,y=1016
+i=9,x=10,y=11
+i=10,x=1015,y=1016
+i=11,x=1015,y=1016
+i=12,x=13,y=14
+i=13,x=1015,y=1016
+i=14,x=1015,y=1016
+i=15,x=1015,y=1016
+i=16,x=1015,y=1016
+i=17,x=1015,y=1016
+i=18,x=1015,y=1016
+i=19,x=1015,y=1016
+i=20,x=1015,y=1016
+i=21,x=1015,y=1016
+i=22,x=1015,y=1016
+i=23,x=1015,y=1016
+i=24,x=1015,y=1016
+i=25,x=1015,y=1016
+i=26,x=1015,y=1016
+i=27,x=1015,y=1016
+i=28,x=1015,y=1016
+i=29,x=1015,y=1016
+i=30,x=1015,y=1016
+i=31,x=1015,y=1016
+i=32,x=1015,y=1016
+i=33,x=1015,y=1016
+i=34,x=1015,y=1016
+i=35,x=1015,y=1016
+i=36,x=1015,y=1016
+i=37,x=1015,y=1016
+i=38,x=1015,y=1016
+i=39,x=1015,y=1016
+i=40,x=1015,y=1016
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 17) {
+    $x = 18;
+    $y = 19
+  } elif (NR == 20) {
+    $x = 21;
+    $y = 22
+  } elif (NR == 23) {
+    $x = 24;
+    $y = 25
+  } else {
+    $x = 1026;
+    $y = 1027
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="17", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="18", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="19", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="20", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="21", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="22", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="23", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="24", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="25", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1026", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1027", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="17", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="18", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="19", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="20", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="21", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="22", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="23", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="24", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="25", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1026", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1027", type=NUMERIC_LITERAL.
+
+i=1,x=1026,y=1027
+i=2,x=1026,y=1027
+i=3,x=1026,y=1027
+i=4,x=1026,y=1027
+i=5,x=1026,y=1027
+i=6,x=1026,y=1027
+i=7,x=1026,y=1027
+i=8,x=1026,y=1027
+i=9,x=1026,y=1027
+i=10,x=1026,y=1027
+i=11,x=1026,y=1027
+i=12,x=1026,y=1027
+i=13,x=1026,y=1027
+i=14,x=1026,y=1027
+i=15,x=1026,y=1027
+i=16,x=1026,y=1027
+i=17,x=18,y=19
+i=18,x=1026,y=1027
+i=19,x=1026,y=1027
+i=20,x=21,y=22
+i=21,x=1026,y=1027
+i=22,x=1026,y=1027
+i=23,x=24,y=25
+i=24,x=1026,y=1027
+i=25,x=1026,y=1027
+i=26,x=1026,y=1027
+i=27,x=1026,y=1027
+i=28,x=1026,y=1027
+i=29,x=1026,y=1027
+i=30,x=1026,y=1027
+i=31,x=1026,y=1027
+i=32,x=1026,y=1027
+i=33,x=1026,y=1027
+i=34,x=1026,y=1027
+i=35,x=1026,y=1027
+i=36,x=1026,y=1027
+i=37,x=1026,y=1027
+i=38,x=1026,y=1027
+i=39,x=1026,y=1027
+i=40,x=1026,y=1027
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 28) {
+    $x = 29;
+    $y = 30
+  } elif (NR == 31) {
+    $x = 32;
+    $y = 33
+  } elif (NR == 34) {
+    $x = 35;
+    $y = 36
+  } elif (NR == 37) {
+    $x = 38;
+    $y = 39
+  } else {
+    $x = 1040;
+    $y = 1041
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="28", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="29", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="30", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="31", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="32", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="33", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="34", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="35", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="36", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="37", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="38", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="39", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1040", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1041", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="28", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="29", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="30", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="31", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="32", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="33", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="34", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="35", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="36", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="37", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="38", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="39", type=NUMERIC_LITERAL.
+        text="else", type=IF_ITEM:
+            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="1040", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="1041", type=NUMERIC_LITERAL.
+
+i=1,x=1040,y=1041
+i=2,x=1040,y=1041
+i=3,x=1040,y=1041
+i=4,x=1040,y=1041
+i=5,x=1040,y=1041
+i=6,x=1040,y=1041
+i=7,x=1040,y=1041
+i=8,x=1040,y=1041
+i=9,x=1040,y=1041
+i=10,x=1040,y=1041
+i=11,x=1040,y=1041
+i=12,x=1040,y=1041
+i=13,x=1040,y=1041
+i=14,x=1040,y=1041
+i=15,x=1040,y=1041
+i=16,x=1040,y=1041
+i=17,x=1040,y=1041
+i=18,x=1040,y=1041
+i=19,x=1040,y=1041
+i=20,x=1040,y=1041
+i=21,x=1040,y=1041
+i=22,x=1040,y=1041
+i=23,x=1040,y=1041
+i=24,x=1040,y=1041
+i=25,x=1040,y=1041
+i=26,x=1040,y=1041
+i=27,x=1040,y=1041
+i=28,x=29,y=30
+i=29,x=1040,y=1041
+i=30,x=1040,y=1041
+i=31,x=32,y=33
+i=32,x=1040,y=1041
+i=33,x=1040,y=1041
+i=34,x=35,y=36
+i=35,x=1040,y=1041
+i=36,x=1040,y=1041
+i=37,x=38,y=39
+i=38,x=1040,y=1041
+i=39,x=1040,y=1041
+i=40,x=1040,y=1041
+
+
+---------------------------------------------------------------- IF/ELIF WITHOUT ELSE
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 1) {
+    $x = 2;
+    $y = 3
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="1", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="2", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="3", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="1", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="2", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="3", type=NUMERIC_LITERAL.
+
+i=1,x=2,y=3
+i=2,x=102,y=202
+i=3,x=103,y=203
+i=4,x=104,y=204
+i=5,x=105,y=205
+i=6,x=106,y=206
+i=7,x=107,y=207
+i=8,x=108,y=208
+i=9,x=109,y=209
+i=10,x=110,y=210
+i=11,x=111,y=211
+i=12,x=112,y=212
+i=13,x=113,y=213
+i=14,x=114,y=214
+i=15,x=115,y=215
+i=16,x=116,y=216
+i=17,x=117,y=217
+i=18,x=118,y=218
+i=19,x=119,y=219
+i=20,x=120,y=220
+i=21,x=121,y=221
+i=22,x=122,y=222
+i=23,x=123,y=223
+i=24,x=124,y=224
+i=25,x=125,y=225
+i=26,x=126,y=226
+i=27,x=127,y=227
+i=28,x=128,y=228
+i=29,x=129,y=229
+i=30,x=130,y=230
+i=31,x=131,y=231
+i=32,x=132,y=232
+i=33,x=133,y=233
+i=34,x=134,y=234
+i=35,x=135,y=235
+i=36,x=136,y=236
+i=37,x=137,y=237
+i=38,x=138,y=238
+i=39,x=139,y=239
+i=40,x=140,y=240
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 4) {
+    $x = 5;
+    $y = 6
+  } elif (NR == 7) {
+    $x = 8;
+    $y = 9
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="4", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="5", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="6", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="7", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="8", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="9", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="4", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="5", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="6", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="7", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="8", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="9", type=NUMERIC_LITERAL.
+
+i=1,x=101,y=201
+i=2,x=102,y=202
+i=3,x=103,y=203
+i=4,x=5,y=6
+i=5,x=105,y=205
+i=6,x=106,y=206
+i=7,x=8,y=9
+i=8,x=108,y=208
+i=9,x=109,y=209
+i=10,x=110,y=210
+i=11,x=111,y=211
+i=12,x=112,y=212
+i=13,x=113,y=213
+i=14,x=114,y=214
+i=15,x=115,y=215
+i=16,x=116,y=216
+i=17,x=117,y=217
+i=18,x=118,y=218
+i=19,x=119,y=219
+i=20,x=120,y=220
+i=21,x=121,y=221
+i=22,x=122,y=222
+i=23,x=123,y=223
+i=24,x=124,y=224
+i=25,x=125,y=225
+i=26,x=126,y=226
+i=27,x=127,y=227
+i=28,x=128,y=228
+i=29,x=129,y=229
+i=30,x=130,y=230
+i=31,x=131,y=231
+i=32,x=132,y=232
+i=33,x=133,y=233
+i=34,x=134,y=234
+i=35,x=135,y=235
+i=36,x=136,y=236
+i=37,x=137,y=237
+i=38,x=138,y=238
+i=39,x=139,y=239
+i=40,x=140,y=240
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 10) {
+    $x = 11;
+    $y = 12
+  } elif (NR == 13) {
+    $x = 14;
+    $y = 15
+  } elif (NR == 16) {
+    $x = 17;
+    $y = 18
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="10", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="11", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="12", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="13", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="14", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="15", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="16", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="17", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="18", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="10", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="11", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="12", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="13", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="14", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="15", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="16", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="17", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="18", type=NUMERIC_LITERAL.
+
+i=1,x=101,y=201
+i=2,x=102,y=202
+i=3,x=103,y=203
+i=4,x=104,y=204
+i=5,x=105,y=205
+i=6,x=106,y=206
+i=7,x=107,y=207
+i=8,x=108,y=208
+i=9,x=109,y=209
+i=10,x=11,y=12
+i=11,x=111,y=211
+i=12,x=112,y=212
+i=13,x=14,y=15
+i=14,x=114,y=214
+i=15,x=115,y=215
+i=16,x=17,y=18
+i=17,x=117,y=217
+i=18,x=118,y=218
+i=19,x=119,y=219
+i=20,x=120,y=220
+i=21,x=121,y=221
+i=22,x=122,y=222
+i=23,x=123,y=223
+i=24,x=124,y=224
+i=25,x=125,y=225
+i=26,x=126,y=226
+i=27,x=127,y=227
+i=28,x=128,y=228
+i=29,x=129,y=229
+i=30,x=130,y=230
+i=31,x=131,y=231
+i=32,x=132,y=232
+i=33,x=133,y=233
+i=34,x=134,y=234
+i=35,x=135,y=235
+i=36,x=136,y=236
+i=37,x=137,y=237
+i=38,x=138,y=238
+i=39,x=139,y=239
+i=40,x=140,y=240
+
+mlr --from ./reg_test/input/xy40.dkvp put -v 
+  if (NR == 19) {
+    $x = 20;
+    $y = 21
+  } elif (NR == 22) {
+    $x = 23;
+    $y = 24
+  } elif (NR == 25) {
+    $x = 26;
+    $y = 37
+  } elif (NR == 28) {
+    $x = 29;
+    $y = 30
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="19", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="20", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="21", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="22", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="23", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="24", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="25", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="26", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="37", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="28", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK:
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="29", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="30", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="if_head", type=IF_HEAD:
+        text="if", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="19", type=NUMERIC_LITERAL.
+            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="20", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="21", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="22", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="23", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="24", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="25", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="26", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="37", type=NUMERIC_LITERAL.
+        text="elif", type=IF_ITEM:
+            text="==", type=OPERATOR:
+                text="NR", type=CONTEXT_VARIABLE.
+                text="28", type=NUMERIC_LITERAL.
+            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                text="=", type=SREC_ASSIGNMENT:
+                    text="x", type=FIELD_NAME.
+                    text="29", type=NUMERIC_LITERAL.
+                text="=", type=SREC_ASSIGNMENT:
+                    text="y", type=FIELD_NAME.
+                    text="30", type=NUMERIC_LITERAL.
+
+i=1,x=101,y=201
+i=2,x=102,y=202
+i=3,x=103,y=203
+i=4,x=104,y=204
+i=5,x=105,y=205
+i=6,x=106,y=206
+i=7,x=107,y=207
+i=8,x=108,y=208
+i=9,x=109,y=209
+i=10,x=110,y=210
+i=11,x=111,y=211
+i=12,x=112,y=212
+i=13,x=113,y=213
+i=14,x=114,y=214
+i=15,x=115,y=215
+i=16,x=116,y=216
+i=17,x=117,y=217
+i=18,x=118,y=218
+i=19,x=20,y=21
+i=20,x=120,y=220
+i=21,x=121,y=221
+i=22,x=23,y=24
+i=23,x=123,y=223
+i=24,x=124,y=224
+i=25,x=26,y=37
+i=26,x=126,y=226
+i=27,x=127,y=227
+i=28,x=29,y=30
+i=29,x=129,y=229
+i=30,x=130,y=230
+i=31,x=131,y=231
+i=32,x=132,y=232
+i=33,x=133,y=233
+i=34,x=134,y=234
+i=35,x=135,y=235
+i=36,x=136,y=236
+i=37,x=137,y=237
+i=38,x=138,y=238
+i=39,x=139,y=239
+i=40,x=140,y=240
+
