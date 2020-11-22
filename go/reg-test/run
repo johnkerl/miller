@@ -134,7 +134,7 @@ usage() {
 pwd=$(pwd)
 ourdir=`dirname $0`
 srcdir=$ourdir/../..
-path_to_mlr=$srcdir/c/mlr
+path_to_mlr=$srcdir/go/mlr
 if [ ! -x "$path_to_mlr" ]; then
   echo "$0: Could not find path to mlr executable $path_to_mlr." 1>&2
 fi
