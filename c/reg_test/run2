@@ -164,8 +164,6 @@ indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$pwd/output-regtest
 reloutdir=./output-regtest
-outfile=$outdir/out
-expfile=$expdir/out
 
 # TODO:
 # * verbose from -v
@@ -211,7 +209,6 @@ export MLRRC="__none__"
 
 rm -rf $outdir
 mkdir -p $outdir
-touch $outfile
 
 echo Using mlr executable $path_to_mlr
 
