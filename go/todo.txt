@@ -11,6 +11,8 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+!!! ^H two aliases ... one for paragraph one for line
+
 * split up ../c/reg_test/run output into multiple files first -- ?
   - green/red PASS/FAIL if isatty
   - diff-case script

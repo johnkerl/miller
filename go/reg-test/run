@@ -178,12 +178,13 @@ else
   export              green="\e[32m"
 fi
 
-if [ "$verbose" = "true" ]; then
-    PASS="PASS"
-    FAIL="FAIL"
-else
+# Bash idiom to test if file descriptor #1 (stdout) is a terminal
+if [[ -t 1 ]]; then
     PASS="${green}PASS${textdefault}"
     FAIL="${red}FAIL${textdefault}"
+else
+    PASS="PASS"
+    FAIL="FAIL"
 fi
 
 # ----------------------------------------------------------------
