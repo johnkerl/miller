@@ -1,81 +1,81 @@
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f a -n 3
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f a -n 3
 a     count
 apple 6
 bat   5
 cat   4
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f a,b -n 3
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f a,b -n 3
 a     b     count
 apple apple 6
 bat   cat   5
 cat   bat   3
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f a,b -n 3 -b
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f a,b -n 3 -b
 a     b
 apple apple
 bat   cat
 cat   bat
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f nonesuch -n 3
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f nonesuch -n 3
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f a -n 3
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f a -n 3
 a   count
 dog 2
 cat 4
 bat 5
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f a,b -n 3
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f a,b -n 3
 a   b   count
 cat cat 1
 dog dog 2
 cat bat 3
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f a,b -n 3 -b
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f a,b -n 3 -b
 a   b
 cat cat
 dog dog
 cat bat
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f nonesuch -n 3
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f nonesuch -n 3
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f a -n 3 -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f a -n 3 -o foo
 a     foo
 apple 6
 bat   5
 cat   4
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f a,b -n 3 -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f a,b -n 3 -o foo
 a     b     foo
 apple apple 6
 bat   cat   5
 cat   bat   3
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f a,b -n 3 -b -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f a,b -n 3 -b -o foo
 a     b
 apple apple
 bat   cat
 cat   bat
 
-mlr --opprint --from ./reg_test/input/freq.dkvp most-frequent -f nonesuch -n 3 -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp most-frequent -f nonesuch -n 3 -o foo
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f a -n 3 -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f a -n 3 -o foo
 a   foo
 dog 2
 cat 4
 bat 5
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f a,b -n 3 -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f a,b -n 3 -o foo
 a   b   foo
 cat cat 1
 dog dog 2
 cat bat 3
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f a,b -n 3 -b -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f a,b -n 3 -b -o foo
 a   b
 cat cat
 dog dog
 cat bat
 
-mlr --opprint --from ./reg_test/input/freq.dkvp least-frequent -f nonesuch -n 3 -o foo
+mlr --opprint --from ././reg-test/input/freq.dkvp least-frequent -f nonesuch -n 3 -o foo
 

@@ -1,4 +1,4 @@
-# Intended to be invoked by "." from reg_test/run
+# Intended to be invoked by "." from reg-test/run
 
 run_mlr having-fields --at-least  a,b         $indir/abixy
 run_mlr having-fields --at-least  a,c         $indir/abixy

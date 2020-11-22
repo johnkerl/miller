@@ -1,7 +1,7 @@
 
 
 ---------------------------------------------------------------- key-only fors
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -31,7 +31,7 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -61,7 +61,7 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k in {ab : xy}) {
@@ -89,7 +89,7 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -122,7 +122,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- key-value fors with scalar values
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -152,7 +152,7 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -182,7 +182,7 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k, v in {ab : xy}) {
@@ -210,7 +210,7 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -243,7 +243,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- key-value fors with map values
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -304,7 +304,7 @@ k is pan_wye  v is
 }
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -365,7 +365,7 @@ k is pan_wye  v is
 }
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k, v in {ab : {"foo": xy}}) {
@@ -424,7 +424,7 @@ k is pan_wye  v is
 }
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy-het put 
+mlr --from ././reg-test/input/abixy-het put 
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;

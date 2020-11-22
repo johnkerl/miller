@@ -1,5 +1,5 @@
 
-mlr --opprint --from ./reg_test/input/abixy put subr s(a,b) { $[a] = b } call s("W", 999)
+mlr --opprint --from ././reg-test/input/abixy put subr s(a,b) { $[a] = b } call s("W", 999)
 a   b   i  x                   y                   W
 pan pan 1  0.3467901443380824  0.7268028627434533  999
 eks pan 2  0.7586799647899636  0.5221511083334797  999
@@ -12,7 +12,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   999
 hat wye 9  0.03144187646093577 0.7495507603507059  999
 pan wye 10 0.5026260055412137  0.9526183602969864  999
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   func f(x,y,z) {
     return x + y + z
   }
@@ -35,7 +35,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9.574735  8  YES
 hat wye 9  0.03144187646093577 0.7495507603507059  9.780993  9  YES
 pan wye 10 0.5026260055412137  0.9526183602969864  11.455244 10 YES
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   func f(x,y,z) {
     return x + y + z
   }
@@ -59,7 +59,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9.574735  8
 hat wye 9  0.03144187646093577 0.7495507603507059  9.780993  9
 pan wye 10 0.5026260055412137  0.9526183602969864  11.455244 10
 
-mlr --from ./reg_test/input/abixy put 
+mlr --from ././reg-test/input/abixy put 
   func f(x,y,z) {
     return x + y + z
   }
@@ -72,7 +72,7 @@ mlr --from ./reg_test/input/abixy put
 
 mlr: return statements within user-defined subroutines must not return a value.
 
-mlr --from ./reg_test/input/abixy put 
+mlr --from ././reg-test/input/abixy put 
   func f(x,y,z) {
     return # func must return value
   }
@@ -84,7 +84,7 @@ mlr --from ./reg_test/input/abixy put
 
 mlr: return statements within user-defined functions must return a value.
 
-mlr --from ./reg_test/input/abixy --opprint put func f(x) {return k} for (k,v in $*) {$o=f($x)}
+mlr --from ././reg-test/input/abixy --opprint put func f(x) {return k} for (k,v in $*) {$o=f($x)}
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -97,7 +97,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --from ./reg_test/input/abixy --opprint put subr foo() {print "k is [".k."]"} for (k,v in $*) {call foo()}
+mlr --from ././reg-test/input/abixy --opprint put subr foo() {print "k is [".k."]"} for (k,v in $*) {call foo()}
 k is []
 k is []
 k is []
@@ -160,10 +160,10 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put func log(x) { return 0 } $o = log($x)
+mlr --opprint --from ././reg-test/input/abixy put func log(x) { return 0 } $o = log($x)
 mlr: function named "log" must not override a built-in function of the same name.
 
-mlr --from ./reg_test/input/abixy put subr log() { print "hello record  ". NR } call log()
+mlr --from ././reg-test/input/abixy put subr log() { print "hello record  ". NR } call log()
 hello record  1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 hello record  2
@@ -185,67 +185,67 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 hello record  10
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy --opprint put func f(x) { begin {} }
+mlr --from ././reg-test/input/abixy --opprint put func f(x) { begin {} }
 mlr: begin statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put func f(x) { end {} }
+mlr --from ././reg-test/input/abixy --opprint put func f(x) { end {} }
 mlr: end statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put subr s(x) { begin {} }
+mlr --from ././reg-test/input/abixy --opprint put subr s(x) { begin {} }
 mlr: begin statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put subr s(x) { end {} }
+mlr --from ././reg-test/input/abixy --opprint put subr s(x) { end {} }
 mlr: end statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put func f(x) { func g(y) {} }
+mlr --from ././reg-test/input/abixy --opprint put func f(x) { func g(y) {} }
 mlr: func statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put func f(x) { subr t(y) {} }
+mlr --from ././reg-test/input/abixy --opprint put func f(x) { subr t(y) {} }
 mlr: subr statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put subr s(x) { func g(y) {} }
+mlr --from ././reg-test/input/abixy --opprint put subr s(x) { func g(y) {} }
 mlr: func statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put subr s(x) { subr t(y) {} }
+mlr --from ././reg-test/input/abixy --opprint put subr s(x) { subr t(y) {} }
 mlr: subr statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter func f(x) { begin {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter func f(x) { begin {} }; true
 mlr: begin statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter func f(x) { end {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter func f(x) { end {} }; true
 mlr: end statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { begin {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter subr s(x) { begin {} }; true
 mlr: begin statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { end {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter subr s(x) { end {} }; true
 mlr: end statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter func f(x) { func g(y) {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter func f(x) { func g(y) {} }; true
 mlr: func statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter func f(x) { subr t(y) {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter func f(x) { subr t(y) {} }; true
 mlr: subr statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { func g(y) {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter subr s(x) { func g(y) {} }; true
 mlr: func statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { subr t(y) {} }; true
+mlr --from ././reg-test/input/abixy --opprint filter subr s(x) { subr t(y) {} }; true
 mlr: subr statements are only valid at top level.
 
-mlr --from ./reg_test/input/abixy --opprint put func log(x) { return $x + 1 }
+mlr --from ././reg-test/input/abixy --opprint put func log(x) { return $x + 1 }
 mlr: function named "log" must not override a built-in function of the same name.
 
-mlr --from ./reg_test/input/abixy --opprint put func f(x) { return $x + 1 } func f(x) { return $x + 1}
+mlr --from ././reg-test/input/abixy --opprint put func f(x) { return $x + 1 } func f(x) { return $x + 1}
 mlr: function named "f" has already been defined.
 
-mlr --from ./reg_test/input/abixy --opprint put subr s() { } subr s() { }
+mlr --from ././reg-test/input/abixy --opprint put subr s() { } subr s() { }
 mlr: subroutine named "s" has already been defined.
 
-mlr --from ./reg_test/input/abixy --opprint put subr s() { } subr s(x) { }
+mlr --from ././reg-test/input/abixy --opprint put subr s() { } subr s(x) { }
 mlr: subroutine named "s" has already been defined.
 
-mlr --from ./reg_test/input/abixy --opprint put subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)
+mlr --from ././reg-test/input/abixy --opprint put subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)
 TEXT IS NR is 1
 TEXT IS NR is 2
 TEXT IS NR is 3
@@ -268,7 +268,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --from ./reg_test/input/abixy put -v 
+mlr --from ././reg-test/input/abixy put -v 
     func f(x) {
         return x**2
     }
@@ -576,7 +576,7 @@ a=10
 b=20
 c=30
 
-mlr --from ./reg_test/input/abixy --opprint put subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)
+mlr --from ././reg-test/input/abixy --opprint put subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)
 TEXT IS NR is 1
 TEXT IS NR is 2
 TEXT IS NR is 3
@@ -599,7 +599,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --from ./reg_test/input/abixy --opprint put func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)
+mlr --from ././reg-test/input/abixy --opprint put func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)
 TEXT IS pan
 TEXT IS eks
 TEXT IS wye
@@ -622,7 +622,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   zeezee
 hat wye 9  0.03144187646093577 0.7495507603507059  hathat
 pan wye 10 0.5026260055412137  0.9526183602969864  panpan
 
-mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"                 } $o=f($i)
+mlr --from ././reg-test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"                 } $o=f($i)
 {
   "x": 1
 }
@@ -674,9 +674,9 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 hello
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; tee  > "x", $* } $o=f($i)
+mlr --from ././reg-test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; tee  > "x", $* } $o=f($i)
 mlr: tee statements are not valid within func blocks.
 
-mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)
+mlr --from ././reg-test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)
 mlr: emit statements are not valid within func blocks.
 

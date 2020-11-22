@@ -1,5 +1,5 @@
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum(); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum(); dump o
 {
 }
 {
@@ -21,7 +21,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum(); dump o
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff(); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff(); dump o
 {
 }
 {
@@ -43,13 +43,13 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff(); dump o
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept(); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept(); dump o
 mlr: Function named "mapexcept" takes at least 1 argument; got 0.
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect(); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect(); dump o
 mlr: Function named "mapselect" takes at least 1 argument; got 0.
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum($*); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum($*); dump o
 {
   "a": "pan",
   "b": "pan",
@@ -121,7 +121,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum($*); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum({"a":999}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum({"a":999}); dump o
 {
   "a": 999
 }
@@ -153,7 +153,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum({"a":999}); dump o
   "a": 999
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff($*); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff($*); dump o
 {
   "a": "pan",
   "b": "pan",
@@ -225,7 +225,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff($*); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff({"a":999}); dump o
 {
   "a": 999
 }
@@ -257,7 +257,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}); dump o
   "a": 999
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept($*); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept($*); dump o
 {
   "a": "pan",
   "b": "pan",
@@ -329,7 +329,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapexcept($*); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept({"a":999}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept({"a":999}); dump o
 {
   "a": 999
 }
@@ -361,7 +361,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapexcept({"a":999}); dump o
   "a": 999
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect($*); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect($*); dump o
 {
 }
 {
@@ -383,7 +383,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect($*); dump o
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect({"a":999}); dump o
 {
 }
 {
@@ -405,7 +405,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}); dump o
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum($*, {"a":999}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum($*, {"a":999}); dump o
 {
   "a": 999,
   "b": "pan",
@@ -479,7 +479,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum($*, {"a":999}); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum({"a":999}, $*); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum({"a":999}, $*); dump o
 {
   "a": "pan",
   "b": "pan",
@@ -553,7 +553,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum({"a":999}, $*); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff($*, {"a":999}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff($*, {"a":999}); dump o
 {
   "b": "pan",
   "i": 1,
@@ -617,7 +617,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff($*, {"a":999}); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff({"a":999}, $*); dump o
 {
 }
 {
@@ -641,7 +641,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*); dump o
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept($*, "a"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept($*, "a"); dump o
 {
   "b": "pan",
   "i": 1,
@@ -705,7 +705,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapexcept($*, "a"); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept({"a":999}, "a"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept({"a":999}, "a"); dump o
 {
 }
 {
@@ -727,7 +727,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapexcept({"a":999}, "a"); dump
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept({"a":999}, "nonesuch"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept({"a":999}, "nonesuch"); dump o
 {
   "a": 999
 }
@@ -759,7 +759,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapexcept({"a":999}, "nonesuch"
   "a": 999
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect($*, "a"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect($*, "a"); dump o
 {
   "a": "pan"
 }
@@ -789,7 +789,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect($*, "a"); dump o
   "a": "pan"
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "a"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect({"a":999}, "a"); dump o
 {
   "a": 999
 }
@@ -821,7 +821,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "a"); dump
   "a": 999
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "nonesuch"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect({"a":999}, "nonesuch"); dump o
 {
 }
 {
@@ -843,7 +843,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "nonesuch"
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum($*, {"a":999}, {"b": 444}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum($*, {"a":999}, {"b": 444}); dump o
 {
   "a": 999,
   "b": 444,
@@ -919,7 +919,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum($*, {"a":999}, {"b": 444
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapsum({"a":999}, $*, {"b": 444}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapsum({"a":999}, $*, {"b": 444}); dump o
 {
   "a": "pan",
   "b": 444,
@@ -995,7 +995,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapsum({"a":999}, $*, {"b": 444
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff($*, {"a":999}, {"b": 444}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff($*, {"a":999}, {"b": 444}); dump o
 {
   "i": 1,
   "x": 0.3467901443380824,
@@ -1051,7 +1051,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff($*, {"a":999}, {"b": 44
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 444}); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 444}); dump o
 {
 }
 {
@@ -1075,7 +1075,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 44
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapexcept($*, "a", "b"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapexcept($*, "a", "b"); dump o
 {
   "i": 1,
   "x": 0.3467901443380824,
@@ -1131,7 +1131,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapexcept($*, "a", "b"); dump o
   "y": 0.9526183602969864
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "b", "nonesuch"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect({"a":999}, "b", "nonesuch"); dump o
 {
 }
 {
@@ -1153,7 +1153,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "b", "none
 {
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect($*, "a", "b"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect($*, "a", "b"); dump o
 {
   "a": "pan",
   "b": "pan"
@@ -1191,7 +1191,7 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapselect($*, "a", "b"); dump o
   "b": "wye"
 }
 
-mlr --from ./reg_test/input/abixy-het put -q o = mapselect({"a":999}, "b", "nonesuch"); dump o
+mlr --from ././reg-test/input/abixy-het put -q o = mapselect({"a":999}, "b", "nonesuch"); dump o
 {
 }
 {

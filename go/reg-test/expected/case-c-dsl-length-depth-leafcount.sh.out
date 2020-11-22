@@ -1,5 +1,5 @@
 
-mlr --from ./reg_test/input/abixy-het put $length = length($a)
+mlr --from ././reg-test/input/abixy-het put $length = length($a)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,length=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,length=1
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,length=1
@@ -11,7 +11,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,length=1
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,length=1
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,length=1
 
-mlr --from ./reg_test/input/abixy-het put $length = length($*)
+mlr --from ././reg-test/input/abixy-het put $length = length($*)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,length=5
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,length=5
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,length=5
@@ -23,19 +23,19 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,length=5
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,length=5
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,length=5
 
-mlr --from ./reg_test/input/xyz2 put $length= length({3:4, 5:{6:7}, 8:{9:{10:11}}})
+mlr --from ././reg-test/input/xyz2 put $length= length({3:4, 5:{6:7}, 8:{9:{10:11}}})
 x=3,y=4,z=5,length=3
 x=6,y=7,u=8,length=3
 
-mlr --from ./reg_test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $length = length(o)
+mlr --from ././reg-test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $length = length(o)
 x=3,y=4,z=5,length=3
 x=6,y=7,u=8,length=3
 
-mlr --from ./reg_test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $length = length(@o)
+mlr --from ././reg-test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $length = length(@o)
 x=3,y=4,z=5,length=3
 x=6,y=7,u=8,length=3
 
-mlr --from ./reg_test/input/abixy-het put $depth = depth($a)
+mlr --from ././reg-test/input/abixy-het put $depth = depth($a)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,depth=0
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,depth=0
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,depth=0
@@ -47,7 +47,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,depth=0
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,depth=0
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,depth=0
 
-mlr --from ./reg_test/input/abixy-het put $depth = depth($*)
+mlr --from ././reg-test/input/abixy-het put $depth = depth($*)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,depth=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,depth=1
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,depth=1
@@ -59,19 +59,19 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,depth=1
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,depth=1
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,depth=1
 
-mlr --from ./reg_test/input/xyz2 put $depth= depth({3:4, 5:{6:7}, 8:{9:{10:11}}})
+mlr --from ././reg-test/input/xyz2 put $depth= depth({3:4, 5:{6:7}, 8:{9:{10:11}}})
 x=3,y=4,z=5,depth=3
 x=6,y=7,u=8,depth=3
 
-mlr --from ./reg_test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $depth = depth(o)
+mlr --from ././reg-test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $depth = depth(o)
 x=3,y=4,z=5,depth=3
 x=6,y=7,u=8,depth=3
 
-mlr --from ./reg_test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $depth = depth(@o)
+mlr --from ././reg-test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $depth = depth(@o)
 x=3,y=4,z=5,depth=3
 x=6,y=7,u=8,depth=3
 
-mlr --from ./reg_test/input/abixy-het put $leafcount = leafcount($a)
+mlr --from ././reg-test/input/abixy-het put $leafcount = leafcount($a)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,leafcount=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,leafcount=1
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,leafcount=1
@@ -83,7 +83,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,leafcount=1
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,leafcount=1
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,leafcount=1
 
-mlr --from ./reg_test/input/abixy-het put $leafcount = leafcount($*)
+mlr --from ././reg-test/input/abixy-het put $leafcount = leafcount($*)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,leafcount=5
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,leafcount=5
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,leafcount=5
@@ -95,15 +95,15 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,leafcount=5
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,leafcount=5
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,leafcount=5
 
-mlr --from ./reg_test/input/xyz2 put $leafcount= leafcount({3:4, 5:{6:7}, 8:{9:{10:11}}})
+mlr --from ././reg-test/input/xyz2 put $leafcount= leafcount({3:4, 5:{6:7}, 8:{9:{10:11}}})
 x=3,y=4,z=5,leafcount=3
 x=6,y=7,u=8,leafcount=3
 
-mlr --from ./reg_test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $leafcount = leafcount(o)
+mlr --from ././reg-test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $leafcount = leafcount(o)
 x=3,y=4,z=5,leafcount=3
 x=6,y=7,u=8,leafcount=3
 
-mlr --from ./reg_test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $leafcount = leafcount(@o)
+mlr --from ././reg-test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $leafcount = leafcount(@o)
 x=3,y=4,z=5,leafcount=3
 x=6,y=7,u=8,leafcount=3
 

@@ -1,82 +1,82 @@
 
-mlr put $z = $s . $s ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = $s . $s ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=hellohello
 x=1,y=,s=,z=
 x=,y=,s=hurrah,z=hurrahhurrah
 
-mlr put $z = $s == "" ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = $s == "" ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=false
 x=1,y=,s=,z=true
 x=,y=,s=hurrah,z=false
 
-mlr put $z = $s == $s ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = $s == $s ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=true
 x=1,y=,s=,z=true
 x=,y=,s=hurrah,z=true
 
-mlr put $z = is_empty($s) ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = is_empty($s) ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=false
 x=1,y=,s=,z=true
 x=,y=,s=hurrah,z=false
 
-mlr put $z = $x + $y ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = $x + $y ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=3
 x=1,y=,s=,z=
 x=,y=,s=hurrah,z=
 
-mlr put $z = $y + $y ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = $y + $y ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=4
 x=1,y=,s=,z=
 x=,y=,s=hurrah,z=
 
-mlr put $z = $x + $nosuch ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = $x + $nosuch ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=1
 x=1,y=,s=,z=1
 x=,y=,s=hurrah
 
-mlr put $t = sub($s,       "ell", "X") ./reg_test/input/null-vs-empty.dkvp
+mlr put $t = sub($s,       "ell", "X") ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,t=hXo
 x=1,y=,s=,t=
 x=,y=,s=hurrah,t=hurrah
 
-mlr put $t = sub($s,       "ell", "") ./reg_test/input/null-vs-empty.dkvp
+mlr put $t = sub($s,       "ell", "") ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,t=ho
 x=1,y=,s=,t=
 x=,y=,s=hurrah,t=hurrah
 
-mlr put $t = sub($nosuch,  "ell", "X") ./reg_test/input/null-vs-empty.dkvp
+mlr put $t = sub($nosuch,  "ell", "X") ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello
 x=1,y=,s=
 x=,y=,s=hurrah
 
-mlr put $t = gsub($s,      "l",   "X") ./reg_test/input/null-vs-empty.dkvp
+mlr put $t = gsub($s,      "l",   "X") ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,t=heXXo
 x=1,y=,s=,t=
 x=,y=,s=hurrah,t=hurrah
 
-mlr put $t = gsub($s,      "l",   "") ./reg_test/input/null-vs-empty.dkvp
+mlr put $t = gsub($s,      "l",   "") ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,t=heo
 x=1,y=,s=,t=
 x=,y=,s=hurrah,t=hurrah
 
-mlr put $t = gsub($nosuch, "l",   "X") ./reg_test/input/null-vs-empty.dkvp
+mlr put $t = gsub($nosuch, "l",   "X") ././reg-test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello
 x=1,y=,s=
 x=,y=,s=hurrah
 
 
 ---------------------------------------------------------------- EMIT
-mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
+mlr put -q @v=1; @nonesuch       {emit @v} ././reg-test/input/abixy
 
-mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
+mlr put -q @v=1; @nonesuch==true {emit @v} ././reg-test/input/abixy
 
-mlr put -q @v=1; $nonesuch       {emit @v} ./reg_test/input/abixy
+mlr put -q @v=1; $nonesuch       {emit @v} ././reg-test/input/abixy
 
-mlr put -q @v=1; $nonesuch==true {emit @v} ./reg_test/input/abixy
+mlr put -q @v=1; $nonesuch==true {emit @v} ././reg-test/input/abixy
 
 
 ---------------------------------------------------------------- PLUS
-mlr --ofs tab put begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=2
@@ -90,7 +90,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=5	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=5	st=3
@@ -104,7 +104,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=5	st=4
 x=1	y=	xy=	xt=5	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
@@ -118,7 +118,7 @@ x=1	b=	xy=1	xt=5	st=4
 x=	b=2	xt=	st=4
 x=	b=	xt=	st=4
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x + $y; $sy = @s + $y; $xt = $x + @t; $st = @s + @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=5	xt=5	st=7
 x=1	y=	xy=	sy=	xt=5	st=7
 x=	y=2	xy=	sy=5	xt=	st=7
@@ -134,7 +134,7 @@ x=	b=	sy=3	xt=	st=7
 
 
 ---------------------------------------------------------------- MINUS
-mlr --ofs tab put begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=2	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=2
@@ -148,7 +148,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1	st=3
@@ -162,7 +162,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=2	xt=-3	st=4
 x=1	y=	xy=	xt=-3	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
@@ -176,7 +176,7 @@ x=1	b=	xy=1	xt=-3	st=4
 x=	b=2	xt=	st=4
 x=	b=	xt=	st=4
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x - $y; $sy = @s - $y; $xt = $x - @t; $st = @s - @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=-1	sy=1	xt=-3	st=-1
 x=1	y=	xy=	sy=	xt=-3	st=-1
 x=	y=2	xy=	sy=1	xt=	st=-1
@@ -192,7 +192,7 @@ x=	b=	sy=3	xt=	st=-1
 
 
 ---------------------------------------------------------------- TIMES
-mlr --ofs tab put begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=2	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=2
@@ -206,7 +206,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=6	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=6	st=3
@@ -220,7 +220,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=2	xt=4	st=4
 x=1	y=	xy=	xt=4	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
@@ -234,7 +234,7 @@ x=1	b=	xy=1	xt=4	st=4
 x=	b=2	xt=	st=4
 x=	b=	xt=	st=4
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x * $y; $sy = @s * $y; $xt = $x * @t; $st = @s * @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=2	sy=6	xt=4	st=12
 x=1	y=	xy=	sy=	xt=4	st=12
 x=	y=2	xy=	sy=6	xt=	st=12
@@ -250,7 +250,7 @@ x=	b=	sy=3	xt=	st=12
 
 
 ---------------------------------------------------------------- DIVIDE
-mlr --ofs tab put begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=0	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=0
@@ -264,7 +264,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=1.500000	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1.500000	st=3
@@ -278,7 +278,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=0	xt=0.250000	st=0
 x=1	y=	xy=	xt=0.250000	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
@@ -292,7 +292,7 @@ x=1	b=	xy=1	xt=0.250000	st=0
 x=	b=2	xt=	st=0
 x=	b=	xt=	st=0
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0.500000	sy=1.500000	xt=0.250000	st=0.750000
 x=1	y=	xy=	sy=	xt=0.250000	st=0.750000
 x=	y=2	xy=	sy=1.500000	xt=	st=0.750000
@@ -308,7 +308,7 @@ x=	b=	sy=3	xt=	st=0.750000
 
 
 ---------------------------------------------------------------- INTEGER DIVIDE
-mlr --ofs tab put begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=0	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=0
@@ -322,7 +322,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1	st=3
@@ -336,7 +336,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=0	xt=0	st=0
 x=1	y=	xy=	xt=0	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
@@ -350,7 +350,7 @@ x=1	b=	xy=1	xt=0	st=0
 x=	b=2	xt=	st=0
 x=	b=	xt=	st=0
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x // $y; $sy = @s // $y; $xt = $x // @t; $st = @s // @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=1	xt=0	st=0
 x=1	y=	xy=	sy=	xt=0	st=0
 x=	y=2	xy=	sy=1	xt=	st=0
@@ -366,7 +366,7 @@ x=	b=	sy=3	xt=	st=0
 
 
 ---------------------------------------------------------------- REMAINDER
-mlr --ofs tab put begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=0	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=0
@@ -380,7 +380,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1	st=3
@@ -394,7 +394,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=0	xt=1	st=0
 x=1	y=	xy=	xt=1	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
@@ -408,7 +408,7 @@ x=1	b=	xy=1	xt=1	st=0
 x=	b=2	xt=	st=0
 x=	b=	xt=	st=0
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x % $y; $sy = @s % $y; $xt = $x % @t; $st = @s % @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=1	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1	xt=	st=3
@@ -424,7 +424,7 @@ x=	b=	sy=3	xt=	st=3
 
 
 ---------------------------------------------------------------- BITWISE AND
-mlr --ofs tab put begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=2
@@ -438,7 +438,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=2	st=3
@@ -452,7 +452,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=0	st=4
 x=1	y=	xy=	xt=0	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
@@ -466,7 +466,7 @@ x=1	b=	xy=1	xt=0	st=4
 x=	b=2	xt=	st=4
 x=	b=	xt=	st=4
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=0	sy=2	xt=0	st=0
 x=1	y=	xy=	sy=	xt=0	st=0
 x=	y=2	xy=	sy=2	xt=	st=0
@@ -482,7 +482,7 @@ x=	b=	sy=3	xt=	st=0
 
 
 ---------------------------------------------------------------- BITWISE OR
-mlr --ofs tab put begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=2
@@ -496,7 +496,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=3	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=3	st=3
@@ -510,7 +510,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=5	st=4
 x=1	y=	xy=	xt=5	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
@@ -524,7 +524,7 @@ x=1	b=	xy=1	xt=5	st=4
 x=	b=2	xt=	st=4
 x=	b=	xt=	st=4
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x | $y; $sy = @s | $y; $xt = $x | @t; $st = @s | @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=3	xt=5	st=7
 x=1	y=	xy=	sy=	xt=5	st=7
 x=	y=2	xy=	sy=3	xt=	st=7
@@ -540,7 +540,7 @@ x=	b=	sy=3	xt=	st=7
 
 
 ---------------------------------------------------------------- BITWISE XOR
-mlr --ofs tab put begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{};          $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=2
@@ -554,7 +554,7 @@ x=1	b=	xy=1	xt=1
 x=	b=2
 x=	b=
 
-mlr --ofs tab put begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=1	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
 x=	y=2	xy=	sy=1	st=3
@@ -568,7 +568,7 @@ x=1	b=	xy=1	sy=3	xt=1	st=3
 x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
-mlr --ofs tab put begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@t=4};      $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=2	xt=5	st=4
 x=1	y=	xy=	xt=5	st=4
 x=	y=2	xy=	sy=2	xt=	st=4
@@ -582,7 +582,7 @@ x=1	b=	xy=1	xt=5	st=4
 x=	b=2	xt=	st=4
 x=	b=	xt=	st=4
 
-mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ./reg_test/input/typeof.dkvp
+mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x ^ $y; $sy = @s ^ $y; $xt = $x ^ @t; $st = @s ^ @t ././reg-test/input/typeof.dkvp
 x=1	y=2	xy=3	sy=1	xt=5	st=7
 x=1	y=	xy=	sy=	xt=5	st=7
 x=	y=2	xy=	sy=1	xt=	st=7

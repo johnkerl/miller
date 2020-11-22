@@ -1,5 +1,5 @@
 
-mlr --xtab put $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -14,7 +14,7 @@ quot  7.120000
 iquot 7.000000
 mod   1.200000
 
-mlr --xtab put $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -29,7 +29,7 @@ quot  7.500000
 iquot 7
 mod   5
 
-mlr --xtab put $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -44,7 +44,7 @@ quot  -7.120000
 iquot -8.000000
 mod   8.800000
 
-mlr --xtab put $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -59,7 +59,7 @@ quot  -7.500000
 iquot -8
 mod   5
 
-mlr --xtab put -F $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -74,7 +74,7 @@ quot  7.120000
 iquot 7.000000
 mod   1.200000
 
-mlr --xtab put -F $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -89,7 +89,7 @@ quot  7.500000
 iquot 7.000000
 mod   5.000000
 
-mlr --xtab put -F $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -104,7 +104,7 @@ quot  -7.120000
 iquot -8.000000
 mod   8.800000
 
-mlr --xtab put -F $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -119,7 +119,7 @@ quot  -7.500000
 iquot -8.000000
 mod   5.000000
 
-mlr --xtab put $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -134,7 +134,7 @@ quot  -7.120000
 iquot -8.000000
 mod   -8.800000
 
-mlr --xtab put $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -149,7 +149,7 @@ quot  -7.500000
 iquot -8
 mod   -5
 
-mlr --xtab put $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -164,7 +164,7 @@ quot  7.120000
 iquot 7.000000
 mod   -1.200000
 
-mlr --xtab put $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -179,7 +179,7 @@ quot  7.500000
 iquot 7
 mod   -5
 
-mlr --xtab put -F $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -194,7 +194,7 @@ quot  -7.120000
 iquot -8.000000
 mod   -8.800000
 
-mlr --xtab put -F $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -209,7 +209,7 @@ quot  -7.500000
 iquot -8.000000
 mod   -5.000000
 
-mlr --xtab put -F $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0
@@ -224,7 +224,7 @@ quot  7.120000
 iquot 7.000000
 mod   -1.200000
 
-mlr --xtab put -F $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg_test/input/mixed-types.xtab
+mlr --xtab put -F $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ././reg-test/input/mixed-types.xtab
 pf1   71.2
 nf1   -71.2
 zf    0.0

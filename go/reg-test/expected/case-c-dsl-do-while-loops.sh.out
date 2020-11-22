@@ -1,5 +1,5 @@
 
-mlr put -v while($i < 5) { $i += 1} ./reg_test/input/abixy
+mlr put -v while($i < 5) { $i += 1} ././reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -41,7 +41,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr put -v do {$i += 1} while($i < 5) ./reg_test/input/abixy
+mlr put -v do {$i += 1} while($i < 5) ././reg-test/input/abixy
 RAW AST:
 
 AST ROOT:

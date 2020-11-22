@@ -1,10 +1,10 @@
 
-mlr head -n 2 then put end{ print "Final NR is ".NR} ./reg_test/input/abixy-wide
+mlr head -n 2 then put end{ print "Final NR is ".NR} ././reg-test/input/abixy-wide
 a=cat,b=pan,i=1,x=0.5117389009583777,y=0.08295224980036853,x2=0.2618767027540883,xy=0.0424498931448654,y2=0.006881075746942741
 a=pan,b=wye,i=2,x=0.5225940442098578,y=0.511678736087022,x2=0.27310453504361476,xy=0.2674002600279053,y2=0.26181512896361225
 Final NR is 3
 
-mlr head -n 2 -g a then put end{ print "Final NR is ".NR} ./reg_test/input/abixy-wide
+mlr head -n 2 -g a then put end{ print "Final NR is ".NR} ././reg-test/input/abixy-wide
 a=cat,b=pan,i=1,x=0.5117389009583777,y=0.08295224980036853,x2=0.2618767027540883,xy=0.0424498931448654,y2=0.006881075746942741
 a=pan,b=wye,i=2,x=0.5225940442098578,y=0.511678736087022,x2=0.27310453504361476,xy=0.2674002600279053,y2=0.26181512896361225
 a=wye,b=cat,i=3,x=0.8150401717873625,y=0.07989551500795256,x2=0.6642904816271734,xy=0.06511805427712146,y2=0.006383293318385972
@@ -17,17 +17,17 @@ a=cat,b=hat,i=12,x=0.6335445699880142,y=0.15467178563525052,x2=0.401378722161297
 a=hat,b=wye,i=13,x=0.35922068401384877,y=0.8502678133887914,x2=0.1290394998233774,xy=0.30543378552048117,y2=0.7229553544849566
 Final NR is 2000
 
-mlr cat then head -n 2 then put end{ print "Final NR is ".NR} ./reg_test/input/abixy-wide
+mlr cat then head -n 2 then put end{ print "Final NR is ".NR} ././reg-test/input/abixy-wide
 a=cat,b=pan,i=1,x=0.5117389009583777,y=0.08295224980036853,x2=0.2618767027540883,xy=0.0424498931448654,y2=0.006881075746942741
 a=pan,b=wye,i=2,x=0.5225940442098578,y=0.511678736087022,x2=0.27310453504361476,xy=0.2674002600279053,y2=0.26181512896361225
 Final NR is 3
 
-mlr tac then head -n 2 then put end{ print "Final NR is ".NR} ./reg_test/input/abixy-wide
+mlr tac then head -n 2 then put end{ print "Final NR is ".NR} ././reg-test/input/abixy-wide
 Final NR is 2000
 a=wye,b=cat,i=2000,x=0.10887569736363611,y=0.3480524315645718,x2=0.01185391747641808,xy=0.037894451205701986,y2=0.12114049511801092
 a=hat,b=dog,i=1999,x=0.010819574860139292,y=0.8983779455002124,x2=0.00011706320015415817,xy=0.009720067434037685,y2=0.8070829329611827
 
-mlr head -n 2 then put end{ print "Final NR is ".NR} ./reg_test/input/abixy-wide ./reg_test/input/abixy-wide ./reg_test/input/abixy-wide
+mlr head -n 2 then put end{ print "Final NR is ".NR} ././reg-test/input/abixy-wide ././reg-test/input/abixy-wide ././reg-test/input/abixy-wide
 a=cat,b=pan,i=1,x=0.5117389009583777,y=0.08295224980036853,x2=0.2618767027540883,xy=0.0424498931448654,y2=0.006881075746942741
 a=pan,b=wye,i=2,x=0.5225940442098578,y=0.511678736087022,x2=0.27310453504361476,xy=0.2674002600279053,y2=0.26181512896361225
 Final NR is 3

@@ -3,7 +3,7 @@
 ================================================================
 DSL BREAK/CONTINUE IN SINGLE WHILE/DO-WHILE
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   while ($i < 5) {
     $i += 1;
     break;
@@ -22,7 +22,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   while ($i < 5) {
     $i += 1;
     continue;
@@ -41,7 +41,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   do {
     $i += 1;
     break;
@@ -60,7 +60,7 @@ zee wye 9  0.5985540091064224  0.976181385699006
 hat wye 10 0.03144187646093577 0.7495507603507059
 pan wye 11 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   do {
     $i += 1;
     continue;
@@ -79,7 +79,7 @@ zee wye 9  0.5985540091064224  0.976181385699006
 hat wye 10 0.03144187646093577 0.7495507603507059
 pan wye 11 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $NR = NR;
   while ($i < 5) {
     $i += 1;
@@ -101,7 +101,7 @@ zee     wye 8  0.5985540091064224  0.976181385699006   8
 hat     wye 9  0.03144187646093577 0.7495507603507059  9
 pan     wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $NR = NR;
   while ($i < 5) {
     $i += 1;
@@ -123,7 +123,7 @@ zee     wye 8  0.5985540091064224  0.976181385699006   8
 hat     wye 9  0.03144187646093577 0.7495507603507059  9
 pan     wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
 $NR = NR;
   do {
     $i += 1;
@@ -145,7 +145,7 @@ reached wye 9  0.5985540091064224  0.976181385699006   8
 reached wye 10 0.03144187646093577 0.7495507603507059  9
 reached wye 11 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $NR = NR;
   do {
     $i += 1;
@@ -171,7 +171,7 @@ reached wye 11 0.5026260055412137  0.9526183602969864  10
 ================================================================
 DSL BREAK/CONTINUE IN NESTED WHILE/DO-WHILE
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -196,7 +196,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -221,7 +221,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -247,7 +247,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -273,7 +273,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -300,7 +300,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -327,7 +327,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -355,7 +355,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   while ($j < 4) {
     $k = NR;
@@ -383,7 +383,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -406,7 +406,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  8
 hat wye 9  0.03144187646093577 0.7495507603507059  10 9
 pan wye 10 0.5026260055412137  0.9526183602969864  11 10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -429,7 +429,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  8
 hat wye 9  0.03144187646093577 0.7495507603507059  10 9
 pan wye 10 0.5026260055412137  0.9526183602969864  11 10
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -453,7 +453,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  9
 hat wye 9  0.03144187646093577 0.7495507603507059  10 10
 pan wye 10 0.5026260055412137  0.9526183602969864  11 11
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -477,7 +477,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  9
 hat wye 9  0.03144187646093577 0.7495507603507059  10 10
 pan wye 10 0.5026260055412137  0.9526183602969864  11 11
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -502,7 +502,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  8
 hat wye 9  0.03144187646093577 0.7495507603507059  10 10
 pan wye 10 0.5026260055412137  0.9526183602969864  11 11
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -527,7 +527,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  8
 hat wye 9  0.03144187646093577 0.7495507603507059  10 10
 pan wye 10 0.5026260055412137  0.9526183602969864  11 11
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -553,7 +553,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  9
 hat wye 9  0.03144187646093577 0.7495507603507059  10 10010
 pan wye 10 0.5026260055412137  0.9526183602969864  11 10011
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
   $j = NR;
   do {
     $k = NR;
@@ -583,7 +583,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864  11 10011
 ================================================================
 DSL BREAK/CONTINUE IN SINGLE FOR-SREC
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k,v in $*) {
       @logging1[NR][k] = v;
       if (k == "x") {
@@ -636,7 +636,7 @@ NR k logging1
 10 i 10
 10 x 0.502626
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k,v in $*) {
       if (k == "x") {
           break;
@@ -679,7 +679,7 @@ NR k logging2
 10 b wye
 10 i 10
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k,v in $*) {
       @logging3[NR][k] = v;
       if (k == "x") {
@@ -742,7 +742,7 @@ NR k logging3
 10 x 0.502626
 10 y 0.952618
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k,v in $*) {
       if (k == "x") {
           continue;
@@ -795,7 +795,7 @@ NR k logging4
 10 i 10
 10 y 0.952618
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k,v in $*) {
       @logging1[NR][k] = v;
       if (k == "x") {
@@ -1003,7 +1003,7 @@ NR k logging4
 ================================================================
 DSL BREAK/CONTINUE IN NESTED FOR-SREC
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     break;
@@ -1030,7 +1030,7 @@ NR name output1
 9  a    before
 10 a    before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     continue;
@@ -1097,7 +1097,7 @@ NR name output1
 10 x    before
 10 y    before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     @output1[NR][k1] = v1;
@@ -1216,7 +1216,7 @@ NR names output2
 10 x_a   before
 10 y_a   before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     @output1[NR][k1] = v1;
@@ -1535,7 +1535,7 @@ NR names output2
 10 y_x   before
 10 y_y   before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     break;
@@ -1563,7 +1563,7 @@ NR name output1
 9  a    before
 10 a    before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     continue;
@@ -1631,7 +1631,7 @@ NR name output1
 10 x    before
 10 y    before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     break;
@@ -1659,7 +1659,7 @@ NR name output1
 9  a    before
 10 a    before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     continue;
@@ -1727,7 +1727,7 @@ NR name output1
 10 x    before
 10 y    before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     if (k1 == "b") {
@@ -1818,7 +1818,7 @@ NR names output2
 10 a_x   0.502626
 10 a_y   0.952618
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     if (k1 == "b") {
@@ -2089,7 +2089,7 @@ NR names output2
 10 y_x   0.502626
 10 y_y   0.952618
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     @output1[NR][k1] = v1;
@@ -2210,7 +2210,7 @@ NR names output2
 10 x_a   before
 10 y_a   before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     @output1[NR][k1] = v1;
@@ -2531,7 +2531,7 @@ NR names output2
 10 y_x   0.502626
 10 y_y   0.952618
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     if (k1 == "b") {
@@ -2585,7 +2585,7 @@ NR names output2
 9  a_a   before
 10 a_a   before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     if (k1 == "b") {
@@ -2699,7 +2699,7 @@ NR names output2
 10 x_a   before
 10 y_a   before
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     if (k1 == "b") {
@@ -2793,7 +2793,7 @@ NR names output2
 10 a_x   0.502626
 10 a_y   0.952618
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   for (k1, v1 in $*) {
     @output1[NR][k1] = "before";
     if (k1 == "b") {
@@ -3073,7 +3073,7 @@ DSL BREAK/CONTINUE IN SINGLE FOR-OOSVAR
 
 
 ---------------------------------------------------------------- single-key tests, direct break/continue
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3084,7 +3084,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
   }
 
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3098,7 +3098,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
 NR output
 a  eks
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3109,7 +3109,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
   }
 
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3129,7 +3129,7 @@ y  0.5221511083334797
 
 
 ---------------------------------------------------------------- single-key tests, indirect break/continue
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3145,7 +3145,7 @@ NR output
 a  eks
 b  pan
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3162,7 +3162,7 @@ a  eks
 b  pan
 i  2
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3180,7 +3180,7 @@ b  pan
 x  0.7586799647899636
 y  0.5221511083334797
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for (k1, v in @logging[2]) {
@@ -3202,7 +3202,7 @@ y  reached
 
 
 ---------------------------------------------------------------- multiple-key tests, direct break/continue
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3213,7 +3213,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
   }
 
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3227,7 +3227,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
 NR name output
 1  a    pan
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3238,7 +3238,7 @@ mlr --opprint --from ./reg_test/input/abixy put -q
   }
 
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3303,7 +3303,7 @@ NR name output
 
 
 ---------------------------------------------------------------- multiple-key tests, indirect break/continue
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3337,7 +3337,7 @@ NR name output
 4  x    0.38139939387114097
 4  y    0.13418874328430463
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3353,7 +3353,7 @@ NR name output
 1  a    pan
 1  b    pan
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3388,7 +3388,7 @@ NR name output
 4  y    0.13418874328430463
 5  a    wye
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3405,7 +3405,7 @@ NR name output
 1  b    pan
 1  i    1
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3464,7 +3464,7 @@ NR name output
 10 x    0.5026260055412137
 10 y    0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3518,7 +3518,7 @@ NR name output
 10 x    0.5026260055412137
 10 y    0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3583,7 +3583,7 @@ NR name output
 10 x    0.5026260055412137
 10 y    0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {
@@ -3652,7 +3652,7 @@ NR name output
 ================================================================
 DSL BREAK/CONTINUE IN NESTED FOR-OOSVAR
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @logging[NR] = $*;
   end {
     for ((k1, k2), v in @logging) {

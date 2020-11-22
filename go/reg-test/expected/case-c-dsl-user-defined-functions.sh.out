@@ -3,7 +3,7 @@
 ================================================================
 USER-DEFINED FUNCTIONS
 
-mlr --opprint --from ./reg_test/input/abixy put func f(u,v){return u+v} $o=f(NR*1000,$x)
+mlr --opprint --from ././reg-test/input/abixy put func f(u,v){return u+v} $o=f(NR*1000,$x)
 a   b   i  x                   y                   o
 pan pan 1  0.3467901443380824  0.7268028627434533  1000.346790
 eks pan 2  0.7586799647899636  0.5221511083334797  2000.758680
@@ -16,10 +16,10 @@ zee wye 8  0.5985540091064224  0.976181385699006   8000.598554
 hat wye 9  0.03144187646093577 0.7495507603507059  9000.031442
 pan wye 10 0.5026260055412137  0.9526183602969864  10000.502626
 
-mlr --opprint --from ./reg_test/input/abixy put func f(x,y,z){$nnn=999; int n=10; return $y} $o=f($i,$x,$y)
+mlr --opprint --from ././reg-test/input/abixy put func f(x,y,z){$nnn=999; int n=10; return $y} $o=f($i,$x,$y)
 mlr: assignments to $-variables are not valid within func blocks.
 
-mlr -n put -q -f ./reg_test/input/sieve.mlr
+mlr -n put -q -f ././reg-test/input/sieve.mlr
 2
 3
 5
@@ -46,7 +46,7 @@ mlr -n put -q -f ./reg_test/input/sieve.mlr
 89
 97
 
-mlr -n put -q -f ./reg_test/input/mand.mlr -e begin {@verbose = true}
+mlr -n put -q -f ././reg-test/input/mand.mlr -e begin {@verbose = true}
 RCORN     = -2.000000
 ICORN     = -2.000000
 SIDE      = 4.000000
@@ -106,7 +106,7 @@ CHARS     = @X*o-.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-mlr --from ./reg_test/input/abixy put func f(x,y) { return 2*y } $o = f($x,$y) 
+mlr --from ././reg-test/input/abixy put func f(x,y) { return 2*y } $o = f($x,$y) 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,o=1.453606
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,o=1.044302
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,o=0.676637
@@ -118,7 +118,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,o=1.952363
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,o=1.499102
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,o=1.905237
 
-mlr --opprint --from ./reg_test/input/abixy put $o1 = a; int a=1000+NR; $o2 = a; a=2000+NR; $o3 = a
+mlr --opprint --from ././reg-test/input/abixy put $o1 = a; int a=1000+NR; $o2 = a; a=2000+NR; $o3 = a
 a   b   i  x                   y                   o2   o3
 pan pan 1  0.3467901443380824  0.7268028627434533  1001 2001
 eks pan 2  0.7586799647899636  0.5221511083334797  1002 2002
@@ -131,7 +131,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   1008 2008
 hat wye 9  0.03144187646093577 0.7495507603507059  1009 2009
 pan wye 10 0.5026260055412137  0.9526183602969864  1010 2010
 
-mlr --opprint --from ./reg_test/input/abixy put 
+mlr --opprint --from ././reg-test/input/abixy put 
     func f(n) {
         if (is_numeric(n)) {
             if (n > 0) {
@@ -156,7 +156,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   40320
 hat wye 9  0.03144187646093577 0.7495507603507059  362880
 pan wye 10 0.5026260055412137  0.9526183602969864  3628800
 
-mlr --from ./reg_test/input/abixy --opprint put 
+mlr --from ././reg-test/input/abixy --opprint put 
   func f(n) {
     return n+1;
   }
@@ -179,7 +179,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9  10 11 12 13 14
 hat wye 9  0.03144187646093577 0.7495507603507059  10 11 12 13 14 15
 pan wye 10 0.5026260055412137  0.9526183602969864  11 12 13 14 15 16
 
-mlr --from ./reg_test/input/abixy --opprint put 
+mlr --from ././reg-test/input/abixy --opprint put 
   func f(n) {
       if (n < 2) {
           return 1
@@ -201,7 +201,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   34
 hat wye 9  0.03144187646093577 0.7495507603507059  55
 pan wye 10 0.5026260055412137  0.9526183602969864  89
 
-mlr --from ./reg_test/input/abixy --opprint put 
+mlr --from ././reg-test/input/abixy --opprint put 
   func f(n) {
     if (is_present(@fcache[n])) {
       return @fcache[n]

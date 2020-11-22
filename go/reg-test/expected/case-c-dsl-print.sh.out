@@ -1,5 +1,5 @@
 
-mlr put -q print  1; print  "two"; print  $a; print;  print  $i < 4; print  "y is ".string($y); print "" ./reg_test/input/abixy
+mlr put -q print  1; print  "two"; print  $a; print;  print  $i < 4; print  "y is ".string($y); print "" ././reg-test/input/abixy
 1
 two
 pan
@@ -71,7 +71,7 @@ false
 y is 0.952618
 
 
-mlr put -q printn 1; printn "two"; printn $a; printn; printn $i < 4; printn "y is ".string($y); print "" ./reg_test/input/abixy
+mlr put -q printn 1; printn "two"; printn $a; printn; printn $i < 4; printn "y is ".string($y); print "" ././reg-test/input/abixy
 1twopantruey is 0.726803
 1twoekstruey is 0.522151
 1twowyetruey is 0.338319
@@ -83,7 +83,7 @@ mlr put -q printn 1; printn "two"; printn $a; printn; printn $i < 4; printn "y i
 1twohatfalsey is 0.749551
 1twopanfalsey is 0.952618
 
-mlr put -q print  $*; print  $*; print  {}; print ./reg_test/input/abixy
+mlr put -q print  $*; print  $*; print  {}; print ././reg-test/input/abixy
 {is-a-map}
 {is-a-map}
 {is-a-map}
@@ -125,7 +125,7 @@ mlr put -q print  $*; print  $*; print  {}; print ./reg_test/input/abixy
 {is-a-map}
 
 
-mlr put -q printn $*; printn $*; printn {}; print ./reg_test/input/abixy
+mlr put -q printn $*; printn $*; printn {}; print ././reg-test/input/abixy
 {is-a-map}{is-a-map}{is-a-map}
 {is-a-map}{is-a-map}{is-a-map}
 {is-a-map}{is-a-map}{is-a-map}

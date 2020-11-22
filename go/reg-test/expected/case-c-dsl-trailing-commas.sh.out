@@ -1,5 +1,5 @@
 
-mlr --from ./reg_test/input/abixy put 
+mlr --from ././reg-test/input/abixy put 
   $* = {
     "a": $a,
     "x": $x,
@@ -16,68 +16,68 @@ a=zee,x=0.598554
 a=hat,x=0.031442
 a=pan,x=0.502626
 
-mlr --from ./reg_test/input/xyz345 put func f(): int { return 999 } $y=f()
+mlr --from ././reg-test/input/xyz345 put func f(): int { return 999 } $y=f()
 x=3,y=999,z=5
 
-mlr --from ./reg_test/input/xyz345 put func f(): int { return 999 } $y=f(,)
+mlr --from ././reg-test/input/xyz345 put func f(): int { return 999 } $y=f(,)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of 'func f(): int { return 999 } $y=f(,)'
 
-mlr --from ./reg_test/input/xyz345 put func f(a,):  int { return a*2 } $y=f(NR)
+mlr --from ././reg-test/input/xyz345 put func f(a,):  int { return a*2 } $y=f(NR)
 x=3,y=2,z=5
 
-mlr --from ./reg_test/input/xyz345 put func f(a,,): int { return a*2 } $y=f(NR)
+mlr --from ././reg-test/input/xyz345 put func f(a,,): int { return a*2 } $y=f(NR)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of 'func f(a,,): int { return a*2 } $y=f(NR)'
 
-mlr --from ./reg_test/input/xyz345 put func f(int a,):  int { return a*2 } $y=f(NR)
+mlr --from ././reg-test/input/xyz345 put func f(int a,):  int { return a*2 } $y=f(NR)
 x=3,y=2,z=5
 
-mlr --from ./reg_test/input/xyz345 put func f(int a,,): int { return a*2 } $y=f(NR)
+mlr --from ././reg-test/input/xyz345 put func f(int a,,): int { return a*2 } $y=f(NR)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of 'func f(int a,,): int { return a*2 } $y=f(NR)'
 
-mlr --from ./reg_test/input/xyz345 put subr s()      { print 999  } call s()
+mlr --from ././reg-test/input/xyz345 put subr s()      { print 999  } call s()
 999
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz345 put subr s()      { print 999  } call s(,)
+mlr --from ././reg-test/input/xyz345 put subr s()      { print 999  } call s(,)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of 'subr s()      { print 999  } call s(,)'
 
-mlr --from ./reg_test/input/xyz345 put subr s(a,)   { print a*2 } call s(NR)
+mlr --from ././reg-test/input/xyz345 put subr s(a,)   { print a*2 } call s(NR)
 2
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz345 put subr s(a,,)  { print a*2 } call s(NR)
+mlr --from ././reg-test/input/xyz345 put subr s(a,,)  { print a*2 } call s(NR)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of 'subr s(a,,)  { print a*2 } call s(NR)'
 
-mlr --from ./reg_test/input/xyz345 put subr s(int a,)   { print a*2 } call s(NR)
+mlr --from ././reg-test/input/xyz345 put subr s(int a,)   { print a*2 } call s(NR)
 2
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz345 put subr s(int a,,)  { print a*2 } call s(NR)
+mlr --from ././reg-test/input/xyz345 put subr s(int a,,)  { print a*2 } call s(NR)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of 'subr s(int a,,)  { print a*2 } call s(NR)'
 
-mlr --from ./reg_test/input/xyz345 put $y=log10($x)
+mlr --from ././reg-test/input/xyz345 put $y=log10($x)
 x=3,y=0.477121,z=5
 
-mlr --from ./reg_test/input/xyz345 put $y=log10($x,)
+mlr --from ././reg-test/input/xyz345 put $y=log10($x,)
 x=3,y=0.477121,z=5
 
-mlr --from ./reg_test/input/xyz345 put $y=log10($x,,)
+mlr --from ././reg-test/input/xyz345 put $y=log10($x,,)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of '$y=log10($x,,)'
 
-mlr --from ./reg_test/input/xyz345 put $y=log10(,$x)
+mlr --from ././reg-test/input/xyz345 put $y=log10(,$x)
 mlr DSL: syntax error at ","
 mlr put: syntax error on DSL parse of '$y=log10(,$x)'
 
-mlr --from ./reg_test/input/xyz345 put $y=pow($x,2)
+mlr --from ././reg-test/input/xyz345 put $y=pow($x,2)
 x=3,y=9.000000,z=5
 
-mlr --from ./reg_test/input/xyz345 put $y=pow($x,2,)
+mlr --from ././reg-test/input/xyz345 put $y=pow($x,2,)
 x=3,y=9.000000,z=5
 

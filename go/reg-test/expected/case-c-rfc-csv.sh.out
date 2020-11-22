@@ -1,52 +1,52 @@
 
-mlr --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
+mlr --csv cat ././reg-test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
 x,"y""yy",z
 
-mlr --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
+mlr --csv cat ././reg-test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/narrow.csv
+mlr --csv cat ././reg-test/input/rfc-csv/narrow.csv
 a
 1
 2
 3
 4
 
-mlr --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
+mlr --csv cat ././reg-test/input/rfc-csv/narrow-truncated.csv
 a
 1
 2
 3
 4
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
+mlr --csv cat ././reg-test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
+mlr --csv cat ././reg-test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
+mlr --csv cat ././reg-test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
+mlr --csv cat ././reg-test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-mlr --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
+mlr --csv cat ././reg-test/input/rfc-csv/simple-truncated.csv ././reg-test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
@@ -54,7 +54,7 @@ a,b,c
 4,5,6
 x,"y""yy",z
 
-mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
+mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ././reg-test/input/rfc-csv/modify-defaults.csv
 a|c
 
 1|3
@@ -62,13 +62,13 @@ a|c
 4|6
 
 
-mlr --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
+mlr --csv --rs lf --quote-original cut -o -f c,b,a ././reg-test/input/quote-original.csv
 c,b,a
 3,2,1
 6,"5",4
 "9",8,"7"
 
-mlr --icsv --oxtab cat ./reg_test/input/comma-at-eof.csv
+mlr --icsv --oxtab cat ././reg-test/input/comma-at-eof.csv
 a 1
 b 2
 c 3
@@ -77,19 +77,19 @@ a 4
 b 5
 c 
 
-mlr --csv --quote-all cat ./reg_test/input/rfc-csv/simple.csv-crlf
+mlr --csv --quote-all cat ././reg-test/input/rfc-csv/simple.csv-crlf
 "a","b","c"
 "1","x","3"
 "4","5","6"
 "x","y""yy","z"
 
-mlr --csv --quote-original cat ./reg_test/input/rfc-csv/simple.csv-crlf
+mlr --csv --quote-original cat ././reg-test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
 "x","y""yy","z"
 
-mlr --itsv --rs lf --oxtab cat ./reg_test/input/simple.tsv
+mlr --itsv --rs lf --oxtab cat ././reg-test/input/simple.tsv
 a pan
 b pan
 i 1
@@ -120,7 +120,7 @@ i 5
 x 5
 y 0.448283
 
-mlr --iusv --oxtab cat ./reg_test/input/example.usv
+mlr --iusv --oxtab cat ././reg-test/input/example.usv
 a d
 b e
 c f

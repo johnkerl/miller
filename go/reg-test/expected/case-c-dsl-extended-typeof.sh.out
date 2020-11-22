@@ -1,5 +1,5 @@
 
-mlr --from ./reg_test/input/xyz2 --oxtab put 
+mlr --from ././reg-test/input/xyz2 --oxtab put 
   a = {1:2, 3:4};
   b = {1: {2:3, 4:5}};
   @c = {1:2, 3:4};

@@ -1,87 +1,75 @@
 
-----------------------------------------------------------------
-mlr --opprint cat u/s.dkvp
+mlr --opprint cat ./reg-test/input/s.dkvp
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint cat -n u/s.dkvp
+mlr --opprint cat -n ./reg-test/input/s.dkvp
 n a   b   i x                   y
 1 pan pan 1 0.3467901443380824  0.7268028627434533
 2 eks pan 2 0.7586799647899636  0.5221511083334797
 3 wye wye 3 0.20460330576630303 0.33831852551664776
 4 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint cat -n -g a u/s.dkvp
+mlr --opprint cat -n -g a ./reg-test/input/s.dkvp
 n a   b   i x                   y
 1 pan pan 1 0.3467901443380824  0.7268028627434533
 1 eks pan 2 0.7586799647899636  0.5221511083334797
 1 wye wye 3 0.20460330576630303 0.33831852551664776
 2 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint cat -n -g a,b u/s.dkvp
+mlr --opprint cat -n -g a,b ./reg-test/input/s.dkvp
 n a   b   i x                   y
 1 pan pan 1 0.3467901443380824  0.7268028627434533
 1 eks pan 2 0.7586799647899636  0.5221511083334797
 1 wye wye 3 0.20460330576630303 0.33831852551664776
 1 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint cut -f x,a u/s.dkvp
+mlr --opprint cut -f x,a ./reg-test/input/s.dkvp
 a   x
 pan 0.3467901443380824
 eks 0.7586799647899636
 wye 0.20460330576630303
 eks 0.38139939387114097
 
-----------------------------------------------------------------
-mlr --opprint cut -o -f x,a u/s.dkvp
+mlr --opprint cut -o -f x,a ./reg-test/input/s.dkvp
 x                   a
 0.3467901443380824  pan
 0.7586799647899636  eks
 0.20460330576630303 wye
 0.38139939387114097 eks
 
-----------------------------------------------------------------
-mlr --opprint cut -x -f x,a u/s.dkvp
+mlr --opprint cut -x -f x,a ./reg-test/input/s.dkvp
 b   i y
 pan 1 0.7268028627434533
 pan 2 0.5221511083334797
 wye 3 0.33831852551664776
 wye 4 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint head -n 1 u/s.dkvp
+mlr --opprint head -n 1 ./reg-test/input/s.dkvp
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 
-----------------------------------------------------------------
-mlr --opprint head -n 1 -g a u/s.dkvp
+mlr --opprint head -n 1 -g a ./reg-test/input/s.dkvp
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 
-----------------------------------------------------------------
-mlr --opprint head -n 1 -g a,b u/s.dkvp
+mlr --opprint head -n 1 -g a,b ./reg-test/input/s.dkvp
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint tail -n 1 u/medium.dkvp
+mlr --opprint tail -n 1 ./reg-test/input/medium.dkvp
 a   b   i  x                   y
 pan hat 40 0.30302850095892986 0.2884018711352886
 
-----------------------------------------------------------------
-mlr --opprint tail -n 1 -g a u/medium.dkvp
+mlr --opprint tail -n 1 -g a ./reg-test/input/medium.dkvp
 a   b   i  x                    y
 pan hat 40 0.30302850095892986  0.2884018711352886
 eks pan 31 0.5701563454882129   0.822178550628332
@@ -89,8 +77,7 @@ wye pan 37 0.056537252420374995 0.5450112991603523
 zee zee 35 0.12565828887119346  0.1936186210637818
 hat pan 39 0.4591095934684415   0.6526252088703994
 
-----------------------------------------------------------------
-mlr --opprint tail -n 1 -g a,b u/medium.dkvp
+mlr --opprint tail -n 1 -g a,b ./reg-test/input/medium.dkvp
 a   b   i  x                     y
 pan pan 16 0.5736853980681922    0.7554169353781729
 eks pan 31 0.5701563454882129    0.822178550628332
@@ -114,23 +101,24 @@ zee zee 35 0.12565828887119346   0.1936186210637818
 pan hat 40 0.30302850095892986   0.2884018711352886
 pan zee 38 0.508250895522605     0.12919877119684198
 
-----------------------------------------------------------------
-mlr --opprint group-like u/het.dkvp
-a
-1
+mlr --opprint group-like ./reg-test/input/het.dkvp
+host
+jupiter
+saturn
+mars
+jupiter
+mars
+saturn
 
-a b
-2 3
+df/tmp uptime
+2.43MB 32345sec
+1.34MB 234214132sec
+4.97MB 345089805sec
+0.04MB 890sec
+8.55MB 787897777sec
+9.47MB 234289080sec
 
-a b c
-4 5 6
-7 8 9
-
-x  y  z
-10 11 12
-
-----------------------------------------------------------------
-mlr --opprint group-by a u/medium.dkvp
+mlr --opprint group-by a ./reg-test/input/medium.dkvp
 a   b   i  x                     y
 pan pan 1  0.3467901443380824    0.7268028627434533
 pan wye 10 0.5026260055412137    0.9526183602969864
@@ -173,8 +161,7 @@ hat pan 33 0.09303747345405      0.18404048980291832
 hat wye 34 0.49061881414751796   0.4721354893261027
 hat pan 39 0.4591095934684415    0.6526252088703994
 
-----------------------------------------------------------------
-mlr --opprint group-by a,b u/medium.dkvp
+mlr --opprint group-by a,b ./reg-test/input/medium.dkvp
 a   b   i  x                     y
 pan pan 1  0.3467901443380824    0.7268028627434533
 pan pan 11 0.7930488423451967    0.6505816637259333
@@ -217,160 +204,140 @@ pan hat 36 0.9436794292675323    0.9111218711707734
 pan hat 40 0.30302850095892986   0.2884018711352886
 pan zee 38 0.508250895522605     0.12919877119684198
 
-----------------------------------------------------------------
-mlr --opprint rename a,AAA u/s.dkvp
+mlr --opprint rename a,AAA ./reg-test/input/s.dkvp
 AAA b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint rename a,AAA,x,XXX u/s.dkvp
+mlr --opprint rename a,AAA,x,XXX ./reg-test/input/s.dkvp
 AAA b   i XXX                 y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint rename none,such u/s.dkvp
+mlr --opprint rename none,such ./reg-test/input/s.dkvp
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint rename a,b u/s.dkvp
+mlr --opprint rename a,b ./reg-test/input/s.dkvp
 b   i x                   y
 pan 1 0.3467901443380824  0.7268028627434533
 eks 2 0.7586799647899636  0.5221511083334797
 wye 3 0.20460330576630303 0.33831852551664776
 eks 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint rename i,j,a,b u/s.dkvp
+mlr --opprint rename i,j,a,b ./reg-test/input/s.dkvp
 b   j x                   y
 pan 1 0.3467901443380824  0.7268028627434533
 eks 2 0.7586799647899636  0.5221511083334797
 wye 3 0.20460330576630303 0.33831852551664776
 eks 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint rename x,y,a,b u/s.dkvp
+mlr --opprint rename x,y,a,b ./reg-test/input/s.dkvp
 b   i y
 pan 1 0.3467901443380824
 eks 2 0.7586799647899636
 wye 3 0.20460330576630303
 eks 4 0.38139939387114097
 
-----------------------------------------------------------------
-mlr --opprint label A,B,I u/s.dkvp
+mlr --opprint label A,B,I ./reg-test/input/s.dkvp
 A   B   I x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint label A,B,I,X,Y u/s.dkvp
+mlr --opprint label A,B,I,X,Y ./reg-test/input/s.dkvp
 A   B   I X                   Y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint label A,B,I,X,Y,Z u/s.dkvp
+mlr --opprint label A,B,I,X,Y,Z ./reg-test/input/s.dkvp
 A   B   I X                   Y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint label b,i,x u/s.dkvp
+mlr --opprint label b,i,x ./reg-test/input/s.dkvp
 b   i   x                   y
 pan pan 0.3467901443380824  0.7268028627434533
 eks pan 0.7586799647899636  0.5221511083334797
 wye wye 0.20460330576630303 0.33831852551664776
 eks wye 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint label x,i,b u/s.dkvp
+mlr --opprint label x,i,b ./reg-test/input/s.dkvp
 x                   i   b y
 0.3467901443380824  pan 1 0.7268028627434533
 0.7586799647899636  pan 2 0.5221511083334797
 0.20460330576630303 wye 3 0.33831852551664776
 0.38139939387114097 wye 4 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -f nonesuch
+mlr --opprint --from ./reg-test/input/s.dkvp sort -f nonesuch
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -f a
+mlr --opprint --from ./reg-test/input/s.dkvp sort -f a
 a   b   i x                   y
 eks pan 2 0.7586799647899636  0.5221511083334797
 eks wye 4 0.38139939387114097 0.13418874328430463
 pan pan 1 0.3467901443380824  0.7268028627434533
 wye wye 3 0.20460330576630303 0.33831852551664776
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -f a,b
+mlr --opprint --from ./reg-test/input/s.dkvp sort -f a,b
 a   b   i x                   y
 eks pan 2 0.7586799647899636  0.5221511083334797
 eks wye 4 0.38139939387114097 0.13418874328430463
 pan pan 1 0.3467901443380824  0.7268028627434533
 wye wye 3 0.20460330576630303 0.33831852551664776
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -r a
+mlr --opprint --from ./reg-test/input/s.dkvp sort -r a
 a   b   i x                   y
 wye wye 3 0.20460330576630303 0.33831852551664776
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -r a,b
+mlr --opprint --from ./reg-test/input/s.dkvp sort -r a,b
 a   b   i x                   y
 wye wye 3 0.20460330576630303 0.33831852551664776
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks wye 4 0.38139939387114097 0.13418874328430463
 eks pan 2 0.7586799647899636  0.5221511083334797
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -f a -r b
+mlr --opprint --from ./reg-test/input/s.dkvp sort -f a -r b
 a   b   i x                   y
 eks wye 4 0.38139939387114097 0.13418874328430463
 eks pan 2 0.7586799647899636  0.5221511083334797
 pan pan 1 0.3467901443380824  0.7268028627434533
 wye wye 3 0.20460330576630303 0.33831852551664776
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -f b -n i
+mlr --opprint --from ./reg-test/input/s.dkvp sort -f b -n i
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp sort -f b -nr i
+mlr --opprint --from ./reg-test/input/s.dkvp sort -f b -nr i
 a   b   i x                   y
 eks pan 2 0.7586799647899636  0.5221511083334797
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks wye 4 0.38139939387114097 0.13418874328430463
 wye wye 3 0.20460330576630303 0.33831852551664776
 
-----------------------------------------------------------------
-mlr --json --from u/needs-sorting.json sort-within-records
+mlr --json --from ./reg-test/input/needs-sorting.json sort-within-records
 {
   "a": 1,
   "b": 2
@@ -385,8 +352,7 @@ mlr --json --from u/needs-sorting.json sort-within-records
   "c": 3
 }
 
-----------------------------------------------------------------
-mlr --json --from u/needs-regularize.json regularize
+mlr --json --from ./reg-test/input/needs-regularize.json regularize
 {
   "b": 2,
   "c": 3,
@@ -404,8 +370,7 @@ mlr --json --from u/needs-regularize.json regularize
   "c": 3
 }
 
-----------------------------------------------------------------
-mlr --opprint --from u/needs-unsparsify.dkvp unsparsify
+mlr --opprint --from ./reg-test/input/needs-unsparsify.dkvp unsparsify
 a b c
 1 - -
 1 2 -
@@ -413,8 +378,7 @@ a b c
 1 2 -
 1 - -
 
-----------------------------------------------------------------
-mlr --opprint --from u/needs-unsparsify.dkvp unsparsify --fill-with X
+mlr --opprint --from ./reg-test/input/needs-unsparsify.dkvp unsparsify --fill-with X
 a b c
 1 X X
 1 2 X
@@ -422,8 +386,7 @@ a b c
 1 2 X
 1 X X
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify
 a   b   i  x                   y                   aaa bbb xxx                iii yyy
 pan pan 1  0.3467901443380824  0.7268028627434533  -   -   -                  -   -
 eks pan 2  0.7586799647899636  0.5221511083334797  -   -   -                  -   -
@@ -436,8 +399,7 @@ zee wye 8  0.5985540091064224  -                   -   -   -                  - 
 -   -   9  0.03144187646093577 0.7495507603507059  hat wye -                  -   -
 pan wye 10 0.5026260055412137  0.9526183602969864  -   -   -                  -   -
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify -f a,b,i,x,y
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify -f a,b,i,x,y
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
@@ -466,8 +428,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059 - -
 a   b   i  x                  y
 pan wye 10 0.5026260055412137 0.9526183602969864
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify -f a,b,i,x,y then regularize
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify -f a,b,i,x,y then regularize
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
@@ -496,8 +457,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059 - -
 a   b   i  x                  y
 pan wye 10 0.5026260055412137 0.9526183602969864
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify -f aaa,bbb,iii,xxx,yyy
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify -f aaa,bbb,iii,xxx,yyy
 a   b   i x                  y                  aaa bbb iii xxx yyy
 pan pan 1 0.3467901443380824 0.7268028627434533 -   -   -   -   -
 eks pan 2 0.7586799647899636 0.5221511083334797 -   -   -   -   -
@@ -526,8 +486,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059 -   -   -
 a   b   i  x                  y                  aaa bbb iii xxx yyy
 pan wye 10 0.5026260055412137 0.9526183602969864 -   -   -   -   -
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify -f aaa,bbb,iii,xxx,yyy then regularize
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify -f aaa,bbb,iii,xxx,yyy then regularize
 a   b   i x                  y                  aaa bbb iii xxx yyy
 pan pan 1 0.3467901443380824 0.7268028627434533 -   -   -   -   -
 eks pan 2 0.7586799647899636 0.5221511083334797 -   -   -   -   -
@@ -556,8 +515,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059 -   -   -
 a   b   i  x                  y                  aaa bbb iii xxx yyy
 pan wye 10 0.5026260055412137 0.9526183602969864 -   -   -   -   -
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify -f a,b,i,x,y,aaa,bbb,iii,xxx,yyy
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify -f a,b,i,x,y,aaa,bbb,iii,xxx,yyy
 a   b   i x                  y                  aaa bbb iii xxx yyy
 pan pan 1 0.3467901443380824 0.7268028627434533 -   -   -   -   -
 eks pan 2 0.7586799647899636 0.5221511083334797 -   -   -   -   -
@@ -586,8 +544,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059 - - -   -   -
 a   b   i  x                  y                  aaa bbb iii xxx yyy
 pan wye 10 0.5026260055412137 0.9526183602969864 -   -   -   -   -
 
-----------------------------------------------------------------
-mlr --opprint --from u/abixy-het unsparsify -f a,b,i,x,y,aaa,bbb,iii,xxx,yyy then regularize
+mlr --opprint --from ./reg-test/input/abixy-het unsparsify -f a,b,i,x,y,aaa,bbb,iii,xxx,yyy then regularize
 a   b   i  x                   y                   aaa bbb iii xxx                yyy
 pan pan 1  0.3467901443380824  0.7268028627434533  -   -   -   -                  -
 eks pan 2  0.7586799647899636  0.5221511083334797  -   -   -   -                  -
@@ -600,13 +557,11 @@ zee wye 8  0.5985540091064224  -                   -   -   -   -                
 -   -   9  0.03144187646093577 0.7495507603507059  hat wye -   -                  -
 pan wye 10 0.5026260055412137  0.9526183602969864  -   -   -   -                  -
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count
+mlr --opprint --from ./reg-test/input/medium.dkvp count
 count
 40
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count -g a
+mlr --opprint --from ./reg-test/input/medium.dkvp count -g a
 a   count
 pan 8
 eks 10
@@ -614,8 +569,7 @@ wye 7
 zee 8
 hat 7
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count -g a,b
+mlr --opprint --from ./reg-test/input/medium.dkvp count -g a,b
 a   b   count
 pan pan 3
 eks pan 4
@@ -639,23 +593,19 @@ zee zee 1
 pan hat 2
 pan zee 1
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count -g a -n
+mlr --opprint --from ./reg-test/input/medium.dkvp count -g a -n
 count
 5
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count -g a,b -n
+mlr --opprint --from ./reg-test/input/medium.dkvp count -g a,b -n
 count
 21
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count -o NAME
+mlr --opprint --from ./reg-test/input/medium.dkvp count -o NAME
 NAME
 40
 
-----------------------------------------------------------------
-mlr --opprint --from u/medium.dkvp count -g a -o NAME
+mlr --opprint --from ./reg-test/input/medium.dkvp count -g a -o NAME
 a   NAME
 pan 8
 eks 10
@@ -663,248 +613,214 @@ wye 7
 zee 8
 hat 7
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp grep pan
+mlr --opprint --from ./reg-test/input/s.dkvp grep pan
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp grep -v pan
+mlr --opprint --from ./reg-test/input/s.dkvp grep -v pan
 a   b   i x                   y
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp grep PAN
+mlr --opprint --from ./reg-test/input/s.dkvp grep PAN
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp grep -i PAN
+mlr --opprint --from ./reg-test/input/s.dkvp grep -i PAN
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
 
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp grep -i -v PAN
+mlr --opprint --from ./reg-test/input/s.dkvp grep -i -v PAN
 a   b   i x                   y
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp skip-trivial-records
+mlr --from ./reg-test/input/s.dkvp skip-trivial-records
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 
-----------------------------------------------------------------
-mlr --from u/skip-trivial-records.dkvp skip-trivial-records
+mlr --from ./reg-test/input/skip-trivial-records.dkvp skip-trivial-records
 a=1,b=2
 c=4,d=
 
-----------------------------------------------------------------
 mlr --inidx --ifs comma altkv
 
 
 a=b,c=d,e=f
 
-----------------------------------------------------------------
 mlr --inidx --ifs comma altkv
 
 
 a=b,c=d,e=f,4=g
 
-----------------------------------------------------------------
-mlr --from u/s.csv --icsv --opprint remove-empty-columns
+mlr --from ./reg-test/input/s.csv --icsv --opprint remove-empty-columns
 a   b   i x                   y
 eks wye 4 0.38139939387114097 0.13418874328430463
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks pan 2 0.7586799647899636  0.5221511083334797
 pan pan 1 0.3467901443380824  0.7268028627434533
 
-----------------------------------------------------------------
-mlr --from u/remove-empty-columns.csv --icsv --opprint cat
+mlr --from ./reg-test/input/remove-empty-columns.csv --icsv --opprint cat
 a b c  d
 - 2 3  4
 - 6 -  8
 - - 11 12
 
-----------------------------------------------------------------
-mlr --from u/remove-empty-columns.csv --icsv --opprint remove-empty-columns
+mlr --from ./reg-test/input/remove-empty-columns.csv --icsv --opprint remove-empty-columns
 b c  d
 - 11 12
 6 -  8
 2 3  4
 
-----------------------------------------------------------------
-mlr --icsv --opprint fill-down -f z u/remove-empty-columns.csv
+mlr --icsv --opprint fill-down -f z ./reg-test/input/remove-empty-columns.csv
 a b c  d
 - 2 3  4
 - 6 -  8
 - - 11 12
 
-----------------------------------------------------------------
-mlr --icsv --opprint fill-down -f a,b,c,d u/remove-empty-columns.csv
+mlr --icsv --opprint fill-down -f a,b,c,d ./reg-test/input/remove-empty-columns.csv
 a b c  d
 - 2 3  4
 - 6 3  8
 - 6 11 12
 
-----------------------------------------------------------------
-mlr --icsv --opprint reorder -f x,i u/s.dkvp
+mlr --icsv --opprint reorder -f x,i ./reg-test/input/s.dkvp
 a=pan b=pan i=1 x=0.3467901443380824  y=0.7268028627434533
 a=eks b=pan i=2 x=0.7586799647899636  y=0.5221511083334797
 a=wye b=wye i=3 x=0.20460330576630303 y=0.33831852551664776
 a=eks b=wye i=4 x=0.38139939387114097 y=0.13418874328430463
 
-----------------------------------------------------------------
-mlr --icsv --opprint reorder -f x,i -e u/s.dkvp
+mlr --icsv --opprint reorder -f x,i -e ./reg-test/input/s.dkvp
 a=pan b=pan i=1 x=0.3467901443380824  y=0.7268028627434533
 a=eks b=pan i=2 x=0.7586799647899636  y=0.5221511083334797
 a=wye b=wye i=3 x=0.20460330576630303 y=0.33831852551664776
 a=eks b=wye i=4 x=0.38139939387114097 y=0.13418874328430463
 
-----------------------------------------------------------------
-mlr decimate -n 2 u/s.dkvp
+mlr decimate -n 2 ./reg-test/input/s.dkvp
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 
-----------------------------------------------------------------
-mlr decimate -b -n 2 u/s.dkvp
+mlr decimate -b -n 2 ./reg-test/input/s.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 
-----------------------------------------------------------------
-mlr decimate -e -n 2 u/s.dkvp
+mlr decimate -e -n 2 ./reg-test/input/s.dkvp
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 
-----------------------------------------------------------------
-mlr decimate -b -e -n 2 u/s.dkvp
+mlr decimate -b -e -n 2 ./reg-test/input/s.dkvp
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 
-----------------------------------------------------------------
-mlr --opprint count-similar -g a u/s.dkvp
+mlr --opprint count-similar -g a ./reg-test/input/s.dkvp
 a   b   i x                   y                   count
 pan pan 1 0.3467901443380824  0.7268028627434533  1
 eks pan 2 0.7586799647899636  0.5221511083334797  2
 eks wye 4 0.38139939387114097 0.13418874328430463 2
 wye wye 3 0.20460330576630303 0.33831852551664776 1
 
-----------------------------------------------------------------
-mlr --opprint count-similar -g b u/s.dkvp
+mlr --opprint count-similar -g b ./reg-test/input/s.dkvp
 a   b   i x                   y                   count
 pan pan 1 0.3467901443380824  0.7268028627434533  2
 eks pan 2 0.7586799647899636  0.5221511083334797  2
 wye wye 3 0.20460330576630303 0.33831852551664776 2
 eks wye 4 0.38139939387114097 0.13418874328430463 2
 
-----------------------------------------------------------------
-mlr --opprint count-similar -g a,b u/s.dkvp
+mlr --opprint count-similar -g a,b ./reg-test/input/s.dkvp
 a   b   i x                   y                   count
 pan pan 1 0.3467901443380824  0.7268028627434533  1
 eks pan 2 0.7586799647899636  0.5221511083334797  1
 wye wye 3 0.20460330576630303 0.33831852551664776 1
 eks wye 4 0.38139939387114097 0.13418874328430463 1
 
-----------------------------------------------------------------
-mlr --opprint count-similar -g a -o altnamehere u/s.dkvp
+mlr --opprint count-similar -g a -o altnamehere ./reg-test/input/s.dkvp
 a   b   i x                   y                   altnamehere
 pan pan 1 0.3467901443380824  0.7268028627434533  1
 eks pan 2 0.7586799647899636  0.5221511083334797  2
 eks wye 4 0.38139939387114097 0.13418874328430463 2
 wye wye 3 0.20460330576630303 0.33831852551664776 1
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -1 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -1 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.1Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.1Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.1Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.1Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -2 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -2 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.12Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.12Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.12Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.12Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -3 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -3 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.123Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.123Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.123Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.123Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -4 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -4 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.1234Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.1234Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.1234Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.1234Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -5 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -5 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.12345Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.12345Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.12345Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.12345Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -6 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -6 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.123456Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.123456Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.123456Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.123456Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -7 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -7 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.1234567Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.1234567Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.1234567Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.1234567Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -8 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -8 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.12345678Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.12345678Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.12345678Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.12345678Z
 
-----------------------------------------------------------------
-mlr --from u/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -9 a,t
+mlr --from ./reg-test/input/s.dkvp --opprint put $t = $i + 0.123456789 then sec2gmt -9 a,t
 a   b   i x                   y                   t
 pan pan 1 0.3467901443380824  0.7268028627434533  1970-01-01T00:00:01.123456789Z
 eks pan 2 0.7586799647899636  0.5221511083334797  1970-01-01T00:00:02.123456789Z
 wye wye 3 0.20460330576630303 0.33831852551664776 1970-01-01T00:00:03.123456789Z
 eks wye 4 0.38139939387114097 0.13418874328430463 1970-01-01T00:00:04.123456788Z
-mlr --from u/ten.dkvp gap
-Usage: ./mlr gap [options]
+
+mlr --from ./reg-test/input/ten.dkvp gap
+Usage: ./reg-test/../../go/mlr gap [options]
 Emits an empty record every n records, or when certain values change.
  -g (default ) Print a gap whenever values of these fields (e.g. a,b,c) changes
  -n (default -1) Print a gap every n records.
 One of -f or -g is required.
 -n is ignored if -g is present.
 
-----------------------------------------------------------------
-mlr --from u/ten.dkvp gap -n 4
+mlr --from ./reg-test/input/ten.dkvp gap -n 4
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=-0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -918,8 +834,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=-0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-----------------------------------------------------------------
-mlr --from u/ten.dkvp gap -g a
+mlr --from ./reg-test/input/ten.dkvp gap -g a
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 
 a=eks,b=pan,i=2,x=0.7586799647899636,y=-0.5221511083334797
@@ -940,8 +855,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=-0.7495507603507059
 
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-----------------------------------------------------------------
-mlr --from u/ten.dkvp sort -f a then gap -g a
+mlr --from ./reg-test/input/ten.dkvp sort -f a then gap -g a
 a=eks,b=pan,i=2,x=0.7586799647899636,y=-0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=-0.13418874328430463
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
@@ -957,8 +871,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 a=zee,b=pan,i=6,x=0.5271261600918548,y=-0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 
-----------------------------------------------------------------
-mlr --from u/ten.dkvp sort -f a,b then gap -g a,b
+mlr --from ./reg-test/input/ten.dkvp sort -f a,b then gap -g a,b
 a=eks,b=pan,i=2,x=0.7586799647899636,y=-0.5221511083334797
 
 a=eks,b=wye,i=4,x=0.38139939387114097,y=-0.13418874328430463
@@ -978,3 +891,4 @@ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=zee,b=pan,i=6,x=0.5271261600918548,y=-0.49322128674835697
 
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+

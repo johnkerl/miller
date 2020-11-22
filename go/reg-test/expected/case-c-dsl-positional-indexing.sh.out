@@ -1,5 +1,5 @@
 
-mlr --opprint put $NEW = $[[3]] ./reg_test/input/abixy
+mlr --opprint put $NEW = $[[3]] ././reg-test/input/abixy
 a   b   i  x                   y                   NEW
 pan pan 1  0.3467901443380824  0.7268028627434533  i
 eks pan 2  0.7586799647899636  0.5221511083334797  i
@@ -12,7 +12,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   i
 hat wye 9  0.03144187646093577 0.7495507603507059  i
 pan wye 10 0.5026260055412137  0.9526183602969864  i
 
-mlr --opprint put $NEW = $[[[3]]] ./reg_test/input/abixy
+mlr --opprint put $NEW = $[[[3]]] ././reg-test/input/abixy
 a   b   i  x                   y                   NEW
 pan pan 1  0.3467901443380824  0.7268028627434533  1
 eks pan 2  0.7586799647899636  0.5221511083334797  2
@@ -25,7 +25,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint put $NEW = $[[11]] ./reg_test/input/abixy
+mlr --opprint put $NEW = $[[11]] ././reg-test/input/abixy
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -38,7 +38,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $NEW = $[[[11]]] ./reg_test/input/abixy
+mlr --opprint put $NEW = $[[[11]]] ././reg-test/input/abixy
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -51,7 +51,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $[[3]]   = "NEW" ./reg_test/input/abixy
+mlr --opprint put $[[3]]   = "NEW" ././reg-test/input/abixy
 a   b   NEW x                   y
 pan pan 1   0.3467901443380824  0.7268028627434533
 eks pan 2   0.7586799647899636  0.5221511083334797
@@ -64,7 +64,7 @@ zee wye 8   0.5985540091064224  0.976181385699006
 hat wye 9   0.03144187646093577 0.7495507603507059
 pan wye 10  0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $[[[3]]] = "NEW" ./reg_test/input/abixy
+mlr --opprint put $[[[3]]] = "NEW" ././reg-test/input/abixy
 a   b   i   x                   y
 pan pan NEW 0.3467901443380824  0.7268028627434533
 eks pan NEW 0.7586799647899636  0.5221511083334797
@@ -77,7 +77,7 @@ zee wye NEW 0.5985540091064224  0.976181385699006
 hat wye NEW 0.03144187646093577 0.7495507603507059
 pan wye NEW 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $[[11]]   = "NEW" ./reg_test/input/abixy
+mlr --opprint put $[[11]]   = "NEW" ././reg-test/input/abixy
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -90,7 +90,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $[[[11]]] = "NEW" ./reg_test/input/abixy
+mlr --opprint put $[[[11]]] = "NEW" ././reg-test/input/abixy
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -103,7 +103,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $[[1]] = $[[2]] ./reg_test/input/abixy
+mlr --opprint put $[[1]] = $[[2]] ././reg-test/input/abixy
 b   i  x                   y
 pan 1  0.3467901443380824  0.7268028627434533
 eks 2  0.7586799647899636  0.5221511083334797
@@ -116,7 +116,7 @@ zee 8  0.5985540091064224  0.976181385699006
 hat 9  0.03144187646093577 0.7495507603507059
 pan 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $a     = $[[2]]; unset $["a"] ./reg_test/input/abixy
+mlr --opprint put $a     = $[[2]]; unset $["a"] ././reg-test/input/abixy
 b   i  x                   y                   a
 pan 1  0.3467901443380824  0.7268028627434533  b
 pan 2  0.7586799647899636  0.5221511083334797  b
@@ -129,7 +129,7 @@ wye 8  0.5985540091064224  0.976181385699006   b
 wye 9  0.03144187646093577 0.7495507603507059  b
 wye 10 0.5026260055412137  0.9526183602969864  b
 
-mlr --opprint put $[[1]] = $b;     unset $[[1]] ./reg_test/input/abixy
+mlr --opprint put $[[1]] = $b;     unset $[[1]] ././reg-test/input/abixy
 b   i  x                   y
 pan 1  0.3467901443380824  0.7268028627434533
 pan 2  0.7586799647899636  0.5221511083334797
@@ -142,7 +142,7 @@ wye 8  0.5985540091064224  0.976181385699006
 wye 9  0.03144187646093577 0.7495507603507059
 wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ./reg_test/input/abixy
+mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ././reg-test/input/abixy
 b   i  x                   y
 pan 1  0.3467901443380824  0.7268028627434533
 eks 2  0.7586799647899636  0.5221511083334797
@@ -155,7 +155,7 @@ zee 8  0.5985540091064224  0.976181385699006
 hat 9  0.03144187646093577 0.7495507603507059
 pan 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put unset $c ./reg_test/input/abixy
+mlr --opprint put unset $c ././reg-test/input/abixy
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -168,7 +168,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint put unset $c; $c="new" ./reg_test/input/abixy
+mlr --opprint put unset $c; $c="new" ././reg-test/input/abixy
 a   b   i  x                   y                   c
 pan pan 1  0.3467901443380824  0.7268028627434533  new
 eks pan 2  0.7586799647899636  0.5221511083334797  new
@@ -181,7 +181,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   new
 hat wye 9  0.03144187646093577 0.7495507603507059  new
 pan wye 10 0.5026260055412137  0.9526183602969864  new
 
-mlr --opprint put $c=$a.$b; unset $c; $c="new" ./reg_test/input/abixy
+mlr --opprint put $c=$a.$b; unset $c; $c="new" ././reg-test/input/abixy
 a   b   i  x                   y                   c
 pan pan 1  0.3467901443380824  0.7268028627434533  new
 eks pan 2  0.7586799647899636  0.5221511083334797  new
@@ -194,7 +194,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   new
 hat wye 9  0.03144187646093577 0.7495507603507059  new
 pan wye 10 0.5026260055412137  0.9526183602969864  new
 
-mlr --opprint put $c=$a.$b; unset $c ./reg_test/input/abixy
+mlr --opprint put $c=$a.$b; unset $c ././reg-test/input/abixy
 a   b   i  x                   y                   c
 pan pan 1  0.3467901443380824  0.7268028627434533  panpan
 eks pan 2  0.7586799647899636  0.5221511083334797  ekspan

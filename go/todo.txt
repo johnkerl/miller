@@ -17,6 +17,9 @@ no need to bootstrap a parser for the parser-generator language
   - path reorgs
   - awkish-cond -> pattern-action everywhere
   - "format-" prefix etc
+  - diff the *.err files -- ?
+  ! move u/* data files to $indir
+  - double-check c/go sieve.mlr parse/execute ok
 
 * justWroteEmptyLine -> pprint too ...
 

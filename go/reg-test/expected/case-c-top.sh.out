@@ -1,9 +1,9 @@
 
-mlr top -f x,y -n 2 ./reg_test/input/abixy-het
+mlr top -f x,y -n 2 ././reg-test/input/abixy-het
 top_idx=1,x_top=0.758680,y_top=0.952618
 top_idx=2,x_top=0.611784,y_top=0.749551
 
-mlr top -f x,y -n 2 -g a ./reg_test/input/abixy-het
+mlr top -f x,y -n 2 -g a ././reg-test/input/abixy-het
 a=pan,top_idx=1,x_top=0.502626,y_top=0.952618
 a=pan,top_idx=2,x_top=0.346790,y_top=0.726803
 a=eks,top_idx=1,x_top=0.758680,y_top=0.522151
@@ -11,7 +11,7 @@ a=eks,top_idx=2,x_top=0.611784,y_top=0.187885
 a=zee,top_idx=1,x_top=0.527126,y_top=0.493221
 a=zee,top_idx=2,x_top=,y_top=
 
-mlr top -f x,y -n 2 -g a,b ./reg_test/input/abixy-het
+mlr top -f x,y -n 2 -g a,b ././reg-test/input/abixy-het
 a=pan,b=pan,top_idx=1,x_top=0.346790,y_top=0.726803
 a=pan,b=pan,top_idx=2,x_top=,y_top=
 a=eks,b=pan,top_idx=1,x_top=0.758680,y_top=0.522151
@@ -23,24 +23,24 @@ a=eks,b=zee,top_idx=2,x_top=,y_top=
 a=pan,b=wye,top_idx=1,x_top=0.502626,y_top=0.952618
 a=pan,b=wye,top_idx=2,x_top=,y_top=
 
-mlr top -f x,y -n 2 ./reg_test/input/ints.dkvp
+mlr top -f x,y -n 2 ././reg-test/input/ints.dkvp
 top_idx=1,x_top=9,y_top=9
 top_idx=2,x_top=8,y_top=9
 
-mlr top -f x,y -n 2 -F ./reg_test/input/ints.dkvp
+mlr top -f x,y -n 2 -F ././reg-test/input/ints.dkvp
 top_idx=1,x_top=9.000000,y_top=9.000000
 top_idx=2,x_top=8.000000,y_top=9.000000
 
-mlr top -n 4 -f x ./reg_test/input/abixy-wide
+mlr top -n 4 -f x ././reg-test/input/abixy-wide
 top_idx=1,x_top=0.999730
 top_idx=2,x_top=0.999308
 top_idx=3,x_top=0.997339
 top_idx=4,x_top=0.997245
 
-mlr top -n 1 -f x,y ./reg_test/input/abixy-wide
+mlr top -n 1 -f x,y ././reg-test/input/abixy-wide
 top_idx=1,x_top=0.999730,y_top=0.999522
 
-mlr top -n 4 -f x -g a ./reg_test/input/abixy-wide
+mlr top -n 4 -f x -g a ././reg-test/input/abixy-wide
 a=cat,top_idx=1,x_top=0.996359
 a=cat,top_idx=2,x_top=0.990588
 a=cat,top_idx=3,x_top=0.990160
@@ -62,20 +62,20 @@ a=hat,top_idx=2,x_top=0.995705
 a=hat,top_idx=3,x_top=0.992879
 a=hat,top_idx=4,x_top=0.989639
 
-mlr top -n 1 -f x,y -g a ./reg_test/input/abixy-wide
+mlr top -n 1 -f x,y -g a ././reg-test/input/abixy-wide
 a=cat,top_idx=1,x_top=0.996359,y_top=0.997929
 a=pan,top_idx=1,x_top=0.999730,y_top=0.999319
 a=wye,top_idx=1,x_top=0.997339,y_top=0.999450
 a=dog,top_idx=1,x_top=0.997245,y_top=0.999522
 a=hat,top_idx=1,x_top=0.997014,y_top=0.991400
 
-mlr top -a -n 4 -f x ./reg_test/input/abixy-wide
+mlr top -a -n 4 -f x ././reg-test/input/abixy-wide
 a=pan,b=cat,i=1943,x=0.9997301774748071,y=0.8408385083267972,x2=0.9994604277538093,xy=0.8406116311572011,y2=0.7070093970852334
 a=pan,b=dog,i=552,x=0.9993077485337599,y=0.10019859749555626,x2=0.9986159762796124,xy=0.10012923486952477,y2=0.010039758940076493
 a=wye,b=pan,i=568,x=0.9973387930844961,y=0.5711453274816489,x2=0.9946846681912394,xy=0.569625391586397,y2=0.32620698510412
 a=dog,b=pan,i=1613,x=0.997245171384539,y=0.8188847898688517,x2=0.9944979318497786,xy=0.8166289026169553,y2=0.6705722990785534
 
-mlr top -a -n 4 -f x -g a ./reg_test/input/abixy-wide
+mlr top -a -n 4 -f x -g a ././reg-test/input/abixy-wide
 a=cat,b=dog,i=901,x=0.9963591865818606,y=0.9423606044154952,x2=0.9927316286860669,xy=0.9389296452822133,y2=0.8880435087543374
 a=cat,b=wye,i=135,x=0.9905881531288986,y=0.7789092765450115,x2=0.9812648891193222,xy=0.7715783017076895,y2=0.6066996610878732
 a=cat,b=hat,i=975,x=0.9901595235021967,y=0.8592860989306361,x2=0.9804158819820973,xy=0.8508303142692202,y2=0.738372599815431
@@ -97,22 +97,22 @@ a=hat,b=hat,i=818,x=0.9957052214494239,y=0.026702922142899044,x2=0.9914288880216
 a=hat,b=hat,i=1513,x=0.9928788688650781,y=0.1805357299725343,x2=0.9858084482387971,xy=0.17925011136486105,y2=0.03259314979671582
 a=hat,b=dog,i=1768,x=0.9896393441122658,y=0.5323182982465756,x2=0.9793860314149557,xy=0.5268031315356986,y2=0.2833627706481302
 
-mlr top -n 3 -f x,y ./reg_test/input/near-ovf.dkvp
+mlr top -n 3 -f x,y ././reg-test/input/near-ovf.dkvp
 top_idx=1,x_top=9223372036854775807,y_top=-9223372036854775801
 top_idx=2,x_top=9223372036854775806,y_top=-9223372036854775802
 top_idx=3,x_top=9223372036854775805,y_top=-9223372036854775803
 
-mlr top -n 3 -f x,y --min ./reg_test/input/near-ovf.dkvp
+mlr top -n 3 -f x,y --min ././reg-test/input/near-ovf.dkvp
 top_idx=1,x_top=9223372036854775801,y_top=-9223372036854775807
 top_idx=2,x_top=9223372036854775802,y_top=-9223372036854775806
 top_idx=3,x_top=9223372036854775803,y_top=-9223372036854775805
 
-mlr top -F -n 3 -f x,y ./reg_test/input/near-ovf.dkvp
+mlr top -F -n 3 -f x,y ././reg-test/input/near-ovf.dkvp
 top_idx=1,x_top=9223372036854775808.000000,y_top=-9223372036854775808.000000
 top_idx=2,x_top=9223372036854775808.000000,y_top=-9223372036854775808.000000
 top_idx=3,x_top=9223372036854775808.000000,y_top=-9223372036854775808.000000
 
-mlr top -F -n 3 -f x,y --min ./reg_test/input/near-ovf.dkvp
+mlr top -F -n 3 -f x,y --min ././reg-test/input/near-ovf.dkvp
 top_idx=1,x_top=9223372036854775808.000000,y_top=-9223372036854775808.000000
 top_idx=2,x_top=9223372036854775808.000000,y_top=-9223372036854775808.000000
 top_idx=3,x_top=9223372036854775808.000000,y_top=-9223372036854775808.000000

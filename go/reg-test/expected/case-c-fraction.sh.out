@@ -1,5 +1,5 @@
 
-mlr fraction -f x,y ./reg_test/input/abixy-het
+mlr fraction -f x,y ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_fraction=0.087507,y_fraction=0.146286
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_fraction=0.191441,y_fraction=0.105095
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_fraction=0.051628,y_fraction=0.068095
@@ -11,7 +11,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_fraction=0.151035
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_fraction=0.007934,y_fraction=0.150865
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_fraction=0.126830,y_fraction=0.191737
 
-mlr fraction -f x,y -g a ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_fraction=0.408269,y_fraction=0.432770
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_fraction=0.433070,y_fraction=0.618498
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -23,7 +23,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_fraction=0.531727
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_fraction=0.591731,y_fraction=0.567230
 
-mlr fraction -f x,y -g a,b ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a,b ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_fraction=1.000000,y_fraction=1.000000
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_fraction=1.000000,y_fraction=1.000000
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -35,7 +35,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_fraction=1.000000
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_fraction=1.000000,y_fraction=1.000000
 
-mlr fraction -f x,y -p ./reg_test/input/abixy-het
+mlr fraction -f x,y -p ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_percent=8.750687,y_percent=14.628624
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_percent=19.144058,y_percent=10.509524
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_percent=5.162832,y_percent=6.809459
@@ -47,7 +47,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_percent=15.103539
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_percent=0.793385,y_percent=15.086479
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_percent=12.682952,y_percent=19.173694
 
-mlr fraction -f x,y -g a -p ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a -p ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_percent=40.826884,y_percent=43.276985
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_percent=43.307027,y_percent=61.849773
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -59,7 +59,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_percent=53.172653
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_percent=59.173116,y_percent=56.723015
 
-mlr fraction -f x,y -g a,b -p ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a,b -p ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_percent=100.000000,y_percent=100.000000
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_percent=100.000000,y_percent=100.000000
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -71,7 +71,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_percent=100.000000
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_percent=100.000000,y_percent=100.000000
 
-mlr fraction -f x,y -c ./reg_test/input/abixy-het
+mlr fraction -f x,y -c ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_cumulative_fraction=0.087507,y_cumulative_fraction=0.146286
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_cumulative_fraction=0.278947,y_cumulative_fraction=0.251381
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_cumulative_fraction=0.330576,y_cumulative_fraction=0.319476
@@ -83,7 +83,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_cumulative_fraction
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_cumulative_fraction=0.873170,y_cumulative_fraction=0.808263
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_cumulative_fraction=1.000000,y_cumulative_fraction=1.000000
 
-mlr fraction -f x,y -g a -c ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a -c ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_cumulative_fraction=0.408269,y_cumulative_fraction=0.432770
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_cumulative_fraction=0.433070,y_cumulative_fraction=0.618498
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -95,7 +95,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_cumulative_fraction
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_cumulative_fraction=1.000000,y_cumulative_fraction=1.000000
 
-mlr fraction -f x,y -g a,b -c ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a,b -c ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_cumulative_fraction=1.000000,y_cumulative_fraction=1.000000
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_cumulative_fraction=1.000000,y_cumulative_fraction=1.000000
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -107,7 +107,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_cumulative_fraction
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_cumulative_fraction=1.000000,y_cumulative_fraction=1.000000
 
-mlr fraction -f x,y -p -c ./reg_test/input/abixy-het
+mlr fraction -f x,y -p -c ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_cumulative_percent=8.750687,y_cumulative_percent=14.628624
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_cumulative_percent=27.894745,y_cumulative_percent=25.138148
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_cumulative_percent=33.057577,y_cumulative_percent=31.947608
@@ -119,7 +119,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_cumulative_percent=
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_cumulative_percent=87.317048,y_cumulative_percent=80.826306
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_cumulative_percent=100.000000,y_cumulative_percent=100.000000
 
-mlr fraction -f x,y -g a -p -c ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a -p -c ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_cumulative_percent=40.826884,y_cumulative_percent=43.276985
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_cumulative_percent=43.307027,y_cumulative_percent=61.849773
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -131,7 +131,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_cumulative_percent=
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_cumulative_percent=100.000000,y_cumulative_percent=100.000000
 
-mlr fraction -f x,y -g a,b -p -c ./reg_test/input/abixy-het
+mlr fraction -f x,y -g a,b -p -c ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_cumulative_percent=100.000000,y_cumulative_percent=100.000000
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_cumulative_percent=100.000000,y_cumulative_percent=100.000000
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776

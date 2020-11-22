@@ -1,7 +1,7 @@
 
 
 ---------------------------------------------------------------- IF/ELIF WITH ELSE
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR==1) {
     $x = 2;
     $y = 3
@@ -81,7 +81,7 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 4) {
     $x = 5;
     $y = 6
@@ -180,7 +180,7 @@ i=38,x=1007,y=1008
 i=39,x=1007,y=1008
 i=40,x=1007,y=1008
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 9) {
     $x = 10;
     $y = 11
@@ -304,7 +304,7 @@ i=38,x=1015,y=1016
 i=39,x=1015,y=1016
 i=40,x=1015,y=1016
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 17) {
     $x = 18;
     $y = 19
@@ -453,7 +453,7 @@ i=38,x=1026,y=1027
 i=39,x=1026,y=1027
 i=40,x=1026,y=1027
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 28) {
     $x = 29;
     $y = 30
@@ -629,7 +629,7 @@ i=40,x=1040,y=1041
 
 
 ---------------------------------------------------------------- IF/ELIF WITHOUT ELSE
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 1) {
     $x = 2;
     $y = 3
@@ -709,7 +709,7 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 4) {
     $x = 5;
     $y = 6
@@ -814,7 +814,7 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 10) {
     $x = 11;
     $y = 12
@@ -944,7 +944,7 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ./reg_test/input/xy40.dkvp put -v 
+mlr --from ././reg-test/input/xy40.dkvp put -v 
   if (NR == 19) {
     $x = 20;
     $y = 21

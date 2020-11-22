@@ -137,7 +137,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                 text="v", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
 
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @o[1][1]["text1"][NR] = $a;
   @o[1][2]["text2"][NR] = $b;
   @o[1][2][$a][$i*100] = $x;
@@ -170,7 +170,7 @@ a b c    d     n
 3 4 10   text2 wye
 3 4 1000 pan   0.502626
 
-mlr --opprint --from ./reg_test/input/abixy put -q 
+mlr --opprint --from ././reg-test/input/abixy put -q 
   @sum[$a][$b] += $x;
   @count[$a][$b] += 1;
   end {
@@ -218,7 +218,7 @@ zee pan 0.527126
 zee wye 0.598554
 hat wye 0.031442
 
-mlr --opprint --from ./reg_test/input/abixy-wide put -q 
+mlr --opprint --from ././reg-test/input/abixy-wide put -q 
   @value["sum"][$a][$b] += $x;
   @value["count"][$a][$b] += 1;
   end {
@@ -472,27 +472,27 @@ text="block", type=STATEMENT_BLOCK:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 mlr: redefinition of variable c in the same scope.
 
-mlr --from ./reg_test/input/xyz2 put -q func f() { return {"a"."b":"c"."d",3:4}}; for (k,v in f()){print "k=".k.",v=".v}
+mlr --from ././reg-test/input/xyz2 put -q func f() { return {"a"."b":"c"."d",3:4}}; for (k,v in f()){print "k=".k.",v=".v}
 k=ab,v=cd
 k=3,v=4
 k=ab,v=cd
 k=3,v=4
 
-mlr --from ./reg_test/input/xyz2 put -q for (k,v in {"a"."b":"c"."d",3:"c"}) {print "k=".k.",v=".v}
+mlr --from ././reg-test/input/xyz2 put -q for (k,v in {"a"."b":"c"."d",3:"c"}) {print "k=".k.",v=".v}
 k=ab,v=cd
 k=3,v=c
 k=ab,v=cd
 k=3,v=c
 
-mlr --from ./reg_test/input/xyz2 put -q o["a"."b"]="c"."d"; for (k,v in o) {print "k=".k.",v=".v}
+mlr --from ././reg-test/input/xyz2 put -q o["a"."b"]="c"."d"; for (k,v in o) {print "k=".k.",v=".v}
 k=ab,v=cd
 k=ab,v=cd
 
-mlr --from ./reg_test/input/xyz2 put -q @o["a"."b"]="c"."d"; for (k,v in @o) {print "k=".k.",v=".v}
+mlr --from ././reg-test/input/xyz2 put -q @o["a"."b"]="c"."d"; for (k,v in @o) {print "k=".k.",v=".v}
 k=ab,v=cd
 k=ab,v=cd
 
-mlr --from ./reg_test/input/xyz2 put for (k in $*) { print k}
+mlr --from ././reg-test/input/xyz2 put for (k in $*) { print k}
 x
 y
 z
@@ -502,7 +502,7 @@ y
 u
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put m=$*; for (k in m) { print k}
+mlr --from ././reg-test/input/xyz2 put m=$*; for (k in m) { print k}
 x
 y
 z

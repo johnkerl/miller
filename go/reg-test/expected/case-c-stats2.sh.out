@@ -1,9 +1,9 @@
 
-mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 ./reg_test/input/abixy-wide
+mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 ././reg-test/input/abixy-wide
 x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr x_y_cov  xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov
 0.028351  0.487644  2000      1.332924  -0.170590 2000      0.056909        0.000791 0.028120 0.002330 0.893610    0.107060    2000        1.529534    -0.055477   2000        0.824336          0.447971 0.669306   0.045036
 
-mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 -g a,b ./reg_test/input/abixy-wide
+mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 -g a,b ././reg-test/input/abixy-wide
 a   b   x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr  x_y_cov   xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov
 cat pan 0.054420  0.481777  89        3.636062  -1.221602 89        0.177683        0.002504 0.050036  0.003777  0.950908    0.105754    89          1.715574    -0.081719   89          0.830612          0.435336 0.659800   0.041616
 pan wye -0.145486 0.584799  78        -1.340927 1.199920  78        0.254025        0.019479 -0.139568 -0.012683 0.908151    0.126628    78          1.595150    -0.045034   78          0.824114          0.438850 0.662457   0.046203
@@ -31,7 +31,7 @@ cat cat 0.016257  0.425410  79        0.432946  0.225535  79        0.044275    
 pan cat -0.188523 0.616919  89        -0.898665 0.953923  89        0.324264        0.037036 -0.192447 -0.016206 0.781770    0.176617    89          2.020454    -0.113587   89          0.762332          0.278739 0.527958   0.032984
 wye pan 0.229443  0.444446  66        1.313689  -0.098124 66        0.365811        0.046722 0.216152  0.020367  0.887659    0.145052    66          1.471906    -0.030176   66          0.827911          0.462545 0.680107   0.064496
 
-mlr --oxtab stats2 -s -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 ./reg_test/input/abixy-wide-short
+mlr --oxtab stats2 -s -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 ././reg-test/input/abixy-wide-short
 a                 cat
 b                 pan
 i                 1
@@ -612,7 +612,7 @@ xy_y2_r2          0.499340
 xy_y2_corr        0.706640
 xy_y2_cov         0.032678
 
-mlr --oxtab stats2 -s -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 -g a,b ./reg_test/input/abixy-wide-short
+mlr --oxtab stats2 -s -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 -g a,b ././reg-test/input/abixy-wide-short
 a                 cat
 b                 pan
 i                 1
@@ -1193,7 +1193,7 @@ xy_y2_r2          1.000000
 xy_y2_corr        1.000000
 xy_y2_cov         0.208357
 
-mlr --opprint stats2 --fit -a linreg-ols,linreg-pca -f x,y,xy,y2 ./reg_test/input/abixy-wide-short
+mlr --opprint stats2 --fit -a linreg-ols,linreg-pca -f x,y,xy,y2 ././reg-test/input/abixy-wide-short
 a   b   i  x                    y                   x2                    xy                   y2                   x_y_ols_fit x_y_pca_fit xy_y2_ols_fit xy_y2_pca_fit
 cat pan 1  0.5117389009583777   0.08295224980036853 0.2618767027540883    0.0424498931448654   0.006881075746942741 0.464963    0.366904    0.118531      -0.042629
 pan wye 2  0.5225940442098578   0.511678736087022   0.27310453504361476   0.2674002600279053   0.26181512896361225  0.459005    0.342466    0.417581      0.483270
@@ -1216,7 +1216,7 @@ wye wye 18 0.6770613653962891   0.896307226056897   0.4584120925122874    0.6068
 dog wye 19 0.4865373244199632   0.44117766146315884 0.23671856805373653   0.2146493990021416   0.1946377289741016   0.478796    0.423641    0.347454      0.359947
 dog dog 20 0.3223311725542929   0.08115611029827985 0.10389738480022534   0.026159144192390068 0.006586314238746564 0.568925    0.793322    0.096874      -0.080714
 
-mlr --opprint stats2 --fit -a linreg-ols,linreg-pca -f x,y,xy,y2 -g a ./reg_test/input/abixy-wide-short
+mlr --opprint stats2 --fit -a linreg-ols,linreg-pca -f x,y,xy,y2 -g a ././reg-test/input/abixy-wide-short
 a   b   i  x                    y                   x2                    xy                   y2                   x_y_ols_fit x_y_pca_fit xy_y2_ols_fit xy_y2_pca_fit
 cat pan 1  0.5117389009583777   0.08295224980036853 0.2618767027540883    0.0424498931448654   0.006881075746942741 0.082952    0.082952    0.006881      0.006881
 cat hat 12 0.6335445699880142   0.15467178563525052 0.4013787221612979    0.0979914699195631   0.02392336127159689  0.154672    0.154672    0.023923      0.023923
@@ -1239,19 +1239,19 @@ dog dog 20 0.3223311725542929   0.08115611029827985 0.10389738480022534   0.0261
 hat hat 9  0.33786884067769307  0.6036735617015514  0.11415535350088835   0.203962486439877    0.3644217690974368   0.603674    0.603674    0.364422      0.364422
 hat wye 13 0.35922068401384877  0.8502678133887914  0.1290394998233774    0.30543378552048117  0.7229553544849566   0.850268    0.850268    0.722955      0.722955
 
-mlr --opprint stats2 -a logireg -f x,y ./reg_test/input/logi.dkvp
+mlr --opprint stats2 -a logireg -f x,y ././reg-test/input/logi.dkvp
 x_y_logistic_m x_y_logistic_b x_y_logistic_n
 0.145457       0.145449       22
 
-mlr --opprint stats2 -a logireg -f x,y -g g ./reg_test/input/logi.dkvp
+mlr --opprint stats2 -a logireg -f x,y -g g ././reg-test/input/logi.dkvp
 g    x_y_logistic_m x_y_logistic_b x_y_logistic_n
 red  0.145458       -0.036371      11
 blue 0.145457       0.327269       11
 
-mlr --oxtab stats2 -a cov -f x,y ./reg_test/input/abixy-het
+mlr --oxtab stats2 -a cov -f x,y ././reg-test/input/abixy-het
 x_y_cov -0.011481
 
-mlr --oxtab stats2 -a cov -f x,y -g a ./reg_test/input/abixy-het
+mlr --oxtab stats2 -a cov -f x,y -g a ././reg-test/input/abixy-het
 a       pan
 x_y_cov 0.017595
 

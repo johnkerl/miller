@@ -1,0 +1,92 @@
+# ----------------------------------------------------------------
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for (k in @*) {
+    print "k: ".k
+  }
+'
+
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for (k,v in @*) {
+    print
+      "k: ".k." ".
+      "v:".v;
+  }
+'
+
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for (k,v in @data) {
+    print
+      "k: ".k." ".
+      "v:".v;
+  }
+'
+
+mlr_expect_fail --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for (k,v in @data["a"]) {
+    print
+      "k: ".k." ".
+      "v:".v;
+  }
+'
+
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2),v in @*) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "v:".v;
+  }
+'
+
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2),v in @data) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "v:".v;
+  }
+'
+
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2,k3),v in @*) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "k3: ".k3." ".
+      "v:".v;
+  }
+'
+
+run_mlr --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2,k3),v in @*) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "k3: ".k3." ".
+      "v:".v;
+    if (v == 5) {
+      break
+    }
+  }
+'
+
+mlr_expect_fail --json --from $indir/for-multi.json put -q '
+  @data = $*;
+  for ((k1,k2,k3),v in @data) {
+    print
+      "k1: ".k1." ".
+      "k2: ".k2." ".
+      "k3: ".k3." ".
+      "v:".v;
+  }
+'
+
+

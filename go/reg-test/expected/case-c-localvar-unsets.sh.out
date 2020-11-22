@@ -1,5 +1,5 @@
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset s      ; dump s; dump t; dump u ./reg_test/input/unset1.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset s      ; dump s; dump t; dump u ././reg-test/input/unset1.dkvp
 9
 {
   "1": 9
@@ -19,7 +19,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset s      ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t      ; dump s; dump t; dump u ./reg_test/input/unset1.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t      ; dump s; dump t; dump u ././reg-test/input/unset1.dkvp
 9
 {
   "1": 9
@@ -37,7 +37,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t      ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t[1]   ; dump s; dump t; dump u ./reg_test/input/unset1.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t[1]   ; dump s; dump t; dump u ././reg-test/input/unset1.dkvp
 9
 {
   "1": 9
@@ -56,7 +56,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t[1]   ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u      ; dump s; dump t; dump u ./reg_test/input/unset1.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u      ; dump s; dump t; dump u ././reg-test/input/unset1.dkvp
 9
 {
   "1": 9
@@ -72,7 +72,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u      ; 
 }
 
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1]   ; dump s; dump t; dump u ./reg_test/input/unset1.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1]   ; dump s; dump t; dump u ././reg-test/input/unset1.dkvp
 9
 {
   "1": 9
@@ -89,7 +89,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1]   ; 
 {
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1][2]; dump s; dump t; dump u ./reg_test/input/unset1.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1][2]; dump s; dump t; dump u ././reg-test/input/unset1.dkvp
 9
 {
   "1": 9
@@ -108,7 +108,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1][2]; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset s      ; dump s; dump t; dump u ./reg_test/input/unset4.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset s      ; dump s; dump t; dump u ././reg-test/input/unset4.dkvp
 9
 {
   "1": 9
@@ -182,7 +182,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset s      ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t      ; dump s; dump t; dump u ./reg_test/input/unset4.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t      ; dump s; dump t; dump u ././reg-test/input/unset4.dkvp
 9
 {
   "1": 9
@@ -248,7 +248,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t      ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t[1]   ; dump s; dump t; dump u ./reg_test/input/unset4.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t[1]   ; dump s; dump t; dump u ././reg-test/input/unset4.dkvp
 9
 {
   "1": 9
@@ -320,7 +320,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset t[1]   ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u      ; dump s; dump t; dump u ./reg_test/input/unset4.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u      ; dump s; dump t; dump u ././reg-test/input/unset4.dkvp
 9
 {
   "1": 9
@@ -378,7 +378,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u      ; 
 }
 
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1]   ; dump s; dump t; dump u ./reg_test/input/unset4.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1]   ; dump s; dump t; dump u ././reg-test/input/unset4.dkvp
 9
 {
   "1": 9
@@ -446,7 +446,7 @@ mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1]   ; 
   }
 }
 
-mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1][2]; dump s; dump t; dump u ./reg_test/input/unset4.dkvp
+mlr put -q s=$x; t[$a]=$x; u[$a][$b]=$x; dump s; dump t; dump u; unset u[1][2]; dump s; dump t; dump u ././reg-test/input/unset4.dkvp
 9
 {
   "1": 9

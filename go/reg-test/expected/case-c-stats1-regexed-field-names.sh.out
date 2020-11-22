@@ -1,5 +1,5 @@
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum -g a,b -f i,x,y
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum -g a,b -f i,x,y
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151
@@ -12,7 +12,7 @@ zee wye 8     0.598554 0.976181
 hat wye 9     0.031442 0.749551
 pan wye 10    0.502626 0.952618
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gr ^[a-h]$ --fr ^[i-z]$
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum --gr ^[a-h]$ --fr ^[i-z]$
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151
@@ -25,7 +25,7 @@ zee wye 8     0.598554 0.976181
 hat wye 9     0.031442 0.749551
 pan wye 10    0.502626 0.952618
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum -g a,b --fr ^[i-z]$
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum -g a,b --fr ^[i-z]$
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151
@@ -38,7 +38,7 @@ zee wye 8     0.598554 0.976181
 hat wye 9     0.031442 0.749551
 pan wye 10    0.502626 0.952618
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gr ^[a-h]$ -f i,x,y
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum --gr ^[a-h]$ -f i,x,y
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151
@@ -51,7 +51,7 @@ zee wye 8     0.598554 0.976181
 hat wye 9     0.031442 0.749551
 pan wye 10    0.502626 0.952618
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gx ^[i-z]$ --fx ^[a-h]$
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum --gx ^[i-z]$ --fx ^[a-h]$
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151
@@ -64,7 +64,7 @@ zee wye 8     0.598554 0.976181
 hat wye 9     0.031442 0.749551
 pan wye 10    0.502626 0.952618
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum -g a,b --fx ^[a-h]$
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum -g a,b --fx ^[a-h]$
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151
@@ -77,7 +77,7 @@ zee wye 8     0.598554 0.976181
 hat wye 9     0.031442 0.749551
 pan wye 10    0.502626 0.952618
 
-mlr --from ./reg_test/input/abixy --opprint stats1 -a sum --gx ^[i-z]$ -f i,x,y
+mlr --from ././reg-test/input/abixy --opprint stats1 -a sum --gx ^[i-z]$ -f i,x,y
 a   b   i_sum x_sum    y_sum
 pan pan 1     0.346790 0.726803
 eks pan 2     0.758680 0.522151

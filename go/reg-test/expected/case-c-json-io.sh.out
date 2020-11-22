@@ -1,5 +1,5 @@
 
-mlr --ijson --opprint cat ./reg_test/input/small-non-nested.json
+mlr --ijson --opprint cat ././reg-test/input/small-non-nested.json
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -12,7 +12,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json
+mlr --ijson --opprint cat ././reg-test/input/small-non-nested-wrapped.json
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -25,7 +25,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --ijson --oxtab cat ./reg_test/input/small-nested.json
+mlr --ijson --oxtab cat ././reg-test/input/small-nested.json
 z:pan:1 0.726803
 z:pan:0 0.952618
 z:eks:0 0.134189
@@ -34,12 +34,12 @@ z:wye:1 0.863624
 z:zee:0 0.976181
 z:hat:1 0.749551
 
-mlr --ojson cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson cat ././reg-test/input/json-output-options.dkvp
 { "a": 1, "b": "x", "c": 3 }
 { "d": 4 }
 { "1": 5, "f": 6 }
 
-mlr --ojson --jvstack cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack cat ././reg-test/input/json-output-options.dkvp
 {
   "a": 1,
   "b": "x",
@@ -53,14 +53,14 @@ mlr --ojson --jvstack cat ./reg_test/input/json-output-options.dkvp
   "f": 6
 }
 
-mlr --ojson --jlistwrap cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jlistwrap cat ././reg-test/input/json-output-options.dkvp
 [
 { "a": 1, "b": "x", "c": 3 }
 ,{ "d": 4 }
 ,{ "1": 5, "f": 6 }
 ]
 
-mlr --ojson --jvstack --jlistwrap cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jlistwrap cat ././reg-test/input/json-output-options.dkvp
 [
 {
   "a": 1,
@@ -76,12 +76,12 @@ mlr --ojson --jvstack --jlistwrap cat ./reg_test/input/json-output-options.dkvp
 }
 ]
 
-mlr --ojson --jquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jquoteall cat ././reg-test/input/json-output-options.dkvp
 { "a": "1", "b": "x", "c": "3" }
 { "d": "4" }
 { "1": "5", "f": "6" }
 
-mlr --ojson --jvstack --jquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jquoteall cat ././reg-test/input/json-output-options.dkvp
 {
   "a": "1",
   "b": "x",
@@ -95,14 +95,14 @@ mlr --ojson --jvstack --jquoteall cat ./reg_test/input/json-output-options.dkvp
   "f": "6"
 }
 
-mlr --ojson --jlistwrap --jquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jlistwrap --jquoteall cat ././reg-test/input/json-output-options.dkvp
 [
 { "a": "1", "b": "x", "c": "3" }
 ,{ "d": "4" }
 ,{ "1": "5", "f": "6" }
 ]
 
-mlr --ojson --jvstack --jlistwrap --jquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jlistwrap --jquoteall cat ././reg-test/input/json-output-options.dkvp
 [
 {
   "a": "1",
@@ -118,12 +118,12 @@ mlr --ojson --jvstack --jlistwrap --jquoteall cat ./reg_test/input/json-output-o
 }
 ]
 
-mlr --ojson --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvquoteall cat ././reg-test/input/json-output-options.dkvp
 { "a": "1", "b": "x", "c": "3" }
 { "d": "4" }
 { "1": "5", "f": "6" }
 
-mlr --ojson --jvstack --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jvquoteall cat ././reg-test/input/json-output-options.dkvp
 {
   "a": "1",
   "b": "x",
@@ -137,14 +137,14 @@ mlr --ojson --jvstack --jvquoteall cat ./reg_test/input/json-output-options.dkvp
   "f": "6"
 }
 
-mlr --ojson --jlistwrap --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jlistwrap --jvquoteall cat ././reg-test/input/json-output-options.dkvp
 [
 { "a": "1", "b": "x", "c": "3" }
 ,{ "d": "4" }
 ,{ "1": "5", "f": "6" }
 ]
 
-mlr --ojson --jvstack --jlistwrap --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jlistwrap --jvquoteall cat ././reg-test/input/json-output-options.dkvp
 [
 {
   "a": "1",
@@ -160,12 +160,12 @@ mlr --ojson --jvstack --jlistwrap --jvquoteall cat ./reg_test/input/json-output-
 }
 ]
 
-mlr --ojson --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jknquoteint cat ././reg-test/input/json-output-options.dkvp
 { "a": 1, "b": "x", "c": 3 }
 { "d": 4 }
 { "1": 5, "f": 6 }
 
-mlr --ojson --jvstack --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jknquoteint cat ././reg-test/input/json-output-options.dkvp
 {
   "a": 1,
   "b": "x",
@@ -179,14 +179,14 @@ mlr --ojson --jvstack --jknquoteint cat ./reg_test/input/json-output-options.dkv
   "f": 6
 }
 
-mlr --ojson --jlistwrap --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jlistwrap --jknquoteint cat ././reg-test/input/json-output-options.dkvp
 [
 { "a": 1, "b": "x", "c": 3 }
 ,{ "d": 4 }
 ,{ "1": 5, "f": 6 }
 ]
 
-mlr --ojson --jvstack --jlistwrap --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+mlr --ojson --jvstack --jlistwrap --jknquoteint cat ././reg-test/input/json-output-options.dkvp
 [
 {
   "a": 1,
@@ -202,7 +202,7 @@ mlr --ojson --jvstack --jlistwrap --jknquoteint cat ./reg_test/input/json-output
 }
 ]
 
-mlr put -q --jvquoteall dump $* ./reg_test/input/json-output-options.dkvp
+mlr put -q --jvquoteall dump $* ././reg-test/input/json-output-options.dkvp
 {
   "a": "1",
   "b": "x",
@@ -216,7 +216,7 @@ mlr put -q --jvquoteall dump $* ./reg_test/input/json-output-options.dkvp
   "f": "6"
 }
 
-mlr put -q --jvquoteall o = $*; o[7] = 8; dump o ./reg_test/input/json-output-options.dkvp
+mlr put -q --jvquoteall o = $*; o[7] = 8; dump o ././reg-test/input/json-output-options.dkvp
 {
   "a": "1",
   "b": "x",
@@ -233,7 +233,7 @@ mlr put -q --jvquoteall o = $*; o[7] = 8; dump o ./reg_test/input/json-output-op
   "7": "8"
 }
 
-mlr put -q --jknquoteint dump $* ./reg_test/input/json-output-options.dkvp
+mlr put -q --jknquoteint dump $* ././reg-test/input/json-output-options.dkvp
 {
   "a": 1,
   "b": "x",
@@ -247,7 +247,7 @@ mlr put -q --jknquoteint dump $* ./reg_test/input/json-output-options.dkvp
   "f": 6
 }
 
-mlr put -q --jknquoteint o = $*; o[7] = 8; dump o ./reg_test/input/json-output-options.dkvp
+mlr put -q --jknquoteint o = $*; o[7] = 8; dump o ././reg-test/input/json-output-options.dkvp
 {
   "a": 1,
   "b": "x",
@@ -264,7 +264,7 @@ mlr put -q --jknquoteint o = $*; o[7] = 8; dump o ./reg_test/input/json-output-o
   7: 8
 }
 
-mlr --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json ./reg_test/input/small-non-nested-wrapped.json
+mlr --ijson --opprint cat ././reg-test/input/small-non-nested-wrapped.json ././reg-test/input/small-non-nested-wrapped.json
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -293,7 +293,7 @@ mlr --icsv --ojson --rs lf cat
 mlr --icsv --ojson --jvquoteall --rs lf cat
 { "col": "abc \"def\" \\ghi" }
 
-mlr --ijson --oxtab cat ./reg_test/input/arrays.json
+mlr --ijson --oxtab cat ././reg-test/input/arrays.json
 a 1
 b 1
 
@@ -318,7 +318,7 @@ b:2:1 9
 a       6
 b:0:0:0 11
 
-mlr --ijson --oxtab --json-map-arrays-on-input cat ./reg_test/input/arrays.json
+mlr --ijson --oxtab --json-map-arrays-on-input cat ././reg-test/input/arrays.json
 a 1
 b 1
 
@@ -343,7 +343,7 @@ b:2:1 9
 a       6
 b:0:0:0 11
 
-mlr --ijson --oxtab --json-skip-arrays-on-input cat ./reg_test/input/arrays.json
+mlr --ijson --oxtab --json-skip-arrays-on-input cat ././reg-test/input/arrays.json
 a 1
 b 1
 
@@ -357,13 +357,13 @@ a 5
 
 a 6
 
-mlr --ijson --oxtab --json-fatal-arrays-on-input cat ./reg_test/input/arrays.json
+mlr --ijson --oxtab --json-fatal-arrays-on-input cat ././reg-test/input/arrays.json
 mlr: found array item within JSON object. This is valid but unmillerable JSON.
 Use --json-skip-arrays-on-input to exclude these from input without fataling.
 Or, --json-map-arrays-on-input to convert them to integer-indexed maps.
 mlr: Unable to parse JSON data.
 
-mlr --json cat ./reg_test/input/escapes.json
+mlr --json cat ././reg-test/input/escapes.json
 { "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\xyz" }
 { "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz" }
 

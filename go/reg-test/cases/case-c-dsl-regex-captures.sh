@@ -1,5 +1,5 @@
 
-# cat reg_test/input/capture.dkvp
+# cat reg-test/input/capture.dkvp
 # FIELD=ABC123
 # FIELD=ABC..123
 # FIELD=..ABC..123..
@@ -11,7 +11,7 @@ run_mlr --opprint put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)";  $F1="\1"; $F2="\2";
 run_mlr --opprint put '$FIELD =~ "([A-Z]+)([0-9]+)"'         then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
 run_mlr --opprint put '$FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)"'  then put '$F1="\1"; $F2="\2"; $F3="\3"' $indir/capture.dkvp
 
-# cat reg_test/input/capture-lengths.dkvp
+# cat reg-test/input/capture-lengths.dkvp
 # FIELD=
 # FIELD=a
 # FIELD=ab

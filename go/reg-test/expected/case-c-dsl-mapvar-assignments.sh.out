@@ -3,55 +3,55 @@
 ================================================================
 MAPVAR ASSIGNMENTS TO FULL SREC
 
-mlr --from ./reg_test/input/xyz2 put $* = {"a":1, "b": {"x":8,"y":9}, "c":3}
+mlr --from ././reg-test/input/xyz2 put $* = {"a":1, "b": {"x":8,"y":9}, "c":3}
 a=1,c=3
 a=1,c=3
 
-mlr --from ./reg_test/input/xyz2 put $* = $*
+mlr --from ././reg-test/input/xyz2 put $* = $*
 x=3,y=4,z=5
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @a = 1; $* = @a
+mlr --from ././reg-test/input/xyz2 put @a = 1; $* = @a
 
 
 
-mlr --from ./reg_test/input/xyz2 put @b[1] = 2; $* = @b
+mlr --from ././reg-test/input/xyz2 put @b[1] = 2; $* = @b
 1=2
 1=2
 
-mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; $* = @c
+mlr --from ././reg-test/input/xyz2 put @c[1][2] = 3; $* = @c
 
 
 
-mlr --from ./reg_test/input/xyz2 put @a = 1; $* = @*
+mlr --from ././reg-test/input/xyz2 put @a = 1; $* = @*
 a=1
 a=1
 
-mlr --from ./reg_test/input/xyz2 put @b[1] = 2; $* = @*
+mlr --from ././reg-test/input/xyz2 put @b[1] = 2; $* = @*
 
 
 
-mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; $* = @*
+mlr --from ././reg-test/input/xyz2 put @c[1][2] = 3; $* = @*
 
 
 
-mlr --from ./reg_test/input/xyz2 put a = 1; $* = a
+mlr --from ././reg-test/input/xyz2 put a = 1; $* = a
 
 
 
-mlr --from ./reg_test/input/xyz2 put b[1] = 2; $* = b
+mlr --from ././reg-test/input/xyz2 put b[1] = 2; $* = b
 1=2
 1=2
 
-mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; $* = c
+mlr --from ././reg-test/input/xyz2 put c[1][2] = 3; $* = c
 
 
 
-mlr --from ./reg_test/input/xyz2 put $* = 3
+mlr --from ././reg-test/input/xyz2 put $* = 3
 
 
 
-mlr --from ./reg_test/input/xyz2 put 
+mlr --from ././reg-test/input/xyz2 put 
   func map_valued_func() {
     return {"a":1,"b":2}
   }
@@ -61,7 +61,7 @@ mlr --from ./reg_test/input/xyz2 put
 a=1,b=2
 a=1,b=2
 
-mlr --from ./reg_test/input/xyz2 put 
+mlr --from ././reg-test/input/xyz2 put 
   func map_valued_func() {
     return {"a":1,"b":2}
   }
@@ -74,7 +74,7 @@ a=1,b=2
 ================================================================
 MAPVAR ASSIGNMENTS TO FULL OOSVAR
 
-mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump
+mlr --from ././reg-test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump
 {
   "a": 1,
   "b": {
@@ -94,7 +94,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @* = $*; dump
+mlr --from ././reg-test/input/xyz2 put @* = $*; dump
 {
   "x": 3,
   "y": 4,
@@ -108,7 +108,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump
+mlr --from ././reg-test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump
 {
   "a": 1,
   "b": {
@@ -144,7 +144,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @a = 1; @* = @a; dump
+mlr --from ././reg-test/input/xyz2 put @a = 1; @* = @a; dump
 {
 }
 x=3,y=4,z=5
@@ -152,7 +152,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @b; dump
+mlr --from ././reg-test/input/xyz2 put @b[1] = 2; @* = @b; dump
 {
   "1": 2
 }
@@ -162,7 +162,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @c; dump
+mlr --from ././reg-test/input/xyz2 put @c[1][2] = 3; @* = @c; dump
 {
   "1": {
     "2": 3
@@ -176,7 +176,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @a = 1; @* = @*; dump
+mlr --from ././reg-test/input/xyz2 put @a = 1; @* = @*; dump
 {
   "a": 1
 }
@@ -186,7 +186,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @*; dump
+mlr --from ././reg-test/input/xyz2 put @b[1] = 2; @* = @*; dump
 {
   "b": {
     "1": 2
@@ -200,7 +200,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @*; dump
+mlr --from ././reg-test/input/xyz2 put @c[1][2] = 3; @* = @*; dump
 {
   "c": {
     "1": {
@@ -218,7 +218,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put a = 1; @* = a; dump
+mlr --from ././reg-test/input/xyz2 put a = 1; @* = a; dump
 {
 }
 x=3,y=4,z=5
@@ -226,7 +226,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put b[1] = 2; @* = b; dump
+mlr --from ././reg-test/input/xyz2 put b[1] = 2; @* = b; dump
 {
   "1": 2
 }
@@ -236,7 +236,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; @* = c; dump
+mlr --from ././reg-test/input/xyz2 put c[1][2] = 3; @* = c; dump
 {
   "1": {
     "2": 3
@@ -250,11 +250,11 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put @* = 3
+mlr --from ././reg-test/input/xyz2 put @* = 3
 x=3,y=4,z=5
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put 
+mlr --from ././reg-test/input/xyz2 put 
   func map_valued_func() {
     return {"a":1,"b":2}
   }
@@ -273,7 +273,7 @@ x=3,y=4,z=5
 }
 x=6,y=7,u=8
 
-mlr --from ./reg_test/input/xyz2 put 
+mlr --from ././reg-test/input/xyz2 put 
   func map_valued_func() {
     return {"a":1,"b":2}
   }
@@ -295,7 +295,7 @@ x=6,y=7,u=8
 ================================================================
 MAPVAR ASSIGNMENTS TO OOSVAR
 
-mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o
 {
   "a": 1,
   "b": {
@@ -313,11 +313,11 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @o = @o; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @o = @o; dump @o
 
 
 
-mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @o = @*; dump
+mlr --from ././reg-test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @o = @*; dump
 {
   "o": {
     "a": 1,
@@ -363,7 +363,7 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @o = $*; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @o = $*; dump @o
 {
   "x": 3,
   "y": 4,
@@ -375,7 +375,7 @@ mlr --from ./reg_test/input/xyz2 put -q @o = $*; dump @o
   "u": 8
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o; @o = @o; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o; @o = @o; dump @o
 {
   "a": 1,
   "b": {
@@ -409,7 +409,7 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; @o = @o; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; @o = @o; dump @o
 {
   "a": 1,
   "b": {
@@ -427,11 +427,11 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @a; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; @o = @a; dump @o
 1
 1
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @b; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; @o = @b; dump @o
 {
   "1": 2
 }
@@ -439,7 +439,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @b; dump @o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
 {
   "1": {
     "2": 3
@@ -451,7 +451,7 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @*; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; @o = @*; dump @o
 {
   "a": 1
 }
@@ -462,7 +462,7 @@ mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @*; dump @o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @*; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; @o = @*; dump @o
 {
   "b": {
     "1": 2
@@ -479,7 +479,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @*; dump @o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @*; dump @o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; @o = @*; dump @o
 {
   "c": {
     "1": {
@@ -502,11 +502,11 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @*; dump @o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q a = 1; @o = a; dump @o
+mlr --from ././reg-test/input/xyz2 put -q a = 1; @o = a; dump @o
 1
 1
 
-mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; @o = b; dump @o
+mlr --from ././reg-test/input/xyz2 put -q b[1] = 2; @o = b; dump @o
 {
   "1": 2
 }
@@ -514,7 +514,7 @@ mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; @o = b; dump @o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; @o = c; dump @o
+mlr --from ././reg-test/input/xyz2 put -q c[1][2] = 3; @o = c; dump @o
 {
   "1": {
     "2": 3
@@ -526,7 +526,7 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; @o = c; dump @o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} @o = map_valued_func(); dump @o
+mlr --from ././reg-test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} @o = map_valued_func(); dump @o
 {
   "a": 1,
   "b": 2
@@ -540,7 +540,7 @@ mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"
 ================================================================
 MAPVAR ASSIGNMENTS TO MAP-TYPED LOCAL
 
-mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+mlr --from ././reg-test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
 {
   "a": 1,
   "b": {
@@ -558,10 +558,10 @@ mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q map o = @o; dump o
+mlr --from ././reg-test/input/xyz2 put -q map o = @o; dump o
 mlr: map type assertion for variable o unmet by value "" with type absent.
 
-mlr --from ./reg_test/input/xyz2 put -q map o = $*; dump o
+mlr --from ././reg-test/input/xyz2 put -q map o = $*; dump o
 {
   "x": 3,
   "y": 4,
@@ -573,7 +573,7 @@ mlr --from ./reg_test/input/xyz2 put -q map o = $*; dump o
   "u": 8
 }
 
-mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
+mlr --from ././reg-test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
   "a": 1,
   "b": {
@@ -591,10 +591,10 @@ mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @a; dump o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; map o = @a; dump o
 mlr: map type assertion for variable o unmet by value 1 with type int.
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @b; dump o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; map o = @b; dump o
 {
   "1": 2
 }
@@ -602,7 +602,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @b; dump o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @c; dump o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; map o = @c; dump o
 {
   "1": {
     "2": 3
@@ -614,7 +614,7 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @c; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; map o = @*; dump o
 {
   "a": 1
 }
@@ -622,7 +622,7 @@ mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @*; dump o
   "a": 1
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; map o = @*; dump o
 {
   "b": {
     "1": 2
@@ -634,7 +634,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @*; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; map o = @*; dump o
 {
   "c": {
     "1": {
@@ -650,10 +650,10 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @*; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q a = 1; map o = a; dump o
+mlr --from ././reg-test/input/xyz2 put -q a = 1; map o = a; dump o
 mlr: map type assertion for variable o unmet by value 1 with type int.
 
-mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; map o = b; dump o
+mlr --from ././reg-test/input/xyz2 put -q b[1] = 2; map o = b; dump o
 {
   "1": 2
 }
@@ -661,7 +661,7 @@ mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; map o = b; dump o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
+mlr --from ././reg-test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
 {
   "1": {
     "2": 3
@@ -673,7 +673,7 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} map o = map_valued_func(); dump o
+mlr --from ././reg-test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} map o = map_valued_func(); dump o
 {
   "a": 1,
   "b": 2
@@ -687,7 +687,7 @@ mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"
 ================================================================
 MAPVAR ASSIGNMENTS TO VAR-TYPED LOCAL
 
-mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+mlr --from ././reg-test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
 {
   "a": 1,
   "b": {
@@ -705,11 +705,11 @@ mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q var o = @o; dump o
+mlr --from ././reg-test/input/xyz2 put -q var o = @o; dump o
 
 
 
-mlr --from ./reg_test/input/xyz2 put -q var o = $*; dump o
+mlr --from ././reg-test/input/xyz2 put -q var o = $*; dump o
 {
   "x": 3,
   "y": 4,
@@ -721,7 +721,7 @@ mlr --from ./reg_test/input/xyz2 put -q var o = $*; dump o
   "u": 8
 }
 
-mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
+mlr --from ././reg-test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
   "a": 1,
   "b": {
@@ -739,11 +739,11 @@ mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @a; dump o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; var o = @a; dump o
 1
 1
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @b; dump o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; var o = @b; dump o
 {
   "1": 2
 }
@@ -751,7 +751,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @b; dump o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @c; dump o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; var o = @c; dump o
 {
   "1": {
     "2": 3
@@ -763,7 +763,7 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @c; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; var o = @*; dump o
 {
   "a": 1
 }
@@ -771,7 +771,7 @@ mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @*; dump o
   "a": 1
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; var o = @*; dump o
 {
   "b": {
     "1": 2
@@ -783,7 +783,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @*; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; var o = @*; dump o
 {
   "c": {
     "1": {
@@ -799,11 +799,11 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @*; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q a = 1; var o = a; dump o
+mlr --from ././reg-test/input/xyz2 put -q a = 1; var o = a; dump o
 1
 1
 
-mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; var o = b; dump o
+mlr --from ././reg-test/input/xyz2 put -q b[1] = 2; var o = b; dump o
 {
   "1": 2
 }
@@ -811,7 +811,7 @@ mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; var o = b; dump o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
+mlr --from ././reg-test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
 {
   "1": {
     "2": 3
@@ -823,7 +823,7 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o
+mlr --from ././reg-test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o
 {
   "a": 1,
   "b": 2
@@ -837,7 +837,7 @@ mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"
 ================================================================
 MAPVAR ASSIGNMENTS TO UNTYPED LOCAL
 
-mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+mlr --from ././reg-test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
 {
   "a": 1,
   "b": {
@@ -855,11 +855,11 @@ mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q o = @o; dump o
+mlr --from ././reg-test/input/xyz2 put -q o = @o; dump o
 
 
 
-mlr --from ./reg_test/input/xyz2 put -q o = $*; dump o
+mlr --from ././reg-test/input/xyz2 put -q o = $*; dump o
 {
   "x": 3,
   "y": 4,
@@ -871,7 +871,7 @@ mlr --from ./reg_test/input/xyz2 put -q o = $*; dump o
   "u": 8
 }
 
-mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
+mlr --from ././reg-test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
   "a": 1,
   "b": {
@@ -889,11 +889,11 @@ mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
   "c": 3
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @a; dump o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; o = @a; dump o
 1
 1
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @b; dump o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; o = @b; dump o
 {
   "1": 2
 }
@@ -901,7 +901,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @b; dump o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @c; dump o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; o = @c; dump o
 {
   "1": {
     "2": 3
@@ -913,7 +913,7 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @c; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @a = 1; o = @*; dump o
 {
   "a": 1
 }
@@ -921,7 +921,7 @@ mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @*; dump o
   "a": 1
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @b[1] = 2; o = @*; dump o
 {
   "b": {
     "1": 2
@@ -933,7 +933,7 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @*; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @*; dump o
+mlr --from ././reg-test/input/xyz2 put -q @c[1][2] = 3; o = @*; dump o
 {
   "c": {
     "1": {
@@ -949,11 +949,11 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @*; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q a = 1; o = a; dump o
+mlr --from ././reg-test/input/xyz2 put -q a = 1; o = a; dump o
 1
 1
 
-mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; o = b; dump o
+mlr --from ././reg-test/input/xyz2 put -q b[1] = 2; o = b; dump o
 {
   "1": 2
 }
@@ -961,7 +961,7 @@ mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; o = b; dump o
   "1": 2
 }
 
-mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
+mlr --from ././reg-test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
 {
   "1": {
     "2": 3
@@ -973,7 +973,7 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
   }
 }
 
-mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o
+mlr --from ././reg-test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o
 {
   "a": 1,
   "b": 2

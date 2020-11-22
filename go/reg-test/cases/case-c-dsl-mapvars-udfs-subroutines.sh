@@ -96,7 +96,7 @@ mlr_expect_fail --from $indir/abixy put '
   var b = a[2]; # cannot index localvar declared non-map
 '
 
-# This one is intended to particularly look at freeing, e.g.  with './reg_test/run --valgrind'.
+# This one is intended to particularly look at freeing, e.g.  with './reg-test/run --valgrind'.
 run_mlr --oxtab --from $indir/abixy-het put '
  $* = mapdiff(
    mapsum($*, {"a": "newval"}),

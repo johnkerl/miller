@@ -1,6 +1,4 @@
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 || 2
 DSL EXPRESSION:
 $y = 1 || 2
@@ -13,8 +11,6 @@ RAW AST:
             * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 || 2 || 3
 DSL EXPRESSION:
 $y = 1 || 2 || 3
@@ -29,8 +25,6 @@ RAW AST:
             * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 || 2 && 3
 DSL EXPRESSION:
 $y = 1 || 2 && 3
@@ -45,8 +39,6 @@ RAW AST:
                 * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 && 2 || 3
 DSL EXPRESSION:
 $y = 1 && 2 || 3
@@ -61,8 +53,6 @@ RAW AST:
             * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 ? 2 : 3
 DSL EXPRESSION:
 $y = 1 ? 2 : 3
@@ -76,8 +66,6 @@ RAW AST:
             * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = $a + $b * $c
 DSL EXPRESSION:
 $y = $a + $b * $c
@@ -92,8 +80,6 @@ RAW AST:
                 * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = $a * $b * $c
 DSL EXPRESSION:
 $y = $a * $b * $c
@@ -108,8 +94,6 @@ RAW AST:
             * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = $a ** $b ** $c
 DSL EXPRESSION:
 $y = $a ** $b ** $c
@@ -124,8 +108,6 @@ RAW AST:
                 * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $[2] = 3
 DSL EXPRESSION:
 $[2] = 3
@@ -137,8 +119,6 @@ RAW AST:
         * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $[$y] = 4
 DSL EXPRESSION:
 $[$y] = 4
@@ -150,8 +130,6 @@ RAW AST:
         * int literal "4"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = "abc"
 DSL EXPRESSION:
 $x = "abc"
@@ -162,8 +140,6 @@ RAW AST:
         * string literal "abc"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $["abc"] = "def"
 DSL EXPRESSION:
 $["abc"] = "def"
@@ -175,8 +151,6 @@ RAW AST:
         * string literal "def"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $[FILENAME] = FNR
 DSL EXPRESSION:
 $[FILENAME] = FNR
@@ -188,8 +162,6 @@ RAW AST:
         * context variable "FNR"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = $a + $b + $c
 DSL EXPRESSION:
 $x = $a + $b + $c
@@ -204,8 +176,6 @@ RAW AST:
             * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 DSL EXPRESSION:
 $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
@@ -234,8 +204,6 @@ RAW AST:
             * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = 2 * $a + $b . $c
 DSL EXPRESSION:
 $x = 2 * $a + $b . $c
@@ -252,8 +220,6 @@ RAW AST:
             * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = 2 * $a + ($b . $c)
 DSL EXPRESSION:
 $x = 2 * $a + ($b . $c)
@@ -270,8 +236,6 @@ RAW AST:
                 * direct field value "c"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 DSL EXPRESSION:
 $x = (NF + NR) * 7; $y = OFS . $y . "hello"
@@ -293,8 +257,6 @@ RAW AST:
             * string literal "hello"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x = 123. + 1e-2 / .2e3 + 1.e-3
 DSL EXPRESSION:
 $x = 123. + 1e-2 / .2e3 + 1.e-3
@@ -311,8 +273,6 @@ RAW AST:
             * float literal "1.e-3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff  + 0x7fffffffffffffff
@@ -325,8 +285,6 @@ RAW AST:
             * int literal "0x7fffffffffffffff"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
@@ -339,8 +297,6 @@ RAW AST:
             * int literal "0x7fffffffffffffff"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z=0x7fffffffffffffff  * 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff  * 0x7fffffffffffffff
@@ -353,8 +309,6 @@ RAW AST:
             * int literal "0x7fffffffffffffff"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z=0x7fffffffffffffff .* 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff .* 0x7fffffffffffffff
@@ -367,62 +321,42 @@ RAW AST:
             * int literal "0x7fffffffffffffff"
 
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=2.3
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.3
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 2.3
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=2.
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 2.
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=.3
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=.3
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 .3
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=2.3e4
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.3e4
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 2.3e4
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=2.e4
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.e4
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 2.e4
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=.3e4
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=.3e4
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 .3e4
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=2.3e-4
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.3e-4
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 2.3e-4
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=2.e-4
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.e-4
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 2.e-4
 
-
-----------------------------------------------------------------
-mlr --opprint --from u/s.dkvp head -n 1 then put $z=.3e-4
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=.3e-4
 a   b   i x                  y                  z
 pan pan 1 0.3467901443380824 0.7268028627434533 .3e-4
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 * 2 ?? 3
 DSL EXPRESSION:
 $y = 1 * 2 ?? 3
@@ -437,8 +371,6 @@ RAW AST:
             * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $y = 1 ?? 2 * 3
 DSL EXPRESSION:
 $y = 1 ?? 2 * 3
@@ -453,8 +385,6 @@ RAW AST:
                 * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = []
 DSL EXPRESSION:
 $z = []
@@ -465,8 +395,6 @@ RAW AST:
         * array literal "[]"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = [1,]
 DSL EXPRESSION:
 $z = [1,]
@@ -478,8 +406,6 @@ RAW AST:
             * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = [1,2]
 DSL EXPRESSION:
 $z = [1,2]
@@ -492,8 +418,6 @@ RAW AST:
             * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = [1,2,]
 DSL EXPRESSION:
 $z = [1,2,]
@@ -506,8 +430,6 @@ RAW AST:
             * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = [1,2,3]
 DSL EXPRESSION:
 $z = [1,2,3]
@@ -521,8 +443,6 @@ RAW AST:
             * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = [1,2,3,]
 DSL EXPRESSION:
 $z = [1,2,3,]
@@ -536,8 +456,6 @@ RAW AST:
             * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {}
 DSL EXPRESSION:
 $z = {}
@@ -548,8 +466,6 @@ RAW AST:
         * map literal "{}"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":"1"}
 DSL EXPRESSION:
 $z = {"a":"1"}
@@ -563,8 +479,6 @@ RAW AST:
                 * string literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":"1",}
 DSL EXPRESSION:
 $z = {"a":"1",}
@@ -578,8 +492,6 @@ RAW AST:
                 * string literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":"1", "b":2}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2}
@@ -596,8 +508,6 @@ RAW AST:
                 * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":"1", "b":2,}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2,}
@@ -614,8 +524,6 @@ RAW AST:
                 * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":"1", "b":2, "c":3}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3}
@@ -635,8 +543,6 @@ RAW AST:
                 * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":"1", "b":2, "c":3,}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3,}
@@ -656,8 +562,6 @@ RAW AST:
                 * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = $a[1]
 DSL EXPRESSION:
 $z = $a[1]
@@ -670,8 +574,6 @@ RAW AST:
             * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = $a["index"]
 DSL EXPRESSION:
 $z = $a["index"]
@@ -684,8 +586,6 @@ RAW AST:
             * string literal "index"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = "abcde"[1]
 DSL EXPRESSION:
 $z = "abcde"[1]
@@ -698,8 +598,6 @@ RAW AST:
             * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = "abcde"["index"]
 DSL EXPRESSION:
 $z = "abcde"["index"]
@@ -712,8 +610,6 @@ RAW AST:
             * string literal "index"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = $a[1:2]
 DSL EXPRESSION:
 $z = $a[1:2]
@@ -727,8 +623,6 @@ RAW AST:
             * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = $a[:2]
 DSL EXPRESSION:
 $z = $a[:2]
@@ -742,8 +636,6 @@ RAW AST:
             * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = $a[1:]
 DSL EXPRESSION:
 $z = $a[1:]
@@ -757,8 +649,6 @@ RAW AST:
             * array-slice empty upper index ":"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = $a[:]
 DSL EXPRESSION:
 $z = $a[:]
@@ -772,8 +662,6 @@ RAW AST:
             * array-slice empty upper index ":"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = [5,6,7,8,9][1]
 DSL EXPRESSION:
 $z = [5,6,7,8,9][1]
@@ -791,8 +679,6 @@ RAW AST:
             * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $z = {"a":1, "b":2, "c":3}["b"]
 DSL EXPRESSION:
 $z = {"a":1, "b":2, "c":3}["b"]
@@ -814,8 +700,6 @@ RAW AST:
             * string literal "b"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{}
 DSL EXPRESSION:
 begin{}
@@ -825,8 +709,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{@y=1}
 DSL EXPRESSION:
 begin{@y=1}
@@ -839,8 +721,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v end{}
 DSL EXPRESSION:
 end{}
@@ -850,8 +730,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v end{@y=1}
 DSL EXPRESSION:
 end{@y=1}
@@ -864,8 +742,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x=2; end{@y=1}
 DSL EXPRESSION:
 $x=2; end{@y=1}
@@ -881,8 +757,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{@y=1} $x=2
 DSL EXPRESSION:
 begin{@y=1} $x=2
@@ -898,8 +772,6 @@ RAW AST:
         * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{} end {}
 DSL EXPRESSION:
 begin{} end {}
@@ -911,8 +783,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x=1;
 DSL EXPRESSION:
 $x=1;
@@ -923,8 +793,6 @@ RAW AST:
         * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v $x=1;$y=2;
 DSL EXPRESSION:
 $x=1;$y=2;
@@ -938,8 +806,6 @@ RAW AST:
         * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{@x=1;@y=2}
 DSL EXPRESSION:
 begin{@x=1;@y=2}
@@ -955,8 +821,6 @@ RAW AST:
                 * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{@x=1;@y=2;}
 DSL EXPRESSION:
 begin{@x=1;@y=2;}
@@ -972,8 +836,6 @@ RAW AST:
                 * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{@x=1;@y=2;} $z=3
 DSL EXPRESSION:
 begin{@x=1;@y=2;} $z=3
@@ -992,8 +854,6 @@ RAW AST:
         * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin{@x=1;@y=2;} $z=3;
 DSL EXPRESSION:
 begin{@x=1;@y=2;} $z=3;
@@ -1012,8 +872,6 @@ RAW AST:
         * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (NR == 1) { $z = 100 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 }
@@ -1030,8 +888,6 @@ RAW AST:
                     * int literal "100"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (NR == 1) { $z = 100 } else { $z = 900 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } else { $z = 900 }
@@ -1053,8 +909,6 @@ RAW AST:
                     * int literal "900"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
@@ -1079,8 +933,6 @@ RAW AST:
                     * int literal "200"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
@@ -1110,8 +962,6 @@ RAW AST:
                     * int literal "900"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
@@ -1149,8 +999,6 @@ RAW AST:
                     * int literal "900"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (k in $*) { emit { k : k } }
 DSL EXPRESSION:
 for (k in $*) { emit { k : k } }
@@ -1167,8 +1015,6 @@ RAW AST:
                         * local variable "k"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v begin {}
 DSL EXPRESSION:
 begin {}
@@ -1178,8 +1024,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v end {}
 DSL EXPRESSION:
 end {}
@@ -1189,8 +1033,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (1) {}
 DSL EXPRESSION:
 if (1) {}
@@ -1202,8 +1044,6 @@ RAW AST:
             * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v if (1) {2}
 DSL EXPRESSION:
 if (1) {2}
@@ -1217,8 +1057,6 @@ RAW AST:
                     * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (k in $*) {}
 DSL EXPRESSION:
 for (k in $*) {}
@@ -1230,8 +1068,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (k in $*) {2}
 DSL EXPRESSION:
 for (k in $*) {2}
@@ -1245,8 +1081,6 @@ RAW AST:
                 * int literal "2"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v while (false) {}
 DSL EXPRESSION:
 while (false) {}
@@ -1257,8 +1091,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v do {} while (false)
 DSL EXPRESSION:
 do {} while (false)
@@ -1269,8 +1101,6 @@ RAW AST:
         * bool literal "false"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v nr=NR; $nr=nr
 DSL EXPRESSION:
 nr=NR; $nr=nr
@@ -1284,8 +1114,6 @@ RAW AST:
         * local variable "nr"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (i = 0; i < 10; i += 1) { $x += i }
 DSL EXPRESSION:
 for (i = 0; i < 10; i += 1) { $x += i }
@@ -1315,8 +1143,6 @@ RAW AST:
                     * local variable "i"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (;;) {}
 DSL EXPRESSION:
 for (;;) {}
@@ -1329,8 +1155,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (i = 0; i < NR; i += 1) { $i += i }
 DSL EXPRESSION:
 for (i = 0; i < NR; i += 1) { $i += i }
@@ -1360,8 +1184,6 @@ RAW AST:
                     * local variable "i"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
 DSL EXPRESSION:
 for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
@@ -1398,8 +1220,6 @@ RAW AST:
                     * local variable "i"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
 DSL EXPRESSION:
 for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
@@ -1436,8 +1256,6 @@ RAW AST:
                     * local variable "i"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(){}
 DSL EXPRESSION:
 func f(){}
@@ -1448,8 +1266,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a){}
 DSL EXPRESSION:
 func f(a){}
@@ -1462,8 +1278,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,){}
 DSL EXPRESSION:
 func f(a,){}
@@ -1476,8 +1290,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b){}
 DSL EXPRESSION:
 func f(a,b){}
@@ -1492,8 +1304,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b,){}
 DSL EXPRESSION:
 func f(a,b,){}
@@ -1508,8 +1318,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b,c){}
 DSL EXPRESSION:
 func f(a,b,c){}
@@ -1526,8 +1334,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b,c,){}
 DSL EXPRESSION:
 func f(a,b,c,){}
@@ -1544,8 +1350,6 @@ RAW AST:
         * statement block
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(){return 1}
 DSL EXPRESSION:
 func f(){return 1}
@@ -1558,8 +1362,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a){return 1}
 DSL EXPRESSION:
 func f(a){return 1}
@@ -1574,8 +1376,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,){return 1}
 DSL EXPRESSION:
 func f(a,){return 1}
@@ -1590,8 +1390,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b){return 1}
 DSL EXPRESSION:
 func f(a,b){return 1}
@@ -1608,8 +1406,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b,){return 1}
 DSL EXPRESSION:
 func f(a,b,){return 1}
@@ -1626,8 +1422,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b,c){return 1}
 DSL EXPRESSION:
 func f(a,b,c){return 1}
@@ -1646,8 +1440,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(a,b,c,){return 1}
 DSL EXPRESSION:
 func f(a,b,c,){return 1}
@@ -1666,8 +1458,6 @@ RAW AST:
                 * int literal "1"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(x, y) { z = 3}
 DSL EXPRESSION:
 func f(x, y) { z = 3}
@@ -1685,8 +1475,6 @@ RAW AST:
                 * int literal "3"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v func f(var x, var y): var { var z = 3}
 DSL EXPRESSION:
 func f(var x, var y): var { var z = 3}
@@ -1708,8 +1496,6 @@ RAW AST:
         * type declaration "var"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v unset $x
 DSL EXPRESSION:
 unset $x
@@ -1719,8 +1505,6 @@ RAW AST:
         * direct field value "x"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v unset $*
 DSL EXPRESSION:
 unset $*
@@ -1730,8 +1514,6 @@ RAW AST:
         * full record "$*"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v unset @x
 DSL EXPRESSION:
 unset @x
@@ -1741,8 +1523,6 @@ RAW AST:
         * direct oosvar value "x"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v unset @*
 DSL EXPRESSION:
 unset @*
@@ -1752,8 +1532,6 @@ RAW AST:
         * full oosvar "@*"
 
 
-
-----------------------------------------------------------------
 mlr -n put -v unset x
 DSL EXPRESSION:
 unset x
@@ -1764,10 +1542,17 @@ RAW AST:
 
 
 mlr -n put -v unset 3
+DSL EXPRESSION:
+unset 3
+RAW AST:
+* statement block
+    * unset "unset"
+        * int literal "3"
+
 Miller: int literal is not valid for unset statement.
 
-mlr -n put -f u/lex-error.mlr
-./mlr: cannot parse DSL expression.
+mlr -n put -f ./reg-test/input/lex-error.mlr
+./reg-test/../../go/mlr: cannot parse DSL expression.
 Parse error on token "`" at line 20 columnn 3.
 Please check for missing semicolon.
 Expected one of:
@@ -1778,11 +1563,12 @@ Expected one of:
   ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS ctx_NF ctx_NR ctx_FNR ctx_FILENAME
   ctx_FILENUM begin end if while do for break continue func return
 
-mlr -n put -f u/parse-error.mlr
-./mlr: cannot parse DSL expression.
+mlr -n put -f ./reg-test/input/parse-error.mlr
+./reg-test/../../go/mlr: cannot parse DSL expression.
 Parse error on token "x" at line 20 columnn 5.
 Please check for missing semicolon.
 Expected one of:
   ; { } = ||= ^^= &&= ??= |= &= ^= <<= >>= >>>= += .= -= *= /= //= %= **=
   ? || ^^ && ?? =~ !=~ == != > >= < <= | ^ & << >> >>> + - .+ .- . * / //
   % .* ./ .// ** ( [
+

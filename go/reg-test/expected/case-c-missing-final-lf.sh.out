@@ -3,27 +3,27 @@
 ================================================================
 MISSING FINAL LF
 
-mlr --csvlite cat ./reg_test/input/truncated.csv
+mlr --csvlite cat ././reg-test/input/truncated.csv
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 
-mlr --dkvp cat ./reg_test/input/truncated.dkvp
+mlr --dkvp cat ././reg-test/input/truncated.dkvp
 a=1,b=2
 c=3
 
-mlr --nidx cat ./reg_test/input/truncated.nidx
+mlr --nidx cat ././reg-test/input/truncated.nidx
 1 2 3
 4 5
 
-mlr --pprint cat ./reg_test/input/truncated.pprint
+mlr --pprint cat ././reg-test/input/truncated.pprint
 a b c
 1 2 3
 4 5 6
 7 8 9
 
-mlr --xtab cat ./reg_test/input/truncated.xtab-crlf
+mlr --xtab cat ././reg-test/input/truncated.xtab-crlf
 a 1
 b 2
 c 3

@@ -1,5 +1,5 @@
 
-mlr --opprint --from ./reg_test/input/abixy put -f ./reg_test/input/put-script-piece-1
+mlr --opprint --from ././reg-test/input/abixy put -f ././reg-test/input/put-script-piece-1
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -12,7 +12,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put -f ./reg_test/input/put-script-piece-1 -f ./reg_test/input/put-script-piece-2
+mlr --opprint --from ././reg-test/input/abixy put -f ././reg-test/input/put-script-piece-1 -f ././reg-test/input/put-script-piece-2
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -25,7 +25,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put -f ./reg_test/input/put-script-piece-1 -f ./reg_test/input/put-script-piece-2 -f ./reg_test/input/put-script-piece-3
+mlr --opprint --from ././reg-test/input/abixy put -f ././reg-test/input/put-script-piece-1 -f ././reg-test/input/put-script-piece-2 -f ././reg-test/input/put-script-piece-3
 a   b   i  x                   y                   o         W  DID
 pan pan 1  0.3467901443380824  0.7268028627434533  2.073593  1  YES
 eks pan 2  0.7586799647899636  0.5221511083334797  3.280831  2  YES
@@ -38,7 +38,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9.574735  8  YES
 hat wye 9  0.03144187646093577 0.7495507603507059  9.780993  9  YES
 pan wye 10 0.5026260055412137  0.9526183602969864  11.455244 10 YES
 
-mlr --opprint --from ./reg_test/input/abixy put -e $xy = $x**2 + $y**2
+mlr --opprint --from ././reg-test/input/abixy put -e $xy = $x**2 + $y**2
 a   b   i  x                   y                   xy
 pan pan 1  0.3467901443380824  0.7268028627434533  0.648506
 eks pan 2  0.7586799647899636  0.5221511083334797  0.848237
@@ -51,11 +51,11 @@ zee wye 8  0.5985540091064224  0.976181385699006   1.311197
 hat wye 9  0.03144187646093577 0.7495507603507059  0.562815
 pan wye 10 0.5026260055412137  0.9526183602969864  1.160115
 
-mlr --opprint --from ./reg_test/input/abixy filter -e NR == 7
+mlr --opprint --from ././reg-test/input/abixy filter -e NR == 7
 a   b   i x                  y
 eks zee 7 0.6117840605678454 0.1878849191181694
 
-mlr --opprint --from ./reg_test/input/abixy put -e print "PRE"; -f ./reg_test/input/put-script-piece-1 -f ./reg_test/input/put-script-piece-2 -f ./reg_test/input/put-script-piece-3 -e print "POST"
+mlr --opprint --from ././reg-test/input/abixy put -e print "PRE"; -f ././reg-test/input/put-script-piece-1 -f ././reg-test/input/put-script-piece-2 -f ././reg-test/input/put-script-piece-3 -e print "POST"
 PRE
 POST
 PRE
@@ -88,7 +88,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   9.574735  8  YES
 hat wye 9  0.03144187646093577 0.7495507603507059  9.780993  9  YES
 pan wye 10 0.5026260055412137  0.9526183602969864  11.455244 10 YES
 
-mlr --opprint --from ./reg_test/input/abixy filter -f ./reg_test/input/filter-script-piece-1
+mlr --opprint --from ././reg-test/input/abixy filter -f ././reg-test/input/filter-script-piece-1
 a   b   i  x                  y
 eks pan 2  0.7586799647899636 0.5221511083334797
 wye pan 5  0.5732889198020006 0.8636244699032729
@@ -97,7 +97,7 @@ eks zee 7  0.6117840605678454 0.1878849191181694
 zee wye 8  0.5985540091064224 0.976181385699006
 pan wye 10 0.5026260055412137 0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy filter -f ./reg_test/input/filter-script-piece-1 -f ./reg_test/input/filter-script-piece-2
+mlr --opprint --from ././reg-test/input/abixy filter -f ././reg-test/input/filter-script-piece-1 -f ././reg-test/input/filter-script-piece-2
 a   b   i x                  y
 eks pan 2 0.7586799647899636 0.5221511083334797
 

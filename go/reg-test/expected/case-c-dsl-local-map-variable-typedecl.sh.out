@@ -1,24 +1,24 @@
 
-mlr --from ./reg_test/input/xyz345 put 
+mlr --from ././reg-test/input/xyz345 put 
     map a = {};
 
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz345 put 
+mlr --from ././reg-test/input/xyz345 put 
     map a = {};
     a[1]=2;
     a[3][4]=5;
 
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz345 put 
+mlr --from ././reg-test/input/xyz345 put 
     map a = {};
     a=2;
     a[3][4]=5;
 
 mlr: map type assertion for variable a unmet by value 2 with type int.
 
-mlr --from ./reg_test/input/xyz345 put 
+mlr --from ././reg-test/input/xyz345 put 
     map a = {};
     a[3][4]=5;
     a=2;

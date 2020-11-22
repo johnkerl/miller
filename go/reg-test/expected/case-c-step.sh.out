@@ -1,5 +1,5 @@
 
-mlr --opprint step -a rsum,shift,delta,counter -f x,y ./reg_test/input/abixy
+mlr --opprint step -a rsum,shift,delta,counter -f x,y ././reg-test/input/abixy
 a   b   i  x                   y                   x_rsum   x_shift             x_delta   x_counter y_rsum   y_shift             y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 -                   0         1         0.726803 -                   0         1
 eks pan 2  0.7586799647899636  0.5221511083334797  1.105470 0.3467901443380824  0.411890  2         1.248954 0.7268028627434533  -0.204652 2
@@ -12,7 +12,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   4.002226 0.6117840605678454  
 hat wye 9  0.03144187646093577 0.7495507603507059  4.033668 0.5985540091064224  -0.567112 9         4.991924 0.976181385699006   -0.226631 9
 pan wye 10 0.5026260055412137  0.9526183602969864  4.536294 0.03144187646093577 0.471184  10        5.944542 0.7495507603507059  0.203068  10
 
-mlr --opprint step -a rsum,shift,delta,counter -f x,y -g a ./reg_test/input/abixy
+mlr --opprint step -a rsum,shift,delta,counter -f x,y -g a ././reg-test/input/abixy
 a   b   i  x                   y                   x_rsum   x_shift             x_delta   x_counter y_rsum   y_shift             y_delta   y_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790 -                   0         1         0.726803 -                   0         1
 eks pan 2  0.7586799647899636  0.5221511083334797  0.758680 -                   0         1         0.522151 -                   0         1
@@ -25,7 +25,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   1.125680 0.5271261600918548  
 hat wye 9  0.03144187646093577 0.7495507603507059  0.031442 -                   0         1         0.749551 -                   0         1
 pan wye 10 0.5026260055412137  0.9526183602969864  0.849416 0.3467901443380824  0.155836  2         1.679421 0.7268028627434533  0.225815  2
 
-mlr --opprint step -a ewma -d 0.1,0.9 -f x,y -g a ./reg_test/input/abixy
+mlr --opprint step -a ewma -d 0.1,0.9 -f x,y -g a ././reg-test/input/abixy
 a   b   i  x                   y                   x_ewma_0.1 x_ewma_0.9 y_ewma_0.1 y_ewma_0.9
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790   0.346790   0.726803   0.726803
 eks pan 2  0.7586799647899636  0.5221511083334797  0.758680   0.758680   0.522151   0.522151
@@ -38,7 +38,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.534269   0.591411   0.54151
 hat wye 9  0.03144187646093577 0.7495507603507059  0.031442   0.031442   0.749551   0.749551
 pan wye 10 0.5026260055412137  0.9526183602969864  0.362374   0.487042   0.749384   0.930037
 
-mlr --opprint step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g a ./reg_test/input/abixy
+mlr --opprint step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g a ././reg-test/input/abixy
 a   b   i  x                   y                   x_ewma_smooth x_ewma_rough y_ewma_smooth y_ewma_rough
 pan pan 1  0.3467901443380824  0.7268028627434533  0.346790      0.346790     0.726803      0.726803
 eks pan 2  0.7586799647899636  0.5221511083334797  0.758680      0.758680     0.522151      0.522151
@@ -51,7 +51,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.534269      0.591411     0.
 hat wye 9  0.03144187646093577 0.7495507603507059  0.031442      0.031442     0.749551      0.749551
 pan wye 10 0.5026260055412137  0.9526183602969864  0.362374      0.487042     0.749384      0.930037
 
-mlr --odkvp step -a rsum,shift,delta,counter -f x,y ./reg_test/input/abixy-het
+mlr --odkvp step -a rsum,shift,delta,counter -f x,y ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_shift=,x_delta=0,x_counter=1,y_rsum=0.726803,y_shift=,y_delta=0,y_counter=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=1.105470,x_shift=0.3467901443380824,x_delta=0.411890,x_counter=2,y_rsum=1.248954,y_shift=0.7268028627434533,y_delta=-0.204652,y_counter=2
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x_rsum=1.310073,x_shift=0.7586799647899636,x_delta=-0.554077,x_counter=3,y_rsum=1.587272,y_shift=0.5221511083334797,y_delta=-0.183833,y_counter=3
@@ -63,7 +63,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=3.428937,x_shi
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x_rsum=3.460379,x_shift=0.5985540091064224,x_delta=-0.567112,x_counter=8,y_rsum=4.015743,y_shift=0.1878849191181694,y_delta=0.561666,y_counter=8
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=3.963005,x_shift=0.03144187646093577,x_delta=0.471184,x_counter=9,y_rsum=4.968361,y_shift=0.7495507603507059,y_delta=0.203068,y_counter=9
 
-mlr --odkvp step -a rsum,shift,delta,counter -f x,y -g a ./reg_test/input/abixy-het
+mlr --odkvp step -a rsum,shift,delta,counter -f x,y -g a ././reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x_rsum=0.346790,x_shift=,x_delta=0,x_counter=1,y_rsum=0.726803,y_shift=,y_delta=0,y_counter=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x_rsum=0.758680,x_shift=,x_delta=0,x_counter=1,y_rsum=0.522151,y_shift=,y_delta=0,y_counter=1
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -75,7 +75,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,x_rsum=1.125680,x_shi
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x_rsum=0.849416,x_shift=0.3467901443380824,x_delta=0.155836,x_counter=2,y_rsum=1.679421,y_shift=0.7268028627434533,y_delta=0.225815,y_counter=2
 
-mlr --opprint step -a ewma -d 0.1,0.9 -f x,y -g a ./reg_test/input/abixy-het
+mlr --opprint step -a ewma -d 0.1,0.9 -f x,y -g a ././reg-test/input/abixy-het
 a   b   i x                  y                  x_ewma_0.1 x_ewma_0.9 y_ewma_0.1 y_ewma_0.9
 pan pan 1 0.3467901443380824 0.7268028627434533 0.346790   0.346790   0.726803   0.726803
 eks pan 2 0.7586799647899636 0.5221511083334797 0.758680   0.758680   0.522151   0.522151
@@ -104,7 +104,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059
 a   b   i  x                  y                  x_ewma_0.1 x_ewma_0.9 y_ewma_0.1 y_ewma_0.9
 pan wye 10 0.5026260055412137 0.9526183602969864 0.362374   0.487042   0.749384   0.930037
 
-mlr --opprint step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g a ./reg_test/input/abixy-het
+mlr --opprint step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g a ././reg-test/input/abixy-het
 a   b   i x                  y                  x_ewma_smooth x_ewma_rough y_ewma_smooth y_ewma_rough
 pan pan 1 0.3467901443380824 0.7268028627434533 0.346790      0.346790     0.726803      0.726803
 eks pan 2 0.7586799647899636 0.5221511083334797 0.758680      0.758680     0.522151      0.522151
@@ -133,7 +133,7 @@ hat wye 9 0.03144187646093577 0.7495507603507059
 a   b   i  x                  y                  x_ewma_smooth x_ewma_rough y_ewma_smooth y_ewma_rough
 pan wye 10 0.5026260055412137 0.9526183602969864 0.362374      0.487042     0.749384      0.930037
 
-mlr --icsvlite --opprint step -a from-first -f x ./reg_test/input/from-first.csv
+mlr --icsvlite --opprint step -a from-first -f x ././reg-test/input/from-first.csv
 x   g     x_from_first
 100 red   0
 203 red   103
@@ -142,7 +142,7 @@ x   g     x_from_first
 209 green 109
 314 green 214
 
-mlr --icsvlite --opprint step -a from-first -f x -g g ./reg_test/input/from-first.csv
+mlr --icsvlite --opprint step -a from-first -f x -g g ././reg-test/input/from-first.csv
 x   g     x_from_first
 100 red   0
 203 red   103

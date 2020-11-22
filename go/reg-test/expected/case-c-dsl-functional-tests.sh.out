@@ -1,5 +1,5 @@
 
-mlr filter $x>.3 ./reg_test/input/abixy
+mlr filter $x>.3 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -9,7 +9,7 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr filter $x>.3; ./reg_test/input/abixy
+mlr filter $x>.3; ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -19,7 +19,7 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr filter $x>0.3 ./reg_test/input/abixy
+mlr filter $x>0.3 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -29,7 +29,7 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr filter $x>0.3 && $y>0.3 ./reg_test/input/abixy
+mlr filter $x>0.3 && $y>0.3 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
@@ -37,7 +37,7 @@ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr filter $x>0.3 || $y>0.3 ./reg_test/input/abixy
+mlr filter $x>0.3 || $y>0.3 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -49,29 +49,29 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr filter NR>=4 && NR <= 7 ./reg_test/input/abixy
+mlr filter NR>=4 && NR <= 7 ././reg-test/input/abixy
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 
-mlr filter -x $x>.3 ./reg_test/input/abixy
+mlr filter -x $x>.3 ././reg-test/input/abixy
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-mlr filter -x $x>0.3 ./reg_test/input/abixy
+mlr filter -x $x>0.3 ././reg-test/input/abixy
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-mlr filter -x $x>0.3 && $y>0.3 ./reg_test/input/abixy
+mlr filter -x $x>0.3 && $y>0.3 ././reg-test/input/abixy
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-mlr filter -x $x>0.3 || $y>0.3 ./reg_test/input/abixy
+mlr filter -x $x>0.3 || $y>0.3 ././reg-test/input/abixy
 
-mlr filter -x NR>=4 && NR <= 7 ./reg_test/input/abixy
+mlr filter -x NR>=4 && NR <= 7 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -79,9 +79,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr filter $nosuchfield>.3 ./reg_test/input/abixy
+mlr filter $nosuchfield>.3 ././reg-test/input/abixy
 
-mlr put $x2 = $x**2 ./reg_test/input/abixy
+mlr put $x2 = $x**2 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x2=0.120263
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x2=0.575595
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x2=0.041863
@@ -93,7 +93,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,x2=0.358267
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x2=0.000989
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x2=0.252633
 
-mlr put $x2 = $x**2; ./reg_test/input/abixy
+mlr put $x2 = $x**2; ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,x2=0.120263
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,x2=0.575595
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,x2=0.041863
@@ -105,7 +105,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,x2=0.358267
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,x2=0.000989
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,x2=0.252633
 
-mlr put $z = -0.024*$x+0.13 ./reg_test/input/abixy
+mlr put $z = -0.024*$x+0.13 ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,z=0.121677
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.111792
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,z=0.125090
@@ -117,7 +117,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,z=0.115635
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,z=0.129245
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,z=0.117937
 
-mlr put $c = $a . $b ./reg_test/input/abixy
+mlr put $c = $a . $b ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,c=panpan
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,c=ekspan
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,c=wyewye
@@ -129,7 +129,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,c=zeewye
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,c=hatwye
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,c=panwye
 
-mlr put $ii = $i + $i ./reg_test/input/abixy
+mlr put $ii = $i + $i ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,ii=2
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,ii=4
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,ii=6
@@ -141,7 +141,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,ii=16
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,ii=18
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,ii=20
 
-mlr put $emptytest = $i + $nosuch ./reg_test/input/abixy
+mlr put $emptytest = $i + $nosuch ././reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,emptytest=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,emptytest=2
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,emptytest=3
@@ -153,7 +153,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,emptytest=8
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,emptytest=9
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,emptytest=10
 
-mlr --opprint put $nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM ./reg_test/input/abixy ./reg_test/input/abixy
+mlr --opprint put $nr=NR;$fnr=FNR;$nf=NF;$filenum=FILENUM ././reg-test/input/abixy ././reg-test/input/abixy
 a   b   i  x                   y                   nr fnr nf filenum
 pan pan 1  0.3467901443380824  0.7268028627434533  1  1   7  1
 eks pan 2  0.7586799647899636  0.5221511083334797  2  2   7  1
@@ -176,7 +176,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   18 8   7  2
 hat wye 9  0.03144187646093577 0.7495507603507059  19 9   7  2
 pan wye 10 0.5026260055412137  0.9526183602969864  20 10  7  2
 
-mlr --opprint put $y=madd($x,10,37) then put $z=msub($x,10,37) ./reg_test/input/modarith.dat
+mlr --opprint put $y=madd($x,10,37) then put $z=msub($x,10,37) ././reg-test/input/modarith.dat
 x   y  z
 -37 10 27
 -36 11 28
@@ -290,7 +290,7 @@ x   y  z
 72  8  25
 73  9  26
 
-mlr --opprint put $y=mexp($x,35,37) then put $z=mmul($x,$y,37) ./reg_test/input/modarith.dat
+mlr --opprint put $y=mexp($x,35,37) then put $z=mmul($x,$y,37) ././reg-test/input/modarith.dat
 x   y  z
 -37 0  0
 -36 1  1
@@ -404,7 +404,7 @@ x   y  z
 72  18 1
 73  36 1
 
-mlr put $z=min($x, $y) ./reg_test/input/minmax.dkvp
+mlr put $z=min($x, $y) ././reg-test/input/minmax.dkvp
 x=1,y=2,z=1
 x=1,y=,z=1
 x=,y=,z=
@@ -414,7 +414,7 @@ x=3,y=,z=3
 x=,y=,z=
 x=,y=2,z=2
 
-mlr put $z=max($x, $y) ./reg_test/input/minmax.dkvp
+mlr put $z=max($x, $y) ././reg-test/input/minmax.dkvp
 x=1,y=2,z=2
 x=1,y=,z=1
 x=,y=,z=
@@ -457,7 +457,7 @@ x=a,y=2,u=2,v=a
 mlr put $u=min($x,$y);$v=max($x,$y)
 x=a,y=b,u=a,v=b
 
-mlr --icsvlite --oxtab put ${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y} ./reg_test/input/braced.csv
+mlr --icsvlite --oxtab put ${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y} ././reg-test/input/braced.csv
 name.x 1
 name.y 2
 z      3
@@ -470,12 +470,12 @@ z      5
 x+y    10
 x*y    24
 
-mlr --icsvlite --oxtab filter ${name.y} < ${z} ./reg_test/input/braced.csv
+mlr --icsvlite --oxtab filter ${name.y} < ${z} ././reg-test/input/braced.csv
 name.x 1
 name.y 2
 z      3
 
-mlr --opprint put $z = $x < 0.5 ? 0 : 1 ./reg_test/input/abixy
+mlr --opprint put $z = $x < 0.5 ? 0 : 1 ././reg-test/input/abixy
 a   b   i  x                   y                   z
 pan pan 1  0.3467901443380824  0.7268028627434533  0
 eks pan 2  0.7586799647899636  0.5221511083334797  1
@@ -488,53 +488,53 @@ zee wye 8  0.5985540091064224  0.976181385699006   1
 hat wye 9  0.03144187646093577 0.7495507603507059  0
 pan wye 10 0.5026260055412137  0.9526183602969864  1
 
-mlr --csvlite filter true  && true ./reg_test/input/b.csv
+mlr --csvlite filter true  && true ././reg-test/input/b.csv
 d,e,f
 5,6,7
 
-mlr --csvlite filter true  && false ./reg_test/input/b.csv
+mlr --csvlite filter true  && false ././reg-test/input/b.csv
 
-mlr --csvlite filter false && true ./reg_test/input/b.csv
+mlr --csvlite filter false && true ././reg-test/input/b.csv
 
-mlr --csvlite filter false && false ./reg_test/input/b.csv
+mlr --csvlite filter false && false ././reg-test/input/b.csv
 
-mlr --csvlite filter true  || true ./reg_test/input/b.csv
+mlr --csvlite filter true  || true ././reg-test/input/b.csv
 d,e,f
 5,6,7
 
-mlr --csvlite filter true  || false ./reg_test/input/b.csv
+mlr --csvlite filter true  || false ././reg-test/input/b.csv
 d,e,f
 5,6,7
 
-mlr --csvlite filter false || true ./reg_test/input/b.csv
+mlr --csvlite filter false || true ././reg-test/input/b.csv
 d,e,f
 5,6,7
 
-mlr --csvlite filter false || false ./reg_test/input/b.csv
+mlr --csvlite filter false || false ././reg-test/input/b.csv
 
-mlr --csvlite filter true  ^^ true ./reg_test/input/b.csv
+mlr --csvlite filter true  ^^ true ././reg-test/input/b.csv
 
-mlr --csvlite filter true  ^^ false ./reg_test/input/b.csv
+mlr --csvlite filter true  ^^ false ././reg-test/input/b.csv
 d,e,f
 5,6,7
 
-mlr --csvlite filter false ^^ true ./reg_test/input/b.csv
+mlr --csvlite filter false ^^ true ././reg-test/input/b.csv
 d,e,f
 5,6,7
 
-mlr --csvlite filter false ^^ false ./reg_test/input/b.csv
+mlr --csvlite filter false ^^ false ././reg-test/input/b.csv
 
-mlr put $x==2 && $a =~ "....." { $y=4 } ./reg_test/input/short-circuit.dkvp
+mlr put $x==2 && $a =~ "....." { $y=4 } ././reg-test/input/short-circuit.dkvp
 x=1,a="hello"
 x=2,a="there",y=4
 x=3,a="world"
 
-mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
+mlr put $x = ENV["X"]; $y = ENV[$name] ././reg-test/input/env-var.dkvp
 name=X,x=97,y=97
 name=Y,x=97,y=98
 x=97,y=6
 
-mlr put $x = ENV["X"]; $y = ENV[$name] ./reg_test/input/env-var.dkvp
+mlr put $x = ENV["X"]; $y = ENV[$name] ././reg-test/input/env-var.dkvp
 name=X,x=,y=
 name=Y,x=,y=
 x=,y=6
@@ -580,7 +580,7 @@ x=hello
 
 
 ---------------------------------------------------------------- LHS value on first record should result in ZYX for process creation
-mlr --from ./reg_test/input/abixy put -q ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a
+mlr --from ././reg-test/input/abixy put -q ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a
 [ZYX]=[CBA1] a is pan
 [ZYX]=[CBA1] a is eks
 [ZYX]=[CBA1] a is wye

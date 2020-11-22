@@ -1,41 +1,41 @@
 
-mlr cat ./reg_test/input/nest-explode.dkvp
+mlr cat ././reg-test/input/nest-explode.dkvp
 x=a:1;b:2;c:3,y=d:40
 x=,y=d:50
 u=100,y=d:60
 x=a:4;b:5,y=d:70
 
-mlr cat ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr cat ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 x=a=1|b=2|c=3,y=d=40
 x=,y=d=50
 u=100,y=d=60
 x=a=4|b=5,y=d=70
 
-mlr nest --explode --values --across-fields -f x ./reg_test/input/nest-explode.dkvp
+mlr nest --explode --values --across-fields -f x ././reg-test/input/nest-explode.dkvp
 x_1=a:1,x_2=b:2,x_3=c:3,y=d:40
 x_1=,y=d:50
 u=100,y=d:60
 x_1=a:4,x_2=b:5,y=d:70
 
-mlr nest --explode --values --across-fields -f x --nested-fs pipe --nested-ps = ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr nest --explode --values --across-fields -f x --nested-fs pipe --nested-ps = ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 x_1=a=1,x_2=b=2,x_3=c=3,y=d=40
 x_1=,y=d=50
 u=100,y=d=60
 x_1=a=4,x_2=b=5,y=d=70
 
-mlr nest --explode --values --across-fields -f x then nest --implode --values --across-fields -f x ./reg_test/input/nest-explode.dkvp
+mlr nest --explode --values --across-fields -f x then nest --implode --values --across-fields -f x ././reg-test/input/nest-explode.dkvp
 x=a:1;b:2;c:3,y=d:40
 x=,y=d:50
 u=100,y=d:60
 x=a:4;b:5,y=d:70
 
-mlr nest --explode --values --across-fields -f x --nested-fs pipe --nested-ps = then nest --implode --values --across-fields -f x --nested-fs pipe --nested-ps = ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr nest --explode --values --across-fields -f x --nested-fs pipe --nested-ps = then nest --implode --values --across-fields -f x --nested-fs pipe --nested-ps = ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 x=a=1|b=2|c=3,y=d=40
 x=,y=d=50
 u=100,y=d=60
 x=a=4|b=5,y=d=70
 
-mlr nest --explode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
+mlr nest --explode --values --across-records -f x ././reg-test/input/nest-explode.dkvp
 x=a:1,y=d:40
 x=b:2,y=d:40
 x=c:3,y=d:40
@@ -44,7 +44,7 @@ u=100,y=d:60
 x=a:4,y=d:70
 x=b:5,y=d:70
 
-mlr nest --explode --values --across-records -f x --nested-fs pipe --nested-ps = ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr nest --explode --values --across-records -f x --nested-fs pipe --nested-ps = ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 x=a=1,y=d=40
 x=b=2,y=d=40
 x=c=3,y=d=40
@@ -53,31 +53,31 @@ u=100,y=d=60
 x=a=4,y=d=70
 x=b=5,y=d=70
 
-mlr nest --explode --values --across-records -f x then nest --implode --values --across-records -f x ./reg_test/input/nest-explode.dkvp
+mlr nest --explode --values --across-records -f x then nest --implode --values --across-records -f x ././reg-test/input/nest-explode.dkvp
 u=100,y=d:60
 x=a:1;b:2;c:3,y=d:40
 x=,y=d:50
 x=a:4;b:5,y=d:70
 
-mlr nest --explode --values --across-records -f x --nested-fs pipe --nested-ps = then nest --implode --values --across-records -f x --nested-fs pipe --nested-ps = ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr nest --explode --values --across-records -f x --nested-fs pipe --nested-ps = then nest --implode --values --across-records -f x --nested-fs pipe --nested-ps = ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 u=100,y=d=60
 x=a=1|b=2|c=3,y=d=40
 x=,y=d=50
 x=a=4|b=5,y=d=70
 
-mlr nest --explode --pairs --across-fields -f x ./reg_test/input/nest-explode.dkvp
+mlr nest --explode --pairs --across-fields -f x ././reg-test/input/nest-explode.dkvp
 a=1,b=2,c=3,y=d:40
 y=d:50
 u=100,y=d:60
 a=4,b=5,y=d:70
 
-mlr nest --explode --pairs --across-fields -f x --nested-fs pipe --nested-ps = ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr nest --explode --pairs --across-fields -f x --nested-fs pipe --nested-ps = ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 a=1,b=2,c=3,y=d=40
 y=d=50
 u=100,y=d=60
 a=4,b=5,y=d=70
 
-mlr nest --explode --pairs --across-records -f x ./reg_test/input/nest-explode.dkvp
+mlr nest --explode --pairs --across-records -f x ././reg-test/input/nest-explode.dkvp
 a=1,y=d:40
 b=2,y=d:40
 c=3,y=d:40
@@ -86,7 +86,7 @@ u=100,y=d:60
 a=4,y=d:70
 b=5,y=d:70
 
-mlr nest --explode --pairs --across-records -f x --nested-fs pipe --nested-ps = ./reg_test/input/nest-explode-vary-fs-ps.dkvp
+mlr nest --explode --pairs --across-records -f x --nested-fs pipe --nested-ps = ././reg-test/input/nest-explode-vary-fs-ps.dkvp
 a=1,y=d=40
 b=2,y=d=40
 c=3,y=d=40

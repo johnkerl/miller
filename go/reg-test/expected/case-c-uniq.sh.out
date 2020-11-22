@@ -1,11 +1,11 @@
 
-mlr uniq -g a ./reg_test/input/abixy-het
+mlr uniq -g a ././reg-test/input/abixy-het
 a=pan
 a=eks
 a=wye
 a=zee
 
-mlr uniq -g a,b ./reg_test/input/abixy-het
+mlr uniq -g a,b ././reg-test/input/abixy-het
 a=pan,b=pan
 a=eks,b=pan
 a=wye,b=pan
@@ -14,13 +14,13 @@ a=eks,b=zee
 a=zee,b=wye
 a=pan,b=wye
 
-mlr uniq -f a ./reg_test/input/abixy-het
+mlr uniq -f a ././reg-test/input/abixy-het
 a=pan
 a=eks
 a=wye
 a=zee
 
-mlr uniq -f a,b ./reg_test/input/abixy-het
+mlr uniq -f a,b ././reg-test/input/abixy-het
 a=pan,b=pan
 a=eks,b=pan
 a=wye,b=pan
@@ -29,13 +29,13 @@ a=eks,b=zee
 a=zee,b=wye
 a=pan,b=wye
 
-mlr uniq -c -g a ./reg_test/input/abixy-het
+mlr uniq -c -g a ././reg-test/input/abixy-het
 a=pan,count=2
 a=eks,count=3
 a=wye,count=1
 a=zee,count=2
 
-mlr uniq -c -g a,b ./reg_test/input/abixy-het
+mlr uniq -c -g a,b ././reg-test/input/abixy-het
 a=pan,b=pan,count=1
 a=eks,b=pan,count=1
 a=wye,b=pan,count=1
@@ -44,13 +44,13 @@ a=eks,b=zee,count=1
 a=zee,b=wye,count=1
 a=pan,b=wye,count=1
 
-mlr uniq -g a -o foo ./reg_test/input/abixy-het
+mlr uniq -g a -o foo ././reg-test/input/abixy-het
 a=pan
 a=eks
 a=wye
 a=zee
 
-mlr uniq -g a,b -o foo ./reg_test/input/abixy-het
+mlr uniq -g a,b -o foo ././reg-test/input/abixy-het
 a=pan,b=pan
 a=eks,b=pan
 a=wye,b=pan
@@ -59,13 +59,13 @@ a=eks,b=zee
 a=zee,b=wye
 a=pan,b=wye
 
-mlr uniq -f a -o foo ./reg_test/input/abixy-het
+mlr uniq -f a -o foo ././reg-test/input/abixy-het
 a=pan
 a=eks
 a=wye
 a=zee
 
-mlr uniq -f a,b -o foo ./reg_test/input/abixy-het
+mlr uniq -f a,b -o foo ././reg-test/input/abixy-het
 a=pan,b=pan
 a=eks,b=pan
 a=wye,b=pan
@@ -74,13 +74,13 @@ a=eks,b=zee
 a=zee,b=wye
 a=pan,b=wye
 
-mlr uniq -c -g a -o foo ./reg_test/input/abixy-het
+mlr uniq -c -g a -o foo ././reg-test/input/abixy-het
 a=pan,foo=2
 a=eks,foo=3
 a=wye,foo=1
 a=zee,foo=2
 
-mlr uniq -c -g a,b -o foo ./reg_test/input/abixy-het
+mlr uniq -c -g a,b -o foo ././reg-test/input/abixy-het
 a=pan,b=pan,foo=1
 a=eks,b=pan,foo=1
 a=wye,b=pan,foo=1
@@ -89,7 +89,7 @@ a=eks,b=zee,foo=1
 a=zee,b=wye,foo=1
 a=pan,b=wye,foo=1
 
-mlr uniq -a ./reg_test/input/repeats.dkvp
+mlr uniq -a ././reg-test/input/repeats.dkvp
 color=red,shape=square,flag=0
 color=purple,shape=triangle,flag=0
 color=yellow,shape=circle,flag=1
@@ -98,7 +98,7 @@ color=purple,shape=square,flag=0
 color=red,shape=square,flag=1
 color=yellow,shape=triangle,flag=1
 
-mlr uniq -a -c ./reg_test/input/repeats.dkvp
+mlr uniq -a -c ././reg-test/input/repeats.dkvp
 count=17,color=red,shape=square,flag=0
 count=11,color=purple,shape=triangle,flag=0
 count=11,color=yellow,shape=circle,flag=1
@@ -107,7 +107,7 @@ count=7,color=purple,shape=square,flag=0
 count=3,color=red,shape=square,flag=1
 count=2,color=yellow,shape=triangle,flag=1
 
-mlr uniq -a -c -o foo ./reg_test/input/repeats.dkvp
+mlr uniq -a -c -o foo ././reg-test/input/repeats.dkvp
 foo=17,color=red,shape=square,flag=0
 foo=11,color=purple,shape=triangle,flag=0
 foo=11,color=yellow,shape=circle,flag=1
@@ -116,9 +116,9 @@ foo=7,color=purple,shape=square,flag=0
 foo=3,color=red,shape=square,flag=1
 foo=2,color=yellow,shape=triangle,flag=1
 
-mlr uniq -a -n ./reg_test/input/repeats.dkvp
+mlr uniq -a -n ././reg-test/input/repeats.dkvp
 count=7
 
-mlr uniq -a -n -o bar ./reg_test/input/repeats.dkvp
+mlr uniq -a -n -o bar ././reg-test/input/repeats.dkvp
 bar=7
 

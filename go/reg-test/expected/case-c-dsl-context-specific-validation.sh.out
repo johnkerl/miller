@@ -389,7 +389,7 @@ mlr: filter expressions must end in a final boolean statement.
 
 
 ---------------------------------------------------------------- expanded filter
-mlr --from ./reg_test/input/abixy filter 
+mlr --from ././reg-test/input/abixy filter 
   begin {
     @avoid = 3
   }
@@ -405,7 +405,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg_test/input/abixy filter -x 
+mlr --from ././reg-test/input/abixy filter -x 
   begin {
     @avoid = 3
   }
@@ -413,7 +413,7 @@ mlr --from ./reg_test/input/abixy filter -x
 
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 
-mlr --from ./reg_test/input/abixy filter 
+mlr --from ././reg-test/input/abixy filter 
   func f(n) {
     return n - 1
   }
@@ -421,7 +421,7 @@ mlr --from ./reg_test/input/abixy filter
 
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 
-mlr --from ./reg_test/input/abixy filter 
+mlr --from ././reg-test/input/abixy filter 
   subr s(n) {
     print "NR is ".n
   }
@@ -439,7 +439,7 @@ NR is 8
 NR is 9
 NR is 10
 
-mlr --from ./reg_test/input/abixy filter 
+mlr --from ././reg-test/input/abixy filter 
   int a = 5;
   int b = 7;
   a <= NR && NR <= b
@@ -448,9 +448,9 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 
-mlr --from ./reg_test/input/abixy filter filter false
+mlr --from ././reg-test/input/abixy filter filter false
 mlr filter: expressions must not also contain the "filter" keyword.
 
-mlr --from ./reg_test/input/abixy filter filter false; true
+mlr --from ././reg-test/input/abixy filter filter false; true
 mlr filter: expressions must not also contain the "filter" keyword.
 

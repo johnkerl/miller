@@ -1,4 +1,4 @@
-# Intended to be invoked by "." from reg_test/run
+# Intended to be invoked by "." from reg-test/run
 
 run_mlr cut -f a,x $indir/abixy
 run_mlr cut --complement -f a,x $indir/abixy

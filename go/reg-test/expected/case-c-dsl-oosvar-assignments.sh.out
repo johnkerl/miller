@@ -161,14 +161,14 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                 text="$*", type=FULL_SREC.
 
 
-mlr --oxtab put -q @v = $*; end {emitp @v } ./reg_test/input/abixy-het
+mlr --oxtab put -q @v = $*; end {emitp @v } ././reg-test/input/abixy-het
 v:a pan
 v:b wye
 v:i 10
 v:x 0.5026260055412137
 v:y 0.9526183602969864
 
-mlr --oxtab put -q @v[$a] = $*; end {emitp @v      } ./reg_test/input/abixy-het
+mlr --oxtab put -q @v[$a] = $*; end {emitp @v      } ././reg-test/input/abixy-het
 v:pan:a   pan
 v:pan:b   wye
 v:pan:i   10
@@ -190,7 +190,7 @@ v:zee:i   8
 v:zee:x   0.5985540091064224
 v:zee:yyy 0.976181385699006
 
-mlr --oxtab put -q @v[$a] = $*; end {emitp @v, "a" } ./reg_test/input/abixy-het
+mlr --oxtab put -q @v[$a] = $*; end {emitp @v, "a" } ././reg-test/input/abixy-het
 a   pan
 v:a pan
 v:b wye
@@ -219,7 +219,7 @@ v:i   8
 v:x   0.5985540091064224
 v:yyy 0.976181385699006
 
-mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v          } ./reg_test/input/abixy-het
+mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v          } ././reg-test/input/abixy-het
 v:pan:pan:a   pan
 v:pan:pan:b   pan
 v:pan:pan:i   1
@@ -256,7 +256,7 @@ v:zee:wye:i   8
 v:zee:wye:x   0.5985540091064224
 v:zee:wye:yyy 0.976181385699006
 
-mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v, "a"     } ./reg_test/input/abixy-het
+mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v, "a"     } ././reg-test/input/abixy-het
 a       pan
 v:pan:a pan
 v:pan:b pan
@@ -300,7 +300,7 @@ v:wye:i   8
 v:wye:x   0.5985540091064224
 v:wye:yyy 0.976181385699006
 
-mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v, "a", "b"} ./reg_test/input/abixy-het
+mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v, "a", "b"} ././reg-test/input/abixy-het
 a   pan
 b   pan
 v:a pan
@@ -519,7 +519,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                     text="2", type=FIELD_NAME.
 
 
-mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
+mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ././reg-test/input/abixy-het
 1=pan
 1=pan,2=eks
 1=pan,2=eks
@@ -1007,7 +1007,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
 
 
-mlr put -q @s    += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s    += $i; @t=@s;             end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": 55,
   "t": 55
@@ -1015,7 +1015,7 @@ mlr put -q @s    += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_te
 s=55
 t=55
 
-mlr put -q @s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": 55
@@ -1027,7 +1027,7 @@ mlr put -q @s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_te
 s:1=55
 t:1=55
 
-mlr put -q @s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": 55
@@ -1037,7 +1037,7 @@ mlr put -q @s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ./reg_te
 s:1=55
 t=55
 
-mlr put -q @s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": 55
@@ -1051,7 +1051,7 @@ mlr put -q @s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ./reg_te
 s:1=55
 t:3:1=55
 
-mlr put -q @s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": 55
@@ -1063,7 +1063,7 @@ mlr put -q @s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ./reg_te
 s:1=55
 t:3=55
 
-mlr put -q @s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1079,7 +1079,7 @@ mlr put -q @s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:1:2=55
 
-mlr put -q @s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1093,7 +1093,7 @@ mlr put -q @s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:2=55
 
-mlr put -q @s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1105,7 +1105,7 @@ mlr put -q @s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t=55
 
-mlr put -q @s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1123,7 +1123,7 @@ mlr put -q @s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:3:1:2=55
 
-mlr put -q @s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1139,7 +1139,7 @@ mlr put -q @s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:3:2=55
 
-mlr put -q @s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1153,7 +1153,7 @@ mlr put -q @s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:3=55
 
-mlr put -q @s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1173,7 +1173,7 @@ mlr put -q @s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:3:4:1:2=55
 
-mlr put -q @s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1191,7 +1191,7 @@ mlr put -q @s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:3:4:2=55
 
-mlr put -q @s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+mlr put -q @s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t} ././reg-test/input/abixy
 {
   "s": {
     "1": {
@@ -1207,7 +1207,7 @@ mlr put -q @s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t} ./reg
 s:1:2=55
 t:3:4=55
 
-mlr --opprint put -q @s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"} ./reg_test/input/abixy
+mlr --opprint put -q @s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"} ././reg-test/input/abixy
 A  B  s
 1  1  0.010000
 2  2  0.020000

@@ -3,7 +3,7 @@
 ================================================================
 USER-DEFINED SUBROUTINES
 
-mlr --opprint --from ./reg_test/input/abixy head -n 5 then put 
+mlr --opprint --from ././reg-test/input/abixy head -n 5 then put 
     subr s(n) {
         print "n = " . n;
         if (is_numeric(n)) {

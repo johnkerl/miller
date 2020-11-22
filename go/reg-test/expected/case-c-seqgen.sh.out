@@ -26,13 +26,13 @@ c=1
 mlr seqgen --start 5 --stop 5 --step -1 -f d
 d=5
 
-mlr --from ./reg_test/input/abixy cat then seqgen --start 1 --stop 5
+mlr --from ././reg-test/input/abixy cat then seqgen --start 1 --stop 5
 i=1
 i=2
 i=3
 i=4
 i=5
 
-mlr --from ./reg_test/input/abixy cat then seqgen --start 1 --stop 100 then stats1 -a count,sum,min,p50,max -f i
+mlr --from ././reg-test/input/abixy cat then seqgen --start 1 --stop 100 then stats1 -a count,sum,min,p50,max -f i
 i_count=100,i_sum=5050,i_min=1,i_p50=51,i_max=100
 

@@ -1,4 +1,4 @@
-# Intended to be invoked by "." from reg_test/run
+# Intended to be invoked by "." from reg-test/run
 
 run_mlr sort -f a   $indir/abixy
 run_mlr sort -r a   $indir/abixy

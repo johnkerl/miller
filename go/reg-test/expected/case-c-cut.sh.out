@@ -1,5 +1,5 @@
 
-mlr cut -f a,x ./reg_test/input/abixy
+mlr cut -f a,x ././reg-test/input/abixy
 a=pan,x=0.3467901443380824
 a=eks,x=0.7586799647899636
 a=wye,x=0.20460330576630303
@@ -11,7 +11,7 @@ a=zee,x=0.5985540091064224
 a=hat,x=0.03144187646093577
 a=pan,x=0.5026260055412137
 
-mlr cut --complement -f a,x ./reg_test/input/abixy
+mlr cut --complement -f a,x ././reg-test/input/abixy
 b=pan,i=1,y=0.7268028627434533
 b=pan,i=2,y=0.5221511083334797
 b=wye,i=3,y=0.33831852551664776
@@ -23,7 +23,7 @@ b=wye,i=8,y=0.976181385699006
 b=wye,i=9,y=0.7495507603507059
 b=wye,i=10,y=0.9526183602969864
 
-mlr cut -r -f c,e ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -f c,e ././reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 
 abcd=3
@@ -31,7 +31,7 @@ abcd=3
 abcde=5
 
 
-mlr cut -r -f "C","E" ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -f "C","E" ././reg-test/input/having-fields-regex.dkvp
 
 ABC=2,DEF=12
 
@@ -39,7 +39,7 @@ ABCD=4
 
 ABCDE=6
 
-mlr cut -r -f "c"i,"e" ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -f "c"i,"e" ././reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 ABC=2
 abcd=3
@@ -47,7 +47,7 @@ ABCD=4
 abcde=5
 ABCDE=6
 
-mlr cut -r -f "C"i,"E" ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -f "C"i,"E" ././reg-test/input/having-fields-regex.dkvp
 abc=1
 ABC=2,DEF=12
 abcd=3
@@ -55,7 +55,7 @@ ABCD=4
 abcde=5
 ABCDE=6
 
-mlr cut -r -x -f c,e ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -x -f c,e ././reg-test/input/having-fields-regex.dkvp
 
 ABC=2,DEF=12
 ghi=13
@@ -63,7 +63,7 @@ ABCD=4,GHI=14
 ghi=15
 ABCDE=6,GHI=16
 
-mlr cut -r -x -f "C","E" ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -x -f "C","E" ././reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 
 abcd=3,ghi=13
@@ -71,7 +71,7 @@ GHI=14
 abcde=5,ghi=15
 GHI=16
 
-mlr cut -r -x -f "C","E"i ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -x -f "C","E"i ././reg-test/input/having-fields-regex.dkvp
 abc=1
 
 abcd=3,ghi=13
@@ -79,7 +79,7 @@ GHI=14
 ghi=15
 GHI=16
 
-mlr cut -r -x -f "c","e"i ./reg_test/input/having-fields-regex.dkvp
+mlr cut -r -x -f "c","e"i ././reg-test/input/having-fields-regex.dkvp
 
 ABC=2
 ghi=13
@@ -87,7 +87,7 @@ ABCD=4,GHI=14
 ghi=15
 GHI=16
 
-mlr --csvlite cut -r -f ^Name$,^Date_[0-9].*$ ./reg_test/input/date1.csv ./reg_test/input/date2.csv
+mlr --csvlite cut -r -f ^Name$,^Date_[0-9].*$ ././reg-test/input/date1.csv ././reg-test/input/date2.csv
 Name,Date_201505
 Alice,2015-05-14
 Bob,2015-05-11

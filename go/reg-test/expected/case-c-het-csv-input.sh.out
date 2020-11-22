@@ -1,39 +1,39 @@
 
-mlr --icsvlite --odkvp cat ./reg_test/input/a.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/a.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --icsvlite --odkvp cat ./reg_test/input/b.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/b.csv
 d=5,e=6,f=7
 
-mlr --icsvlite --odkvp cat ./reg_test/input/c.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/c.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-mlr --icsvlite --odkvp cat ./reg_test/input/d.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/d.csv
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-mlr --icsvlite --odkvp cat ./reg_test/input/e.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/e.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --icsvlite --odkvp cat ./reg_test/input/f.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/f.csv
 
-mlr --icsvlite --odkvp cat ./reg_test/input/g.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/g.csv
 
-mlr --icsvlite --odkvp cat ./reg_test/input/a.csv ./reg_test/input/a.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/a.csv ././reg-test/input/a.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --icsvlite --odkvp cat ./reg_test/input/b.csv ./reg_test/input/b.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/b.csv ././reg-test/input/b.csv
 d=5,e=6,f=7
 d=5,e=6,f=7
 
-mlr --icsvlite --odkvp cat ./reg_test/input/c.csv ./reg_test/input/c.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/c.csv ././reg-test/input/c.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
@@ -41,88 +41,88 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-mlr --icsvlite --odkvp cat ./reg_test/input/d.csv ./reg_test/input/d.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/d.csv ././reg-test/input/d.csv
 h=3,i=4,j=5
 m=8,n=9,o=10
 h=3,i=4,j=5
 m=8,n=9,o=10
 
-mlr --icsvlite --odkvp cat ./reg_test/input/e.csv ./reg_test/input/e.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/e.csv ././reg-test/input/e.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --icsvlite --odkvp cat ./reg_test/input/f.csv ./reg_test/input/f.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/f.csv ././reg-test/input/f.csv
 
-mlr --icsvlite --odkvp cat ./reg_test/input/g.csv ./reg_test/input/g.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/g.csv ././reg-test/input/g.csv
 
-mlr --icsvlite --odkvp cat ./reg_test/input/a.csv ./reg_test/input/b.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/a.csv ././reg-test/input/b.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 d=5,e=6,f=7
 
-mlr --icsvlite --odkvp cat ./reg_test/input/b.csv ./reg_test/input/c.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/b.csv ././reg-test/input/c.csv
 d=5,e=6,f=7
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 
-mlr --icsvlite --odkvp cat ./reg_test/input/c.csv ./reg_test/input/d.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-a=7,b=8,c=9
-h=3,i=4,j=5
-m=8,n=9,o=10
-
-mlr --icsvlite --odkvp cat ./reg_test/input/d.csv ./reg_test/input/e.csv
-h=3,i=4,j=5
-m=8,n=9,o=10
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-mlr --icsvlite --odkvp cat ./reg_test/input/e.csv ./reg_test/input/f.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-mlr --icsvlite --odkvp cat ./reg_test/input/f.csv ./reg_test/input/g.csv
-
-mlr --icsvlite --odkvp cat ./reg_test/input/a.csv ./reg_test/input/b.csv ./reg_test/input/c.csv ./reg_test/input/d.csv ./reg_test/input/e.csv ./reg_test/input/f.csv ./reg_test/input/g.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-d=5,e=6,f=7
+mlr --icsvlite --odkvp cat ././reg-test/input/c.csv ././reg-test/input/d.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 a=7,b=8,c=9
 h=3,i=4,j=5
 m=8,n=9,o=10
+
+mlr --icsvlite --odkvp cat ././reg-test/input/d.csv ././reg-test/input/e.csv
+h=3,i=4,j=5
+m=8,n=9,o=10
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --icsvlite --odkvp tac ./reg_test/input/het.csv
+mlr --icsvlite --odkvp cat ././reg-test/input/e.csv ././reg-test/input/f.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --icsvlite --odkvp cat ././reg-test/input/f.csv ././reg-test/input/g.csv
+
+mlr --icsvlite --odkvp cat ././reg-test/input/a.csv ././reg-test/input/b.csv ././reg-test/input/c.csv ././reg-test/input/d.csv ././reg-test/input/e.csv ././reg-test/input/f.csv ././reg-test/input/g.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+d=5,e=6,f=7
+a=1,b=2,c=3
+a=4,b=5,c=6
+a=7,b=8,c=9
+h=3,i=4,j=5
+m=8,n=9,o=10
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --icsvlite --odkvp tac ././reg-test/input/het.csv
 resource=/some/other/path,loadsec=0.97,ok=false
 record_count=150,resource=/path/to/second/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/file,loadsec=0.45,ok=true
 
-mlr --headerless-csv-output --csvlite tac ./reg_test/input/a.csv
+mlr --headerless-csv-output --csvlite tac ././reg-test/input/a.csv
 4,5,6
 1,2,3
 
-mlr --headerless-csv-output --csvlite tac ./reg_test/input/c.csv
+mlr --headerless-csv-output --csvlite tac ././reg-test/input/c.csv
 7,8,9
 4,5,6
 1,2,3
 
-mlr --headerless-csv-output --csvlite tac ./reg_test/input/a.csv ./reg_test/input/c.csv
+mlr --headerless-csv-output --csvlite tac ././reg-test/input/a.csv ././reg-test/input/c.csv
 7,8,9
 4,5,6
 1,2,3
 4,5,6
 1,2,3
 
-mlr --headerless-csv-output --csvlite tac ./reg_test/input/het.csv
+mlr --headerless-csv-output --csvlite tac ././reg-test/input/het.csv
 /some/other/path,0.97,false
 
 150,/path/to/second/file
@@ -133,7 +133,7 @@ mlr --headerless-csv-output --csvlite tac ./reg_test/input/het.csv
 
 /path/to/file,0.45,true
 
-mlr --headerless-csv-output --csvlite group-like ./reg_test/input/het.csv
+mlr --headerless-csv-output --csvlite group-like ././reg-test/input/het.csv
 /path/to/file,0.45,true
 /path/to/second/file,0.32,true
 /some/other/path,0.97,false
