@@ -1,0 +1,7 @@
+
+mlr --csv skip-trivial-records ./reg_test/input/trivial-records.csv
+a,b,c
+1,2,3
+4,,6
+,8,9
+

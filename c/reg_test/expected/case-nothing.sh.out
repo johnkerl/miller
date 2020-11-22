@@ -1,0 +1,11 @@
+
+mlr cat then nothing
+
+mlr cat then nothing ./reg_test/input/abixy
+
+mlr tac then nothing ./reg_test/input/abixy
+
+mlr cat then nothing ./reg_test/input/abixy ./reg_test/input/abixy
+
+mlr cat then nothing then cat ./reg_test/input/abixy
+

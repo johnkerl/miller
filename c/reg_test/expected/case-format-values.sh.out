@@ -1,0 +1,49 @@
+
+mlr format-values ./reg_test/input/abixy
+a=pan,b=pan,i=1,x=0.346790,y=0.726803
+a=eks,b=pan,i=2,x=0.758680,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338319
+a=eks,b=wye,i=4,x=0.381399,y=0.134189
+a=wye,b=pan,i=5,x=0.573289,y=0.863624
+a=zee,b=pan,i=6,x=0.527126,y=0.493221
+a=eks,b=zee,i=7,x=0.611784,y=0.187885
+a=zee,b=wye,i=8,x=0.598554,y=0.976181
+a=hat,b=wye,i=9,x=0.031442,y=0.749551
+a=pan,b=wye,i=10,x=0.502626,y=0.952618
+
+mlr format-values -n ./reg_test/input/abixy
+a=pan,b=pan,i=1.000000,x=0.346790,y=0.726803
+a=eks,b=pan,i=2.000000,x=0.758680,y=0.522151
+a=wye,b=wye,i=3.000000,x=0.204603,y=0.338319
+a=eks,b=wye,i=4.000000,x=0.381399,y=0.134189
+a=wye,b=pan,i=5.000000,x=0.573289,y=0.863624
+a=zee,b=pan,i=6.000000,x=0.527126,y=0.493221
+a=eks,b=zee,i=7.000000,x=0.611784,y=0.187885
+a=zee,b=wye,i=8.000000,x=0.598554,y=0.976181
+a=hat,b=wye,i=9.000000,x=0.031442,y=0.749551
+a=pan,b=wye,i=10.000000,x=0.502626,y=0.952618
+
+mlr format-values -i %08llx -f %.6le -s X%sX ./reg_test/input/abixy
+a=XpanX,b=XpanX,i=00000001,x=3.467901e-01,y=7.268029e-01
+a=XeksX,b=XpanX,i=00000002,x=7.586800e-01,y=5.221511e-01
+a=XwyeX,b=XwyeX,i=00000003,x=2.046033e-01,y=3.383185e-01
+a=XeksX,b=XwyeX,i=00000004,x=3.813994e-01,y=1.341887e-01
+a=XwyeX,b=XpanX,i=00000005,x=5.732889e-01,y=8.636245e-01
+a=XzeeX,b=XpanX,i=00000006,x=5.271262e-01,y=4.932213e-01
+a=XeksX,b=XzeeX,i=00000007,x=6.117841e-01,y=1.878849e-01
+a=XzeeX,b=XwyeX,i=00000008,x=5.985540e-01,y=9.761814e-01
+a=XhatX,b=XwyeX,i=00000009,x=3.144188e-02,y=7.495508e-01
+a=XpanX,b=XwyeX,i=0000000a,x=5.026260e-01,y=9.526184e-01
+
+mlr format-values -i %08llx -f %.6le -s X%sX -n ./reg_test/input/abixy
+a=XpanX,b=XpanX,i=1.000000e+00,x=3.467901e-01,y=7.268029e-01
+a=XeksX,b=XpanX,i=2.000000e+00,x=7.586800e-01,y=5.221511e-01
+a=XwyeX,b=XwyeX,i=3.000000e+00,x=2.046033e-01,y=3.383185e-01
+a=XeksX,b=XwyeX,i=4.000000e+00,x=3.813994e-01,y=1.341887e-01
+a=XwyeX,b=XpanX,i=5.000000e+00,x=5.732889e-01,y=8.636245e-01
+a=XzeeX,b=XpanX,i=6.000000e+00,x=5.271262e-01,y=4.932213e-01
+a=XeksX,b=XzeeX,i=7.000000e+00,x=6.117841e-01,y=1.878849e-01
+a=XzeeX,b=XwyeX,i=8.000000e+00,x=5.985540e-01,y=9.761814e-01
+a=XhatX,b=XwyeX,i=9.000000e+00,x=3.144188e-02,y=7.495508e-01
+a=XpanX,b=XwyeX,i=1.000000e+01,x=5.026260e-01,y=9.526184e-01
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 {case name}" 1>&2
+  exit 1
+fi
+name="$1"
+shift
+
+cat "$@" | uind -s > reg_test/case-${name}.sh
