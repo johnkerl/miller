@@ -1,0 +1,142 @@
+
+
+================================================================
+DSL SCIENTIFIC NOTATION IN FIELD VALUES
+
+mlr --opprint put $y=$x+1 ./reg_test/input/scinot.dkvp
+x       y
+123     124
+123.    124.000000
+123.4   124.400000
+.234    1.234000
+1e2     101.000000
+1e-2    1.010000
+1.2e3   1201.000000
+1.e3    1001.000000
+1.2e-3  1.001200
+1.e-3   1.001000
+.2e3    201.000000
+.2e-3   1.000200
+1.e-3   1.001000
+-123    -122
+-123.   -122.000000
+-123.4  -122.400000
+-.234   0.766000
+-1e2    -99.000000
+-1e-2   0.990000
+-1.2e3  -1199.000000
+-1.e3   -999.000000
+-1.2e-3 0.998800
+-1.e-3  0.999000
+-.2e3   -199.000000
+-.2e-3  0.999800
+-1.e-3  0.999000
+
+
+================================================================
+DSL SCIENTIFIC NOTATION IN EXPRESSION LITERALS
+
+mlr --opprint put $y = 123     + $i ./reg_test/input/scinot1.dkvp
+i y
+1 124
+
+mlr --opprint put $y = 123.    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 124.000000
+
+mlr --opprint put $y = 123.4   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 124.400000
+
+mlr --opprint put $y = .234    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1.234000
+
+mlr --opprint put $y = 1e2     + $i ./reg_test/input/scinot1.dkvp
+i y
+1 101.000000
+
+mlr --opprint put $y = 1e-2    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1.010000
+
+mlr --opprint put $y = 1.2e3   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1201.000000
+
+mlr --opprint put $y = 1.e3    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1001.000000
+
+mlr --opprint put $y = 1.2e-3  + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1.001200
+
+mlr --opprint put $y = 1.e-3   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1.001000
+
+mlr --opprint put $y = .2e3    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 201.000000
+
+mlr --opprint put $y = .2e-3   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1.000200
+
+mlr --opprint put $y = 1.e-3   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 1.001000
+
+mlr --opprint put $y = -123    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -122
+
+mlr --opprint put $y = -123.   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -122.000000
+
+mlr --opprint put $y = -123.4  + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -122.400000
+
+mlr --opprint put $y = -.234   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 0.766000
+
+mlr --opprint put $y = -1e2    + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -99.000000
+
+mlr --opprint put $y = -1e-2   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 0.990000
+
+mlr --opprint put $y = -1.2e3  + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -1199.000000
+
+mlr --opprint put $y = -1.e3   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -999.000000
+
+mlr --opprint put $y = -1.2e-3 + $i ./reg_test/input/scinot1.dkvp
+i y
+1 0.998800
+
+mlr --opprint put $y = -1.e-3  + $i ./reg_test/input/scinot1.dkvp
+i y
+1 0.999000
+
+mlr --opprint put $y = -.2e3   + $i ./reg_test/input/scinot1.dkvp
+i y
+1 -199.000000
+
+mlr --opprint put $y = -.2e-3  + $i ./reg_test/input/scinot1.dkvp
+i y
+1 0.999800
+
+mlr --opprint put $y = -1.e-3  + $i ./reg_test/input/scinot1.dkvp
+i y
+1 0.999000
+

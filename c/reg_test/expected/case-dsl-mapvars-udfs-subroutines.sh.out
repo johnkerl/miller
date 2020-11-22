@@ -1,0 +1,406 @@
+
+mlr --from ./reg_test/input/abixy put 
+  func f(m) {
+    dump m;
+    sum = 0;
+    for (k, v in m) {
+      sum += k
+    }
+    return sum
+  }
+  @v[$i] = $a;
+  $y = f(@v)
+
+{
+  "1": "pan"
+}
+a=pan,b=pan,i=1,x=0.3467901443380824,y=1
+{
+  "1": "pan",
+  "2": "eks"
+}
+a=eks,b=pan,i=2,x=0.7586799647899636,y=3
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye"
+}
+a=wye,b=wye,i=3,x=0.20460330576630303,y=6
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks"
+}
+a=eks,b=wye,i=4,x=0.38139939387114097,y=10
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye"
+}
+a=wye,b=pan,i=5,x=0.5732889198020006,y=15
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee"
+}
+a=zee,b=pan,i=6,x=0.5271261600918548,y=21
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks"
+}
+a=eks,b=zee,i=7,x=0.6117840605678454,y=28
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks",
+  "8": "zee"
+}
+a=zee,b=wye,i=8,x=0.5985540091064224,y=36
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks",
+  "8": "zee",
+  "9": "hat"
+}
+a=hat,b=wye,i=9,x=0.03144187646093577,y=45
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks",
+  "8": "zee",
+  "9": "hat",
+  "10": "pan"
+}
+a=pan,b=wye,i=10,x=0.5026260055412137,y=55
+
+mlr --from ./reg_test/input/abixy put 
+  subr s(m) {
+    dump m;
+    sum = 0;
+    for (k, v in m) {
+      sum += k
+    }
+    @sum = sum;
+  }
+  @v[$i] = $a;
+  call s(@v);
+  $y = @sum;
+
+{
+  "1": "pan"
+}
+a=pan,b=pan,i=1,x=0.3467901443380824,y=1
+{
+  "1": "pan",
+  "2": "eks"
+}
+a=eks,b=pan,i=2,x=0.7586799647899636,y=3
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye"
+}
+a=wye,b=wye,i=3,x=0.20460330576630303,y=6
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks"
+}
+a=eks,b=wye,i=4,x=0.38139939387114097,y=10
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye"
+}
+a=wye,b=pan,i=5,x=0.5732889198020006,y=15
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee"
+}
+a=zee,b=pan,i=6,x=0.5271261600918548,y=21
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks"
+}
+a=eks,b=zee,i=7,x=0.6117840605678454,y=28
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks",
+  "8": "zee"
+}
+a=zee,b=wye,i=8,x=0.5985540091064224,y=36
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks",
+  "8": "zee",
+  "9": "hat"
+}
+a=hat,b=wye,i=9,x=0.03144187646093577,y=45
+{
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks",
+  "5": "wye",
+  "6": "zee",
+  "7": "eks",
+  "8": "zee",
+  "9": "hat",
+  "10": "pan"
+}
+a=pan,b=wye,i=10,x=0.5026260055412137,y=55
+
+mlr --from ./reg_test/input/abixy-het put func f(x) {return {"a":x,"b":x**2}}; map o = f($x); $* = o
+a=0.346790,b=0.120263
+a=0.758680,b=0.575595
+a=0.204603,b=0.041863
+a=0.381399,b=0.145465
+a=,b=
+a=0.527126,b=0.277862
+a=0.611784,b=0.374280
+a=0.598554,b=0.358267
+a=0.031442,b=0.000989
+a=0.502626,b=0.252633
+
+mlr --from ./reg_test/input/abixy-het put -q func f(x) {return x**2}; var z = f($x); dump z
+0.120263
+0.575595
+0.041863
+0.145465
+
+0.277862
+0.374280
+0.358267
+0.000989
+0.252633
+
+mlr --from ./reg_test/input/abixy-het put -q func f(x) {map m = {NR:x};return m}; z = f($y); dump z
+{
+  "1": 0.726803
+}
+{
+  "2": 0.522151
+}
+{
+  "3": 0.338319
+}
+{
+  "4": 0.134189
+}
+{
+  "5": 0.863624
+}
+{
+  "6": 0.493221
+}
+{
+  "7": 0.187885
+}
+{
+  "8": 
+}
+{
+  "9": 0.749551
+}
+{
+  "10": 0.952618
+}
+
+mlr --from ./reg_test/input/abixy put 
+  func f(int x): map {
+    if (NR==2) {
+      return 2
+    } else {
+      return {}
+    }
+  }
+  $y=f($x)
+
+mlr: int type assertion for variable x unmet by value 0.346790 with type float.
+
+mlr --from ./reg_test/input/abixy put 
+  func f(int x): map {
+    if (NR==200) {
+      return 2
+    } else {
+      return {}
+    }
+  }
+  $y=f($i)
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg_test/input/abixy put 
+  func f(int x): map {
+    if (NR==200) {
+      return 2
+    } else {
+      return {}
+    }
+  }
+  $y=f($x)
+
+mlr: int type assertion for variable x unmet by value 0.346790 with type float.
+
+mlr --from ./reg_test/input/abixy put 
+  func f(int x): var {
+    if (NR==2) {
+      return 2
+    } else {
+      return {}
+    }
+  }
+  $y=f($i)
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=2
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg_test/input/abixy put 
+  func f(int x): var {
+    if (NR==2) {
+      return 2
+    } else {
+      return {}
+    }
+  }
+  $y=f($x)
+
+mlr: int type assertion for variable x unmet by value 0.346790 with type float.
+
+mlr --from ./reg_test/input/abixy put 
+  func f(x): int {
+    # fall-through return value is absent-null
+  }
+  $y=f($x)
+
+mlr: function f returned type absent, not matching typedecl int.
+
+mlr --from ./reg_test/input/abixy put 
+  int a = 1;
+  var b = a[2]; # cannot index localvar declared non-map
+
+mlr: int type assertion for variable a unmet on read.
+
+mlr --oxtab --from ./reg_test/input/abixy-het put 
+ $* = mapdiff(
+   mapsum($*, {"a": "newval"}),
+   {"b": "nonesuch"},
+ )
+
+a newval
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+a newval
+i 2
+x 0.7586799647899636
+y 0.5221511083334797
+
+aaa wye
+i   3
+x   0.20460330576630303
+y   0.33831852551664776
+a   newval
+
+a   newval
+bbb wye
+i   4
+x   0.38139939387114097
+y   0.13418874328430463
+
+a   newval
+i   5
+xxx 0.5732889198020006
+y   0.8636244699032729
+
+a newval
+i 6
+x 0.5271261600918548
+y 0.49322128674835697
+
+a   newval
+iii 7
+x   0.6117840605678454
+y   0.1878849191181694
+
+a   newval
+i   8
+x   0.5985540091064224
+yyy 0.976181385699006
+
+aaa hat
+bbb wye
+i   9
+x   0.03144187646093577
+y   0.7495507603507059
+a   newval
+
+a newval
+i 10
+x 0.5026260055412137
+y 0.9526183602969864
+

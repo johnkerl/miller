@@ -1,0 +1,1279 @@
+
+
+================================================================
+OOSVAR-FROM-SREC ASSIGNMENT
+
+mlr put -v @v     = $* /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+        text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+        text="$*", type=FULL_SREC.
+
+
+mlr put -v @v[1]  = $* /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+        text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+        text="$*", type=FULL_SREC.
+
+
+mlr put -v @v[$2] = $* /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="2", type=FIELD_NAME.
+        text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="2", type=FIELD_NAME.
+        text="$*", type=FULL_SREC.
+
+
+mlr put -v NR == 3 {@v     = $*} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                text="$*", type=FULL_SREC.
+
+
+mlr put -v NR == 3 {@v[1]  = $*} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+                text="$*", type=FULL_SREC.
+
+
+mlr put -v NR == 3 {@v[$2] = $*} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="2", type=FIELD_NAME.
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="2", type=FIELD_NAME.
+                text="$*", type=FULL_SREC.
+
+
+mlr --oxtab put -q @v = $*; end {emitp @v } ./reg_test/input/abixy-het
+v:a pan
+v:b wye
+v:i 10
+v:x 0.5026260055412137
+v:y 0.9526183602969864
+
+mlr --oxtab put -q @v[$a] = $*; end {emitp @v      } ./reg_test/input/abixy-het
+v:pan:a   pan
+v:pan:b   wye
+v:pan:i   10
+v:pan:x   0.5026260055412137
+v:pan:y   0.9526183602969864
+v:eks:a   eks
+v:eks:b   zee
+v:eks:iii 7
+v:eks:x   0.6117840605678454
+v:eks:y   0.1878849191181694
+v:wye:a   wye
+v:wye:b   pan
+v:wye:i   5
+v:wye:xxx 0.5732889198020006
+v:wye:y   0.8636244699032729
+v:zee:a   zee
+v:zee:b   wye
+v:zee:i   8
+v:zee:x   0.5985540091064224
+v:zee:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a] = $*; end {emitp @v, "a" } ./reg_test/input/abixy-het
+a   pan
+v:a pan
+v:b wye
+v:i 10
+v:x 0.5026260055412137
+v:y 0.9526183602969864
+
+a     eks
+v:a   eks
+v:b   zee
+v:iii 7
+v:x   0.6117840605678454
+v:y   0.1878849191181694
+
+a     wye
+v:a   wye
+v:b   pan
+v:i   5
+v:xxx 0.5732889198020006
+v:y   0.8636244699032729
+
+a     zee
+v:a   zee
+v:b   wye
+v:i   8
+v:x   0.5985540091064224
+v:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v          } ./reg_test/input/abixy-het
+v:pan:pan:a   pan
+v:pan:pan:b   pan
+v:pan:pan:i   1
+v:pan:pan:x   0.3467901443380824
+v:pan:pan:y   0.7268028627434533
+v:pan:wye:a   pan
+v:pan:wye:b   wye
+v:pan:wye:i   10
+v:pan:wye:x   0.5026260055412137
+v:pan:wye:y   0.9526183602969864
+v:eks:pan:a   eks
+v:eks:pan:b   pan
+v:eks:pan:i   2
+v:eks:pan:x   0.7586799647899636
+v:eks:pan:y   0.5221511083334797
+v:eks:zee:a   eks
+v:eks:zee:b   zee
+v:eks:zee:iii 7
+v:eks:zee:x   0.6117840605678454
+v:eks:zee:y   0.1878849191181694
+v:wye:pan:a   wye
+v:wye:pan:b   pan
+v:wye:pan:i   5
+v:wye:pan:xxx 0.5732889198020006
+v:wye:pan:y   0.8636244699032729
+v:zee:pan:a   zee
+v:zee:pan:b   pan
+v:zee:pan:i   6
+v:zee:pan:x   0.5271261600918548
+v:zee:pan:y   0.49322128674835697
+v:zee:wye:a   zee
+v:zee:wye:b   wye
+v:zee:wye:i   8
+v:zee:wye:x   0.5985540091064224
+v:zee:wye:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v, "a"     } ./reg_test/input/abixy-het
+a       pan
+v:pan:a pan
+v:pan:b pan
+v:pan:i 1
+v:pan:x 0.3467901443380824
+v:pan:y 0.7268028627434533
+v:wye:a pan
+v:wye:b wye
+v:wye:i 10
+v:wye:x 0.5026260055412137
+v:wye:y 0.9526183602969864
+
+a         eks
+v:pan:a   eks
+v:pan:b   pan
+v:pan:i   2
+v:pan:x   0.7586799647899636
+v:pan:y   0.5221511083334797
+v:zee:a   eks
+v:zee:b   zee
+v:zee:iii 7
+v:zee:x   0.6117840605678454
+v:zee:y   0.1878849191181694
+
+a         wye
+v:pan:a   wye
+v:pan:b   pan
+v:pan:i   5
+v:pan:xxx 0.5732889198020006
+v:pan:y   0.8636244699032729
+
+a         zee
+v:pan:a   zee
+v:pan:b   pan
+v:pan:i   6
+v:pan:x   0.5271261600918548
+v:pan:y   0.49322128674835697
+v:wye:a   zee
+v:wye:b   wye
+v:wye:i   8
+v:wye:x   0.5985540091064224
+v:wye:yyy 0.976181385699006
+
+mlr --oxtab put -q @v[$a][$b] = $*; end {emitp @v, "a", "b"} ./reg_test/input/abixy-het
+a   pan
+b   pan
+v:a pan
+v:b pan
+v:i 1
+v:x 0.3467901443380824
+v:y 0.7268028627434533
+
+a   pan
+b   wye
+v:a pan
+v:b wye
+v:i 10
+v:x 0.5026260055412137
+v:y 0.9526183602969864
+
+a   eks
+b   pan
+v:a eks
+v:b pan
+v:i 2
+v:x 0.7586799647899636
+v:y 0.5221511083334797
+
+a     eks
+b     zee
+v:a   eks
+v:b   zee
+v:iii 7
+v:x   0.6117840605678454
+v:y   0.1878849191181694
+
+a     wye
+b     pan
+v:a   wye
+v:b   pan
+v:i   5
+v:xxx 0.5732889198020006
+v:y   0.8636244699032729
+
+a   zee
+b   pan
+v:a zee
+v:b pan
+v:i 6
+v:x 0.5271261600918548
+v:y 0.49322128674835697
+
+a     zee
+b     wye
+v:a   zee
+v:b   wye
+v:i   8
+v:x   0.5985540091064224
+v:yyy 0.976181385699006
+
+
+================================================================
+SREC-FROM-OOSVAR ASSIGNMENT
+
+mlr put -v $* = @v     /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=FULL_SREC_ASSIGNMENT:
+        text="$*", type=FULL_SREC.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=FULL_SREC_ASSIGNMENT:
+        text="$*", type=FULL_SREC.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+
+
+mlr put -v $* = @v[1]  /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=FULL_SREC_ASSIGNMENT:
+        text="$*", type=FULL_SREC.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=FULL_SREC_ASSIGNMENT:
+        text="$*", type=FULL_SREC.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+
+mlr put -v $* = @v[$2] /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=FULL_SREC_ASSIGNMENT:
+        text="$*", type=FULL_SREC.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="2", type=FIELD_NAME.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=FULL_SREC_ASSIGNMENT:
+        text="$*", type=FULL_SREC.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="2", type=FIELD_NAME.
+
+
+mlr put -v NR == 3 {$* = @v    } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+
+mlr put -v NR == 3 {$* = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+
+mlr put -v NR == 3 {$* = @v[$2]} /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="2", type=FIELD_NAME.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=FULL_SREC_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="2", type=FIELD_NAME.
+
+
+mlr put @v[NR] = $a; NR == 7 { @v = $*} ; $* = @v ./reg_test/input/abixy-het
+1=pan
+1=pan,2=eks
+1=pan,2=eks
+1=pan,2=eks,4=eks
+1=pan,2=eks,4=eks,5=wye
+1=pan,2=eks,4=eks,5=wye,6=zee
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,8=zee,10=pan
+
+
+================================================================
+OOSVAR-FROM-OOSVAR ASSIGNMENT
+
+mlr put -v @u    = @v /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+
+
+mlr put -v @u    = @v[1] /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+
+mlr put -v @u[2] = @v /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+
+
+mlr put -v @u[2] = @v[1] /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="u", type=STRING_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="v", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+
+
+mlr put -v begin { @u    = @v } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v begin { @u    = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v begin { @u[2] = @v } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+                text="2", type=NUMERIC_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v begin { @u[2] = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+                text="2", type=NUMERIC_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v NR == 3 { @u    = @v } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+
+mlr put -v NR == 3 { @u    = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+
+mlr put -v NR == 3 { @u[2] = @v } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+
+mlr put -v NR == 3 { @u[2] = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
+    text="cond", type=CONDITIONAL_BLOCK:
+        text="==", type=OPERATOR:
+            text="NR", type=CONTEXT_VARIABLE.
+            text="3", type=NUMERIC_LITERAL.
+        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+
+mlr put -v end { @u    = @v } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v end { @u    = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v end { @u[2] = @v } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+                text="2", type=NUMERIC_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -v end { @u[2] = @v[1] } /dev/null
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="u", type=STRING_LITERAL.
+                    text="2", type=NUMERIC_LITERAL.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                    text="1", type=NUMERIC_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="u", type=STRING_LITERAL.
+                text="2", type=NUMERIC_LITERAL.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+                text="1", type=NUMERIC_LITERAL.
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+
+
+mlr put -q @s    += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": 55,
+  "t": 55
+}
+s=55
+t=55
+
+mlr put -q @s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": 55
+  },
+  "t": {
+    "1": 55
+  }
+}
+s:1=55
+t:1=55
+
+mlr put -q @s[1] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": 55
+  },
+  "t": 55
+}
+s:1=55
+t=55
+
+mlr put -q @s[1] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": 55
+  },
+  "t": {
+    "3": {
+      "1": 55
+    }
+  }
+}
+s:1=55
+t:3:1=55
+
+mlr put -q @s[1] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": 55
+  },
+  "t": {
+    "3": 55
+  }
+}
+s:1=55
+t:3=55
+
+mlr put -q @s[1][2] += $i; @t=@s;             end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "1": {
+      "2": 55
+    }
+  }
+}
+s:1:2=55
+t:1:2=55
+
+mlr put -q @s[1][2] += $i; @t=@s[1];          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "2": 55
+  }
+}
+s:1:2=55
+t:2=55
+
+mlr put -q @s[1][2] += $i; @t=@s[1][2];       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": 55
+}
+s:1:2=55
+t=55
+
+mlr put -q @s[1][2] += $i; @t[3]=@s;          end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "3": {
+      "1": {
+        "2": 55
+      }
+    }
+  }
+}
+s:1:2=55
+t:3:1:2=55
+
+mlr put -q @s[1][2] += $i; @t[3]=@s[1];       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "3": {
+      "2": 55
+    }
+  }
+}
+s:1:2=55
+t:3:2=55
+
+mlr put -q @s[1][2] += $i; @t[3]=@s[1][2];    end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "3": 55
+  }
+}
+s:1:2=55
+t:3=55
+
+mlr put -q @s[1][2] += $i; @t[3][4]=@s;       end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "3": {
+      "4": {
+        "1": {
+          "2": 55
+        }
+      }
+    }
+  }
+}
+s:1:2=55
+t:3:4:1:2=55
+
+mlr put -q @s[1][2] += $i; @t[3][4]=@s[1];    end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "3": {
+      "4": {
+        "2": 55
+      }
+    }
+  }
+}
+s:1:2=55
+t:3:4:2=55
+
+mlr put -q @s[1][2] += $i; @t[3][4]=@s[1][2]; end{dump; emitp@s; emitp @t} ./reg_test/input/abixy
+{
+  "s": {
+    "1": {
+      "2": 55
+    }
+  },
+  "t": {
+    "3": {
+      "4": 55
+    }
+  }
+}
+s:1:2=55
+t:3:4=55
+
+mlr --opprint put -q @s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"} ./reg_test/input/abixy
+A  B  s
+1  1  0.010000
+2  2  0.020000
+3  3  0.030000
+4  4  0.040000
+5  5  0.050000
+6  6  0.060000
+7  7  0.070000
+8  8  0.080000
+9  9  0.090000
+10 10 0.100000
+
+C   D  E  t
+10  1  1  0.010000
+20  1  1  0.010000
+20  2  2  0.020000
+30  1  1  0.010000
+30  2  2  0.020000
+30  3  3  0.030000
+40  1  1  0.010000
+40  2  2  0.020000
+40  3  3  0.030000
+40  4  4  0.040000
+50  1  1  0.010000
+50  2  2  0.020000
+50  3  3  0.030000
+50  4  4  0.040000
+50  5  5  0.050000
+60  1  1  0.010000
+60  2  2  0.020000
+60  3  3  0.030000
+60  4  4  0.040000
+60  5  5  0.050000
+60  6  6  0.060000
+70  1  1  0.010000
+70  2  2  0.020000
+70  3  3  0.030000
+70  4  4  0.040000
+70  5  5  0.050000
+70  6  6  0.060000
+70  7  7  0.070000
+80  1  1  0.010000
+80  2  2  0.020000
+80  3  3  0.030000
+80  4  4  0.040000
+80  5  5  0.050000
+80  6  6  0.060000
+80  7  7  0.070000
+80  8  8  0.080000
+90  1  1  0.010000
+90  2  2  0.020000
+90  3  3  0.030000
+90  4  4  0.040000
+90  5  5  0.050000
+90  6  6  0.060000
+90  7  7  0.070000
+90  8  8  0.080000
+90  9  9  0.090000
+100 1  1  0.010000
+100 2  2  0.020000
+100 3  3  0.030000
+100 4  4  0.040000
+100 5  5  0.050000
+100 6  6  0.060000
+100 7  7  0.070000
+100 8  8  0.080000
+100 9  9  0.090000
+100 10 10 0.100000
+
