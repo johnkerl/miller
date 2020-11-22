@@ -16,6 +16,7 @@ no need to bootstrap a parser for the parser-generator language
   - diff-case script
   - path reorgs
   - awkish-cond -> pattern-action everywhere
+  - "format-" prefix etc
 
 * justWroteEmptyLine -> pprint too ...
 

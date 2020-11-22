@@ -267,7 +267,7 @@ for case_file in $case_file_names; do
   num_cases_attempted=`expr $num_cases_attempted + 1`
 
   # ----------------------------------------------------------------
-  # Run all invoctions in the case:
+  # Run all invocations in the case:
   . $case_file
   # ----------------------------------------------------------------
 
@@ -307,7 +307,7 @@ for case_file in $case_file_names; do
     echo "----------------------------------------------------------------"
   fi
 
-  total_num_invocations_attempted=`expr $num_cases_attempted + $num_invocations_attempted`
+  total_num_invocations_attempted=`expr $total_num_invocations_attempted + $num_invocations_attempted`
 done
 
 echo

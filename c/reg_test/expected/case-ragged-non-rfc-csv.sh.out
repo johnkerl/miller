@@ -1,0 +1,33 @@
+
+
+================================================================
+RAGGED NON-RFC CSV
+
+mlr --icsv --oxtab --ragged cat ./reg_test/input/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+a 6
+b 7
+c 8
+4 9
+
+mlr --icsvlite --oxtab --ragged cat ./reg_test/input/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+a 6
+b 7
+c 8
+4 9
+

@@ -1,0 +1,33 @@
+
+
+================================================================
+UTF-8 STRLEN
+
+mlr --inidx --ifs comma --oxtab put $s1=strlen($1);$s2=strlen($2);$s3=strlen($3);$s4=strlen($4) ./reg_test/input/utf8-align.dkvp
+1  191º=test
+2  1912=test2
+3  cois=çais
+4  çois=cais
+s1 9
+s2 10
+s3 9
+s4 9
+
+1  191º=test
+2  1912=test2
+3  ois=çais
+4  çois=cais
+s1 9
+s2 10
+s3 8
+s4 9
+
+1  191º=test
+2  1912=test2
+3  coise=çais
+4  çois=cais
+s1 9
+s2 10
+s3 10
+s4 9
+
