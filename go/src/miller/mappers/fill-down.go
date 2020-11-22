@@ -43,7 +43,7 @@ func mapperFillDownParseCLI(
 	)
 
 	pOnlyIfAbsentShort := flagSet.Bool(
-		"-a",
+		"a",
 		false,
 		`If a given record has a missing value for a given field, fill that from
 the corresponding value from a previous record, if any.
@@ -52,7 +52,7 @@ With -a, a field is 'missing' only if it is absent.`,
 	)
 
 	pOnlyIfAbsentLong := flagSet.Bool(
-		"--only-if-absent",
+		"only-if-absent",
 		false,
 		`Synonym for -a`,
 	)

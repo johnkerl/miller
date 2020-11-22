@@ -13,14 +13,10 @@ no need to bootstrap a parser for the parser-generator language
 
 !!! ^H two aliases ... one for paragraph one for line
 
-* split up ../c/reg_test/run output into multiple files first -- ?
-  - green/red PASS/FAIL if isatty
-  - diff-case script
-  - path reorgs
+* reg-test:
   - awkish-cond -> pattern-action everywhere
   - "format-" prefix etc
   - diff the *.err files -- ?
-  ! move u/* data files to $indir
   - double-check c/go sieve.mlr parse/execute ok
   - easier differ -- C5 optional or something
   - mlr label: check unique

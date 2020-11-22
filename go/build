@@ -10,4 +10,4 @@ set -euo pipefail
 
 ./build-go
 ./tester
-./check $verbose
+./reg-test/run -n $verbose

@@ -63,12 +63,12 @@ Passes through one of every n records, optionally by category.
 ================================================================
 Usage: ./reg-test/../../go/mlr fill-down [options]
 Passes through the last n records, optionally by category.
- ---only-if-absent (default false) Synonym for -a
- --a (default false) If a given record has a missing value for a given field, fill that from
+ -a (default false) If a given record has a missing value for a given field, fill that from
 the corresponding value from a previous record, if any.
 By default, a 'missing' field either is absent, or has the empty-string value.
 With -a, a field is 'missing' only if it is absent.
  -f (default ) Field names for fill-down
+ -only-if-absent (default false) Synonym for -a
 
 ================================================================
 Usage: ./reg-test/../../go/mlr filter [options] {DSL expression}
