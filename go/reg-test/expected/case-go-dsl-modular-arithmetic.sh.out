@@ -1,0 +1,17 @@
+
+mlr --c2p --from ./reg-test/input/mod.csv put 
+  $add = madd($a, $b, $m);
+  $sub = msub($a, $b, $m);
+  $mul = mmul($a, $b, $m);
+  $exp = mexp($a, $b, $m);
+
+a  b  m  add sub mul exp
+0  1  11 1   10  0   0
+1  0  11 1   1   0   1
+5  6  11 0   10  8   5
+7  8  11 4   10  1   9
+3  4  11 7   10  1   4
+-3 -4 11 4   1   1   (error)
+-3 4  11 1   4   10  4
+3  -4 11 10  7   10  (error)
+

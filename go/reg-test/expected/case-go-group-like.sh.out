@@ -1,0 +1,18 @@
+
+mlr --opprint group-like ./reg-test/input/het.dkvp
+host
+jupiter
+saturn
+mars
+jupiter
+mars
+saturn
+
+df/tmp uptime
+2.43MB 32345sec
+1.34MB 234214132sec
+4.97MB 345089805sec
+0.04MB 890sec
+8.55MB 787897777sec
+9.47MB 234289080sec
+

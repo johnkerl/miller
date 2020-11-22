@@ -1,0 +1,64 @@
+
+mlr --from ./reg-test/input/s.dkvp head -n 2 then put -q for (k,v in $*) { emit { "foo" : "bar" } }
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+foo=bar
+
+mlr --from ./reg-test/input/s.dkvp head -n 2 then put -q for (k,v in $*) { emit { "foo" : v } }
+foo=pan
+foo=pan
+foo=1
+foo=0.3467901443380824
+foo=0.7268028627434533
+foo=eks
+foo=pan
+foo=2
+foo=0.7586799647899636
+foo=0.5221511083334797
+
+mlr --from ./reg-test/input/s.dkvp head -n 2 then put -q for (k,v in $*) { emit { k: "bar" } }
+a=bar
+b=bar
+i=bar
+x=bar
+y=bar
+a=bar
+b=bar
+i=bar
+x=bar
+y=bar
+
+mlr --from ./reg-test/input/s.dkvp head -n 2 then put -q for (k,v in $*) { emit { k : v } }
+a=pan
+b=pan
+i=1
+x=0.3467901443380824
+y=0.7268028627434533
+a=eks
+b=pan
+i=2
+x=0.7586799647899636
+y=0.5221511083334797
+
+mlr --from ./reg-test/input/s.dkvp head -n 1 then put -q for (i,e in [3,4,5]) { emit { "foo" : "bar" } }
+foo=bar
+foo=bar
+foo=bar
+
+mlr --from ./reg-test/input/s.dkvp head -n 1 then put -q for (i,e in [3,4,5]) { emit { "foo" : i } }
+foo=1
+foo=2
+foo=3
+
+mlr --from ./reg-test/input/s.dkvp head -n 1 then put -q for (i,e in [3,4,5]) { emit { "foo" : e } }
+foo=3
+foo=4
+foo=5
+

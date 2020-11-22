@@ -1,0 +1,5 @@
+echo 'x= a     b '| run_mlr --ojson put '$y = strip($x)'
+echo 'x= a     b '| run_mlr --ojson put '$y = lstrip($x)'
+echo 'x= a     b '| run_mlr --ojson put '$y = rstrip($x)'
+echo 'x= a     b '| run_mlr --ojson put '$y = collapse_whitespace($x)'
+echo 'x= a     b '| run_mlr --ojson put '$y = clean_whitespace($x)'

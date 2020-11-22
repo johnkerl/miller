@@ -1,0 +1,7 @@
+run_mlr -n put -v '$z=max()'
+run_mlr -n put -v '$z=max(1)'
+run_mlr -n put -v '$z=max(1,)'
+run_mlr -n put -v '$z=max(1,2)'
+run_mlr -n put -v '$z=max(1,2,)'
+run_mlr -n put -v '$z=max(1,2,3)'
+run_mlr -n put -v '$z=max(1,2,3,)'

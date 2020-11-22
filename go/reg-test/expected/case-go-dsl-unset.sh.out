@@ -1,0 +1,1002 @@
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[0]; dump $v
+[1, 2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[1]; dump $v
+[2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[2]; dump $v
+[1, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[3]; dump $v
+[1, 2, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[4]; dump $v
+[1, 2, 3, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[5]; dump $v
+[1, 2, 3, 4]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q $v=[1,2,3,4,5]; unset $v[6]; dump $v
+[1, 2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[0]; dump @v }
+[1, 2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[1]; dump @v }
+[2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[2]; dump @v }
+[1, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[3]; dump @v }
+[1, 2, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[4]; dump @v }
+[1, 2, 3, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[5]; dump @v }
+[1, 2, 3, 4]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { @v=[1,2,3,4,5]; unset @v[6]; dump @v }
+[1, 2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[0]; dump v }
+[1, 2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[1]; dump v }
+[2, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[2]; dump v }
+[1, 3, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[3]; dump v }
+[1, 2, 4, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[4]; dump v }
+[1, 2, 3, 5]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[5]; dump v }
+[1, 2, 3, 4]
+
+mlr --from ./reg-test/input/ten.dkvp head -n 1 then put -q end { v=[1,2,3,4,5]; unset v[6]; dump v }
+[1, 2, 3, 4, 5]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"];
+    dump @v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"]["x"];
+    dump @v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1];
+    dump @v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {
+    "y": 1
+  }
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1]["x"];
+    dump @v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {},
+  {
+    "y": 1
+  }
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"];
+    dump @v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v["a"][2];
+    dump @v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v;
+    dump @v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1];
+    dump @v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["w", "x"]
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  @v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump @v;
+  } elif (NR == 2) {
+    unset @v[1][2];
+    dump @v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["u"],
+  ["w", "x"]
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"];
+    dump $v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"]["x"];
+    dump $v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1];
+    dump $v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {
+    "y": 1
+  }
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1]["x"];
+    dump $v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {},
+  {
+    "y": 1
+  }
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"];
+    dump $v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v["a"][2];
+    dump $v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v;
+    dump $v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1];
+    dump $v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["w", "x"]
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump $v;
+  } elif (NR == 2) {
+    unset $v[1][2];
+    dump $v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["u"],
+  ["w", "x"]
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $* = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*;
+    dump $*;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $* = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"];
+    dump $*;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $* = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"]["x"];
+    dump $*;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $* = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*;
+    dump $*;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $* = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"];
+    dump $*;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  $* = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump $*;
+  } elif (NR == 2) {
+    unset $*["a"][2];
+    dump $*;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"];
+    dump v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"]["x"];
+    dump v;
+  }
+
+{
+  "a": {
+    "x": 1
+  },
+  "b": {
+    "y": 1
+  }
+}
+{
+  "a": {},
+  "b": {
+    "y": 1
+  }
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1];
+    dump v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {
+    "y": 1
+  }
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = [
+    {"x": 1},
+    {"y": 1},
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1]["x"];
+    dump v;
+  }
+
+[
+  {
+    "x": 1
+  },
+  {
+    "y": 1
+  }
+]
+[
+  {},
+  {
+    "y": 1
+  }
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"];
+    dump v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"][2];
+    dump v;
+  }
+
+{
+  "a": ["u", "v"],
+  "b": ["w", "x"]
+}
+{
+  "a": ["u"],
+  "b": ["w", "x"]
+}
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+(absent)
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1];
+    dump v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["w", "x"]
+]
+
+mlr --from ./reg-test/input/s.dkvp put -q 
+  v = [
+    ["u", "v"],
+    ["w", "x"],
+  ];
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v[1][2];
+    dump v;
+  }
+
+[
+  ["u", "v"],
+  ["w", "x"]
+]
+[
+  ["u"],
+  ["w", "x"]
+]
+

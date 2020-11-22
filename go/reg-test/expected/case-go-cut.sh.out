@@ -1,0 +1,22 @@
+
+mlr --opprint cut -f x,a ./reg-test/input/s.dkvp
+a   x
+pan 0.3467901443380824
+eks 0.7586799647899636
+wye 0.20460330576630303
+eks 0.38139939387114097
+
+mlr --opprint cut -o -f x,a ./reg-test/input/s.dkvp
+x                   a
+0.3467901443380824  pan
+0.7586799647899636  eks
+0.20460330576630303 wye
+0.38139939387114097 eks
+
+mlr --opprint cut -x -f x,a ./reg-test/input/s.dkvp
+b   i y
+pan 1 0.7268028627434533
+pan 2 0.5221511083334797
+wye 3 0.33831852551664776
+wye 4 0.13418874328430463
+

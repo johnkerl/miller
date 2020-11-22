@@ -1,0 +1,21 @@
+
+mlr --from ./reg-test/input/s.dkvp --opprint put -q @sum[$a] += $i; emit {"sum": @sum}
+sum
+{
+  "pan": 1
+}
+{
+  "pan": 1,
+  "eks": 2
+}
+{
+  "pan": 1,
+  "eks": 2,
+  "wye": 3
+}
+{
+  "pan": 1,
+  "eks": 6,
+  "wye": 3
+}
+
