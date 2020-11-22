@@ -62,59 +62,6 @@ run_mlr() {
   echo >> $outfile
 }
 
-run_cat() {
-  if [ "$verbose" = "true" ]; then
-    echo cat "$@"
-  fi
-  echo cat "$@" >> $outfile
-  cat "$@" >> $outfile
-  echo >> $outfile
-}
-
-run_mlr_for_auxents() {
-  # Use just "mlr" for info messages
-  echo mlr "$@" >> $outfile
-  num_invocations_attempted=`expr $num_invocations_attempted + 1`
-  # Use path to mlr for invoking the command
-  $path_to_mlr "$@" >> $outfile 2> $errfile.$$
-  cat $errfile.$$ >> $errfile
-  rm $errfile.$$ # TODO comment this
-  status=$?
-  if [ $status -eq 0 ]; then
-    num_invocations_passed=`expr $num_invocations_passed + 1`
-  else
-    num_invocations_failed=`expr $num_invocations_failed + 1`
-  fi
-  echo >> $outfile
-}
-
-run_mlr_for_auxents_no_output() {
-  # Use just "mlr" for info messages
-  echo mlr "$@" >> $outfile
-  num_invocations_attempted=`expr $num_invocations_attempted + 1`
-  # Use path to mlr for invoking the command
-  $path_to_mlr "$@" 2> $errfile.$$
-  cat $errfile.$$ >> $errfile
-  rm $errfile.$$ # TODO comment this
-  status=$?
-  if [ $status -eq 0 ]; then
-    num_invocations_passed=`expr $num_invocations_passed + 1`
-  else
-    num_invocations_failed=`expr $num_invocations_failed + 1`
-  fi
-  echo >> $outfile
-}
-
-# Just cats a file while also announcing that fact.
-run_cat() {
-  if [ "$verbose" = "true" ]; then
-    echo cat "$@"
-  fi
-  echo cat "$@" >> $outfile # for diff at end
-  cat "$@" >> $outfile      # for diff at end
-  echo >> $outfile
-}
-
 mlr_expect_fail() {
   # Use just "mlr" for info messages
   if [ "$verbose" = "true" ]; then
@@ -142,9 +89,42 @@ mlr_expect_fail() {
   echo >> $outfile
 }
 
+run_mlr_no_output() {
+  # Use just "mlr" for info messages
+  echo mlr "$@" >> $outfile
+  num_invocations_attempted=`expr $num_invocations_attempted + 1`
+  # Use path to mlr for invoking the command
+  $path_to_mlr "$@" 2> $errfile.$$
+  cat $errfile.$$ >> $errfile
+  rm $errfile.$$ # TODO comment this
+  status=$?
+  if [ $status -eq 0 ]; then
+    num_invocations_passed=`expr $num_invocations_passed + 1`
+  else
+    num_invocations_failed=`expr $num_invocations_failed + 1`
+  fi
+  echo >> $outfile
+}
+
+# Just cats a file while also announcing that fact.
+run_cat() {
+  if [ "$verbose" = "true" ]; then
+    echo cat "$@"
+  fi
+  echo cat "$@" >> $outfile # for diff at end
+  cat "$@" >> $outfile      # for diff at end
+  echo >> $outfile
+}
+
 # ----------------------------------------------------------------
 usage() {
-	echo "Usage: $(basename $0) [-v aarg] [-m path/to/mlr] [case*sh filenams]" 1>&2
+	echo "Usage: $(basename $0) [case*sh filenames]" 1>&2
+    echo "Options:" 1>&2
+    echo "-h   Print this message" 1>&2
+    echo "-v   More verbose output including each mlr-invocation line, and diff outputs" 1>&2
+    echo "-m {path/to/mlr} Use a specified mlr executable" 1>&2
+    echo "-c   Use ../c/mlr executable" 1>&2
+    echo "-g   Use ../go/mlr executable" 1>&2
 	exit 1
 }
 
@@ -171,11 +151,13 @@ reloutdir=./output-regtest
 verbose="false"
 case_file_names="" # None means all
 
-while getopts vm:h f
+while getopts vcgm:h f
 do
 	case $f in
-	v)      verbose="true";         continue;;
-	m)      path_to_mlr="$OPTARG"; continue;;
+	v)      verbose="true";                continue;;
+	c)      path_to_mlr=$ourdir/../../c/mlr;  continue;;
+	g)      path_to_mlr=$ourdir/../../go/mlr; continue;;
+	m)      path_to_mlr="$OPTARG";         continue;;
 	h)      echo; usage;;
 	esac
 done

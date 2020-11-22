@@ -40,7 +40,7 @@ run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
+run_mlr_no_output termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
 
 mention input comments1-crlf.dkvp
 run_cat $outdir/comments1-crlf.dkvp
@@ -133,7 +133,7 @@ run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.nidx > $outdir/comments1-crlf.nidx
+run_mlr_no_output termcvt --lf2crlf < $indir/comments/comments1.nidx > $outdir/comments1-crlf.nidx
 
 mention input comments1-crlf.nidx
 run_cat $outdir/comments1-crlf.nidx
@@ -188,7 +188,7 @@ run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments3.json
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
+run_mlr_no_output termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
 
 mention input comments1-crlf.json
 run_cat $outdir/comments1-crlf.json
@@ -231,7 +231,7 @@ run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.xtab > $outdir/comments1-crlf.xtab
+run_mlr_no_output termcvt --lf2crlf < $indir/comments/comments1.xtab > $outdir/comments1-crlf.xtab
 
 mention input comments1-crlf.xtab
 run_cat $outdir/comments1-crlf.xtab
@@ -274,7 +274,7 @@ run_mlr --pass-comments --icsvlite --odkvp cat   $indir/comments/comments2.csv
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
+run_mlr_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
 
 mention input comments1-crlf.csv
 run_cat $outdir/comments1-crlf.csv
@@ -317,7 +317,7 @@ run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments2.csv
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
+run_mlr_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
 
 mention input comments1-crlf.csv
 run_cat $outdir/comments1-crlf.csv
