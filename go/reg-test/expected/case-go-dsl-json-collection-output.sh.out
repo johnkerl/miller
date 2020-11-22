@@ -89,20 +89,15 @@ mlr --json cat
 }
 
 mlr --json cat
-mlr --json cat
 {
   "x": 1
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": [1, 2, 3]
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": [
@@ -112,8 +107,6 @@ mlr --json cat
   ]
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": [
@@ -127,15 +120,11 @@ mlr --json cat
   ]
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": {}
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": {
@@ -145,8 +134,6 @@ mlr --json cat
   }
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": {
@@ -160,16 +147,12 @@ mlr --json cat
   }
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": {},
   "y": 1
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": {
@@ -180,8 +163,6 @@ mlr --json cat
   "y": 4
 }
 
-
-mlr --json cat
 mlr --json cat
 {
   "x": {
@@ -195,5 +176,4 @@ mlr --json cat
   },
   "y": 7
 }
-
 
