@@ -174,7 +174,7 @@ if [ "$verbose" = "true" ]; then
     FAIL="FAIL"
 else
     PASS="${green}PASS${textdefault}"
-    FAIL="${green}FAIL${textdefault}"
+    FAIL="${red}FAIL${textdefault}"
 fi
 
 # ----------------------------------------------------------------
