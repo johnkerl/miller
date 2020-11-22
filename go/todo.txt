@@ -12,6 +12,7 @@ no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * split up ../c/reg_test/run output into multiple files first -- ?
+  - green/red PASS/FAIL if isatty
 
 * justWroteEmptyLine -> pprint too ...
 

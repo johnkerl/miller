@@ -159,6 +159,25 @@ if [ "$1" = "-v" ]; then
 fi
 
 # ----------------------------------------------------------------
+if [ "$(uname)" = "Darwin" ]; then
+  export        textdefault=$'\033[0m'
+  export                red=$'\033[31;01m'
+  export              green=$'\033[32;01m'
+else
+  export        textdefault="\e[0m"
+  export                red="\e[31m"
+  export              green="\e[32m"
+fi
+
+if [ "$verbose" = "true" ]; then
+    PASS="PASS"
+    FAIL="FAIL"
+else
+    PASS="${green}PASS${textdefault}"
+    FAIL="${green}FAIL${textdefault}"
+fi
+
+# ----------------------------------------------------------------
 mkdir -p $outdir
 
 # Don't let the running user's .mlrrc affect the regression test
@@ -215,6 +234,8 @@ for case_file in $ourdir/case-*.sh; do
   outfile=$outdir/$case_name.out
   expfile=$expdir/$case_name.out
 
+  echo > $outfile
+
   num_cases_attempted=`expr $num_cases_attempted + 1`
 
   # ----------------------------------------------------------------
@@ -231,8 +252,9 @@ for case_file in $ourdir/case-*.sh; do
     case_passed=false
   fi
 
-  diff_flag=""
   if [ "$verbose" = "true" ]; then
+    diff_flag=""
+  else
     diff_flag="-q"
   fi
   if [ "$verbose" = "true" ]; then
@@ -249,10 +271,10 @@ for case_file in $ourdir/case-*.sh; do
   fi
 
   if [ $case_passed = "true" ]; then
-    echo "PASS  $case_file"
+    echo "$PASS  $case_file"
     num_cases_passed=`expr $num_cases_passed + 1`
   else
-    echo "FAIL  $case_file"
+    echo "$FAIL  $case_file"
     num_cases_failed=`expr $num_cases_failed + 1`
   fi
 
@@ -271,9 +293,9 @@ echo
 
 # ----------------------------------------------------------------
 if [ $num_cases_failed -eq 0 ]; then
-  echo "PASS"
+  echo "$PASS"
   exit 0
 else
-  echo "FAIL"
+  echo "$FAIL"
   exit 1
 fi

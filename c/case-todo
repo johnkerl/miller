@@ -1,52 +1,12 @@
 
-#run_mlr rename b,BEE,x,EKS $indir/abixy
-#run_mlr rename nonesuch,nonesuch,x,EKS $indir/abixy
-#
-#run_mlr         label NEW             $indir/abixy
-#run_mlr         label a,NEW,c         $indir/abixy
-#run_mlr         label 1,2,3,4,5,6,7,8 $indir/abixy
-#run_mlr         label d,x,f           $indir/abixy
-#mlr_expect_fail label d,x,d           $indir/abixy
-#
-#run_mlr --csvlite rename -r    '^Date_[0-9].*$,Date'  $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r    '(.*)e(.*),\1EEE\2'    $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r    '"(.*)e(.*)"i,\1EEE\2' $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r -g '"(.*)e(.*)"i,\1EEE\2' $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r    '^(.a.e)(_.*)?,AA\1BB\2CC' $indir/date1.csv
-#run_mlr --csvlite rename -r    '"e",EEE'              $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r -g '"e",EEE'              $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r    '"e"i,EEE'             $indir/date1.csv $indir/date2.csv
-#run_mlr --csvlite rename -r -g '"e"i,EEE'             $indir/date1.csv $indir/date2.csv
 
-#run_mlr regularize $indir/regularize.dkvp
 
-#run_mlr --opprint bar -f x,y --lo 0 --hi 1 $indir/abixy
-#run_mlr --opprint bar -f x,y -c c -x x -b b --lo 0.1 --hi 0.9 -w 20 $indir/abixy
-#run_mlr --opprint bar --auto -f x,y -w 10 $indir/abixy
 
-#run_mlr altkv <<EOF
-#a,b,c,d,e,f
-#EOF
-#run_mlr altkv <<EOF
-#a,b,c,d,e,f,g
-#EOF
 
-#run_mlr group-by a   $indir/abixy
-#run_mlr group-by a,b $indir/abixy
 
-#run_mlr group-like $indir/het.dkvp
 
-#run_mlr tac $indir/abixy
-#run_mlr tac /dev/null
 
-#run_mlr --opprint unsparsify $indir/abixy
-#run_mlr --opprint unsparsify $indir/abixy-het
-#
-#run_mlr --opprint unsparsify -f nonesuch $indir/abixy-het
-#run_mlr --opprint unsparsify -f a,b,i,x,y $indir/abixy-het
-#run_mlr --opprint unsparsify -f aaa,bbb,xxx,iii,yyy $indir/abixy-het
-#run_mlr --opprint unsparsify -f a,b,i,x,y,aaa,bbb,xxx,iii,yyy $indir/abixy-het
-#run_mlr --opprint unsparsify -f a,b,i,x,y,aaa,bbb,xxx,iii,yyy then regularize $indir/abixy-het
+
 
 #run_mlr --csv skip-trivial-records $indir/trivial-records.csv
 
@@ -70,33 +30,7 @@
 #run_mlr cat then nothing then cat $indir/abixy
 
 # ================================================================
-#announce CHAINING
-#
-#run_mlr cat then cat $indir/short
-#run_mlr cat then tac $indir/short
-#run_mlr tac then cat $indir/short
-#run_mlr tac then tac $indir/short
-#
-#run_mlr cat then cat then cat $indir/short
-#run_mlr cat then cat then tac $indir/short
-#run_mlr cat then tac then cat $indir/short
-#run_mlr cat then tac then tac $indir/short
-#run_mlr tac then cat then cat $indir/short
-#run_mlr tac then cat then tac $indir/short
-#run_mlr tac then tac then cat $indir/short
-#run_mlr tac then tac then tac $indir/short
 
-# ================================================================
-#run_mlr head -n 2        $indir/abixy-het
-#run_mlr head -n 2 -g a   $indir/abixy-het
-#run_mlr head -n 2 -g a,b $indir/abixy-het
-#
-## Test allowing then-chains to start with an initial 'then'
-#run_mlr \
-#    then cat \
-#    then head -n 2 -g a,b \
-#    then tac \
-#    $indir/abixy-het
 
 ## Test early-out for unkeyed head
 #run_mlr head -n 2 then put 'end{ print "Final NR is ".NR}' $indir/abixy-wide
@@ -105,87 +39,12 @@
 #run_mlr tac then head -n 2 then put 'end{ print "Final NR is ".NR}' $indir/abixy-wide
 #run_mlr head -n 2 then put 'end{ print "Final NR is ".NR}' $indir/abixy-wide $indir/abixy-wide $indir/abixy-wide
 
-#run_mlr tail -n 2        $indir/abixy-het
-#run_mlr tail -n 2 -g a   $indir/abixy-het
-#run_mlr tail -n 2 -g a,b $indir/abixy-het
 
-#run_mlr top -f x,y -n 2        $indir/abixy-het
-#run_mlr top -f x,y -n 2 -g a   $indir/abixy-het
-#run_mlr top -f x,y -n 2 -g a,b $indir/abixy-het
-#
-#run_mlr top -f x,y -n 2        $indir/ints.dkvp
-#run_mlr top -f x,y -n 2 -F     $indir/ints.dkvp
-#
-#run_mlr top    -n 4 -f x        $indir/abixy-wide
-#run_mlr top    -n 1 -f x,y      $indir/abixy-wide
-#run_mlr top    -n 4 -f x   -g a $indir/abixy-wide
-#run_mlr top    -n 1 -f x,y -g a $indir/abixy-wide
-#run_mlr top -a -n 4 -f x        $indir/abixy-wide
-#run_mlr top -a -n 4 -f x   -g a $indir/abixy-wide
-#
-#run_mlr top    -n 3 -f x,y       $indir/near-ovf.dkvp
-#run_mlr top    -n 3 -f x,y --min $indir/near-ovf.dkvp
-#run_mlr top -F -n 3 -f x,y       $indir/near-ovf.dkvp
-#run_mlr top -F -n 3 -f x,y --min $indir/near-ovf.dkvp
 
-#run_mlr --seed 12345 bootstrap       $indir/abixy-het
-#run_mlr --seed 12345 bootstrap -n  2 $indir/abixy-het
-#run_mlr --seed 12345 bootstrap -n 20 $indir/abixy-het
 
-#run_mlr --seed 12345 sample -k 2        $indir/abixy-het
-#run_mlr --seed 12345 sample -k 2 -g a   $indir/abixy-het
-#run_mlr --seed 12345 sample -k 2 -g a,b $indir/abixy-het
 
-#run_mlr --seed 12345 shuffle $indir/abixy-het
-#run_mlr --seed 23456 shuffle $indir/abixy-het
-#run_mlr --seed 34567 shuffle $indir/abixy-het
 
-#run_mlr uniq    -g a   $indir/abixy-het
-#run_mlr uniq    -g a,b $indir/abixy-het
-#
-#run_mlr uniq    -f a   $indir/abixy-het
-#run_mlr uniq    -f a,b $indir/abixy-het
-#
-#run_mlr uniq -c -g a   $indir/abixy-het
-#run_mlr uniq -c -g a,b $indir/abixy-het
 
-#run_mlr uniq    -g a   -o foo $indir/abixy-het
-#run_mlr uniq    -g a,b -o foo $indir/abixy-het
-#
-#run_mlr uniq    -f a   -o foo $indir/abixy-het
-#run_mlr uniq    -f a,b -o foo $indir/abixy-het
-#
-#run_mlr uniq -c -g a   -o foo $indir/abixy-het
-#run_mlr uniq -c -g a,b -o foo $indir/abixy-het
-#
-#run_mlr uniq -a           $indir/repeats.dkvp
-#run_mlr uniq -a -c        $indir/repeats.dkvp
-#run_mlr uniq -a -c -o foo $indir/repeats.dkvp
-#run_mlr uniq -a -n        $indir/repeats.dkvp
-#run_mlr uniq -a -n -o bar $indir/repeats.dkvp
-
-#run_mlr count-distinct -f a      $indir/small $indir/abixy
-#run_mlr count-distinct -f a,b    $indir/small $indir/abixy
-#run_mlr count-distinct -f a,b -u $indir/small $indir/abixy
-#
-#run_mlr count-distinct -f a   -n $indir/small $indir/abixy
-#run_mlr count-distinct -f a,b -n $indir/small $indir/abixy
-
-#run_mlr count-distinct -f a   -o foo $indir/small $indir/abixy
-#run_mlr count-distinct -f a,b -o foo $indir/small $indir/abixy
-#
-#run_mlr count-distinct -f a   -n -o foo $indir/small $indir/abixy
-#run_mlr count-distinct -f a,b -n -o foo $indir/small $indir/abixy
-
-#run_mlr grep    pan $indir/abixy-het
-#run_mlr grep -v pan $indir/abixy-het
-
-#run_mlr decimate         -n 4 $indir/abixy
-#run_mlr decimate      -b -n 4 $indir/abixy
-#run_mlr decimate      -e -n 4 $indir/abixy
-#run_mlr decimate -g a    -n 2 $indir/abixy
-#run_mlr decimate -g a -b -n 2 $indir/abixy
-#run_mlr decimate -g a -e -n 2 $indir/abixy
 
 # ----------------------------------------------------------------
 #run_mlr --icsv --ojson cat                                $indir/clean-whitespace.csv
