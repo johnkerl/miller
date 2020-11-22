@@ -47,7 +47,10 @@ run_mlr() {
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
-  $path_to_mlr "$@" >> $outfile
+  $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+  cat $errfile.$$ >> $errfile
+  rm $errfile.$$ # TODO comment this
+  num_invocations_attempted=`expr $num_invocations_attempted + 1`
   status=$?
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -71,7 +74,9 @@ run_mlr_for_auxents() {
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
-  $path_to_mlr "$@" >> $outfile
+  $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+  cat $errfile.$$ >> $errfile
+  rm $errfile.$$ # TODO comment this
   status=$?
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -86,7 +91,9 @@ run_mlr_for_auxents_no_output() {
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
-  $path_to_mlr "$@"
+  $path_to_mlr "$@" 2> $errfile.$$
+  cat $errfile.$$ >> $errfile
+  rm $errfile.$$ # TODO comment this
   status=$?
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -111,7 +118,9 @@ mlr_expect_fail() {
   if [ "$verbose" = "true" ]; then
     echo mlr "$@"
   fi
-  echo mlr "$@" >> $outfile
+  echo mlr "$@" >> $outfile 2> $errfile.$$
+  cat $errfile.$$ >> $errfile
+  rm $errfile.$$ # TODO comment this
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
   # Use path to mlr for invoking the command
   stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 >>$outfile )
@@ -127,6 +136,12 @@ mlr_expect_fail() {
     num_invocations_failed=`expr $num_invocations_failed + 1`
   fi
   echo >> $outfile
+}
+
+# ----------------------------------------------------------------
+usage() {
+	echo "Usage: $(basename $0) [-v aarg] [-m path/to/mlr] [case*sh filenams]" 1>&2
+	exit 1
 }
 
 # ================================================================
@@ -152,11 +167,18 @@ expfile=$expdir/out
 # * verbose from -v
 # * case-files from remaining args
 verbose="false"
+case_file_names="" # None means all
 
-# TODO: getopt
-if [ "$1" = "-v" ]; then
-    verbose=true
-fi
+while getopts vm:h f
+do
+	case $f in
+	v)      verbose="true";         continue;;
+	m)      path_to_mlr="$OPTARG"; continue;;
+	h)      echo; usage;;
+	esac
+done
+shift $(($OPTIND-1))
+case_file_names="$@"
 
 # ----------------------------------------------------------------
 if [ "$(uname)" = "Darwin" ]; then
@@ -216,7 +238,11 @@ num_cases_failed=0
 
 total_num_invocations_attempted=0
 
-for case_file in $ourdir/case-*.sh; do
+if [ "$case_file_names" = "" ]; then
+    case_file_names=$(ls $ourdir/case-*.sh)
+fi
+
+for case_file in $case_file_names; do
 
   # Per case:
   num_invocations_attempted=0
@@ -232,6 +258,7 @@ for case_file in $ourdir/case-*.sh; do
 
   case_name=$(basename $case_file)
   outfile=$outdir/$case_name.out
+  errfile=$outdir/$case_name.err
   expfile=$expdir/$case_name.out
 
   echo > $outfile
@@ -253,14 +280,11 @@ for case_file in $ourdir/case-*.sh; do
   fi
 
   if [ "$verbose" = "true" ]; then
-    diff_flag=""
+    echo diff -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
+    diff -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
   else
-    diff_flag="-q"
+    diff -q -a -I '^mlr' -I '^cat' -C5 $expfile $outfile > /dev/null
   fi
-  if [ "$verbose" = "true" ]; then
-    echo diff $diff_flag -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
-  fi
-  diff $diff_flag -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
   status=$?
   if [ $status -ne 0 ]; then
     case_passed=false
