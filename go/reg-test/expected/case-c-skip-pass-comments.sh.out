@@ -154,7 +154,7 @@ mlr termcvt --lf2crlf
 
 
 ---------------------------------------------------------------- input comments1-crlf.dkvp
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.dkvp
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -170,7 +170,7 @@ a 4
 b 5
 c 6
 
-mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.dkvp
 a 1
 b 2
 c 3
@@ -191,7 +191,7 @@ a 4
 b 5
 c 6
 
-mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.dkvp
 # hello world 1
 a 1
 b 2
@@ -507,7 +507,7 @@ mlr termcvt --lf2crlf
 
 
 ---------------------------------------------------------------- input comments1-crlf.nidx
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.nidx
 # hello world 1
 aX1 bX2 cX3
 aX4 bX5 cX6
@@ -523,7 +523,7 @@ mlr --skip-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.nidx
 1 aX1
 2 bX2
 3 cX3
@@ -544,7 +544,7 @@ mlr --pass-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.nidx
 # hello world 1
 1 aX1
 2 bX2
@@ -649,7 +649,7 @@ mlr termcvt --lf2crlf
 
 
 ---------------------------------------------------------------- input comments1-crlf.json
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.json
 # hello world 1
 { "a":1, "b":2, "c":3 }
 { "a":4, "b":5, "c":6 }
@@ -660,7 +660,7 @@ mlr --skip-comments --ijson --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -671,7 +671,7 @@ mlr --pass-comments --ijson --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.json
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -769,7 +769,7 @@ mlr termcvt --lf2crlf
 
 
 ---------------------------------------------------------------- input comments1-crlf.xtab
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.xtab
 x 1
 #hello world3
 z 3
@@ -785,7 +785,7 @@ mlr --skip-comments --ixtab --odkvp cat
 x=1,z=3
 x=2,z=5
 
-mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.xtab
 x=1,z=3
 x=2,z=5
 
@@ -797,7 +797,7 @@ x=1,z=3
 #hello world4
 x=2,z=5
 
-mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.xtab
 #hello world3
 x=1,z=3
 #hello world4
@@ -880,7 +880,7 @@ mlr termcvt --lf2crlf
 
 
 ---------------------------------------------------------------- input comments1-crlf.csv
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
 # hello
 a,b,c
 1,2,3
@@ -892,7 +892,7 @@ mlr --skip-comments --icsvlite --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -903,7 +903,7 @@ mlr --pass-comments --icsvlite --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -985,7 +985,7 @@ mlr termcvt --lf2crlf
 
 
 ---------------------------------------------------------------- input comments1-crlf.csv
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
 # hello
 a,b,c
 1,2,3
@@ -997,7 +997,7 @@ mlr --skip-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -1008,7 +1008,7 @@ mlr --pass-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6

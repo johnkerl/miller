@@ -144,8 +144,8 @@ fi
 # Input/output locations
 indir=$ourdir/input
 expdir=$ourdir/expected
-outdir=$pwd/output-regtest
-reloutdir=./output-regtest
+outdir=$pwd/output-reg-test
+reloutdir=./output-reg-test
 
 verbose="false"
 case_file_names="" # None means all

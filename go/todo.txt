@@ -20,6 +20,7 @@ no need to bootstrap a parser for the parser-generator language
   - diff the *.err files -- ?
   ! move u/* data files to $indir
   - double-check c/go sieve.mlr parse/execute ok
+  - easier differ -- C5 optional or something
 
 * justWroteEmptyLine -> pprint too ...
 
