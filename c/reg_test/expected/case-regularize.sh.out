@@ -1,0 +1,5 @@
+mlr regularize ./reg_test/input/regularize.dkvp
+a=1,c=2,b=3
+e=4,d=5
+a=6,c=7,b=8
+
