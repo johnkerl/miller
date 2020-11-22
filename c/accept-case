@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for arg; do
+  src=output-regtest/case-${arg}.sh.out
+  if [ ! -f $src ]; then
+    echo "Cannot find source $src" 1>&2
+    exit 1
+  fi
+  cp $src reg_test/expected
+done
