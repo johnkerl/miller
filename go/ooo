@@ -1,34 +1,77 @@
+================================================================
+BUG:
+
 FAIL  ./reg-test/cases/case-c-altkv.sh
+FAIL  ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
+FAIL  ./reg-test/cases/case-c-dsl-extended-typeof.sh
+FAIL  ./reg-test/cases/case-c-dsl-functional-tests.sh
+FAIL  ./reg-test/cases/case-c-dsl-haskey.sh
+FAIL  ./reg-test/cases/case-c-dsl-triple-for-loops.sh
+
+================================================================
+FORMATTING?
+
+FAIL  ./reg-test/cases/case-c-clean-whitespace.sh
+
+================================================================
+PARTIALLY IMPLEMENTED:
+
+FAIL  ./reg-test/cases/case-c-cut.sh
+
+================================================================
+PPRINT --BARRED --RIGHT
+
+rrv  ./reg-test/cases/case-c-barred-pprint.sh
+
+================================================================
+BACKWARD INCOMPATIBILITIES:
+
+FAIL  ./reg-test/cases/case-c-dsl-substr.sh
+
+================================================================
+NEED EMITP:
+
+FAIL  ./reg-test/cases/case-c-dsl-absent-empty.sh
+FAIL  ./reg-test/cases/case-c-dsl-break-continue.sh
+FAIL  ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
+
+================================================================
+NOT IMPLEMENTED YET:
+
 FAIL  ./reg-test/cases/case-c-auxents.sh
 FAIL  ./reg-test/cases/case-c-bar.sh
-FAIL  ./reg-test/cases/case-c-barred-pprint.sh
-FAIL  ./reg-test/cases/case-c-bootstrap.sh
-FAIL  ./reg-test/cases/case-c-clean-whitespace.sh
 FAIL  ./reg-test/cases/case-c-compressed-input.sh
 FAIL  ./reg-test/cases/case-c-count-distinct.sh
-FAIL  ./reg-test/cases/case-c-csv-rs-environment-defaults.sh
-FAIL  ./reg-test/cases/case-c-cut.sh
-FAIL  ./reg-test/cases/case-c-dsl-absent-empty.sh
-FAIL  ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
+FAIL  ./reg-test/cases/case-c-stats1-percentile-interpolation.sh
+FAIL  ./reg-test/cases/case-c-stats1-regexed-field-names.sh
+FAIL  ./reg-test/cases/case-c-stats1.sh
+FAIL  ./reg-test/cases/case-c-stats2.sh
+FAIL  ./reg-test/cases/case-c-step.sh
+FAIL  ./reg-test/cases/case-c-top.sh
+FAIL  ./reg-test/cases/case-c-uniq.sh
+
+================================================================
+NEED MORE LOOKING:
+FAIL  ./reg-test/cases/case-c-dsl-is-predicates.sh
+FAIL  ./reg-test/cases/case-c-dsl-for-map-depth.sh
 FAIL  ./reg-test/cases/case-c-dsl-asserting.sh
-FAIL  ./reg-test/cases/case-c-dsl-break-continue.sh
+
+================================================================
+TBD:
+
+FAIL  ./reg-test/cases/case-c-bootstrap.sh
+FAIL  ./reg-test/cases/case-c-csv-rs-environment-defaults.sh
 FAIL  ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 FAIL  ./reg-test/cases/case-c-dsl-empty-statements.sh
-FAIL  ./reg-test/cases/case-c-dsl-extended-typeof.sh
 FAIL  ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
 FAIL  ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
-FAIL  ./reg-test/cases/case-c-dsl-for-map-depth.sh
 FAIL  ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
 FAIL  ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 FAIL  ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 FAIL  ./reg-test/cases/case-c-dsl-from-file.sh
-FAIL  ./reg-test/cases/case-c-dsl-functional-tests.sh
 FAIL  ./reg-test/cases/case-c-dsl-gmt-date-time-functions.sh
-FAIL  ./reg-test/cases/case-c-dsl-haskey.sh
 FAIL  ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 FAIL  ./reg-test/cases/case-c-dsl-indirect-srec-assignments.sh
-FAIL  ./reg-test/cases/case-c-dsl-is-predicates.sh
-FAIL  ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
 FAIL  ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
 FAIL  ./reg-test/cases/case-c-dsl-local-date-time-functions.sh
 FAIL  ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
@@ -58,9 +101,7 @@ FAIL  ./reg-test/cases/case-c-dsl-regex-matching.sh
 FAIL  ./reg-test/cases/case-c-dsl-scientific-notation.sh
 FAIL  ./reg-test/cases/case-c-dsl-split-join.sh
 FAIL  ./reg-test/cases/case-c-dsl-stack-allocation.sh
-FAIL  ./reg-test/cases/case-c-dsl-substr.sh
 FAIL  ./reg-test/cases/case-c-dsl-trailing-commas.sh
-FAIL  ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 FAIL  ./reg-test/cases/case-c-dsl-type-inference.sh
 FAIL  ./reg-test/cases/case-c-dsl-type-predicates.sh
 FAIL  ./reg-test/cases/case-c-dsl-typed-overlay.sh
@@ -103,12 +144,6 @@ FAIL  ./reg-test/cases/case-c-seqgen.sh
 FAIL  ./reg-test/cases/case-c-shuffle.sh
 FAIL  ./reg-test/cases/case-c-skip-pass-comments.sh
 FAIL  ./reg-test/cases/case-c-space-padding.sh
-FAIL  ./reg-test/cases/case-c-stats1-percentile-interpolation.sh
-FAIL  ./reg-test/cases/case-c-stats1-regexed-field-names.sh
-FAIL  ./reg-test/cases/case-c-stats1.sh
-FAIL  ./reg-test/cases/case-c-stats2.sh
-FAIL  ./reg-test/cases/case-c-step.sh
-FAIL  ./reg-test/cases/case-c-top.sh
-FAIL  ./reg-test/cases/case-c-uniq.sh
+
 FAIL  ./reg-test/cases/case-c-utf8-alignment.sh
 FAIL  ./reg-test/cases/case-c-utf8-bom.sh

@@ -20,6 +20,7 @@ no need to bootstrap a parser for the parser-generator language
   - double-check c/go sieve.mlr parse/execute ok
   - easier differ -- C5 optional or something
   - mlr label: check unique
+  - remove ././ from expecteds
 
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 
