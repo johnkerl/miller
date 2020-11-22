@@ -1,5 +1,4 @@
-# comment here
-# intended to be invoked by "."
+# Intended to be invoked by "." from reg_test/run
 
 run_mlr cat $indir/abixy
 run_mlr cat /dev/null
