@@ -125,6 +125,8 @@ usage() {
     echo "-m {path/to/mlr} Use a specified mlr executable" 1>&2
     echo "-c   Use ../c/mlr executable" 1>&2
     echo "-g   Use ../go/mlr executable" 1>&2
+    echo "-o   Run only old case-c-* cases" 1>&2
+    echo "-n   Run only new case-c-* cases" 1>&2
 	exit 1
 }
 
@@ -145,24 +147,25 @@ expdir=$ourdir/expected
 outdir=$pwd/output-regtest
 reloutdir=./output-regtest
 
-# TODO:
-# * verbose from -v
-# * case-files from remaining args
 verbose="false"
 case_file_names="" # None means all
 
-while getopts vcgm:h f
+while getopts vcgnom:h f
 do
 	case $f in
-	v)      verbose="true";                continue;;
+	v)      verbose="true";                   continue;;
 	c)      path_to_mlr=$ourdir/../../c/mlr;  continue;;
 	g)      path_to_mlr=$ourdir/../../go/mlr; continue;;
-	m)      path_to_mlr="$OPTARG";         continue;;
+	m)      path_to_mlr="$OPTARG";            continue;;
+	o)      case_file_names=$(ls $ourdir/cases/case-c-*.sh); continue;;
+	n)      case_file_names=$(ls $ourdir/cases/case-go-*.sh); continue;;
 	h)      echo; usage;;
 	esac
 done
 shift $(($OPTIND-1))
-case_file_names="$@"
+if [ "$case_file_names" = "" ]; then
+  case_file_names="$@"
+fi
 
 # ----------------------------------------------------------------
 if [ "$(uname)" = "Darwin" ]; then
