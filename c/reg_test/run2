@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: NEEDS A FULL RE-COMMENT PASS
+
 # ================================================================
 # MILLER REGRESSION SCRIPT
 #
@@ -127,7 +129,9 @@ mlr_expect_fail() {
   status=$?
   echo "${stderr_capture}" >> $outfile
   if [ $status -ne 1 ]; then
-    echo "Exit status was $status; expected 1."
+    if [ "$verbose" = "true" ]; then
+      echo "Exit status was $status; expected 1."
+    fi
     echo "Exit status was $status; expected 1." >> $outfile
   fi
   if [ $status -ne 0 ]; then

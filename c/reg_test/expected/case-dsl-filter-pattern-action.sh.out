@@ -1,0 +1,767 @@
+
+mlr --opprint put          $x > 0.5;  $z = "flag" ./reg_test/input/abixy
+a   b   i  x                   y                   z
+pan pan 1  0.3467901443380824  0.7268028627434533  flag
+eks pan 2  0.7586799647899636  0.5221511083334797  flag
+wye wye 3  0.20460330576630303 0.33831852551664776 flag
+eks wye 4  0.38139939387114097 0.13418874328430463 flag
+wye pan 5  0.5732889198020006  0.8636244699032729  flag
+zee pan 6  0.5271261600918548  0.49322128674835697 flag
+eks zee 7  0.6117840605678454  0.1878849191181694  flag
+zee wye 8  0.5985540091064224  0.976181385699006   flag
+hat wye 9  0.03144187646093577 0.7495507603507059  flag
+pan wye 10 0.5026260055412137  0.9526183602969864  flag
+
+mlr --opprint put        !($x > 0.5); $z = "flag" ./reg_test/input/abixy
+a   b   i  x                   y                   z
+pan pan 1  0.3467901443380824  0.7268028627434533  flag
+eks pan 2  0.7586799647899636  0.5221511083334797  flag
+wye wye 3  0.20460330576630303 0.33831852551664776 flag
+eks wye 4  0.38139939387114097 0.13418874328430463 flag
+wye pan 5  0.5732889198020006  0.8636244699032729  flag
+zee pan 6  0.5271261600918548  0.49322128674835697 flag
+eks zee 7  0.6117840605678454  0.1878849191181694  flag
+zee wye 8  0.5985540091064224  0.976181385699006   flag
+hat wye 9  0.03144187646093577 0.7495507603507059  flag
+pan wye 10 0.5026260055412137  0.9526183602969864  flag
+
+mlr --opprint put filter   $x > 0.5;  $z = "flag" ./reg_test/input/abixy
+a   b   i  x                  y                   z
+eks pan 2  0.7586799647899636 0.5221511083334797  flag
+wye pan 5  0.5732889198020006 0.8636244699032729  flag
+zee pan 6  0.5271261600918548 0.49322128674835697 flag
+eks zee 7  0.6117840605678454 0.1878849191181694  flag
+zee wye 8  0.5985540091064224 0.976181385699006   flag
+pan wye 10 0.5026260055412137 0.9526183602969864  flag
+
+mlr --opprint put          $x > 0.5  {$z = "flag"} ./reg_test/input/abixy
+a   b   i x                  y
+pan pan 1 0.3467901443380824 0.7268028627434533
+
+a   b   i x                  y                  z
+eks pan 2 0.7586799647899636 0.5221511083334797 flag
+
+a   b   i x                   y
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+
+a   b   i x                  y                   z
+wye pan 5 0.5732889198020006 0.8636244699032729  flag
+zee pan 6 0.5271261600918548 0.49322128674835697 flag
+eks zee 7 0.6117840605678454 0.1878849191181694  flag
+zee wye 8 0.5985540091064224 0.976181385699006   flag
+
+a   b   i x                   y
+hat wye 9 0.03144187646093577 0.7495507603507059
+
+a   b   i  x                  y                  z
+pan wye 10 0.5026260055412137 0.9526183602969864 flag
+
+mlr --opprint put filter !($x > 0.5); $z = "flag" ./reg_test/input/abixy
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  flag
+wye wye 3 0.20460330576630303 0.33831852551664776 flag
+eks wye 4 0.38139939387114097 0.13418874328430463 flag
+hat wye 9 0.03144187646093577 0.7495507603507059  flag
+
+mlr --opprint put        !($x > 0.5) {$z = "flag"} ./reg_test/input/abixy
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 flag
+
+a   b   i x                  y
+eks pan 2 0.7586799647899636 0.5221511083334797
+
+a   b   i x                   y                   z
+wye wye 3 0.20460330576630303 0.33831852551664776 flag
+eks wye 4 0.38139939387114097 0.13418874328430463 flag
+
+a   b   i x                  y
+wye pan 5 0.5732889198020006 0.8636244699032729
+zee pan 6 0.5271261600918548 0.49322128674835697
+eks zee 7 0.6117840605678454 0.1878849191181694
+zee wye 8 0.5985540091064224 0.976181385699006
+
+a   b   i x                   y                  z
+hat wye 9 0.03144187646093577 0.7495507603507059 flag
+
+a   b   i  x                  y
+pan wye 10 0.5026260055412137 0.9526183602969864
+
+
+================================================================
+DSL SUB/GSUB/REGEX_EXTRACT
+
+mlr --opprint put $y = sub($x, "e.*l",        "") ./reg_test/input/sub.dat
+x     y
+hello ho
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*l"i,       "") ./reg_test/input/sub.dat
+x     y
+hello ho
+HELLO HO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*"."l",     "") ./reg_test/input/sub.dat
+x     y
+hello ho
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*l",        "y123y") ./reg_test/input/sub.dat
+x     y
+hello hy123yo
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*l"i,       "y123y") ./reg_test/input/sub.dat
+x     y
+hello hy123yo
+HELLO Hy123yO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "e.*"."l",     "y123y") ./reg_test/input/sub.dat
+x     y
+hello hy123yo
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "y\1y123\2y") ./reg_test/input/sub.dat
+x     y
+hello yhy123oy
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "([hg])e.*l.",   "y\1y123\2y") ./reg_test/input/sub.dat
+x     y
+hello yhy123y
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "y\1y123.y") ./reg_test/input/sub.dat
+x     y
+hello yhy123.y
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = sub($x,  "a",    "aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    aabcdefg
+ababbabbba aababbabbba
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = gsub($x, "a",    "aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    aabcdefg
+ababbabbba aabaabbaabbbaa
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = gsub($x, "A",    "Aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    abcdefg
+ababbabbba ababbabbba
+LMNOP      LMNOP
+ABCDEFG    AaBCDEFG
+ABABBABBBA AaBAaBBAaBBBAa
+
+mlr --opprint put $y = gsub($x, "a"i,   "Aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    Aabcdefg
+ababbabbba AabAabbAabbbAa
+LMNOP      LMNOP
+ABCDEFG    AaBCDEFG
+ABABBABBBA AaBAaBBAaBBBAa
+
+mlr --opprint put $y = gsub($x, "A"i,   "Aa") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    Aabcdefg
+ababbabbba AabAabbAabbbAa
+LMNOP      LMNOP
+ABCDEFG    AaBCDEFG
+ABABBABBBA AaBAaBBAaBBBAa
+
+mlr --opprint put $y = gsub($x, "a(.)", "aa\1\1\1") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    aabbbcdefg
+ababbabbba aabbbaabbbbaabbbbba
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = sub($x,  "a",    "") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    bcdefg
+ababbabbba babbabbba
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = gsub($x, "a",    "") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    bcdefg
+ababbabbba bbbbbb
+LMNOP      LMNOP
+ABCDEFG    ABCDEFG
+ABABBABBBA ABABBABBBA
+
+mlr --opprint put $y = gsub($x, "A",    "") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    abcdefg
+ababbabbba ababbabbba
+LMNOP      LMNOP
+ABCDEFG    BCDEFG
+ABABBABBBA BBBBBB
+
+mlr --opprint put $y = gsub($x, "a"i,   "") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    bcdefg
+ababbabbba bbbbbb
+LMNOP      LMNOP
+ABCDEFG    BCDEFG
+ABABBABBBA BBBBBB
+
+mlr --opprint put $y = gsub($x, "A"i,   "") ./reg_test/input/gsub.dat
+x          y
+lmnop      lmnop
+abcdefg    bcdefg
+ababbabbba bbbbbb
+LMNOP      LMNOP
+ABCDEFG    BCDEFG
+ABABBABBBA BBBBBB
+
+mlr --oxtab cat ./reg_test/input/subtab.dkvp
+x afoob
+
+x a\tb
+
+x a\\tb
+
+x a	b
+
+z 
+
+x 
+
+mlr --oxtab put -f ./reg_test/input/subtab1.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y a\tb
+
+x a\\tb
+y a\\tb
+
+x a	b
+y aTABb
+
+z 
+
+x 
+y 
+
+mlr --oxtab put -f ./reg_test/input/subtab2.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y aTABb
+
+x a\\tb
+y a\TABb
+
+x a	b
+y a	b
+
+z 
+
+x 
+y 
+
+mlr --oxtab put -f ./reg_test/input/subtab3.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y a\tb
+
+x a\\tb
+y a\\tb
+
+x a	b
+y a	b
+
+z 
+
+x 
+y 
+
+mlr --oxtab put -f ./reg_test/input/subtab4.mlr ./reg_test/input/subtab.dkvp
+x afoob
+y afoob
+
+x a\tb
+y a	b
+
+x a\\tb
+y a\	b
+
+x a	b
+y a	b
+
+z 
+
+x 
+y 
+
+mlr --opprint put $y = ssub($x, "HE",       "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO LLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HE",       "HE") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HE",       "12345") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 12345LLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LL",       "1") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE1O
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LL",       "12") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE12O
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LL",       "12345") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE12345O
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "12") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE12
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "123") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE123
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "123456") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE123456
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO -
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "1234") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 1234
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "12345") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 12345
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "1234678") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 1234678
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "nonesuch", "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "nonesuch", "1234") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "nonesuch", "1234567890") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --oxtab put $y = regextract($x, "[A-Z]+") ./reg_test/input/sub.dat
+x hello
+
+x HELLO
+y HELLO
+
+x world
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract($x, "[A-Z]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y HELLO
+
+x world
+y 
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract($x, "[a-z]+") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+
+x world
+y world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[a-z]*") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+y 
+
+x world
+y world
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[0-9]+") ./reg_test/input/sub.dat
+x hello
+
+x HELLO
+
+x world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[0-9]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[ef]+") ./reg_test/input/sub.dat
+x hello
+y e
+
+x HELLO
+
+x world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[ef]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[hi]+") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+
+x world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[hi]*") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[op]+") ./reg_test/input/sub.dat
+x hello
+y o
+
+x HELLO
+
+x world
+y o
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[op]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[A-Z]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y DEFAULT
+
+x HELLO
+y HELLO
+
+x world
+y DEFAULT
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract_or_else($x, "[A-Z]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y HELLO
+
+x world
+y 
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract_or_else($x, "[a-z]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+y DEFAULT
+
+x world
+y world
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[a-z]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+y 
+
+x world
+y world
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[0-9]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y DEFAULT
+
+x HELLO
+y DEFAULT
+
+x world
+y DEFAULT
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[0-9]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[ef]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y e
+
+x HELLO
+y DEFAULT
+
+x world
+y DEFAULT
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[ef]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[hi]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+y DEFAULT
+
+x world
+y DEFAULT
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[hi]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[op]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y o
+
+x HELLO
+y DEFAULT
+
+x world
+y o
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[op]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --nidx put $1 = sub($1, "ab(.)d(..)g",  "ab<<\1>>d<<\2>>g")
+ab<<c>>d<<ef>>g
+
+mlr --nidx put $1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")
+ab<<c>>d<<ef>>g
+
+mlr --nidx put $1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")
+abXdefg
+
+mlr --nidx put $1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")
+ab<<>>d<<ef>>g
+
