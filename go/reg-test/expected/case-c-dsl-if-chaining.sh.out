@@ -1,44 +1,31 @@
 
 
 ---------------------------------------------------------------- IF/ELIF WITH ELSE
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR==1) {
+    $x = 2;
+    $y = 3
+  }
+DSL EXPRESSION:
+
   if (NR==1) {
     $x = 2;
     $y = 3
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="1", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="2", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="1", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="2", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="3", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "2"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "3"
 
 i=1,x=2,y=3
 i=2,x=102,y=202
@@ -81,7 +68,16 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 4) {
+    $x = 5;
+    $y = 6
+  } else {
+    $x = 1007;
+    $y = 1008
+  }
+DSL EXPRESSION:
+
   if (NR == 4) {
     $x = 5;
     $y = 6
@@ -90,54 +86,27 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 1008
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="4", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="5", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="6", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1007", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1008", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="4", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="5", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="6", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1007", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1008", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "4"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "5"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "6"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "1007"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "1008"
 
 i=1,x=1007,y=1008
 i=2,x=1007,y=1008
@@ -180,7 +149,19 @@ i=38,x=1007,y=1008
 i=39,x=1007,y=1008
 i=40,x=1007,y=1008
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 9) {
+    $x = 10;
+    $y = 11
+  } elif (NR == 12) {
+    $x = 13;
+    $y = 14
+  } else {
+    $x = 1015;
+    $y = 1016
+  }
+DSL EXPRESSION:
+
   if (NR == 9) {
     $x = 10;
     $y = 11
@@ -192,76 +173,38 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 1016
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="9", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="10", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="11", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="12", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="13", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="14", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1015", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1016", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="9", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="10", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="11", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="12", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="13", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="14", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1015", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1016", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "9"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "10"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "11"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "12"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "13"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "14"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "1015"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "1016"
 
 i=1,x=1015,y=1016
 i=2,x=1015,y=1016
@@ -304,7 +247,22 @@ i=38,x=1015,y=1016
 i=39,x=1015,y=1016
 i=40,x=1015,y=1016
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 17) {
+    $x = 18;
+    $y = 19
+  } elif (NR == 20) {
+    $x = 21;
+    $y = 22
+  } elif (NR == 23) {
+    $x = 24;
+    $y = 25
+  } else {
+    $x = 1026;
+    $y = 1027
+  }
+DSL EXPRESSION:
+
   if (NR == 17) {
     $x = 18;
     $y = 19
@@ -319,98 +277,49 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 1027
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="17", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="18", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="19", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="20", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="21", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="22", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="23", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="24", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="25", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1026", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1027", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="17", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="18", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="19", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="20", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="21", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="22", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="23", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="24", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="25", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1026", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1027", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "17"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "18"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "19"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "20"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "21"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "22"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "23"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "24"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "25"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "1026"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "1027"
 
 i=1,x=1026,y=1027
 i=2,x=1026,y=1027
@@ -453,7 +362,25 @@ i=38,x=1026,y=1027
 i=39,x=1026,y=1027
 i=40,x=1026,y=1027
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 28) {
+    $x = 29;
+    $y = 30
+  } elif (NR == 31) {
+    $x = 32;
+    $y = 33
+  } elif (NR == 34) {
+    $x = 35;
+    $y = 36
+  } elif (NR == 37) {
+    $x = 38;
+    $y = 39
+  } else {
+    $x = 1040;
+    $y = 1041
+  }
+DSL EXPRESSION:
+
   if (NR == 28) {
     $x = 29;
     $y = 30
@@ -471,120 +398,60 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 1041
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="28", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="29", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="30", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="31", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="32", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="33", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="34", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="35", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="36", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="37", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="38", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="39", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1040", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1041", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="28", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="29", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="30", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="31", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="32", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="33", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="34", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="35", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="36", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="37", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="38", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="39", type=NUMERIC_LITERAL.
-        text="else", type=IF_ITEM:
-            text="else_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="1040", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="1041", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "28"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "29"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "30"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "31"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "32"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "33"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "34"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "35"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "36"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "37"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "38"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "39"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "1040"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "1041"
 
 i=1,x=1040,y=1041
 i=2,x=1040,y=1041
@@ -629,44 +496,31 @@ i=40,x=1040,y=1041
 
 
 ---------------------------------------------------------------- IF/ELIF WITHOUT ELSE
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 1) {
+    $x = 2;
+    $y = 3
+  }
+DSL EXPRESSION:
+
   if (NR == 1) {
     $x = 2;
     $y = 3
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="1", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="2", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="1", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="2", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="3", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "2"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "3"
 
 i=1,x=2,y=3
 i=2,x=102,y=202
@@ -709,7 +563,16 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 4) {
+    $x = 5;
+    $y = 6
+  } elif (NR == 7) {
+    $x = 8;
+    $y = 9
+  }
+DSL EXPRESSION:
+
   if (NR == 4) {
     $x = 5;
     $y = 6
@@ -718,60 +581,30 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 9
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="4", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="5", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="6", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="7", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="8", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="9", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="4", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="5", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="6", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="7", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="8", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="9", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "4"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "5"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "6"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "7"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "8"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "9"
 
 i=1,x=101,y=201
 i=2,x=102,y=202
@@ -814,7 +647,19 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 10) {
+    $x = 11;
+    $y = 12
+  } elif (NR == 13) {
+    $x = 14;
+    $y = 15
+  } elif (NR == 16) {
+    $x = 17;
+    $y = 18
+  }
+DSL EXPRESSION:
+
   if (NR == 10) {
     $x = 11;
     $y = 12
@@ -826,82 +671,41 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 18
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="10", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="11", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="12", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="13", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="14", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="15", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="16", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="17", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="18", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="10", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="11", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="12", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="13", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="14", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="15", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="16", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="17", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="18", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "10"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "11"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "12"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "13"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "14"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "15"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "16"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "17"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "18"
 
 i=1,x=101,y=201
 i=2,x=102,y=202
@@ -944,7 +748,22 @@ i=38,x=138,y=238
 i=39,x=139,y=239
 i=40,x=140,y=240
 
-mlr --from ././reg-test/input/xy40.dkvp put -v 
+mlr --from ./reg-test/input/xy40.dkvp put -v 
+  if (NR == 19) {
+    $x = 20;
+    $y = 21
+  } elif (NR == 22) {
+    $x = 23;
+    $y = 24
+  } elif (NR == 25) {
+    $x = 26;
+    $y = 37
+  } elif (NR == 28) {
+    $x = 29;
+    $y = 30
+  }
+DSL EXPRESSION:
+
   if (NR == 19) {
     $x = 20;
     $y = 21
@@ -959,104 +778,52 @@ mlr --from ././reg-test/input/xy40.dkvp put -v
     $y = 30
   }
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="19", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="20", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="21", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="22", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="23", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="24", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="25", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="26", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="37", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="28", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK:
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="29", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="30", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="if_head", type=IF_HEAD:
-        text="if", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="19", type=NUMERIC_LITERAL.
-            text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="20", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="21", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="22", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="23", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="24", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="25", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="26", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="37", type=NUMERIC_LITERAL.
-        text="elif", type=IF_ITEM:
-            text="==", type=OPERATOR:
-                text="NR", type=CONTEXT_VARIABLE.
-                text="28", type=NUMERIC_LITERAL.
-            text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
-                text="=", type=SREC_ASSIGNMENT:
-                    text="x", type=FIELD_NAME.
-                    text="29", type=NUMERIC_LITERAL.
-                text="=", type=SREC_ASSIGNMENT:
-                    text="y", type=FIELD_NAME.
-                    text="30", type=NUMERIC_LITERAL.
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "19"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "20"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "21"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "22"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "23"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "24"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "25"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "26"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "37"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "28"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "29"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "30"
 
 i=1,x=101,y=201
 i=2,x=102,y=202

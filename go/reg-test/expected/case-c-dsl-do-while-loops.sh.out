@@ -1,34 +1,19 @@
 
-mlr put -v while($i < 5) { $i += 1} ././reg-test/input/abixy
+mlr put -v while($i < 5) { $i += 1} ./reg-test/input/abixy
+DSL EXPRESSION:
+while($i < 5) { $i += 1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="while", type=WHILE:
-        text="<", type=OPERATOR:
-            text="i", type=FIELD_NAME.
-            text="5", type=NUMERIC_LITERAL.
-        text="while_block", type=STATEMENT_BLOCK:
-            text="=", type=SREC_ASSIGNMENT:
-                text="i", type=FIELD_NAME.
-                text="+", type=OPERATOR:
-                    text="i", type=FIELD_NAME.
-                    text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="while", type=WHILE:
-        text="<", type=OPERATOR:
-            text="i", type=FIELD_NAME.
-            text="5", type=NUMERIC_LITERAL.
-        text="while_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=SREC_ASSIGNMENT:
-                text="i", type=FIELD_NAME.
-                text="+", type=OPERATOR:
-                    text="i", type=FIELD_NAME.
-                    text="1", type=NUMERIC_LITERAL.
+* statement block
+    * while loop "while"
+        * operator "<"
+            * direct field value "i"
+            * int literal "5"
+        * statement block
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * int literal "1"
 
 a=pan,b=pan,i=5,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=5,x=0.7586799647899636,y=0.5221511083334797
@@ -41,36 +26,21 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr put -v do {$i += 1} while($i < 5) ././reg-test/input/abixy
+mlr put -v do {$i += 1} while($i < 5) ./reg-test/input/abixy
+DSL EXPRESSION:
+do {$i += 1} while($i < 5)
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="do", type=DO_WHILE:
-        text="do_while_block", type=STATEMENT_BLOCK:
-            text="=", type=SREC_ASSIGNMENT:
-                text="i", type=FIELD_NAME.
-                text="+", type=OPERATOR:
-                    text="i", type=FIELD_NAME.
-                    text="1", type=NUMERIC_LITERAL.
-        text="<", type=OPERATOR:
-            text="i", type=FIELD_NAME.
-            text="5", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="do", type=DO_WHILE:
-        text="do_while_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=SREC_ASSIGNMENT:
-                text="i", type=FIELD_NAME.
-                text="+", type=OPERATOR:
-                    text="i", type=FIELD_NAME.
-                    text="1", type=NUMERIC_LITERAL.
-        text="<", type=OPERATOR:
-            text="i", type=FIELD_NAME.
-            text="5", type=NUMERIC_LITERAL.
+* statement block
+    * do-while`loop "do"
+        * statement block
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * int literal "1"
+        * operator "<"
+            * direct field value "i"
+            * int literal "5"
 
 a=pan,b=pan,i=5,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=5,x=0.7586799647899636,y=0.5221511083334797
