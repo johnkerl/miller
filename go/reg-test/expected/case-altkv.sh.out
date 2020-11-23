@@ -1,0 +1,13 @@
+
+mlr
+Exit status was 1; expected 0.
+
+mlr
+Exit status was 1; expected 0.
+
+mlr --inidx --ifs comma altkv
+a=b,c=d,e=f
+
+mlr --inidx --ifs comma altkv
+a=b,c=d,e=f,4=g
+
