@@ -1,19 +1,18 @@
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-altkv.sh
 rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 rrv ./reg-test/cases/case-c-dsl-haskey.sh
+rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
+rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
 rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 rrv ./reg-test/cases/case-c-label.sh
-rrv ./reg-test/cases/case-c-remove-empty-columns.sh
 
 ================================================================
 FORMATTING?
 
-rrv ./reg-test/cases/case-c-clean-whitespace.sh
 rrv ./reg-test/cases/case-c-localvar-unsets.sh
 rrv ./reg-test/cases/case-c-dsl-operator-associativity.sh
 rrv ./reg-test/cases/case-c-dsl-operator-precedence.sh
@@ -21,7 +20,9 @@ rrv ./reg-test/cases/case-c-dsl-operator-precedence.sh
 ================================================================
 PARTIALLY IMPLEMENTED:
 
+rrv ./reg-test/cases/case-c-clean-whitespace.sh
 rrv ./reg-test/cases/case-c-cut.sh
+rrv ./reg-test/cases/case-c-localvar-unsets.sh
 
 ================================================================
 PPRINT --BARRED --RIGHT
@@ -47,7 +48,12 @@ rrv ./reg-test/cases/case-c-auxents.sh
 rrv ./reg-test/cases/case-c-bar.sh
 rrv ./reg-test/cases/case-c-compressed-input.sh
 rrv ./reg-test/cases/case-c-count-distinct.sh
+rrv ./reg-test/cases/case-c-csv-rs-environment-defaults.sh
+rrv ./reg-test/cases/case-c-dsl-gmt-date-time-functions.sh
 rrv ./reg-test/cases/case-c-dsl-local-date-time-functions.sh
+rrv ./reg-test/cases/case-c-dsl-mapvars-udfs-subroutines.sh
+rrv ./reg-test/cases/case-c-dsl-positional-indexing.sh
+rrv ./reg-test/cases/case-c-dsl-redirects.sh
 rrv ./reg-test/cases/case-c-dsl-regex-captures.sh
 rrv ./reg-test/cases/case-c-dsl-regex-matching.sh
 rrv ./reg-test/cases/case-c-fraction.sh
@@ -114,23 +120,15 @@ rrv ./reg-test/cases/case-c-dsl-typed-overlay.sh
 rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
 rrv ./reg-test/cases/case-c-dsl-user-defined-functions.sh
 rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
-rrv ./reg-test/cases/case-c-dsl-utf8-uppercase-lowercase.sh
 rrv ./reg-test/cases/case-c-format-conversion-keystroke-savers.sh
 rrv ./reg-test/cases/case-c-het-pprint-input.sh
 
 ================================================================
 TBD:
 
-rrv ./reg-test/cases/case-c-csv-rs-environment-defaults.sh
-rrv ./reg-test/cases/case-c-dsl-gmt-date-time-functions.sh
-rrv ./reg-test/cases/case-c-dsl-mapvars-udfs-subroutines.sh
-rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
-rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
 rrv ./reg-test/cases/case-c-dsl-parameterized-emit.sh
-rrv ./reg-test/cases/case-c-dsl-positional-indexing.sh
 rrv ./reg-test/cases/case-c-dsl-prefixed-unprefixed-emit.sh
 rrv ./reg-test/cases/case-c-dsl-print.sh
-rrv ./reg-test/cases/case-c-dsl-redirects.sh
 rrv ./reg-test/cases/case-c-dsl-scientific-notation.sh
 rrv ./reg-test/cases/case-c-dsl-stack-allocation.sh
 rrv ./reg-test/cases/case-c-format-values.sh

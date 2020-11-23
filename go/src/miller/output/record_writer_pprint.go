@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"unicode/utf8"
 
 	"miller/clitypes"
 	"miller/types"
@@ -89,7 +90,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 	for e := records.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*types.Mlrmap)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			width := len(pe.Value.String())
+			width := utf8.RuneCountInString(pe.Value.String())
 			if width == 0 {
 				width = 1 // We'll rewrite "" to "-" below
 			}
@@ -102,7 +103,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 
 	// Column name may be longer/shorter than all data values in the column
 	for key, oldMaxWidth := range maxWidths {
-		width := len(key)
+		width := utf8.RuneCountInString(key)
 		if width > oldMaxWidth {
 			maxWidths[key] = width
 		}
