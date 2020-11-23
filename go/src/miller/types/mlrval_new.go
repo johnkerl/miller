@@ -182,6 +182,10 @@ func MlrvalFromInferredType(input string) Mlrval {
 	// xxx the parsing has happened so stash it ...
 	// xxx emphasize the invariant that a non-invalid printrep always
 	// matches the nval ...
+	if input == "" {
+		return MlrvalFromVoid()
+	}
+
 	_, iok := lib.TryInt64FromString(input)
 	if iok {
 		return MlrvalFromInt64String(input)
