@@ -6,7 +6,8 @@ for arg; do
   if [ -f $src ]; then
     cp $src reg-test/expected
   elif [ -f $arg ]; then
-    cp $arg.out reg-test/expected
+    src=output-reg-test/$(basename $arg).out
+    cp $src reg-test/expected
   else
     echo "Cannot find source $arg" 1>&2
     exit 1

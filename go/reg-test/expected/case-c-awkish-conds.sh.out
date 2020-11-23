@@ -145,7 +145,52 @@ RAW AST:
                 * int literal "9"
 
 
-mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emitf @v,@w;dump}; $x=6; end{@z=9} /dev/null
+mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v;emit @w; dump}; $x=6; end{@z=9} /dev/null
+DSL EXPRESSION:
+begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v;emit @w; dump}; $x=6; end{@z=9}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "a"
+                * int literal "1"
+    * assignment "="
+        * direct field value "e"
+        * int literal "2"
+    * cond block
+        * operator "||"
+            * operator "=="
+                * direct field value "f"
+                * direct field value "g"
+            * operator "=="
+                * direct field value "h"
+                * direct field value "i"
+        * statement block
+            * assignment "="
+                * direct field value "s"
+                * int literal "1"
+            * assignment "="
+                * array or map index access "[]"
+                    * direct oosvar value "t"
+                    * operator "."
+                        * string literal "u"
+                        * direct field value "5"
+                * int literal "2"
+            * emit statement "emit"
+                * direct oosvar value "v"
+            * emit statement "emit"
+                * direct oosvar value "w"
+            * dump statement "dump"
+    * assignment "="
+        * direct field value "x"
+        * int literal "6"
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "z"
+                * int literal "9"
+
 
 mlr put -v begin{true{@x=1}}; true{@x=2}; end{true{@x=3}} /dev/null
 DSL EXPRESSION:

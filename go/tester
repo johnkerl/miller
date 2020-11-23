@@ -2,6 +2,7 @@
 
 # ================================================================
 # GO-SOURCE TESTS
+# Note reg-test/run has FAR more test cases
 # ================================================================
 
 # go test -v ./... doesn't work since it triggers unready things in
