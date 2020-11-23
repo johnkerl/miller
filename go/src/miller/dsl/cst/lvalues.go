@@ -461,6 +461,14 @@ func (this *FullOosvarLvalueNode) UnsetIndexed(
 // ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
 	typeGatedMlrvalName *types.TypeGatedMlrvalName
+
+	// a = 1;
+	// b = 1;
+	// if (true) {
+	//   a = 3;     <-- frameBind is false; updates outer a
+	//   var b = 4; <-- frameBind is true;  creates new inner b
+	// }
+	frameBind bool
 }
 
 func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
@@ -468,10 +476,12 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 
 	variableName := string(astNode.Token.Lit)
 	typeName := "var"
+	frameBind := false
 	if astNode.Children != nil { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
 		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
 		typeName = string(typeNode.Token.Lit)
+		frameBind = true
 	}
 	typeGatedMlrvalName, err := types.NewTypeGatedMlrvalName(
 		variableName,
@@ -483,14 +493,17 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 	// TODO: type-gated mlrval
 	return NewLocalVariableLvalueNode(
 		typeGatedMlrvalName,
+		frameBind,
 	), nil
 }
 
 func NewLocalVariableLvalueNode(
 	typeGatedMlrvalName *types.TypeGatedMlrvalName,
+	frameBind bool,
 ) *LocalVariableLvalueNode {
 	return &LocalVariableLvalueNode{
 		typeGatedMlrvalName: typeGatedMlrvalName,
+		frameBind:           frameBind,
 	}
 }
 
@@ -514,23 +527,19 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 			return err
 		}
 
-		// TODO: Needs BindVariable if done with a type
-		//
-		//   a = 1;
-		//   if (true) {
-		//     a = 2; <-- do reuse: SetVariable
-		//   }
-		//
-		//   a = 1;
-		//   if (true) {
-		//     var a = 2; <-- do not reuse: BindVariable
-		//   }
-
-		state.stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
+		if this.frameBind {
+			state.stack.BindVariable(this.typeGatedMlrvalName.Name, rvalue)
+		} else {
+			state.stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
+		}
 		return nil
 	} else {
 		// TODO: propagate error return
-		state.stack.SetVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+		if this.frameBind {
+			state.stack.BindVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+		} else {
+			state.stack.SetVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+		}
 		return nil
 	}
 }

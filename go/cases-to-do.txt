@@ -1,9 +1,6 @@
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
-* !!
-
 rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
 * mlr_expect_fail -n filter -v ''
   C: "filter statement must not be empty"
@@ -239,3 +236,4 @@ rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
 
 ================================================================
+rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
