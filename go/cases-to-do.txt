@@ -1,27 +1,88 @@
 ================================================================
-MULTI:
+NEED MORE LOOKING:
+
+rrv -C5 ./reg-test/cases/case-c-dsl-asserting.sh
+rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
+rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
+rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
+rrv ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
+rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
+rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
+rrv ./reg-test/cases/case-c-dsl-from-file.sh
+rrv ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
+rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
+rrv ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
+rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
+
+rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
+rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
+rrv ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
+rrv ./reg-test/cases/case-c-dsl-mapvars-in-scalar-function-call-contexts.sh
+rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
+rrv ./reg-test/cases/case-c-dsl-oosvars.sh
+rrv ./reg-test/cases/case-c-dsl-split-join.sh
+rrv ./reg-test/cases/case-c-dsl-type-inference.sh
+rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
+rrv ./reg-test/cases/case-c-dsl-typed-overlay.sh
+rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
+rrv ./reg-test/cases/case-c-dsl-user-defined-functions.sh
+rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
+rrv ./reg-test/cases/case-c-format-conversion-keystroke-savers.sh
+rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
+rrv ./reg-test/cases/case-c-multi-character-ixs.sh
+
+================================================================
+MULTIPLE ISSUES:
 
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 * bug mlr filter $nosuchfield>.3 ./reg-test/input/abixy
 * ofmt
 * env
+-> split up this big case-file
 
 * typeof prints different things -- regularize ...
 
 * 'x=' -> MT_EMPTY vs MT_STRING
 
 ================================================================
+LF/CRLF ETC.
+
+rrv ./reg-test/cases/case-c-missing-final-lf.sh
+
+================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
+rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
+* str s = "a"; s = 3 doesn't trigger -- needs gate-retention ...
+
+rrv ./reg-test/cases/case-c-dsl-for-map-depth.sh
+* Miller: looped-over item is not a map or array.
+  Needs to treat absent as zero-pass case
+
+rrv ./reg-test/cases/case-c-dsl-map-variant-dumps.sh
+* run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
+  Miller: couldn't assign variable var a from value absent (absent)
+
 rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
+* "conditional expression did not evaluate to boolean" -- versus @nonesuch {} P/A in C ...
+
 rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
+* Needs to do this:
+  "Continuation statements are split into the final boolean, and the statements before (if any)."
+
 rrv ./reg-test/cases/case-c-label.sh
+* needs uniqueness-checker
 
 ================================================================
 ENV
 
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
+
+================================================================
+PUT -S / -F
+
+rrv ./reg-test/cases/case-c-dsl-pythonic-division.sh
 
 ================================================================
 ARRAY/MAP
@@ -31,10 +92,29 @@ rrv ./reg-test/cases/case-c-dsl-haskey.sh
 
 rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
 
+rrv ./reg-test/cases/case-c-dsl-is-predicates.sh
+* {1:2} is empty-map in Go; should step up (populate) or step down (error)
+
+  func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
+      if this.mvtype != MT_MAP {
+          // TODO: need to be careful about semantics here.
+          // Silent no-ops are not good UX ...
+          return
+      }
+      if key.mvtype != MT_STRING {
+          // TODO: need to be careful about semantics here.
+          // Silent no-ops are not good UX ...
+          return
+      }
+      this.mapval.PutCopy(&key.printrep, value)
+  }
+
 ================================================================
 SUBR
 
+rrv ./reg-test/cases/case-c-dsl-trailing-commas.sh
 rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
+rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
 
 ================================================================
 FORMATTING?
@@ -79,6 +159,9 @@ rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
 
 ================================================================
 NOT IMPLEMENTED YET:
+
+rrv ./reg-test/cases/case-c-het-pprint-input.sh
+* new pprint reader not done yet
 
 rrv ./reg-test/cases/case-c-auxents.sh
 rrv ./reg-test/cases/case-c-bar.sh
@@ -126,44 +209,3 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
-
-================================================================
-NEED MORE LOOKING:
-
-rrv ./reg-test/cases/case-c-dsl-asserting.sh
-rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
-rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
-rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
-rrv ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
-rrv ./reg-test/cases/case-c-dsl-for-map-depth.sh
-rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
-rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-from-file.sh
-rrv ./reg-test/cases/case-c-dsl-is-predicates.sh
-rrv ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
-rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
-rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
-rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-map-variant-dumps.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
-rrv ./reg-test/cases/case-c-dsl-mapvars-in-scalar-function-call-contexts.sh
-rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-oosvars.sh
-rrv ./reg-test/cases/case-c-dsl-pythonic-division.sh
-rrv ./reg-test/cases/case-c-dsl-split-join.sh
-rrv ./reg-test/cases/case-c-dsl-trailing-commas.sh
-rrv ./reg-test/cases/case-c-dsl-type-inference.sh
-rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
-rrv ./reg-test/cases/case-c-dsl-typed-overlay.sh
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions.sh
-rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
-rrv ./reg-test/cases/case-c-format-conversion-keystroke-savers.sh
-rrv ./reg-test/cases/case-c-het-pprint-input.sh
-rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
-rrv ./reg-test/cases/case-c-missing-final-lf.sh
-rrv ./reg-test/cases/case-c-multi-character-ixs.sh

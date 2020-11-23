@@ -703,7 +703,11 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	// empty is true
 	if len(continuationExpressionASTNode.Children) == 1 {
 		bareBooleanASTNode := continuationExpressionASTNode.Children[0]
-		lib.InternalCodingErrorIf(bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean)
+		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
+			return nil, errors.New(
+				"Miller: the triple-for continutation statement must be a bare boolean.",
+			)
+		}
 		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
 
 		continuationExpressionNode, err = this.BuildEvaluableNode(bareBooleanASTNode.Children[0])
