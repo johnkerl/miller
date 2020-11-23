@@ -1,9 +1,29 @@
 ================================================================
+MULTI:
+
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
+* bug mlr filter $nosuchfield>.3 ./reg-test/input/abixy
+* ofmt
+* env
+
+  echo 'x=1,y=b' | ../c/mlr  put '$u=min($x,$y);$v=max($x,$y)'
+  echo 'x=1,y=b' | ../go/mlr put '$u=min($x,$y);$v=max($x,$y)'
+
+  echo 'x=a,y=2' | ../c/mlr  put '$u=min($x,$y);$v=max($x,$y)'
+  echo 'x=a,y=2' | ../go/mlr put '$u=min($x,$y);$v=max($x,$y)'
+
+  echo 'x=a,y=b' | ../c/mlr  put '$u=min($x,$y);$v=max($x,$y)'
+  echo 'x=a,y=b' | ../go/mlr put '$u=min($x,$y);$v=max($x,$y)'
+
+* check cmp matrices too
+
+* typeof prints different things -- regularize ...
+
+* 'x=' -> MT_EMPTY vs MT_STRING
+
+================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 rrv ./reg-test/cases/case-c-dsl-haskey.sh
 rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
 rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
@@ -11,8 +31,24 @@ rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 rrv ./reg-test/cases/case-c-label.sh
 
 ================================================================
+ENV
+
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
+
+================================================================
+ARRAY/MAP
+
+rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
+
+================================================================
+SUBR
+
+rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
+
+================================================================
 FORMATTING?
 
+rrv ./reg-test/cases/case-c-dsl-indirect-srec-assignments.sh
 rrv ./reg-test/cases/case-c-localvar-unsets.sh
 
 rrv ./reg-test/cases/case-c-dsl-operator-associativity.sh
@@ -23,6 +59,7 @@ PARTIALLY IMPLEMENTED:
 
 rrv ./reg-test/cases/case-c-clean-whitespace.sh
 rrv ./reg-test/cases/case-c-cut.sh
+rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-scientific-notation.sh
 rrv ./reg-test/cases/case-c-format-values.sh
 rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
@@ -112,8 +149,6 @@ rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
 rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-from-file.sh
-rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-indirect-srec-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-is-predicates.sh
 rrv ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
 rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
