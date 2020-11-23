@@ -15,32 +15,47 @@
 # ================================================================
 
 # ================================================================
-# Functions
+# STRUCTURE
 #
-# xxx note:
-# * side-global input $verbose
-# * side-global input $outfile
-# ... and why structured this way (so run_mlr lines can be compact)
-# * side-global in/out $num_invocations_tried
-# * side-global in/out $num_invocations_passed
-# * side-global in/out $num_invocations_failed
+# * reg-test/cases/case*.sh consist of "invocations" of Miller
+#
+# * Each case
+#     ./reg-test/cases/case-foo.sh
+#   has expected output
+#     ./reg-test/expected/case-foo.sh.out
+#     ./reg-test/expected/case-foo.sh.err
+#   and actuals
+#    output-reg-test/case-c-cat.sh.err
+#    output-reg-test/case-c-cat.sh.out
+#
+# * This script loops over all of the case-*.sh files and executes them via
+#   sourcing them with the Bash "." operator.
+#
+# * Each has lines of the form 'run_mlr ...' or 'mlr_expect_fail ...'.
+#   Those functions are defined here in this file. They take mlr command-lines
+#   as argumebnts.  They also take global variables $verbose, $outfile, and
+#   $errfile as side-inputs, and write global variables like
+#   $num_invocations_passed as side-outputs.
+#
+# * Each case can fail in the following ways:
+#   o A given 'run_mlr ...' invocation exits with non-zero when it should exit
+#     with zero.
+#   o A given 'mlr_expect_fail ...' invocation exits with zero when it should
+#     exit with non-zero.
+#   o The output of the invocations in the case's actual-output file differs
+#     from the case's expected-output file.
+#
+# ================================================================
 
-announce() {
-  echo >> $outfile
-  echo "================================================================" >> $outfile
-  echo "$@" >> $outfile
-  echo >> $outfile
-}
-
-mention() {
-  echo >> $outfile
-  echo ---------------------------------------------------------------- "$@" >> $outfile
-}
+# ================================================================
+# FUNCTIONS FOR USE BY THE CASE-FILES
 
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to the mlr
 # executable may vary.  Nonetheless for debugging it's crucial that we echo out
-# each command being executed. See also diff -I below.
+# each command being executed.
+
+# ----------------------------------------------------------------
 run_mlr() {
   # Use just "mlr" for info messages, not full path to mlr
   if [ "$verbose" = "true" ]; then
@@ -48,20 +63,27 @@ run_mlr() {
   fi
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
-  # Use path to mlr for invoking the command
+
+  # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
+  # Instead we use this '$errfile.$$' trick.
   $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+  status=$?
   cat $errfile.$$ >> $errfile
   rm $errfile.$$ # TODO comment this
-  num_invocations_attempted=`expr $num_invocations_attempted + 1`
-  status=$?
+
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`
   else
+    if [ "$verbose" = "true" ]; then
+      echo "Exit status was $status; expected 0."
+    fi
+    echo "Exit status was $status; expected 0." >> $outfile
     num_invocations_failed=`expr $num_invocations_failed + 1`
   fi
   echo >> $outfile
 }
 
+# ----------------------------------------------------------------
 mlr_expect_fail() {
   # Use just "mlr" for info messages
   if [ "$verbose" = "true" ]; then
@@ -71,41 +93,55 @@ mlr_expect_fail() {
   cat $errfile.$$ >> $errfile
   rm $errfile.$$ # TODO comment this
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
-  # Use path to mlr for invoking the command
-  stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 >>$outfile )
+
+  # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
+  # Instead we use this '$errfile.$$' trick.
+  $path_to_mlr "$@" >> $outfile 2> $errfile.$$
   status=$?
-  echo "${stderr_capture}" >> $outfile
-  if [ $status -ne 1 ]; then
+  cat $errfile.$$ >> $errfile
+  rm $errfile.$$ # TODO comment this
+
+  if [ $status -eq 1 ]; then
+    num_invocations_passed=`expr $num_invocations_passed + 1`
+  else
+    num_invocations_failed=`expr $num_invocations_failed + 1`
     if [ "$verbose" = "true" ]; then
       echo "Exit status was $status; expected 1."
     fi
     echo "Exit status was $status; expected 1." >> $outfile
   fi
-  if [ $status -ne 0 ]; then
-    num_invocations_passed=`expr $num_invocations_passed + 1`
-  else
-    num_invocations_failed=`expr $num_invocations_failed + 1`
-  fi
   echo >> $outfile
 }
 
+# ----------------------------------------------------------------
 run_mlr_no_output() {
-  # Use just "mlr" for info messages
+  # Use just "mlr" for info messages, not full path to mlr
+  if [ "$verbose" = "true" ]; then
+    echo mlr "$@"
+  fi
   echo mlr "$@" >> $outfile
   num_invocations_attempted=`expr $num_invocations_attempted + 1`
-  # Use path to mlr for invoking the command
+
+  # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
+  # Instead we use this '$errfile.$$' trick.
   $path_to_mlr "$@" 2> $errfile.$$
+  status=$?
   cat $errfile.$$ >> $errfile
   rm $errfile.$$ # TODO comment this
-  status=$?
+
   if [ $status -eq 0 ]; then
     num_invocations_passed=`expr $num_invocations_passed + 1`
   else
+    if [ "$verbose" = "true" ]; then
+      echo "Exit status was $status; expected 0."
+    fi
+    echo "Exit status was $status; expected 0." >> $outfile
     num_invocations_failed=`expr $num_invocations_failed + 1`
   fi
   echo >> $outfile
 }
 
+# ----------------------------------------------------------------
 # Just cats a file while also announcing that fact.
 run_cat() {
   if [ "$verbose" = "true" ]; then
@@ -117,29 +153,43 @@ run_cat() {
 }
 
 # ----------------------------------------------------------------
-usage() {
-	echo "Usage: $(basename $0) [case*sh filenames]" 1>&2
-    echo "Options:" 1>&2
-    echo "-h   Print this message" 1>&2
-    echo "-v   More verbose output including each mlr-invocation line, and diff outputs" 1>&2
-    echo "-m {path/to/mlr} Use a specified mlr executable" 1>&2
-    echo "-c   Use ../c/mlr executable" 1>&2
-    echo "-g   Use ../go/mlr executable" 1>&2
-    echo "-o   Run only old case-c-* cases" 1>&2
-    echo "-n   Run only new case-c-* cases" 1>&2
-	exit 1
+announce() {
+  echo >> $outfile
+  echo "================================================================" >> $outfile
+  echo "$@" >> $outfile
+  echo >> $outfile
+}
+
+# ----------------------------------------------------------------
+mention() {
+  echo >> $outfile
+  echo ---------------------------------------------------------------- "$@" >> $outfile
 }
 
 # ================================================================
-# Start of script
+# START OF SCRIPT PER SE
 
+# ----------------------------------------------------------------
+usage() {
+	echo "Usage: $(basename $0) [case*sh filenames]" 1>&2
+    echo "Options:" 1>&2
+    echo "-h     Print this message" 1>&2
+    echo "-v     More verbose output including each mlr-invocation line, and diff outputs" 1>&2
+    echo "-m {path/to/mlr} Use a specified mlr executable" 1>&2
+    echo "-c     Use ../c/mlr executable" 1>&2
+    echo "-g     Use ../go/mlr executable" 1>&2
+    echo "-o     Run only old case-c-* cases" 1>&2
+    echo "-n     Run only new case-c-* cases" 1>&2
+    echo "-C {n} Passed directly to diff" 1>&2
+	exit 1
+}
+
+# ----------------------------------------------------------------
+# These next few lines let us be invoked from another directory.
 pwd=$(pwd)
 ourdir=`dirname $0`
 srcdir=$ourdir/../..
 path_to_mlr=$srcdir/go/mlr
-if [ ! -x "$path_to_mlr" ]; then
-  echo "$0: Could not find path to mlr executable $path_to_mlr." 1>&2
-fi
 
 # Input/output locations
 indir=$ourdir/input
@@ -149,8 +199,9 @@ reloutdir=./output-reg-test
 
 verbose="false"
 case_file_names="" # None means all
+diff_context_flag=""
 
-while getopts vcgnom:h f
+while getopts vcgnom:C:h f
 do
 	case $f in
 	v)      verbose="true";                   continue;;
@@ -159,15 +210,27 @@ do
 	m)      path_to_mlr="$OPTARG";            continue;;
 	o)      case_file_names=$(ls $ourdir/cases/case-c-*.sh); continue;;
 	n)      case_file_names=$(ls $ourdir/cases/case-go-*.sh); continue;;
+	C)      diff_context_flag="-C$OPTARG";    continue;;
 	h)      echo; usage;;
 	esac
 done
+
+# No case-file names means all of them
 shift $(($OPTIND-1))
 if [ "$case_file_names" = "" ]; then
   case_file_names="$@"
 fi
+if [ "$case_file_names" = "" ]; then
+    case_file_names=$(ls $ourdir/cases/case-*.sh)
+fi
+
+if [ ! -x "$path_to_mlr" ]; then
+  echo "$0: Could not find path to mlr executable $path_to_mlr." 1>&2
+fi
 
 # ----------------------------------------------------------------
+# Set up for green "PASS", red "FAIL" if output is to a terminal.
+
 if [ "$(uname)" = "Darwin" ]; then
   export        textdefault=$'\033[0m'
   export                red=$'\033[31;01m'
@@ -188,53 +251,32 @@ else
 fi
 
 # ----------------------------------------------------------------
-mkdir -p $outdir
-
-# Don't let the running user's .mlrrc affect the regression test
-export MLRRC="__none__"
+# Prep for output
 
 rm -rf $outdir
 mkdir -p $outdir
 
 echo Using mlr executable $path_to_mlr
 
-# ----------------------------------------------------------------
-# TODO: comments:
-# * Input-globals:
-#   o path_to_mlr
-#   o verbose
-#   o outfile (changes)
-#
-# * State-globals:
-#   o num_invocations_attempted
-#   o num_invocations_passed
-#   o num_invocations_failed
-#
-# * Sketch:
-#   o Discover well-ordered *.case files
-#   o Contents are as now: announce, run_mlr, mlr_expect_fail
-#   o Count global #pass #fail, as well as per-case-file #pass #fail
-#   o Set verbose here
-#   o Execute each case file with redirected output. Only details if -v.
-# ----------------------------------------------------------------
+# Don't let the running user's .mlrrc affect the regression test
+export MLRRC="__none__"
 
-# Over all cases:
+# ----------------------------------------------------------------
+# Set side-globals used by the case-files.
+
 num_cases_attempted=0
 num_cases_passed=0
 num_cases_failed=0
 
+# ----------------------------------------------------------------
+# Set counters for this main script.
 total_num_invocations_attempted=0
 
-if [ "$case_file_names" = "" ]; then
-    case_file_names=$(ls $ourdir/cases/case-*.sh)
-fi
+
+# ----------------------------------------------------------------
+# Run the case-files.
 
 for case_file in $case_file_names; do
-
-  # Per case:
-  num_invocations_attempted=0
-  num_invocations_passed=0
-  num_invocations_failed=0
 
   if [ "$verbose" = "true" ] ; then
     echo ""
@@ -243,13 +285,17 @@ for case_file in $case_file_names; do
     echo ""
   fi
 
+  # Side-globals set/read per case:
+  num_invocations_attempted=0
+  num_invocations_passed=0
+  num_invocations_failed=0
+
   case_name=$(basename $case_file)
   outfile=$outdir/$case_name.out
   errfile=$outdir/$case_name.err
   expfile=$expdir/$case_name.out
 
   echo > $outfile
-
   num_cases_attempted=`expr $num_cases_attempted + 1`
 
   # ----------------------------------------------------------------
@@ -266,11 +312,17 @@ for case_file in $case_file_names; do
     case_passed=false
   fi
 
+  # TODO: check the errfiles too
   if [ "$verbose" = "true" ]; then
-    echo diff -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
-    diff -a -I '^mlr' -I '^cat' -C5 $expfile $outfile
+    echo ""
+    echo "num_invocations_attempted  $num_invocations_attempted"
+    echo "num_invocations_passed     $num_invocations_passed"
+    echo "num_invocations_failed     $num_invocations_failed"
+    echo ""
+    echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
+    diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
   else
-    diff -q -a -I '^mlr' -I '^cat' -C5 $expfile $outfile > /dev/null
+    diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile > /dev/null
   fi
   status=$?
   if [ $status -ne 0 ]; then
@@ -296,13 +348,15 @@ for case_file in $case_file_names; do
   total_num_invocations_attempted=`expr $total_num_invocations_attempted + $num_invocations_attempted`
 done
 
+# ----------------------------------------------------------------
+# SUMMARIZE
+
 echo
 echo "NUMBER OF MILLER RUNS $total_num_invocations_attempted"
 echo "NUMBER OF CASES PASSED $num_cases_passed"
 echo "NUMBER OF CASES FAILED $num_cases_failed"
 echo
 
-# ----------------------------------------------------------------
 if [ $num_cases_failed -eq 0 ]; then
   echo "$PASS"
   exit 0

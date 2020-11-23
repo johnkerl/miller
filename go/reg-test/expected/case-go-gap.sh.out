@@ -1,11 +1,5 @@
 
 mlr --from ./reg-test/input/ten.dkvp gap
-Usage: ./reg-test/../../go/mlr gap [options]
-Emits an empty record every n records, or when certain values change.
- -g (default ) Print a gap whenever values of these fields (e.g. a,b,c) changes
- -n (default -1) Print a gap every n records.
-One of -f or -g is required.
--n is ignored if -g is present.
 
 mlr --from ./reg-test/input/ten.dkvp gap -n 4
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
