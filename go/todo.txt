@@ -338,3 +338,4 @@ NITS/NON-IMMEDIATE:
 * comment schema-change supported only in csvlite reader, not csv reader
 * for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
 * neaten mlr gap -g (default) print
+* case-c-* / case-go-* -> case-* eventually

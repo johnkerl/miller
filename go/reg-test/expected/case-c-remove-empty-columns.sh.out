@@ -1,7 +1,0 @@
-
-mlr --csv remove-empty-columns ./reg-test/input/remove-empty-columns.csv
-b,c,d
-2,3,4
-6,,8
-,11,12
-

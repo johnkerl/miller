@@ -1,3 +1,5 @@
+run_mlr --csv remove-empty-columns $indir/remove-empty-columns.csv
+
 run_mlr --from $indir/s.csv                    --icsv --opprint remove-empty-columns
 run_mlr --from $indir/remove-empty-columns.csv --icsv --opprint cat
 run_mlr --from $indir/remove-empty-columns.csv --icsv --opprint remove-empty-columns

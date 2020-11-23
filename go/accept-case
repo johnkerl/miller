@@ -3,9 +3,12 @@
 # See ./reg-test/run
 for arg; do
   src=output-reg-test/$arg.out
-  if [ ! -f $src ]; then
-    echo "Cannot find source $src" 1>&2
+  if [ -f $src ]; then
+    cp $src reg-test/expected
+  elif [ -f $arg ]; then
+    cp $arg.out reg-test/expected
+  else
+    echo "Cannot find source $arg" 1>&2
     exit 1
   fi
-  cp $src reg-test/expected
 done
