@@ -1,6 +1,6 @@
 mention key-only fors
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -10,7 +10,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -20,7 +20,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k in {ab : xy}) {
@@ -28,7 +28,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -41,7 +41,7 @@ run_mlr --from $indir/abixy-het put '
 
 mention key-value fors with scalar values
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -51,7 +51,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -61,7 +61,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k, v in {ab : xy}) {
@@ -69,7 +69,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -83,7 +83,7 @@ run_mlr --from $indir/abixy-het put '
 
 mention key-value fors with map values
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -94,7 +94,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -105,7 +105,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k, v in {ab : {"foo": xy}}) {
@@ -114,7 +114,7 @@ run_mlr --from $indir/abixy-het put '
   }
 '
 
-run_mlr --from $indir/abixy-het put '
+run_mlr --from $indir/abixy-het put -q '
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;

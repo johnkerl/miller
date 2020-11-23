@@ -1,674 +1,331 @@
 
 mlr -n put -v 
+DSL EXPRESSION:
+
 RAW AST:
-
-AST ROOT:
-(null)
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
 
 
 mlr -n filter -v 
-RAW AST:
+DSL EXPRESSION:
 
-AST ROOT:
-(null)
-mlr: filter statement must not be empty.
+RAW AST:
+* statement block
+
+Exit status was 0; expected 1.
 
 mlr -n put -v begin {}
+DSL EXPRESSION:
+begin {}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
 
 
 mlr -n put -v begin {;}
+DSL EXPRESSION:
+begin {;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
 
 
 mlr -n put -v begin {;;}
+DSL EXPRESSION:
+begin {;;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
 
 
 mlr -n put -v begin {;;;}
+DSL EXPRESSION:
+begin {;;;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
 
 
 mlr -n put -v begin {@x=1}
+DSL EXPRESSION:
+begin {@x=1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v begin {@x=1;}
+DSL EXPRESSION:
+begin {@x=1;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v begin {;@x=1}
+DSL EXPRESSION:
+begin {;@x=1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v begin {@x=1;@y=2}
+DSL EXPRESSION:
+begin {@x=1;@y=2}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="y", type=STRING_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
 
 
 mlr -n put -v begin {@x=1;;@y=2}
+DSL EXPRESSION:
+begin {@x=1;;@y=2}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="y", type=STRING_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
 
 
 mlr -n put -v true {}
+DSL EXPRESSION:
+true {}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
 
 
 mlr -n put -v true {;}
+DSL EXPRESSION:
+true {;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
 
 
 mlr -n put -v true {;;}
+DSL EXPRESSION:
+true {;;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
 
 
 mlr -n put -v true {;;;}
+DSL EXPRESSION:
+true {;;;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
 
 
 mlr -n put -v true {@x=1}
+DSL EXPRESSION:
+true {@x=1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v true {@x=1;}
+DSL EXPRESSION:
+true {@x=1;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v true {;@x=1}
+DSL EXPRESSION:
+true {;@x=1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v true {@x=1;@y=2}
+DSL EXPRESSION:
+true {@x=1;@y=2}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
 
 
 mlr -n put -v true {@x=1;;@y=2}
+DSL EXPRESSION:
+true {@x=1;;@y=2}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=1
-    text="cond", type=CONDITIONAL_BLOCK:
-        text="true", type=BOOLEAN_LITERAL.
-        text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=0
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
 
 
 mlr -n put -v end {}
+DSL EXPRESSION:
+end {}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
 
 
 mlr -n put -v end {;}
+DSL EXPRESSION:
+end {;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
 
 
 mlr -n put -v end {;;}
+DSL EXPRESSION:
+end {;;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
 
 
 mlr -n put -v end {;;;}
+DSL EXPRESSION:
+end {;;;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
 
 
 mlr -n put -v end {@x=1}
+DSL EXPRESSION:
+end {@x=1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v end {@x=1;}
+DSL EXPRESSION:
+end {@x=1;}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v end {;@x=1}
+DSL EXPRESSION:
+end {;@x=1}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
 
 
 mlr -n put -v end {@x=1;@y=2}
+DSL EXPRESSION:
+end {@x=1;@y=2}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="y", type=STRING_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
 
 
 mlr -n put -v end {@x=1;;@y=2}
+DSL EXPRESSION:
+end {@x=1;;@y=2}
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="x", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="y", type=STRING_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="x", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="y", type=STRING_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
 
 

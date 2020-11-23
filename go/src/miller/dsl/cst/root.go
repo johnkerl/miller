@@ -25,6 +25,7 @@ func NewEmptyRoot() *RootNode {
 }
 
 // ----------------------------------------------------------------
+// TODO: take isFilter arg and abend if empty
 func Build(ast *dsl.AST) (*RootNode, error) {
 	if ast.RootNode == nil {
 		return nil, errors.New("Cannot build CST from nil AST root")

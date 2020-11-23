@@ -1,7 +1,7 @@
 
 
 ---------------------------------------------------------------- key-only fors
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -11,27 +11,17 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -41,27 +31,17 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k in {ab : xy}) {
@@ -69,27 +49,17 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -100,29 +70,19 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- key-value fors with scalar values
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -132,27 +92,17 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan  v is 0.346790_0.726803
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 0.758680_0.522151
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 0.204603_0.338319
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 0.381399_0.134189
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is _0.863624
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 0.527126_0.493221
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 0.611784_0.187885
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 0.598554_
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 0.031442_0.749551
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -162,27 +112,17 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan  v is 0.346790_0.726803
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 0.758680_0.522151
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 0.204603_0.338319
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 0.381399_0.134189
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is _0.863624
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 0.527126_0.493221
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 0.611784_0.187885
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 0.598554_
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 0.031442_0.749551
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k, v in {ab : xy}) {
@@ -190,27 +130,17 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan  v is 0.346790_0.726803
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 0.758680_0.522151
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 0.204603_0.338319
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 0.381399_0.134189
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is _0.863624
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 0.527126_0.493221
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 0.611784_0.187885
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 0.598554_
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 0.031442_0.749551
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -221,29 +151,19 @@ mlr --from ./reg-test/input/abixy-het put
   }
 
 k is pan_pan  v is 0.346790_0.726803
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 0.758680_0.522151
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 0.204603_0.338319
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 0.381399_0.134189
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is _0.863624
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 0.527126_0.493221
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 0.611784_0.187885
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 0.598554_
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 0.031442_0.749551
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 0.502626_0.952618
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- key-value fors with map values
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   map o = {};
@@ -257,54 +177,44 @@ k is pan_pan  v is
 {
   "foo": "0.346790_0.726803"
 }
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 
 {
   "foo": "0.758680_0.522151"
 }
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 
 {
   "foo": "0.204603_0.338319"
 }
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 
 {
   "foo": "0.381399_0.134189"
 }
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is 
 {
   "foo": "_0.863624"
 }
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 
 {
   "foo": "0.527126_0.493221"
 }
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 
 {
   "foo": "0.611784_0.187885"
 }
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 
 {
   "foo": "0.598554_"
 }
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 
 {
   "foo": "0.031442_0.749551"
 }
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 
 {
   "foo": "0.502626_0.952618"
 }
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   unset @o;
@@ -318,54 +228,44 @@ k is pan_pan  v is
 {
   "foo": "0.346790_0.726803"
 }
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 
 {
   "foo": "0.758680_0.522151"
 }
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 
 {
   "foo": "0.204603_0.338319"
 }
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 
 {
   "foo": "0.381399_0.134189"
 }
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is 
 {
   "foo": "_0.863624"
 }
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 
 {
   "foo": "0.527126_0.493221"
 }
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 
 {
   "foo": "0.611784_0.187885"
 }
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 
 {
   "foo": "0.598554_"
 }
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 
 {
   "foo": "0.031442_0.749551"
 }
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 
 {
   "foo": "0.502626_0.952618"
 }
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   ab = $a . "_" . $b;
   xy = $x . "_" . $y;
   for (k, v in {ab : {"foo": xy}}) {
@@ -377,54 +277,44 @@ k is pan_pan  v is
 {
   "foo": "0.346790_0.726803"
 }
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 
 {
   "foo": "0.758680_0.522151"
 }
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 
 {
   "foo": "0.204603_0.338319"
 }
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 
 {
   "foo": "0.381399_0.134189"
 }
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is 
 {
   "foo": "_0.863624"
 }
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 
 {
   "foo": "0.527126_0.493221"
 }
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 
 {
   "foo": "0.611784_0.187885"
 }
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 
 {
   "foo": "0.598554_"
 }
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 
 {
   "foo": "0.031442_0.749551"
 }
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 
 {
   "foo": "0.502626_0.952618"
 }
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --from ./reg-test/input/abixy-het put 
+mlr --from ./reg-test/input/abixy-het put -q 
   func f(a, b, x, y): map {
     ab = $a . "_" . $b;
     xy = $x . "_" . $y;
@@ -439,50 +329,40 @@ k is pan_pan  v is
 {
   "foo": "0.346790_0.726803"
 }
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 k is eks_pan  v is 
 {
   "foo": "0.758680_0.522151"
 }
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 k is _wye  v is 
 {
   "foo": "0.204603_0.338319"
 }
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 k is eks_  v is 
 {
   "foo": "0.381399_0.134189"
 }
-a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 k is wye_pan  v is 
 {
   "foo": "_0.863624"
 }
-a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
 k is zee_pan  v is 
 {
   "foo": "0.527126_0.493221"
 }
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 k is eks_zee  v is 
 {
   "foo": "0.611784_0.187885"
 }
-a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 k is zee_wye  v is 
 {
   "foo": "0.598554_"
 }
-a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 k is _  v is 
 {
   "foo": "0.031442_0.749551"
 }
-aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 k is pan_wye  v is 
 {
   "foo": "0.502626_0.952618"
 }
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 

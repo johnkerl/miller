@@ -1,59 +1,22 @@
 ================================================================
-NEED MORE LOOKING:
-
-rrv -C5 ./reg-test/cases/case-c-dsl-asserting.sh
-rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
-rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
-rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
-rrv ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
-rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
-rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-from-file.sh
-rrv ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
-rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
-rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
-
-rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
-rrv ./reg-test/cases/case-c-dsl-mapvars-in-scalar-function-call-contexts.sh
-rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-oosvars.sh
-rrv ./reg-test/cases/case-c-dsl-split-join.sh
-rrv ./reg-test/cases/case-c-dsl-type-inference.sh
-rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
-rrv ./reg-test/cases/case-c-dsl-typed-overlay.sh
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions.sh
-rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
-rrv ./reg-test/cases/case-c-format-conversion-keystroke-savers.sh
-rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
-rrv ./reg-test/cases/case-c-multi-character-ixs.sh
-
-================================================================
-MULTIPLE ISSUES:
-
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
-* bug mlr filter $nosuchfield>.3 ./reg-test/input/abixy
-* ofmt
-* env
--> split up this big case-file
-
-* typeof prints different things -- regularize ...
-
-* 'x=' -> MT_EMPTY vs MT_STRING
-
-================================================================
-LF/CRLF ETC.
-
-rrv ./reg-test/cases/case-c-missing-final-lf.sh
-
-================================================================
 BUG:
 
+rrv -C1 ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
+* absent-bind discrepancy between C & Go
+
+rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
+rrv -C1 ./reg-test/cases/case-c-dsl-context-specific-validation.sh
+* subr and more ... also needs check for filter statement within filter commands
+
+rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
+* mlr_expect_fail -n filter -v ''
+  C: "filter statement must not be empty"
+
+rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
+
+rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
+rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
 * str s = "a"; s = 3 doesn't trigger -- needs gate-retention ...
 
 rrv ./reg-test/cases/case-c-dsl-for-map-depth.sh
@@ -75,17 +38,55 @@ rrv ./reg-test/cases/case-c-label.sh
 * needs uniqueness-checker
 
 ================================================================
+MULTIPLE ISSUES:
+
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
+* bug mlr filter $nosuchfield>.3 ./reg-test/input/abixy
+* ofmt
+* env
+-> split up this big case-file
+
+* typeof prints different things -- regularize ...
+
+* 'x=' -> MT_EMPTY vs MT_STRING
+
+================================================================
+LF/CRLF ETC.
+
+rrv ./reg-test/cases/case-c-multi-character-ixs.sh
+rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
+rrv ./reg-test/cases/case-c-missing-final-lf.sh
+
+================================================================
 ENV
 
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 
 ================================================================
-PUT -S / -F
+PUT -S / -F / -A
 
+rrv ./reg-test/cases/case-c-dsl-type-inference.sh
+rrv -C1 ./reg-test/cases/case-c-dsl-for-srec-loops.sh
+rrv -C1 ./reg-test/cases/case-c-dsl-type-inference.sh
 rrv ./reg-test/cases/case-c-dsl-pythonic-division.sh
+
+rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
+rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
+* put -a
 
 ================================================================
 ARRAY/MAP
+
+rrv -C5 ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
+
+rrv ./reg-test/cases/case-c-dsl-split-join.sh
+rrv -C5 ./reg-test/cases/case-c-dsl-asserting.sh
+rrv -C1 ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
+* int map keys
+
+rrv -C1 ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
+* int map keys
 
 rrv ./reg-test/cases/case-c-dsl-haskey.sh
 * haskey({3:4}, 3)
@@ -112,6 +113,11 @@ rrv ./reg-test/cases/case-c-dsl-is-predicates.sh
 ================================================================
 SUBR
 
+rrv -C1 ./reg-test/cases/case-c-dsl-context-specific-validation.sh
+* subr and more ... also needs check for filter statement within filter commands
+
+rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
+rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
 rrv ./reg-test/cases/case-c-dsl-trailing-commas.sh
 rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
@@ -119,11 +125,12 @@ rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
 ================================================================
 FORMATTING?
 
+rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-indirect-srec-assignments.sh
-rrv ./reg-test/cases/case-c-localvar-unsets.sh
-
 rrv ./reg-test/cases/case-c-dsl-operator-associativity.sh
 rrv ./reg-test/cases/case-c-dsl-operator-precedence.sh
+rrv ./reg-test/cases/case-c-dsl-typed-overlay.sh
+rrv ./reg-test/cases/case-c-localvar-unsets.sh
 
 ================================================================
 PARTIALLY IMPLEMENTED:
@@ -150,18 +157,38 @@ BACKWARD INCOMPATIBILITIES:
 rrv ./reg-test/cases/case-c-dsl-print.sh
 rrv ./reg-test/cases/case-c-dsl-substr.sh
 
+rrv -C20 ./reg-test/cases/case-c-dsl-user-defined-functions.sh
+* array 1-up
+
 ================================================================
-NEED EMITP:
+NEED EMITP/MULTI-EMIT
 
 rrv ./reg-test/cases/case-c-dsl-absent-empty.sh
 rrv ./reg-test/cases/case-c-dsl-break-continue.sh
 rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
+rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
+rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
+
+rrv -C20 ./reg-test/cases/case-c-dsl-type-predicates.sh
+* multi-emit
 
 ================================================================
 NOT IMPLEMENTED YET:
 
+rrv ./reg-test/cases/case-c-format-conversion-keystroke-savers.sh
+* needs --ipprint
+
+rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
+* regex
+
+rrv -C1 ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
+* regexi
+
 rrv ./reg-test/cases/case-c-het-pprint-input.sh
 * new pprint reader not done yet
+
+rrv ./reg-test/cases/case-c-dsl-oosvars.sh
+* uses mlr step
 
 rrv ./reg-test/cases/case-c-auxents.sh
 rrv ./reg-test/cases/case-c-bar.sh
@@ -209,3 +236,5 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
+
+================================================================
