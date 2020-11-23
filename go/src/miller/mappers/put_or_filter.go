@@ -132,6 +132,16 @@ func mapperPutParseCLI(
 			verbose = true
 			argi++
 
+		} else if args[argi] == "-S" {
+			// TODO: this is a no-op in Miller 6 and above.
+			// Comment this in more detail.
+			argi++
+
+		} else if args[argi] == "-F" {
+			// TODO: this is a no-op in Miller 6 and above.
+			// Comment this in more detail.
+			argi++
+
 		} else {
 			mapperPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)

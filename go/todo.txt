@@ -17,8 +17,7 @@ no need to bootstrap a parser for the parser-generator language
   - mlr label: check unique
   - rr --show option to cat out the .out files ...
 
-! two bugs on set-var/bind-var
-  - track w or w/o type at 'var a = 2' & SV/BV accordingly
+! bug on set-var/bind-var
   - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
 
 ! int map keys: what to do with:
