@@ -17,9 +17,10 @@ no need to bootstrap a parser for the parser-generator language
   - diff the *.err files -- ?
   - mlr label: check unique
 
-! two bugs on set-var/bind-var
+! three bugs on set-var/bind-var
   - track w or w/o type at 'var a = 2' & SV/BV accordingly
   - two-level structure in Stack w/ fences: if/for aren't on the same footing as func/subr
+  - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
 
 ! int map keys: what to do with:
   o '{1:2}' treat as '{"1":2}'

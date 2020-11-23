@@ -10,6 +10,27 @@ import (
 
 // ================================================================
 // Stack frames for begin/end/if/for/function blocks
+//
+// A Miller DSL stack has two levels of nesting:
+// * A Stack contains a list of StackFrameset, one per function or Miller outermost statement block
+// * A StackFrameset contains a list of StackFrame, one per if/for/etc within a function
+//
+// This is because of the following.
+//
+// (1) a = 1              <-- outer stack frame in same frameset
+//     if (condition) {   <-- inner stack frame in same frameset
+//       a = 2            <-- this should update the outer 'a', not create new inner 'a'
+//     }
+//
+// (2) a = 1              <-- outer stack frame in same frameset
+//     if (condition) {   <-- inner stack frame in same frameset
+//       var a = 2        <-- this should create new inner 'a', not update the outer 'a'
+//     }
+//
+// (3) a = 1              <-- outer stack frame
+//     func f() {         <-- stack frame in a new frameset
+//       a = 2            <-- this should create new inner 'a', not update the outer 'a'
+//     }
 // ================================================================
 
 // ----------------------------------------------------------------
