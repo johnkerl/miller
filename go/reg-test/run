@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# TODO: NEEDS A FULL RE-COMMENT PASS
+set -uo pipefail
 
 # ================================================================
 # MILLER REGRESSION SCRIPT
@@ -38,6 +38,7 @@
 #   $num_invocations_passed as side-outputs.
 #
 # * Each case can fail in the following ways:
+#   o Zero invocatios were attempted.
 #   o A given 'run_mlr ...' invocation exits with non-zero when it should exit
 #     with zero.
 #   o A given 'mlr_expect_fail ...' invocation exits with zero when it should
@@ -295,20 +296,42 @@ for case_file in $case_file_names; do
   errfile=$outdir/$case_name.err
   expfile=$expdir/$case_name.out
 
+  case_passed=true
+
   echo > $outfile
   num_cases_attempted=`expr $num_cases_attempted + 1`
+
+  # Note that 'echo "..." | run_mlr ... ' would be nice in case-files, but, I had
+  # issues with the $num_invocations_attempted not tracking correctly in
+  # reg-test/run when run_mlr is at the end of a pipe :(. So, I enforce
+  # the discipline of always using here-documents ("<<EOF").
+  grep 'echo.*|' $case_file > /dev/null 2> /dev/null
+  status=$?
+  if [ $status -eq 0 ]; then
+    echo "$0: Please edit $case_file and replace 'echo ... | run_mlr ...' lines with 'run_mlr ... <EOF'"
+    case_passed=false
+  fi
 
   # ----------------------------------------------------------------
   # Run all invocations in the case:
   . $case_file
   # ----------------------------------------------------------------
 
-  # There are two ways to fail:
+  # There are two ways to fail here:
   # * Miller-command code was 0 not 1 (or vice versa) -- checked per-invocation
   # * Expected/actual output mismatch -- checked per-case
 
-  case_passed=true
   if [ $num_invocations_failed -ne 0 ]; then
+    if [ "$verbose" = "true" ]; then
+      echo "Case failed due to num_invocations_failed > 0"
+    fi
+    case_passed=false
+  fi
+
+  if [ $num_invocations_attempted -eq 0 ]; then
+    if [ "$verbose" = "true" ]; then
+      echo "Case failed due to num_invocations_attempted == 0"
+    fi
     case_passed=false
   fi
 
@@ -326,6 +349,9 @@ for case_file in $case_file_names; do
   fi
   status=$?
   if [ $status -ne 0 ]; then
+    if [ "$verbose" = "true" ]; then
+      echo "Case failed due to expected output != actual output"
+    fi
     case_passed=false
   fi
 

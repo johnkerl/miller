@@ -6,9 +6,15 @@ run_mlr --xtab filter    '999   != $pi1 + $pi2' $indir/mixed-types.xtab
 run_mlr --xtab filter -F '999   != $pi1 + $pi2' $indir/mixed-types.xtab
 run_mlr --xtab filter -S '"999" != $pi1 . $pi2' $indir/mixed-types.xtab
 
-echo a=1,b=2.0 | run_mlr --oxtab put    '$s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);'
-echo a=1,b=2.0 | run_mlr --oxtab put -F '$s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);'
-echo a=1,b=2.0 | run_mlr --oxtab put -S '$s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);'
+run_mlr --oxtab put    '$s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);' <<EOF
+a=1,b=2.0
+EOF
+run_mlr --oxtab put -F '$s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);' <<EOF
+a=1,b=2.0
+EOF
+run_mlr --oxtab put -S '$s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);' <<EOF
+a=1,b=2.0
+EOF
 
 run_mlr --xtab put    '$y=abs($pf1)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$y=abs($nf1)' $indir/mixed-types.xtab
@@ -121,4 +127,6 @@ run_mlr --xtab put    '$a=roundm($pf1,10)  ;$b=roundm($pf1,-10)  ' $indir/mixed-
 run_mlr --xtab put    '$a=roundm($pi1,10.0);$b=roundm($pi1,-10.0)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$a=roundm($pi1,10)  ;$b=roundm($pi1,-10)  ' $indir/mixed-types.xtab
 
-echo 'x=3,y=4' | run_mlr --oxtab put '$z=$x+$y; $a=3+4; $b="3"."4"; $c="3"+4'
+run_mlr --oxtab put '$z=$x+$y; $a=3+4; $b="3"."4"; $c="3"+4' <<EOF
+x=3,y=4
+EOF

@@ -63,7 +63,18 @@ run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0="\
 run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
 run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
 
-echo 'abcdefg' | run_mlr --inidx --odkvp put '$1 =~ "ab(.)d(..)g"  { $c1 = "\1"; $c2 = "\2"}'
-echo 'abcdefg' | run_mlr --inidx --odkvp put '$1 =~ "ab(.)?d(..)g" { $c1 = "\1"; $c2 = "\2"}'
-echo 'abXdefg' | run_mlr --inidx --odkvp put '$1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}'
-echo 'abdefg'  | run_mlr --inidx --odkvp put '$1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}'
+run_mlr --inidx --odkvp put '$1 =~ "ab(.)d(..)g"  { $c1 = "\1"; $c2 = "\2"}' <<EOF
+abcdefg
+EOF
+
+run_mlr --inidx --odkvp put '$1 =~ "ab(.)?d(..)g" { $c1 = "\1"; $c2 = "\2"}' <<EOF
+abcdefg
+EOF
+
+run_mlr --inidx --odkvp put '$1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}' <<EOF
+abXdefg
+EOF
+
+run_mlr --inidx --odkvp put '$1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}' <<EOF
+abdefg
+EOF

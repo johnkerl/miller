@@ -10,8 +10,12 @@ run_mlr cat -g a,b $indir/abixy-het
 run_mlr cat -g a,b -n $indir/abixy-het
 run_mlr cat -g a,b -N counter $indir/abixy-het
 
-echo a,b,c,d,e,f   | run_mlr cat
-echo a,b,c,d,e,f,g | run_mlr cat
+run_mlr cat <<EOF
+a,b,c,d,e,f
+EOF
+run_mlr cat <<EOF
+a,b,c,d,e,f,g
+EOF
 
 run_mlr --opprint cat           $indir/s.dkvp
 run_mlr --opprint cat -n        $indir/s.dkvp

@@ -83,7 +83,18 @@ run_mlr --oxtab put '$y = regextract_or_else($x, "[hi]*", "DEFAULT")' $indir/sub
 run_mlr --oxtab put '$y = regextract_or_else($x, "[op]+", "DEFAULT")' $indir/sub.dat
 run_mlr --oxtab put '$y = regextract_or_else($x, "[op]*", "DEFAULT")' $indir/sub.dat
 
-echo 'abcdefg' | run_mlr --nidx put '$1 = sub($1, "ab(.)d(..)g",  "ab<<\1>>d<<\2>>g")'
-echo 'abcdefg' | run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")'
-echo 'abXdefg' | run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")'
-echo 'abdefg'  | run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")'
+run_mlr --nidx put '$1 = sub($1, "ab(.)d(..)g",  "ab<<\1>>d<<\2>>g")' <<EOF
+abcdefg
+EOF
+
+run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")' <<EOF
+abcdefg
+EOF
+
+run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")' <<EOF
+abXdefg
+EOF
+
+run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")' <<EOF
+abdefg
+EOF

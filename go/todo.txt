@@ -11,17 +11,19 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-!!! ^H two aliases ... one for paragraph one for line
-
 * reg-test:
   - awkish-cond -> pattern-action everywhere
   - "format-" prefix etc for format-specific case; other prefixes ... ?
   - diff the *.err files -- ?
-  - double-check c/go sieve.mlr parse/execute ok
   - mlr label: check unique
-  - remove ././ from expecteds
 
-! jvstack as no-op
+! int map keys: what to do with:
+  o '{1:2}' treat as '{"1":2}'
+  o 'm[1]' treat as 'm["1"]'
+  o positional indexing for maps -- use [[]] [[[]]] ?
+  o pothole: auto-extend of foo[NR] -- this now creates an array not a map
+
+! --jvstack as no-op
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 
 * justWroteEmptyLine -> pprint too ...
@@ -30,7 +32,6 @@ no need to bootstrap a parser for the parser-generator language
 
 ! nidx @ 10-min
 ! text-put @ 10-min
-
 
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
@@ -340,3 +341,6 @@ NITS/NON-IMMEDIATE:
 * for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
 * neaten mlr gap -g (default) print
 * case-c-* / case-go-* -> case-* eventually
+* implement min/max for array/map ... using cmp rules
+! write out thorough min/max/cmp cases for all orderings by type
+* note on <<EOF vs echo| for reg-tests ... sigh ...

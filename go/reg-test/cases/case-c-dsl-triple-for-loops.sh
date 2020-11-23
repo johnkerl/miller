@@ -67,7 +67,7 @@ run_mlr --opprint --from $indir/abixy put '
   $z = sum
 '
 
-echo x=1 | run_mlr put '
+run_mlr put '
   num a = 100;
   num b = 100;
   for (num a = 200, b = 300; a <= 210; a += 1, b += 1) {
@@ -75,7 +75,9 @@ echo x=1 | run_mlr put '
   }
   $oa = a;
   $ob = b;
-'
+' <<EOF
+x=1
+EOF
 
 run_mlr --from $indir/abixy put '
   for ( ; $x <= 10; $x += 1) {

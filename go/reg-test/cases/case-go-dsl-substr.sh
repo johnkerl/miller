@@ -1,9 +1,35 @@
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 0, 0)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 0, 7)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 1, 7)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 1, 6)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 2, 5)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 2, 3)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 3, 3)'
-echo "x=abcdefg" | run_mlr put '$y = substr($x, 4, 3)'
-echo "x=1234567" | run_mlr put '$y = substr($x, 2, 5)'
+run_mlr put '$y = substr($x, 0, 0)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 0, 7)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 1, 7)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 1, 6)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 2, 5)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 2, 3)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 3, 3)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 4, 3)' <<EOF
+x=abcdefg
+EOF
+
+run_mlr put '$y = substr($x, 2, 5)' <<EOF
+x=1234567
+EOF

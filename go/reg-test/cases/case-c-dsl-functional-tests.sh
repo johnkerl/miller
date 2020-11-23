@@ -29,18 +29,51 @@ run_mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' $indir/mo
 run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
-echo 'x=1,y=2,z=3' | run_mlr put '$o=min()'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=max()'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x)'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x)'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x,$y)'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x,$y)'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x,$y,$z)'
-echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x,$y,$z)'
+run_mlr put '$o=min()' <<EOF
+x=1,y=2,z=3
+EOF
 
-echo 'x=1,y=b' | run_mlr put '$u=min($x,$y);$v=max($x,$y)'
-echo 'x=a,y=2' | run_mlr put '$u=min($x,$y);$v=max($x,$y)'
-echo 'x=a,y=b' | run_mlr put '$u=min($x,$y);$v=max($x,$y)'
+run_mlr put '$o=max()' <<EOF
+x=1,y=2,z=3
+EOF
+
+run_mlr put '$o=min($x)' <<EOF
+x=1,y=2,z=3
+EOF
+
+run_mlr put '$o=max($x)' <<EOF
+x=1,y=2,z=3
+EOF
+
+run_mlr put '$o=min($x,$y)' <<EOF
+x=1,y=2,z=3
+EOF
+
+run_mlr put '$o=max($x,$y)' <<EOF
+x=1,y=2,z=3
+EOF
+
+run_mlr put '$o=min($x,$y,$z)' <<EOF
+x=1,y=2,z=3
+EOF
+
+run_mlr put '$o=max($x,$y,$z)' <<EOF
+x=1,y=2,z=3
+EOF
+
+
+run_mlr put '$u=min($x,$y);$v=max($x,$y)' <<EOF
+x=1,y=b
+EOF
+
+run_mlr put '$u=min($x,$y);$v=max($x,$y)' <<EOF
+x=a,y=2
+EOF
+
+run_mlr put '$u=min($x,$y);$v=max($x,$y)' <<EOF
+x=a,y=b
+EOF
+
 
 run_mlr --icsvlite --oxtab put '${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y}' $indir/braced.csv
 run_mlr --icsvlite --oxtab filter '${name.y} < ${z}' $indir/braced.csv
@@ -74,20 +107,55 @@ run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
 
 run_mlr -n put 'begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}'
 
-echo 'x=hello' | run_mlr put '$y = toupper($x)'
-echo 'x=HELLO' | run_mlr put '$y = toupper($x)'
-echo 'x='      | run_mlr put '$y = toupper($x)'
-echo 'x=hello' | run_mlr put '$y = toupper($z)'
+run_mlr put '$y = toupper($x)' <<EOF
+x=hello
+EOF
 
-echo 'x=hello' | run_mlr put '$y = tolower($x)'
-echo 'x=HELLO' | run_mlr put '$y = tolower($x)'
-echo 'x='      | run_mlr put '$y = tolower($x)'
-echo 'x=hello' | run_mlr put '$y = tolower($z)'
+run_mlr put '$y = toupper($x)' <<EOF
+x=HELLO
+EOF
 
-echo 'x=hello' | run_mlr put '$y = capitalize($x)'
-echo 'x=HELLO' | run_mlr put '$y = capitalize($x)'
-echo 'x='      | run_mlr put '$y = capitalize($x)'
-echo 'x=hello' | run_mlr put '$y = capitalize($z)'
+run_mlr put '$y = toupper($x)' <<EOF
+x=
+EOF
+
+run_mlr put '$y = toupper($z)' <<EOF
+x=hello
+EOF
+
+
+run_mlr put '$y = tolower($x)' <<EOF
+x=hello
+EOF
+
+run_mlr put '$y = tolower($x)' <<EOF
+x=HELLO
+EOF
+
+run_mlr put '$y = tolower($x)' <<EOF
+x=
+EOF
+
+run_mlr put '$y = tolower($z)' <<EOF
+x=hello
+EOF
+
+
+run_mlr put '$y = capitalize($x)' <<EOF
+x=hello
+EOF
+
+run_mlr put '$y = capitalize($x)' <<EOF
+x=HELLO
+EOF
+
+run_mlr put '$y = capitalize($x)' <<EOF
+x=
+EOF
+
+run_mlr put '$y = capitalize($z)' <<EOF
+x=hello
+EOF
 
 mention LHS value on first record should result in ZYX for process creation
 export indir; run_mlr --from $indir/abixy put -q 'ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a'

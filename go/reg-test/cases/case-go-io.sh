@@ -53,18 +53,39 @@ run_mlr --opprint --barred cat $indir/het.dkvp
 
 # To-do: port format-specific default separators from C.
 # E.g. NIDX's IFS should default to space.
-echo 'a,b,c,d,e,f' | run_mlr --inidx --oxtab cat
-echo 'a b c d e f' | run_mlr --inidx --oxtab cat
 
-echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs , --oxtab cat
-echo 'a b c d e f' | run_mlr --inidx --ifs , --oxtab cat
-echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs ' ' --oxtab cat
-echo 'a b c d e f' | run_mlr --inidx --ifs ' ' --oxtab cat
+run_mlr --inidx --oxtab cat <<EOF
+a,b,c,d,e,f
+EOF
+run_mlr --inidx --oxtab cat <<EOF
+a b c d e f
+EOF
 
-echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs comma --oxtab cat
-echo 'a b c d e f' | run_mlr --inidx --ifs comma --oxtab cat
-echo 'a,b,c,d,e,f' | run_mlr --inidx --ifs space --oxtab cat
-echo 'a b c d e f' | run_mlr --inidx --ifs space --oxtab cat
+run_mlr --inidx --ifs , --oxtab cat <<EOF
+a,b,c,d,e,f
+EOF
+run_mlr --inidx --ifs , --oxtab cat <<EOF
+a b c d e f
+EOF
+run_mlr --inidx --ifs ' ' --oxtab cat <<EOF
+a,b,c,d,e,f
+EOF
+run_mlr --inidx --ifs ' ' --oxtab cat <<EOF
+a b c d e f
+EOF
+
+run_mlr --inidx --ifs comma --oxtab cat <<EOF
+a,b,c,d,e,f
+EOF
+run_mlr --inidx --ifs comma --oxtab cat <<EOF
+a b c d e f
+EOF
+run_mlr --inidx --ifs space --oxtab cat <<EOF
+a,b,c,d,e,f
+EOF
+run_mlr --inidx --ifs space --oxtab cat <<EOF
+a b c d e f
+EOF
 
 run_mlr --itsv --ocsv cat $indir/s.tsv
 run_mlr --icsv --otsv cat $indir/s.tsv
