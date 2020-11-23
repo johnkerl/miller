@@ -92,7 +92,7 @@ func (this *MapperRemoveEmptyColumns) Map(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		this.recordsAndContexts.PushFront(inrecAndContext)
+		this.recordsAndContexts.PushBack(inrecAndContext)
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !pe.Value.IsEmpty() {
