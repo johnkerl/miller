@@ -67,6 +67,13 @@ run_mlr() {
 
   # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
   # Instead we use this '$errfile.$$' trick.
+  #
+  # Also note that we could 2>&1 and have a single combined stdout-and-stderr
+  # file. However, experience has shown that the line-ordering isn't
+  # deterministic across multiple platforms, causing a regression test baked
+  # (and passing) on one platform to fail on another. See in particular
+  # https://github.com/johnkerl/miller/issues/293
+
   $path_to_mlr "$@" >> $outfile 2> $errfile.$$
   status=$?
   cat $errfile.$$ >> $errfile

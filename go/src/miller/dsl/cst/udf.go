@@ -89,9 +89,50 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 
 	// Evaluate and pair up the callsite arguments with our parameters,
 	// positionally.
+	//
+	// This needs to be a two-step process, for the following reason.
+	//
+	// The Miller-DSL stack has 'framesets' and 'frames'. For example:
+	//
+	//   x = 1;                        | Frameset 1
+	//   y = 2;                        | Frame 1a: x=1, y=2
+	//   if (NR > 10) {                  | Frameset 1b:
+	//     x = 3;                        | updates 1a's x; new y=4
+	//     var y = 4;                    |
+	//   }                             |
+	//   func f() {                        | Frameset 2
+	//                                     | Frame 2a
+	//     x = 5;                          | x = 5, doesn't affect caller's frames
+	//     if (some condition) {           |
+	//       x = 6;                          | Frame 2b: updates x from from 2a
+	//     }                               |
+	//   }                                 |
+	//
+	// We allow scope-walk within a frameset -- so the 1b reference to x
+	// updates 1a's x, while 1b's reference to y binds its own y (due to
+	// 'var'). But we don't allow scope-walks across framesets with or without
+	// 'var': the function's locals are fenced off from the caller's locals.
+	//
+	// All well and good. What affects us here is callsites of the form
+	//
+	//   x = 1;
+	//   y = f(x);
+	//   func f(n) {
+	//     return n**2;
+	//   }
+	//
+	// The code in this method implements the line 'y = f(x)', setting up for
+	// the call to f(n). Due to the fencing mentioned above, we need to
+	// evaluate the argument 'x' using the caller's frameset, but bind it to
+	// the callee's parameter 'n' using the callee's frameset.
+	//
+	// That's why we have two loops here: the first evaluates the arguments
+	// using the caller's frameset, stashing them in the arguments array.  Then
+	// we push a new frameset and BindVariable using the callee's frameset.
 
-	state.stack.PushStackFrame()
-	defer state.stack.PopStackFrame()
+	// Evaluate the arguments
+	numArguments := len(this.udf.signature.typeGatedParameterNames)
+	arguments := make([]types.Mlrval, numArguments)
 
 	for i, typeGatedParameterName := range this.udf.signature.typeGatedParameterNames {
 		argument := this.argumentNodes[i].Evaluate(state)
@@ -106,7 +147,15 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 			os.Exit(1)
 		}
 
-		state.stack.BindVariable(typeGatedParameterName.Name, &argument)
+		arguments[i] = argument
+	}
+
+	// Bind the arguments to the parameters
+	state.stack.PushStackFrameSet()
+	defer state.stack.PopStackFrameSet()
+
+	for i, argument := range arguments {
+		state.stack.BindVariable(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
 	}
 
 	// Execute the function body.

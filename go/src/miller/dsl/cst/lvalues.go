@@ -514,7 +514,7 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 			return err
 		}
 
-		// BUG: Needs BindVariable if done with a type
+		// TODO: Needs BindVariable if done with a type
 		//
 		//   a = 1;
 		//   if (true) {
@@ -524,13 +524,6 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 		//   a = 1;
 		//   if (true) {
 		//     var a = 2; <-- do not reuse: BindVariable
-		//   }
-
-		// BUG: functions need hard-gating even without a type
-		//
-		//   a = 1;
-		//   func f() {
-		//     a = 2; <-- do not reuse
 		//   }
 
 		state.stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
