@@ -1,8 +1,6 @@
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-cat.sh
-
 rrv ./reg-test/cases/case-c-altkv.sh
 rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
