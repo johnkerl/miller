@@ -475,7 +475,7 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeLocalVariable)
 
 	variableName := string(astNode.Token.Lit)
-	typeName := "var"
+	typeName := "any"
 	frameBind := false
 	if astNode.Children != nil { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]

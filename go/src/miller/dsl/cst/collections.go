@@ -168,7 +168,9 @@ func (this *MapLiteralNode) Evaluate(state *State) types.Mlrval {
 		mkey := evaluablePair.Key.Evaluate(state)
 		mvalue := evaluablePair.Value.Evaluate(state)
 
-		mlrval.MapPut(&mkey, &mvalue)
+		if !mvalue.IsAbsent() {
+			mlrval.MapPut(&mkey, &mvalue)
+		}
 	}
 
 	return mlrval

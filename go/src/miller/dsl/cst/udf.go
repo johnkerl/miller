@@ -279,7 +279,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	parameterListASTNode := astNode.Children[0]
 	functionBodyASTNode := astNode.Children[1]
 
-	returnValueTypeName := "var"
+	returnValueTypeName := "any"
 	if len(astNode.Children) == 3 {
 		typeNode := astNode.Children[2]
 		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
@@ -302,7 +302,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 		lib.InternalCodingErrorIf(typeGatedParameterNameASTNode.Type != dsl.NodeTypeParameterName)
 		variableName := string(typeGatedParameterNameASTNode.Token.Lit)
-		typeName := "var"
+		typeName := "any"
 		if typeGatedParameterNameASTNode.Children != nil { // typed parameter like 'num x'
 			lib.InternalCodingErrorIf(len(typeGatedParameterNameASTNode.Children) != 1)
 			typeNode := typeGatedParameterNameASTNode.Children[0]

@@ -28,9 +28,7 @@ mlr --from ./reg-test/input/abixy-het put -q dump {"a"."b":$a.$b}
 {
   "ab": "zeewye"
 }
-{
-  "ab": 
-}
+{}
 {
   "ab": "panwye"
 }
@@ -60,9 +58,7 @@ mlr --from ./reg-test/input/abixy-het put -q func f(a, b) { return {"a"."b":a.b}
 {
   "ab": "zeewye"
 }
-{
-  "ab": 
-}
+{}
 {
   "ab": "panwye"
 }
