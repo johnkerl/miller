@@ -3,6 +3,7 @@ package output
 import (
 	"bytes"
 	"os"
+	"unicode/utf8"
 
 	"miller/clitypes"
 	"miller/types"
@@ -29,7 +30,7 @@ func (this *RecordWriterXTAB) Write(
 
 	maxKeyLength := 1
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := len(*pe.Key)
+		keyLength := utf8.RuneCountInString(*pe.Key)
 		if keyLength > maxKeyLength {
 			maxKeyLength = keyLength
 		}
@@ -45,7 +46,7 @@ func (this *RecordWriterXTAB) Write(
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := len(*pe.Key)
+		keyLength := utf8.RuneCountInString(*pe.Key)
 		padLength := maxKeyLength - keyLength
 
 		buffer.WriteString(*pe.Key)

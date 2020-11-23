@@ -23,6 +23,7 @@ PARTIALLY IMPLEMENTED:
 rrv ./reg-test/cases/case-c-clean-whitespace.sh
 rrv ./reg-test/cases/case-c-cut.sh
 rrv ./reg-test/cases/case-c-localvar-unsets.sh
+rrv ./reg-test/cases/case-c-utf8-alignment.sh
 
 ================================================================
 PPRINT --BARRED --RIGHT
@@ -146,5 +147,3 @@ rrv ./reg-test/cases/case-c-rfc-csv.sh
 rrv ./reg-test/cases/case-c-sample.sh
 rrv ./reg-test/cases/case-c-shuffle.sh
 rrv ./reg-test/cases/case-c-space-padding.sh
-
-rrv ./reg-test/cases/case-c-utf8-alignment.sh
