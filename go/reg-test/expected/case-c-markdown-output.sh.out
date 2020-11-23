@@ -1,5 +1,5 @@
 
-mlr --itsv --rs lf --omd cat ././reg-test/input/simple.tsv
+mlr --itsv --rs lf --omd cat ./reg-test/input/simple.tsv
 | a | b | i | x | y |
 | --- | --- | --- | --- | --- |
 | pan | pan | 1 | 2 | 0.989945 |

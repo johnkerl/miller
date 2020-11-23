@@ -1,5 +1,5 @@
 
-mlr label NEW ././reg-test/input/abixy
+mlr label NEW ./reg-test/input/abixy
 NEW=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 NEW=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 NEW=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -11,7 +11,7 @@ NEW=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 NEW=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 NEW=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr label a,NEW,c ././reg-test/input/abixy
+mlr label a,NEW,c ./reg-test/input/abixy
 a=pan,NEW=pan,c=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,NEW=pan,c=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,NEW=wye,c=3,x=0.20460330576630303,y=0.33831852551664776
@@ -23,7 +23,7 @@ a=zee,NEW=wye,c=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,NEW=wye,c=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,NEW=wye,c=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr label 1,2,3,4,5,6,7,8 ././reg-test/input/abixy
+mlr label 1,2,3,4,5,6,7,8 ./reg-test/input/abixy
 1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
 1=eks,2=pan,3=2,4=0.7586799647899636,5=0.5221511083334797
 1=wye,2=wye,3=3,4=0.20460330576630303,5=0.33831852551664776
@@ -35,7 +35,7 @@ mlr label 1,2,3,4,5,6,7,8 ././reg-test/input/abixy
 1=hat,2=wye,3=9,4=0.03144187646093577,5=0.7495507603507059
 1=pan,2=wye,3=10,4=0.5026260055412137,5=0.9526183602969864
 
-mlr label d,x,f ././reg-test/input/abixy
+mlr label d,x,f ./reg-test/input/abixy
 d=pan,x=pan,f=1,y=0.7268028627434533
 d=eks,x=pan,f=2,y=0.5221511083334797
 d=wye,x=wye,f=3,y=0.33831852551664776
@@ -47,6 +47,6 @@ d=zee,x=wye,f=8,y=0.976181385699006
 d=hat,x=wye,f=9,y=0.7495507603507059
 d=pan,x=wye,f=10,y=0.9526183602969864
 
-mlr label d,x,d ././reg-test/input/abixy
+mlr label d,x,d ./reg-test/input/abixy
 mlr label: labels must be unique; got "d"
 

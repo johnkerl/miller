@@ -1,5 +1,5 @@
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for (int i = 0; i < $i; i += 1) {
     $c = i * 10;
   }
@@ -15,14 +15,14 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,c=70
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,c=80
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,c=90
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for (float i = 0; i < $i; i += 1) {
     $c = i * 10;
   }
 
 mlr: float type assertion for variable i unmet by value 0 with type int.
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for (int i = 0; i < $i; i += 1) {
     i += 2;
     $c = i;
@@ -39,7 +39,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,c=8
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,c=8
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,c=11
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for (int i = 0; i < $i; i += 1) {
     i += 1.5;
     $c = i;
@@ -47,7 +47,7 @@ mlr --from ././reg-test/input/abixy put
 
 mlr: int type assertion for variable i unmet by value 1.500000 with type float.
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for (int i = 0; i < $i; i += 1) {
     i += 1.0;
     $c = i;
@@ -55,7 +55,7 @@ mlr --from ././reg-test/input/abixy put
 
 mlr: int type assertion for variable i unmet by value 1.000000 with type float.
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for (num i = 0; i < $i; i += 1) {
     i += 1.0;
     $c = i;

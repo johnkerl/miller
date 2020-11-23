@@ -1,5 +1,5 @@
 
-mlr --from ././reg-test/input/xyz345 put -v -a 
+mlr --from ./reg-test/input/xyz345 put -v -a 
     $s = a;
     $t = b[$x];
     $u = c[$x][$y];
@@ -68,7 +68,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
 
 x=3,y=4,z=5
 
-mlr --from ././reg-test/input/xyz345 put -v -a 
+mlr --from ./reg-test/input/xyz345 put -v -a 
     d[$x][$y][$z] = 9;
     $d = d[$x][$y][$z];
 
@@ -119,7 +119,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=2 max_subframe_depth
 
 x=3,y=4,z=5,d=9
 
-mlr --from ././reg-test/input/xyz345 put -v -a 
+mlr --from ./reg-test/input/xyz345 put -v -a 
     a = 6;
     b[$x] = 7;
     c[$x][$y] = 8;
@@ -237,7 +237,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth
 
 x=3,y=4,z=5,a=6,b=7,c=8,d=9
 
-mlr --from ././reg-test/input/xyz345 put -v -a 
+mlr --from ./reg-test/input/xyz345 put -v -a 
     a = 6;
     b[$x] = 7;
     c[$x][$y] = 8;

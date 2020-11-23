@@ -1,5 +1,5 @@
 
-mlr group-like ././reg-test/input/het.dkvp
+mlr group-like ./reg-test/input/het.dkvp
 host=jupiter
 host=saturn
 host=mars

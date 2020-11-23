@@ -1,5 +1,5 @@
 
-mlr --opprint --barred cat ././reg-test/input/abixy
+mlr --opprint --barred cat ./reg-test/input/abixy
 +-----+-----+----+---------------------+---------------------+
 | a   | b   | i  | x                   | y                   |
 +-----+-----+----+---------------------+---------------------+
@@ -15,7 +15,7 @@ mlr --opprint --barred cat ././reg-test/input/abixy
 | pan | wye | 10 | 0.5026260055412137  | 0.9526183602969864  |
 +-----+-----+----+---------------------+---------------------+
 
-mlr --opprint --barred --right cat ././reg-test/input/abixy
+mlr --opprint --barred --right cat ./reg-test/input/abixy
 +-----+-----+----+---------------------+---------------------+
 |   a |   b |  i |                   x |                   y |
 +-----+-----+----+---------------------+---------------------+
@@ -31,7 +31,7 @@ mlr --opprint --barred --right cat ././reg-test/input/abixy
 | pan | wye | 10 |  0.5026260055412137 |  0.9526183602969864 |
 +-----+-----+----+---------------------+---------------------+
 
-mlr --opprint --barred cat ././reg-test/input/abixy-het
+mlr --opprint --barred cat ./reg-test/input/abixy-het
 +-----+-----+---+--------------------+--------------------+
 | a   | b   | i | x                  | y                  |
 +-----+-----+---+--------------------+--------------------+
@@ -87,7 +87,7 @@ mlr --opprint --barred cat ././reg-test/input/abixy-het
 | pan | wye | 10 | 0.5026260055412137 | 0.9526183602969864 |
 +-----+-----+----+--------------------+--------------------+
 
-mlr --opprint --barred --right cat ././reg-test/input/abixy-het
+mlr --opprint --barred --right cat ./reg-test/input/abixy-het
 +-----+-----+---+--------------------+--------------------+
 |   a |   b | i |                  x |                  y |
 +-----+-----+---+--------------------+--------------------+

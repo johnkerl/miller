@@ -3,19 +3,19 @@
 ================================================================
 CSV/RS ENVIRONMENT DEFAULTS
 
-mlr --csv cut -f a ././reg-test/input/rfc-csv/simple.csv-crlf
+mlr --csv cut -f a ./reg-test/input/rfc-csv/simple.csv-crlf
 a
 1
 4
 x
 
-mlr --csv --rs crlf cut -f a ././reg-test/input/rfc-csv/simple.csv-crlf
+mlr --csv --rs crlf cut -f a ./reg-test/input/rfc-csv/simple.csv-crlf
 a
 1
 4
 x
 
-mlr --csv --rs lf cut -f a ././reg-test/input/rfc-csv/simple.csv-crlf
+mlr --csv --rs lf cut -f a ./reg-test/input/rfc-csv/simple.csv-crlf
 a
 1
 4

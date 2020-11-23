@@ -1,5 +1,5 @@
 
-mlr repeat -n 5 ././reg-test/input/repeat-input.dat
+mlr repeat -n 5 ./reg-test/input/repeat-input.dat
 a=1,b=2,c=3
 a=1,b=2,c=3
 a=1,b=2,c=3
@@ -21,7 +21,7 @@ a=8,x=,c=9
 a=8,x=,c=9
 a=8,x=,c=9
 
-mlr repeat -f a ././reg-test/input/repeat-input.dat
+mlr repeat -f a ./reg-test/input/repeat-input.dat
 a=1,b=2,c=3
 a=3,b=4,c=5
 a=3,b=4,c=5
@@ -41,7 +41,7 @@ a=8,x=,c=9
 a=8,x=,c=9
 a=8,x=,c=9
 
-mlr repeat -f b ././reg-test/input/repeat-input.dat
+mlr repeat -f b ./reg-test/input/repeat-input.dat
 a=1,b=2,c=3
 a=1,b=2,c=3
 a=3,b=4,c=5
@@ -49,7 +49,7 @@ a=3,b=4,c=5
 a=3,b=4,c=5
 a=3,b=4,c=5
 
-mlr repeat -f c ././reg-test/input/repeat-input.dat
+mlr repeat -f c ./reg-test/input/repeat-input.dat
 a=1,b=2,c=3
 a=1,b=2,c=3
 a=1,b=2,c=3

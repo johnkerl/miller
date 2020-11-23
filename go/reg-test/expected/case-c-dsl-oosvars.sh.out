@@ -1,5 +1,5 @@
 
-mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ././reg-test/input/abixy
+mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -56,7 +56,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
-mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ././reg-test/input/abixy
+mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -125,7 +125,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put -v $d=$x/@ox; @ox=$x then step -a ratio -f x ././reg-test/input/abixy
+mlr --opprint put -v $d=$x/@ox; @ox=$x then step -a ratio -f x ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -168,7 +168,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ././reg-test/input/abixy
+mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -237,7 +237,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
 hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
 pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
 
-mlr --opprint put -v begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum ././reg-test/input/abixy
+mlr --opprint put -v begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -296,7 +296,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   4.002226
 hat wye 9  0.03144187646093577 0.7495507603507059  4.033668
 pan wye 10 0.5026260055412137  0.9526183602969864  4.536294
 
-mlr --opprint put -v begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ././reg-test/input/abixy
+mlr --opprint put -v begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -421,7 +421,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   5  6  7  18
 hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
-mlr --opprint put -v begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ././reg-test/input/abixy
+mlr --opprint put -v begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -546,7 +546,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   5  6  7  18
 hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
-mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ././reg-test/input/abixy
+mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -603,7 +603,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
 pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
 
-mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ././reg-test/input/abixy
+mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -688,7 +688,7 @@ a=pan
 b=wye
 c=0.502626
 
-mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ././reg-test/input/abixy
+mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -759,7 +759,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=pan,b=wye,c=0.502626
 
-mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean} ././reg-test/input/abixy
+mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean} ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -867,7 +867,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864
 mean
 0.453629
 
-mlr --opprint put -v end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ././reg-test/input/abixy
+mlr --opprint put -v end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ./reg-test/input/abixy
 RAW AST:
 
 AST ROOT:
@@ -1055,7 +1055,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
         text="4", type=FIELD_NAME.
 
 
-mlr put @y[$a]=$y; end{dump} ././reg-test/input/abixy
+mlr put @y[$a]=$y; end{dump} ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -1076,14 +1076,14 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
   }
 }
 
-mlr stats1 -a sum -f y -g a ././reg-test/input/abixy
+mlr stats1 -a sum -f y -g a ./reg-test/input/abixy
 a=pan,y_sum=1.679421
 a=eks,y_sum=0.844225
 a=wye,y_sum=1.201943
 a=zee,y_sum=1.469403
 a=hat,y_sum=0.749551
 
-mlr put @y_sum[$a] = $y; end{dump} ././reg-test/input/abixy
+mlr put @y_sum[$a] = $y; end{dump} ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -1104,7 +1104,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump} ././reg-test/input/unset1.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump} ./reg-test/input/unset1.dkvp
 {
   "s": 9,
   "t": {
@@ -1127,7 +1127,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump} ././reg-test/input/unset1.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump} ./reg-test/input/unset1.dkvp
 {
   "s": 9,
   "t": {
@@ -1148,7 +1148,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ././reg-test/input/unset1.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ./reg-test/input/unset1.dkvp
 {
   "s": 9,
   "t": {
@@ -1171,7 +1171,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump} ././reg-test/input/unset1.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump} ./reg-test/input/unset1.dkvp
 {
   "s": 9,
   "t": {
@@ -1190,7 +1190,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ././reg-test/input/unset1.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ./reg-test/input/unset1.dkvp
 {
   "s": 9,
   "t": {
@@ -1211,7 +1211,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ././reg-test/input/unset1.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ./reg-test/input/unset1.dkvp
 {
   "s": 9,
   "t": {
@@ -1234,7 +1234,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1269,7 +1269,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @s      ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1301,7 +1301,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t      ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1336,7 +1336,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1362,7 +1362,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1394,7 +1394,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1429,7 +1429,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ././
   }
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1450,7 +1450,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ././
 {
 }
 
-mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ././reg-test/input/unset4.dkvp
+mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ./reg-test/input/unset4.dkvp
 {
   "s": 9,
   "t": {
@@ -1471,19 +1471,19 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ././
 {
 }
 
-mlr put unset $x ././reg-test/input/unset4.dkvp
+mlr put unset $x ./reg-test/input/unset4.dkvp
 a=1,b=2
 a=1,b=3
 a=4,b=5
 a=4,b=6
 
-mlr put unset $*; $aaa = 999 ././reg-test/input/unset4.dkvp
+mlr put unset $*; $aaa = 999 ./reg-test/input/unset4.dkvp
 aaa=999
 aaa=999
 aaa=999
 aaa=999
 
-mlr --from ././reg-test/input/abixy put x = 1; print "OX=".x; unset x; print "NX=".x
+mlr --from ./reg-test/input/abixy put x = 1; print "OX=".x; unset x; print "NX=".x
 OX=1
 NX=
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -1515,17 +1515,17 @@ OX=1
 NX=
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ././reg-test/input/abixy
+mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg-test/input/abixy
 variable.name=4.536294
 
-mlr put -q @{variable.name}[$a] += $x; end{emit @{variable.name},"a"} ././reg-test/input/abixy
+mlr put -q @{variable.name}[$a] += $x; end{emit @{variable.name},"a"} ./reg-test/input/abixy
 a=pan,variable.name=0.849416
 a=eks,variable.name=1.751863
 a=wye,variable.name=0.777892
 a=zee,variable.name=1.125680
 a=hat,variable.name=0.031442
 
-mlr put for (k,v in $*) { if (k == "i") {unset $[k]}} ././reg-test/input/abixy
+mlr put for (k,v in $*) { if (k == "i") {unset $[k]}} ./reg-test/input/abixy
 a=pan,b=pan,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,x=0.20460330576630303,y=0.33831852551664776
@@ -1537,7 +1537,7 @@ a=zee,b=wye,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --opprint --from ././reg-test/input/abixy put -q 
+mlr --opprint --from ./reg-test/input/abixy put -q 
   @output[NR] = $*;
   end {
     for ((nr, k), v in @output) {

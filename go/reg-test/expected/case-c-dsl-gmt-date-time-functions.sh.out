@@ -1,5 +1,5 @@
 
-mlr --csvlite put $gmt = sec2gmt($sec) ././reg-test/input/sec2gmt
+mlr --csvlite put $gmt = sec2gmt($sec) ./reg-test/input/sec2gmt
 n,sec,gmt
 1,0,1970-01-01T00:00:00Z
 2,1,1970-01-01T00:00:01Z
@@ -27,7 +27,7 @@ n,sec,gmt
 24,x,x
 25,123x,123x
 
-mlr --csvlite put $gmt = sec2gmt($sec,1) ././reg-test/input/sec2gmt
+mlr --csvlite put $gmt = sec2gmt($sec,1) ./reg-test/input/sec2gmt
 n,sec,gmt
 1,0,1970-01-01T00:00:00.0Z
 2,1,1970-01-01T00:00:01.0Z
@@ -55,7 +55,7 @@ n,sec,gmt
 24,x,x
 25,123x,123x
 
-mlr --csvlite put $gmt = sec2gmt($sec,3) ././reg-test/input/sec2gmt
+mlr --csvlite put $gmt = sec2gmt($sec,3) ./reg-test/input/sec2gmt
 n,sec,gmt
 1,0,1970-01-01T00:00:00.000Z
 2,1,1970-01-01T00:00:01.000Z
@@ -83,7 +83,7 @@ n,sec,gmt
 24,x,x
 25,123x,123x
 
-mlr --csvlite put $gmt = sec2gmt($sec,6) ././reg-test/input/sec2gmt
+mlr --csvlite put $gmt = sec2gmt($sec,6) ./reg-test/input/sec2gmt
 n,sec,gmt
 1,0,1970-01-01T00:00:00.000000Z
 2,1,1970-01-01T00:00:01.000000Z
@@ -111,7 +111,7 @@ n,sec,gmt
 24,x,x
 25,123x,123x
 
-mlr --csvlite put $sec = gmt2sec($gmt) ././reg-test/input/gmt2sec
+mlr --csvlite put $sec = gmt2sec($gmt) ./reg-test/input/gmt2sec
 gmt,sec
 1970-01-01T00:00:00Z,0.000000
 1970-01-01T00:00:00.Z,0.000000
@@ -142,7 +142,7 @@ gmt,sec
 2033-05-18T03:33:20Z,2000000000.000000
 2033-05-18T03:33:20.999999Z,2000000000.999999
 
-mlr --csvlite put $gmtdate = sec2gmtdate($sec) ././reg-test/input/sec2gmt
+mlr --csvlite put $gmtdate = sec2gmtdate($sec) ./reg-test/input/sec2gmt
 n,sec,gmtdate
 1,0,1970-01-01
 2,1,1970-01-01
@@ -170,7 +170,7 @@ n,sec,gmtdate
 24,x,x
 25,123x,123x
 
-mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%SZ") ././reg-test/input/sec2gmt
+mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%SZ") ./reg-test/input/sec2gmt
 n  sec                  gmt
 1  0                    1970-01-01T00:00:00Z
 2  1                    1970-01-01T00:00:01Z
@@ -198,7 +198,7 @@ n  sec                  gmt
 24 x                    (error)
 25 123x                 (error)
 
-mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%1SZ") ././reg-test/input/sec2gmt
+mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%1SZ") ./reg-test/input/sec2gmt
 n  sec                  gmt
 1  0                    1970-01-01T00:00:00.0Z
 2  1                    1970-01-01T00:00:01.0Z
@@ -226,7 +226,7 @@ n  sec                  gmt
 24 x                    (error)
 25 123x                 (error)
 
-mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%3SZ") ././reg-test/input/sec2gmt
+mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%3SZ") ./reg-test/input/sec2gmt
 n  sec                  gmt
 1  0                    1970-01-01T00:00:00.000Z
 2  1                    1970-01-01T00:00:01.000Z
@@ -254,7 +254,7 @@ n  sec                  gmt
 24 x                    (error)
 25 123x                 (error)
 
-mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%6SZ") ././reg-test/input/sec2gmt
+mlr --icsv --opprint put $gmt = strftime($sec, "%Y-%m-%dT%H:%M:%6SZ") ./reg-test/input/sec2gmt
 n  sec                  gmt
 1  0                    1970-01-01T00:00:00.000000Z
 2  1                    1970-01-01T00:00:01.000000Z
@@ -282,7 +282,7 @@ n  sec                  gmt
 24 x                    (error)
 25 123x                 (error)
 
-mlr --icsv --opprint put $sec = strptime($gmt, "%Y-%m-%dT%H:%M:%SZ") ././reg-test/input/gmt2sec
+mlr --icsv --opprint put $sec = strptime($gmt, "%Y-%m-%dT%H:%M:%SZ") ./reg-test/input/gmt2sec
 gmt                            sec
 1970-01-01T00:00:00Z           0.000000
 1970-01-01T00:00:00.Z          0.000000
@@ -313,7 +313,7 @@ gmt                            sec
 2033-05-18T03:33:20Z           2000000000.000000
 2033-05-18T03:33:20.999999Z    2000000000.999999
 
-mlr --csvlite sec2gmt sec ././reg-test/input/sec2gmt
+mlr --csvlite sec2gmt sec ./reg-test/input/sec2gmt
 n,sec
 1,1970-01-01T00:00:00Z
 2,1970-01-01T00:00:01Z
@@ -341,7 +341,7 @@ n,sec
 24,x
 25,123x
 
-mlr --opprint put $hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec ././reg-test/input/sec2xhms
+mlr --opprint put $hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$resec-$sec ./reg-test/input/sec2xhms
 sec     hms        resec   diff
 0       00:00:00   0       0
 1       00:00:01   1       0
@@ -371,7 +371,7 @@ sec     hms        resec   diff
 -864000 -240:00:00 -864000 0
 -864001 -240:00:01 -864001 0
 
-mlr --opprint put $hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec ././reg-test/input/fsec2xhms
+mlr --opprint put $hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec ./reg-test/input/fsec2xhms
 sec        hms               resec          diff
 0.25       0:00:00.250000    0.250000       0.000000
 1.25       0:00:01.250000    1.250000       0.000000
@@ -402,7 +402,7 @@ sec        hms               resec          diff
 -864000.25 -240:00:00.250000 -864000.250000 0.000000
 -864001.25 -240:00:01.250000 -864001.250000 0.000000
 
-mlr --opprint put $hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec ././reg-test/input/sec2xhms
+mlr --opprint put $hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec ./reg-test/input/sec2xhms
 sec     hms           resec   diff
 0       0s            0       0
 1       1s            1       0
@@ -432,7 +432,7 @@ sec     hms           resec   diff
 -864000 -10d00h00m00s -864000 0
 -864001 -10d00h00m01s -864001 0
 
-mlr --opprint put $hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec ././reg-test/input/fsec2xhms
+mlr --opprint put $hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec ./reg-test/input/fsec2xhms
 sec        hms                  resec          diff
 0.25       0.250000s            0.250000       0.000000
 1.25       1.250000s            1.250000       0.000000
@@ -463,7 +463,7 @@ sec        hms                  resec          diff
 -864000.25 -10d00h00m00.250000s -864000.250000 0.000000
 -864001.25 -10d00h00m01.250000s -864001.250000 0.000000
 
-mlr --csvlite sec2gmt sec ././reg-test/input/sec2gmt
+mlr --csvlite sec2gmt sec ./reg-test/input/sec2gmt
 n,sec
 1,1970-01-01T00:00:00Z
 2,1970-01-01T00:00:01Z
@@ -491,7 +491,7 @@ n,sec
 24,x
 25,123x
 
-mlr --csvlite sec2gmtdate sec ././reg-test/input/sec2gmt
+mlr --csvlite sec2gmtdate sec ./reg-test/input/sec2gmt
 n,sec
 1,1970-01-01
 2,1970-01-01

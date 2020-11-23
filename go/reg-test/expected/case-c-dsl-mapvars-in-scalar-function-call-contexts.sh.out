@@ -3,13 +3,13 @@
 ================================================================
 MAPVARS IN SCALAR FUNCTION-CALL CONTEXTS
 
-mlr --from ././reg-test/input/abixy put $z=strlen($*)
+mlr --from ./reg-test/input/abixy put $z=strlen($*)
 mlr: $* is not valid within scalar contexts.
 
-mlr --from ././reg-test/input/abixy put $z=strlen({})
+mlr --from ./reg-test/input/abixy put $z=strlen({})
 mlr: map-literals are not valid within scalar contexts.
 
-mlr --from ././reg-test/input/abixy put a={}; $z=strlen(a)
+mlr --from ./reg-test/input/abixy put a={}; $z=strlen(a)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776

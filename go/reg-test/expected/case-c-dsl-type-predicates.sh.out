@@ -1,5 +1,5 @@
 
-mlr --from ././reg-test/input/abixy --opprint put  for (k, v in $*) { $[k."_type"]      = typeof(v)     } 
+mlr --from ./reg-test/input/abixy --opprint put  for (k, v in $*) { $[k."_type"]      = typeof(v)     } 
 a   b   i  x                   y                   a_type b_type i_type x_type y_type
 pan pan 1  0.3467901443380824  0.7268028627434533  string string int    float  float
 eks pan 2  0.7586799647899636  0.5221511083334797  string string int    float  float
@@ -12,7 +12,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   string string int    float  f
 hat wye 9  0.03144187646093577 0.7495507603507059  string string int    float  float
 pan wye 10 0.5026260055412137  0.9526183602969864  string string int    float  float
 
-mlr --from ././reg-test/input/abixy-het put -q for (k,v in $*) {if (is_float(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_float(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
 NR=1,k=x,float=0.346790
 NR=1,k=y,float=0.726803
 NR=2,k=x,float=0.758680
@@ -34,7 +34,7 @@ NR=9,k=y,float=0.749551
 NR=10,k=x,float=0.502626
 NR=10,k=y,float=0.952618
 
-mlr --from ././reg-test/input/abixy-het put -q for (k,v in $*) {if (is_int(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_int(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }
 NR=1,k=i,int=1
 NR=2,k=i,int=2
 NR=3,k=i,int=3
@@ -46,7 +46,7 @@ NR=8,k=i,int=8
 NR=9,k=i,int=9
 NR=10,k=i,int=10
 
-mlr --from ././reg-test/input/abixy-het put -q for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }
 NR=1,k=i,numeric=1
 NR=1,k=x,numeric=0.346790
 NR=1,k=y,numeric=0.726803
@@ -78,7 +78,7 @@ NR=10,k=i,numeric=10
 NR=10,k=x,numeric=0.502626
 NR=10,k=y,numeric=0.952618
 
-mlr --from ././reg-test/input/abixy-het put -q for (k,v in $*) {if (is_string(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_string(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }
 NR=1,k=a,string=pan
 NR=1,k=b,string=pan
 NR=2,k=a,string=eks
@@ -100,9 +100,9 @@ NR=9,k=bbb,string=wye
 NR=10,k=a,string=pan
 NR=10,k=b,string=wye
 
-mlr --from ././reg-test/input/abixy-het put -q for (k,v in $*) {if (is_bool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_bool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }
 
-mlr --from ././reg-test/input/abixy-het put -q for (k,v in $*) {if (is_bool(NR==2)) {@bool[NR][k]    = "NR==2"}} end{ emit @bool,    "NR", "k" }
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_bool(NR==2)) {@bool[NR][k]    = "NR==2"}} end{ emit @bool,    "NR", "k" }
 NR=1,k=a,bool=NR==2
 NR=1,k=b,bool=NR==2
 NR=1,k=i,bool=NR==2

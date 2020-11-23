@@ -1,7 +1,7 @@
 
 
 ---------------------------------------------------------------- empty for-srec
-mlr --from ././reg-test/input/abixy put -v for(k,v in $*) { }
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) { }
 RAW AST:
 
 AST ROOT:
@@ -35,7 +35,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- for-srec without boundvars
-mlr --from ././reg-test/input/abixy put -v for(k,v in $*) {$nr= NR}
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {$nr= NR}
 RAW AST:
 
 AST ROOT:
@@ -75,7 +75,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nr=10
 
 
 ---------------------------------------------------------------- for-srec modifying the srec
-mlr --from ././reg-test/input/abixy put -v for(k,v in $*) {unset $[k]}; $j = NR
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {unset $[k]}; $j = NR
 RAW AST:
 
 AST ROOT:
@@ -119,7 +119,7 @@ j=8
 j=9
 j=10
 
-mlr --from ././reg-test/input/abixy put -v for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
 RAW AST:
 
 AST ROOT:
@@ -175,7 +175,7 @@ x=0.5985540091064224,j=8
 x=0.03144187646093577,j=9
 x=0.5026260055412137,j=10
 
-mlr --from ././reg-test/input/abixy --opprint put -S -v for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
+mlr --from ./reg-test/input/abixy --opprint put -S -v for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
 RAW AST:
 
 AST ROOT:
@@ -224,7 +224,7 @@ other other other other other zee    wye    8      0.5985540091064224  0.9761813
 other other other other other hat    wye    9      0.03144187646093577 0.7495507603507059
 other other other other other pan    wye    10     0.5026260055412137  0.9526183602969864
 
-mlr --from ././reg-test/input/abixy put -S -v for(k,v in $*) {$[v]=k}
+mlr --from ./reg-test/input/abixy put -S -v for(k,v in $*) {$[v]=k}
 RAW AST:
 
 AST ROOT:
@@ -262,7 +262,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,zee=a,wye=b,8=i,0.59855
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,hat=a,wye=b,9=i,0.03144187646093577=x,0.7495507603507059=y
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,pan=a,wye=b,10=i,0.5026260055412137=x,0.9526183602969864=y
 
-mlr --from ././reg-test/input/abixy put -v 
+mlr --from ./reg-test/input/abixy put -v 
   $sum = 0;
   for(k,v in $*) {
     if (k =~ "^[xy]$") {
@@ -330,7 +330,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.574735
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.780993
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.455244
 
-mlr --from ././reg-test/input/abixy put -S -v 
+mlr --from ./reg-test/input/abixy put -S -v 
   $sum = float(0);
   for(k,v in $*) {
     if (k =~ "^[xy]$") {

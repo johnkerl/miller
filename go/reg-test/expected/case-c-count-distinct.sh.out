@@ -1,12 +1,12 @@
 
-mlr count-distinct -f a ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a ./reg-test/input/small ./reg-test/input/abixy
 a=pan,count=4
 a=eks,count=6
 a=wye,count=4
 a=zee,count=4
 a=hat,count=2
 
-mlr count-distinct -f a,b ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a,b ./reg-test/input/small ./reg-test/input/abixy
 a=pan,b=pan,count=2
 a=eks,b=pan,count=2
 a=wye,b=wye,count=2
@@ -18,7 +18,7 @@ a=zee,b=wye,count=2
 a=hat,b=wye,count=2
 a=pan,b=wye,count=2
 
-mlr count-distinct -f a,b -u ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a,b -u ./reg-test/input/small ./reg-test/input/abixy
 field=a,value=pan,count=4
 field=a,value=eks,count=6
 field=a,value=wye,count=4
@@ -28,20 +28,20 @@ field=b,value=pan,count=8
 field=b,value=wye,count=10
 field=b,value=zee,count=2
 
-mlr count-distinct -f a -n ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a -n ./reg-test/input/small ./reg-test/input/abixy
 count=5
 
-mlr count-distinct -f a,b -n ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a,b -n ./reg-test/input/small ./reg-test/input/abixy
 count=10
 
-mlr count-distinct -f a -o foo ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a -o foo ./reg-test/input/small ./reg-test/input/abixy
 a=pan,foo=4
 a=eks,foo=6
 a=wye,foo=4
 a=zee,foo=4
 a=hat,foo=2
 
-mlr count-distinct -f a,b -o foo ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a,b -o foo ./reg-test/input/small ./reg-test/input/abixy
 a=pan,b=pan,foo=2
 a=eks,b=pan,foo=2
 a=wye,b=wye,foo=2
@@ -53,9 +53,9 @@ a=zee,b=wye,foo=2
 a=hat,b=wye,foo=2
 a=pan,b=wye,foo=2
 
-mlr count-distinct -f a -n -o foo ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a -n -o foo ./reg-test/input/small ./reg-test/input/abixy
 count=5
 
-mlr count-distinct -f a,b -n -o foo ././reg-test/input/small ././reg-test/input/abixy
+mlr count-distinct -f a,b -n -o foo ./reg-test/input/small ./reg-test/input/abixy
 count=10
 

@@ -3,7 +3,7 @@
 ================================================================
 JOIN
 
-mlr --opprint join -s -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -19,7 +19,7 @@ o x y
 3 e y
 3 f y
 
-mlr --opprint join -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -35,26 +35,7 @@ o x y
 3 e y
 3 f y
 
-mlr --opprint join -s --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-l x
-4 g
-
-mlr --opprint join --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -73,45 +54,7 @@ o x y
 l x
 4 g
 
-mlr --opprint join -s --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
-mlr --opprint join --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
-mlr --opprint join -s --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -130,10 +73,67 @@ o x y
 l x
 4 g
 
+mlr --opprint join -s --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
 r y
 5 z
 
-mlr --opprint join --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+r y
+5 z
+
+mlr --opprint join -s --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
+l x
+4 g
+
+r y
+5 z
+
+mlr --opprint join --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -155,37 +155,37 @@ r y
 l x
 4 g
 
-mlr --opprint join -s --np --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --np --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 l x
 4 g
 
-mlr --opprint join --np --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --np --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 l x
 4 g
 
-mlr --opprint join -s --np --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --np --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 5 z
 
-mlr --opprint join --np --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --np --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 5 z
 
-mlr --opprint join -s --np --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --np --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 l x
 4 g
 
 r y
 5 z
 
-mlr --opprint join --np --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --np --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 5 z
 
 l x
 4 g
 
-mlr join -l l -r r -j j -f ././reg-test/input/joina.dkvp ././reg-test/input/joinb.dkvp
+mlr join -l l -r r -j j -f ./reg-test/input/joina.dkvp ./reg-test/input/joinb.dkvp
 j=1,x=a,y=s
 j=2,x=b,y=t
 j=2,x=c,y=t
@@ -200,7 +200,7 @@ j=3,x=f,y=x
 j=3,x=e,y=y
 j=3,x=f,y=y
 
-mlr join -l l -j r -f ././reg-test/input/joina.dkvp ././reg-test/input/joinb.dkvp
+mlr join -l l -j r -f ./reg-test/input/joina.dkvp ./reg-test/input/joinb.dkvp
 r=1,x=a,y=s
 r=2,x=b,y=t
 r=2,x=c,y=t
@@ -215,7 +215,7 @@ r=3,x=f,y=x
 r=3,x=e,y=y
 r=3,x=f,y=y
 
-mlr join -r r -j l -f ././reg-test/input/joina.dkvp ././reg-test/input/joinb.dkvp
+mlr join -r r -j l -f ./reg-test/input/joina.dkvp ./reg-test/input/joinb.dkvp
 l=1,x=a,y=s
 l=2,x=b,y=t
 l=2,x=c,y=t
@@ -230,15 +230,15 @@ l=3,x=f,y=x
 l=3,x=e,y=y
 l=3,x=f,y=y
 
-mlr --opprint join -s -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 
-mlr --opprint join -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 
-mlr --opprint join -s --ul -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --ul -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 
-mlr --opprint join --ul -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --ul -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 
-mlr --opprint join -s --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -248,7 +248,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -258,7 +258,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join -s --ul --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --ul --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -268,7 +268,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join --ul --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --ul --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -278,11 +278,11 @@ r y
 3 y
 5 z
 
-mlr --opprint join -s --np --ul -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --np --ul -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 
-mlr --opprint join --np --ul -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --np --ul -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 
-mlr --opprint join -s --np --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --np --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -292,7 +292,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join --np --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --np --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -302,7 +302,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join -s --np --ul --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join -s --np --ul --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -312,7 +312,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join --np --ul --ur -f /dev/null -l l -r r -j o ././reg-test/input/joinb.dkvp
+mlr --opprint join --np --ul --ur -f /dev/null -l l -r r -j o ./reg-test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -322,11 +322,11 @@ r y
 3 y
 5 z
 
-mlr --opprint join -s -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join -s --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -336,7 +336,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -346,11 +346,11 @@ l x
 3 f
 4 g
 
-mlr --opprint join -s --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join -s --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -360,7 +360,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -370,7 +370,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join -s --np --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --np --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -380,7 +380,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join --np --ul -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --np --ul -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -390,11 +390,11 @@ l x
 3 f
 4 g
 
-mlr --opprint join -s --np --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --np --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join --np --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --np --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join -s --np --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --np --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -404,7 +404,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join --np --ul --ur -f ././reg-test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join --np --ul --ur -f ./reg-test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -414,7 +414,7 @@ l x
 3 f
 4 g
 
-mlr --odkvp join -j a -f ././reg-test/input/join-het.dkvp ././reg-test/input/abixy-het
+mlr --odkvp join -j a -f ./reg-test/input/join-het.dkvp ./reg-test/input/abixy-het
 a=pan,n=234,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,n=123,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,n=123,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -424,7 +424,7 @@ a=eks,n=123,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,n=456,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 a=pan,n=234,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --odkvp join -j a -f ././reg-test/input/abixy-het ././reg-test/input/join-het.dkvp
+mlr --odkvp join -j a -f ./reg-test/input/abixy-het ./reg-test/input/join-het.dkvp
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,n=123
 a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,n=123
 a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,n=123
@@ -434,17 +434,17 @@ a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,n=345
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,n=456
 a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,n=456
 
-mlr --odkvp join --np --ul --ur -j a -f ././reg-test/input/join-het.dkvp ././reg-test/input/abixy-het
+mlr --odkvp join --np --ul --ur -j a -f ./reg-test/input/join-het.dkvp ./reg-test/input/abixy-het
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 aye=bee,enn=emm
 
-mlr --odkvp join --np --ul --ur -j a -f ././reg-test/input/abixy-het ././reg-test/input/join-het.dkvp
+mlr --odkvp join --np --ul --ur -j a -f ./reg-test/input/abixy-het ./reg-test/input/join-het.dkvp
 aye=bee,enn=emm
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
-mlr --idkvp --oxtab join --lp left_ --rp right_ -j i -f ././reg-test/input/abixy-het ././reg-test/input/abixy-het
+mlr --idkvp --oxtab join --lp left_ --rp right_ -j i -f ./reg-test/input/abixy-het ./reg-test/input/abixy-het
 i       1
 left_a  pan
 left_b  pan
@@ -535,109 +535,109 @@ right_b wye
 right_x 0.5026260055412137
 right_y 0.9526183602969864
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r1
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r1
 j=1,b=11
 j=1,b=12
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r11
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r11
 j=1,b=11
 j=1,b=12
 j=1,b=11
 j=1,b=12
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r12
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r12
 j=1,b=11
 j=1,b=12
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r13
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r13
 j=1,b=11
 j=1,b=12
 j=3,b=14
 j=3,b=15
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r14
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r14
 j=1,b=11
 j=1,b=12
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r15
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r15
 j=1,b=11
 j=1,b=12
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r16
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r16
 j=1,b=11
 j=1,b=12
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r2
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r2
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r22
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r22
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r23
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r23
 j=3,b=14
 j=3,b=15
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r24
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r24
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r25
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r25
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r26
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r26
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r3
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r3
 j=3,b=14
 j=3,b=15
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r33
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r33
 j=3,b=14
 j=3,b=15
 j=3,b=14
 j=3,b=15
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r34
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r34
 j=3,b=14
 j=3,b=15
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r35
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r35
 j=3,b=14
 j=3,b=15
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r36
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r36
 j=3,b=14
 j=3,b=15
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r4
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r4
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r44
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r44
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r45
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r45
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r46
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r46
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r5
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r5
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r55
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r55
 j=5,b=17
 j=5,b=18
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r56
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r56
 j=5,b=17
 j=5,b=18
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r6
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r6
 
-mlr join -s -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r66
+mlr join -s -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r66
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r1
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r1
 x=100,b=10
 x=200,b=13
 l=3,b=14
@@ -647,7 +647,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r11
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r11
 x=100,b=10
 x=200,b=13
 l=3,b=14
@@ -657,7 +657,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r12
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r12
 x=100,b=10
 x=200,b=13
 x=300,b=16
@@ -667,7 +667,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r13
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r13
 x=100,b=10
 x=200,b=13
 x=300,b=16
@@ -675,7 +675,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r14
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r14
 x=100,b=10
 x=200,b=13
 l=3,b=14
@@ -685,7 +685,7 @@ x=400,b=19
 l=5,b=17
 l=5,b=18
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r15
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r15
 x=100,b=10
 x=200,b=13
 l=3,b=14
@@ -693,7 +693,7 @@ l=3,b=15
 x=300,b=16
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r16
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r16
 x=100,b=10
 x=200,b=13
 l=3,b=14
@@ -703,7 +703,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r2
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r2
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -715,7 +715,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r22
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r22
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -727,7 +727,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r23
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r23
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -737,7 +737,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r24
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r24
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -749,7 +749,7 @@ x=400,b=19
 l=5,b=17
 l=5,b=18
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r25
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r25
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -759,7 +759,7 @@ l=3,b=14
 l=3,b=15
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r26
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r26
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -771,7 +771,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r3
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r3
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -781,7 +781,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r33
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r33
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -791,7 +791,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r34
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r34
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -801,7 +801,7 @@ x=400,b=19
 l=5,b=17
 l=5,b=18
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r35
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r35
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -809,7 +809,7 @@ l=1,b=12
 x=300,b=16
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r36
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r36
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -819,7 +819,7 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r4
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r4
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -831,7 +831,7 @@ x=400,b=19
 l=5,b=17
 l=5,b=18
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r44
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r44
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -843,7 +843,7 @@ x=400,b=19
 l=5,b=17
 l=5,b=18
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r45
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r45
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -853,7 +853,7 @@ l=3,b=15
 x=300,b=16
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r46
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r46
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -865,7 +865,7 @@ x=400,b=19
 l=5,b=17
 l=5,b=18
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r5
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r5
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -875,7 +875,7 @@ l=3,b=15
 x=300,b=16
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r55
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r55
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -885,7 +885,7 @@ l=3,b=15
 x=300,b=16
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r56
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r56
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -895,19 +895,7 @@ l=3,b=15
 x=300,b=16
 x=400,b=19
 
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r6
-x=100,b=10
-x=200,b=13
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=300,b=16
-l=5,b=17
-l=5,b=18
-x=400,b=19
-
-mlr join -s --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r66
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r6
 x=100,b=10
 x=200,b=13
 l=1,b=11
@@ -919,690 +907,702 @@ l=5,b=17
 l=5,b=18
 x=400,b=19
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r1
+mlr join -s --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r66
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r1
 y=111
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r11
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r11
 y=111
 y=222
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r12
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r12
 y=111
 y=222
 r=2
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r13
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r13
 y=111
 y=222
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r14
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r14
 y=111
 y=222
 r=4
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r15
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r15
 y=111
 y=222
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r16
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r16
 y=111
 y=222
 r=6
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r2
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r2
 y=111
 r=2
 y=333
 
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r22
-y=111
-r=2
-y=222
-r=2
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r23
-y=111
-r=2
-y=222
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r24
-y=111
-r=2
-y=222
-r=4
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r25
-y=111
-r=2
-y=222
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r26
-y=111
-r=2
-y=222
-r=6
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r3
-y=111
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r33
-y=111
-y=222
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r34
-y=111
-y=222
-r=4
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r35
-y=111
-y=222
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r36
-y=111
-y=222
-r=6
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r4
-y=111
-r=4
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r44
-y=111
-r=4
-y=222
-r=4
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r45
-y=111
-r=4
-y=222
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r46
-y=111
-r=4
-y=222
-r=6
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r5
-y=111
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r55
-y=111
-y=222
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r56
-y=111
-y=222
-r=6
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r6
-y=111
-r=6
-y=333
-
-mlr join -s --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r66
-y=111
-r=6
-y=222
-r=6
-y=333
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r1
-j=1,b=11
-j=1,b=12
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r11
-j=1,b=11
-j=1,b=12
-j=1,b=11
-j=1,b=12
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r12
-j=1,b=11
-j=1,b=12
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r13
-j=1,b=11
-j=1,b=12
-j=3,b=14
-j=3,b=15
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r14
-j=1,b=11
-j=1,b=12
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r15
-j=1,b=11
-j=1,b=12
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r16
-j=1,b=11
-j=1,b=12
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r2
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r22
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r23
-j=3,b=14
-j=3,b=15
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r24
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r25
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r26
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r3
-j=3,b=14
-j=3,b=15
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r33
-j=3,b=14
-j=3,b=15
-j=3,b=14
-j=3,b=15
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r34
-j=3,b=14
-j=3,b=15
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r35
-j=3,b=14
-j=3,b=15
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r36
-j=3,b=14
-j=3,b=15
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r4
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r44
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r45
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r46
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r5
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r55
-j=5,b=17
-j=5,b=18
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r56
-j=5,b=17
-j=5,b=18
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r6
-
-mlr join -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r66
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r1
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r11
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r13
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r14
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r15
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r16
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r2
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r22
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r23
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r24
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r25
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r26
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r3
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r33
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r34
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r35
-l=1,b=11
-l=1,b=12
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r36
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r4
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r44
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r45
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r46
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r5
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r55
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r56
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r6
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ul -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r66
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r1
-y=111
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r11
-y=111
-y=222
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r12
-y=111
-y=222
-r=2
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r13
-y=111
-y=222
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r14
-y=111
-y=222
-r=4
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r15
-y=111
-y=222
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r16
-y=111
-y=222
-r=6
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r2
-y=111
-r=2
-y=333
-
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r22
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r22
 y=111
 r=2
 y=222
 r=2
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r23
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r23
 y=111
 r=2
 y=222
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r24
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r24
 y=111
 r=2
 y=222
 r=4
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r25
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r25
 y=111
 r=2
 y=222
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r26
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r26
 y=111
 r=2
 y=222
 r=6
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r3
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r3
 y=111
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r33
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r33
 y=111
 y=222
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r34
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r34
 y=111
 y=222
 r=4
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r35
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r35
 y=111
 y=222
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r36
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r36
 y=111
 y=222
 r=6
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r4
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r4
 y=111
 r=4
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r44
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r44
+y=111
+r=4
+y=222
+r=4
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r45
+y=111
+r=4
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r46
+y=111
+r=4
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r5
+y=111
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r55
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r56
+y=111
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r6
+y=111
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r66
+y=111
+r=6
+y=222
+r=6
+y=333
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r1
+j=1,b=11
+j=1,b=12
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r11
+j=1,b=11
+j=1,b=12
+j=1,b=11
+j=1,b=12
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r12
+j=1,b=11
+j=1,b=12
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r13
+j=1,b=11
+j=1,b=12
+j=3,b=14
+j=3,b=15
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r14
+j=1,b=11
+j=1,b=12
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r15
+j=1,b=11
+j=1,b=12
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r16
+j=1,b=11
+j=1,b=12
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r2
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r22
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r23
+j=3,b=14
+j=3,b=15
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r24
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r25
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r26
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r3
+j=3,b=14
+j=3,b=15
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r33
+j=3,b=14
+j=3,b=15
+j=3,b=14
+j=3,b=15
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r34
+j=3,b=14
+j=3,b=15
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r35
+j=3,b=14
+j=3,b=15
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r36
+j=3,b=14
+j=3,b=15
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r4
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r44
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r45
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r46
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r5
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r55
+j=5,b=17
+j=5,b=18
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r56
+j=5,b=17
+j=5,b=18
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r6
+
+mlr join -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r66
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r1
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r11
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r13
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r14
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r15
+l=3,b=14
+l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r16
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r2
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r22
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r23
+l=1,b=11
+l=1,b=12
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r24
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r25
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r26
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r3
+l=1,b=11
+l=1,b=12
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r33
+l=1,b=11
+l=1,b=12
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r34
+l=1,b=11
+l=1,b=12
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r35
+l=1,b=11
+l=1,b=12
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r36
+l=1,b=11
+l=1,b=12
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r4
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r44
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r45
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r46
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r5
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r55
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r56
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r6
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r66
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r1
+y=111
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r11
+y=111
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r12
+y=111
+y=222
+r=2
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r13
+y=111
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r14
+y=111
+y=222
+r=4
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r15
+y=111
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r16
+y=111
+y=222
+r=6
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r2
+y=111
+r=2
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r22
+y=111
+r=2
+y=222
+r=2
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r23
+y=111
+r=2
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r24
+y=111
+r=2
+y=222
+r=4
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r25
+y=111
+r=2
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r26
+y=111
+r=2
+y=222
+r=6
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r3
+y=111
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r33
+y=111
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r34
+y=111
+y=222
+r=4
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r35
+y=111
+y=222
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r36
+y=111
+y=222
+r=6
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r4
+y=111
+r=4
+y=333
+
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r44
 y=111
 r=4
 y=222
 r=4
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r45
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r45
 y=111
 r=4
 y=222
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r46
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r46
 y=111
 r=4
 y=222
 r=6
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r5
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r5
 y=111
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r55
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r55
 y=111
 y=222
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r56
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r56
 y=111
 y=222
 r=6
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r6
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r6
 y=111
 r=6
 y=333
 
-mlr join --np --ur -l l -r r -j j -f ././reg-test/input/het-join-left ././reg-test/input/het-join-right-r66
+mlr join --np --ur -l l -r r -j j -f ./reg-test/input/het-join-left ./reg-test/input/het-join-right-r66
 y=111
 r=6
 y=222

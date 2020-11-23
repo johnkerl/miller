@@ -1,11 +1,11 @@
 
-mlr --csv --prepipe cat cat ././reg-test/input/rfc-csv/simple.csv-crlf
+mlr --csv --prepipe cat cat ./reg-test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
 x,"y""yy",z
 
-mlr --dkvp --prepipe cat cat ././reg-test/input/abixy
+mlr --dkvp --prepipe cat cat ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776

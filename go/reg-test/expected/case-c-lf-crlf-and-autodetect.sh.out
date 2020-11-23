@@ -1,5 +1,5 @@
 
-mlr --irs auto --ors lf cat ././reg-test/input/line-term-lf.dkvp
+mlr --irs auto --ors lf cat ./reg-test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -11,7 +11,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --irs auto --ors lf cat ././reg-test/input/line-term-crlf.dkvp
+mlr --irs auto --ors lf cat ./reg-test/input/line-term-crlf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -23,7 +23,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr cat ././reg-test/input/line-term-lf.dkvp
+mlr cat ./reg-test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -35,7 +35,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr cat ././reg-test/input/line-term-crlf.dkvp
+mlr cat ./reg-test/input/line-term-crlf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -49,7 +49,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- nidx
-mlr --irs auto --ors lf --nidx --fs comma cat ././reg-test/input/line-term-lf.dkvp
+mlr --irs auto --ors lf --nidx --fs comma cat ./reg-test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -61,7 +61,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --irs auto --ors lf --nidx --fs comma cat ././reg-test/input/line-term-crlf.dkvp
+mlr --irs auto --ors lf --nidx --fs comma cat ./reg-test/input/line-term-crlf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -73,7 +73,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --nidx --fs comma cat ././reg-test/input/line-term-lf.dkvp
+mlr --nidx --fs comma cat ./reg-test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -85,7 +85,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --nidx --fs comma cat ././reg-test/input/line-term-crlf.dkvp
+mlr --nidx --fs comma cat ./reg-test/input/line-term-crlf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -99,7 +99,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ---------------------------------------------------------------- csvlite
-mlr --irs auto --ors lf --csvlite cat ././reg-test/input/line-term-lf.csv
+mlr --irs auto --ors lf --csvlite cat ./reg-test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -112,7 +112,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --irs auto --ors lf --csvlite cat ././reg-test/input/line-term-crlf.csv
+mlr --irs auto --ors lf --csvlite cat ./reg-test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -125,7 +125,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --csvlite cat ././reg-test/input/line-term-lf.csv
+mlr --csvlite cat ./reg-test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -138,7 +138,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --csvlite cat ././reg-test/input/line-term-crlf.csv
+mlr --csvlite cat ./reg-test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -153,7 +153,7 @@ pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
 ---------------------------------------------------------------- pprint
-mlr --irs auto --ors lf --pprint cat ././reg-test/input/line-term-lf.csv
+mlr --irs auto --ors lf --pprint cat ./reg-test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -166,7 +166,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --irs auto --ors lf --pprint cat ././reg-test/input/line-term-crlf.csv
+mlr --irs auto --ors lf --pprint cat ./reg-test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -179,7 +179,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --pprint cat ././reg-test/input/line-term-lf.csv
+mlr --pprint cat ./reg-test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -192,7 +192,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --pprint cat ././reg-test/input/line-term-crlf.csv
+mlr --pprint cat ./reg-test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -207,7 +207,7 @@ pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
 ---------------------------------------------------------------- xtab
-mlr --ifs auto --xtab cat ././reg-test/input/line-term-lf.xtab
+mlr --ifs auto --xtab cat ./reg-test/input/line-term-lf.xtab
 a pan
 b pan
 i 1
@@ -268,7 +268,7 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr --ifs auto --xtab cat ././reg-test/input/line-term-crlf.xtab
+mlr --ifs auto --xtab cat ./reg-test/input/line-term-crlf.xtab
 a pan
 b pan
 i 1
@@ -329,7 +329,7 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr --fs auto --xtab cat ././reg-test/input/line-term-lf.xtab
+mlr --fs auto --xtab cat ./reg-test/input/line-term-lf.xtab
 a pan
 b pan
 i 1
@@ -390,7 +390,7 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr --fs auto --xtab cat ././reg-test/input/line-term-crlf.xtab
+mlr --fs auto --xtab cat ./reg-test/input/line-term-crlf.xtab
 a pan
 b pan
 i 1
@@ -453,7 +453,7 @@ y 0.9526183602969864
 
 
 ---------------------------------------------------------------- xtab
-mlr --ifs auto --xtab cat ././reg-test/input/line-term-lf.xtab
+mlr --ifs auto --xtab cat ./reg-test/input/line-term-lf.xtab
 a pan
 b pan
 i 1
@@ -514,7 +514,7 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr --ifs auto --xtab cat ././reg-test/input/line-term-crlf.xtab
+mlr --ifs auto --xtab cat ./reg-test/input/line-term-crlf.xtab
 a pan
 b pan
 i 1
@@ -575,7 +575,7 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr --fs auto --xtab cat ././reg-test/input/line-term-lf.xtab
+mlr --fs auto --xtab cat ./reg-test/input/line-term-lf.xtab
 a pan
 b pan
 i 1
@@ -636,7 +636,7 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr --fs auto --xtab cat ././reg-test/input/line-term-crlf.xtab
+mlr --fs auto --xtab cat ./reg-test/input/line-term-crlf.xtab
 a pan
 b pan
 i 1
@@ -699,7 +699,7 @@ y 0.9526183602969864
 
 
 ---------------------------------------------------------------- csv
-mlr --irs auto --ors lf --csv cat ././reg-test/input/line-term-lf.csv
+mlr --irs auto --ors lf --csv cat ./reg-test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -712,7 +712,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --irs auto --ors lf --csv cat ././reg-test/input/line-term-crlf.csv
+mlr --irs auto --ors lf --csv cat ./reg-test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -725,7 +725,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --csv cat ././reg-test/input/line-term-lf.csv
+mlr --csv cat ./reg-test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -738,7 +738,7 @@ zee,wye,8,0.5985540091064224,0.976181385699006
 hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
-mlr --csv cat ././reg-test/input/line-term-crlf.csv
+mlr --csv cat ./reg-test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -753,7 +753,7 @@ pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
 ---------------------------------------------------------------- json nowrap nostack
-mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-lf.json
+mlr --irs auto --ors lf --json cat ./reg-test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -765,7 +765,7 @@ mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-lf.json
 { "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
-mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-crlf.json
+mlr --irs auto --ors lf --json cat ./reg-test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -777,7 +777,7 @@ mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-crlf.json
 { "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
-mlr --json cat ././reg-test/input/line-term-lf.json
+mlr --json cat ./reg-test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -789,7 +789,7 @@ mlr --json cat ././reg-test/input/line-term-lf.json
 { "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
-mlr --json cat ././reg-test/input/line-term-crlf.json
+mlr --json cat ./reg-test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -803,7 +803,7 @@ mlr --json cat ././reg-test/input/line-term-crlf.json
 
 
 ---------------------------------------------------------------- json yeswrap nostack
-mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-lf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json cat ./reg-test/input/line-term-lf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -817,7 +817,7 @@ mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-lf-w
 ,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 ]
 
-mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json cat ./reg-test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -831,7 +831,7 @@ mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-crlf
 ,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 ]
 
-mlr --jlistwrap --json cat ././reg-test/input/line-term-lf-wrap.json
+mlr --jlistwrap --json cat ./reg-test/input/line-term-lf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -845,7 +845,7 @@ mlr --jlistwrap --json cat ././reg-test/input/line-term-lf-wrap.json
 ,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 ]
 
-mlr --jlistwrap --json cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --jlistwrap --json cat ./reg-test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -861,7 +861,7 @@ mlr --jlistwrap --json cat ././reg-test/input/line-term-crlf-wrap.json
 
 
 ---------------------------------------------------------------- json nowrap yesstack
-mlr --irs auto --json --jvstack cat ././reg-test/input/line-term-lf.json
+mlr --irs auto --json --jvstack cat ./reg-test/input/line-term-lf.json
 {
   "a": "pan",
   "b": "pan",
@@ -933,7 +933,7 @@ mlr --irs auto --json --jvstack cat ././reg-test/input/line-term-lf.json
   "y": 0.9526183602969864
 }
 
-mlr --irs auto --ors lf --json --jvstack cat ././reg-test/input/line-term-crlf.json
+mlr --irs auto --ors lf --json --jvstack cat ./reg-test/input/line-term-crlf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1005,7 +1005,7 @@ mlr --irs auto --ors lf --json --jvstack cat ././reg-test/input/line-term-crlf.j
   "y": 0.9526183602969864
 }
 
-mlr --json --jvstack cat ././reg-test/input/line-term-lf.json
+mlr --json --jvstack cat ./reg-test/input/line-term-lf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1077,7 +1077,7 @@ mlr --json --jvstack cat ././reg-test/input/line-term-lf.json
   "y": 0.9526183602969864
 }
 
-mlr --json --jvstack cat ././reg-test/input/line-term-crlf.json
+mlr --json --jvstack cat ./reg-test/input/line-term-crlf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1151,7 +1151,7 @@ mlr --json --jvstack cat ././reg-test/input/line-term-crlf.json
 
 
 ---------------------------------------------------------------- json yeswrap yesstack
-mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line-term-lf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg-test/input/line-term-lf-wrap.json
 [
 {
   "a": "pan",
@@ -1225,7 +1225,7 @@ mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line
 }
 ]
 
-mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg-test/input/line-term-crlf-wrap.json
 [
 {
   "a": "pan",
@@ -1299,7 +1299,7 @@ mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line
 }
 ]
 
-mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-lf-wrap.json
+mlr --jlistwrap --json --jvstack cat ./reg-test/input/line-term-lf-wrap.json
 [
 {
   "a": "pan",
@@ -1373,7 +1373,7 @@ mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-lf-wrap.json
 }
 ]
 
-mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --jlistwrap --json --jvstack cat ./reg-test/input/line-term-crlf-wrap.json
 [
 {
   "a": "pan",
@@ -1449,7 +1449,7 @@ mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-crlf-wrap.json
 
 
 ---------------------------------------------------------------- json nowrap nostack
-mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-lf.json
+mlr --irs auto --ors lf --json cat ./reg-test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -1461,7 +1461,7 @@ mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-lf.json
 { "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
-mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-crlf.json
+mlr --irs auto --ors lf --json cat ./reg-test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -1473,7 +1473,7 @@ mlr --irs auto --ors lf --json cat ././reg-test/input/line-term-crlf.json
 { "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
-mlr --json cat ././reg-test/input/line-term-lf.json
+mlr --json cat ./reg-test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -1485,7 +1485,7 @@ mlr --json cat ././reg-test/input/line-term-lf.json
 { "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
-mlr --json cat ././reg-test/input/line-term-crlf.json
+mlr --json cat ./reg-test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -1499,7 +1499,7 @@ mlr --json cat ././reg-test/input/line-term-crlf.json
 
 
 ---------------------------------------------------------------- json yeswrap nostack
-mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-lf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json cat ./reg-test/input/line-term-lf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -1513,7 +1513,7 @@ mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-lf-w
 ,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 ]
 
-mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json cat ./reg-test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -1527,7 +1527,7 @@ mlr --irs auto --ors lf --jlistwrap --json cat ././reg-test/input/line-term-crlf
 ,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 ]
 
-mlr --jlistwrap --json cat ././reg-test/input/line-term-lf-wrap.json
+mlr --jlistwrap --json cat ./reg-test/input/line-term-lf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -1541,7 +1541,7 @@ mlr --jlistwrap --json cat ././reg-test/input/line-term-lf-wrap.json
 ,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 ]
 
-mlr --jlistwrap --json cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --jlistwrap --json cat ./reg-test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -1557,7 +1557,7 @@ mlr --jlistwrap --json cat ././reg-test/input/line-term-crlf-wrap.json
 
 
 ---------------------------------------------------------------- json nowrap yesstack
-mlr --irs auto --ors lf --json --jvstack cat ././reg-test/input/line-term-lf.json
+mlr --irs auto --ors lf --json --jvstack cat ./reg-test/input/line-term-lf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1629,7 +1629,7 @@ mlr --irs auto --ors lf --json --jvstack cat ././reg-test/input/line-term-lf.jso
   "y": 0.9526183602969864
 }
 
-mlr --irs auto --ors lf --json --jvstack cat ././reg-test/input/line-term-crlf.json
+mlr --irs auto --ors lf --json --jvstack cat ./reg-test/input/line-term-crlf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1701,7 +1701,7 @@ mlr --irs auto --ors lf --json --jvstack cat ././reg-test/input/line-term-crlf.j
   "y": 0.9526183602969864
 }
 
-mlr --json --jvstack cat ././reg-test/input/line-term-lf.json
+mlr --json --jvstack cat ./reg-test/input/line-term-lf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1773,7 +1773,7 @@ mlr --json --jvstack cat ././reg-test/input/line-term-lf.json
   "y": 0.9526183602969864
 }
 
-mlr --json --jvstack cat ././reg-test/input/line-term-crlf.json
+mlr --json --jvstack cat ./reg-test/input/line-term-crlf.json
 {
   "a": "pan",
   "b": "pan",
@@ -1847,7 +1847,7 @@ mlr --json --jvstack cat ././reg-test/input/line-term-crlf.json
 
 
 ---------------------------------------------------------------- json yeswrap yesstack
-mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line-term-lf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg-test/input/line-term-lf-wrap.json
 [
 {
   "a": "pan",
@@ -1921,7 +1921,7 @@ mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line
 }
 ]
 
-mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg-test/input/line-term-crlf-wrap.json
 [
 {
   "a": "pan",
@@ -1995,7 +1995,7 @@ mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ././reg-test/input/line
 }
 ]
 
-mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-lf-wrap.json
+mlr --jlistwrap --json --jvstack cat ./reg-test/input/line-term-lf-wrap.json
 [
 {
   "a": "pan",
@@ -2069,7 +2069,7 @@ mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-lf-wrap.json
 }
 ]
 
-mlr --jlistwrap --json --jvstack cat ././reg-test/input/line-term-crlf-wrap.json
+mlr --jlistwrap --json --jvstack cat ./reg-test/input/line-term-crlf-wrap.json
 [
 {
   "a": "pan",

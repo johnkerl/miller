@@ -1,5 +1,5 @@
 
-mlr --opprint bar -f x,y --lo 0 --hi 1 ././reg-test/input/abixy
+mlr --opprint bar -f x,y --lo 0 --hi 1 ./reg-test/input/abixy
 a   b   i  x                                        y
 pan pan 1  *************........................... *****************************...........
 eks pan 2  ******************************.......... ********************....................
@@ -12,7 +12,7 @@ zee wye 8  ***********************................. ****************************
 hat wye 9  *....................................... *****************************...........
 pan wye 10 ********************.................... **************************************..
 
-mlr --opprint bar -f x,y -c c -x x -b b --lo 0.1 --hi 0.9 -w 20 ././reg-test/input/abixy
+mlr --opprint bar -f x,y -c c -x x -b b --lo 0.1 --hi 0.9 -w 20 ./reg-test/input/abixy
 a   b   i  x                    y
 pan pan 1  ccccccbbbbbbbbbbbbbb cccccccccccccccbbbbb
 eks pan 2  ccccccccccccccccbbbb ccccccccccbbbbbbbbbb
@@ -25,7 +25,7 @@ zee wye 8  ccccccccccccbbbbbbbb cccccccccccccccccccx
 hat wye 9  xbbbbbbbbbbbbbbbbbbb ccccccccccccccccbbbb
 pan wye 10 ccccccccccbbbbbbbbbb cccccccccccccccccccx
 
-mlr --opprint bar --auto -f x,y -w 10 ././reg-test/input/abixy
+mlr --opprint bar --auto -f x,y -w 10 ./reg-test/input/abixy
 a   b   i  x                              y
 pan pan 1  [0.0314419]****......[0.75868] [0.134189]*******...[0.976181]
 eks pan 2  [0.0314419]*********#[0.75868] [0.134189]****......[0.976181]

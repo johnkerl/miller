@@ -1,5 +1,5 @@
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   num a = 1;
   for (;;) {
@@ -23,7 +23,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   36
 hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   num a = 1;
   for (;;) {
@@ -47,7 +47,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   36
 hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   for (num a = 1; ;) {
     if (a > NR) {
@@ -70,7 +70,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   36
 hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   num a = 1;
   for (; ; a += 1) {
@@ -93,7 +93,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   36
 hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   for (num a=1; ; a += 1) {
     if (a > NR) {
@@ -115,7 +115,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   36
 hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   for (num a=1; a <= NR; a += 1) {
     sum += a;
@@ -156,7 +156,7 @@ a:209,b:309
 a:210,b:310
 x=1,oa=100,ob=311
 
-mlr --from ././reg-test/input/abixy put 
+mlr --from ./reg-test/input/abixy put 
   for ( ; $x <= 10; $x += 1) {
   }
 
@@ -171,7 +171,7 @@ a=zee,b=wye,i=8,x=10.598554,y=0.976181385699006
 a=hat,b=wye,i=9,x=10.031442,y=0.7495507603507059
 a=pan,b=wye,i=10,x=10.502626,y=0.9526183602969864
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num a = 100;
   b  = 200;
   @c = 300;
@@ -199,7 +199,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   410 110 210 310 410
 hat wye 9  0.03144187646093577 0.7495507603507059  410 110 210 310 410
 pan wye 10 0.5026260055412137  0.9526183602969864  410 110 210 310 410
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   for (num a = 1; a <= 10; a += 1) {
     continue;
@@ -219,7 +219,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   0
 hat wye 9  0.03144187646093577 0.7495507603507059  0
 pan wye 10 0.5026260055412137  0.9526183602969864  0
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   for (num a = 1; a <= 10; a += 1) {
     sum += a;
@@ -239,7 +239,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   1
 hat wye 9  0.03144187646093577 0.7495507603507059  1
 pan wye 10 0.5026260055412137  0.9526183602969864  1
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   num sum = 0;
   for (num a = 1; a <= NR; a += 1) {
     if (a == 4 || a == 5) {
@@ -264,7 +264,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   19
 hat wye 9  0.03144187646093577 0.7495507603507059  19
 pan wye 10 0.5026260055412137  0.9526183602969864  19
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
     for ($o1 = 1; ; $o3 = 3) {
         break;
     }
@@ -281,7 +281,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   1
 hat wye 9  0.03144187646093577 0.7495507603507059  1
 pan wye 10 0.5026260055412137  0.9526183602969864  1
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
     for ($o1 = 1; $o1 < NR; $o1 += 1) {
     }
 
@@ -297,20 +297,20 @@ zee wye 8  0.5985540091064224  0.976181385699006   8
 hat wye 9  0.03144187646093577 0.7495507603507059  9
 pan wye 10 0.5026260055412137  0.9526183602969864  10
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
     for ($o1 = 1, $o2 = 2; $o3 = 3; $o4 = 4) {
     }
 
 mlr: the final triple-for continutation statement must be a bare boolean.
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
     for ($o1 = 1, $o2 = 2; $o3 < 3, $o4 = 4; $o5 = 5) {
         break;
     }
 
 mlr: the final triple-for continutation statement must be a bare boolean.
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
     $o4 = 0;
     for ($o1 = 1, $o2 = 2; $o3 = 3, $o4 < 4; $o5 = 5) {
         break;

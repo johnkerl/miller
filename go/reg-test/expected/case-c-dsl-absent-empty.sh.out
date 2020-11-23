@@ -1,15 +1,15 @@
 
-mlr put -q @sum     += $x; end{emitp @sum} ././reg-test/input/abixy
+mlr put -q @sum     += $x; end{emitp @sum} ./reg-test/input/abixy
 sum=4.536294
 
-mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ././reg-test/input/abixy
+mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg-test/input/abixy
 a=pan,sum=0.849416
 a=eks,sum=1.751863
 a=wye,sum=0.777892
 a=zee,sum=1.125680
 a=hat,sum=0.031442
 
-mlr put $nonesuch = @nonesuch ././reg-test/input/abixy
+mlr put $nonesuch = @nonesuch ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -21,15 +21,15 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr put -q @sum     += $x; end{emitp @sum} ././reg-test/input/abixy-het
+mlr put -q @sum     += $x; end{emitp @sum} ./reg-test/input/abixy-het
 sum=3.963005
 
-mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ././reg-test/input/abixy-het
+mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg-test/input/abixy-het
 a=pan,sum=0.849416
 a=eks,sum=1.751863
 a=zee,sum=1.125680
 
-mlr put $nonesuch = @nonesuch ././reg-test/input/abixy-het
+mlr put $nonesuch = @nonesuch ./reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41,7 +41,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ././reg-test/input/abixy
+mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg-test/input/abixy
 sumtype=float,xtype=float,sum=0.346790
 sumtype=float,xtype=float,sum=1.105470
 sumtype=float,xtype=float,sum=1.310073
@@ -54,7 +54,7 @@ sumtype=float,xtype=float,sum=4.033668
 sumtype=float,xtype=float,sum=4.536294
 sum=4.536294
 
-mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ././reg-test/input/abixy-het
+mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg-test/input/abixy-het
 sumtype=float,xtype=float,sum=0.346790
 sumtype=float,xtype=float,sum=1.105470
 sumtype=float,xtype=float,sum=1.310073
@@ -67,7 +67,7 @@ sumtype=float,xtype=float,sum=3.460379
 sumtype=float,xtype=float,sum=3.963005
 sum=3.963005
 
-mlr put $z = $x + $y ././reg-test/input/typeof.dkvp
+mlr put $z = $x + $y ./reg-test/input/typeof.dkvp
 x=1,y=2,z=3
 x=1,y=,z=
 x=,y=2,z=
@@ -81,7 +81,7 @@ x=1,b=,z=1
 x=,b=2
 x=,b=
 
-mlr put $z = $x + $u ././reg-test/input/typeof.dkvp
+mlr put $z = $x + $u ./reg-test/input/typeof.dkvp
 x=1,y=2,z=1
 x=1,y=,z=1
 x=,y=2
@@ -95,7 +95,7 @@ x=1,b=,z=1
 x=,b=2
 x=,b=
 
-mlr put @s = @s + $y; emitp @s ././reg-test/input/typeof.dkvp
+mlr put @s = @s + $y; emitp @s ./reg-test/input/typeof.dkvp
 s=2
 x=1,y=2
 s=
@@ -121,7 +121,7 @@ x=,b=2
 s=
 x=,b=
 
-mlr put @s = @s + $u; emitp @s ././reg-test/input/typeof.dkvp
+mlr put @s = @s + $u; emitp @s ./reg-test/input/typeof.dkvp
 x=1,y=2
 x=1,y=
 x=,y=2
@@ -135,7 +135,7 @@ x=1,b=
 x=,b=2
 x=,b=
 
-mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ././reg-test/input/typeof.dkvp
+mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg-test/input/typeof.dkvp
 x=int,y=int,z=int
 x=int,y=empty,z=empty
 x=empty,y=int,z=empty
@@ -149,7 +149,7 @@ x=int,b=,z=int,y=absent
 x=empty,b=2,y=absent,z=absent
 x=empty,b=,y=absent,z=absent
 
-mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ././reg-test/input/typeof.dkvp
+mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg-test/input/typeof.dkvp
 x=int,y=int,z=int
 x=int,y=empty,z=int
 x=empty,y=int,z=absent
@@ -163,7 +163,7 @@ x=int,b=,z=int,y=absent
 x=empty,b=2,y=absent,z=absent
 x=empty,b=,y=absent,z=absent
 
-mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ././reg-test/input/typeof.dkvp
+mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg-test/input/typeof.dkvp
 x=int,y=int,z=absent,s=int
 x=int,y=empty,z=absent,s=empty
 x=empty,y=int,z=absent,s=empty
@@ -177,7 +177,7 @@ x=int,b=,y=absent,z=absent,s=empty
 x=empty,b=2,y=absent,z=absent,s=empty
 x=empty,b=,y=absent,z=absent,s=empty
 
-mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ././reg-test/input/typeof.dkvp
+mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg-test/input/typeof.dkvp
 x=int,y=int,z=absent,s=absent
 x=int,y=empty,z=absent,s=absent
 x=empty,y=int,z=absent,s=absent

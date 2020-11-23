@@ -3,14 +3,14 @@
 ================================================================
 SPACE-PADDING
 
-mlr --idkvp --odkvp --ifs space --repifs cat ././reg-test/input/space-pad.dkvp
+mlr --idkvp --odkvp --ifs space --repifs cat ./reg-test/input/space-pad.dkvp
 a=1,b=2
 c=3
 
-mlr --inidx --odkvp --ifs space --repifs cat ././reg-test/input/space-pad.nidx
+mlr --inidx --odkvp --ifs space --repifs cat ./reg-test/input/space-pad.nidx
 1=a,2=b,3=c
 1=d,2=e,3=f
 
-mlr --icsvlite --odkvp --ifs space --repifs cat ././reg-test/input/space-pad.pprint
+mlr --icsvlite --odkvp --ifs space --repifs cat ./reg-test/input/space-pad.pprint
 a=1,b=2,c=3
 

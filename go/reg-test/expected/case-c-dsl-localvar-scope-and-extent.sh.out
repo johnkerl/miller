@@ -1,5 +1,5 @@
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   func f() {
     var a = 1;
     if (NR > 5) {
@@ -47,7 +47,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   2  1  2  2
 hat wye 9  0.03144187646093577 0.7495507603507059  2  1  2  2
 pan wye 10 0.5026260055412137  0.9526183602969864  2  1  2  2
 
-mlr --opprint --from ././reg-test/input/abixy put 
+mlr --opprint --from ./reg-test/input/abixy put 
   func f() {
     var a = 2;
     var b = 2;

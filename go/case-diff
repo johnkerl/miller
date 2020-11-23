@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# See ./reg-test/run
+for arg; do
+  expfile=./reg-test/expected/$arg.out
+  outfile=./output-reg-test/$arg.out
+  diff -a -I '^mlr' -I '^Miller:' -I '^cat' $expfile $outfile
+done

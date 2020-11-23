@@ -1,19 +1,19 @@
 
-mlr --icsvlite --odkvp cat ././reg-test/input/null-fields.csv
+mlr --icsvlite --odkvp cat ./reg-test/input/null-fields.csv
 a=1,b=2,c=3,d=4,e=5
 a=6,b=,c=,d=,e=10
 a=,b=,c=,d=11,e=12
 a=13,b=14,c=,d=,e=
 a=,b=,c=,d=,e=
 
-mlr --inidx --ifs comma --odkvp cat ././reg-test/input/null-fields.nidx
+mlr --inidx --ifs comma --odkvp cat ./reg-test/input/null-fields.nidx
 1=a,2=b,3=c,4=d,5=e
 1=f,2=,3=,4=,5=g
 1=,2=,3=,4=h,5=i
 1=j,2=k,3=,4=,5=
 1=,2=,3=,4=,5=
 
-mlr --idkvp --oxtab cat ././reg-test/input/missings.dkvp
+mlr --idkvp --oxtab cat ./reg-test/input/missings.dkvp
 a 1
 b 2
 c 3
@@ -37,70 +37,28 @@ c 3
 6 e
 f 6
 
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x ./reg-test/input/nullvals.dkvp
 x_sum      9
 x_min      1
 x_max      5
 x_antimode 1
 x_mode     1
 
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y ./reg-test/input/nullvals.dkvp
 y_sum      12
 y_min      2
 y_max      6
 y_antimode 2
 y_mode     2
 
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z ./reg-test/input/nullvals.dkvp
 z_sum      0
 z_min      
 z_max      
 z_antimode 
 z_mode     
 
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z ././reg-test/input/nullvals.dkvp
-x_sum      9
-x_min      1
-x_max      5
-x_antimode 1
-x_mode     1
-y_sum      12
-y_min      2
-y_max      6
-y_antimode 2
-y_mode     2
-z_sum      0
-z_min      
-z_max      
-z_antimode 
-z_mode     
-
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x -g a ././reg-test/input/nullvals.dkvp
-a          b
-x_sum      9
-x_min      1
-x_max      5
-x_antimode 1
-x_mode     1
-
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y -g a ././reg-test/input/nullvals.dkvp
-a          b
-y_sum      12
-y_min      2
-y_max      6
-y_antimode 2
-y_mode     2
-
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z -g a ././reg-test/input/nullvals.dkvp
-a          b
-z_sum      0
-z_min      
-z_max      
-z_antimode 
-z_mode     
-
-mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z -g a ././reg-test/input/nullvals.dkvp
-a          b
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z ./reg-test/input/nullvals.dkvp
 x_sum      9
 x_min      1
 x_max      5
@@ -117,7 +75,49 @@ z_max
 z_antimode 
 z_mode     
 
-mlr --opprint merge-fields -a sum,min,max,antimode,mode -f x,y,z -o xyz ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x -g a ./reg-test/input/nullvals.dkvp
+a          b
+x_sum      9
+x_min      1
+x_max      5
+x_antimode 1
+x_mode     1
+
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y -g a ./reg-test/input/nullvals.dkvp
+a          b
+y_sum      12
+y_min      2
+y_max      6
+y_antimode 2
+y_mode     2
+
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z -g a ./reg-test/input/nullvals.dkvp
+a          b
+z_sum      0
+z_min      
+z_max      
+z_antimode 
+z_mode     
+
+mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z -g a ./reg-test/input/nullvals.dkvp
+a          b
+x_sum      9
+x_min      1
+x_max      5
+x_antimode 1
+x_mode     1
+y_sum      12
+y_min      2
+y_max      6
+y_antimode 2
+y_mode     2
+z_sum      0
+z_min      
+z_max      
+z_antimode 
+z_mode     
+
+mlr --opprint merge-fields -a sum,min,max,antimode,mode -f x,y,z -o xyz ./reg-test/input/nullvals.dkvp
 a xyz_sum xyz_min xyz_max xyz_antimode xyz_mode
 b 3       1       2       1            1
 b 7       3       4       3            3
@@ -125,7 +125,7 @@ b 5       5       5       5            5
 b 6       6       6       6            6
 b 0       -       -       -            -
 
-mlr --opprint merge-fields -a sum,min,max,antimode,mode -r x,y,z -o xyz ././reg-test/input/nullvals.dkvp
+mlr --opprint merge-fields -a sum,min,max,antimode,mode -r x,y,z -o xyz ./reg-test/input/nullvals.dkvp
 a xyz_sum xyz_min xyz_max xyz_antimode xyz_mode
 b 3       1       2       1            1
 b 7       3       4       3            3
@@ -133,7 +133,7 @@ b 5       5       5       5            5
 b 6       6       6       6            6
 b 0       -       -       -            -
 
-mlr --opprint merge-fields -a sum,min,max,antimode,mode -c x,y,z ././reg-test/input/nullvals.dkvp
+mlr --opprint merge-fields -a sum,min,max,antimode,mode -c x,y,z ./reg-test/input/nullvals.dkvp
 a _sum _min _max _antimode _mode
 b 3    1    2    1         1
 b 7    3    4    3         3
@@ -141,24 +141,24 @@ b 5    5    5    5         5
 b 6    6    6    6         6
 b 0    -    -    -         -
 
-mlr --oxtab stats2 -a cov -f x,y ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats2 -a cov -f x,y ./reg-test/input/nullvals.dkvp
 x_y_cov 2.000000
 
-mlr --oxtab stats2 -a cov -f x,z ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats2 -a cov -f x,z ./reg-test/input/nullvals.dkvp
 
-mlr --oxtab stats2 -a cov -f y,z ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats2 -a cov -f y,z ./reg-test/input/nullvals.dkvp
 
-mlr --oxtab stats2 -a cov -f x,y -g a ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats2 -a cov -f x,y -g a ./reg-test/input/nullvals.dkvp
 a       b
 x_y_cov 2.000000
 
-mlr --oxtab stats2 -a cov -f x,z -g a ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats2 -a cov -f x,z -g a ./reg-test/input/nullvals.dkvp
 a b
 
-mlr --oxtab stats2 -a cov -f y,z -g a ././reg-test/input/nullvals.dkvp
+mlr --oxtab stats2 -a cov -f y,z -g a ./reg-test/input/nullvals.dkvp
 a b
 
-mlr --opprint top -n 5 -f x ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f x ./reg-test/input/nullvals.dkvp
 top_idx x_top
 1       5
 2       3
@@ -166,7 +166,7 @@ top_idx x_top
 4       -
 5       -
 
-mlr --opprint top -n 5 -f y ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f y ./reg-test/input/nullvals.dkvp
 top_idx y_top
 1       6
 2       4
@@ -174,7 +174,7 @@ top_idx y_top
 4       -
 5       -
 
-mlr --opprint top -n 5 -f z ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f z ./reg-test/input/nullvals.dkvp
 top_idx z_top
 1       -
 2       -
@@ -182,7 +182,7 @@ top_idx z_top
 4       -
 5       -
 
-mlr --opprint top -n 5 -f x,y,z ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f x,y,z ./reg-test/input/nullvals.dkvp
 top_idx x_top y_top z_top
 1       5     6     -
 2       3     4     -
@@ -190,7 +190,7 @@ top_idx x_top y_top z_top
 4       -     -     -
 5       -     -     -
 
-mlr --opprint top -n 5 -f x -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f x -g a ./reg-test/input/nullvals.dkvp
 a top_idx x_top
 b 1       5
 b 2       3
@@ -198,7 +198,7 @@ b 3       1
 b 4       -
 b 5       -
 
-mlr --opprint top -n 5 -f y -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f y -g a ./reg-test/input/nullvals.dkvp
 a top_idx y_top
 b 1       6
 b 2       4
@@ -206,7 +206,7 @@ b 3       2
 b 4       -
 b 5       -
 
-mlr --opprint top -n 5 -f z -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f z -g a ./reg-test/input/nullvals.dkvp
 a top_idx z_top
 b 1       -
 b 2       -
@@ -214,7 +214,7 @@ b 3       -
 b 4       -
 b 5       -
 
-mlr --opprint top -n 5 -f x,y,z -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f x,y,z -g a ./reg-test/input/nullvals.dkvp
 a top_idx x_top y_top z_top
 b 1       5     6     -
 b 2       3     4     -
@@ -222,35 +222,35 @@ b 3       1     2     -
 b 4       -     -     -
 b 5       -     -     -
 
-mlr --opprint top -a -n 5 -f x ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f x ./reg-test/input/nullvals.dkvp
 a x y z
 b 5 - -
 b 3 4 -
 b 1 2 -
 
-mlr --opprint top -a -n 5 -f y ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f y ./reg-test/input/nullvals.dkvp
 a x y z
 b - 6 -
 b 3 4 -
 b 1 2 -
 
-mlr --opprint top -a -n 5 -f z ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f z ./reg-test/input/nullvals.dkvp
 
-mlr --opprint top -a -n 5 -f x -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f x -g a ./reg-test/input/nullvals.dkvp
 a x y z
 b 5 - -
 b 3 4 -
 b 1 2 -
 
-mlr --opprint top -a -n 5 -f y -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f y -g a ./reg-test/input/nullvals.dkvp
 a x y z
 b - 6 -
 b 3 4 -
 b 1 2 -
 
-mlr --opprint top -a -n 5 -f z -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f z -g a ./reg-test/input/nullvals.dkvp
 
-mlr --opprint top -n 5 -f x -o foo ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f x -o foo ./reg-test/input/nullvals.dkvp
 foo x_top
 1   5
 2   3
@@ -258,7 +258,7 @@ foo x_top
 4   -
 5   -
 
-mlr --opprint top -n 5 -f x -g a -o foo ././reg-test/input/nullvals.dkvp
+mlr --opprint top -n 5 -f x -g a -o foo ./reg-test/input/nullvals.dkvp
 a foo x_top
 b 1   5
 b 2   3
@@ -266,15 +266,15 @@ b 3   1
 b 4   -
 b 5   -
 
-mlr --opprint top -a -n 5 -f x -o foo ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f x -o foo ./reg-test/input/nullvals.dkvp
 a x y z
 b 5 - -
 b 3 4 -
 b 1 2 -
 
-mlr --opprint top -a -n 5 -f z -o foo -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint top -a -n 5 -f z -o foo -g a ./reg-test/input/nullvals.dkvp
 
-mlr --opprint step -a counter,rsum -f x ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f x ./reg-test/input/nullvals.dkvp
 a x y z x_counter x_rsum
 b 1 2 - 1         1
 b 3 4 - 2         4
@@ -282,7 +282,7 @@ b 5 - - 3         9
 b - 6 - -         -
 b - - - -         -
 
-mlr --opprint step -a counter,rsum -f y ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f y ./reg-test/input/nullvals.dkvp
 a x y z y_counter y_rsum
 b 1 2 - 1         2
 b 3 4 - 2         6
@@ -290,7 +290,7 @@ b 5 - - -         -
 b - 6 - 3         12
 b - - - -         -
 
-mlr --opprint step -a counter,rsum -f z ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f z ./reg-test/input/nullvals.dkvp
 a x y z z_counter z_rsum
 b 1 2 - -         -
 b 3 4 - -         -
@@ -298,7 +298,7 @@ b 5 - - -         -
 b - 6 - -         -
 b - - - -         -
 
-mlr --opprint step -a counter,rsum -f x,y,z ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f x,y,z ./reg-test/input/nullvals.dkvp
 a x y z x_counter x_rsum y_counter y_rsum z_counter z_rsum
 b 1 2 - 1         1      1         2      -         -
 b 3 4 - 2         4      2         6      -         -
@@ -306,7 +306,7 @@ b 5 - - 3         9      -         -      -         -
 b - 6 - -         -      3         12     -         -
 b - - - -         -      -         -      -         -
 
-mlr --opprint step -a counter,rsum -f x -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f x -g a ./reg-test/input/nullvals.dkvp
 a x y z x_counter x_rsum
 b 1 2 - 1         1
 b 3 4 - 2         4
@@ -314,7 +314,7 @@ b 5 - - 3         9
 b - 6 - -         -
 b - - - -         -
 
-mlr --opprint step -a counter,rsum -f y -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f y -g a ./reg-test/input/nullvals.dkvp
 a x y z y_counter y_rsum
 b 1 2 - 1         2
 b 3 4 - 2         6
@@ -322,7 +322,7 @@ b 5 - - -         -
 b - 6 - 3         12
 b - - - -         -
 
-mlr --opprint step -a counter,rsum -f z -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f z -g a ./reg-test/input/nullvals.dkvp
 a x y z z_counter z_rsum
 b 1 2 - -         -
 b 3 4 - -         -
@@ -330,7 +330,7 @@ b 5 - - -         -
 b - 6 - -         -
 b - - - -         -
 
-mlr --opprint step -a counter,rsum -f x,y,z -g a ././reg-test/input/nullvals.dkvp
+mlr --opprint step -a counter,rsum -f x,y,z -g a ./reg-test/input/nullvals.dkvp
 a x y z x_counter x_rsum y_counter y_rsum z_counter z_rsum
 b 1 2 - 1         1      1         2      -         -
 b 3 4 - 2         4      2         6      -         -

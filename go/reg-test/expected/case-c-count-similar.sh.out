@@ -1,5 +1,5 @@
 
-mlr --opprint --from ././reg-test/input/abixy count-similar -g a
+mlr --opprint --from ./reg-test/input/abixy count-similar -g a
 a   b   i  x                   y                   count
 pan pan 1  0.3467901443380824  0.7268028627434533  2
 pan wye 10 0.5026260055412137  0.9526183602969864  2
@@ -12,7 +12,7 @@ zee pan 6  0.5271261600918548  0.49322128674835697 2
 zee wye 8  0.5985540091064224  0.976181385699006   2
 hat wye 9  0.03144187646093577 0.7495507603507059  1
 
-mlr --opprint --from ././reg-test/input/abixy count-similar -g b,i
+mlr --opprint --from ./reg-test/input/abixy count-similar -g b,i
 a   b   i  x                   y                   count
 pan pan 1  0.3467901443380824  0.7268028627434533  1
 eks pan 2  0.7586799647899636  0.5221511083334797  1
@@ -25,7 +25,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   1
 hat wye 9  0.03144187646093577 0.7495507603507059  1
 pan wye 10 0.5026260055412137  0.9526183602969864  1
 
-mlr --opprint --from ././reg-test/input/abixy count-similar -g a,b,i -o other_name_for_counter
+mlr --opprint --from ./reg-test/input/abixy count-similar -g a,b,i -o other_name_for_counter
 a   b   i  x                   y                   other_name_for_counter
 pan pan 1  0.3467901443380824  0.7268028627434533  1
 eks pan 2  0.7586799647899636  0.5221511083334797  1

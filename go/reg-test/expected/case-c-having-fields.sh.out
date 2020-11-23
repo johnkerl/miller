@@ -1,5 +1,5 @@
 
-mlr having-fields --at-least a,b ././reg-test/input/abixy
+mlr having-fields --at-least a,b ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -11,9 +11,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr having-fields --at-least a,c ././reg-test/input/abixy
+mlr having-fields --at-least a,c ./reg-test/input/abixy
 
-mlr having-fields --at-least a,b,i,x,y ././reg-test/input/abixy
+mlr having-fields --at-least a,b,i,x,y ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -25,9 +25,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr having-fields --which-are a,b,i,x ././reg-test/input/abixy
+mlr having-fields --which-are a,b,i,x ./reg-test/input/abixy
 
-mlr having-fields --which-are a,b,i,x,y ././reg-test/input/abixy
+mlr having-fields --which-are a,b,i,x,y ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -39,7 +39,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr having-fields --which-are a,b,i,y,x ././reg-test/input/abixy
+mlr having-fields --which-are a,b,i,y,x ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -51,13 +51,13 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr having-fields --which-are a,b,i,x,w ././reg-test/input/abixy
+mlr having-fields --which-are a,b,i,x,w ./reg-test/input/abixy
 
-mlr having-fields --which-are a,b,i,x,y,z ././reg-test/input/abixy
+mlr having-fields --which-are a,b,i,x,y,z ./reg-test/input/abixy
 
-mlr having-fields --at-most a,c ././reg-test/input/abixy
+mlr having-fields --at-most a,c ./reg-test/input/abixy
 
-mlr having-fields --at-most a,b,i,x,y ././reg-test/input/abixy
+mlr having-fields --at-most a,b,i,x,y ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -69,7 +69,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr having-fields --at-most a,b,i,x,y,z ././reg-test/input/abixy
+mlr having-fields --at-most a,b,i,x,y,z ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -81,24 +81,24 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr having-fields --all-matching "^[a-z][a-z][a-z]$" ././reg-test/input/having-fields-regex.dkvp
+mlr having-fields --all-matching "^[a-z][a-z][a-z]$" ./reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 
-mlr having-fields --any-matching "^[a-z][a-z][a-z]$" ././reg-test/input/having-fields-regex.dkvp
+mlr having-fields --any-matching "^[a-z][a-z][a-z]$" ./reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 abcd=3,ghi=13
 abcde=5,ghi=15
 
-mlr having-fields --none-matching "^[a-z][a-z][a-z]$" ././reg-test/input/having-fields-regex.dkvp
+mlr having-fields --none-matching "^[a-z][a-z][a-z]$" ./reg-test/input/having-fields-regex.dkvp
 ABC=2,DEF=12
 ABCD=4,GHI=14
 ABCDE=6,GHI=16
 
-mlr having-fields --all-matching "^[a-z][a-z][a-z]$"i ././reg-test/input/having-fields-regex.dkvp
+mlr having-fields --all-matching "^[a-z][a-z][a-z]$"i ./reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 ABC=2,DEF=12
 
-mlr having-fields --any-matching "^[a-z][a-z][a-z]$"i ././reg-test/input/having-fields-regex.dkvp
+mlr having-fields --any-matching "^[a-z][a-z][a-z]$"i ./reg-test/input/having-fields-regex.dkvp
 abc=1,def=11
 ABC=2,DEF=12
 abcd=3,ghi=13
@@ -106,5 +106,5 @@ ABCD=4,GHI=14
 abcde=5,ghi=15
 ABCDE=6,GHI=16
 
-mlr having-fields --none-matching "^[a-z][a-z][a-z]$"i ././reg-test/input/having-fields-regex.dkvp
+mlr having-fields --none-matching "^[a-z][a-z][a-z]$"i ./reg-test/input/having-fields-regex.dkvp
 

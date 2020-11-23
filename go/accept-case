@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# See ./reg-test/run
 for arg; do
   src=output-reg-test/$arg.out
   if [ ! -f $src ]; then

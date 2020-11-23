@@ -1,17 +1,17 @@
 
-mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y ././reg-test/input/abixy
+mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y ./reg-test/input/abixy
 i_mean   i_sum i_count i_min i_max i_antimode i_mode x_mean   x_sum    x_count x_min    x_max    x_antimode         x_mode             y_mean   y_sum    y_count y_min    y_max    y_antimode         y_mode
 5.500000 55    10      1     10    1          1      0.453629 4.536294 10      0.031442 0.758680 0.3467901443380824 0.3467901443380824 0.594454 5.944542 10      0.134189 0.976181 0.7268028627434533 0.7268028627434533
 
-mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y ././reg-test/input/abixy
+mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y ./reg-test/input/abixy
 i_min i_p10 i_p50 i_median i_antimode i_mode i_p90 i_max x_min    x_p10    x_p50    x_median x_antimode         x_mode             x_p90    x_max    y_min    y_p10    y_p50    y_median y_antimode         y_mode             y_p90    y_max
 1     2     6     6        1          1      10    10    0.031442 0.204603 0.527126 0.527126 0.3467901443380824 0.3467901443380824 0.758680 0.758680 0.134189 0.187885 0.726803 0.726803 0.7268028627434533 0.7268028627434533 0.976181 0.976181
 
-mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y ././reg-test/input/abixy
+mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y ./reg-test/input/abixy
 i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 5.500000 0.957427 3.027650 0.453629 0.068157 0.215531 0.594454 0.096968 0.306639
 
-mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y ././reg-test/input/abixy
+mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y ./reg-test/input/abixy
 a          pan
 b          pan
 i          1
@@ -282,7 +282,7 @@ y_max      0.976181
 y_antimode 0.7268028627434533
 y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ././reg-test/input/abixy
+mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ./reg-test/input/abixy
 a   i_mean   i_sum i_count i_min i_max i_antimode i_mode x_mean   x_sum    x_count x_min    x_max    x_antimode          x_mode              y_mean   y_sum    y_count y_min    y_max    y_antimode          y_mode
 pan 5.500000 11    2       1     10    1          1      0.424708 0.849416 2       0.346790 0.502626 0.3467901443380824  0.3467901443380824  0.839711 1.679421 2       0.726803 0.952618 0.7268028627434533  0.7268028627434533
 eks 4.333333 13    3       2     7     2          2      0.583954 1.751863 3       0.381399 0.758680 0.7586799647899636  0.7586799647899636  0.281408 0.844225 3       0.134189 0.522151 0.5221511083334797  0.5221511083334797
@@ -290,7 +290,7 @@ wye 4.000000 8     2       3     5     3          3      0.388946 0.777892 2    
 zee 7.000000 14    2       6     8     6          6      0.562840 1.125680 2       0.527126 0.598554 0.5271261600918548  0.5271261600918548  0.734701 1.469403 2       0.493221 0.976181 0.49322128674835697 0.49322128674835697
 hat 9.000000 9     1       9     9     9          9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059  0.7495507603507059
 
-mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a ././reg-test/input/abixy
+mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a ./reg-test/input/abixy
 a   i_min i_p10 i_p50 i_median i_antimode i_mode i_p90 i_max x_min    x_p10    x_p50    x_median x_antimode          x_mode              x_p90    x_max    y_min    y_p10    y_p50    y_median y_antimode          y_mode              y_p90    y_max
 pan 1     1     10    10       1          1      10    10    0.346790 0.346790 0.502626 0.502626 0.3467901443380824  0.3467901443380824  0.502626 0.502626 0.726803 0.726803 0.952618 0.952618 0.7268028627434533  0.7268028627434533  0.952618 0.952618
 eks 2     2     4     4        2          2      7     7     0.381399 0.381399 0.611784 0.611784 0.7586799647899636  0.7586799647899636  0.758680 0.758680 0.134189 0.134189 0.187885 0.187885 0.5221511083334797  0.5221511083334797  0.522151 0.522151
@@ -298,7 +298,7 @@ wye 3     3     5     5        3          3      5     5     0.204603 0.204603 0
 zee 6     6     8     8        6          6      8     8     0.527126 0.527126 0.598554 0.598554 0.5271261600918548  0.5271261600918548  0.598554 0.598554 0.493221 0.493221 0.976181 0.976181 0.49322128674835697 0.49322128674835697 0.976181 0.976181
 hat 9     9     9     9        9          9      9     9     0.031442 0.031442 0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.031442 0.031442 0.749551 0.749551 0.749551 0.749551 0.7495507603507059  0.7495507603507059  0.749551 0.749551
 
-mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a ././reg-test/input/abixy
+mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a ./reg-test/input/abixy
 a   i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 pan 5.500000 4.500000 6.363961 0.424708 0.077918 0.110193 0.839711 0.112908 0.159676
 eks 4.333333 1.452966 2.516611 0.583954 0.109797 0.190174 0.281408 0.121365 0.210211
@@ -306,7 +306,7 @@ wye 4.000000 1.000000 1.414214 0.388946 0.184343 0.260700 0.600971 0.262653 0.37
 zee 7.000000 1.000000 1.414214 0.562840 0.035714 0.050507 0.734701 0.241480 0.341504
 hat 9.000000 -        -        0.031442 -        -        0.749551 -        -
 
-mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ././reg-test/input/abixy
+mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ./reg-test/input/abixy
 a          pan
 b          pan
 i          1
@@ -577,7 +577,7 @@ y_max      0.952618
 y_antimode 0.7268028627434533
 y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ././reg-test/input/abixy
+mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ./reg-test/input/abixy
 a   b   i_mean    i_sum i_count i_min i_max i_antimode i_mode x_mean   x_sum    x_count x_min    x_max    x_antimode          x_mode              y_mean   y_sum    y_count y_min    y_max    y_antimode          y_mode
 pan pan 1.000000  1     1       1     1     1          1      0.346790 0.346790 1       0.346790 0.346790 0.3467901443380824  0.3467901443380824  0.726803 0.726803 1       0.726803 0.726803 0.7268028627434533  0.7268028627434533
 eks pan 2.000000  2     1       2     2     2          2      0.758680 0.758680 1       0.758680 0.758680 0.7586799647899636  0.7586799647899636  0.522151 0.522151 1       0.522151 0.522151 0.5221511083334797  0.5221511083334797
@@ -590,7 +590,7 @@ zee wye 8.000000  8     1       8     8     8          8      0.598554 0.598554 
 hat wye 9.000000  9     1       9     9     9          9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059  0.7495507603507059
 pan wye 10.000000 10    1       10    10    10         10     0.502626 0.502626 1       0.502626 0.502626 0.5026260055412137  0.5026260055412137  0.952618 0.952618 1       0.952618 0.952618 0.9526183602969864  0.9526183602969864
 
-mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a,b ././reg-test/input/abixy
+mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a,b ./reg-test/input/abixy
 a   b   i_min i_p10 i_p50 i_median i_antimode i_mode i_p90 i_max x_min    x_p10    x_p50    x_median x_antimode          x_mode              x_p90    x_max    y_min    y_p10    y_p50    y_median y_antimode          y_mode              y_p90    y_max
 pan pan 1     1     1     1        1          1      1     1     0.346790 0.346790 0.346790 0.346790 0.3467901443380824  0.3467901443380824  0.346790 0.346790 0.726803 0.726803 0.726803 0.726803 0.7268028627434533  0.7268028627434533  0.726803 0.726803
 eks pan 2     2     2     2        2          2      2     2     0.758680 0.758680 0.758680 0.758680 0.7586799647899636  0.7586799647899636  0.758680 0.758680 0.522151 0.522151 0.522151 0.522151 0.5221511083334797  0.5221511083334797  0.522151 0.522151
@@ -603,7 +603,7 @@ zee wye 8     8     8     8        8          8      8     8     0.598554 0.5985
 hat wye 9     9     9     9        9          9      9     9     0.031442 0.031442 0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.031442 0.031442 0.749551 0.749551 0.749551 0.749551 0.7495507603507059  0.7495507603507059  0.749551 0.749551
 pan wye 10    10    10    10       10         10     10    10    0.502626 0.502626 0.502626 0.502626 0.5026260055412137  0.5026260055412137  0.502626 0.502626 0.952618 0.952618 0.952618 0.952618 0.9526183602969864  0.9526183602969864  0.952618 0.952618
 
-mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a,b ././reg-test/input/abixy
+mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a,b ./reg-test/input/abixy
 a   b   i_mean    i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
 pan pan 1.000000  -        -        0.346790 -        -        0.726803 -        -
 eks pan 2.000000  -        -        0.758680 -        -        0.522151 -        -
@@ -616,7 +616,7 @@ zee wye 8.000000  -        -        0.598554 -        -        0.976181 -       
 hat wye 9.000000  -        -        0.031442 -        -        0.749551 -        -
 pan wye 10.000000 -        -        0.502626 -        -        0.952618 -        -
 
-mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ././reg-test/input/abixy
+mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ./reg-test/input/abixy
 a          pan
 b          pan
 i          1
@@ -887,7 +887,7 @@ y_max      0.952618
 y_antimode 0.9526183602969864
 y_mode     0.9526183602969864
 
-mlr --oxtab stats1 -a min,p0,p50,p100,max -f x,y,z ././reg-test/input/string-numeric-ordering.dkvp
+mlr --oxtab stats1 -a min,p0,p50,p100,max -f x,y,z ./reg-test/input/string-numeric-ordering.dkvp
 x_min  1.000000
 x_p0   1
 x_p50  2.500000
@@ -904,10 +904,10 @@ z_p50  d
 z_p100 f
 z_max  f
 
-mlr --oxtab stats1 -a mean -f x ././reg-test/input/abixy-het
+mlr --oxtab stats1 -a mean -f x ./reg-test/input/abixy-het
 x_mean 0.440334
 
-mlr --oxtab stats1 -a mean -f x -g a ././reg-test/input/abixy-het
+mlr --oxtab stats1 -a mean -f x -g a ./reg-test/input/abixy-het
 a      pan
 x_mean 0.424708
 
@@ -920,7 +920,7 @@ x_mean
 a      zee
 x_mean 0.562840
 
-mlr --oxtab stats1 -a p0,p50,p100 -f x,y ././reg-test/input/near-ovf.dkvp
+mlr --oxtab stats1 -a p0,p50,p100 -f x,y ./reg-test/input/near-ovf.dkvp
 x_p0   9223372036854775801
 x_p50  9223372036854775804
 x_p100 9223372036854775807
@@ -928,7 +928,7 @@ y_p0   -9223372036854775807
 y_p50  -9223372036854775804
 y_p100 -9223372036854775801
 
-mlr --oxtab stats1 -a p0,p50,p100 -f x,y -F ././reg-test/input/near-ovf.dkvp
+mlr --oxtab stats1 -a p0,p50,p100 -f x,y -F ./reg-test/input/near-ovf.dkvp
 x_p0   9223372036854775801
 x_p50  9223372036854775804
 x_p100 9223372036854775807

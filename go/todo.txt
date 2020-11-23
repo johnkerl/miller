@@ -15,10 +15,9 @@ no need to bootstrap a parser for the parser-generator language
 
 * reg-test:
   - awkish-cond -> pattern-action everywhere
-  - "format-" prefix etc
+  - "format-" prefix etc for format-specific case; other prefixes ... ?
   - diff the *.err files -- ?
   - double-check c/go sieve.mlr parse/execute ok
-  - easier differ -- C5 optional or something
   - mlr label: check unique
   - remove ././ from expecteds
 
