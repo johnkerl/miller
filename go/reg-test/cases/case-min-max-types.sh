@@ -1,48 +1,6 @@
 # NUMERICS < BOOL < VOID < STRING
 
-run_mlr --ojson put '
-  $lt["n"]["n"] = $n < $n;
-  $lt["n"]["b"] = $n < $b;
-  $lt["n"]["v"] = $n < $v;
-  $lt["n"]["s"] = $n < $s;
-
-  $lt["b"]["n"] = $b < $n;
-  $lt["b"]["b"] = $b < $b;
-  $lt["b"]["v"] = $b < $v;
-  $lt["b"]["s"] = $b < $s;
-
-  $lt["v"]["n"] = $v < $n;
-  $lt["v"]["b"] = $v < $b;
-  $lt["v"]["v"] = $v < $v;
-  $lt["v"]["s"] = $v < $s;
-
-  $lt["s"]["n"] = $s < $n;
-  $lt["s"]["b"] = $s < $b;
-  $lt["s"]["s"] = $s < $s;
-  $lt["s"]["v"] = $s < $v;
-
-  $gt["n"]["n"] = $n > $n;
-  $gt["n"]["b"] = $n > $b;
-  $gt["n"]["v"] = $n > $v;
-  $gt["n"]["s"] = $n > $s;
-
-  $gt["b"]["n"] = $b > $n;
-  $gt["b"]["b"] = $b > $b;
-  $gt["b"]["v"] = $b > $v;
-  $gt["b"]["s"] = $b > $s;
-
-  $gt["v"]["n"] = $v > $n;
-  $gt["v"]["b"] = $v > $b;
-  $gt["v"]["v"] = $v > $v;
-  $gt["v"]["s"] = $v > $s;
-
-  $gt["s"]["n"] = $s > $n;
-  $gt["s"]["b"] = $s > $b;
-  $gt["s"]["v"] = $s > $v;
-  $gt["s"]["s"] = $s > $s;
-' <<EOF
-n=1,b=true,v=,s=abc
-EOF
+# TODO: cmp-matrices need to be fixed to follow the advertised rule for mixed types.
 
 run_mlr --ojson put '
   $min["n"]["n"] = min($n,$n);
@@ -62,9 +20,13 @@ run_mlr --ojson put '
 
   $min["s"]["n"] = min($s,$n);
   $min["s"]["b"] = min($s,$b);
-  $min["s"]["s"] = min($s,$s);
   $min["s"]["v"] = min($s,$v);
+  $min["s"]["s"] = min($s,$s);
+' <<EOF
+n=1,b=true,v=,s=abc
+EOF
 
+run_mlr --ojson put '
   $max["n"]["n"] = max($n,$n);
   $max["n"]["b"] = max($n,$b);
   $max["n"]["v"] = max($n,$v);
@@ -84,6 +46,54 @@ run_mlr --ojson put '
   $max["s"]["b"] = max($s,$b);
   $max["s"]["v"] = max($s,$v);
   $max["s"]["s"] = max($s,$s);
+' <<EOF
+n=1,b=true,v=,s=abc
+EOF
+
+run_mlr --ojson put '
+  $le["n"]["n"] = $n <= $n;
+  $le["n"]["b"] = $n <= $b;
+  $le["n"]["v"] = $n <= $v;
+  $le["n"]["s"] = $n <= $s;
+
+  $le["b"]["n"] = $b <= $n;
+  $le["b"]["b"] = $b <= $b;
+  $le["b"]["v"] = $b <= $v;
+  $le["b"]["s"] = $b <= $s;
+
+  $le["v"]["n"] = $v <= $n;
+  $le["v"]["b"] = $v <= $b;
+  $le["v"]["v"] = $v <= $v;
+  $le["v"]["s"] = $v <= $s;
+
+  $le["s"]["n"] = $s <= $n;
+  $le["s"]["b"] = $s <= $b;
+  $le["s"]["v"] = $s <= $v;
+  $le["s"]["s"] = $s <= $s;
+' <<EOF
+n=1,b=true,v=,s=abc
+EOF
+
+run_mlr --ojson put '
+  $ge["n"]["n"] = $n >= $n;
+  $ge["n"]["b"] = $n >= $b;
+  $ge["n"]["v"] = $n >= $v;
+  $ge["n"]["s"] = $n >= $s;
+
+  $ge["b"]["n"] = $b >= $n;
+  $ge["b"]["b"] = $b >= $b;
+  $ge["b"]["v"] = $b >= $v;
+  $ge["b"]["s"] = $b >= $s;
+
+  $ge["v"]["n"] = $v >= $n;
+  $ge["v"]["b"] = $v >= $b;
+  $ge["v"]["v"] = $v >= $v;
+  $ge["v"]["s"] = $v >= $s;
+
+  $ge["s"]["n"] = $s >= $n;
+  $ge["s"]["b"] = $s >= $b;
+  $ge["s"]["v"] = $s >= $v;
+  $ge["s"]["s"] = $s >= $s;
 ' <<EOF
 n=1,b=true,v=,s=abc
 EOF

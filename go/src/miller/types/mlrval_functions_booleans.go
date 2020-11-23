@@ -277,7 +277,7 @@ var ge_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var lt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT VOID     STRING   INT      FLOAT    BOOL   ARRAY  MAP
+	//       .  ERROR   ABSENT VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*VOID   */ {_erro, _absn, lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _fals, _fals, _fals},
@@ -290,7 +290,7 @@ var lt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 }
 
 var le_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT VOID     STRING   INT      FLOAT    BOOL   ARRAY  MAP
+	//       .  ERROR   ABSENT VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 	/*VOID   */ {_erro, _absn, le_b_ss, le_b_ss, le_b_sx, le_b_sx, _fals, _fals, _fals},
