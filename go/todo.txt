@@ -17,6 +17,8 @@ no need to bootstrap a parser for the parser-generator language
   - mlr label: check unique
   - rr --show option to cat out the .out files ...
 
+! still need put -S / put -F ... sigh.
+
 ! bug on set-var/bind-var
   - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
 
@@ -346,4 +348,3 @@ NITS/NON-IMMEDIATE:
 * case-c-* / case-go-* -> case-* eventually
 * implement min/max for array/map ... using cmp rules
 ! write out thorough min/max/cmp cases for all orderings by type
-* note on <<EOF vs echo| for reg-tests ... sigh ...

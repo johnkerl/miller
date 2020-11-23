@@ -541,10 +541,13 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		//		writerOptions.right_justify_xtab_value = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--jvstack" {
-		//		writerOptions.stack_json_output_vertically = true;
-		//		argi += 1;
-		//
+
+	// TODO: comment in detail this is accepted as a no-op for backward
+	// compatibility in Miller 6 and above.
+	} else if args[argi] == "--jvstack" {
+		//writerOptions.stack_json_output_vertically = true;
+		argi += 1
+
 	} else if args[argi] == "--jlistwrap" {
 		writerOptions.WrapJSONOutputInOuterList = true
 		argi += 1
