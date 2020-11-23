@@ -11,3 +11,6 @@ run_mlr cat -g a,b $indir/abixy-het
 
 run_mlr cat -g a,b -n $indir/abixy-het
 run_mlr cat -g a,b -N counter $indir/abixy-het
+
+echo a,b,c,d,e,f   | run_mlr cat
+echo a,b,c,d,e,f,g | run_mlr cat
