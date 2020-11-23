@@ -36,7 +36,7 @@ NonEmptyStatementBlock
   : BracelessStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
-  // Things ending in a curly brace, like for/do/while, begin/end, and awkish-conds
+  // Things ending in a curly brace, like for/do/while, begin/end, and pattern-action blocks
   | BracefulStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 

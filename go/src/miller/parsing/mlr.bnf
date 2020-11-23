@@ -329,7 +329,7 @@ NonEmptyStatementBlock
   : BracelessStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
-  // Things ending in a curly brace, like for/do/while, begin/end, and awkish-conds
+  // Things ending in a curly brace, like for/do/while, begin/end, and pattern-acction blocks
   | BracefulStatement
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
 
@@ -420,9 +420,9 @@ Unset
 //
 // We can limit the things expressible on the left-hand side here in the AST,
 // via Lvalue production rules much narrower than Rvalue production rules.
-// However, this results in LR-1 conflicts for bare-boolean and awkish-cond
-// expressions which start with something of rvalue form -- the parser needs
-// more than one lookahead symbol to realize what's going on.
+// However, this results in LR-1 conflicts for bare-boolean and pattern-action
+// blocks which start with something of rvalue form -- the parser needs more
+// than one lookahead symbol to realize what's going on.
 //
 // Instead, we use the same production rule for lvalues and rvalues here in the
 // grammar, deferring lvalue restrictions to the CST builder where we have more
@@ -1340,7 +1340,7 @@ EndBlock
     << dsl.NewASTNodeUnary(nil, $1, dsl.NodeTypeEndBlock) >>
 ;
 // ================================================================
-// AWKISH COND-BLOCKS
+// PATTERN-ACTION BLOCKS (AWKISH)
 // E.g. mlr put 'NR > 10 { ... }'.
 // Just shorthand for mlr put 'if (NR > 10) { ... }' without any elif/else.
 
