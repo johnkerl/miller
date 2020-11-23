@@ -21,10 +21,6 @@ rrv ./reg-test/cases/case-c-dsl-for-map-depth.sh
 * Miller: looped-over item is not a map or array.
   Needs to treat absent as zero-pass case
 
-rrv ./reg-test/cases/case-c-dsl-map-variant-dumps.sh
-* run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
-  Miller: couldn't assign variable var a from value absent (absent)
-
 rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
 * "conditional expression did not evaluate to boolean" -- versus @nonesuch {} P/A in C ...
 
@@ -248,6 +244,3 @@ rrv -C1 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 
 # ----------------------------------------------------------------
 announce MAP-VARIANT DUMPS
-
-run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
-run_mlr --from $indir/abixy-het put -q 'func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)'
