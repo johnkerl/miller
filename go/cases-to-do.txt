@@ -1,18 +1,19 @@
 ================================================================
 BUG:
 
+rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
+* !!
+
+rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
+* mlr_expect_fail -n filter -v ''
+  C: "filter statement must not be empty"
+
 rrv -C1 ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
 * absent-bind discrepancy between C & Go
 
 rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 rrv -C1 ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 * subr and more ... also needs check for filter statement within filter commands
-
-rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
-* mlr_expect_fail -n filter -v ''
-  C: "filter statement must not be empty"
-
-rrv ./reg-test/cases/case-c-dsl-localvar-scope-and-extent.sh
 
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
