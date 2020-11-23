@@ -86,7 +86,6 @@ rrv ./reg-test/cases/case-c-utf8-bom.sh
 ================================================================
 NEED MORE LOOKING:
 
-rrv ./reg-test/cases/case-c-bootstrap.sh
 rrv ./reg-test/cases/case-c-dsl-asserting.sh
 rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
@@ -144,6 +143,4 @@ rrv ./reg-test/cases/case-c-null-field-input.sh
 rrv ./reg-test/cases/case-c-number-formatting.sh
 rrv ./reg-test/cases/case-c-repeat.sh
 rrv ./reg-test/cases/case-c-rfc-csv.sh
-rrv ./reg-test/cases/case-c-sample.sh
-rrv ./reg-test/cases/case-c-shuffle.sh
 rrv ./reg-test/cases/case-c-space-padding.sh

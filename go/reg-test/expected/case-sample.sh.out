@@ -1,6 +1,6 @@
 
 mlr --seed 12345 sample -k 2 ./reg-test/input/abixy-het
-aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
 mlr --seed 12345 sample -k 2 -g a ./reg-test/input/abixy-het
