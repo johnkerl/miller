@@ -23,7 +23,7 @@ x    0.3467901443380824
 y    0.7268028627434533
 hk01 (error)
 hk02 (error)
-hk03 (error)
+hk03 false
 hk04 true
 hk05 false
 hk06 false
@@ -35,5 +35,5 @@ hk11 false
 hk12 true
 hk13 true
 hk14 true
-hk15 (error)
+hk15 false
 

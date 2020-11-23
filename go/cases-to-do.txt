@@ -6,17 +6,6 @@ rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 * ofmt
 * env
 
-  echo 'x=1,y=b' | ../c/mlr  put '$u=min($x,$y);$v=max($x,$y)'
-  echo 'x=1,y=b' | ../go/mlr put '$u=min($x,$y);$v=max($x,$y)'
-
-  echo 'x=a,y=2' | ../c/mlr  put '$u=min($x,$y);$v=max($x,$y)'
-  echo 'x=a,y=2' | ../go/mlr put '$u=min($x,$y);$v=max($x,$y)'
-
-  echo 'x=a,y=b' | ../c/mlr  put '$u=min($x,$y);$v=max($x,$y)'
-  echo 'x=a,y=b' | ../go/mlr put '$u=min($x,$y);$v=max($x,$y)'
-
-* check cmp matrices too
-
 * typeof prints different things -- regularize ...
 
 * 'x=' -> MT_EMPTY vs MT_STRING
@@ -24,7 +13,6 @@ rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-haskey.sh
 rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
 rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
 rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
@@ -37,6 +25,9 @@ rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 
 ================================================================
 ARRAY/MAP
+
+rrv ./reg-test/cases/case-c-dsl-haskey.sh
+* haskey({3:4}, 3)
 
 rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
 

@@ -143,6 +143,9 @@ func MlrvalLeafCount(ma *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 func has_key_in_array(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype == MT_STRING {
+		return MlrvalFromFalse()
+	}
 	if mb.mvtype != MT_INT {
 		return MlrvalFromError()
 	}
@@ -151,6 +154,9 @@ func has_key_in_array(ma, mb *Mlrval) Mlrval {
 }
 
 func has_key_in_map(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype == MT_INT {
+		return MlrvalFromFalse()
+	}
 	if mb.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
