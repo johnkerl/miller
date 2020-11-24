@@ -21,11 +21,6 @@ rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
   "Continuation statements are split into the final boolean, and the statements before (if any)."
 
 ================================================================
-ENV
-
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
-
-================================================================
 MULTIPLE ISSUES:
 
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
@@ -148,6 +143,9 @@ rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
 rrv -C20 ./reg-test/cases/case-c-dsl-type-predicates.sh
 * multi-emit
 
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
+* print-with-redirect
+
 ================================================================
 NOT IMPLEMENTED YET:
 
@@ -212,3 +210,5 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
+
+================================================================
