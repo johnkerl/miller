@@ -1,6 +1,7 @@
 package mappers
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -60,9 +61,13 @@ func mapperLabelParseCLI(
 
 	argi += 1
 
-	mapper, _ := NewMapperLabel(
+	mapper, err := NewMapperLabel(
 		newNames,
 	)
+	if err != nil {
+		fmt.Fprint(os.Stderr, err)
+		return nil
+	}
 
 	*pargi = argi
 	return mapper
@@ -95,6 +100,20 @@ type MapperLabel struct {
 func NewMapperLabel(
 	newNames []string,
 ) (*MapperLabel, error) {
+	uniquenessChecker := make(map[string]bool)
+	for _, newName := range newNames {
+		_, ok := uniquenessChecker[newName]
+		if ok {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"mlr label: labels must be unique; got duplicate \"%s\"\n",
+					newName,
+				),
+			)
+		}
+		uniquenessChecker[newName] = true
+	}
+
 	this := &MapperLabel{
 		newNames: newNames,
 	}

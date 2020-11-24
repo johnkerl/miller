@@ -21,7 +21,12 @@ rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
   "Continuation statements are split into the final boolean, and the statements before (if any)."
 
 rrv ./reg-test/cases/case-c-label.sh
-* needs uniqueness-checker
+* handles old/new clashes differently from C impl :^/
+
+================================================================
+ENV
+
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 
 ================================================================
 MULTIPLE ISSUES:
@@ -44,17 +49,10 @@ rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
 rrv ./reg-test/cases/case-c-missing-final-lf.sh
 
 ================================================================
-ENV
-
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
-
-================================================================
 PUT -S / -F / -A
 
-rrv ./reg-test/cases/case-c-dsl-type-inference.sh
 rrv -C1 ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 rrv -C1 ./reg-test/cases/case-c-dsl-type-inference.sh
-rrv ./reg-test/cases/case-c-dsl-pythonic-division.sh
 
 rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
@@ -62,6 +60,8 @@ rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 
 ================================================================
 ARRAY/MAP
+
+rrv ./reg-test/cases/case-c-localvar-unsets.sh
 
 rrv -C5 ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
 rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
@@ -107,16 +107,6 @@ rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
 rrv ./reg-test/cases/case-c-dsl-trailing-commas.sh
 rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
-
-================================================================
-FORMATTING?
-
-rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
-rrv ./reg-test/cases/case-c-dsl-indirect-srec-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-operator-associativity.sh
-rrv ./reg-test/cases/case-c-dsl-operator-precedence.sh
-rrv ./reg-test/cases/case-c-dsl-typed-overlay.sh
-rrv ./reg-test/cases/case-c-localvar-unsets.sh
 
 ================================================================
 PARTIALLY IMPLEMENTED:
@@ -222,19 +212,3 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
-
-================================================================
-JUST FORMATTING NOW??
-
-rrv ./reg-test/cases/case-c-dsl-type-inference.sh
-rrv -C1 ./reg-test/cases/case-c-dsl-for-srec-loops.sh
-rrv -C1 ./reg-test/cases/case-c-dsl-type-inference.sh
-rrv ./reg-test/cases/case-c-dsl-pythonic-division.sh
-
-rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
-rrv -C1 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
-
-================================================================
-rrv -C20 ./reg-test/cases/case-c-dsl-empty-statements.sh
-rrv -C1 ./reg-test/cases/case-c-dsl-empty-statements.sh
-================================================================
