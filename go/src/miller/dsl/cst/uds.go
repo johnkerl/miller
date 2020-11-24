@@ -7,7 +7,6 @@ package cst
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -16,7 +15,7 @@ import (
 
 // ----------------------------------------------------------------
 type UDS struct {
-	signature    *Signature
+	signature      *Signature
 	subroutineBody *StatementBlockNode
 }
 
@@ -25,7 +24,7 @@ func NewUDS(
 	subroutineBody *StatementBlockNode,
 ) *UDS {
 	return &UDS{
-		signature:    signature,
+		signature:      signature,
 		subroutineBody: subroutineBody,
 	}
 }
@@ -114,12 +113,7 @@ func (this *UDSCallsite) Execute(state *State) (*BlockExitPayload, error) {
 
 		err := typeGatedParameterName.Check(&argument)
 		if err != nil {
-			// TODO: put error-return in the Evaluate API
-			fmt.Fprint(
-				os.Stderr,
-				err,
-			)
-			os.Exit(1)
+			return nil, err
 		}
 
 		arguments[i] = argument
@@ -136,44 +130,25 @@ func (this *UDSCallsite) Execute(state *State) (*BlockExitPayload, error) {
 	// Execute the subroutine body.
 	blockExitPayload, err := this.uds.subroutineBody.Execute(state)
 
-	// TODO: rethink error-propagation here: blockExitPayload.blockReturnValue
-	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
-	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		// return types.MlrvalFromError()
-		return nil, nil // TODO
+		return nil, err
 	}
 
 	// Fell off end of subroutine with no return
 	if blockExitPayload == nil {
-		// TODO return types.MlrvalFromAbsent()
 		return nil, nil
 	}
 
 	// TODO: should be an internal coding error. This would be break or
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
-	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		// TODO return types.MlrvalFromAbsent()
-		return nil, nil
-	}
+	lib.InternalCodingErrorIf(blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE)
 
-	// Definitely a Miller internal coding error if the user put 'return x' in
-	// their UDS but we lost the return value.
-	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue == nil)
+	// Subroutines can't return values: 'return' not 'return x'. This should
+	// have been caught in the AST validator.
+	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue != nil)
 
-	err = this.uds.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
-	if err != nil {
-		// TODO: put error-return in the Evaluate API
-		fmt.Fprint(
-			os.Stderr,
-			err,
-		)
-		os.Exit(1)
-	}
-
-	// xxx temp return *blockExitPayload.blockReturnValue
-	return nil, nil // TODO
+	return blockExitPayload, nil
 }
 
 // ----------------------------------------------------------------

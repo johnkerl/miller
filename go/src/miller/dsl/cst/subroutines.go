@@ -44,12 +44,12 @@ func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 		return nil, err
 	}
 
-	// AST snippet for '$z = f($x, $y)':
-	// * Assignment "="
-	//     * DirectFieldValue "z"
-	//     * SubroutineCallsite "f"
-	//         * DirectFieldValue "x"
-	//         * DirectFieldValue "y"
+	// AST snippet for 'call s($x, $y)':
+	//
+	// * statement block
+	//     * subroutine callsite "call"
+	//         * direct field value "x"
+	//         * direct field value "y"
 	//
 	// Here we need to make an array of our arguments at the callsite, to be
 	// paired up with the parameters within he subroutine definition at runtime.

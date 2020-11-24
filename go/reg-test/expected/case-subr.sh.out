@@ -7,6 +7,8 @@ RAW AST:
     * subroutine callsite "call"
 
 
+mlr -n put -v call s
+
 mlr -n put -v call s(1,2,3)
 DSL EXPRESSION:
 call s(1,2,3)
@@ -51,4 +53,51 @@ RAW AST:
         * statement block
             * return "return"
 
+
+mlr -n put -v subr s() {return 2}
+DSL EXPRESSION:
+subr s() {return 2}
+RAW AST:
+* statement block
+    * subroutine definition "s"
+        * parameter list
+        * statement block
+            * return "return"
+                * int literal "2"
+
+
+mlr -n put subr s()
+
+mlr -n put -v subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
+DSL EXPRESSION:
+subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
+RAW AST:
+* statement block
+    * subroutine definition "s"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+            * print statement "print"
+                * operator "."
+                    * operator "."
+                        * string literal "HELLO, "
+                        * local variable "a"
+                    * string literal "!"
+    * subroutine callsite "call"
+        * string literal "WORLD"
+
+
+mlr --from ./reg-test/input/2.dkvp put subr s() {}
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+
+mlr --from ./reg-test/input/2.dkvp put subr s() {return}
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+
+mlr --from ./reg-test/input/2.dkvp put call s()
+
+mlr --from ./reg-test/input/2.dkvp put subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
+Exit status was 1; expected 0.
 
