@@ -12,7 +12,6 @@ DSL EXPRESSION:
 RAW AST:
 * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v begin {}
 DSL EXPRESSION:
