@@ -25,8 +25,8 @@ set -uo pipefail
 #     ./reg-test/expected/case-foo.sh.out
 #     ./reg-test/expected/case-foo.sh.err
 #   and actuals
-#    output-reg-test/case-c-cat.sh.err
 #    output-reg-test/case-c-cat.sh.out
+#    output-reg-test/case-c-cat.sh.err
 #
 # * This script loops over all of the case-*.sh files and executes them via
 #   sourcing them with the Bash "." operator.
