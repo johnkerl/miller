@@ -1,5 +1,5 @@
 // ================================================================
-// Support for user-defined functions
+// Support for user-defined subroutines
 // ================================================================
 
 package cst
@@ -15,52 +15,52 @@ import (
 )
 
 // ----------------------------------------------------------------
-type UDF struct {
+type UDS struct {
 	signature    *Signature
-	functionBody *StatementBlockNode
+	subroutineBody *StatementBlockNode
 }
 
-func NewUDF(
+func NewUDS(
 	signature *Signature,
-	functionBody *StatementBlockNode,
-) *UDF {
-	return &UDF{
+	subroutineBody *StatementBlockNode,
+) *UDS {
+	return &UDS{
 		signature:    signature,
-		functionBody: functionBody,
+		subroutineBody: subroutineBody,
 	}
 }
 
-// For when a function is called before being defined. This gives us something
-// to go back and fill in later once we've encountered the function definition.
-func NewUnresolvedUDF(
+// For when a subroutine is called before being defined. This gives us something
+// to go back and fill in later once we've encountered the subroutine definition.
+func NewUnresolvedUDS(
 	functionName string,
 	callsiteArity int,
-) *UDF {
+) *UDS {
 	signature := NewSignature(functionName, callsiteArity, nil, nil)
-	udf := NewUDF(signature, nil)
-	return udf
+	uds := NewUDS(signature, nil)
+	return uds
 }
 
 // ----------------------------------------------------------------
-type UDFCallsite struct {
+type UDSCallsite struct {
 	argumentNodes []IEvaluable
-	udf           *UDF
+	uds           *UDS
 }
 
-func NewUDFCallsite(
+func NewUDSCallsite(
 	argumentNodes []IEvaluable,
-	udf *UDF,
-) *UDFCallsite {
-	return &UDFCallsite{
+	uds *UDS,
+) *UDSCallsite {
+	return &UDSCallsite{
 		argumentNodes: argumentNodes,
-		udf:           udf,
+		uds:           uds,
 	}
 }
 
-func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
+func (this *UDSCallsite) Execute(state *State) (*BlockExitPayload, error) {
 	lib.InternalCodingErrorIf(this.argumentNodes == nil)
-	lib.InternalCodingErrorIf(this.udf == nil)
-	lib.InternalCodingErrorIf(this.udf.functionBody == nil)
+	lib.InternalCodingErrorIf(this.uds == nil)
+	lib.InternalCodingErrorIf(this.uds.subroutineBody == nil)
 
 	// Evaluate and pair up the callsite arguments with our parameters,
 	// positionally.
@@ -86,7 +86,7 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	// We allow scope-walk within a frameset -- so the 1b reference to x
 	// updates 1a's x, while 1b's reference to y binds its own y (due to
 	// 'var'). But we don't allow scope-walks across framesets with or without
-	// 'var': the function's locals are fenced off from the caller's locals.
+	// 'var': the subroutine's locals are fenced off from the caller's locals.
 	//
 	// All well and good. What affects us here is callsites of the form
 	//
@@ -106,10 +106,10 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	// we push a new frameset and BindVariable using the callee's frameset.
 
 	// Evaluate the arguments
-	numArguments := len(this.udf.signature.typeGatedParameterNames)
+	numArguments := len(this.uds.signature.typeGatedParameterNames)
 	arguments := make([]types.Mlrval, numArguments)
 
-	for i, typeGatedParameterName := range this.udf.signature.typeGatedParameterNames {
+	for i, typeGatedParameterName := range this.uds.signature.typeGatedParameterNames {
 		argument := this.argumentNodes[i].Evaluate(state)
 
 		err := typeGatedParameterName.Check(&argument)
@@ -130,36 +130,39 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	defer state.stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.stack.BindVariable(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
+		state.stack.BindVariable(this.uds.signature.typeGatedParameterNames[i].Name, &argument)
 	}
 
-	// Execute the function body.
-	blockExitPayload, err := this.udf.functionBody.Execute(state)
+	// Execute the subroutine body.
+	blockExitPayload, err := this.uds.subroutineBody.Execute(state)
 
 	// TODO: rethink error-propagation here: blockExitPayload.blockReturnValue
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		return types.MlrvalFromError()
+		// return types.MlrvalFromError()
+		return nil, nil // TODO
 	}
 
-	// Fell off end of function with no return
+	// Fell off end of subroutine with no return
 	if blockExitPayload == nil {
-		return types.MlrvalFromAbsent()
+		// TODO return types.MlrvalFromAbsent()
+		return nil, nil
 	}
 
 	// TODO: should be an internal coding error. This would be break or
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		return types.MlrvalFromAbsent()
+		// TODO return types.MlrvalFromAbsent()
+		return nil, nil
 	}
 
 	// Definitely a Miller internal coding error if the user put 'return x' in
-	// their UDF but we lost the return value.
+	// their UDS but we lost the return value.
 	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue == nil)
 
-	err = this.udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
+	err = this.uds.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
 	if err != nil {
 		// TODO: put error-return in the Evaluate API
 		fmt.Fprint(
@@ -169,45 +172,46 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 		os.Exit(1)
 	}
 
-	return *blockExitPayload.blockReturnValue
+	// xxx temp return *blockExitPayload.blockReturnValue
+	return nil, nil // TODO
 }
 
 // ----------------------------------------------------------------
-type UDFManager struct {
-	functions map[string]*UDF
+type UDSManager struct {
+	subroutines map[string]*UDS
 }
 
-func NewUDFManager() *UDFManager {
-	return &UDFManager{
-		functions: make(map[string]*UDF),
+func NewUDSManager() *UDSManager {
+	return &UDSManager{
+		subroutines: make(map[string]*UDS),
 	}
 }
 
-func (this *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
-	udf := this.functions[functionName]
-	if udf == nil {
+func (this *UDSManager) LookUp(functionName string, callsiteArity int) (*UDS, error) {
+	uds := this.subroutines[functionName]
+	if uds == nil {
 		return nil, nil
 	}
-	if udf.signature.arity != callsiteArity {
+	if uds.signature.arity != callsiteArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"Miller: subroutine %s invoked with %d argument%s; expected %d",
 				functionName,
 				callsiteArity,
 				lib.Plural(callsiteArity),
-				udf.signature.arity,
+				uds.signature.arity,
 			),
 		)
 	}
-	return udf, nil
+	return uds, nil
 }
 
-func (this *UDFManager) Install(udf *UDF) {
-	this.functions[udf.signature.funcOrSubrName] = udf
+func (this *UDSManager) Install(uds *UDS) {
+	this.subroutines[uds.signature.funcOrSubrName] = uds
 }
 
 // ----------------------------------------------------------------
-// Example AST for UDF definition and callsite:
+// Example AST for UDS definition and callsite:
 
 // DSL EXPRESSION:
 // func f(x) {
@@ -222,7 +226,7 @@ func (this *UDFManager) Install(udf *UDF) {
 //
 // RAW AST:
 // * StatementBlock
-//     * FunctionDefinition "f"
+//     * SubroutineDefinition "f"
 //         * ParameterList
 //             * Parameter
 //                 * ParameterName "x"
@@ -242,17 +246,17 @@ func (this *UDFManager) Install(udf *UDF) {
 //                                 * LocalVariable "x"
 //     * Assignment "="
 //         * DirectFieldValue "y"
-//         * FunctionCallsite "f"
+//         * SubroutineCallsite "f"
 //             * DirectFieldValue "x"
 
-func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionDefinition)
+func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeSubroutineDefinition)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
 	functionName := string(astNode.Token.Lit)
 	parameterListASTNode := astNode.Children[0]
-	functionBodyASTNode := astNode.Children[1]
+	subroutineBodyASTNode := astNode.Children[1]
 
 	returnValueTypeName := "any"
 	if len(astNode.Children) == 3 {
@@ -261,7 +265,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		returnValueTypeName = string(typeNode.Token.Lit)
 	}
 	typeGatedReturnValue, err := types.NewTypeGatedMlrvalName(
-		"function return value",
+		"subroutine return value",
 		returnValueTypeName,
 	)
 
@@ -297,14 +301,14 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	signature := NewSignature(functionName, arity, typeGatedParameterNames, typeGatedReturnValue)
 
-	functionBody, err := this.BuildStatementBlockNode(functionBodyASTNode)
+	subroutineBody, err := this.BuildStatementBlockNode(subroutineBodyASTNode)
 	if err != nil {
 		return err
 	}
 
-	udf := NewUDF(signature, functionBody)
+	uds := NewUDS(signature, subroutineBody)
 
-	this.udfManager.Install(udf)
+	this.udsManager.Install(uds)
 
 	return nil
 }

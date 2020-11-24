@@ -26,11 +26,13 @@ type State struct {
 
 // ----------------------------------------------------------------
 type RootNode struct {
-	beginBlocks                 []*StatementBlockNode
-	mainBlock                   *StatementBlockNode
-	endBlocks                   []*StatementBlockNode
-	udfManager                  *UDFManager
-	unresolvedFunctionCallsites *list.List
+	beginBlocks                   []*StatementBlockNode
+	mainBlock                     *StatementBlockNode
+	endBlocks                     []*StatementBlockNode
+	udfManager                    *UDFManager
+	udsManager                    *UDSManager
+	unresolvedFunctionCallsites   *list.List
+	unresolvedSubroutineCallsites *list.List
 }
 
 // ----------------------------------------------------------------

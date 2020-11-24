@@ -16,16 +16,17 @@ import (
 // ----------------------------------------------------------------
 func NewEmptyRoot() *RootNode {
 	return &RootNode{
-		beginBlocks:                 make([]*StatementBlockNode, 0),
-		mainBlock:                   NewStatementBlockNode(),
-		endBlocks:                   make([]*StatementBlockNode, 0),
-		udfManager:                  NewUDFManager(),
-		unresolvedFunctionCallsites: list.New(),
+		beginBlocks:                   make([]*StatementBlockNode, 0),
+		mainBlock:                     NewStatementBlockNode(),
+		endBlocks:                     make([]*StatementBlockNode, 0),
+		udfManager:                    NewUDFManager(),
+		udsManager:                    NewUDSManager(),
+		unresolvedFunctionCallsites:   list.New(),
+		unresolvedSubroutineCallsites: list.New(),
 	}
 }
 
 // ----------------------------------------------------------------
-// TODO: take isFilter arg and abend if empty
 func Build(
 	ast *dsl.AST,
 	isFilter bool, // false for 'mlr put', true for 'mlr filter'
@@ -141,6 +142,10 @@ func (this *RootNode) rememberUnresolvedFunctionCallsite(udfCallsite *UDFCallsit
 	this.unresolvedFunctionCallsites.PushBack(udfCallsite)
 }
 
+func (this *RootNode) rememberUnresolvedSubroutineCallsite(udsCallsite *UDSCallsite) {
+	this.unresolvedSubroutineCallsites.PushBack(udsCallsite)
+}
+
 // After-pass after buildMainPass returns, in case a function was called before
 // it was defined. It may be the case that:
 //
@@ -156,7 +161,7 @@ func (this *RootNode) resolveFunctionCallsites() error {
 			this.unresolvedFunctionCallsites.Front(),
 		).(*UDFCallsite)
 
-		functionName := unresolvedFunctionCallsite.udf.signature.functionName
+		functionName := unresolvedFunctionCallsite.udf.signature.funcOrSubrName
 		callsiteArity := unresolvedFunctionCallsite.udf.signature.arity
 
 		udf, err := this.udfManager.LookUp(functionName, callsiteArity)
@@ -170,6 +175,30 @@ func (this *RootNode) resolveFunctionCallsites() error {
 		}
 
 		unresolvedFunctionCallsite.udf = udf
+	}
+	return nil
+}
+
+func (this *RootNode) resolveSubroutineCallsites() error {
+	for this.unresolvedSubroutineCallsites.Len() > 0 {
+		unresolvedSubroutineCallsite := this.unresolvedSubroutineCallsites.Remove(
+			this.unresolvedSubroutineCallsites.Front(),
+		).(*UDSCallsite)
+
+		functionName := unresolvedSubroutineCallsite.uds.signature.funcOrSubrName
+		callsiteArity := unresolvedSubroutineCallsite.uds.signature.arity
+
+		uds, err := this.udsManager.LookUp(functionName, callsiteArity)
+		if err != nil {
+			return err
+		}
+		if uds == nil {
+			return errors.New(
+				"Miller: function name not found: " + functionName,
+			)
+		}
+
+		unresolvedSubroutineCallsite.uds = uds
 	}
 	return nil
 }
