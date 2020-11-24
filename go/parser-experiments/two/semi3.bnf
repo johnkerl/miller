@@ -6,7 +6,7 @@
 // ================================================================
 // IMPORT
 
-<< import "dsl" >>
+<< import "miller/dsl" >>
 
 // ================================================================
 // PARSER
@@ -83,7 +83,7 @@ NonEmptyStatementBlock
 // ----------------------------------------------------------------
 BracelessStatement
   : "x"
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeStatement) >>
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeBareBoolean) >>
 ;
 
 // ----------------------------------------------------------------

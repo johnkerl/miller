@@ -51,6 +51,21 @@ echo "Parser-autogen OK"
 #   $dir/util/
 
 # ----------------------------------------------------------------
+# Copy AST files from the main Miller tree
+
+rm -rvf ./src/miller/lib/
+rm -rvf ./src/miller/dsl/
+
+mkdir -p ./src/miller/lib/
+mkdir -p ./src/miller/dsl/
+
+cp -v ../../src/miller/lib/*.go ./src/miller/lib/
+cp -v ../../src/miller/dsl/ast*.go ./src/miller/dsl/
+
+# Different path to autogen between main Miller tree and here
+sed -i .bak 's:miller/parsing:experimental:' src/miller/dsl/ast*go
+
+# ----------------------------------------------------------------
 # Compile the main and the parser-autogen
 
 go build main.go
