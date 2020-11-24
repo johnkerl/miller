@@ -16,14 +16,15 @@ import (
 type BuiltinFunctionInfo struct {
 	name string
 	// class      string -- "math", "time", "typing", "maps", etc
-	help                string
-	hasMultipleArities  bool
-	zaryFunc            types.ZaryFunc
-	unaryFunc           types.UnaryFunc
-	contextualUnaryFunc types.ContextualUnaryFunc // asserting_{typename}
-	binaryFunc          types.BinaryFunc
-	ternaryFunc         types.TernaryFunc
-	variadicFunc        types.VariadicFunc
+	help                 string
+	hasMultipleArities   bool
+	minimumVariadicArity int
+	zaryFunc             types.ZaryFunc
+	unaryFunc            types.UnaryFunc
+	contextualUnaryFunc  types.ContextualUnaryFunc // asserting_{typename}
+	binaryFunc           types.BinaryFunc
+	ternaryFunc          types.TernaryFunc
+	variadicFunc         types.VariadicFunc
 }
 
 //// ----------------------------------------------------------------
@@ -892,6 +893,7 @@ Remaining arguments can be strings or arrays of string.
 E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
 and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
 		variadicFunc: types.MlrvalMapSelect,
+		minimumVariadicArity: 1,
 	},
 	{
 		name: "mapexcept",
@@ -900,6 +902,7 @@ Remaining arguments can be strings or arrays of string.
 E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
 and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
 		variadicFunc: types.MlrvalMapExcept,
+		minimumVariadicArity: 1,
 	},
 	{
 		name: "mapsum",

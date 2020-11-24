@@ -321,6 +321,17 @@ func (this *RootNode) BuildVariadicFunctionCallsiteNode(
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	evaluables := make([]IEvaluable, len(astNode.Children))
 
+	callsiteArity := len(astNode.Children)
+	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: function %s takes minimum argument count %d; got %d.\n",
+				builtinFunctionInfo.minimumVariadicArity,
+				callsiteArity,
+			),
+		)
+	}
+
 	var err error = nil
 	for i, astChildNode := range astNode.Children {
 		evaluables[i], err = this.BuildEvaluableNode(astChildNode)

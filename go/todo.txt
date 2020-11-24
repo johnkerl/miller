@@ -17,7 +17,7 @@ no need to bootstrap a parser for the parser-generator language
   - mlr label: check unique
   - rr --show option to cat out the .out files ...
 
-! still need put -S / put -F ... sigh.
+! still need functional put -S / put -F ... sigh.
 
 ! bug on set-var/bind-var
   - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
