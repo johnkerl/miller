@@ -1,10 +1,6 @@
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
-* emit-with-redirect
-* also print/output sequencing issue (fix in test)
-
 rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 * mlr --from ./reg-test/input/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
   Miller: record/map indices must be string or positional-int; got float

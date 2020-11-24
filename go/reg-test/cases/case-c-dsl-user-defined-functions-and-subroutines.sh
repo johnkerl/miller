@@ -50,12 +50,19 @@ mlr_expect_fail --from $indir/abixy put '
 
 # Test fencing: function f should not have access to boundvar k from the callsite.
 run_mlr --from $indir/abixy --opprint put 'func f(x) {return k} for (k,v in $*) {$o=f($x)}'
-run_mlr --from $indir/abixy --opprint put 'subr foo() {print "k is [".k."]"} for (k,v in $*) {call foo()}'
+run_mlr --from $indir/2.dkvp --opprint put -q '
+  subr foo() {
+    print "k is [".k."]"
+  }
+  for (k,v in $*) {
+    call foo()
+  }
+'
 
 # Test overriding built-ins
 mlr_expect_fail --opprint --from $indir/abixy put 'func log(x) { return 0 } $o = log($x)'
 
-run_mlr --from $indir/abixy put 'subr log() { print "hello record  ". NR } call log()'
+run_mlr --from $indir/abixy put -q 'subr log() { print "hello record  ". NR } call log()'
 
 # No nesting of top-levels
 mlr_expect_fail --from $indir/abixy --opprint put 'func f(x) { begin {} }'
@@ -86,7 +93,7 @@ mlr_expect_fail --from $indir/abixy --opprint put 'subr s() { } subr s(x) { }'
 run_mlr --from $indir/abixy --opprint put 'subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)'
 
 # scoping within distinct begin/end blocks
-run_mlr --from $indir/abixy put -v '
+run_mlr --from $indir/abixy --opprint put '
     func f(x) {
         return x**2
     }
@@ -124,6 +131,6 @@ run_mlr --from $indir/abixy put -v '
 # print/dump from subr/func;  no tee/emit from func
 run_mlr --from $indir/abixy --opprint put 'subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)'
 run_mlr --from $indir/abixy --opprint put 'func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)'
-run_mlr --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"                 } $o=f($i)'
+run_mlr --from $indir/abixy --opprint put 'begin{@x=1} func f(x) { dump; print "hello" } $o=f($i)'
 mlr_expect_fail --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; tee  > "x", $* } $o=f($i)'
 mlr_expect_fail --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)' 
