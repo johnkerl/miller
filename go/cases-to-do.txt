@@ -2,6 +2,9 @@
 ================================================================
 BUG:
 
+rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
+* needs already-defined check
+
 rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 * mlr --from ./reg-test/input/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
   Miller: record/map indices must be string or positional-int; got float
@@ -206,15 +209,4 @@ rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 :)
 rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
 rrv ./reg-test/cases/case-c-dsl-trailing-commas.sh
-
-MERGE
-rrv ./reg-test/cases/case-c-dsl-user-defined-subroutines.sh
-
-================================================================
-SUBR
-
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
-
-
-
 
