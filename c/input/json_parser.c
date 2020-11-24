@@ -160,7 +160,7 @@ static int new_value(
 
 			case JSON_DOUBLE:
 				if (! (pvalue->u.dbl.sval = (json_char *) json_alloc
-					(pstate, (pvalue->u.dbl.length + 1) * sizeof (json_char), 1)) )
+					(pstate, (pvalue->u.dbl.length + 5) * sizeof (json_char), 1)) )
 				{
 					return 0;
 				}
