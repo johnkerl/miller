@@ -51,16 +51,21 @@ echo "Parser-autogen OK"
 #   $dir/util/
 
 # ----------------------------------------------------------------
+# Override GOCC codegen with customized error handling
+cp ../../src/miller/parsing/errors.go.template src/experimental/errors/errors.go
+sed -i .bak 's:miller/parsing:experimental:' src/experimental/errors/errors.go
+
+# ----------------------------------------------------------------
 # Copy AST files from the main Miller tree
 
-rm -rvf ./src/miller/lib/
-rm -rvf ./src/miller/dsl/
+rm -rf ./src/miller/lib/
+rm -rf ./src/miller/dsl/
 
 mkdir -p ./src/miller/lib/
 mkdir -p ./src/miller/dsl/
 
-cp -v ../../src/miller/lib/*.go ./src/miller/lib/
-cp -v ../../src/miller/dsl/ast*.go ./src/miller/dsl/
+cp ../../src/miller/lib/*.go ./src/miller/lib/
+cp ../../src/miller/dsl/ast*.go ./src/miller/dsl/
 
 # Different path to autogen between main Miller tree and here
 sed -i .bak 's:miller/parsing:experimental:' src/miller/dsl/ast*go

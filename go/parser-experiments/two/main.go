@@ -14,7 +14,7 @@ const GREEN = "\033[32;01m"
 const RED = "\033[31;01m"
 const TEXTDEFAULT = "\033[0m"
 
-func parseOne(input string) bool {
+func parseOne(input string, printError bool) bool {
 	theLexer := lexer.NewLexer([]byte(input))
 	theParser := parser.NewParser()
 	iast, err := theParser.Parse(theLexer)
@@ -24,7 +24,9 @@ func parseOne(input string) bool {
 		fmt.Println()
 		return true
 	} else {
-		//fmt.Println(err)
+		if printError {
+			fmt.Println(err)
+		}
 		fmt.Printf("%sFail%s %s\n", RED, TEXTDEFAULT, input)
 		fmt.Println()
 		return false
@@ -32,7 +34,14 @@ func parseOne(input string) bool {
 }
 
 func main() {
-	if len(os.Args) == 1 {
+	printError := false
+	args := os.Args[1:] // os.Args[0] is program name in Go
+	if len(args) >= 1 && args[0] == "-v" {
+		printError = true
+		args = args[1:]
+	}
+
+	if len(args) == 0 {
 		ok := true
 
 		fmt.Println("----------------------------------------------------------------")
@@ -79,7 +88,7 @@ func main() {
 			"{} {} ;;; {;;} x; x; x; x; x; {}",
 		}
 		for _, input := range goods {
-			if parseOne(input) == false {
+			if parseOne(input, printError) == false {
 				ok = false
 			}
 		}
@@ -92,7 +101,7 @@ func main() {
 			"x {}",
 		}
 		for _, input := range bads {
-			if parseOne(input) == true {
+			if parseOne(input, printError) == true {
 				ok = false
 			}
 		}
@@ -107,8 +116,8 @@ func main() {
 		}
 
 	} else {
-		for _, arg := range os.Args[1:] {
-			parseOne(arg)
+		for _, arg := range args {
+			parseOne(arg, printError)
 		}
 	}
 }
