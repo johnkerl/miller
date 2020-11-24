@@ -367,10 +367,10 @@ for case_file in $case_file_names; do
   fi
 
   if [ $case_passed = "true" ]; then
-    echo "$PASS  $case_file"
+    echo -e "$PASS  $case_file"
     num_cases_passed=`expr $num_cases_passed + 1`
   else
-    echo "$FAIL  $case_file"
+    echo -e "$FAIL  $case_file"
     num_cases_failed=`expr $num_cases_failed + 1`
   fi
 
@@ -391,9 +391,9 @@ echo "NUMBER OF CASES FAILED $num_cases_failed"
 echo
 
 if [ $num_cases_failed -eq 0 ]; then
-  echo "$PASS"
+  echo -e "$PASS"
   exit 0
 else
-  echo "$FAIL"
+  echo -e "$FAIL"
   exit 1
 fi
