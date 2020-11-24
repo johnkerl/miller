@@ -20,10 +20,10 @@ Note: while this `README.md` file is within the `go/reg-test/` subdirectory, all
   sourcing them with the Bash `.` operator.
 * Each has lines of the form `run_mlr ...` or `mlr_expect_fail ...`. Those functions are defined in `reg_test/run`. They take `mlr` command-lines as arguments.
 * Each case can fail in the following ways:
-  o Zero invocations were attempted.
-  o A given `run_mlr ...` invocation exits with non-zero when it should exit with zero.
-  o A given `mlr_expect_fail ...` invocation exits with zero when it should exit with non-zero.
-  o The output of the invocations in the case's actual-output file differs from the case's expected-output file.
+  * Zero invocations were attempted.
+  * A given `run_mlr ...` invocation exits with non-zero when it should exit with zero.
+  * A given `mlr_expect_fail ...` invocation exits with zero when it should exit with non-zero.
+  * The output of the invocations in the case's actual-output file differs from the case's expected-output file.
 
 ## Debugging failures of existing cases
 
