@@ -1,5 +1,10 @@
+
 ================================================================
 BUG:
+
+rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
+* mlr --from ./reg-test/input/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
+  Miller: record/map indices must be string or positional-int; got float
 
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
@@ -33,7 +38,6 @@ rrv ./reg-test/cases/case-c-missing-final-lf.sh
 ================================================================
 PUT -S / -F / -A
 
-rrv -C1 ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 rrv -C1 ./reg-test/cases/case-c-dsl-type-inference.sh
 
 rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
