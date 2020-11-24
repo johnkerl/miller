@@ -171,10 +171,10 @@ while    : 'w' 'h' 'i' 'l' 'e' ;
 break    : 'b' 'r' 'e' 'a' 'k' ;
 continue : 'c' 'o' 'n' 't' 'i' 'n' 'u' 'e' ;
 
-func     : 'f' 'u' 'n' 'c' ;
-//subr     : 's' 'u' 'b' 'r' ;
-//call     : 'c' 'a' 'l' 'l' ;
 return   : 'r' 'e' 't' 'u' 'r' 'n' ;
+func     : 'f' 'u' 'n' 'c' ;
+subr     : 's' 'u' 'b' 'r' ;
+call     : 'c' 'a' 'l' 'l' ;
 
 arr   : 'a' 'r' 'r' ;
 bool  : 'b' 'o' 'o' 'l' ;
@@ -403,6 +403,7 @@ BracelessStatement
   | BreakStatement
   | ContinueStatement
   | ReturnStatement
+  | SubroutineCallsite
 ;
 
 Assignment
@@ -1252,10 +1253,10 @@ ArraySliceAccess
 // FUNCTION/SUBROUTINE CALLS
 
 MlrvalOrFunction
-  : FcnOrSubrCall
+  : FunctionCallsite
 ;
 
-FcnOrSubrCall
+FunctionCallsite
 
   : FunctionName "(" ")"
     << dsl.NewASTNodeZary(
@@ -1264,17 +1265,17 @@ FcnOrSubrCall
     ) >>
 
   | FunctionName "(" FcnArgs ")"
-    // As parsed there's an intermediate node between FcnOrSubrCall
+    // As parsed there's an intermediate node between FunctionCallsite
     // and the children. Now we can remove it.
     //
     // Before:
-    // * FcnOrSubrCall "[]"
-    //     * FcnOrSubrCall
+    // * FunctionCallsite "[]"
+    //     * FunctionCallsite
     //         * StringLiteral "a"
     //         * StringLiteral "b"
     //
     // After:
-    // * FcnOrSubrCall "[]"
+    // * FunctionCallsite "[]"
     //     * StringLiteral "a"
     //     * StringLiteral "b"
     << dsl.AdoptChildren(
@@ -1322,6 +1323,41 @@ FcnArgs
     ) >>
 ;
 
+// ----------------------------------------------------------------
+// Subroutine callsite
+
+SubroutineCallsite
+  : call SubroutineName "(" ")"
+    << dsl.NewASTNodeZary(
+      $0,
+      dsl.NodeTypeSubroutineCallsite,
+    ) >>
+
+  | call SubroutineName "(" FcnArgs ")"
+    // As parsed there's an intermediate node between SubroutineCallsite
+    // and the children. Now we can remove it.
+    //
+    // Before:
+    // * SubroutineCallsite "[]"
+    //     * SubroutineCallsite
+    //         * StringLiteral "a"
+    //         * StringLiteral "b"
+    //
+    // After:
+    // * SubroutineCallsite "[]"
+    //     * StringLiteral "a"
+    //     * StringLiteral "b"
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeSubroutineCallsite,
+      ),
+      $2,
+    ) >>
+;
+
+SubroutineName : non_sigil_name;
+
 // ================================================================
 // BEGIN/END BLOCKS
 
@@ -1332,8 +1368,8 @@ BracefulStatement
   | IfChain
   | WhileLoop
   | ForLoop
-  | FuncBlock
-  // | SubrBlock
+  | FunctionDefinition
+  | SubroutineDefinition
 ;
 
 BeginBlock
@@ -1565,7 +1601,7 @@ ContinueStatement
 // ================================================================
 // FUNCTION AND SUBROUTINE DEFINITIONS
 
-FuncBlock
+FunctionDefinition
 
   // Without return-type annotation
   : func
@@ -1604,15 +1640,22 @@ FuncBlock
 
 ;
 
-// ----------------------------------------------------------------
-//SubrBlock(C) ::= subr
-//  non_sigil_name(F) "(" FuncOrSubrParameterList(A) ")"
-//  "{" StatementBlock(B) "}".
-//{
-//  A = mlr_dsl_ast_node_set_function_name(A, F->text);
-//  mlr_dsl_ast_node_replace_text(B, "subr_block");
-//  C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
-//}
+SubroutineDefinition
+  : subr
+    non_sigil_name
+    "("
+    FuncOrSubrParameterList
+    ")"
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeBinary(
+      $1,
+      $3, // parameter list
+      $5, // { ... }
+      dsl.NodeTypeSubroutineDefinition,
+    );
+  >>
+;
 
 // ----------------------------------------------------------------
 FuncOrSubrParameterList
@@ -1663,10 +1706,6 @@ TypedFuncOrSubrParameterName
   : Typedecl UntypedFuncOrSubrParameterName
     << dsl.AppendChild($1, $0) >>
 ;
-
-//Statement : call FcnOrSubrCall(B). {
-//  A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
-//}
 
 // ----------------------------------------------------------------
 // Return statements for user-defined functions and subroutines

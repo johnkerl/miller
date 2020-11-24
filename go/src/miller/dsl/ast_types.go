@@ -64,8 +64,9 @@ const (
 	NodeTypePrintnStatement  = "printn statement"
 	NodeTypeEprintnStatement = "eprintn statement"
 
-	NodeTypeOperator         = "operator"
-	NodeTypeFunctionCallsite = "function callsite"
+	NodeTypeOperator           = "operator"
+	NodeTypeFunctionCallsite   = "function callsite"
+	NodeTypeSubroutineCallsite = "subroutine callsite"
 
 	NodeTypeBeginBlock           = "begin block"
 	NodeTypeEndBlock             = "end block"
