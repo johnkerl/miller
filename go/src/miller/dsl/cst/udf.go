@@ -257,6 +257,15 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	functionName := string(astNode.Token.Lit)
 
+	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
+		return errors.New(
+			fmt.Sprintf(
+				"Miller: function named \"%s\" must not override a built-in function of the same name.",
+				functionName,
+			),
+		)
+	}
+
 	if this.udfManager.ExistsByName(functionName) {
 		return errors.New(
 			fmt.Sprintf(
