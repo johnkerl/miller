@@ -233,17 +233,6 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	parameterListASTNode := astNode.Children[0]
 	subroutineBodyASTNode := astNode.Children[1]
 
-	returnValueTypeName := "any"
-	if len(astNode.Children) == 3 {
-		typeNode := astNode.Children[2]
-		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
-		returnValueTypeName = string(typeNode.Token.Lit)
-	}
-	typeGatedReturnValue, err := types.NewTypeGatedMlrvalName(
-		"subroutine return value",
-		returnValueTypeName,
-	)
-
 	lib.InternalCodingErrorIf(parameterListASTNode.Type != dsl.NodeTypeParameterList)
 	lib.InternalCodingErrorIf(parameterListASTNode.Children == nil)
 	arity := len(parameterListASTNode.Children)
@@ -274,7 +263,7 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 		typeGatedParameterNames[i] = typeGatedParameterName
 	}
 
-	signature := NewSignature(functionName, arity, typeGatedParameterNames, typeGatedReturnValue)
+	signature := NewSignature(functionName, arity, typeGatedParameterNames, nil)
 
 	subroutineBody, err := this.BuildStatementBlockNode(subroutineBodyASTNode)
 	if err != nil {

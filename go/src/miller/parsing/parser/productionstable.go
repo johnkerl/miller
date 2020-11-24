@@ -2532,7 +2532,7 @@ var productionsTable = ProdTab{
 	},
 	ProdTabEntry{
 		String: `SubroutineCallsite : call SubroutineName "(" ")"	<< dsl.NewASTNodeZary(
-      X[0],
+      X[1],
       dsl.NodeTypeSubroutineCallsite,
     ) >>`,
 		Id:         "SubroutineCallsite",
@@ -2541,7 +2541,7 @@ var productionsTable = ProdTab{
 		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeZary(
-				X[0],
+				X[1],
 				dsl.NodeTypeSubroutineCallsite,
 			)
 		},
@@ -2549,7 +2549,7 @@ var productionsTable = ProdTab{
 	ProdTabEntry{
 		String: `SubroutineCallsite : call SubroutineName "(" FcnArgs ")"	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
-        X[0],
+        X[1],
         dsl.NodeTypeSubroutineCallsite,
       ),
       X[3],
@@ -2561,7 +2561,7 @@ var productionsTable = ProdTab{
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.AdoptChildren(
 				dsl.NewASTNodeNestable(
-					X[0],
+					X[1],
 					dsl.NodeTypeSubroutineCallsite,
 				),
 				X[3],

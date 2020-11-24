@@ -4,7 +4,7 @@ DSL EXPRESSION:
 call s()
 RAW AST:
 * statement block
-    * subroutine callsite "call"
+    * subroutine callsite "s"
 
 
 mlr -n put -v call s
@@ -14,7 +14,7 @@ DSL EXPRESSION:
 call s(1,2,3)
 RAW AST:
 * statement block
-    * subroutine callsite "call"
+    * subroutine callsite "s"
         * int literal "1"
         * int literal "2"
         * int literal "3"
@@ -68,6 +68,28 @@ RAW AST:
 
 mlr -n put subr s()
 
+mlr -n put -v subr s() {}; call s()
+DSL EXPRESSION:
+subr s() {}; call s()
+RAW AST:
+* statement block
+    * subroutine definition "s"
+        * parameter list
+        * statement block
+    * subroutine callsite "s"
+
+
+mlr -n put -v call s(); subr s() {}
+DSL EXPRESSION:
+call s(); subr s() {}
+RAW AST:
+* statement block
+    * subroutine callsite "s"
+    * subroutine definition "s"
+        * parameter list
+        * statement block
+
+
 mlr -n put -v subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
 DSL EXPRESSION:
 subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
@@ -84,7 +106,7 @@ RAW AST:
                         * string literal "HELLO, "
                         * local variable "a"
                     * string literal "!"
-    * subroutine callsite "call"
+    * subroutine callsite "s"
         * string literal "WORLD"
 
 
@@ -98,6 +120,57 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
 mlr --from ./reg-test/input/2.dkvp put call s()
 
-mlr --from ./reg-test/input/2.dkvp put subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
-Exit status was 1; expected 0.
+mlr --from ./reg-test/input/2.dkvp put -v -q 
+  func s(x) {
+    return x*2;
+  }
+  subr s(a) {
+    print "HELLO, ".a."!"
+  }
+  print s(NR);
+  call s("WORLD");
+
+DSL EXPRESSION:
+
+  func s(x) {
+    return x*2;
+  }
+  subr s(a) {
+    print "HELLO, ".a."!"
+  }
+  print s(NR);
+  call s("WORLD");
+
+RAW AST:
+* statement block
+    * function definition "s"
+        * parameter list
+            * parameter
+                * parameter name "x"
+        * statement block
+            * return "return"
+                * operator "*"
+                    * local variable "x"
+                    * int literal "2"
+    * subroutine definition "s"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+            * print statement "print"
+                * operator "."
+                    * operator "."
+                        * string literal "HELLO, "
+                        * local variable "a"
+                    * string literal "!"
+    * print statement "print"
+        * function callsite "s"
+            * context variable "NR"
+    * subroutine callsite "s"
+        * string literal "WORLD"
+
+2
+HELLO, WORLD!
+4
+HELLO, WORLD!
 

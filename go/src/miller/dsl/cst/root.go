@@ -55,6 +55,11 @@ func Build(
 		return nil, err
 	}
 
+	err = cstRoot.resolveSubroutineCallsites()
+	if err != nil {
+		return nil, err
+	}
+
 	return cstRoot, nil
 }
 
@@ -185,16 +190,16 @@ func (this *RootNode) resolveSubroutineCallsites() error {
 			this.unresolvedSubroutineCallsites.Front(),
 		).(*UDSCallsite)
 
-		functionName := unresolvedSubroutineCallsite.uds.signature.funcOrSubrName
+		subroutineName := unresolvedSubroutineCallsite.uds.signature.funcOrSubrName
 		callsiteArity := unresolvedSubroutineCallsite.uds.signature.arity
 
-		uds, err := this.udsManager.LookUp(functionName, callsiteArity)
+		uds, err := this.udsManager.LookUp(subroutineName, callsiteArity)
 		if err != nil {
 			return err
 		}
 		if uds == nil {
 			return errors.New(
-				"Miller: function name not found: " + functionName,
+				"Miller: subroutine name not found: " + subroutineName,
 			)
 		}
 

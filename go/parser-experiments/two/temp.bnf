@@ -30,7 +30,7 @@ SubroutineCallsite
 
   : "call" SubroutineName "(" ")"
     << dsl.NewASTNodeZary(
-      $0,
+      $1,
       dsl.NodeTypeSubroutineCallsite,
     ) >>
 
@@ -50,7 +50,7 @@ SubroutineCallsite
     //     * StringLiteral "b"
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
-        $0,
+        $1,
         dsl.NodeTypeSubroutineCallsite,
       ),
       $3,
