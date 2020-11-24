@@ -82,7 +82,7 @@ func mapperPutParseCLI(
 				return nil
 			}
 			if dslString != "" {
-				dslString += ";\n"
+				dslString += "\n"
 			}
 			dslString += string(data)
 

@@ -25,6 +25,8 @@ no need to bootstrap a parser for the parser-generator language
 ! bug on set-var/bind-var
   - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
 
+* README.md doc section on reg-test/run fu
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! int map keys: what to do with:
   o '{1:2}' treat as '{"1":2}'
