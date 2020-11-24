@@ -1,10 +1,6 @@
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-empty-statements.sh
-* mlr_expect_fail -n filter -v ''
-  C: "filter statement must not be empty"
-
 rrv -C1 ./reg-test/cases/case-c-dsl-for-bind-loops-for-valgrind.sh
 * absent-bind discrepancy between C & Go
 
