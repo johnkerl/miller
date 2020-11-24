@@ -1,0 +1,71 @@
+
+
+================================================================
+UTF-8 alignment
+
+mlr --icsvlite --opprint cat ./reg-test/input/utf8-1.csv
+langue   nom      jour
+français françois vendredi
+žusz     éloignée -
+
+mlr --icsvlite --opprint cat ./reg-test/input/utf8-2.csv
+français françois vendredi
+langue   nom      jour
+
+mlr --icsvlite --oxtab cat ./reg-test/input/utf8-1.csv
+langue français
+nom    françois
+jour   vendredi
+
+langue žusz
+nom    éloignée
+jour   
+
+mlr --icsvlite --oxtab cat ./reg-test/input/utf8-2.csv
+français langue
+françois nom
+vendredi jour
+
+mlr --inidx --ifs space --opprint cat ./reg-test/input/utf8-align.nidx
+1        2
+191º     test
+191      test2
+francois français
+françois francais
+
+mlr --inidx --ifs space --opprint --right cat ./reg-test/input/utf8-align.nidx
+       1        2
+    191º     test
+     191    test2
+francois français
+françois francais
+
+mlr --oxtab cat ./reg-test/input/utf8-align.dkvp
+191º test
+1912 test2
+cois çais
+çois cais
+
+191º test
+1912 test2
+ois  çais
+çois cais
+
+191º  test
+1912  test2
+coise çais
+çois  cais
+
+mlr --inidx --ifs space --oxtab --xvright cat ./reg-test/input/utf8-align.nidx
+1 191º
+2 test
+
+1   191
+2 test2
+
+1 francois
+2 français
+
+1 françois
+2 francais
+

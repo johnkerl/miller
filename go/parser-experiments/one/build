@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# ----------------------------------------------------------------
+# Setup
+us=$(basename $0)
+set -euo pipefail
+
+verbose="false"
+
+if [ $# -eq 1 ]; then
+  bnf="$1"
+elif [ $# -eq 2 ]; then
+  if [ "$1" = "-v" ]; then
+    verbose="true"
+  else
+    echo "Usage: $0 {.bnf file}" 1>&2
+    exit 1
+  fi
+  bnf="$2"
+else
+  echo "Usage: $0 {.bnf file}" 1>&2
+  exit 1
+fi
+
+dir=src/experimental
+mkdir -p $dir
+
+# ----------------------------------------------------------------
+# Run the parser-generator
+export GOPATH=$(pwd)
+
+# Build the bin/gocc executable:
+go get github.com/goccmack/gocc
+
+rm -f $dir/*.txt
+if [ "$verbose" = "true" ]; then
+  lr1="$dir/LR1_conflicts.txt"
+  # The -o specifies the package name within the autogen
+  bin/gocc -v -o $dir $bnf || expand -2 $lr1
+else
+  bin/gocc -o $dir $bnf
+fi
+
+echo "Parser-autogen OK"
+
+# Code-gen directories:
+#   $dir/errors/
+#   $dir/lexer/
+#   $dir/parser/
+#   $dir/token/
+#   $dir/util/
+
+# ----------------------------------------------------------------
+# Compile the main and the parser-autogen
+
+go build main.go
+echo "Compile OK"

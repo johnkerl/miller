@@ -1,0 +1,17 @@
+
+mlr --opprint --from ./reg-test/input/s.dkvp put 
+  $lcx = leafcount($x);
+  $lcn = leafcount($nonesuch);
+  $lca1 = leafcount([1,2,3]);
+  $lca2 = leafcount([1,[4,5,6],3]);
+  $lca3 = leafcount([1,{"s":4,"t":[7,8,9],"u":6},3]);
+  $lcm1 = leafcount({"s":1,"t":2,"u":3});
+  $lcm2 = leafcount({"s":1,"t":[4,5,6],"u":3});
+  $lcm3 = leafcount({"s":1,"t":[4,{"x":8, "y": 9},6],"u":3});
+
+a   b   i x                   y                   lcx lca1 lca2 lca3 lcm1 lcm2 lcm3
+pan pan 1 0.3467901443380824  0.7268028627434533  1   3    5    7    3    5    6
+eks pan 2 0.7586799647899636  0.5221511083334797  1   3    5    7    3    5    6
+wye wye 3 0.20460330576630303 0.33831852551664776 1   3    5    7    3    5    6
+eks wye 4 0.38139939387114097 0.13418874328430463 1   3    5    7    3    5    6
+

@@ -33,4 +33,7 @@ fi
 #   src/miller/parsing/token/
 #   src/miller/parsing/util/
 
+# Override GOCC codegen with customized error handling
+cp src/miller/parsing/errors.go.template src/miller/parsing/errors/errors.go
+
 for x in src/miller/parsing/*/*.go; do gofmt -w $x; done

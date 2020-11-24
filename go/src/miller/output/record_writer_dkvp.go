@@ -30,6 +30,11 @@ func (this *RecordWriterDKVP) Write(
 		return
 	}
 
+	if outrec.FieldCount == 0 {
+		os.Stdout.WriteString(this.ors)
+		return
+	}
+
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(*pe.Key)

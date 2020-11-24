@@ -1,0 +1,38 @@
+
+mlr seqgen --start 1 --stop 5 --step 1
+i=1
+i=2
+i=3
+i=4
+i=5
+
+mlr seqgen --start 1 --stop 5 --step 2
+i=1
+i=3
+i=5
+
+mlr seqgen --start 1 --stop 1 --step 1 -f a
+a=1
+
+mlr seqgen --start 5 --stop 1 --step 1 -f b
+
+mlr seqgen --start 5 --stop 1 --step -1 -f c
+c=5
+c=4
+c=3
+c=2
+c=1
+
+mlr seqgen --start 5 --stop 5 --step -1 -f d
+d=5
+
+mlr --from ./reg-test/input/abixy cat then seqgen --start 1 --stop 5
+i=1
+i=2
+i=3
+i=4
+i=5
+
+mlr --from ./reg-test/input/abixy cat then seqgen --start 1 --stop 100 then stats1 -a count,sum,min,p50,max -f i
+i_count=100,i_sum=5050,i_min=1,i_p50=51,i_max=100
+

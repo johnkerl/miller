@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/types"
 )
 
@@ -91,7 +92,7 @@ func recordFromNIDXLine(
 	ifs *string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	values := strings.Split(*line, *ifs) // TODO: repifs ...
+	values := lib.SplitString(*line, *ifs) // TODO: repifs ...
 	var i int64 = 0
 	for _, value := range values {
 		i++

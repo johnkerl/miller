@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# See ./reg-test/run
+diff_context_flag=""
+for arg; do
+  if [ "$arg" = "-C5" ]; then
+    diff_context_flag="$arg"
+  else
+    expfile=./reg-test/expected/$arg.out
+    outfile=./output-reg-test/$arg.out
+    diff -a -I '^mlr' -I '^Miller:' -I '^cat' $expfile $outfile
+  fi
+done

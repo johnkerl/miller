@@ -65,7 +65,11 @@ static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv,
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count) {
+static mapper_t* mapper_head_alloc(
+	ap_state_t* pargp,
+	slls_t* pgroup_by_field_names,
+	unsigned long long head_count
+) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_head_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_head_state_t));

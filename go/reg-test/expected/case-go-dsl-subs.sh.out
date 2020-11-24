@@ -1,0 +1,10 @@
+
+mlr put $y=ssub($x, "e", "X")
+x=eeee,y=Xeee
+
+mlr put $y=sub($x, "e", "X")
+x=eeee,y=Xeee
+
+mlr put $y=gsub($x, "e", "X")
+x=eeee,y=XXXX
+

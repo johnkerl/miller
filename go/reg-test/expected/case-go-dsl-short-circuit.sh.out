@@ -1,0 +1,176 @@
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  && true
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  true
+eks pan 2 0.7586799647899636  0.5221511083334797  true
+wye wye 3 0.20460330576630303 0.33831852551664776 true
+eks wye 4 0.38139939387114097 0.13418874328430463 true
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  && false
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  false
+eks pan 2 0.7586799647899636  0.5221511083334797  false
+wye wye 3 0.20460330576630303 0.33831852551664776 false
+eks wye 4 0.38139939387114097 0.13418874328430463 false
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false && true
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  false
+eks pan 2 0.7586799647899636  0.5221511083334797  false
+wye wye 3 0.20460330576630303 0.33831852551664776 false
+eks wye 4 0.38139939387114097 0.13418874328430463 false
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false && false
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  false
+eks pan 2 0.7586799647899636  0.5221511083334797  false
+wye wye 3 0.20460330576630303 0.33831852551664776 false
+eks wye 4 0.38139939387114097 0.13418874328430463 false
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  && 4
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  (error)
+eks pan 2 0.7586799647899636  0.5221511083334797  (error)
+wye wye 3 0.20460330576630303 0.33831852551664776 (error)
+eks wye 4 0.38139939387114097 0.13418874328430463 (error)
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false && 4
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  false
+eks pan 2 0.7586799647899636  0.5221511083334797  false
+wye wye 3 0.20460330576630303 0.33831852551664776 false
+eks wye 4 0.38139939387114097 0.13418874328430463 false
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = 4     && true
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  (error)
+eks pan 2 0.7586799647899636  0.5221511083334797  (error)
+wye wye 3 0.20460330576630303 0.33831852551664776 (error)
+eks wye 4 0.38139939387114097 0.13418874328430463 (error)
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = 4     && false
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  (error)
+eks pan 2 0.7586799647899636  0.5221511083334797  (error)
+wye wye 3 0.20460330576630303 0.33831852551664776 (error)
+eks wye 4 0.38139939387114097 0.13418874328430463 (error)
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false && %%%panic%%%
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  false
+eks pan 2 0.7586799647899636  0.5221511083334797  false
+wye wye 3 0.20460330576630303 0.33831852551664776 false
+eks wye 4 0.38139939387114097 0.13418874328430463 false
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  || true
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  true
+eks pan 2 0.7586799647899636  0.5221511083334797  true
+wye wye 3 0.20460330576630303 0.33831852551664776 true
+eks wye 4 0.38139939387114097 0.13418874328430463 true
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  || false
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  true
+eks pan 2 0.7586799647899636  0.5221511083334797  true
+wye wye 3 0.20460330576630303 0.33831852551664776 true
+eks wye 4 0.38139939387114097 0.13418874328430463 true
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false || true
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  true
+eks pan 2 0.7586799647899636  0.5221511083334797  true
+wye wye 3 0.20460330576630303 0.33831852551664776 true
+eks wye 4 0.38139939387114097 0.13418874328430463 true
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false || false
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  false
+eks pan 2 0.7586799647899636  0.5221511083334797  false
+wye wye 3 0.20460330576630303 0.33831852551664776 false
+eks wye 4 0.38139939387114097 0.13418874328430463 false
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  || 4
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  true
+eks pan 2 0.7586799647899636  0.5221511083334797  true
+wye wye 3 0.20460330576630303 0.33831852551664776 true
+eks wye 4 0.38139939387114097 0.13418874328430463 true
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false || 4
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  (error)
+eks pan 2 0.7586799647899636  0.5221511083334797  (error)
+wye wye 3 0.20460330576630303 0.33831852551664776 (error)
+eks wye 4 0.38139939387114097 0.13418874328430463 (error)
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = 4     || true
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  (error)
+eks pan 2 0.7586799647899636  0.5221511083334797  (error)
+wye wye 3 0.20460330576630303 0.33831852551664776 (error)
+eks wye 4 0.38139939387114097 0.13418874328430463 (error)
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = 4     || false
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  (error)
+eks pan 2 0.7586799647899636  0.5221511083334797  (error)
+wye wye 3 0.20460330576630303 0.33831852551664776 (error)
+eks wye 4 0.38139939387114097 0.13418874328430463 (error)
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  || %%%panic%%%
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  true
+eks pan 2 0.7586799647899636  0.5221511083334797  true
+wye wye 3 0.20460330576630303 0.33831852551664776 true
+eks wye 4 0.38139939387114097 0.13418874328430463 true
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = true  ? 4 : %%%panic%%%
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  4
+eks pan 2 0.7586799647899636  0.5221511083334797  4
+wye wye 3 0.20460330576630303 0.33831852551664776 4
+eks wye 4 0.38139939387114097 0.13418874328430463 4
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = false ? %%%panic%%% : 5
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  5
+eks pan 2 0.7586799647899636  0.5221511083334797  5
+wye wye 3 0.20460330576630303 0.33831852551664776 5
+eks wye 4 0.38139939387114097 0.13418874328430463 5
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = $x ?? %%%panic%%%
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2 0.7586799647899636  0.5221511083334797  0.7586799647899636
+wye wye 3 0.20460330576630303 0.33831852551664776 0.20460330576630303
+eks wye 4 0.38139939387114097 0.13418874328430463 0.38139939387114097
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = $x ?? 999
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2 0.7586799647899636  0.5221511083334797  0.7586799647899636
+wye wye 3 0.20460330576630303 0.33831852551664776 0.20460330576630303
+eks wye 4 0.38139939387114097 0.13418874328430463 0.38139939387114097
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = $nonesuch ?? 999
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  999
+eks pan 2 0.7586799647899636  0.5221511083334797  999
+wye wye 3 0.20460330576630303 0.33831852551664776 999
+eks wye 4 0.38139939387114097 0.13418874328430463 999
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $y ??= 999
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z ??= 999
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  999
+eks pan 2 0.7586799647899636  0.5221511083334797  999
+wye wye 3 0.20460330576630303 0.33831852551664776 999
+eks wye 4 0.38139939387114097 0.13418874328430463 999
+

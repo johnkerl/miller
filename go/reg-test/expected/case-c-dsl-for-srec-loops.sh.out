@@ -1,0 +1,404 @@
+
+
+---------------------------------------------------------------- empty for-srec
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) { }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=3
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+
+---------------------------------------------------------------- for-srec without boundvars
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {$nr= NR}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="nr", type=FIELD_NAME.
+                text="NR", type=CONTEXT_VARIABLE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=3
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="=", type=SREC_ASSIGNMENT:
+                text="nr", type=FIELD_NAME.
+                text="NR", type=CONTEXT_VARIABLE.
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nr=4
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,nr=6
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,nr=7
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,nr=8
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,nr=9
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nr=10
+
+
+---------------------------------------------------------------- for-srec modifying the srec
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {unset $[k]}; $j = NR
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="unset", type=UNSET:
+                text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                    text="k", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="j", type=FIELD_NAME.
+        text="NR", type=CONTEXT_VARIABLE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=3
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="unset", type=UNSET:
+                text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                    text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="j", type=FIELD_NAME.
+        text="NR", type=CONTEXT_VARIABLE.
+
+j=1
+j=2
+j=3
+j=4
+j=5
+j=6
+j=7
+j=8
+j=9
+j=10
+
+mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="if_head", type=IF_HEAD:
+                text="if", type=IF_ITEM:
+                    text="!=", type=OPERATOR:
+                        text="k", type=NONINDEXED_LOCAL_VARIABLE.
+                        text="x", type=STRING_LITERAL.
+                    text="if_block", type=STATEMENT_BLOCK:
+                        text="unset", type=UNSET:
+                            text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                                text="k", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="j", type=FIELD_NAME.
+        text="NR", type=CONTEXT_VARIABLE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=3 max_var_depth=3
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="if_head", type=IF_HEAD:
+                text="if", type=IF_ITEM:
+                    text="!=", type=OPERATOR:
+                        text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                        text="x", type=STRING_LITERAL.
+                    text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                        text="unset", type=UNSET:
+                            text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                                text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="j", type=FIELD_NAME.
+        text="NR", type=CONTEXT_VARIABLE.
+
+x=0.3467901443380824,j=1
+x=0.7586799647899636,j=2
+x=0.20460330576630303,j=3
+x=0.38139939387114097,j=4
+x=0.5732889198020006,j=5
+x=0.5271261600918548,j=6
+x=0.6117840605678454,j=7
+x=0.5985540091064224,j=8
+x=0.03144187646093577,j=9
+x=0.5026260055412137,j=10
+
+mlr --from ./reg-test/input/abixy --opprint put -S -v for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="=", type=INDIRECT_SREC_ASSIGNMENT:
+                text=".", type=OPERATOR:
+                    text="k", type=NONINDEXED_LOCAL_VARIABLE.
+                    text="_orig", type=STRING_LITERAL.
+                text="v", type=NONINDEXED_LOCAL_VARIABLE.
+            text="=", type=INDIRECT_SREC_ASSIGNMENT:
+                text="k", type=NONINDEXED_LOCAL_VARIABLE.
+                text="other", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=3
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="=", type=INDIRECT_SREC_ASSIGNMENT:
+                text=".", type=OPERATOR:
+                    text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                    text="_orig", type=STRING_LITERAL.
+                text="v", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+            text="=", type=INDIRECT_SREC_ASSIGNMENT:
+                text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="other", type=STRING_LITERAL.
+
+a     b     i     x     y     a_orig b_orig i_orig x_orig              y_orig
+other other other other other pan    pan    1      0.3467901443380824  0.7268028627434533
+other other other other other eks    pan    2      0.7586799647899636  0.5221511083334797
+other other other other other wye    wye    3      0.20460330576630303 0.33831852551664776
+other other other other other eks    wye    4      0.38139939387114097 0.13418874328430463
+other other other other other wye    pan    5      0.5732889198020006  0.8636244699032729
+other other other other other zee    pan    6      0.5271261600918548  0.49322128674835697
+other other other other other eks    zee    7      0.6117840605678454  0.1878849191181694
+other other other other other zee    wye    8      0.5985540091064224  0.976181385699006
+other other other other other hat    wye    9      0.03144187646093577 0.7495507603507059
+other other other other other pan    wye    10     0.5026260055412137  0.9526183602969864
+
+mlr --from ./reg-test/input/abixy put -S -v for(k,v in $*) {$[v]=k}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="=", type=INDIRECT_SREC_ASSIGNMENT:
+                text="v", type=NONINDEXED_LOCAL_VARIABLE.
+                text="k", type=NONINDEXED_LOCAL_VARIABLE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=3
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="=", type=INDIRECT_SREC_ASSIGNMENT:
+                text="v", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,pan=b,1=i,0.3467901443380824=x,0.7268028627434533=y
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,eks=a,pan=b,2=i,0.7586799647899636=x,0.5221511083334797=y
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,wye=b,3=i,0.20460330576630303=x,0.33831852551664776=y
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,eks=a,wye=b,4=i,0.38139939387114097=x,0.13418874328430463=y
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,wye=a,pan=b,5=i,0.5732889198020006=x,0.8636244699032729=y
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,zee=a,pan=b,6=i,0.5271261600918548=x,0.49322128674835697=y
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,eks=a,zee=b,7=i,0.6117840605678454=x,0.1878849191181694=y
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,zee=a,wye=b,8=i,0.5985540091064224=x,0.976181385699006=y
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,hat=a,wye=b,9=i,0.03144187646093577=x,0.7495507603507059=y
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,pan=a,wye=b,10=i,0.5026260055412137=x,0.9526183602969864=y
+
+mlr --from ./reg-test/input/abixy put -v 
+  $sum = 0;
+  for(k,v in $*) {
+    if (k =~ "^[xy]$") {
+      $sum += $[k]
+    }
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=SREC_ASSIGNMENT:
+        text="sum", type=FIELD_NAME.
+        text="0", type=NUMERIC_LITERAL.
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="if_head", type=IF_HEAD:
+                text="if", type=IF_ITEM:
+                    text="=~", type=OPERATOR:
+                        text="k", type=NONINDEXED_LOCAL_VARIABLE.
+                        text="^[xy]$", type=STRING_LITERAL.
+                    text="if_block", type=STATEMENT_BLOCK:
+                        text="=", type=SREC_ASSIGNMENT:
+                            text="sum", type=FIELD_NAME.
+                            text="+", type=OPERATOR:
+                                text="sum", type=FIELD_NAME.
+                                text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                                    text="k", type=NONINDEXED_LOCAL_VARIABLE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=3 max_var_depth=3
+    text="=", type=SREC_ASSIGNMENT:
+        text="sum", type=FIELD_NAME.
+        text="0", type=NUMERIC_LITERAL.
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="if_head", type=IF_HEAD:
+                text="if", type=IF_ITEM:
+                    text="=~", type=OPERATOR:
+                        text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                        text="^[xy]$", type=STRING_LITERAL.
+                    text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                        text="=", type=SREC_ASSIGNMENT:
+                            text="sum", type=FIELD_NAME.
+                            text="+", type=OPERATOR:
+                                text="sum", type=FIELD_NAME.
+                                text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                                    text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=0.542922
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=0.515588
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=1.436913
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=1.020347
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=0.799669
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.574735
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.780993
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.455244
+
+mlr --from ./reg-test/input/abixy put -S -v 
+  $sum = float(0);
+  for(k,v in $*) {
+    if (k =~ "^[xy]$") {
+      $sum += float($[k])
+    }
+  }
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=SREC_ASSIGNMENT:
+        text="sum", type=FIELD_NAME.
+        text="float", type=FUNCTION_CALLSITE:
+            text="0", type=NUMERIC_LITERAL.
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="if_head", type=IF_HEAD:
+                text="if", type=IF_ITEM:
+                    text="=~", type=OPERATOR:
+                        text="k", type=NONINDEXED_LOCAL_VARIABLE.
+                        text="^[xy]$", type=STRING_LITERAL.
+                    text="if_block", type=STATEMENT_BLOCK:
+                        text="=", type=SREC_ASSIGNMENT:
+                            text="sum", type=FIELD_NAME.
+                            text="+", type=OPERATOR:
+                                text="sum", type=FIELD_NAME.
+                                text="float", type=FUNCTION_CALLSITE:
+                                    text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                                        text="k", type=NONINDEXED_LOCAL_VARIABLE.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=3 max_var_depth=3
+    text="=", type=SREC_ASSIGNMENT:
+        text="sum", type=FIELD_NAME.
+        text="float", type=FUNCTION_CALLSITE:
+            text="0", type=NUMERIC_LITERAL.
+    text="for", type=FOR_SREC: subframe_var_count=2
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+            text="if_head", type=IF_HEAD:
+                text="if", type=IF_ITEM:
+                    text="=~", type=OPERATOR:
+                        text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                        text="^[xy]$", type=STRING_LITERAL.
+                    text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
+                        text="=", type=SREC_ASSIGNMENT:
+                            text="sum", type=FIELD_NAME.
+                            text="+", type=OPERATOR:
+                                text="sum", type=FIELD_NAME.
+                                text="float", type=FUNCTION_CALLSITE:
+                                    text="indirect_field_name", type=INDIRECT_FIELD_NAME:
+                                        text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=0.542922
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=0.515588
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=1.436913
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=1.020347
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=0.799669
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.574735
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.780993
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.455244
+

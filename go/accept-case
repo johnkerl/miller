@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# See ./reg-test/run
+for arg; do
+  src=output-reg-test/$arg.out
+  if [ -f $src ]; then
+    cp $src reg-test/expected
+  elif [ -f $arg ]; then
+    src=output-reg-test/$(basename $arg).out
+    cp $src reg-test/expected
+  else
+    echo "Cannot find source $arg" 1>&2
+    exit 1
+  fi
+done

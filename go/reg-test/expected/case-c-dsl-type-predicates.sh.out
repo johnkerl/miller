@@ -1,0 +1,156 @@
+
+mlr --from ./reg-test/input/abixy --opprint put  for (k, v in $*) { $[k."_type"]      = typeof(v)     } 
+a   b   i  x                   y                   a_type b_type i_type x_type y_type
+pan pan 1  0.3467901443380824  0.7268028627434533  string string int    float  float
+eks pan 2  0.7586799647899636  0.5221511083334797  string string int    float  float
+wye wye 3  0.20460330576630303 0.33831852551664776 string string int    float  float
+eks wye 4  0.38139939387114097 0.13418874328430463 string string int    float  float
+wye pan 5  0.5732889198020006  0.8636244699032729  string string int    float  float
+zee pan 6  0.5271261600918548  0.49322128674835697 string string int    float  float
+eks zee 7  0.6117840605678454  0.1878849191181694  string string int    float  float
+zee wye 8  0.5985540091064224  0.976181385699006   string string int    float  float
+hat wye 9  0.03144187646093577 0.7495507603507059  string string int    float  float
+pan wye 10 0.5026260055412137  0.9526183602969864  string string int    float  float
+
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_float(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
+NR=1,k=x,float=0.346790
+NR=1,k=y,float=0.726803
+NR=2,k=x,float=0.758680
+NR=2,k=y,float=0.522151
+NR=3,k=x,float=0.204603
+NR=3,k=y,float=0.338319
+NR=4,k=x,float=0.381399
+NR=4,k=y,float=0.134189
+NR=5,k=xxx,float=0.573289
+NR=5,k=y,float=0.863624
+NR=6,k=x,float=0.527126
+NR=6,k=y,float=0.493221
+NR=7,k=x,float=0.611784
+NR=7,k=y,float=0.187885
+NR=8,k=x,float=0.598554
+NR=8,k=yyy,float=0.976181
+NR=9,k=x,float=0.031442
+NR=9,k=y,float=0.749551
+NR=10,k=x,float=0.502626
+NR=10,k=y,float=0.952618
+
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_int(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }
+NR=1,k=i,int=1
+NR=2,k=i,int=2
+NR=3,k=i,int=3
+NR=4,k=i,int=4
+NR=5,k=i,int=5
+NR=6,k=i,int=6
+NR=7,k=iii,int=7
+NR=8,k=i,int=8
+NR=9,k=i,int=9
+NR=10,k=i,int=10
+
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }
+NR=1,k=i,numeric=1
+NR=1,k=x,numeric=0.346790
+NR=1,k=y,numeric=0.726803
+NR=2,k=i,numeric=2
+NR=2,k=x,numeric=0.758680
+NR=2,k=y,numeric=0.522151
+NR=3,k=i,numeric=3
+NR=3,k=x,numeric=0.204603
+NR=3,k=y,numeric=0.338319
+NR=4,k=i,numeric=4
+NR=4,k=x,numeric=0.381399
+NR=4,k=y,numeric=0.134189
+NR=5,k=i,numeric=5
+NR=5,k=xxx,numeric=0.573289
+NR=5,k=y,numeric=0.863624
+NR=6,k=i,numeric=6
+NR=6,k=x,numeric=0.527126
+NR=6,k=y,numeric=0.493221
+NR=7,k=iii,numeric=7
+NR=7,k=x,numeric=0.611784
+NR=7,k=y,numeric=0.187885
+NR=8,k=i,numeric=8
+NR=8,k=x,numeric=0.598554
+NR=8,k=yyy,numeric=0.976181
+NR=9,k=i,numeric=9
+NR=9,k=x,numeric=0.031442
+NR=9,k=y,numeric=0.749551
+NR=10,k=i,numeric=10
+NR=10,k=x,numeric=0.502626
+NR=10,k=y,numeric=0.952618
+
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_string(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }
+NR=1,k=a,string=pan
+NR=1,k=b,string=pan
+NR=2,k=a,string=eks
+NR=2,k=b,string=pan
+NR=3,k=aaa,string=wye
+NR=3,k=b,string=wye
+NR=4,k=a,string=eks
+NR=4,k=bbb,string=wye
+NR=5,k=a,string=wye
+NR=5,k=b,string=pan
+NR=6,k=a,string=zee
+NR=6,k=b,string=pan
+NR=7,k=a,string=eks
+NR=7,k=b,string=zee
+NR=8,k=a,string=zee
+NR=8,k=b,string=wye
+NR=9,k=aaa,string=hat
+NR=9,k=bbb,string=wye
+NR=10,k=a,string=pan
+NR=10,k=b,string=wye
+
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_bool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }
+
+mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_bool(NR==2)) {@bool[NR][k]    = "NR==2"}} end{ emit @bool,    "NR", "k" }
+NR=1,k=a,bool=NR==2
+NR=1,k=b,bool=NR==2
+NR=1,k=i,bool=NR==2
+NR=1,k=x,bool=NR==2
+NR=1,k=y,bool=NR==2
+NR=2,k=a,bool=NR==2
+NR=2,k=b,bool=NR==2
+NR=2,k=i,bool=NR==2
+NR=2,k=x,bool=NR==2
+NR=2,k=y,bool=NR==2
+NR=3,k=aaa,bool=NR==2
+NR=3,k=b,bool=NR==2
+NR=3,k=i,bool=NR==2
+NR=3,k=x,bool=NR==2
+NR=3,k=y,bool=NR==2
+NR=4,k=a,bool=NR==2
+NR=4,k=bbb,bool=NR==2
+NR=4,k=i,bool=NR==2
+NR=4,k=x,bool=NR==2
+NR=4,k=y,bool=NR==2
+NR=5,k=a,bool=NR==2
+NR=5,k=b,bool=NR==2
+NR=5,k=i,bool=NR==2
+NR=5,k=xxx,bool=NR==2
+NR=5,k=y,bool=NR==2
+NR=6,k=a,bool=NR==2
+NR=6,k=b,bool=NR==2
+NR=6,k=i,bool=NR==2
+NR=6,k=x,bool=NR==2
+NR=6,k=y,bool=NR==2
+NR=7,k=a,bool=NR==2
+NR=7,k=b,bool=NR==2
+NR=7,k=iii,bool=NR==2
+NR=7,k=x,bool=NR==2
+NR=7,k=y,bool=NR==2
+NR=8,k=a,bool=NR==2
+NR=8,k=b,bool=NR==2
+NR=8,k=i,bool=NR==2
+NR=8,k=x,bool=NR==2
+NR=8,k=yyy,bool=NR==2
+NR=9,k=aaa,bool=NR==2
+NR=9,k=bbb,bool=NR==2
+NR=9,k=i,bool=NR==2
+NR=9,k=x,bool=NR==2
+NR=9,k=y,bool=NR==2
+NR=10,k=a,bool=NR==2
+NR=10,k=b,bool=NR==2
+NR=10,k=i,bool=NR==2
+NR=10,k=x,bool=NR==2
+NR=10,k=y,bool=NR==2
+

@@ -1,0 +1,70 @@
+
+mlr cat then cat ./reg-test/input/short
+a=1
+b=2
+c=3
+
+mlr cat then tac ./reg-test/input/short
+c=3
+b=2
+a=1
+
+mlr tac then cat ./reg-test/input/short
+c=3
+b=2
+a=1
+
+mlr tac then tac ./reg-test/input/short
+a=1
+b=2
+c=3
+
+mlr cat then cat then cat ./reg-test/input/short
+a=1
+b=2
+c=3
+
+mlr cat then cat then tac ./reg-test/input/short
+c=3
+b=2
+a=1
+
+mlr cat then tac then cat ./reg-test/input/short
+c=3
+b=2
+a=1
+
+mlr cat then tac then tac ./reg-test/input/short
+a=1
+b=2
+c=3
+
+mlr tac then cat then cat ./reg-test/input/short
+c=3
+b=2
+a=1
+
+mlr tac then cat then tac ./reg-test/input/short
+a=1
+b=2
+c=3
+
+mlr tac then tac then cat ./reg-test/input/short
+a=1
+b=2
+c=3
+
+mlr tac then tac then tac ./reg-test/input/short
+c=3
+b=2
+a=1
+
+mlr then cat then head -n 2 -g a,b then tac ./reg-test/input/abixy-het
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+

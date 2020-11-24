@@ -1,0 +1,248 @@
+
+mlr --help-all-verbs
+================================================================
+Usage: ./reg-test/../../go/mlr altkv {no options}
+Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+
+================================================================
+Usage: ./reg-test/../../go/mlr bootstrap [options]
+Emits an n-sample, with replacement, of the input records.
+See also ./reg-test/../../go/mlr sample and ./reg-test/../../go/mlr shuffle.
+Options:
+ -n Number of samples to output. Defaults to number of input records.
+    Must be non-negative.
+
+================================================================
+Usage: ./reg-test/../../go/mlr cat [options]
+Passes input records directly to output. Most useful for format conversion.
+ -N (default ) Prepend field {name} to each record with record-counter starting at 1
+ -g (default ) Optional group-by-field names for counters, e.g. a,b,c
+ -n (default false) Prepend field "n" to each record with record-counter starting at 1
+
+================================================================
+Usage: ./reg-test/../../go/mlr check
+Consumes records without printing any output.
+Useful for doing a well-formatted check on input data.
+
+================================================================
+Usage: ./reg-test/../../go/mlr count [options]
+Prints number of records, optionally grouped by distinct values for specified field names.
+Options:
+ -g Optional group-by-field names for counts, e.g. a,b,c
+ -n (default false) Show only the number of distinct values. Not interesting without -g.
+ -o (default count) Field name for output count
+
+================================================================
+Usage: ./reg-test/../../go/mlr count-similar [options]
+Ingests all records, then emits each record augmented by a count of
+the number of other records having the same group-by field values.
+ -g Group-by-field names for counts, e.g. a,b,c
+ -o (default count) Field name for output count.
+
+================================================================
+Usage: ./reg-test/../../go/mlr cut [options]
+Passes through input records with specified fields included/excluded.
+ -complement (default false) Synonymous with -x
+ -f (default ) Comma-separated field names for cut, e.g. a,b,c
+ -o (default false) Retain fields in the order specified here in the argument list.
+Default is to retain them in the order found in the input data.
+ -x (default false) Exclude, rather than include, field names specified by -f.
+
+Examples:
+  ./reg-test/../../go/mlr cut -f hostname,status
+  ./reg-test/../../go/mlr cut -x -f hostname,status
+
+================================================================
+Usage: ./reg-test/../../go/mlr decimate [options]
+Passes through one of every n records, optionally by category.
+ -b (default false) Decimate by printing first of every n.
+ -e (default false) Decimate by printing last of every n (default).
+ -g Optional group-by-field names for decimate counts, e.g. a,b,c
+ -n (default 10) Decimation factor.
+
+================================================================
+Usage: ./reg-test/../../go/mlr fill-down [options]
+Passes through the last n records, optionally by category.
+ -a (default false) If a given record has a missing value for a given field, fill that from
+the corresponding value from a previous record, if any.
+By default, a 'missing' field either is absent, or has the empty-string value.
+With -a, a field is 'missing' only if it is absent.
+ -f (default ) Field names for fill-down
+ -only-if-absent (default false) Synonym for -a
+
+================================================================
+Usage: ./reg-test/../../go/mlr filter [options] {DSL expression}
+TODO: put detailed on-line help here.
+ -f {file name} File containing a DSL expression.
+ -x (default false) Prints records for which {expression} evaluates to false, not true,
+    i.e. invert the sense of the filter expression.
+ -q (default false) Does not include the modified record in the output stream.
+    Useful for when all desired output is in begin and/or end blocks.
+ -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.
+
+================================================================
+Usage: ./reg-test/../../go/mlr gap [options]
+Emits an empty record every n records, or when certain values change.
+ -g (default ) Print a gap whenever values of these fields (e.g. a,b,c) changes
+ -n (default -1) Print a gap every n records.
+One of -f or -g is required.
+-n is ignored if -g is present.
+
+================================================================
+Usage: ./reg-test/../../go/mlr grep [options] {regular expression}
+Passes through records which match the regular expression.
+Options:
+ -i (default false) Use case-insensitive search
+ -v (default false) Invert: pass through records which do not match the regex.
+Note that "mlr filter" is more powerful, but requires you to know field names.
+By contrast, "mlr grep" allows you to regex-match the entire record. It does
+this by formatting each record in memory as DKVP, using command-line-specified
+ORS/OFS/OPS, and matching the resulting line against the regex specified
+here. In particular, the regex is not applied to the input stream: if you
+have CSV with header line "x,y,z" and data line "1,2,3" then the regex will
+be matched, not against either of these lines, but against the DKVP line
+"x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
+and this command is intended to be merely a keystroke-saver. To get all the
+features of system grep, you can do
+  "mlr --odkvp ... | grep ... | mlr --idkvp ..."
+
+================================================================
+Usage: ./reg-test/../../go/mlr group-by [options]
+Outputs records in batches having identical values at specified field names.
+
+================================================================
+Usage: ./reg-test/../../go/mlr group-like [options]
+Outputs records in batches having identical field names.
+
+================================================================
+Usage: ./reg-test/../../go/mlr head [options]
+Passes through the first n records, optionally by category.
+ -g (default ) Optional group-by-field names for head counts, e.g. a,b,c
+ -n (default 10) Head count to print
+
+================================================================
+Usage: ./reg-test/../../go/mlr label [options] {new1,new2,new3,...}
+Given n comma-separated names, renames the first n fields of each record to
+have the respective name. (Fields past the nth are left with their original
+names.) Particularly useful with --inidx or --implicit-csv-header, to give
+useful names to otherwise integer-indexed fields.
+
+================================================================
+Usage: ./reg-test/../../go/mlr nothing
+Drops all input records. Useful for testing, or after tee/print/etc. have
+produced other output.
+
+================================================================
+Usage: ./reg-test/../../go/mlr put [options] {DSL expression}
+TODO: put detailed on-line help here.
+ -f {file name} File containing a DSL expression.
+ -x (default false) Prints records for which {expression} evaluates to false, not true,
+    i.e. invert the sense of the filter expression.
+ -q (default false) Does not include the modified record in the output stream.
+    Useful for when all desired output is in begin and/or end blocks.
+ -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.
+
+================================================================
+Usage: ./reg-test/../../go/mlr regularize [options]
+Outputs records sorted lexically ascending by keys.
+
+================================================================
+Usage: ./reg-test/../../go/mlr remove-empty-columns {no options}
+Omits fields which are empty on every input row. Non-streaming.
+
+================================================================
+Usage: ./reg-test/../../go/mlr rename [options] {old1,new1,old2,new2,...}
+Renames specified fields.
+
+================================================================
+Usage: ./reg-test/../../go/mlr reorder [options]
+Moves specified names to start of record, or end of record.
+Options:
+ -e Put specified field names at record end: default is to put them at record start
+ -f Field names to reorder
+Examples:
+./reg-test/../../go/mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
+./reg-test/../../go/mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+
+================================================================
+Usage: ./reg-test/../../go/mlr sample [options]
+Reservoir sampling (subsampling without replacement), optionally by category.
+See also ./reg-test/../../go/mlr bootstrap and ./reg-test/../../go/mlr shuffle.
+Options:
+ -g Optional: group-by-field names for samples, e.g. a,b,c
+ -k Required: number of records to output in total, or by group if using -g.
+
+================================================================
+Usage: ./reg-test/../../go/mlr sec2gmt [options] {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
+  ./reg-test/../../go/mlr sec2gmt time1,time2
+is the same as
+  ./reg-test/../../go/mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+Options:
+-1 through -9: format the seconds using 1..9 decimal places, respectively.
+
+================================================================
+Usage: ./reg-test/../../go/mlr shuffle {no options}
+Outputs records randomly permuted. No output records are produced until
+all input records are read. See also ./reg-test/../../go/mlr bootstrap and ./reg-test/../../go/mlr sample.
+
+================================================================
+Usage: ./reg-test/../../go/mlr skip-trivial-records {no options}
+Passes through all records except those with zero fields,
+or those for which all fields have empty value.
+
+================================================================
+Usage: ./reg-test/../../go/mlr sort {flags}
+Sorts records primarily by the first specified field, secondarily by the second
+field, and so on.  (Any records not having all specified sort keys will appear
+at the end of the output, in the order they were encountered, regardless of the
+specified sort order.) The sort is stable: records that compare equal will sort
+in the order they were encountered in the input record stream.
+
+Flags:
+  -f  {comma-separated field names}  Lexical ascending
+  -n  {comma-separated field names}  Numerical ascending; nulls sort last
+  -nf {comma-separated field names}  Same as -n
+  -r  {comma-separated field names}  Lexical descending
+  -nr {comma-separated field names}  Numerical descending; nulls sort first
+
+Example:
+  ./reg-test/../../go/mlr sort -f a,b -nr x,y,z
+which is the same as:
+  ./reg-test/../../go/mlr sort -f a -f b -nr x -nr y -nr z
+
+================================================================
+Usage: ./reg-test/../../go/mlr sort-within-records [options]
+Outputs records sorted lexically ascending by keys.
+
+================================================================
+Usage: ./reg-test/../../go/mlr tac
+Prints records in reverse order from the order in which they were encountered.
+
+================================================================
+Usage: ./reg-test/../../go/mlr tail [options]
+Passes through the last n records, optionally by category.
+ -g (default ) Optional group-by-field names for tail counts, e.g. a,b,c
+ -n (default 10) Tail count to print
+
+================================================================
+Usage: ./reg-test/../../go/mlr unsparsify [options]
+Prints records with the union of field names over all input records.
+For field names absent in a given record but present in others, fills in
+a value. This verb retains all input before producing any output.
+
+Example: if the input is two records, one being 'a=1,b=2' and the other
+being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
+'a=,b=3,c=4'.
+ -f (default ) Specify field names to be operated on. Any other fields won't be
+modified, and operation will be streaming.
+ -fill-with (default ) Prepend field {name} to each record with record-counter starting at 1
+
+================================================================
+

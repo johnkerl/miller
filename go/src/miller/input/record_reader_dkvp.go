@@ -4,15 +4,18 @@ import (
 	"bufio"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/types"
 )
 
 type RecordReaderDKVP struct {
 	ifs string
 	ips string
+	// TODO: parameterize IRS
 }
 
 func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDKVP {
@@ -88,15 +91,19 @@ func recordFromDKVPLine(
 	ips *string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	pairs := strings.Split(*line, *ifs)
-	for _, pair := range pairs {
+	pairs := lib.SplitString(*line, *ifs)
+	for i, pair := range pairs {
 		kv := strings.SplitN(pair, *ips, 2)
-		key := kv[0]
-		// xxx check length 0. also, check input is empty since "".split() -> [""] not []
+		// TODO check length 0. also, check input is empty since "".split() -> [""] not []
 		if len(kv) == 1 {
-			value := types.MlrvalFromVoid()
+			// E.g the pair has no equals sign: "a" rather than "a=1" or
+			// "a=".  Here we use the positional index as the key. This way
+			// DKVP is a generalization of NIDX.
+			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
+			value := types.MlrvalFromInferredType(kv[0])
 			record.PutReference(&key, &value)
 		} else {
+			key := kv[0]
 			value := types.MlrvalFromInferredType(kv[1])
 			record.PutReference(&key, &value)
 		}

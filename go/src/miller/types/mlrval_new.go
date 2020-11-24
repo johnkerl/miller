@@ -62,15 +62,19 @@ func MlrvalFromVoid() Mlrval {
 }
 
 func MlrvalFromString(input string) Mlrval {
-	return Mlrval{
-		mvtype:        MT_STRING,
-		printrep:      input,
-		printrepValid: true,
-		intval:        0,
-		floatval:      0.0,
-		boolval:       false,
-		arrayval:      nil,
-		mapval:        nil,
+	if input == "" {
+		return MlrvalFromVoid()
+	} else {
+		return Mlrval{
+			mvtype:        MT_STRING,
+			printrep:      input,
+			printrepValid: true,
+			intval:        0,
+			floatval:      0.0,
+			boolval:       false,
+			arrayval:      nil,
+			mapval:        nil,
+		}
 	}
 }
 
@@ -182,6 +186,10 @@ func MlrvalFromInferredType(input string) Mlrval {
 	// xxx the parsing has happened so stash it ...
 	// xxx emphasize the invariant that a non-invalid printrep always
 	// matches the nval ...
+	if input == "" {
+		return MlrvalFromVoid()
+	}
+
 	_, iok := lib.TryInt64FromString(input)
 	if iok {
 		return MlrvalFromInt64String(input)

@@ -1,0 +1,37 @@
+# ================================================================
+# Sample JSON input:
+#
+#   $ cat stan.json
+#   {
+#     "a": [1, 2, 3],
+#     "b": [4, 5, 6]
+#   }
+#
+# Invocation:
+#
+#   $ mlr --ijson --ocsv put -q -f unstan.mlr stan.json
+#
+# Output:
+#
+#   a,b
+#   1,4
+#   2,5
+#   3,6
+
+# ================================================================
+
+# Find array length
+n = 0;
+for (k, v in $*) {
+  n = max(n, length(v));
+}
+keys = keys($*);
+
+# Emit one record per array entry
+for (int i = 1; i <= n; i+=1) {
+  map output_record = {};
+  for (k in keys) {
+    output_record[k] = $[k][i];
+  }
+  emit output_record;
+}

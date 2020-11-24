@@ -1,0 +1,95 @@
+
+mlr --from ./reg-test/input/abixy put 
+  func f(int i) {
+    return i+3;
+  }
+  $c = f($i);
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,c=4
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,c=5
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,c=6
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,c=7
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,c=8
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,c=9
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,c=10
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,c=11
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,c=12
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,c=13
+
+mlr --from ./reg-test/input/abixy put 
+  func f(int i) {
+    return i+3;
+  }
+  $c = f($x);
+
+mlr: int type assertion for variable i unmet by value 0.346790 with type float.
+
+mlr --from ./reg-test/input/abixy put 
+  func f(num i): int {
+    return i+3.45;
+  }
+  $c = f($x);
+
+mlr: function f returned type float, not matching typedecl int.
+
+mlr --from ./reg-test/input/abixy put 
+  func f(num i): int {
+    return i+3.45;
+  }
+  $c = f($i);
+
+mlr: function f returned type float, not matching typedecl int.
+
+mlr --from ./reg-test/input/abixy put 
+  func f(num i): int {
+    i = "a";
+    return 2;
+  }
+  $c = f($x);
+
+mlr: numeric type assertion for variable i unmet by value "a" with type string.
+
+mlr --from ./reg-test/input/abixy put 
+  subr s(int i) {
+    print i+3;
+  }
+  call s($i);
+
+4
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+5
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+6
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+7
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+8
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+9
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+10
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+11
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+12
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+13
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg-test/input/abixy put 
+  subr s(int i) {
+    print i+3;
+  }
+  call s($x);
+
+mlr: int type assertion for variable i unmet by value 0.346790 with type float.
+
+mlr --from ./reg-test/input/abixy put 
+  subr s(num i) {
+    i = "a";
+    print 2;
+  }
+  call s($x);
+
+mlr: numeric type assertion for variable i unmet by value "a" with type string.
+

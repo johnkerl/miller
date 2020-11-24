@@ -12,6 +12,17 @@ import (
 	"miller/version"
 )
 
+const ASV_FS = "\x1f"
+const ASV_RS = "\x1e"
+const USV_FS = "\xe2\x90\x9f"
+const USV_RS = "\xe2\x90\x9e"
+
+// TODO: move somewhere else; maybe clitypes
+const ASV_FS_FOR_HELP = "0x1f"
+const ASV_RS_FOR_HELP = "0x1e"
+const USV_FS_FOR_HELP = "U+241F (UTF-8 0xe2909f)"
+const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
+
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
 	options clitypes.TOptions,
@@ -356,9 +367,9 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.UseImplicitCSVHeader = false
 		argi += 1
 
-		//	} else if args[argi] == "--allow-ragged-csv-input" || args[argi] == "--ragged" {
-		//		readerOptions.allow_ragged_csv_input = true;
-		//		argi += 1;
+	} else if args[argi] == "--allow-ragged-csv-input" || args[argi] == "--ragged" {
+		readerOptions.AllowRaggedCSVInput = true
+		argi += 1
 
 		//	} else if args[argi] == "-i" {
 		//		checkArgCount(args, argi, argc, 2);
@@ -402,43 +413,43 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.InputFileFormat = "csv"
 		argi += 1
 
-		//	} else if args[argi] == "--icsvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--icsvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		argi += 1
+
 	} else if args[argi] == "--itsv" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		argi += 1
-		//	} else if args[argi] == "--itsvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = "\t";
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iasv" {
-		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.IFS = ASV_FS;
-		//		readerOptions.IRS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iasvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = ASV_FS;
-		//		readerOptions.IRS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iusv" {
-		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.IFS = USV_FS;
-		//		readerOptions.IRS = USV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--iusvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		readerOptions.IFS = USV_FS;
-		//		readerOptions.IRS = USV_RS;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--itsvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = "\t"
+		argi += 1
+
+	} else if args[argi] == "--iasv" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = ASV_FS
+		readerOptions.IRS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--iasvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = ASV_FS
+		readerOptions.IRS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--iusv" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = USV_FS
+		readerOptions.IRS = USV_RS
+		argi += 1
+
+	} else if args[argi] == "--iusvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		readerOptions.IFS = USV_FS
+		readerOptions.IRS = USV_RS
+		argi += 1
+
 	} else if args[argi] == "--idkvp" {
 		readerOptions.InputFileFormat = "dkvp"
 		argi += 1
@@ -451,10 +462,10 @@ func parseReaderOptions(args []string, argc int, pargi *int, readerOptions *clit
 		readerOptions.InputFileFormat = "nidx"
 		argi += 1
 
-		//	} else if args[argi] == "--ixtab" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--ixtab" {
+		readerOptions.InputFileFormat = "xtab"
+		argi += 1
+
 		//	} else if args[argi] == "--ipprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
 		//		readerOptions.IFS              = " ";
@@ -530,14 +541,17 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		//		writerOptions.right_justify_xtab_value = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--jvstack" {
-		//		writerOptions.stack_json_output_vertically = true;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--jlistwrap" {
-		//		writerOptions.wrap_json_output_in_outer_list = true;
-		//		argi += 1;
-		//
+
+		// TODO: comment in detail this is accepted as a no-op for backward
+		// compatibility in Miller 6 and above.
+	} else if args[argi] == "--jvstack" {
+		//writerOptions.stack_json_output_vertically = true;
+		argi += 1
+
+	} else if args[argi] == "--jlistwrap" {
+		writerOptions.WrapJSONOutputInOuterList = true
+		argi += 1
+
 		//	} else if args[argi] == "--jknquoteint" {
 		//		writerOptions.json_quote_int_keys = false;
 		//		argi += 1;
@@ -567,44 +581,44 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		writerOptions.OutputFileFormat = "csv"
 		argi += 1
 
-		//	} else if args[argi] == "--ocsvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--ocsvlite" {
+		writerOptions.OutputFileFormat = "csvlite"
+		argi += 1
+
 	} else if args[argi] == "--otsv" {
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.OFS = "\t"
 		argi += 1
 
-		//	} else if args[argi] == "--otsvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		writerOptions.OFS = "\t";
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--oasv" {
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.OFS = ASV_FS;
-		//		writerOptions.ORS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--oasvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		writerOptions.OFS = ASV_FS;
-		//		writerOptions.ORS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--ousv" {
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.OFS = USV_FS;
-		//		writerOptions.ORS = USV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--ousvlite" {
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		writerOptions.OFS = USV_FS;
-		//		writerOptions.ORS = USV_RS;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--otsvlite" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = "\t"
+		argi += 1
+
+	} else if args[argi] == "--oasv" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = ASV_FS
+		writerOptions.ORS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--oasvlite" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = ASV_FS
+		writerOptions.ORS = ASV_RS
+		argi += 1
+
+	} else if args[argi] == "--ousv" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = USV_FS
+		writerOptions.ORS = USV_RS
+		argi += 1
+
+	} else if args[argi] == "--ousvlite" {
+		writerOptions.OutputFileFormat = "csvlite"
+		writerOptions.OFS = USV_FS
+		writerOptions.ORS = USV_RS
+		argi += 1
+
 		//	} else if args[argi] == "--omd" {
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
@@ -637,9 +651,9 @@ func parseWriterOptions(args []string, argc int, pargi *int, writerOptions *clit
 		//		writerOptions.right_align_pprint = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--barred" {
-		//		writerOptions.pprint_barred = true;
-		//		argi += 1;
+	} else if args[argi] == "--barred" {
+		writerOptions.BarredPprintOutput = true
+		argi += 1
 		//
 		//	} else if args[argi] == "--quote-all" {
 		//		writerOptions.oquoting = QUOTE_ALL;
@@ -726,11 +740,11 @@ func parseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csv"
 		argi += 1
 
-		//	} else if args[argi] == "--csvlite" {
-		//		readerOptions.InputFileFormat = "csvlite";
-		//		writerOptions.OutputFileFormat = "csvlite";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--csvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csv"
+		argi += 1
+
 	} else if args[argi] == "--tsv" {
 		readerOptions.InputFileFormat = "csv"
 		writerOptions.OutputFileFormat = "csv"
@@ -738,14 +752,15 @@ func parseReaderWriterOptions(
 		writerOptions.OFS = "\t"
 		argi += 1
 
-		//	} else if args[argi] == "--tsvlite" || args[argi] == "-t" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.IFS = "\t";
-		//		writerOptions.OFS = "\t";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--tsvlite" || args[argi] == "-t" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csvlite"
+		readerOptions.IFS = "\t"
+		writerOptions.OFS = "\t"
+		argi += 1
+
 		//	} else if args[argi] == "--asv" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
+		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
 		//		readerOptions.IFS = ASV_FS;
 		//		writerOptions.OFS = ASV_FS;
 		//		readerOptions.IRS = ASV_RS;
@@ -761,7 +776,7 @@ func parseReaderWriterOptions(
 		//		argi += 1;
 		//
 		//	} else if args[argi] == "--usv" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csv";
+		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
 		//		readerOptions.IFS = USV_FS;
 		//		writerOptions.OFS = USV_FS;
 		//		readerOptions.IRS = USV_RS;
@@ -803,11 +818,12 @@ func parseReaderWriterOptions(
 		//		writerOptions.OFS = "\t";
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--xtab" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "xtab";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--xtab" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
+
+		// TODO: make a fixed-width scanner
 		//	} else if args[argi] == "--pprint" {
 		//		readerOptions.InputFileFormat        = "csvlite";
 		//		readerOptions.IFS              = " ";
@@ -1039,33 +1055,33 @@ func parseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat        = "markdown";
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--x2c" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.ORS       = "auto";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2t" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "csv";
-		//		writerOptions.ORS       = "auto";
-		//		writerOptions.OFS       = "\t";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2d" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "dkvp";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2n" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "nidx";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2j" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "json";
-		//		argi += 1;
-		//	} else if args[argi] == "--x2p" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "pprint";
-		//		argi += 1;
+	} else if args[argi] == "--x2c" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--x2t" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--x2d" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--x2n" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--x2j" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--x2p" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
 		//	} else if args[argi] == "--x2m" {
 		//		readerOptions.InputFileFormat = "xtab";
 		//		writerOptions.OutputFileFormat = "markdown";

@@ -42,7 +42,7 @@ func (this *TypeGatedMlrvalName) Check(value *Mlrval) error {
 	} else {
 		return errors.New(
 			fmt.Sprintf(
-				"Miller: couldn't assign variable %s %s from value %s %s",
+				"Miller: couldn't assign variable %s %s from value %s %s\n",
 				this.TypeName, this.Name, value.GetTypeName(), value.String(),
 			),
 		)

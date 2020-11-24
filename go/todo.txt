@@ -1,22 +1,100 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* window.mlr, window2.mlr -> doc somewhere
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* parser-fu:
+  o iterative LALR grok
+- jackson notes
+- gocc .txt/.go for simple grammars
+o find/bookmark/grok rob's lexer slides
+o iterate on a parser-generator with JSON config file
+no need to bootstrap a parser for the parser-generator language
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+* reg-test:
+  - "format-" prefix etc for format-specific case; other prefixes ... ?
+  - diff the *.err files -- ?
+  - mlr label: check unique
+  - rr --show option to cat out the .out files ...
+
+! still need functional put -S / put -F ... sigh.
+
+! bug on set-var/bind-var
+  - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
+
+! int map keys: what to do with:
+  o '{1:2}' treat as '{"1":2}'
+  o 'm[1]' treat as 'm["1"]'
+  o positional indexing for maps -- use [[]] [[[]]] ?
+  o pothole: auto-extend of foo[NR] -- this now creates an array not a map
+
+! --jvstack as no-op
+! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
+
+* justWroteEmptyLine -> pprint too ...
+
+* new columns-to-arrays and arrays-to-columns for stan format
+
+! nidx @ 10-min
+! text-put @ 10-min
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
+  o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
+  o "null can be added to any value, and returns the other value unchanged."
+  o "the length of null is 0"
+  o note json types: string, number, boolean, null, object, array.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
+  o use:
+    - %
+    - 0 - " " + "'"
+    - number for min field width
+    - "." and precision width
+    - s   d i o u x X   e E f F g G
+    - "%%"
+  o need a parser for validity, and a mapper to Go-builtin formats
+  o need to pull out the printed type & use that for casting/ignoring. examples:
+    - %d int: ok
+    - %d float: int(x) then ok
+    - %d string: convert to %s
+    - %f int: float(x) thenok
+    - %f float: as is
+    - %f string: convert to %s
+    - %s int: convert to %d
+    - %s float: convert to %f
+    - %s string: ok
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+  o done-reading back-channels in stream.go
+    https://gobyexample.com/non-blocking-channel-operations
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! fixed-width pprint input-scanner
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * UDF nexts:
-  ! double-check $-anything in begin/end
-  ! implement indexed-localvar assignment
-  o unset
-    - extraneous check output; wut
-    ? should unset on an array element slip the rest up??
-      > regardless, document it clearly.
-  o ENV
-  o is_x and asserting_x
-  o put -s ...
-  o check for multiple put -f; any/multiple put -e
+  o UT for mixing put -f/-e
+  o more functions (see below)
+  o function metadata, w/ sort-by, for online help
+  o double-check $-anything in begin/end
   o regexes & associated functions -- necessary or not?
+  o mlr_expect_fail extraneous check output; wut
+  o ENV
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
+  ! regex captures
+  o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
+  o put -n https://github.com/johnkerl/miller/issues/77#issuecomment-370375671
+  o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
+
+* bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
+  https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
 
 !! [[]] etc to avoid inadvertent sequentials for int indices on maps.
   this should happen intentionally, not accidentally.
@@ -24,17 +102,16 @@ TOP OF LIST:
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 * UDS
 
-! parse errors need some context somehow
-? ;; is parse error; also {...};
-
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
   o either do copy for all retainers, or treat inrecs as immutable ...
 
 * sliding-window averages into mapper step (C + Go)
+* stats1 rank
 
 * some more verbs
   o easies first
+  o having-fields -x feature ... or something
   o join, stats1, stats2
 
 * double-check rand-seeding
@@ -42,9 +119,6 @@ TOP OF LIST:
 
 * comment-handling
   - delegator for CSV ...
-
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o note json types: string, number, boolean, null, object, array.
 
 ! quoted NIDX
   - how with whitespace regex -- ?
@@ -59,7 +133,53 @@ TOP OF LIST:
   o others in mlrcli_parse.go
   o copy over all operator help-strings from ../c
 
-----------------------------------------------------------------
+* $map.attr1.attr2 syntax for DSL -- ? needs override of "." operator w/ symbols ... ?
+
+================================================================
+REMAINING VERBS:
+
+seqgen
+having-fields
+repeat
+
+bar
+clean-whitespace
+count-distinct
+format-values
+fraction
+histogram
+least-frequent
+most-frequent
+sec2gmtdate
+tee
+top
+uniq
+
+nest
+reshape
+step
+join
+merge-fields
+stats1
+stats2
+
+================================================================
+REMAINING FUNCTIONS:
+
+* new columns-to-arrays and arrays-to-columns for stan format
+
+* regextract regextract_or_else
+
+* system
+
+* sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
+* dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
+* strftime strftime_local strptime strptime_local
+
+https://github.com/lestrrat-go/strftime
+https://github.com/pbnjay/strptime
+
+================================================================
 CATEGORIES:
 
 * widen verb coverage
@@ -91,7 +211,6 @@ CATEGORIES:
   o for-knv
   o profile mand.mlr & check for need for idx-assign
     -> most definitely needed
-  o indexed localvars at LHS
   o multiple-valued return/assign -- ?
     - array destructure at LHS for multi-retval assign (maps too?)
 
@@ -112,7 +231,6 @@ MAYBE:
 GOCC UPSTREAMS:
 
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
-* research customization of error-handling ... line numbers in particular ...
 
 ----------------------------------------------------------------
 DEV NOTES:
@@ -166,7 +284,6 @@ NITS/NON-IMMEDIATE:
     - make a force-single-line writer
     - make a jsonparse DSL function -- ?
   d other formats: use JSON marshaler for collection types, maybe double-quoted
-* better error-identification in the lexer / parser
   o research gocc support
   o maybe a case for hand-roll
 * ICE on scan of 0xffffffffffffffff
@@ -198,3 +315,43 @@ NITS/NON-IMMEDIATE:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
 * make truncate() UTF8-friendly
+* (absent) print on dump -- should simply be empty
+* document array-unset as shiftback
+! error if UDF has same name as built-in
+* huge commenting pass
+* profile mlr sort
+* go exe 17MB, wut. try to discover. (gocc presumably but verify.)
+* fill-down make columns required. also, --all.
+* check triple-dash at mlr fill-down-h ; check others
+* doc that multi-arg print interleaves spaces; they can strcat to avoid
+* clean up unused exitCode arg in sort/put usage.
+  o also document pre/post conditions for flag and non-flag usages x all mappers
+* need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
+? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
+* doc one-variable for is over keys for maps, elements for arrays
+* asserting_{type}: os.Exit(1) -> return nil, err flow?
+* test put/filter w/ various combinations of -s/-e/-f
+* math operators on map? array? e.g. a<b for contains? (prefer functions ...)
+* more text examples in mlr-put doc
+* mt_void keep-or-not .......
+  o check dispo matrices
+  o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
+  o comment clearly regardless
+* window.mlr, window2.mlr -> doc somewhere
+* bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
+* fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly
+* mlrdoc for new go-only verbs
+* ast-parex separate mlr auxents entrypoint?
+* port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
+* doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
+  o xref to 1-up note.
+* why error? mlr put '$y=true; $y &= $x<0.5' s
+* line/column caret at parse-error messages -- would require some GOCC refactoring
+  in order to get the full DSL string and the line/number info into the same method
+* csvlite rd/wr: comment for USV/ASV too. no need for escaping then.
+* comment schema-change supported only in csvlite reader, not csv reader
+* for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
+* neaten mlr gap -g (default) print
+* case-c-* / case-go-* -> case-* eventually
+* implement min/max for array/map ... using cmp rules
+! write out thorough min/max/cmp cases for all orderings by type

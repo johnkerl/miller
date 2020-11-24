@@ -14,6 +14,10 @@ func GetTypeName(mvtype MVType) string {
 }
 
 // ----------------------------------------------------------------
+func (this *Mlrval) IsLegit() bool {
+	return this.mvtype > MT_VOID
+}
+
 func (this *Mlrval) IsErrorOrAbsent() bool {
 	return this.mvtype == MT_ERROR || this.mvtype == MT_ABSENT
 }
@@ -100,7 +104,7 @@ func (this *Mlrval) GetIntValue() (intValue int64, isInt bool) {
 	}
 }
 
-func (this *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
+func (this *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) {
 	if this.mvtype == MT_FLOAT {
 		return this.floatval, true
 	} else if this.mvtype == MT_INT {

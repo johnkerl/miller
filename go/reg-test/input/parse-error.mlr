@@ -1,0 +1,21 @@
+
+begin {
+  @f["0"] = 1;
+  @f["1"] = 1;
+}
+func f(n) {
+  str sn = string(n);
+  if (is_absent(@f[sn])) {
+    num fn = f(n-1) + f(n-2);
+    f[sn] = fn;
+    return fn;
+  } else {
+    return @f[sn]
+  }
+}
+end {
+  for (n = 1; n < 100; n += 1) {
+    print string(n) . " " . string(f(n))
+  }
+  x x
+}

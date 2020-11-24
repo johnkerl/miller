@@ -1,0 +1,245 @@
+
+mlr put -q @sum     += $x; end{emitp @sum} ./reg-test/input/abixy
+sum=4.536294
+
+mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg-test/input/abixy
+a=pan,sum=0.849416
+a=eks,sum=1.751863
+a=wye,sum=0.777892
+a=zee,sum=1.125680
+a=hat,sum=0.031442
+
+mlr put $nonesuch = @nonesuch ./reg-test/input/abixy
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr put -q @sum     += $x; end{emitp @sum} ./reg-test/input/abixy-het
+sum=3.963005
+
+mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg-test/input/abixy-het
+a=pan,sum=0.849416
+a=eks,sum=1.751863
+a=zee,sum=1.125680
+
+mlr put $nonesuch = @nonesuch ./reg-test/input/abixy-het
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
+aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg-test/input/abixy
+sumtype=float,xtype=float,sum=0.346790
+sumtype=float,xtype=float,sum=1.105470
+sumtype=float,xtype=float,sum=1.310073
+sumtype=float,xtype=float,sum=1.691473
+sumtype=float,xtype=float,sum=2.264762
+sumtype=float,xtype=float,sum=2.791888
+sumtype=float,xtype=float,sum=3.403672
+sumtype=float,xtype=float,sum=4.002226
+sumtype=float,xtype=float,sum=4.033668
+sumtype=float,xtype=float,sum=4.536294
+sum=4.536294
+
+mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg-test/input/abixy-het
+sumtype=float,xtype=float,sum=0.346790
+sumtype=float,xtype=float,sum=1.105470
+sumtype=float,xtype=float,sum=1.310073
+sumtype=float,xtype=float,sum=1.691473
+sumtype=float,xtype=absent,sum=1.691473
+sumtype=float,xtype=float,sum=2.218599
+sumtype=float,xtype=float,sum=2.830383
+sumtype=float,xtype=float,sum=3.428937
+sumtype=float,xtype=float,sum=3.460379
+sumtype=float,xtype=float,sum=3.963005
+sum=3.963005
+
+mlr put $z = $x + $y ./reg-test/input/typeof.dkvp
+x=1,y=2,z=3
+x=1,y=,z=
+x=,y=2,z=
+x=,y=,z=
+a=1,y=2,z=2
+a=1,y=
+a=,y=2,z=2
+a=,y=
+x=1,b=2,z=1
+x=1,b=,z=1
+x=,b=2
+x=,b=
+
+mlr put $z = $x + $u ./reg-test/input/typeof.dkvp
+x=1,y=2,z=1
+x=1,y=,z=1
+x=,y=2
+x=,y=
+a=1,y=2
+a=1,y=
+a=,y=2
+a=,y=
+x=1,b=2,z=1
+x=1,b=,z=1
+x=,b=2
+x=,b=
+
+mlr put @s = @s + $y; emitp @s ./reg-test/input/typeof.dkvp
+s=2
+x=1,y=2
+s=
+x=1,y=
+s=
+x=,y=2
+s=
+x=,y=
+s=
+a=1,y=2
+s=
+a=1,y=
+s=
+a=,y=2
+s=
+a=,y=
+s=
+x=1,b=2
+s=
+x=1,b=
+s=
+x=,b=2
+s=
+x=,b=
+
+mlr put @s = @s + $u; emitp @s ./reg-test/input/typeof.dkvp
+x=1,y=2
+x=1,y=
+x=,y=2
+x=,y=
+a=1,y=2
+a=1,y=
+a=,y=2
+a=,y=
+x=1,b=2
+x=1,b=
+x=,b=2
+x=,b=
+
+mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg-test/input/typeof.dkvp
+x=int,y=int,z=int
+x=int,y=empty,z=empty
+x=empty,y=int,z=empty
+x=empty,y=empty,z=empty
+a=1,y=int,z=int,x=absent
+a=1,y=empty,x=absent,z=absent
+a=,y=int,z=int,x=absent
+a=,y=empty,x=absent,z=absent
+x=int,b=2,z=int,y=absent
+x=int,b=,z=int,y=absent
+x=empty,b=2,y=absent,z=absent
+x=empty,b=,y=absent,z=absent
+
+mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg-test/input/typeof.dkvp
+x=int,y=int,z=int
+x=int,y=empty,z=int
+x=empty,y=int,z=absent
+x=empty,y=empty,z=absent
+a=1,y=int,x=absent,z=absent
+a=1,y=empty,x=absent,z=absent
+a=,y=int,x=absent,z=absent
+a=,y=empty,x=absent,z=absent
+x=int,b=2,z=int,y=absent
+x=int,b=,z=int,y=absent
+x=empty,b=2,y=absent,z=absent
+x=empty,b=,y=absent,z=absent
+
+mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg-test/input/typeof.dkvp
+x=int,y=int,z=absent,s=int
+x=int,y=empty,z=absent,s=empty
+x=empty,y=int,z=absent,s=empty
+x=empty,y=empty,z=absent,s=empty
+a=1,y=int,x=absent,z=absent,s=empty
+a=1,y=empty,x=absent,z=absent,s=empty
+a=,y=int,x=absent,z=absent,s=empty
+a=,y=empty,x=absent,z=absent,s=empty
+x=int,b=2,y=absent,z=absent,s=empty
+x=int,b=,y=absent,z=absent,s=empty
+x=empty,b=2,y=absent,z=absent,s=empty
+x=empty,b=,y=absent,z=absent,s=empty
+
+mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg-test/input/typeof.dkvp
+x=int,y=int,z=absent,s=absent
+x=int,y=empty,z=absent,s=absent
+x=empty,y=int,z=absent,s=absent
+x=empty,y=empty,z=absent,s=absent
+a=1,y=int,x=absent,z=absent,s=absent
+a=1,y=empty,x=absent,z=absent,s=absent
+a=,y=int,x=absent,z=absent,s=absent
+a=,y=empty,x=absent,z=absent,s=absent
+x=int,b=2,y=absent,z=absent,s=absent
+x=int,b=,y=absent,z=absent,s=absent
+x=empty,b=2,y=absent,z=absent,s=absent
+x=empty,b=,y=absent,z=absent,s=absent
+
+mlr cat
+x=1
+x=
+x=7
+
+mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
+x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
+sum=
+
+mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);is_present($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
+x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
+sum=
+
+mlr cat
+x=1
+xxx=
+x=7
+
+mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+xxx=	osum=1	ostype=int	xtype=absent	nstype=int	nsum=1
+x=7	osum=1	ostype=int	xtype=int	nstype=int	nsum=8
+sum=8
+
+mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);is_present($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+xxx=	osum=1	ostype=int	xtype=absent	nstype=int	nsum=1
+x=7	osum=1	ostype=int	xtype=int	nstype=int	nsum=8
+sum=8
+
+mlr cat
+x=1
+x=
+y=
+x=7
+
+mlr --ofs tab put $xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)
+x=1	xtype=int	sum=11	stype=int
+x=	xtype=empty	sum=	stype=empty
+y=	xtype=absent	sum=10	stype=int
+x=7	xtype=int	sum=17	stype=int
+
+mlr --ofs tab put $xtype=typeof($x);$sum = is_present($x) ? $x + 10 : 999; $stype=typeof($sum)
+x=1	xtype=int	sum=11	stype=int
+x=	xtype=empty	sum=	stype=empty
+y=	xtype=absent	sum=999	stype=int
+x=7	xtype=int	sum=17	stype=int
+

@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2020-10-26
+.\"      Date: 2020-11-15
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2020-10-26" "\ \&" "\ \&"
+.TH "MILLER" "1" "2020-11-15" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,7 +173,8 @@ output separator to the given value.
  group-by group-like having-fields head histogram join label least-frequent
  merge-fields most-frequent nest nothing put regularize remove-empty-columns
  rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
- skip-trivial-records sort stats1 stats2 step tac tail tee top uniq unsparsify
+ skip-trivial-records sort sort-within-records stats1 stats2 step tac tail tee
+ top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -829,7 +830,7 @@ Use # to comment to end of line.
 
 Examples:
   mlr filter 'log10($count) > 4.0'
-  mlr filter 'FNR == 2          (second record in each file)'
+  mlr filter 'FNR == 2'         (second record in each file)
   mlr filter 'urand() < 0.001'  (subsampling)
   mlr filter '$color != "blue" && $value > 4.2'
   mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
@@ -1602,6 +1603,16 @@ which is the same as:
 .fi
 .if n \{\
 .RE
+.SS "sort-within-records"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sort-within-records [no options]
+Outputs records sorted lexically ascending by keys.
+.fi
+.if n \{\
+.RE
 .SS "stats1"
 .if n \{\
 .RS 0
@@ -1827,12 +1838,14 @@ Options:
 .nf
 Usage: mlr unsparsify [options]
 Prints records with the union of field names over all input records.
-For field names absent in a given record but present in others, fills in
-a value. This verb retains all input before producing any output.
+For field names absent in a given record but present in others, fills in a
+value. Without -f, this verb retains all input before producing any output.
 
 Options:
 --fill-with {filler string}  What to fill absent fields with. Defaults to
                              the empty string.
+-f {a,b,c} Specify field names to be operated on. Any other fields won't be
+                             modified, and operation will be streaming.
 
 Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
@@ -3318,7 +3331,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
+(class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
 .fi
 .if n \{\
 .RE

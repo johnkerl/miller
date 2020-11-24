@@ -1,0 +1,241 @@
+
+mlr --xtab put $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.12
+iquot 7
+mod   1.2000000000000028
+
+mlr --xtab put $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.5
+iquot 7
+mod   5
+
+mlr --xtab put $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.12
+iquot -8
+mod   8.799999999999997
+
+mlr --xtab put $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.5
+iquot -8
+mod   5
+
+mlr --xtab put -F $quot=$pf1/10.0;$iquot=$pf1//10.0;$mod=$pf1%10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.12
+iquot 7
+mod   1.2000000000000028
+
+mlr --xtab put -F $quot=$pi1/10  ;$iquot=$pi1//10  ;$mod=$pi1%10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.5
+iquot 7
+mod   5
+
+mlr --xtab put -F $quot=$nf1/10.0;$iquot=$nf1//10.0;$mod=$nf1%10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.12
+iquot -8
+mod   8.799999999999997
+
+mlr --xtab put -F $quot=$ni1/10  ;$iquot=$ni1//10  ;$mod=$ni1%10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.5
+iquot -8
+mod   5
+
+mlr --xtab put $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.12
+iquot -8
+mod   -8.799999999999997
+
+mlr --xtab put $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.5
+iquot -8
+mod   -5
+
+mlr --xtab put $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.12
+iquot 7
+mod   -1.2000000000000028
+
+mlr --xtab put $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.5
+iquot 7
+mod   -5
+
+mlr --xtab put -F $quot=$pf1/-10.0;$iquot=$pf1//-10.0;$mod=$pf1%-10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.12
+iquot -8
+mod   -8.799999999999997
+
+mlr --xtab put -F $quot=$pi1/-10  ;$iquot=$pi1//-10  ;$mod=$pi1%-10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  -7.5
+iquot -8
+mod   -5
+
+mlr --xtab put -F $quot=$nf1/-10.0;$iquot=$nf1//-10.0;$mod=$nf1%-10.0 ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.12
+iquot 7
+mod   -1.2000000000000028
+
+mlr --xtab put -F $quot=$ni1/-10  ;$iquot=$ni1//-10  ;$mod=$ni1%-10   ./reg-test/input/mixed-types.xtab
+pf1   71.2
+nf1   -71.2
+zf    0.0
+pf2   73.4
+nf2   -73.4
+pi1   75
+ni1   -75
+zi    0
+pi2   76
+ni2   -76
+quot  7.5
+iquot 7
+mod   -5
+

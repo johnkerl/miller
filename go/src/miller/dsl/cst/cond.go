@@ -9,7 +9,7 @@ import (
 )
 
 // ================================================================
-// This is for awkish cond-blocks, like mlr put 'NR > 10 { ... }'.
+// This is for awkish pattern-action-blocks, like mlr put 'NR > 10 { ... }'.
 // Just shorthand for if-statements without elif/else.
 // ================================================================
 

@@ -47,6 +47,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -85,13 +86,14 @@ func mapperSortParseCLI(
 	comparatorFuncs := make([]types.ComparatorFunc, 0)
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if args[argi][0] != '-' {
+		if !strings.HasPrefix(args[argi], "-") {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
 			mapperSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-			argi += 1
+			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
+			checkArgCountSort(args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -99,6 +101,7 @@ func mapperSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-r" {
+			checkArgCountSort(args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -106,6 +109,7 @@ func mapperSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-n" {
+			checkArgCountSort(args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -113,6 +117,7 @@ func mapperSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-nf" {
+			checkArgCountSort(args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -120,6 +125,7 @@ func mapperSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-nr" {
+			checkArgCountSort(args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -131,10 +137,6 @@ func mapperSortParseCLI(
 			mapperSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
 		}
-	}
-
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
 	}
 
 	if len(groupByFieldNameList) == 0 {
@@ -153,7 +155,7 @@ func mapperSortParseCLI(
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
 // this let us see if the "10" slot exists.
-func checkArgCount(args []string, argi int, argc int, n int) {
+func checkArgCountSort(args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
 		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
 		mapperSortUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")

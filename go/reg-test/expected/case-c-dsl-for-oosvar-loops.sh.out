@@ -1,0 +1,514 @@
+
+mlr --opprint -n put -v 
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
+  @o[1][2][$a][$i*100] = $x;
+  for((k1,k2),v in @o[1][2]) {
+    @n[3][4][k2][k1] = v;
+  }
+  end {
+    emit @n, "a", "b", "c", "d"
+  }
+
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="text1", type=STRING_LITERAL.
+            text="NR", type=CONTEXT_VARIABLE.
+        text="a", type=FIELD_NAME.
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+            text="text2", type=STRING_LITERAL.
+            text="NR", type=CONTEXT_VARIABLE.
+        text="b", type=FIELD_NAME.
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+            text="a", type=FIELD_NAME.
+            text="*", type=OPERATOR:
+                text="i", type=FIELD_NAME.
+                text="100", type=NUMERIC_LITERAL.
+        text="x", type=FIELD_NAME.
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="k1", type=UNTYPED_LOCAL_DEFINITION.
+                text="k2", type=UNTYPED_LOCAL_DEFINITION.
+            text="v", type=UNTYPED_LOCAL_DEFINITION.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+        text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="n", type=STRING_LITERAL.
+                    text="3", type=NUMERIC_LITERAL.
+                    text="4", type=NUMERIC_LITERAL.
+                    text="k2", type=NONINDEXED_LOCAL_VARIABLE.
+                    text="k1", type=NONINDEXED_LOCAL_VARIABLE.
+                text="v", type=NONINDEXED_LOCAL_VARIABLE.
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="emit", type=EMIT:
+                text="emit", type=EMIT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="n", type=STRING_LITERAL.
+                    text="emit_namelist", type=EMIT:
+                        text="a", type=STRING_LITERAL.
+                        text="b", type=STRING_LITERAL.
+                        text="c", type=STRING_LITERAL.
+                        text="d", type=STRING_LITERAL.
+                text="stream", type=STREAM:
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="emit", type=EMIT:
+            text="emit", type=EMIT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="n", type=STRING_LITERAL.
+                text="emit_namelist", type=EMIT:
+                    text="a", type=STRING_LITERAL.
+                    text="b", type=STRING_LITERAL.
+                    text="c", type=STRING_LITERAL.
+                    text="d", type=STRING_LITERAL.
+            text="stream", type=STREAM:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=4
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="text1", type=STRING_LITERAL.
+            text="NR", type=CONTEXT_VARIABLE.
+        text="a", type=FIELD_NAME.
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+            text="text2", type=STRING_LITERAL.
+            text="NR", type=CONTEXT_VARIABLE.
+        text="b", type=FIELD_NAME.
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+            text="a", type=FIELD_NAME.
+            text="*", type=OPERATOR:
+                text="i", type=FIELD_NAME.
+                text="100", type=NUMERIC_LITERAL.
+        text="x", type=FIELD_NAME.
+    text="for", type=FOR_OOSVAR: subframe_var_count=3
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="k1", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="k2", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="o", type=STRING_LITERAL.
+            text="1", type=NUMERIC_LITERAL.
+            text="2", type=NUMERIC_LITERAL.
+        text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="n", type=STRING_LITERAL.
+                    text="3", type=NUMERIC_LITERAL.
+                    text="4", type=NUMERIC_LITERAL.
+                    text="k2", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                    text="k1", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="v", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+
+
+mlr --opprint --from ./reg-test/input/abixy put -q 
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
+  @o[1][2][$a][$i*100] = $x;
+  for((k1,k2),v in @o[1][2]) {
+    @n[3][4][k2][k1] = v;
+  }
+  end {
+    emit @n, "a", "b", "c", "d"
+  }
+
+a b c    d     n
+3 4 1    text2 pan
+3 4 100  pan   0.346790
+3 4 2    text2 pan
+3 4 200  eks   0.758680
+3 4 3    text2 wye
+3 4 300  wye   0.204603
+3 4 4    text2 wye
+3 4 400  eks   0.381399
+3 4 5    text2 pan
+3 4 500  wye   0.573289
+3 4 6    text2 pan
+3 4 600  zee   0.527126
+3 4 7    text2 zee
+3 4 700  eks   0.611784
+3 4 8    text2 wye
+3 4 800  zee   0.598554
+3 4 9    text2 wye
+3 4 900  hat   0.031442
+3 4 10   text2 wye
+3 4 1000 pan   0.502626
+
+mlr --opprint --from ./reg-test/input/abixy put -q 
+  @sum[$a][$b] += $x;
+  @count[$a][$b] += 1;
+  end {
+    for ((k1, k2), v in @sum) {
+      @mean[k1][k2] = @sum[k1][k2] / @count[k1][k2]
+    }
+    emitp @sum, "a", "b";
+    emitp @count, "a", "b";
+    emitp @mean, "a", "b"
+  }
+
+a   b   sum
+pan pan 0.346790
+pan wye 0.502626
+eks pan 0.758680
+eks wye 0.381399
+eks zee 0.611784
+wye wye 0.204603
+wye pan 0.573289
+zee pan 0.527126
+zee wye 0.598554
+hat wye 0.031442
+
+a   b   count
+pan pan 1
+pan wye 1
+eks pan 1
+eks wye 1
+eks zee 1
+wye wye 1
+wye pan 1
+zee pan 1
+zee wye 1
+hat wye 1
+
+a   b   mean
+pan pan 0.346790
+pan wye 0.502626
+eks pan 0.758680
+eks wye 0.381399
+eks zee 0.611784
+wye wye 0.204603
+wye pan 0.573289
+zee pan 0.527126
+zee wye 0.598554
+hat wye 0.031442
+
+mlr --opprint --from ./reg-test/input/abixy-wide put -q 
+  @value["sum"][$a][$b] += $x;
+  @value["count"][$a][$b] += 1;
+  end {
+    for ((k1, k2), v in @value["sum"]) {
+      @value["mean"][k1][k2] = @value["sum"][k1][k2] / @value["count"][k1][k2]
+    }
+    emitp @value, "stat", "a", "b";
+  }
+
+stat  a   b   value
+sum   cat pan 42.327158
+sum   cat hat 43.184410
+sum   cat dog 39.241473
+sum   cat wye 45.196775
+sum   cat cat 37.894148
+sum   pan wye 40.135300
+sum   pan pan 36.226334
+sum   pan hat 35.115869
+sum   pan dog 37.817560
+sum   pan cat 42.235677
+sum   wye cat 40.805723
+sum   wye hat 41.166697
+sum   wye dog 40.619547
+sum   wye wye 32.490973
+sum   wye pan 33.027196
+sum   dog hat 43.515162
+sum   dog pan 45.614011
+sum   dog dog 43.545956
+sum   dog wye 37.223795
+sum   dog cat 45.642595
+sum   hat hat 48.058897
+sum   hat wye 34.054270
+sum   hat pan 42.538758
+sum   hat cat 44.325655
+sum   hat dog 37.114244
+count cat pan 89
+count cat hat 90
+count cat dog 78
+count cat wye 77
+count cat cat 79
+count pan wye 78
+count pan pan 77
+count pan hat 67
+count pan dog 73
+count pan cat 89
+count wye cat 74
+count wye hat 87
+count wye dog 76
+count wye wye 67
+count wye pan 66
+count dog hat 88
+count dog pan 87
+count dog dog 87
+count dog wye 79
+count dog cat 83
+count hat hat 88
+count hat wye 70
+count hat pan 85
+count hat cat 88
+count hat dog 78
+mean  cat pan 0.475586
+mean  cat hat 0.479827
+mean  cat dog 0.503096
+mean  cat wye 0.586971
+mean  cat cat 0.479673
+mean  pan wye 0.514555
+mean  pan pan 0.470472
+mean  pan hat 0.524117
+mean  pan dog 0.518049
+mean  pan cat 0.474558
+mean  wye cat 0.551429
+mean  wye hat 0.473180
+mean  wye dog 0.534468
+mean  wye wye 0.484940
+mean  wye pan 0.500412
+mean  dog hat 0.494490
+mean  dog pan 0.524299
+mean  dog dog 0.500528
+mean  dog wye 0.471187
+mean  dog cat 0.549911
+mean  hat hat 0.546124
+mean  hat wye 0.486490
+mean  hat pan 0.500456
+mean  hat cat 0.503701
+mean  hat dog 0.475824
+
+mlr -n put -v for (k, k in $*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_SREC:
+        text="variables", type=FOR_VARIABLES:
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+        text="for_full_srec_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable k in the same scope.
+
+mlr -n put -v for (k, k in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="k", type=UNTYPED_LOCAL_DEFINITION.
+            text="k", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable k in the same scope.
+
+mlr -n put -v for ((a,a), c in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+            text="c", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable a in the same scope.
+
+mlr -n put -v for ((a,b), a in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+            text="a", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable a in the same scope.
+
+mlr -n put -v for ((a,b), b in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+            text="b", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable b in the same scope.
+
+mlr -n put -v for ((a,a,c), d in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
+            text="d", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable a in the same scope.
+
+mlr -n put -v for ((a,b,a), d in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+            text="d", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable a in the same scope.
+
+mlr -n put -v for ((a,b,c), a in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
+            text="a", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable a in the same scope.
+
+mlr -n put -v for ((a,b,b), d in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+            text="d", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable b in the same scope.
+
+mlr -n put -v for ((a,b,c), b in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
+            text="b", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable b in the same scope.
+
+mlr -n put -v for ((a,b,c), c in @*) {}
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="for", type=FOR_OOSVAR:
+        text="key_and_value_variables", type=FOR_VARIABLES:
+            text="key_variables", type=FOR_VARIABLES:
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
+            text="c", type=UNTYPED_LOCAL_DEFINITION.
+        text="empty_keylist", type=OOSVAR_KEYLIST:
+        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
+mlr: redefinition of variable c in the same scope.
+
+mlr --from ./reg-test/input/xyz2 put -q func f() { return {"a"."b":"c"."d",3:4}}; for (k,v in f()){print "k=".k.",v=".v}
+k=ab,v=cd
+k=3,v=4
+k=ab,v=cd
+k=3,v=4
+
+mlr --from ./reg-test/input/xyz2 put -q for (k,v in {"a"."b":"c"."d",3:"c"}) {print "k=".k.",v=".v}
+k=ab,v=cd
+k=3,v=c
+k=ab,v=cd
+k=3,v=c
+
+mlr --from ./reg-test/input/xyz2 put -q o["a"."b"]="c"."d"; for (k,v in o) {print "k=".k.",v=".v}
+k=ab,v=cd
+k=ab,v=cd
+
+mlr --from ./reg-test/input/xyz2 put -q @o["a"."b"]="c"."d"; for (k,v in @o) {print "k=".k.",v=".v}
+k=ab,v=cd
+k=ab,v=cd
+
+mlr --from ./reg-test/input/xyz2 put for (k in $*) { print k}
+x
+y
+z
+x=3,y=4,z=5
+x
+y
+u
+x=6,y=7,u=8
+
+mlr --from ./reg-test/input/xyz2 put m=$*; for (k in m) { print k}
+x
+y
+z
+x=3,y=4,z=5
+x
+y
+u
+x=6,y=7,u=8
+

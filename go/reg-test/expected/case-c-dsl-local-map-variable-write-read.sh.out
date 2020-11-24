@@ -1,0 +1,504 @@
+
+mlr --from ./reg-test/input/xyz345 put -v -a 
+    $s = a;
+    $t = b[$x];
+    $u = c[$x][$y];
+    $v = d[$x][$y][$z];
+
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=SREC_ASSIGNMENT:
+        text="s", type=FIELD_NAME.
+        text="a", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="t", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="u", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="v", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK
+    ADD FOR ABSENT s @ 0u0
+    READ a ABSENT @ 0s0
+    READ b ABSENT @ 0s0
+    READ c ABSENT @ 0s0
+    READ d ABSENT @ 0s0
+BLOCK main_block subframe_var_count=1 max_subframe_depth=1
+
+ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [main_block]
+SUBFRAME [main_block] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
+    NODE a 0s0 (0:0) -> 0
+    NODE b 0s0 (0:0) -> 0
+    NODE c 0s0 (0:0) -> 0
+    NODE d 0s0 (0:0) -> 0
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="s", type=FIELD_NAME.
+        text="a", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+    text="=", type=SREC_ASSIGNMENT:
+        text="t", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="u", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="v", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+x=3,y=4,z=5
+
+mlr --from ./reg-test/input/xyz345 put -v -a 
+    d[$x][$y][$z] = 9;
+    $d = d[$x][$y][$z];
+
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+        text="9", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK
+    ADD FOR ABSENT s @ 0u0
+    ADD WRITE d @ 1s0
+    READ d PRESENT @ 1s0
+BLOCK main_block subframe_var_count=2 max_subframe_depth=1
+
+ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [main_block]
+SUBFRAME [main_block] var_count_below=0 var_count_at=2 max_var_depth_so_far=2 subframe_depth=0
+    NODE d 1s0 (0:0) -> 1
+    NODE d 1s0 (0:0) -> 1
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=2 max_subframe_depth=1 max_var_depth=2
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+        text="9", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+x=3,y=4,z=5,d=9
+
+mlr --from ./reg-test/input/xyz345 put -v -a 
+    a = 6;
+    b[$x] = 7;
+    c[$x][$y] = 8;
+    d[$x][$y][$z] = 9;
+
+    $a = a;
+    $b = b[$x];
+    $c = c[$x][$y];
+    $d = d[$x][$y][$z];
+
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=NONINDEXED_LOCAL_ASSIGNMENT:
+        text="a", type=NONINDEXED_LOCAL_VARIABLE.
+        text="6", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+        text="7", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+        text="8", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+        text="9", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a", type=FIELD_NAME.
+        text="a", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK
+    ADD FOR ABSENT s @ 0u0
+    ADD WRITE a @ 1s0
+    ADD WRITE b @ 2s0
+    ADD WRITE c @ 3s0
+    ADD WRITE d @ 4s0
+    READ a PRESENT @ 1s0
+    READ b PRESENT @ 2s0
+    READ c PRESENT @ 3s0
+    READ d PRESENT @ 4s0
+BLOCK main_block subframe_var_count=5 max_subframe_depth=1
+
+ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [main_block]
+SUBFRAME [main_block] var_count_below=0 var_count_at=5 max_var_depth_so_far=5 subframe_depth=0
+    NODE a 1s0 (0:0) -> 1
+    NODE b 2s0 (0:0) -> 2
+    NODE c 3s0 (0:0) -> 3
+    NODE d 4s0 (0:0) -> 4
+    NODE a 1s0 (0:0) -> 1
+    NODE b 2s0 (0:0) -> 2
+    NODE c 3s0 (0:0) -> 3
+    NODE d 4s0 (0:0) -> 4
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth=1 max_var_depth=5
+    text="=", type=NONINDEXED_LOCAL_ASSIGNMENT:
+        text="a", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+        text="6", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+            text="x", type=FIELD_NAME.
+        text="7", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+        text="8", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+        text="9", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a", type=FIELD_NAME.
+        text="a", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="b", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+x=3,y=4,z=5,a=6,b=7,c=8,d=9
+
+mlr --from ./reg-test/input/xyz345 put -v -a 
+    a = 6;
+    b[$x] = 7;
+    c[$x][$y] = 8;
+    d[$x][$y][$z] = 9;
+
+    $a0 = a;
+    $a1 = a[$x];
+    $a2 = a[$x][$y];
+    $a3 = a[$x][$y][$z];
+
+    $b0 = b;
+    $b1 = b[$x];
+    $b2 = b[$x][$y];
+    $b3 = b[$x][$y][$z];
+
+    $c0 = c;
+    $c1 = c[$x];
+    $c2 = c[$x][$y];
+    $c3 = c[$x][$y][$z];
+
+    $d0 = d;
+    $d1 = d[$x];
+    $d2 = d[$x][$y];
+    $d3 = d[$x][$y][$z];
+
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=NONINDEXED_LOCAL_ASSIGNMENT:
+        text="a", type=NONINDEXED_LOCAL_VARIABLE.
+        text="6", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+        text="7", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+        text="8", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+        text="9", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a0", type=FIELD_NAME.
+        text="a", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a1", type=FIELD_NAME.
+        text="a", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a2", type=FIELD_NAME.
+        text="a", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a3", type=FIELD_NAME.
+        text="a", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b0", type=FIELD_NAME.
+        text="b", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b1", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b2", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b3", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c0", type=FIELD_NAME.
+        text="c", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c1", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c2", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c3", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d0", type=FIELD_NAME.
+        text="d", type=NONINDEXED_LOCAL_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d1", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d2", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d3", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE:
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK
+    ADD FOR ABSENT s @ 0u0
+    ADD WRITE a @ 1s0
+    ADD WRITE b @ 2s0
+    ADD WRITE c @ 3s0
+    ADD WRITE d @ 4s0
+    READ a PRESENT @ 1s0
+    READ a PRESENT @ 1s0
+    READ a PRESENT @ 1s0
+    READ a PRESENT @ 1s0
+    READ b PRESENT @ 2s0
+    READ b PRESENT @ 2s0
+    READ b PRESENT @ 2s0
+    READ b PRESENT @ 2s0
+    READ c PRESENT @ 3s0
+    READ c PRESENT @ 3s0
+    READ c PRESENT @ 3s0
+    READ c PRESENT @ 3s0
+    READ d PRESENT @ 4s0
+    READ d PRESENT @ 4s0
+    READ d PRESENT @ 4s0
+    READ d PRESENT @ 4s0
+BLOCK main_block subframe_var_count=5 max_subframe_depth=1
+
+ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [main_block]
+SUBFRAME [main_block] var_count_below=0 var_count_at=5 max_var_depth_so_far=5 subframe_depth=0
+    NODE a 1s0 (0:0) -> 1
+    NODE b 2s0 (0:0) -> 2
+    NODE c 3s0 (0:0) -> 3
+    NODE d 4s0 (0:0) -> 4
+    NODE a 1s0 (0:0) -> 1
+    NODE a 1s0 (0:0) -> 1
+    NODE a 1s0 (0:0) -> 1
+    NODE a 1s0 (0:0) -> 1
+    NODE b 2s0 (0:0) -> 2
+    NODE b 2s0 (0:0) -> 2
+    NODE b 2s0 (0:0) -> 2
+    NODE b 2s0 (0:0) -> 2
+    NODE c 3s0 (0:0) -> 3
+    NODE c 3s0 (0:0) -> 3
+    NODE c 3s0 (0:0) -> 3
+    NODE c 3s0 (0:0) -> 3
+    NODE d 4s0 (0:0) -> 4
+    NODE d 4s0 (0:0) -> 4
+    NODE d 4s0 (0:0) -> 4
+    NODE d 4s0 (0:0) -> 4
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth=1 max_var_depth=5
+    text="=", type=NONINDEXED_LOCAL_ASSIGNMENT:
+        text="a", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+        text="6", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+            text="x", type=FIELD_NAME.
+        text="7", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+        text="8", type=NUMERIC_LITERAL.
+    text="=", type=INDEXED_LOCAL_ASSIGNMENT:
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+        text="9", type=NUMERIC_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a0", type=FIELD_NAME.
+        text="a", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+    text="=", type=SREC_ASSIGNMENT:
+        text="a1", type=FIELD_NAME.
+        text="a", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a2", type=FIELD_NAME.
+        text="a", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="a3", type=FIELD_NAME.
+        text="a", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b0", type=FIELD_NAME.
+        text="b", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+    text="=", type=SREC_ASSIGNMENT:
+        text="b1", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b2", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="b3", type=FIELD_NAME.
+        text="b", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c0", type=FIELD_NAME.
+        text="c", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+    text="=", type=SREC_ASSIGNMENT:
+        text="c1", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c2", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="c3", type=FIELD_NAME.
+        text="c", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d0", type=FIELD_NAME.
+        text="d", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+    text="=", type=SREC_ASSIGNMENT:
+        text="d1", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+            text="x", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d2", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+    text="=", type=SREC_ASSIGNMENT:
+        text="d3", type=FIELD_NAME.
+        text="d", type=INDEXED_LOCAL_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+            text="x", type=FIELD_NAME.
+            text="y", type=FIELD_NAME.
+            text="z", type=FIELD_NAME.
+
+x=3,y=4,z=5,a0=6,b1=7,c2=8,d3=9
+

@@ -1,0 +1,1556 @@
+
+mlr -n put -v $y = 1 || 2
+DSL EXPRESSION:
+$y = 1 || 2
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "||"
+            * int literal "1"
+            * int literal "2"
+
+
+mlr -n put -v $y = 1 || 2 || 3
+DSL EXPRESSION:
+$y = 1 || 2 || 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "||"
+            * operator "||"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr -n put -v $y = 1 || 2 && 3
+DSL EXPRESSION:
+$y = 1 || 2 && 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "||"
+            * int literal "1"
+            * operator "&&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr -n put -v $y = 1 && 2 || 3
+DSL EXPRESSION:
+$y = 1 && 2 || 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "||"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr -n put -v $y = 1 ? 2 : 3
+DSL EXPRESSION:
+$y = 1 ? 2 : 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "?:"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
+
+
+mlr -n put -v $y = $a + $b * $c
+DSL EXPRESSION:
+$y = $a + $b * $c
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "a"
+            * operator "*"
+                * direct field value "b"
+                * direct field value "c"
+
+
+mlr -n put -v $y = $a * $b * $c
+DSL EXPRESSION:
+$y = $a * $b * $c
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "*"
+            * operator "*"
+                * direct field value "a"
+                * direct field value "b"
+            * direct field value "c"
+
+
+mlr -n put -v $y = $a ** $b ** $c
+DSL EXPRESSION:
+$y = $a ** $b ** $c
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "**"
+            * direct field value "a"
+            * operator "**"
+                * direct field value "b"
+                * direct field value "c"
+
+
+mlr -n put -v $[2] = 3
+DSL EXPRESSION:
+$[2] = 3
+RAW AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * int literal "2"
+        * int literal "3"
+
+
+mlr -n put -v $[$y] = 4
+DSL EXPRESSION:
+$[$y] = 4
+RAW AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * direct field value "y"
+        * int literal "4"
+
+
+mlr -n put -v $x = "abc"
+DSL EXPRESSION:
+$x = "abc"
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * string literal "abc"
+
+
+mlr -n put -v $["abc"] = "def"
+DSL EXPRESSION:
+$["abc"] = "def"
+RAW AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * string literal "abc"
+        * string literal "def"
+
+
+mlr -n put -v $[FILENAME] = FNR
+DSL EXPRESSION:
+$[FILENAME] = FNR
+RAW AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * context variable "FILENAME"
+        * context variable "FNR"
+
+
+mlr -n put -v $x = $a + $b + $c
+DSL EXPRESSION:
+$x = $a + $b + $c
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "+"
+                * direct field value "a"
+                * direct field value "b"
+            * direct field value "c"
+
+
+mlr -n put -v $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
+DSL EXPRESSION:
+$x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "+"
+                * direct field value "a"
+                * direct field value "b"
+            * direct field value "c"
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "a"
+            * operator "+"
+                * direct field value "b"
+                * direct field value "c"
+    * assignment "="
+        * direct field value "z"
+        * operator "+"
+            * operator "+"
+                * direct field value "a"
+                * direct field value "b"
+            * direct field value "c"
+
+
+mlr -n put -v $x = 2 * $a + $b . $c
+DSL EXPRESSION:
+$x = 2 * $a + $b . $c
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "."
+            * operator "+"
+                * operator "*"
+                    * int literal "2"
+                    * direct field value "a"
+                * direct field value "b"
+            * direct field value "c"
+
+
+mlr -n put -v $x = 2 * $a + ($b . $c)
+DSL EXPRESSION:
+$x = 2 * $a + ($b . $c)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "*"
+                * int literal "2"
+                * direct field value "a"
+            * operator "."
+                * direct field value "b"
+                * direct field value "c"
+
+
+mlr -n put -v $x = (NF + NR) * 7; $y = OFS . $y . "hello"
+DSL EXPRESSION:
+$x = (NF + NR) * 7; $y = OFS . $y . "hello"
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "+"
+                * context variable "NF"
+                * context variable "NR"
+            * int literal "7"
+    * assignment "="
+        * direct field value "y"
+        * operator "."
+            * operator "."
+                * context variable "OFS"
+                * direct field value "y"
+            * string literal "hello"
+
+
+mlr -n put -v $x = 123. + 1e-2 / .2e3 + 1.e-3
+DSL EXPRESSION:
+$x = 123. + 1e-2 / .2e3 + 1.e-3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "+"
+                * float literal "123."
+                * operator "/"
+                    * float literal "1e-2"
+                    * float literal ".2e3"
+            * float literal "1.e-3"
+
+
+mlr -n put -v $z=0x7fffffffffffffff  + 0x7fffffffffffffff
+DSL EXPRESSION:
+$z=0x7fffffffffffffff  + 0x7fffffffffffffff
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * operator "+"
+            * int literal "0x7fffffffffffffff"
+            * int literal "0x7fffffffffffffff"
+
+
+mlr -n put -v $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
+DSL EXPRESSION:
+$z=0x7fffffffffffffff .+ 0x7fffffffffffffff
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * operator ".+"
+            * int literal "0x7fffffffffffffff"
+            * int literal "0x7fffffffffffffff"
+
+
+mlr -n put -v $z=0x7fffffffffffffff  * 0x7fffffffffffffff
+DSL EXPRESSION:
+$z=0x7fffffffffffffff  * 0x7fffffffffffffff
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * operator "*"
+            * int literal "0x7fffffffffffffff"
+            * int literal "0x7fffffffffffffff"
+
+
+mlr -n put -v $z=0x7fffffffffffffff .* 0x7fffffffffffffff
+DSL EXPRESSION:
+$z=0x7fffffffffffffff .* 0x7fffffffffffffff
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * operator ".*"
+            * int literal "0x7fffffffffffffff"
+            * int literal "0x7fffffffffffffff"
+
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.3
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 2.3
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 2.
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=.3
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 .3
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.3e4
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 2.3e4
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.e4
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 2.e4
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=.3e4
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 .3e4
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.3e-4
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 2.3e-4
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=2.e-4
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 2.e-4
+
+mlr --opprint --from ./reg-test/input/s.dkvp head -n 1 then put $z=.3e-4
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 .3e-4
+
+mlr -n put -v $y = 1 * 2 ?? 3
+DSL EXPRESSION:
+$y = 1 * 2 ?? 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "??"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr -n put -v $y = 1 ?? 2 * 3
+DSL EXPRESSION:
+$y = 1 ?? 2 * 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "??"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr -n put -v $z = []
+DSL EXPRESSION:
+$z = []
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+
+
+mlr -n put -v $z = [1,]
+DSL EXPRESSION:
+$z = [1,]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+            * int literal "1"
+
+
+mlr -n put -v $z = [1,2]
+DSL EXPRESSION:
+$z = [1,2]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+            * int literal "1"
+            * int literal "2"
+
+
+mlr -n put -v $z = [1,2,]
+DSL EXPRESSION:
+$z = [1,2,]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+            * int literal "1"
+            * int literal "2"
+
+
+mlr -n put -v $z = [1,2,3]
+DSL EXPRESSION:
+$z = [1,2,3]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
+
+
+mlr -n put -v $z = [1,2,3,]
+DSL EXPRESSION:
+$z = [1,2,3,]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
+
+
+mlr -n put -v $z = {}
+DSL EXPRESSION:
+$z = {}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+
+
+mlr -n put -v $z = {"a":"1"}
+DSL EXPRESSION:
+$z = {"a":"1"}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+
+
+mlr -n put -v $z = {"a":"1",}
+DSL EXPRESSION:
+$z = {"a":"1",}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+
+
+mlr -n put -v $z = {"a":"1", "b":2}
+DSL EXPRESSION:
+$z = {"a":"1", "b":2}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+            * map-literal key-value pair ":"
+                * string literal "b"
+                * int literal "2"
+
+
+mlr -n put -v $z = {"a":"1", "b":2,}
+DSL EXPRESSION:
+$z = {"a":"1", "b":2,}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+            * map-literal key-value pair ":"
+                * string literal "b"
+                * int literal "2"
+
+
+mlr -n put -v $z = {"a":"1", "b":2, "c":3}
+DSL EXPRESSION:
+$z = {"a":"1", "b":2, "c":3}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+            * map-literal key-value pair ":"
+                * string literal "b"
+                * int literal "2"
+            * map-literal key-value pair ":"
+                * string literal "c"
+                * int literal "3"
+
+
+mlr -n put -v $z = {"a":"1", "b":2, "c":3,}
+DSL EXPRESSION:
+$z = {"a":"1", "b":2, "c":3,}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+            * map-literal key-value pair ":"
+                * string literal "b"
+                * int literal "2"
+            * map-literal key-value pair ":"
+                * string literal "c"
+                * int literal "3"
+
+
+mlr -n put -v $z = $a[1]
+DSL EXPRESSION:
+$z = $a[1]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * direct field value "a"
+            * int literal "1"
+
+
+mlr -n put -v $z = $a["index"]
+DSL EXPRESSION:
+$z = $a["index"]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * direct field value "a"
+            * string literal "index"
+
+
+mlr -n put -v $z = "abcde"[1]
+DSL EXPRESSION:
+$z = "abcde"[1]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * string literal "abcde"
+            * int literal "1"
+
+
+mlr -n put -v $z = "abcde"["index"]
+DSL EXPRESSION:
+$z = "abcde"["index"]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * string literal "abcde"
+            * string literal "index"
+
+
+mlr -n put -v $z = $a[1:2]
+DSL EXPRESSION:
+$z = $a[1:2]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array-slice access "[]"
+            * direct field value "a"
+            * int literal "1"
+            * int literal "2"
+
+
+mlr -n put -v $z = $a[:2]
+DSL EXPRESSION:
+$z = $a[:2]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array-slice access "[]"
+            * direct field value "a"
+            * array-slice empty lower index ":"
+            * int literal "2"
+
+
+mlr -n put -v $z = $a[1:]
+DSL EXPRESSION:
+$z = $a[1:]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array-slice access "[]"
+            * direct field value "a"
+            * int literal "1"
+            * array-slice empty upper index ":"
+
+
+mlr -n put -v $z = $a[:]
+DSL EXPRESSION:
+$z = $a[:]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array-slice access "[]"
+            * direct field value "a"
+            * array-slice empty lower index ":"
+            * array-slice empty upper index ":"
+
+
+mlr -n put -v $z = [5,6,7,8,9][1]
+DSL EXPRESSION:
+$z = [5,6,7,8,9][1]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * array literal "[]"
+                * int literal "5"
+                * int literal "6"
+                * int literal "7"
+                * int literal "8"
+                * int literal "9"
+            * int literal "1"
+
+
+mlr -n put -v $z = {"a":1, "b":2, "c":3}["b"]
+DSL EXPRESSION:
+$z = {"a":1, "b":2, "c":3}["b"]
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * map literal "{}"
+                * map-literal key-value pair ":"
+                    * string literal "a"
+                    * int literal "1"
+                * map-literal key-value pair ":"
+                    * string literal "b"
+                    * int literal "2"
+                * map-literal key-value pair ":"
+                    * string literal "c"
+                    * int literal "3"
+            * string literal "b"
+
+
+mlr -n put -v begin{}
+DSL EXPRESSION:
+begin{}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+
+
+mlr -n put -v begin{@y=1}
+DSL EXPRESSION:
+begin{@y=1}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "1"
+
+
+mlr -n put -v end{}
+DSL EXPRESSION:
+end{}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+
+
+mlr -n put -v end{@y=1}
+DSL EXPRESSION:
+end{@y=1}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "1"
+
+
+mlr -n put -v $x=2; end{@y=1}
+DSL EXPRESSION:
+$x=2; end{@y=1}
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * int literal "2"
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "1"
+
+
+mlr -n put -v begin{@y=1} $x=2
+DSL EXPRESSION:
+begin{@y=1} $x=2
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "1"
+    * assignment "="
+        * direct field value "x"
+        * int literal "2"
+
+
+mlr -n put -v begin{} end {}
+DSL EXPRESSION:
+begin{} end {}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+    * end block
+        * statement block
+
+
+mlr -n put -v $x=1;
+DSL EXPRESSION:
+$x=1;
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * int literal "1"
+
+
+mlr -n put -v $x=1;$y=2;
+DSL EXPRESSION:
+$x=1;$y=2;
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * int literal "1"
+    * assignment "="
+        * direct field value "y"
+        * int literal "2"
+
+
+mlr -n put -v begin{@x=1;@y=2}
+DSL EXPRESSION:
+begin{@x=1;@y=2}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
+
+
+mlr -n put -v begin{@x=1;@y=2;}
+DSL EXPRESSION:
+begin{@x=1;@y=2;}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
+
+
+mlr -n put -v begin{@x=1;@y=2;} $z=3
+DSL EXPRESSION:
+begin{@x=1;@y=2;} $z=3
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
+    * assignment "="
+        * direct field value "z"
+        * int literal "3"
+
+
+mlr -n put -v begin{@x=1;@y=2;} $z=3;
+DSL EXPRESSION:
+begin{@x=1;@y=2;} $z=3;
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "1"
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "2"
+    * assignment "="
+        * direct field value "z"
+        * int literal "3"
+
+
+mlr -n put -v if (NR == 1) { $z = 100 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 }
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+
+
+mlr -n put -v if (NR == 1) { $z = 100 } else { $z = 900 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } else { $z = 900 }
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "900"
+
+
+mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "2"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "200"
+
+
+mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "2"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "200"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "900"
+
+
+mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "2"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "200"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "3"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "300"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "900"
+
+
+mlr -n put -v for (k in $*) { emit { k : k } }
+DSL EXPRESSION:
+for (k in $*) { emit { k : k } }
+RAW AST:
+* statement block
+    * single-variable for-loop "for"
+        * local variable "k"
+        * full record "$*"
+        * statement block
+            * emit statement "emit"
+                * map literal "{}"
+                    * map-literal key-value pair ":"
+                        * local variable "k"
+                        * local variable "k"
+
+
+mlr -n put -v begin {}
+DSL EXPRESSION:
+begin {}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+
+
+mlr -n put -v end {}
+DSL EXPRESSION:
+end {}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+
+
+mlr -n put -v if (1) {}
+DSL EXPRESSION:
+if (1) {}
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * int literal "1"
+            * statement block
+
+
+mlr -n put -v if (1) {2}
+DSL EXPRESSION:
+if (1) {2}
+RAW AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * int literal "1"
+            * statement block
+                * bare boolean
+                    * int literal "2"
+
+
+mlr -n put -v for (k in $*) {}
+DSL EXPRESSION:
+for (k in $*) {}
+RAW AST:
+* statement block
+    * single-variable for-loop "for"
+        * local variable "k"
+        * full record "$*"
+        * statement block
+
+
+mlr -n put -v for (k in $*) {2}
+DSL EXPRESSION:
+for (k in $*) {2}
+RAW AST:
+* statement block
+    * single-variable for-loop "for"
+        * local variable "k"
+        * full record "$*"
+        * statement block
+            * bare boolean
+                * int literal "2"
+
+
+mlr -n put -v while (false) {}
+DSL EXPRESSION:
+while (false) {}
+RAW AST:
+* statement block
+    * while loop "while"
+        * bool literal "false"
+        * statement block
+
+
+mlr -n put -v do {} while (false)
+DSL EXPRESSION:
+do {} while (false)
+RAW AST:
+* statement block
+    * do-while`loop "do"
+        * statement block
+        * bool literal "false"
+
+
+mlr -n put -v nr=NR; $nr=nr
+DSL EXPRESSION:
+nr=NR; $nr=nr
+RAW AST:
+* statement block
+    * assignment "="
+        * local variable "nr"
+        * context variable "NR"
+    * assignment "="
+        * direct field value "nr"
+        * local variable "nr"
+
+
+mlr -n put -v for (i = 0; i < 10; i += 1) { $x += i }
+DSL EXPRESSION:
+for (i = 0; i < 10; i += 1) { $x += i }
+RAW AST:
+* statement block
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * int literal "10"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * assignment "="
+                * direct field value "x"
+                * operator "+"
+                    * direct field value "x"
+                    * local variable "i"
+
+
+mlr -n put -v for (;;) {}
+DSL EXPRESSION:
+for (;;) {}
+RAW AST:
+* statement block
+    * triple-for loop "for"
+        * statement block
+        * statement block
+        * statement block
+        * statement block
+
+
+mlr -n put -v for (i = 0; i < NR; i += 1) { $i += i }
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { $i += i }
+RAW AST:
+* statement block
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * context variable "NR"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * local variable "i"
+
+
+mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
+RAW AST:
+* statement block
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * context variable "NR"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * if-chain
+                * if-item "if"
+                    * operator "=="
+                        * local variable "i"
+                        * int literal "2"
+                    * statement block
+                        * continue "continue"
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * local variable "i"
+
+
+mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
+RAW AST:
+* statement block
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * context variable "NR"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * if-chain
+                * if-item "if"
+                    * operator "=="
+                        * local variable "i"
+                        * int literal "2"
+                    * statement block
+                        * break "break"
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * local variable "i"
+
+
+mlr -n put -v func f(){}
+DSL EXPRESSION:
+func f(){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+        * statement block
+
+
+mlr -n put -v func f(a){}
+DSL EXPRESSION:
+func f(a){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+
+
+mlr -n put -v func f(a,){}
+DSL EXPRESSION:
+func f(a,){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+
+
+mlr -n put -v func f(a,b){}
+DSL EXPRESSION:
+func f(a,b){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+        * statement block
+
+
+mlr -n put -v func f(a,b,){}
+DSL EXPRESSION:
+func f(a,b,){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+        * statement block
+
+
+mlr -n put -v func f(a,b,c){}
+DSL EXPRESSION:
+func f(a,b,c){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+            * parameter
+                * parameter name "c"
+        * statement block
+
+
+mlr -n put -v func f(a,b,c,){}
+DSL EXPRESSION:
+func f(a,b,c,){}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+            * parameter
+                * parameter name "c"
+        * statement block
+
+
+mlr -n put -v func f(){return 1}
+DSL EXPRESSION:
+func f(){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(a){return 1}
+DSL EXPRESSION:
+func f(a){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(a,){return 1}
+DSL EXPRESSION:
+func f(a,){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(a,b){return 1}
+DSL EXPRESSION:
+func f(a,b){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(a,b,){return 1}
+DSL EXPRESSION:
+func f(a,b,){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(a,b,c){return 1}
+DSL EXPRESSION:
+func f(a,b,c){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+            * parameter
+                * parameter name "c"
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(a,b,c,){return 1}
+DSL EXPRESSION:
+func f(a,b,c,){return 1}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+            * parameter
+                * parameter name "b"
+            * parameter
+                * parameter name "c"
+        * statement block
+            * return "return"
+                * int literal "1"
+
+
+mlr -n put -v func f(x, y) { z = 3}
+DSL EXPRESSION:
+func f(x, y) { z = 3}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "x"
+            * parameter
+                * parameter name "y"
+        * statement block
+            * assignment "="
+                * local variable "z"
+                * int literal "3"
+
+
+mlr -n put -v func f(var x, var y): var { var z = 3}
+DSL EXPRESSION:
+func f(var x, var y): var { var z = 3}
+RAW AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "x"
+                    * type declaration "var"
+            * parameter
+                * parameter name "y"
+                    * type declaration "var"
+        * statement block
+            * assignment "="
+                * local variable "z"
+                    * type declaration "var"
+                * int literal "3"
+        * type declaration "var"
+
+
+mlr -n put -v unset $x
+DSL EXPRESSION:
+unset $x
+RAW AST:
+* statement block
+    * unset "unset"
+        * direct field value "x"
+
+
+mlr -n put -v unset $*
+DSL EXPRESSION:
+unset $*
+RAW AST:
+* statement block
+    * unset "unset"
+        * full record "$*"
+
+
+mlr -n put -v unset @x
+DSL EXPRESSION:
+unset @x
+RAW AST:
+* statement block
+    * unset "unset"
+        * direct oosvar value "x"
+
+
+mlr -n put -v unset @*
+DSL EXPRESSION:
+unset @*
+RAW AST:
+* statement block
+    * unset "unset"
+        * full oosvar "@*"
+
+
+mlr -n put -v unset x
+DSL EXPRESSION:
+unset x
+RAW AST:
+* statement block
+    * unset "unset"
+        * local variable "x"
+
+
+mlr -n put -v unset 3
+DSL EXPRESSION:
+unset 3
+RAW AST:
+* statement block
+    * unset "unset"
+        * int literal "3"
+
+
+mlr -n put -f ./reg-test/input/lex-error.mlr
+
+mlr -n put -f ./reg-test/input/parse-error.mlr
+

@@ -15,7 +15,9 @@ func (this *Mlrmap) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	buffer.Write(mapBytes)
-	buffer.WriteString("\n")
+	// Do not write the final newline here, so the caller can write commas
+	// in the right place if desired.
+	// buffer.WriteString("\n")
 	return buffer.Bytes(), nil
 }
 

@@ -10,10 +10,11 @@ typedef struct _lrec_writer_pprint_state_t {
 	sllv_t*    precords;
 	slls_t*    pprev_keys;
 	int        right_align;
+	int        barred;
+	int        headerless_output;
 	long long  num_blocks_written;
 	char*      ors;
 	char       ofs;
-	int        barred;
 } lrec_writer_pprint_state_t;
 
 static void lrec_writer_pprint_free(lrec_writer_t* pwriter, context_t* pctx);
@@ -21,12 +22,12 @@ static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_
 static void lrec_writer_pprint_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 static void lrec_writer_pprint_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs,
-	int right_align);
+	int right_align, int headerless_output);
 static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_stream, char* ors, char ofs,
-	int right_align);
+	int right_align, int headerless_output);
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int right_align, int barred) {
+lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int right_align, int barred, int headerless_output) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_pprint_state_t));
@@ -36,6 +37,7 @@ lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int right_align, in
 	pstate->ofs                = ofs;
 	pstate->right_align        = right_align;
 	pstate->barred             = barred;
+	pstate->headerless_output  = headerless_output;
 	pstate->num_blocks_written = 0LL;
 
 	plrec_writer->pvstate       = pstate;
@@ -89,10 +91,10 @@ static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_
 			fputs(ors, output_stream);
 		if (pstate->barred) {
 			print_and_free_record_list_barred(pstate->precords, output_stream, ors, pstate->ofs,
-				pstate->right_align);
+				pstate->right_align, pstate->headerless_output);
 		} else {
 			print_and_free_record_list(pstate->precords, output_stream, ors, pstate->ofs,
-				pstate->right_align);
+				pstate->right_align, pstate->headerless_output);
 		}
 		if (pstate->pprev_keys != NULL) {
 			slls_free(pstate->pprev_keys);
@@ -110,7 +112,7 @@ static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_
 
 // ----------------------------------------------------------------
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs,
-	int right_align)
+	int right_align, int headerless_output)
 {
 	if (precords->length == 0) {
 		sllv_free(precords);
@@ -121,7 +123,11 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 	int* max_widths = mlr_malloc_or_die(sizeof(int) * prec1->field_count);
 	int j = 0;
 	for (lrece_t* pe = prec1->phead; pe != NULL; pe = pe->pnext, j++) {
-		max_widths[j] = strlen_for_utf8_display(pe->key);
+		if (headerless_output) {
+			max_widths[j] = 1;
+		} else {
+			max_widths[j] = strlen_for_utf8_display(pe->key);
+		}
 	}
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext) {
 		lrec_t* prec = pnode->pvvalue;
@@ -137,7 +143,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext, onr++) {
 		lrec_t* prec = pnode->pvvalue;
 
-		if (onr == 0) {
+		if (onr == 0 && !headerless_output) {
 			j = 0;
 			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
 				if (j > 0) {
@@ -198,7 +204,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 
 // ----------------------------------------------------------------
 static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_stream, char* ors, char ofs,
-	int right_align)
+	int right_align, int headerless_output)
 {
 	if (precords->length == 0) {
 		sllv_free(precords);
@@ -209,7 +215,11 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 	int* max_widths = mlr_malloc_or_die(sizeof(int) * prec1->field_count);
 	int j = 0;
 	for (lrece_t* pe = prec1->phead; pe != NULL; pe = pe->pnext, j++) {
-		max_widths[j] = strlen_for_utf8_display(pe->key);
+		if (headerless_output) {
+			max_widths[j] = 1;
+		} else {
+			max_widths[j] = strlen_for_utf8_display(pe->key);
+		}
 	}
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext) {
 		lrec_t* prec = pnode->pvvalue;
@@ -225,7 +235,7 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 	for (sllve_t* pnode = precords->phead; pnode != NULL; pnode = pnode->pnext, onr++) {
 		lrec_t* prec = pnode->pvvalue;
 
-		if (onr == 0) {
+		if (onr == 0 && !headerless_output) {
 
 			j = 0;
 			fputc('+', output_stream);

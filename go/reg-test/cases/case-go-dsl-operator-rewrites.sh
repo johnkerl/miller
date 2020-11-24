@@ -1,0 +1,5 @@
+run_mlr --from $indir/s.dkvp --idkvp --opprint put -v '$i += 2'
+run_mlr --from $indir/s.dkvp --idkvp --opprint put -v '$i *= 2'
+run_mlr --from $indir/s.dkvp --idkvp --opprint put -v '$i /= 2'
+run_mlr --from $indir/s.dkvp --idkvp --opprint put -v '$i |= 2'
+run_mlr --from $indir/s.dkvp --idkvp --opprint put -v '$j = true; $j &&= $i < 2'

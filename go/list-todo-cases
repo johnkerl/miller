@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./reg-test/run -g -o | grep '^FAIL ' | tee ooo

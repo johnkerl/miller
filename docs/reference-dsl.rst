@@ -4063,7 +4063,7 @@ joinv
 
 ::
 
-    joinv (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
+    joinv (class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
 
 
 

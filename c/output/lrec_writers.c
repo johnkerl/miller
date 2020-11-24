@@ -35,7 +35,7 @@ lrec_writer_t*  lrec_writer_alloc(cli_writer_opts_t* popts) {
 			return NULL;
 		} else {
 			return lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], popts->right_align_pprint,
-				popts->pprint_barred);
+				popts->pprint_barred, popts->headerless_csv_output);
 		}
 
 	} else {

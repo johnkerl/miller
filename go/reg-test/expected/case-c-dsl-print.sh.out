@@ -1,0 +1,139 @@
+
+mlr put -q print  1; print  "two"; print  $a; print;  print  $i < 4; print  "y is ".string($y); print "" ./reg-test/input/abixy
+1
+two
+pan
+
+true
+y is 0.726803
+
+1
+two
+eks
+
+true
+y is 0.522151
+
+1
+two
+wye
+
+true
+y is 0.338319
+
+1
+two
+eks
+
+false
+y is 0.134189
+
+1
+two
+wye
+
+false
+y is 0.863624
+
+1
+two
+zee
+
+false
+y is 0.493221
+
+1
+two
+eks
+
+false
+y is 0.187885
+
+1
+two
+zee
+
+false
+y is 0.976181
+
+1
+two
+hat
+
+false
+y is 0.749551
+
+1
+two
+pan
+
+false
+y is 0.952618
+
+
+mlr put -q printn 1; printn "two"; printn $a; printn; printn $i < 4; printn "y is ".string($y); print "" ./reg-test/input/abixy
+1twopantruey is 0.726803
+1twoekstruey is 0.522151
+1twowyetruey is 0.338319
+1twoeksfalsey is 0.134189
+1twowyefalsey is 0.863624
+1twozeefalsey is 0.493221
+1twoeksfalsey is 0.187885
+1twozeefalsey is 0.976181
+1twohatfalsey is 0.749551
+1twopanfalsey is 0.952618
+
+mlr put -q print  $*; print  $*; print  {}; print ./reg-test/input/abixy
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+
+mlr put -q printn $*; printn $*; printn {}; print ./reg-test/input/abixy
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+

@@ -6,6 +6,18 @@ import (
 	"strings"
 )
 
+func BooleanXOR(a, b bool) bool {
+	return a != b
+}
+
+func BoolToInt(b bool) int {
+	if b == false {
+		return 0
+	} else {
+		return 1
+	}
+}
+
 func Plural(n int) string {
 	if n == 1 {
 		return ""

@@ -1,0 +1,45 @@
+
+
+================================================================
+STATS1/STEP INT/FLOAT
+
+mlr --opprint step -a rsum,delta,counter -f x,y,z ./reg-test/input/int-float.dkvp
+x y    z    x_rsum x_delta x_counter y_rsum    y_delta  y_counter z_rsum    z_delta   z_counter
+1 10.1 20   1      0       1         10.100000 0        1         20        0         1
+2 10.2 30   3      1       2         20.300000 0.100000 2         50        10        2
+3 10.3 40.8 6      1       3         30.600000 0.100000 3         90.800000 10.800000 3
+
+mlr --opprint step -F -a rsum,delta,counter -f x,y,z ./reg-test/input/int-float.dkvp
+x y    z    x_rsum   x_delta  x_counter y_rsum    y_delta  y_counter z_rsum    z_delta   z_counter
+1 10.1 20   1.000000 0.000000 1.000000  10.100000 0.000000 1.000000  20.000000 0.000000  1.000000
+2 10.2 30   3.000000 1.000000 2.000000  20.300000 0.100000 2.000000  50.000000 10.000000 2.000000
+3 10.3 40.8 6.000000 1.000000 3.000000  30.600000 0.100000 3.000000  90.800000 10.800000 3.000000
+
+mlr --oxtab stats1 -a min,max,sum,count -f x,y,z ./reg-test/input/int-float.dkvp
+x_min   1
+x_max   3
+x_sum   6
+x_count 3
+y_min   10.100000
+y_max   10.300000
+y_sum   30.600000
+y_count 3
+z_min   20.000000
+z_max   40.800000
+z_sum   90.800000
+z_count 3
+
+mlr --oxtab stats1 -F -a min,max,sum,count -f x,y,z ./reg-test/input/int-float.dkvp
+x_min   1
+x_max   3
+x_sum   6.000000
+x_count 3.000000
+y_min   10.100000
+y_max   10.300000
+y_sum   30.600000
+y_count 3.000000
+z_min   20.000000
+z_max   40.800000
+z_sum   90.800000
+z_count 3.000000
+

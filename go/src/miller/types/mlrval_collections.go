@@ -484,13 +484,13 @@ func unsetIndexedOnArray(
 	if numIndices == 1 {
 		if inBounds {
 			leftSlice := (*baseArray)[0:zindex]
-			rightSlice := (*baseArray)[zindex+1:len((*baseArray))]
+			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
 		} else if mindex.intval == 0 {
 			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
 		} else {
 			// TODO: improve wording
-			return errors.New("Miller: array index out of bounds for unset.");
+			return errors.New("Miller: array index out of bounds for unset.")
 		}
 	} else {
 		// More indices remain; recurse
@@ -500,7 +500,7 @@ func unsetIndexedOnArray(
 			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
 		} else {
 			// TODO: improve wording
-			return errors.New("Miller: array index out of bounds for unset.");
+			return errors.New("Miller: array index out of bounds for unset.")
 		}
 
 	}

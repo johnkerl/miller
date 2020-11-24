@@ -1,0 +1,27 @@
+# ================================================================
+# Sample CSV input:
+#
+#   $ cat input.csv
+#   a,b
+#   1,4
+#   2,5
+#   3,6
+#
+# Invocation:
+#
+#   $ mlr --icsv --ojson put -q -f mkstan.mlr input.csv
+#
+# Sample JSON output:
+#
+#   {
+#     "a": [1, 2, 3],
+#     "b": [4, 5, 6]
+#   }
+# ================================================================
+
+for (k, v in $*) {
+  @output_record[k][NR] = v;
+}
+end {
+  emit @output_record
+}

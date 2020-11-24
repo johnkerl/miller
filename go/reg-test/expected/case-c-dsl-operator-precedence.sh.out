@@ -1,0 +1,1811 @@
+
+mlr put -v $x = 1 || 2 ^^ 3 /dev/null
+DSL EXPRESSION:
+$x = 1 || 2 ^^ 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * int literal "1"
+            * operator "^^"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v      1 || 2 ^^ 3 /dev/null
+DSL EXPRESSION:
+     1 || 2 ^^ 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * int literal "1"
+            * operator "^^"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = 1 || 2 && 3 /dev/null
+DSL EXPRESSION:
+$x = 1 || 2 && 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * int literal "1"
+            * operator "&&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v      1 || 2 && 3 /dev/null
+DSL EXPRESSION:
+     1 || 2 && 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * int literal "1"
+            * operator "&&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = 1 ^^ 2 || 3 /dev/null
+DSL EXPRESSION:
+$x = 1 ^^ 2 || 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * operator "^^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      1 ^^ 2 || 3 /dev/null
+DSL EXPRESSION:
+     1 ^^ 2 || 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "^^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x = 1 ^^ 2 && 3 /dev/null
+DSL EXPRESSION:
+$x = 1 ^^ 2 && 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^^"
+            * int literal "1"
+            * operator "&&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v      1 ^^ 2 && 3 /dev/null
+DSL EXPRESSION:
+     1 ^^ 2 && 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "^^"
+            * int literal "1"
+            * operator "&&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = 1 && 2 || 3 /dev/null
+DSL EXPRESSION:
+$x = 1 && 2 || 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      1 && 2 || 3 /dev/null
+DSL EXPRESSION:
+     1 && 2 || 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x = 1 && 2 ^^ 3 /dev/null
+DSL EXPRESSION:
+$x = 1 && 2 ^^ 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^^"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      1 && 2 ^^ 3 /dev/null
+DSL EXPRESSION:
+     1 && 2 ^^ 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "^^"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 == 2 <= 3 /dev/null
+DSL EXPRESSION:
+$x =  1 == 2 <= 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "=="
+            * int literal "1"
+            * operator "<="
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 == 2 <= 3 /dev/null
+DSL EXPRESSION:
+      1 == 2 <= 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=="
+            * int literal "1"
+            * operator "<="
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 <= 2 == 3 /dev/null
+DSL EXPRESSION:
+$x =  1 <= 2 == 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "=="
+            * operator "<="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 <= 2 == 3 /dev/null
+DSL EXPRESSION:
+      1 <= 2 == 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=="
+            * operator "<="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 <= 2 |  3 /dev/null
+DSL EXPRESSION:
+$x =  1 <= 2 |  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<="
+            * int literal "1"
+            * operator "|"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 <= 2 |  3 /dev/null
+DSL EXPRESSION:
+      1 <= 2 |  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "<="
+            * int literal "1"
+            * operator "|"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 |  2 <= 3 /dev/null
+DSL EXPRESSION:
+$x =  1 |  2 <= 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<="
+            * operator "|"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 |  2 <= 3 /dev/null
+DSL EXPRESSION:
+      1 |  2 <= 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "<="
+            * operator "|"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 |  2 ^  3 /dev/null
+DSL EXPRESSION:
+$x =  1 |  2 ^  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * int literal "1"
+            * operator "^"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 |  2 ^  3 /dev/null
+DSL EXPRESSION:
+      1 |  2 ^  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * int literal "1"
+            * operator "^"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 ^  2 |  3 /dev/null
+DSL EXPRESSION:
+$x =  1 ^  2 |  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 ^  2 |  3 /dev/null
+DSL EXPRESSION:
+      1 ^  2 |  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 ^  2 &  3 /dev/null
+DSL EXPRESSION:
+$x =  1 ^  2 &  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 ^  2 &  3 /dev/null
+DSL EXPRESSION:
+      1 ^  2 &  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "^"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 &  2 ^  3 /dev/null
+DSL EXPRESSION:
+$x =  1 &  2 ^  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 &  2 ^  3 /dev/null
+DSL EXPRESSION:
+      1 &  2 ^  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "^"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 &  2 << 3 /dev/null
+DSL EXPRESSION:
+$x =  1 &  2 << 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "&"
+            * int literal "1"
+            * operator "<<"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 &  2 << 3 /dev/null
+DSL EXPRESSION:
+      1 &  2 << 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&"
+            * int literal "1"
+            * operator "<<"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 << 2 &  3 /dev/null
+DSL EXPRESSION:
+$x =  1 << 2 &  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "&"
+            * operator "<<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 << 2 &  3 /dev/null
+DSL EXPRESSION:
+      1 << 2 &  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&"
+            * operator "<<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 +  2 * 3 /dev/null
+DSL EXPRESSION:
+$x =  1 +  2 * 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 +  2 * 3 /dev/null
+DSL EXPRESSION:
+      1 +  2 * 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 *  2 + 3 /dev/null
+DSL EXPRESSION:
+$x =  1 *  2 + 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 *  2 + 3 /dev/null
+DSL EXPRESSION:
+      1 *  2 + 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 + (2 * 3) /dev/null
+DSL EXPRESSION:
+$x =  1 + (2 * 3)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 + (2 * 3) /dev/null
+DSL EXPRESSION:
+      1 + (2 * 3)
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 * (2 + 3) /dev/null
+DSL EXPRESSION:
+$x =  1 * (2 + 3)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * int literal "1"
+            * operator "+"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 * (2 + 3) /dev/null
+DSL EXPRESSION:
+      1 * (2 + 3)
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "*"
+            * int literal "1"
+            * operator "+"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = (1 + 2) * 3 /dev/null
+DSL EXPRESSION:
+$x = (1 + 2) * 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      (1 + 2) * 3 /dev/null
+DSL EXPRESSION:
+     (1 + 2) * 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x = (1 * 2) + 3 /dev/null
+DSL EXPRESSION:
+$x = (1 * 2) + 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      (1 * 2) + 3 /dev/null
+DSL EXPRESSION:
+     (1 * 2) + 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 +   2 ** 3 /dev/null
+DSL EXPRESSION:
+$x =  1 +   2 ** 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 +   2 ** 3 /dev/null
+DSL EXPRESSION:
+      1 +   2 ** 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 **  2 +  3 /dev/null
+DSL EXPRESSION:
+$x =  1 **  2 +  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 **  2 +  3 /dev/null
+DSL EXPRESSION:
+      1 **  2 +  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 +  (2 ** 3) /dev/null
+DSL EXPRESSION:
+$x =  1 +  (2 ** 3)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 +  (2 ** 3) /dev/null
+DSL EXPRESSION:
+      1 +  (2 ** 3)
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 ** (2 +  3) /dev/null
+DSL EXPRESSION:
+$x =  1 ** (2 +  3)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "**"
+            * int literal "1"
+            * operator "+"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 ** (2 +  3) /dev/null
+DSL EXPRESSION:
+      1 ** (2 +  3)
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "**"
+            * int literal "1"
+            * operator "+"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = (1 +  2) ** 3 /dev/null
+DSL EXPRESSION:
+$x = (1 +  2) ** 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "**"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      (1 +  2) ** 3 /dev/null
+DSL EXPRESSION:
+     (1 +  2) ** 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "**"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x = (1 ** 2) +  3 /dev/null
+DSL EXPRESSION:
+$x = (1 ** 2) +  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      (1 ** 2) +  3 /dev/null
+DSL EXPRESSION:
+     (1 ** 2) +  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 *   2 ** 3 /dev/null
+DSL EXPRESSION:
+$x =  1 *   2 ** 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 *   2 ** 3 /dev/null
+DSL EXPRESSION:
+      1 *   2 ** 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "*"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 **  2 *  3 /dev/null
+DSL EXPRESSION:
+$x =  1 **  2 *  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 **  2 *  3 /dev/null
+DSL EXPRESSION:
+      1 **  2 *  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 *  (2 ** 3) /dev/null
+DSL EXPRESSION:
+$x =  1 *  (2 ** 3)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 *  (2 ** 3) /dev/null
+DSL EXPRESSION:
+      1 *  (2 ** 3)
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "*"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 ** (2 *  3) /dev/null
+DSL EXPRESSION:
+$x =  1 ** (2 *  3)
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "**"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 ** (2 *  3) /dev/null
+DSL EXPRESSION:
+      1 ** (2 *  3)
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "**"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = (1 *  2) ** 3 /dev/null
+DSL EXPRESSION:
+$x = (1 *  2) ** 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "**"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      (1 *  2) ** 3 /dev/null
+DSL EXPRESSION:
+     (1 *  2) ** 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "**"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x = (1 ** 2) *  3 /dev/null
+DSL EXPRESSION:
+$x = (1 ** 2) *  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      (1 ** 2) *  3 /dev/null
+DSL EXPRESSION:
+     (1 ** 2) *  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x = -1 +  2 *  3 /dev/null
+DSL EXPRESSION:
+$x = -1 +  2 *  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "-"
+                * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v      -1 +  2 *  3 /dev/null
+DSL EXPRESSION:
+     -1 +  2 *  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "-"
+                * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = -1 *  2 +  3 /dev/null
+DSL EXPRESSION:
+$x = -1 *  2 +  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "*"
+                * operator "-"
+                    * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      -1 *  2 +  3 /dev/null
+DSL EXPRESSION:
+     -1 *  2 +  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "*"
+                * operator "-"
+                    * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 + -2 *  3 /dev/null
+DSL EXPRESSION:
+$x =  1 + -2 *  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * operator "-"
+                    * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 + -2 *  3 /dev/null
+DSL EXPRESSION:
+      1 + -2 *  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * operator "-"
+                    * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 * -2 +  3 /dev/null
+DSL EXPRESSION:
+$x =  1 * -2 +  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * operator "-"
+                    * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 * -2 +  3 /dev/null
+DSL EXPRESSION:
+      1 * -2 +  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * operator "-"
+                    * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 +  2 * -3 /dev/null
+DSL EXPRESSION:
+$x =  1 +  2 * -3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * operator "-"
+                    * int literal "3"
+
+
+mlr filter -v       1 +  2 * -3 /dev/null
+DSL EXPRESSION:
+      1 +  2 * -3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * int literal "1"
+            * operator "*"
+                * int literal "2"
+                * operator "-"
+                    * int literal "3"
+
+
+mlr put -v $x =  1 *  2 + -3 /dev/null
+DSL EXPRESSION:
+$x =  1 *  2 + -3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * operator "-"
+                * int literal "3"
+
+
+mlr filter -v       1 *  2 + -3 /dev/null
+DSL EXPRESSION:
+      1 *  2 + -3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * operator "-"
+                * int literal "3"
+
+
+mlr put -v $x = ~1 |  2 &  3 /dev/null
+DSL EXPRESSION:
+$x = ~1 |  2 &  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "~"
+                * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v      ~1 |  2 &  3 /dev/null
+DSL EXPRESSION:
+     ~1 |  2 &  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "~"
+                * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x = ~1 &  2 |  3 /dev/null
+DSL EXPRESSION:
+$x = ~1 &  2 |  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "&"
+                * operator "~"
+                    * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v      ~1 &  2 |  3 /dev/null
+DSL EXPRESSION:
+     ~1 &  2 |  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "&"
+                * operator "~"
+                    * int literal "1"
+                * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 | ~2 &  3 /dev/null
+DSL EXPRESSION:
+$x =  1 | ~2 &  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * int literal "1"
+            * operator "&"
+                * operator "~"
+                    * int literal "2"
+                * int literal "3"
+
+
+mlr filter -v       1 | ~2 &  3 /dev/null
+DSL EXPRESSION:
+      1 | ~2 &  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * int literal "1"
+            * operator "&"
+                * operator "~"
+                    * int literal "2"
+                * int literal "3"
+
+
+mlr put -v $x =  1 & ~2 |  3 /dev/null
+DSL EXPRESSION:
+$x =  1 & ~2 |  3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "&"
+                * int literal "1"
+                * operator "~"
+                    * int literal "2"
+            * int literal "3"
+
+
+mlr filter -v       1 & ~2 |  3 /dev/null
+DSL EXPRESSION:
+      1 & ~2 |  3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "&"
+                * int literal "1"
+                * operator "~"
+                    * int literal "2"
+            * int literal "3"
+
+
+mlr put -v $x =  1 |  2 & ~3 /dev/null
+DSL EXPRESSION:
+$x =  1 |  2 & ~3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * operator "~"
+                    * int literal "3"
+
+
+mlr filter -v       1 |  2 & ~3 /dev/null
+DSL EXPRESSION:
+      1 |  2 & ~3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * operator "~"
+                    * int literal "3"
+
+
+mlr put -v $x =  1 &  2 | ~3 /dev/null
+DSL EXPRESSION:
+$x =  1 &  2 | ~3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * operator "~"
+                * int literal "3"
+
+
+mlr filter -v       1 &  2 | ~3 /dev/null
+DSL EXPRESSION:
+      1 &  2 | ~3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * operator "~"
+                * int literal "3"
+
+
+mlr put -v $x = $a==1 && $b == 1 && $c == 1 /dev/null
+DSL EXPRESSION:
+$x = $a==1 && $b == 1 && $c == 1
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "&&"
+            * operator "&&"
+                * operator "=="
+                    * direct field value "a"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+            * operator "=="
+                * direct field value "c"
+                * int literal "1"
+
+
+mlr filter -v      $a==1 && $b == 1 && $c == 1 /dev/null
+DSL EXPRESSION:
+     $a==1 && $b == 1 && $c == 1
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * operator "&&"
+                * operator "=="
+                    * direct field value "a"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+            * operator "=="
+                * direct field value "c"
+                * int literal "1"
+
+
+mlr put -v $x = $a==1 || $b == 1 && $c == 1 /dev/null
+DSL EXPRESSION:
+$x = $a==1 || $b == 1 && $c == 1
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * operator "=="
+                * direct field value "a"
+                * int literal "1"
+            * operator "&&"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "c"
+                    * int literal "1"
+
+
+mlr filter -v      $a==1 || $b == 1 && $c == 1 /dev/null
+DSL EXPRESSION:
+     $a==1 || $b == 1 && $c == 1
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "=="
+                * direct field value "a"
+                * int literal "1"
+            * operator "&&"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "c"
+                    * int literal "1"
+
+
+mlr put -v $x = $a==1 || $b == 1 || $c == 1 /dev/null
+DSL EXPRESSION:
+$x = $a==1 || $b == 1 || $c == 1
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * operator "||"
+                * operator "=="
+                    * direct field value "a"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+            * operator "=="
+                * direct field value "c"
+                * int literal "1"
+
+
+mlr filter -v      $a==1 || $b == 1 || $c == 1 /dev/null
+DSL EXPRESSION:
+     $a==1 || $b == 1 || $c == 1
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "||"
+                * operator "=="
+                    * direct field value "a"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+            * operator "=="
+                * direct field value "c"
+                * int literal "1"
+
+
+mlr put -v $x = $a==1 && $b == 1 || $c == 1 /dev/null
+DSL EXPRESSION:
+$x = $a==1 && $b == 1 || $c == 1
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * operator "&&"
+                * operator "=="
+                    * direct field value "a"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+            * operator "=="
+                * direct field value "c"
+                * int literal "1"
+
+
+mlr filter -v      $a==1 && $b == 1 || $c == 1 /dev/null
+DSL EXPRESSION:
+     $a==1 && $b == 1 || $c == 1
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "&&"
+                * operator "=="
+                    * direct field value "a"
+                    * int literal "1"
+                * operator "=="
+                    * direct field value "b"
+                    * int literal "1"
+            * operator "=="
+                * direct field value "c"
+                * int literal "1"
+
+
+mlr put -v $x = $a==1 ? $b == 2 : $c == 3 /dev/null
+DSL EXPRESSION:
+$x = $a==1 ? $b == 2 : $c == 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "?:"
+            * operator "=="
+                * direct field value "a"
+                * int literal "1"
+            * operator "=="
+                * direct field value "b"
+                * int literal "2"
+            * operator "=="
+                * direct field value "c"
+                * int literal "3"
+
+
+mlr filter -v      $a==1 ? $b == 2 : $c == 3 /dev/null
+DSL EXPRESSION:
+     $a==1 ? $b == 2 : $c == 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "?:"
+            * operator "=="
+                * direct field value "a"
+                * int literal "1"
+            * operator "=="
+                * direct field value "b"
+                * int literal "2"
+            * operator "=="
+                * direct field value "c"
+                * int literal "3"
+
+
+mlr put -v $x = true /dev/null
+DSL EXPRESSION:
+$x = true
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * bool literal "true"
+
+
+mlr filter -v      true /dev/null
+DSL EXPRESSION:
+     true
+RAW AST:
+* statement block
+    * bare boolean
+        * bool literal "true"
+
+
+mlr put -v true || 1==0; $x = 3 /dev/null
+DSL EXPRESSION:
+true || 1==0; $x = 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * bool literal "true"
+            * operator "=="
+                * int literal "1"
+                * int literal "0"
+    * assignment "="
+        * direct field value "x"
+        * int literal "3"
+
+
+mlr filter -v         true || 1==0 /dev/null
+DSL EXPRESSION:
+        true || 1==0
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * bool literal "true"
+            * operator "=="
+                * int literal "1"
+                * int literal "0"
+
+
+mlr put -v 1==0 || false; $x = 3 /dev/null
+DSL EXPRESSION:
+1==0 || false; $x = 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "=="
+                * int literal "1"
+                * int literal "0"
+            * bool literal "false"
+    * assignment "="
+        * direct field value "x"
+        * int literal "3"
+
+
+mlr filter -v         1==0 || false /dev/null
+DSL EXPRESSION:
+        1==0 || false
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "=="
+                * int literal "1"
+                * int literal "0"
+            * bool literal "false"
+
+
+mlr put -v true && false; $x = 3 /dev/null
+DSL EXPRESSION:
+true && false; $x = 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * bool literal "true"
+            * bool literal "false"
+    * assignment "="
+        * direct field value "x"
+        * int literal "3"
+
+
+mlr filter -v         true && false /dev/null
+DSL EXPRESSION:
+        true && false
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * bool literal "true"
+            * bool literal "false"
+
+
+mlr put -v true && false && true; $x = 3 /dev/null
+DSL EXPRESSION:
+true && false && true; $x = 3
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * operator "&&"
+                * bool literal "true"
+                * bool literal "false"
+            * bool literal "true"
+    * assignment "="
+        * direct field value "x"
+        * int literal "3"
+
+
+mlr filter -v         true && false && true /dev/null
+DSL EXPRESSION:
+        true && false && true
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * operator "&&"
+                * bool literal "true"
+                * bool literal "false"
+            * bool literal "true"
+
+
+mlr put -v $y += $x + 3 /dev/null
+DSL EXPRESSION:
+$y += $x + 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "y"
+            * operator "+"
+                * direct field value "x"
+                * int literal "3"
+
+
+mlr put -v $y += $x * 3 /dev/null
+DSL EXPRESSION:
+$y += $x * 3
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "y"
+            * operator "*"
+                * direct field value "x"
+                * int literal "3"
+
+
+mlr put -v $y ||= $x /dev/null
+DSL EXPRESSION:
+$y ||= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "||"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y ^^= $x /dev/null
+DSL EXPRESSION:
+$y ^^= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "^^"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y &&= $x /dev/null
+DSL EXPRESSION:
+$y &&= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "&&"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y |=  $x /dev/null
+DSL EXPRESSION:
+$y |=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "|"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y ^=  $x /dev/null
+DSL EXPRESSION:
+$y ^=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "^"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y &=  $x /dev/null
+DSL EXPRESSION:
+$y &=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "^"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y <<= $x /dev/null
+DSL EXPRESSION:
+$y <<= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "<<"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y >>= $x /dev/null
+DSL EXPRESSION:
+$y >>= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator ">>"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y +=  $x /dev/null
+DSL EXPRESSION:
+$y +=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y -=  $x /dev/null
+DSL EXPRESSION:
+$y -=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "-"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y .=  $x /dev/null
+DSL EXPRESSION:
+$y .=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "."
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y *=  $x /dev/null
+DSL EXPRESSION:
+$y *=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "*"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y /=  $x /dev/null
+DSL EXPRESSION:
+$y /=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "/"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y //= $x /dev/null
+DSL EXPRESSION:
+$y //= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "//"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y %=  $x /dev/null
+DSL EXPRESSION:
+$y %=  $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "%"
+            * direct field value "y"
+            * direct field value "x"
+
+
+mlr put -v $y **= $x /dev/null
+DSL EXPRESSION:
+$y **= $x
+RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "**"
+            * direct field value "y"
+            * direct field value "x"
+
+

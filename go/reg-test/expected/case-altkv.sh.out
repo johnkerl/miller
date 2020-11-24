@@ -1,0 +1,13 @@
+
+mlr altkv
+a=b,c=d,e=f
+
+mlr altkv
+a=b,c=d,e=f,4=g
+
+mlr --inidx --ifs comma altkv
+a=b,c=d,e=f
+
+mlr --inidx --ifs comma altkv
+a=b,c=d,e=f,4=g
+

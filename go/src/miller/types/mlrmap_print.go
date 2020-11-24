@@ -35,7 +35,7 @@ func (this Mlrmap) String() string {
 	if err != nil {
 		return "Mlrmap: could not not marshal self to JSON"
 	} else {
-		return string(bytes)
+		return string(bytes) + "\n"
 	}
 }
 
