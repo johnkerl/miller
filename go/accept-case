@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# See ./reg-test/run
+# See ./reg-test/run and ./reg-test/README.md for background on this
+# keystroke-saver.
 for arg; do
   src=output-reg-test/$arg.out
   if [ -f $src ]; then

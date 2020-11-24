@@ -48,10 +48,15 @@ func (this *CondBlockNode) Execute(state *State) (*BlockExitPayload, error) {
 		condition = this.conditionNode.Evaluate(state)
 	}
 	boolValue, isBool := condition.GetBoolValue()
-	if !isBool {
+
+	// Data-heterogeneity case
+	if condition.IsAbsent() {
+		boolValue = false
+	} else if !isBool {
 		// TODO: line-number/token info for the DSL expression.
 		return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
 	}
+
 	if boolValue == true {
 		blockExitPayload, err := this.statementBlockNode.Execute(state)
 		if err != nil {

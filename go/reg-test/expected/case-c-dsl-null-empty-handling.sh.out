@@ -251,7 +251,7 @@ x=	b=	sy=3	xt=	st=12
 
 ---------------------------------------------------------------- DIVIDE
 mlr --ofs tab put begin{};          $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg-test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=0	xt=1
+x=1	y=2	xy=0.5	sy=0	xt=1
 x=1	y=	xy=	xt=1
 x=	y=2	xy=	sy=0
 x=	y=	xy=
@@ -265,13 +265,13 @@ x=	b=2
 x=	b=
 
 mlr --ofs tab put begin{@s=3};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg-test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=1.500000	xt=1	st=3
+x=1	y=2	xy=0.5	sy=1.5	xt=1	st=3
 x=1	y=	xy=	sy=	xt=1	st=3
-x=	y=2	xy=	sy=1.500000	st=3
+x=	y=2	xy=	sy=1.5	st=3
 x=	y=	xy=	sy=	st=3
-a=1	y=2	xy=0	sy=1.500000	st=3
+a=1	y=2	xy=0	sy=1.5	st=3
 a=1	y=	sy=	st=3
-a=	y=2	xy=0	sy=1.500000	st=3
+a=	y=2	xy=0	sy=1.5	st=3
 a=	y=	sy=	st=3
 x=1	b=2	xy=1	sy=3	xt=1	st=3
 x=1	b=	xy=1	sy=3	xt=1	st=3
@@ -279,32 +279,32 @@ x=	b=2	sy=3	st=3
 x=	b=	sy=3	st=3
 
 mlr --ofs tab put begin{@t=4};      $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg-test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=0	xt=0.250000	st=0
-x=1	y=	xy=	xt=0.250000	st=0
+x=1	y=2	xy=0.5	sy=0	xt=0.25	st=0
+x=1	y=	xy=	xt=0.25	st=0
 x=	y=2	xy=	sy=0	xt=	st=0
 x=	y=	xy=	xt=	st=0
 a=1	y=2	xy=0	sy=0	xt=0	st=0
 a=1	y=	xt=0	st=0
 a=	y=2	xy=0	sy=0	xt=0	st=0
 a=	y=	xt=0	st=0
-x=1	b=2	xy=1	xt=0.250000	st=0
-x=1	b=	xy=1	xt=0.250000	st=0
+x=1	b=2	xy=1	xt=0.25	st=0
+x=1	b=	xy=1	xt=0.25	st=0
 x=	b=2	xt=	st=0
 x=	b=	xt=	st=0
 
 mlr --ofs tab put begin{@s=3;@t=4}; $xy = $x / $y; $sy = @s / $y; $xt = $x / @t; $st = @s / @t ./reg-test/input/typeof.dkvp
-x=1	y=2	xy=0.500000	sy=1.500000	xt=0.250000	st=0.750000
-x=1	y=	xy=	sy=	xt=0.250000	st=0.750000
-x=	y=2	xy=	sy=1.500000	xt=	st=0.750000
-x=	y=	xy=	sy=	xt=	st=0.750000
-a=1	y=2	xy=0	sy=1.500000	xt=0	st=0.750000
-a=1	y=	sy=	xt=0	st=0.750000
-a=	y=2	xy=0	sy=1.500000	xt=0	st=0.750000
-a=	y=	sy=	xt=0	st=0.750000
-x=1	b=2	xy=1	sy=3	xt=0.250000	st=0.750000
-x=1	b=	xy=1	sy=3	xt=0.250000	st=0.750000
-x=	b=2	sy=3	xt=	st=0.750000
-x=	b=	sy=3	xt=	st=0.750000
+x=1	y=2	xy=0.5	sy=1.5	xt=0.25	st=0.75
+x=1	y=	xy=	sy=	xt=0.25	st=0.75
+x=	y=2	xy=	sy=1.5	xt=	st=0.75
+x=	y=	xy=	sy=	xt=	st=0.75
+a=1	y=2	xy=0	sy=1.5	xt=0	st=0.75
+a=1	y=	sy=	xt=0	st=0.75
+a=	y=2	xy=0	sy=1.5	xt=0	st=0.75
+a=	y=	sy=	xt=0	st=0.75
+x=1	b=2	xy=1	sy=3	xt=0.25	st=0.75
+x=1	b=	xy=1	sy=3	xt=0.25	st=0.75
+x=	b=2	sy=3	xt=	st=0.75
+x=	b=	sy=3	xt=	st=0.75
 
 
 ---------------------------------------------------------------- INTEGER DIVIDE
