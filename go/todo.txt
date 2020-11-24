@@ -38,12 +38,15 @@ no need to bootstrap a parser for the parser-generator language
 ! nidx @ 10-min
 ! text-put @ 10-min
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
   o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
   o "null can be added to any value, and returns the other value unchanged."
   o "the length of null is 0"
   o note json types: string, number, boolean, null, object, array.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
   o use:
     - %
@@ -63,13 +66,17 @@ no need to bootstrap a parser for the parser-generator language
     - %s int: convert to %d
     - %s float: convert to %f
     - %s string: ok
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
   o done-reading back-channels in stream.go
     https://gobyexample.com/non-blocking-channel-operations
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fixed-width pprint input-scanner
-
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * UDF nexts:
   o UT for mixing put -f/-e

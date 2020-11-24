@@ -176,8 +176,10 @@ func mapperPutParseCLI(
 		}
 	}
 
+	isFilter := verb == "filter"
 	mapper, err := NewMapperPut(
 		dslString,
+		isFilter,
 		presets,
 		verbose,
 		invertFilter,
@@ -236,6 +238,7 @@ type MapperPut struct {
 
 func NewMapperPut(
 	dslString string,
+	isFilter bool,
 	presets []string,
 	verbose bool,
 	invertFilter bool,
@@ -255,7 +258,7 @@ func NewMapperPut(
 		astRootNode.Print()
 		fmt.Println()
 	}
-	cstRootNode, err := cst.Build(astRootNode)
+	cstRootNode, err := cst.Build(astRootNode, isFilter)
 	cstState := cst.NewEmptyState()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

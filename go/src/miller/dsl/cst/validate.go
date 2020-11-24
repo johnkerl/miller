@@ -14,7 +14,10 @@ import (
 // ================================================================
 
 // ----------------------------------------------------------------
-func ValidateAST(ast *dsl.AST) error {
+func ValidateAST(
+	ast *dsl.AST,
+	isFilter bool, // false for 'mlr put', true for 'mlr filter'
+) error {
 	atTopLevel := true
 	inLoop := false
 	inBeginOrEnd := false
@@ -25,8 +28,11 @@ func ValidateAST(ast *dsl.AST) error {
 	isUnset := false
 
 	// They can do mlr put '': there are simply zero statements.
-	if ast.RootNode.Type == dsl.NodeTypeEmptyStatement {
-		return nil
+	// But filter '' is an error.
+	if ast.RootNode.Children == nil || len(ast.RootNode.Children) == 0 {
+		if isFilter {
+			return errors.New("Miller: filter statement must not be empty.")
+		}
 	}
 
 	if ast.RootNode.Children != nil {

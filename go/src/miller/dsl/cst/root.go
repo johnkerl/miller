@@ -26,7 +26,10 @@ func NewEmptyRoot() *RootNode {
 
 // ----------------------------------------------------------------
 // TODO: take isFilter arg and abend if empty
-func Build(ast *dsl.AST) (*RootNode, error) {
+func Build(
+	ast *dsl.AST,
+	isFilter bool, // false for 'mlr put', true for 'mlr filter'
+) (*RootNode, error) {
 	if ast.RootNode == nil {
 		return nil, errors.New("Cannot build CST from nil AST root")
 	}
@@ -34,7 +37,7 @@ func Build(ast *dsl.AST) (*RootNode, error) {
 	// Check for things that are syntax errors but not done in the AST for
 	// pragmatic reasons. For example, $anything in begin/end blocks;
 	// begin/end/func not at top level; etc.
-	err := ValidateAST(ast)
+	err := ValidateAST(ast, isFilter)
 	if err != nil {
 		return nil, err
 	}
