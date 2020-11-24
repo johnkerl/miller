@@ -142,7 +142,7 @@ func (this *UDSCallsite) Execute(state *State) (*BlockExitPayload, error) {
 	// TODO: should be an internal coding error. This would be break or
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
-	lib.InternalCodingErrorIf(blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE)
+	lib.InternalCodingErrorIf(blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VOID)
 
 	// Subroutines can't return values: 'return' not 'return x'. This should
 	// have been caught in the AST validator.

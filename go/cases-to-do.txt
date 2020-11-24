@@ -1,9 +1,10 @@
-
 ================================================================
 BUG:
 
 rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
-* needs already-defined check
+* validator bug:
+  mlr -n put 'subr s() { return 1} func f(){}'
+  mlr -n put 'func f() {} subr s() { return 1}'
 
 rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 * mlr --from ./reg-test/input/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
@@ -200,3 +201,7 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
+
+================================================================
+rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
+

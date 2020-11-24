@@ -68,14 +68,14 @@ func validateASTAux(
 	isAssignmentLHS bool,
 	isUnset bool,
 ) error {
-	nextIsFilter := isFilter
-	nextAtTopLevel := false
-	nextInLoop := inLoop
-	nextInBeginOrEnd := inBeginOrEnd
-	nextInUDF := inUDF
-	nextInUDS := inUDS
-	nextIsAssignmentLHS := isAssignmentLHS
-	nextIsUnset := isUnset
+	nextLevelIsFilter := isFilter
+	nextLevelAtTopLevel := false
+	nextLevelInLoop := inLoop
+	nextLevelInBeginOrEnd := inBeginOrEnd
+	nextLevelInUDF := inUDF
+	nextLevelInUDS := inUDS
+	nextLevelIsAssignmentLHS := isAssignmentLHS
+	nextLevelIsUnset := isUnset
 
 	if astNode.Type == dsl.NodeTypeFilterStatement {
 		if isFilter {
@@ -83,8 +83,7 @@ func validateASTAux(
 				"Miller: filter expressions must not also contain the \"filter\" keyword.",
 			)
 		}
-		nextIsFilter = true
-		nextInUDS = true
+		nextLevelIsFilter = true
 	}
 
 	// Check: begin/end/func/subr must be at top-level
@@ -94,7 +93,7 @@ func validateASTAux(
 				"Miller: begin blocks can only be at top level.",
 			)
 		}
-		nextInBeginOrEnd = true
+		nextLevelInBeginOrEnd = true
 	}
 	if astNode.Type == dsl.NodeTypeEndBlock {
 		if !atTopLevel {
@@ -102,7 +101,7 @@ func validateASTAux(
 				"Miller: end blocks can only be at top level.",
 			)
 		}
-		nextInBeginOrEnd = true
+		nextLevelInBeginOrEnd = true
 	}
 	if astNode.Type == dsl.NodeTypeFunctionDefinition {
 		if !atTopLevel {
@@ -110,7 +109,7 @@ func validateASTAux(
 				"Miller: func blocks can only be at top level.",
 			)
 		}
-		nextInUDF = true
+		nextLevelInUDF = true
 	}
 	if astNode.Type == dsl.NodeTypeSubroutineDefinition {
 		if !atTopLevel {
@@ -118,7 +117,7 @@ func validateASTAux(
 				"Miller: subr blocks can only be at top level.",
 			)
 		}
-		nextInUDS = true
+		nextLevelInUDS = true
 	}
 
 	// Check: $-anything cannot be in begin/end
@@ -163,7 +162,7 @@ func validateASTAux(
 		astNode.Type == dsl.NodeTypeForLoopOneVariable ||
 		astNode.Type == dsl.NodeTypeForLoopTwoVariable ||
 		astNode.Type == dsl.NodeTypeTripleForLoop {
-		nextInLoop = true
+		nextLevelInLoop = true
 	}
 
 	// Check: return outside of func/subr
@@ -224,19 +223,19 @@ func validateASTAux(
 
 	if astNode.Children != nil {
 		for i, astChild := range astNode.Children {
-			nextIsAssignmentLHS = astNode.Type == dsl.NodeTypeAssignment && i == 0
-			nextIsUnset = astNode.Type == dsl.NodeTypeUnset
+			nextLevelIsAssignmentLHS = astNode.Type == dsl.NodeTypeAssignment && i == 0
+			nextLevelIsUnset = astNode.Type == dsl.NodeTypeUnset
 			err := validateASTAux(
 				astChild,
-				nextIsFilter,
-				nextAtTopLevel,
-				nextInLoop,
-				nextInBeginOrEnd,
-				nextInUDF,
-				nextInUDS,
+				nextLevelIsFilter,
+				nextLevelAtTopLevel,
+				nextLevelInLoop,
+				nextLevelInBeginOrEnd,
+				nextLevelInUDF,
+				nextLevelInUDS,
 				isMainBlockLastStatement,
-				nextIsAssignmentLHS,
-				nextIsUnset,
+				nextLevelIsAssignmentLHS,
+				nextLevelIsUnset,
 			)
 			if err != nil {
 				return err
