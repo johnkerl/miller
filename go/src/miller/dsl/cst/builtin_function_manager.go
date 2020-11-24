@@ -892,7 +892,7 @@ splitav("a=3,b=4,c=5", "=", ",") = ["3","4","5"]`,
 Remaining arguments can be strings or arrays of string.
 E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
 and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
-		variadicFunc: types.MlrvalMapSelect,
+		variadicFunc:         types.MlrvalMapSelect,
 		minimumVariadicArity: 1,
 	},
 	{
@@ -901,7 +901,7 @@ and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
 Remaining arguments can be strings or arrays of string.
 E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
 and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
-		variadicFunc: types.MlrvalMapExcept,
+		variadicFunc:         types.MlrvalMapExcept,
 		minimumVariadicArity: 1,
 	},
 	{
