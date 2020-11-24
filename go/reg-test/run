@@ -187,7 +187,7 @@ usage() {
     echo "-c     Use ../c/mlr executable" 1>&2
     echo "-g     Use ../go/mlr executable" 1>&2
     echo "-o     Run only old case-c-* cases" 1>&2
-    echo "-n     Run only new case-c-* cases" 1>&2
+    echo "-n     Run only new non-case-c-* cases" 1>&2
     echo "-C {n} Passed directly to diff" 1>&2
 	exit 1
 }
@@ -217,7 +217,7 @@ do
 	g)      path_to_mlr=$ourdir/../../go/mlr; continue;;
 	m)      path_to_mlr="$OPTARG";            continue;;
 	o)      case_file_names=$(ls $ourdir/cases/case-c-*.sh); continue;;
-	n)      case_file_names=$(ls $ourdir/cases/case-go-*.sh); continue;;
+	n)      case_file_names=$(ls $ourdir/cases/case-*.sh | grep -v case-c-); continue;;
 	C)      diff_context_flag="-C$OPTARG";    continue;;
 	h)      echo; usage;;
 	esac
