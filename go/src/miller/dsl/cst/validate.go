@@ -39,6 +39,7 @@ func ValidateAST(
 		for _, astChild := range ast.RootNode.Children {
 			return validateASTAux(
 				astChild,
+				isFilter,
 				atTopLevel,
 				inLoop,
 				inBeginOrEnd,
@@ -57,6 +58,7 @@ func ValidateAST(
 // ----------------------------------------------------------------
 func validateASTAux(
 	astNode *dsl.ASTNode,
+	isFilter bool,
 	atTopLevel bool,
 	inLoop bool,
 	inBeginOrEnd bool,
@@ -66,6 +68,7 @@ func validateASTAux(
 	isAssignmentLHS bool,
 	isUnset bool,
 ) error {
+	nextIsFilter := isFilter
 	nextAtTopLevel := false
 	nextInLoop := inLoop
 	nextInBeginOrEnd := inBeginOrEnd
@@ -73,6 +76,16 @@ func validateASTAux(
 	nextInUDS := inUDS
 	nextIsAssignmentLHS := isAssignmentLHS
 	nextIsUnset := isUnset
+
+	if astNode.Type == dsl.NodeTypeFilterStatement {
+		if isFilter {
+			return errors.New(
+				"Miller: filter expressions must not also contain the \"filter\" keyword.",
+			)
+		}
+		nextIsFilter = true
+		nextInUDS = true
+	}
 
 	// Check: begin/end/func/subr must be at top-level
 	if astNode.Type == dsl.NodeTypeBeginBlock {
@@ -206,10 +219,6 @@ func validateASTAux(
 		}
 	}
 
-	// Check: ENV disallowed at left-hand side of assignment? or nah?
-	// Needs to be supported for system() ...
-	// * TODO
-
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Treewalk
 
@@ -219,6 +228,7 @@ func validateASTAux(
 			nextIsUnset = astNode.Type == dsl.NodeTypeUnset
 			err := validateASTAux(
 				astChild,
+				nextIsFilter,
 				nextAtTopLevel,
 				nextInLoop,
 				nextInBeginOrEnd,

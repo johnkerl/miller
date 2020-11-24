@@ -2,7 +2,8 @@
 BUG:
 
 rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
-* subr and more ... also needs check for filter statement within filter commands
+* also needs check for filter statement within filter commands
+* subr and more
 
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
