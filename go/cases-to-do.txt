@@ -1,18 +1,11 @@
 ================================================================
 BUG:
 
-rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
-* mlr --from ./reg-test/input/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
-  Miller: record/map indices must be string or positional-int; got float
-
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 * str s = "a"; s = 3 doesn't trigger -- needs gate-retention ...
-
-rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
-* "conditional expression did not evaluate to boolean" -- versus @nonesuch {} P/A in C ...
 
 rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 * Needs to do this:
@@ -37,6 +30,9 @@ rrv ./reg-test/cases/case-c-missing-final-lf.sh
 
 ================================================================
 PUT -S / -F / -A
+
+rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
+* mlr --from ./reg-test/input/abixy put -S -v 'for(k,v in $*) {$[v]=k}'
 
 rrv -C1 ./reg-test/cases/case-c-dsl-type-inference.sh
 
@@ -198,4 +194,3 @@ rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
 
 ================================================================
-rrv ./reg-test/cases/case-c-dsl-user-defined-functions-and-subroutines.sh
