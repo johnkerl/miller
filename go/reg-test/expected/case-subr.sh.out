@@ -120,6 +120,8 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
 mlr --from ./reg-test/input/2.dkvp put call s()
 
+mlr -n put subr s(){} subr s(){}
+
 mlr --from ./reg-test/input/2.dkvp put -v -q 
   func s(x) {
     return x*2;

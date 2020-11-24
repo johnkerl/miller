@@ -206,6 +206,11 @@ func (this *UDFManager) Install(udf *UDF) {
 	this.functions[udf.signature.funcOrSubrName] = udf
 }
 
+func (this *UDFManager) ExistsByName(name string) bool {
+	_, ok := this.functions[name]
+	return ok
+}
+
 // ----------------------------------------------------------------
 // Example AST for UDF definition and callsite:
 
@@ -251,6 +256,16 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
 	functionName := string(astNode.Token.Lit)
+
+	if this.udsManager.ExistsByName(functionName) {
+		return errors.New(
+			fmt.Sprintf(
+				"Miller: function named \"%s\" has already been defined.",
+				functionName,
+			),
+		)
+	}
+
 	parameterListASTNode := astNode.Children[0]
 	functionBodyASTNode := astNode.Children[1]
 

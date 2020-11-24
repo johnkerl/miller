@@ -32,10 +32,10 @@ func NewUDS(
 // For when a subroutine is called before being defined. This gives us something
 // to go back and fill in later once we've encountered the subroutine definition.
 func NewUnresolvedUDS(
-	functionName string,
+	subroutineName string,
 	callsiteArity int,
 ) *UDS {
-	signature := NewSignature(functionName, callsiteArity, nil, nil)
+	signature := NewSignature(subroutineName, callsiteArity, nil, nil)
 	uds := NewUDS(signature, nil)
 	return uds
 }
@@ -162,8 +162,8 @@ func NewUDSManager() *UDSManager {
 	}
 }
 
-func (this *UDSManager) LookUp(functionName string, callsiteArity int) (*UDS, error) {
-	uds := this.subroutines[functionName]
+func (this *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
+	uds := this.subroutines[subroutineName]
 	if uds == nil {
 		return nil, nil
 	}
@@ -171,7 +171,7 @@ func (this *UDSManager) LookUp(functionName string, callsiteArity int) (*UDS, er
 		return nil, errors.New(
 			fmt.Sprintf(
 				"Miller: subroutine %s invoked with %d argument%s; expected %d",
-				functionName,
+				subroutineName,
 				callsiteArity,
 				lib.Plural(callsiteArity),
 				uds.signature.arity,
@@ -183,6 +183,11 @@ func (this *UDSManager) LookUp(functionName string, callsiteArity int) (*UDS, er
 
 func (this *UDSManager) Install(uds *UDS) {
 	this.subroutines[uds.signature.funcOrSubrName] = uds
+}
+
+func (this *UDSManager) ExistsByName(name string) bool {
+	_, ok := this.subroutines[name]
+	return ok
 }
 
 // ----------------------------------------------------------------
@@ -229,7 +234,17 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
-	functionName := string(astNode.Token.Lit)
+	subroutineName := string(astNode.Token.Lit)
+
+	if this.udsManager.ExistsByName(subroutineName) {
+		return errors.New(
+			fmt.Sprintf(
+				"Miller: subroutine named \"%s\" has already been defined.",
+				subroutineName,
+			),
+		)
+	}
+
 	parameterListASTNode := astNode.Children[0]
 	subroutineBodyASTNode := astNode.Children[1]
 
@@ -263,7 +278,7 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 		typeGatedParameterNames[i] = typeGatedParameterName
 	}
 
-	signature := NewSignature(functionName, arity, typeGatedParameterNames, nil)
+	signature := NewSignature(subroutineName, arity, typeGatedParameterNames, nil)
 
 	subroutineBody, err := this.BuildStatementBlockNode(subroutineBodyASTNode)
 	if err != nil {
