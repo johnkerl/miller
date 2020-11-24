@@ -71,7 +71,7 @@ num_invocations_attempted  14
 num_invocations_passed     14
 num_invocations_failed     0
 
-diff -a -I ^mlr -I ^Miller: -I ^cat reg-test/expected/case-cat.sh.out /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/case-cat.sh.out
+diff -a -I ^mlr -I ^Miller: -I ^cat reg-test/expected/case-cat.sh.out output-reg-test/case-cat.sh.out
 
 PASS  reg-test/cases/case-cat.sh
 ----------------------------------------------------------------
