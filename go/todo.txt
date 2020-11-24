@@ -355,3 +355,6 @@ NITS/NON-IMMEDIATE:
 * case-c-* / case-go-* -> case-* eventually
 * implement min/max for array/map ... using cmp rules
 ! write out thorough min/max/cmp cases for all orderings by type
+* silent zero-pass for-loops on non-collections: 
+  o intended as a heterogenity feature ...
+  o consider a --errors or --strict mode; something

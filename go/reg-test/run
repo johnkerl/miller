@@ -183,6 +183,7 @@ usage() {
     echo "Options:" 1>&2
     echo "-h     Print this message" 1>&2
     echo "-v     More verbose output including each mlr-invocation line, and diff outputs" 1>&2
+    echo "-s     Only run cases and show outputs; don't diff against expected" 1>&2
     echo "-m {path/to/mlr} Use a specified mlr executable" 1>&2
     echo "-c     Use ../c/mlr executable" 1>&2
     echo "-g     Use ../go/mlr executable" 1>&2
@@ -206,20 +207,22 @@ outdir=$pwd/output-reg-test
 reloutdir=./output-reg-test
 
 verbose="false"
+only_show="false"
 case_file_names="" # None means all
 diff_context_flag=""
 
-while getopts vcgnom:C:h f
+while getopts hvscgnom:C: f
 do
 	case $f in
+	h)      echo; usage;;
 	v)      verbose="true";                   continue;;
+	s)      only_show="true";                 continue;;
 	c)      path_to_mlr=$ourdir/../../c/mlr;  continue;;
 	g)      path_to_mlr=$ourdir/../../go/mlr; continue;;
 	m)      path_to_mlr="$OPTARG";            continue;;
 	o)      case_file_names=$(ls $ourdir/cases/case-c-*.sh); continue;;
 	n)      case_file_names=$(ls $ourdir/cases/case-*.sh | grep -v case-c-); continue;;
 	C)      diff_context_flag="-C$OPTARG";    continue;;
-	h)      echo; usage;;
 	esac
 done
 
@@ -240,13 +243,13 @@ fi
 # Set up for green "PASS", red "FAIL" if output is to a terminal.
 
 if [ "$(uname)" = "Darwin" ]; then
-  export        textdefault=$'\033[0m'
-  export                red=$'\033[31;01m'
-  export              green=$'\033[32;01m'
+  export textdefault=$'\033[0m'
+  export         red=$'\033[31;01m'
+  export       green=$'\033[32;01m'
 else
-  export        textdefault="\e[0m"
-  export                red="\e[31m"
-  export              green="\e[32m"
+  export textdefault="\e[0m"
+  export         red="\e[31m"
+  export       green="\e[32m"
 fi
 
 # Bash idiom to test if file descriptor #1 (stdout) is a terminal
@@ -324,6 +327,14 @@ for case_file in $case_file_names; do
   . $case_file
   # ----------------------------------------------------------------
 
+  if [ "$only_show" = "true" ]; then
+    echo
+    cat $outfile
+    echo
+    cat $errfile
+    continue
+  fi
+
   # There are two ways to fail here:
   # * Miller-command code was 0 not 1 (or vice versa) -- checked per-invocation
   # * Expected/actual output mismatch -- checked per-case
@@ -383,6 +394,10 @@ done
 
 # ----------------------------------------------------------------
 # SUMMARIZE
+
+if [ "$only_show" = "true" ]; then
+  exit 0
+fi
 
 echo
 echo "NUMBER OF MILLER RUNS $total_num_invocations_attempted"

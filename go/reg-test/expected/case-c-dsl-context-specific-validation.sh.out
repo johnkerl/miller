@@ -1,1 +1,271 @@
 
+
+---------------------------------------------------------------- non-top-level begin/end
+mlr put -v begin{begin{@x=1}}
+DSL EXPRESSION:
+begin{begin{@x=1}}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * begin block
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "1"
+
+
+mlr put -v true{begin{@x=1}}
+DSL EXPRESSION:
+true{begin{@x=1}}
+RAW AST:
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * begin block
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "1"
+
+
+mlr put -v end{end{@x=1}}
+DSL EXPRESSION:
+end{end{@x=1}}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * end block
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "1"
+
+
+mlr put -v true{end{@x=1}}
+DSL EXPRESSION:
+true{end{@x=1}}
+RAW AST:
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * end block
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "1"
+
+
+
+---------------------------------------------------------------- srecs in begin/end
+mlr put -v begin{$x=1}
+DSL EXPRESSION:
+begin{$x=1}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct field value "x"
+                * int literal "1"
+
+
+mlr put -v begin{@x=$y}
+DSL EXPRESSION:
+begin{@x=$y}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * direct field value "y"
+
+
+mlr put -v end{$x=1}
+DSL EXPRESSION:
+end{$x=1}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct field value "x"
+                * int literal "1"
+
+
+mlr put -v end{@x=$y}
+DSL EXPRESSION:
+end{@x=$y}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * direct field value "y"
+
+
+mlr put -v begin{@v=$*}
+DSL EXPRESSION:
+begin{@v=$*}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "v"
+                * full record "$*"
+
+
+mlr put -v end{$*=@v}
+DSL EXPRESSION:
+end{$*=@v}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * full record "$*"
+                * direct oosvar value "v"
+
+
+mlr put -v begin{unset $x}
+DSL EXPRESSION:
+begin{unset $x}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * unset "unset"
+                * direct field value "x"
+
+
+mlr put -v end{unset $x}
+DSL EXPRESSION:
+end{unset $x}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * unset "unset"
+                * direct field value "x"
+
+
+mlr put -v begin{unset $*}
+DSL EXPRESSION:
+begin{unset $*}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * unset "unset"
+                * full record "$*"
+
+
+mlr put -v end{unset $*}
+DSL EXPRESSION:
+end{unset $*}
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * unset "unset"
+                * full record "$*"
+
+
+
+---------------------------------------------------------------- break/continue outside loop
+mlr put -v break
+DSL EXPRESSION:
+break
+RAW AST:
+* statement block
+    * break "break"
+
+
+mlr put -v continue
+DSL EXPRESSION:
+continue
+RAW AST:
+* statement block
+    * continue "continue"
+
+
+
+---------------------------------------------------------------- oosvars etc. in mlr filter
+mlr filter -v break
+DSL EXPRESSION:
+break
+RAW AST:
+* statement block
+    * break "break"
+
+
+mlr filter -v continue
+DSL EXPRESSION:
+continue
+RAW AST:
+* statement block
+    * continue "continue"
+
+
+
+---------------------------------------------------------------- expanded filter
+mlr --from ./reg-test/input/abixy filter 
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg-test/input/abixy filter -x 
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+
+mlr --from ./reg-test/input/abixy filter 
+  func f(n) {
+    return n - 1
+  }
+  f(NR) == 5
+
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+
+mlr --from ./reg-test/input/abixy filter 
+  subr s(n) {
+    print "NR is ".n
+  }
+  call s(NR);
+  false
+
+Exit status was 1; expected 0.
+
+mlr --from ./reg-test/input/abixy filter 
+  int a = 5;
+  int b = 7;
+  a <= NR && NR <= b
+
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+
+mlr --from ./reg-test/input/abixy filter filter false
+
+mlr --from ./reg-test/input/abixy filter filter false; true
+

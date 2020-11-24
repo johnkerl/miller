@@ -1,19 +1,16 @@
-rrv insert "$cases/" if missing
+! rrv --show
 
 ================================================================
 BUG:
 
 rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 * mlr: filter expressions must end in a final boolean statement.
+-> abandon this requirement? doc if so.
 
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
 * str s = "a"; s = 3 doesn't trigger -- needs gate-retention ...
-
-rrv ./reg-test/cases/case-c-dsl-for-map-depth.sh
-* Miller: looped-over item is not a map or array.
-  Needs to treat non-mappable as zero-pass case -- ?
 
 rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
 * "conditional expression did not evaluate to boolean" -- versus @nonesuch {} P/A in C ...
@@ -796,3 +793,5 @@ NUMBER OF CASES PASSED 0
 NUMBER OF CASES FAILED 1
 
 FAIL
+
+================================================================

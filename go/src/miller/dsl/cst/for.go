@@ -2,7 +2,6 @@ package cst
 
 import (
 	"errors"
-	"fmt"
 
 	"miller/dsl"
 	"miller/lib"
@@ -183,15 +182,18 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 
 	} else if mlrval.IsAbsent() {
 		// Data-heterogeneity no-op
-
-	} else {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"Miller: looped-over item is not a map or array; got %s",
-				mlrval.GetTypeName(),
-			),
-		)
 	}
+
+	// TODO: backwards compatibility with the C port means we treat this as
+	// silent zero-pass. But maybe we should surface it as an error. Maybe
+	// with a "mlr put --errors" flag or something.
+	//	} else {
+	//		return nil, errors.New(
+	//			fmt.Sprintf(
+	//				"Miller: looped-over item is not a map or array; got %s",
+	//				mlrval.GetTypeName(),
+	//			),
+	//		)
 
 	return nil, nil
 }
@@ -361,15 +363,18 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 
 	} else if mlrval.IsAbsent() {
 		// Data-heterogeneity no-op
-
-	} else {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"Miller: looped-over item is not a map or array; got %s",
-				mlrval.GetTypeName(),
-			),
-		)
 	}
+
+	// TODO: backwards compatibility with the C port means we treat this as
+	// silent zero-pass. But maybe we should surface it as an error. Maybe
+	// with a "mlr put --errors" flag or something.
+	//	} else {
+	//		return nil, errors.New(
+	//			fmt.Sprintf(
+	//				"Miller: looped-over item is not a map or array; got %s",
+	//				mlrval.GetTypeName(),
+	//			),
+	//		)
 
 	return nil, nil
 }
@@ -550,15 +555,18 @@ func (this *ForLoopMultivariableNode) executeOuter(
 
 	} else if mlrval.IsAbsent() {
 		// Data-heterogeneity no-op
-
-	} else {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"Miller: looped-over item is not a map or array; got %s",
-				mlrval.GetTypeName(),
-			),
-		)
 	}
+
+	// TODO: backwards compatibility with the C port means we treat this as
+	// silent zero-pass. But maybe we should surface it as an error. Maybe
+	// with a "mlr put --errors" flag or something.
+	//	} else {
+	//		return nil, errors.New(
+	//			fmt.Sprintf(
+	//				"Miller: looped-over item is not a map or array; got %s",
+	//				mlrval.GetTypeName(),
+	//			),
+	//		)
 
 	return nil, nil
 }
@@ -632,15 +640,18 @@ func (this *ForLoopMultivariableNode) executeInner(
 
 	} else if mlrval.IsAbsent() {
 		// Data-heterogeneity no-op
-
-	} else {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"Miller: looped-over item is not a map or array; got %s",
-				mlrval.GetTypeName(),
-			),
-		)
 	}
+
+	// TODO: backwards compatibility with the C port means we treat this as
+	// silent zero-pass. But maybe we should surface it as an error. Maybe
+	// with a "mlr put --errors" flag or something.
+	//	} else {
+	//		return nil, errors.New(
+	//			fmt.Sprintf(
+	//				"Miller: looped-over item is not a map or array; got %s",
+	//				mlrval.GetTypeName(),
+	//			),
+	//		)
 
 	return nil, nil
 }
