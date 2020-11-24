@@ -19,7 +19,7 @@ x=2,y=2,z=22
 x=3,y=3,z=33
 
 mlr put $a="hello" then put $b=$a." world";$z=$x+$y;$c=$b;$a=sub($b,"hello","farewell") ./reg-test/input/int-float.dkvp
-x=1,y=10.1,z=11.100000,a=farewell world,b=hello world,c=hello world
-x=2,y=10.2,z=12.200000,a=farewell world,b=hello world,c=hello world
-x=3,y=10.3,z=13.300000,a=farewell world,b=hello world,c=hello world
+x=1,y=10.1,z=11.1,a=farewell world,b=hello world,c=hello world
+x=2,y=10.2,z=12.2,a=farewell world,b=hello world,c=hello world
+x=3,y=10.3,z=13.3,a=farewell world,b=hello world,c=hello world
 
