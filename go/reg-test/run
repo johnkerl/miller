@@ -33,12 +33,12 @@ set -uo pipefail
 #
 # * Each has lines of the form 'run_mlr ...' or 'mlr_expect_fail ...'.
 #   Those functions are defined here in this file. They take mlr command-lines
-#   as argumebnts.  They also take global variables $verbose, $outfile, and
+#   as arguments.  They also take global variables $verbose, $outfile, and
 #   $errfile as side-inputs, and write global variables like
 #   $num_invocations_passed as side-outputs.
 #
 # * Each case can fail in the following ways:
-#   o Zero invocatios were attempted.
+#   o Zero invocations were attempted.
 #   o A given 'run_mlr ...' invocation exits with non-zero when it should exit
 #     with zero.
 #   o A given 'mlr_expect_fail ...' invocation exits with zero when it should
@@ -400,7 +400,7 @@ if [ "$only_show" = "true" ]; then
 fi
 
 echo
-echo "NUMBER OF MILLER RUNS $total_num_invocations_attempted"
+echo "NUMBER OF MILLER INVOCATIONS $total_num_invocations_attempted"
 echo "NUMBER OF CASES PASSED $num_cases_passed"
 echo "NUMBER OF CASES FAILED $num_cases_failed"
 echo
