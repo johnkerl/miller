@@ -2552,7 +2552,7 @@ var productionsTable = ProdTab{
         X[0],
         dsl.NodeTypeSubroutineCallsite,
       ),
-      X[2],
+      X[3],
     ) >>`,
 		Id:         "SubroutineCallsite",
 		NTType:     61,
@@ -2564,7 +2564,7 @@ var productionsTable = ProdTab{
 					X[0],
 					dsl.NodeTypeSubroutineCallsite,
 				),
-				X[2],
+				X[3],
 			)
 		},
 	},

@@ -11,6 +11,5 @@ parser-experiments/one/src/github.com
 parser-experiments/one/src/experimental
 parser-experiments/one/main
 
-parser-experiments/two/src/github.com
-parser-experiments/two/src/experimental
+parser-experiments/two/src
 parser-experiments/two/main

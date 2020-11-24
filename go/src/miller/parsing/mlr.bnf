@@ -1352,7 +1352,7 @@ SubroutineCallsite
         $0,
         dsl.NodeTypeSubroutineCallsite,
       ),
-      $2,
+      $3,
     ) >>
 ;
 

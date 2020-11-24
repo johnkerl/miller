@@ -1,0 +1,94 @@
+// ================================================================
+// LEXER
+
+!whitespace : ' ' | '\t' | '\n' | '\r' ;
+!comment : '#'  {.} '\n' ;
+
+_letter : 'a'-'z' | 'A'-'Z' ;
+_decdig : '0'-'9' ;
+_idchar : _letter | _decdig | '_' ;
+
+non_sigil_name : _idchar { _idchar } ;
+//call : 'c' 'a' 'l' 'l' ;
+
+// ================================================================
+// IMPORT
+
+<< import "miller/dsl" >>
+
+// ================================================================
+// PARSER
+
+// ----------------------------------------------------------------
+Root
+  : SubroutineCallsite
+   << dsl.NewAST($0) >>
+;
+
+// ----------------------------------------------------------------
+SubroutineCallsite
+
+  : "call" SubroutineName "(" ")"
+    << dsl.NewASTNodeZary(
+      $0,
+      dsl.NodeTypeSubroutineCallsite,
+    ) >>
+
+  | "call" SubroutineName "(" FcnArgs ")"
+    // As parsed there's an intermediate node between SubroutineCallsite
+    // and the children. Now we can remove it.
+    //
+    // Before:
+    // * SubroutineCallsite "[]"
+    //     * SubroutineCallsite
+    //         * StringLiteral "a"
+    //         * StringLiteral "b"
+    //
+    // After:
+    // * SubroutineCallsite "[]"
+    //     * StringLiteral "a"
+    //     * StringLiteral "b"
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeSubroutineCallsite,
+      ),
+      $3,
+    ) >>
+;
+
+// ----------------------------------------------------------------
+SubroutineName : non_sigil_name;
+
+// ----------------------------------------------------------------
+FcnArgs
+  : Rvalue
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeFunctionCallsite,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue ","
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeFunctionCallsite,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue "," FcnArgs
+    << dsl.PrependChild(
+      $2,
+      $0,
+    ) >>
+;
+
+
+// ----------------------------------------------------------------
+Rvalue
+  : "x" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
+  | "y" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
+  | "z" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
+  ;
