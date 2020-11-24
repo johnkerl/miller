@@ -1,5 +1,3 @@
-package types
-
 // ================================================================
 // Mlrval implements the Unmarshaler and Marshaler interfaces needed for
 // marshaling/unmarshaling to/from JSON, via the UnmarshalJSON and MarshalJSON
@@ -7,6 +5,8 @@ package types
 //
 // Please see also https://golang.org/pkg/encoding/json/
 // ================================================================
+
+package types
 
 import (
 	"bytes"

@@ -1,12 +1,3 @@
-package types
-
-import (
-	"errors"
-	"strconv"
-
-	"miller/lib"
-)
-
 // ================================================================
 // ABOUT ARRAY/MAP INDEXING
 //
@@ -74,6 +65,15 @@ import (
 //   for 1-up Miller indices.
 //
 // ================================================================
+
+package types
+
+import (
+	"errors"
+	"strconv"
+
+	"miller/lib"
+)
 
 // ================================================================
 func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {

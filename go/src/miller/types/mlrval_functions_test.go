@@ -1,9 +1,9 @@
-package types
-
 // ================================================================
 // Most Miller tests (thousands of them) are command-line-driven via
-// reg_test/run. Here are some cases needing special focus.
+// reg0test/run. Here are some cases needing special focus.
 // ================================================================
+
+package types
 
 import (
 	"testing"

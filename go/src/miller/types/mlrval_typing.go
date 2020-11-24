@@ -1,14 +1,14 @@
+// ================================================================
+// Support for things like 'num x = $a + $b' in the DSL, wherein we check types
+// at assigment time.
+// ================================================================
+
 package types
 
 import (
 	"errors"
 	"fmt"
 )
-
-// ================================================================
-// Support for things like 'num x = $a + $b' in the DSL, wherein we check types
-// at assigment time.
-// ================================================================
 
 type TypeGatedMlrvalName struct {
 	Name     string

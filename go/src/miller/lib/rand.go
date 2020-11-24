@@ -1,3 +1,7 @@
+// ================================================================
+// Thinly wraps Go's rand library, with seed-function support
+// ================================================================
+
 package lib
 
 import (
@@ -5,10 +9,6 @@ import (
 	"os"
 	"time"
 )
-
-// ================================================================
-// Thinly wraps Go's rand library, with seed-function support
-// ================================================================
 
 // By default, Miller random numbers are different on every run.
 var defaultSeed = time.Now().UnixNano() ^ int64(os.Getpid())

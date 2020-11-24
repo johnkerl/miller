@@ -1,5 +1,3 @@
-package mappers
-
 // ================================================================
 // OVERVIEW
 //
@@ -40,6 +38,8 @@ package mappers
 //   ["a":"red","x":"1.0"] map to different groups, but will sort equally.
 //
 // ================================================================
+
+package mappers
 
 import (
 	"container/list"

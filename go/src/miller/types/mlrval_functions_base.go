@@ -1,5 +1,3 @@
-package types
-
 // ================================================================
 // ABOUT DISPOSITION MATRICES/VECTORS
 //
@@ -46,6 +44,8 @@ package types
 //   'x' for don't-care slots, e.g. eq_b_sx for comparing MT_STRING
 //       ('s') to anything else ('x').
 // ================================================================
+
+package types
 
 // Function-pointer type for zary functions.
 type ZaryFunc func() Mlrval

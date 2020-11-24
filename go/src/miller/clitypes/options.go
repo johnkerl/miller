@@ -1,8 +1,10 @@
-package clitypes
-
+// ================================================================
 // Items which might better belong in miller/cli, but which are placed in a
 // deeper package to avoid a package-dependency cycle between miller/cli and
-// miiller/mapping.
+// miller/mapping.
+// ================================================================
+
+package clitypes
 
 // ----------------------------------------------------------------
 //typedef struct _generator_opts_t {

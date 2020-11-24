@@ -1,6 +1,5 @@
 package types
 
-// ================================================================
 // Return error (unary math-library func)
 func _math_unary_erro1(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
 	return MlrvalFromError()

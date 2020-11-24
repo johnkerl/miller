@@ -1,10 +1,11 @@
-package types
-
+// ================================================================
 // See mlrval_json.go for details. This is the unmarshal/marshal solely for Mlrmap.
+// ================================================================
+
+package types
 
 import (
 	"bytes"
-	//"encoding/json"
 )
 
 // ----------------------------------------------------------------

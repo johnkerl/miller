@@ -1,8 +1,8 @@
-package dsl
-
 // ================================================================
 // AST and ASTNode data structures for the Miller DSL parser
 // ================================================================
+
+package dsl
 
 import (
 	"miller/parsing/token"

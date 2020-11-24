@@ -1,7 +1,8 @@
-package types
-
 // ================================================================
 // For sorting
+// ================================================================
+
+package types
 
 // Lexical sort: just stringify everything.
 func LexicalAscendingComparator(ma *Mlrval, mb *Mlrval) int {

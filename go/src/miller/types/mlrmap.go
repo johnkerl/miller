@@ -1,9 +1,9 @@
 // ================================================================
 // ORDERED MAP FROM STRING TO MLRVAL
 //
-// It is an optionally hashless implementation of insertion-ordered key-value
-// pairs for Miller's fundamental record data structure. It's also an
-// ordered-map data structure, suitable for Miller JSON decode/encode.
+// This is an implementation of insertion-ordered key-value pairs for Miller's
+// fundamental record data structure. It's also an ordered-map data structure,
+// suitable for Miller JSON decode/encode.
 //
 // ----------------------------------------------------------------
 // DESIGN
