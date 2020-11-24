@@ -257,7 +257,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	functionName := string(astNode.Token.Lit)
 
-	if this.udsManager.ExistsByName(functionName) {
+	if this.udfManager.ExistsByName(functionName) {
 		return errors.New(
 			fmt.Sprintf(
 				"Miller: function named \"%s\" has already been defined.",
