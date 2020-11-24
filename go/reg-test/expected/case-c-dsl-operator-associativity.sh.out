@@ -1,3101 +1,1746 @@
 
 mlr put -v $x = 1 || 2 || 3 /dev/null
+DSL EXPRESSION:
+$x = 1 || 2 || 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="||", type=OPERATOR:
-            text="||", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="||", type=OPERATOR:
-            text="||", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "||"
+            * operator "||"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 || 2 || 3 /dev/null
+DSL EXPRESSION:
+     1 || 2 || 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="||", type=OPERATOR:
-        text="||", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="||", type=OPERATOR:
-        text="||", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "||"
+            * operator "||"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ^^ 2 ^^ 3 /dev/null
+DSL EXPRESSION:
+$x = 1 ^^ 2 ^^ 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^^", type=OPERATOR:
-            text="^^", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^^", type=OPERATOR:
-            text="^^", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^^"
+            * operator "^^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
+DSL EXPRESSION:
+     1 ^^ 2 ^^ 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="^^", type=OPERATOR:
-        text="^^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="^^", type=OPERATOR:
-        text="^^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "^^"
+            * operator "^^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 && 2 && 3 /dev/null
+DSL EXPRESSION:
+$x = 1 && 2 && 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="&&", type=OPERATOR:
-            text="&&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="&&", type=OPERATOR:
-            text="&&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "&&"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 && 2 && 3 /dev/null
+DSL EXPRESSION:
+     1 && 2 && 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="&&", type=OPERATOR:
-        text="&&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="&&", type=OPERATOR:
-        text="&&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "&&"
+            * operator "&&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  == 2  == 3 /dev/null
+DSL EXPRESSION:
+$x = 1  == 2  == 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="==", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="==", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "=="
+            * operator "=="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  == 2  == 3 /dev/null
+DSL EXPRESSION:
+     1  == 2  == 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="==", type=OPERATOR:
-        text="==", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="==", type=OPERATOR:
-        text="==", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "=="
+            * operator "=="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  != 2  != 3 /dev/null
+DSL EXPRESSION:
+$x = 1  != 2  != 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!=", type=OPERATOR:
-            text="!=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!=", type=OPERATOR:
-            text="!=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "!="
+            * operator "!="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  != 2  != 3 /dev/null
+DSL EXPRESSION:
+     1  != 2  != 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="!=", type=OPERATOR:
-        text="!=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="!=", type=OPERATOR:
-        text="!=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "!="
+            * operator "!="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  =~ 2  =~ 3 /dev/null
+DSL EXPRESSION:
+$x = 1  =~ 2  =~ 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="=~", type=OPERATOR:
-            text="=~", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="=~", type=OPERATOR:
-            text="=~", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "=~"
+            * operator "=~"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  =~ 2  =~ 3 /dev/null
+DSL EXPRESSION:
+     1  =~ 2  =~ 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=~", type=OPERATOR:
-        text="=~", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=~", type=OPERATOR:
-        text="=~", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "=~"
+            * operator "=~"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 !=~ 2 !=~ 3 /dev/null
+DSL EXPRESSION:
+$x = 1 !=~ 2 !=~ 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!=~", type=OPERATOR:
-            text="!=~", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!=~", type=OPERATOR:
-            text="!=~", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "!=~"
+            * operator "!=~"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
+DSL EXPRESSION:
+     1 !=~ 2 !=~ 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="!=~", type=OPERATOR:
-        text="!=~", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="!=~", type=OPERATOR:
-        text="!=~", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "!=~"
+            * operator "!=~"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  == 2  != 3 /dev/null
+DSL EXPRESSION:
+$x = 1  == 2  != 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!=", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!=", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "!="
+            * operator "=="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  == 2  != 3 /dev/null
+DSL EXPRESSION:
+     1  == 2  != 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="!=", type=OPERATOR:
-        text="==", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="!=", type=OPERATOR:
-        text="==", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "!="
+            * operator "=="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  != 2  == 3 /dev/null
+DSL EXPRESSION:
+$x = 1  != 2  == 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="==", type=OPERATOR:
-            text="!=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="==", type=OPERATOR:
-            text="!=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "=="
+            * operator "!="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  != 2  == 3 /dev/null
+DSL EXPRESSION:
+     1  != 2  == 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="==", type=OPERATOR:
-        text="!=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="==", type=OPERATOR:
-        text="!=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "=="
+            * operator "!="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  <  2  <  3 /dev/null
+DSL EXPRESSION:
+$x = 1  <  2  <  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<", type=OPERATOR:
-            text="<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<", type=OPERATOR:
-            text="<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<"
+            * operator "<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  <  2  <  3 /dev/null
+DSL EXPRESSION:
+     1  <  2  <  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="<", type=OPERATOR:
-        text="<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="<", type=OPERATOR:
-        text="<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "<"
+            * operator "<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  <= 2  <= 3 /dev/null
+DSL EXPRESSION:
+$x = 1  <= 2  <= 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<=", type=OPERATOR:
-            text="<=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<=", type=OPERATOR:
-            text="<=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<="
+            * operator "<="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  <= 2  <= 3 /dev/null
+DSL EXPRESSION:
+     1  <= 2  <= 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="<=", type=OPERATOR:
-        text="<=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="<=", type=OPERATOR:
-        text="<=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "<="
+            * operator "<="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  >  2  >  3 /dev/null
+DSL EXPRESSION:
+$x = 1  >  2  >  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">", type=OPERATOR:
-            text=">", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">", type=OPERATOR:
-            text=">", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator ">"
+            * operator ">"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  >  2  >  3 /dev/null
+DSL EXPRESSION:
+     1  >  2  >  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text=">", type=OPERATOR:
-        text=">", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text=">", type=OPERATOR:
-        text=">", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator ">"
+            * operator ">"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  >= 2  >= 3 /dev/null
+DSL EXPRESSION:
+$x = 1  >= 2  >= 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">=", type=OPERATOR:
-            text=">=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">=", type=OPERATOR:
-            text=">=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator ">="
+            * operator ">="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  >= 2  >= 3 /dev/null
+DSL EXPRESSION:
+     1  >= 2  >= 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text=">=", type=OPERATOR:
-        text=">=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text=">=", type=OPERATOR:
-        text=">=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator ">="
+            * operator ">="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  <  2  <= 3 /dev/null
+DSL EXPRESSION:
+$x = 1  <  2  <= 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<=", type=OPERATOR:
-            text="<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<=", type=OPERATOR:
-            text="<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<="
+            * operator "<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  <  2  <= 3 /dev/null
+DSL EXPRESSION:
+     1  <  2  <= 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="<=", type=OPERATOR:
-        text="<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="<=", type=OPERATOR:
-        text="<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "<="
+            * operator "<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  <= 2  <  3 /dev/null
+DSL EXPRESSION:
+$x = 1  <= 2  <  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<", type=OPERATOR:
-            text="<=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<", type=OPERATOR:
-            text="<=", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<"
+            * operator "<="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  <= 2  <  3 /dev/null
+DSL EXPRESSION:
+     1  <= 2  <  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="<", type=OPERATOR:
-        text="<=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="<", type=OPERATOR:
-        text="<=", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "<"
+            * operator "<="
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 |  2 |  3 /dev/null
+DSL EXPRESSION:
+$x = 1 |  2 |  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="|", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="|", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "|"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 |  2 |  3 /dev/null
+DSL EXPRESSION:
+     1 |  2 |  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="|", type=OPERATOR:
-        text="|", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="|", type=OPERATOR:
-        text="|", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "|"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ^  2 ^  3 /dev/null
+DSL EXPRESSION:
+$x = 1 ^  2 ^  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^", type=OPERATOR:
-            text="^", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^", type=OPERATOR:
-            text="^", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^"
+            * operator "^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ^  2 ^  3 /dev/null
+DSL EXPRESSION:
+     1 ^  2 ^  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="^", type=OPERATOR:
-        text="^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="^", type=OPERATOR:
-        text="^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "^"
+            * operator "^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 &  2 &  3 /dev/null
+DSL EXPRESSION:
+$x = 1 &  2 &  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="&", type=OPERATOR:
-            text="&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="&", type=OPERATOR:
-            text="&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "&"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 &  2 &  3 /dev/null
+DSL EXPRESSION:
+     1 &  2 &  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="&", type=OPERATOR:
-        text="&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="&", type=OPERATOR:
-        text="&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "&"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 |  2 &  3 /dev/null
+DSL EXPRESSION:
+$x = 1 |  2 &  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="&", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="&", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 |  2 &  3 /dev/null
+DSL EXPRESSION:
+     1 |  2 &  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="|", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="&", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="|", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="&", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "|"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 |  2 ^  3 /dev/null
+DSL EXPRESSION:
+$x = 1 |  2 ^  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="^", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="^", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * int literal "1"
+            * operator "^"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 |  2 ^  3 /dev/null
+DSL EXPRESSION:
+     1 |  2 ^  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="|", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="^", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="|", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="^", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "|"
+            * int literal "1"
+            * operator "^"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 ^  2 |  3 /dev/null
+DSL EXPRESSION:
+$x = 1 ^  2 |  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="^", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="^", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ^  2 |  3 /dev/null
+DSL EXPRESSION:
+     1 ^  2 |  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="|", type=OPERATOR:
-        text="^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="|", type=OPERATOR:
-        text="^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "^"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ^  2 &  3 /dev/null
+DSL EXPRESSION:
+$x = 1 ^  2 &  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="&", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="&", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 ^  2 &  3 /dev/null
+DSL EXPRESSION:
+     1 ^  2 &  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="^", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="&", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="^", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="&", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "^"
+            * int literal "1"
+            * operator "&"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 &  2 |  3 /dev/null
+DSL EXPRESSION:
+$x = 1 &  2 |  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="|", type=OPERATOR:
-            text="&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "|"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 &  2 |  3 /dev/null
+DSL EXPRESSION:
+     1 &  2 |  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="|", type=OPERATOR:
-        text="&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="|", type=OPERATOR:
-        text="&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "|"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 &  2 ^  3 /dev/null
+DSL EXPRESSION:
+$x = 1 &  2 ^  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^", type=OPERATOR:
-            text="&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="^", type=OPERATOR:
-            text="&", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 &  2 ^  3 /dev/null
+DSL EXPRESSION:
+     1 &  2 ^  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="^", type=OPERATOR:
-        text="&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="^", type=OPERATOR:
-        text="&", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "^"
+            * operator "&"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  << 2  << 3 /dev/null
+DSL EXPRESSION:
+$x = 1  << 2  << 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<<", type=OPERATOR:
-            text="<<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<<", type=OPERATOR:
-            text="<<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<<"
+            * operator "<<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  << 2  << 3 /dev/null
+DSL EXPRESSION:
+     1  << 2  << 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="<<", type=OPERATOR:
-        text="<<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="<<", type=OPERATOR:
-        text="<<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "<<"
+            * operator "<<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  >> 2  >> 3 /dev/null
+DSL EXPRESSION:
+$x = 1  >> 2  >> 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">>", type=OPERATOR:
-            text=">>", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">>", type=OPERATOR:
-            text=">>", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator ">>"
+            * operator ">>"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  >> 2  >> 3 /dev/null
+DSL EXPRESSION:
+     1  >> 2  >> 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text=">>", type=OPERATOR:
-        text=">>", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text=">>", type=OPERATOR:
-        text=">>", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator ">>"
+            * operator ">>"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  << 2  >> 3 /dev/null
+DSL EXPRESSION:
+$x = 1  << 2  >> 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">>", type=OPERATOR:
-            text="<<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=">>", type=OPERATOR:
-            text="<<", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator ">>"
+            * operator "<<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  << 2  >> 3 /dev/null
+DSL EXPRESSION:
+     1  << 2  >> 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text=">>", type=OPERATOR:
-        text="<<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text=">>", type=OPERATOR:
-        text="<<", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator ">>"
+            * operator "<<"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1  >> 2  << 3 /dev/null
+DSL EXPRESSION:
+$x = 1  >> 2  << 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<<", type=OPERATOR:
-            text=">>", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="<<", type=OPERATOR:
-            text=">>", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "<<"
+            * operator ">>"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1  >> 2  << 3 /dev/null
+DSL EXPRESSION:
+     1  >> 2  << 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="<<", type=OPERATOR:
-        text=">>", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="<<", type=OPERATOR:
-        text=">>", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "<<"
+            * operator ">>"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 + 2 + 3 /dev/null
+DSL EXPRESSION:
+$x = 1 + 2 + 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 + 2 + 3 /dev/null
+DSL EXPRESSION:
+     1 + 2 + 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="+", type=OPERATOR:
-        text="+", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="+", type=OPERATOR:
-        text="+", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 - 2 - 3 /dev/null
+DSL EXPRESSION:
+$x = 1 - 2 - 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="-", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="-", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "-"
+            * operator "-"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 - 2 - 3 /dev/null
+DSL EXPRESSION:
+     1 - 2 - 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="-", type=OPERATOR:
-        text="-", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="-", type=OPERATOR:
-        text="-", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "-"
+            * operator "-"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 + 2 - 3 /dev/null
+DSL EXPRESSION:
+$x = 1 + 2 - 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "-"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 + 2 - 3 /dev/null
+DSL EXPRESSION:
+     1 + 2 - 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="-", type=OPERATOR:
-        text="+", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="-", type=OPERATOR:
-        text="+", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "-"
+            * operator "+"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 - 2 + 3 /dev/null
+DSL EXPRESSION:
+$x = 1 - 2 + 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="-", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="-", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "-"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 - 2 + 3 /dev/null
+DSL EXPRESSION:
+     1 - 2 + 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="+", type=OPERATOR:
-        text="-", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="+", type=OPERATOR:
-        text="-", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "-"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 . 2 . 3 /dev/null
+DSL EXPRESSION:
+$x = 1 . 2 . 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=".", type=OPERATOR:
-            text=".", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text=".", type=OPERATOR:
-            text=".", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "."
+            * operator "."
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 . 2 . 3 /dev/null
+DSL EXPRESSION:
+     1 . 2 . 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text=".", type=OPERATOR:
-        text=".", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text=".", type=OPERATOR:
-        text=".", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "."
+            * operator "."
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 * 2 * 3 /dev/null
+DSL EXPRESSION:
+$x = 1 * 2 * 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 * 2 * 3 /dev/null
+DSL EXPRESSION:
+     1 * 2 * 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="*", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="*", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 / 2 / 3 /dev/null
+DSL EXPRESSION:
+$x = 1 / 2 / 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "/"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 / 2 / 3 /dev/null
+DSL EXPRESSION:
+     1 / 2 / 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="/", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="/", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "/"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 // 2 // 3 /dev/null
+DSL EXPRESSION:
+$x = 1 // 2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "//"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 // 2 // 3 /dev/null
+DSL EXPRESSION:
+     1 // 2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="//", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="//", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "//"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 % 2 % 3 /dev/null
+DSL EXPRESSION:
+$x = 1 % 2 % 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "%"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 % 2 % 3 /dev/null
+DSL EXPRESSION:
+     1 % 2 % 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="%", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="%", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "%"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ** 2 ** 3 /dev/null
+DSL EXPRESSION:
+$x = 1 ** 2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "**"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 ** 2 ** 3 /dev/null
+DSL EXPRESSION:
+     1 ** 2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="**", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="**", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "**"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 *  2 /  3 /dev/null
+DSL EXPRESSION:
+$x = 1 *  2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "/"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 *  2 /  3 /dev/null
+DSL EXPRESSION:
+     1 *  2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="/", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="/", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "/"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 *  2 // 3 /dev/null
+DSL EXPRESSION:
+$x = 1 *  2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "//"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 *  2 // 3 /dev/null
+DSL EXPRESSION:
+     1 *  2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="//", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="//", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "//"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 *  2 %  3 /dev/null
+DSL EXPRESSION:
+$x = 1 *  2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="*", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "%"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 *  2 %  3 /dev/null
+DSL EXPRESSION:
+     1 *  2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="%", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="%", type=OPERATOR:
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "%"
+            * operator "*"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 *  2 ** 3 /dev/null
+DSL EXPRESSION:
+$x = 1 *  2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 *  2 ** 3 /dev/null
+DSL EXPRESSION:
+     1 *  2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="*", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="*", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "*"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 /  2 *  3 /dev/null
+DSL EXPRESSION:
+$x = 1 /  2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 /  2 *  3 /dev/null
+DSL EXPRESSION:
+     1 /  2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="*", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="*", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 /  2 // 3 /dev/null
+DSL EXPRESSION:
+$x = 1 /  2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "//"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 /  2 // 3 /dev/null
+DSL EXPRESSION:
+     1 /  2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="//", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="//", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "//"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 /  2 %  3 /dev/null
+DSL EXPRESSION:
+$x = 1 /  2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="/", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "%"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 /  2 %  3 /dev/null
+DSL EXPRESSION:
+     1 /  2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="%", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="%", type=OPERATOR:
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "%"
+            * operator "/"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 /  2 ** 3 /dev/null
+DSL EXPRESSION:
+$x = 1 /  2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "/"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 /  2 ** 3 /dev/null
+DSL EXPRESSION:
+     1 /  2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="/", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="/", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "/"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 // 2 *  3 /dev/null
+DSL EXPRESSION:
+$x = 1 // 2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 // 2 *  3 /dev/null
+DSL EXPRESSION:
+     1 // 2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="*", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="*", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 // 2 /  3 /dev/null
+DSL EXPRESSION:
+$x = 1 // 2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "/"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 // 2 /  3 /dev/null
+DSL EXPRESSION:
+     1 // 2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="/", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="/", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "/"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 // 2 %  3 /dev/null
+DSL EXPRESSION:
+$x = 1 // 2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="//", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "%"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 // 2 %  3 /dev/null
+DSL EXPRESSION:
+     1 // 2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="%", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="%", type=OPERATOR:
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "%"
+            * operator "//"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 // 2 ** 3 /dev/null
+DSL EXPRESSION:
+$x = 1 // 2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "//"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 // 2 ** 3 /dev/null
+DSL EXPRESSION:
+     1 // 2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="//", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="//", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "//"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 %  2 *  3 /dev/null
+DSL EXPRESSION:
+$x = 1 %  2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 %  2 *  3 /dev/null
+DSL EXPRESSION:
+     1 %  2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="*", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="*", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 %  2 /  3 /dev/null
+DSL EXPRESSION:
+$x = 1 %  2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "/"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 %  2 /  3 /dev/null
+DSL EXPRESSION:
+     1 %  2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="/", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="/", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "/"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 %  2 // 3 /dev/null
+DSL EXPRESSION:
+$x = 1 %  2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="%", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "//"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 %  2 // 3 /dev/null
+DSL EXPRESSION:
+     1 %  2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="//", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="//", type=OPERATOR:
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "//"
+            * operator "%"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 %  2 ** 3 /dev/null
+DSL EXPRESSION:
+$x = 1 %  2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="**", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "%"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr filter -v      1 %  2 ** 3 /dev/null
+DSL EXPRESSION:
+     1 %  2 ** 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="%", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="%", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="**", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "%"
+            * int literal "1"
+            * operator "**"
+                * int literal "2"
+                * int literal "3"
 
 
 mlr put -v $x = 1 ** 2 *  3 /dev/null
+DSL EXPRESSION:
+$x = 1 ** 2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="*", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "*"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ** 2 *  3 /dev/null
+DSL EXPRESSION:
+     1 ** 2 *  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="*", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="*", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "*"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ** 2 /  3 /dev/null
+DSL EXPRESSION:
+$x = 1 ** 2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "/"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ** 2 /  3 /dev/null
+DSL EXPRESSION:
+     1 ** 2 /  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="/", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="/", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "/"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ** 2 // 3 /dev/null
+DSL EXPRESSION:
+$x = 1 ** 2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="//", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "//"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ** 2 // 3 /dev/null
+DSL EXPRESSION:
+     1 ** 2 // 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="//", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="//", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "//"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ** 2 %  3 /dev/null
+DSL EXPRESSION:
+$x = 1 ** 2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="%", type=OPERATOR:
-            text="**", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-                text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "%"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ** 2 %  3 /dev/null
+DSL EXPRESSION:
+     1 ** 2 %  3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="%", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="%", type=OPERATOR:
-        text="**", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "%"
+            * operator "**"
+                * int literal "1"
+                * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = ++1 /dev/null
+DSL EXPRESSION:
+$x = ++1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "+"
+            * operator "+"
+                * int literal "1"
 
 
 mlr filter -v      ++1 /dev/null
+DSL EXPRESSION:
+     ++1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="+", type=OPERATOR:
-        text="+", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="+", type=OPERATOR:
-        text="+", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "+"
+            * operator "+"
+                * int literal "1"
 
 
 mlr put -v $x = --1 /dev/null
+DSL EXPRESSION:
+$x = --1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="-", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="-", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "-"
+            * operator "-"
+                * int literal "1"
 
 
 mlr filter -v      --1 /dev/null
+DSL EXPRESSION:
+     --1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="-", type=OPERATOR:
-        text="-", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="-", type=OPERATOR:
-        text="-", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "-"
+            * operator "-"
+                * int literal "1"
 
 
 mlr put -v $x = !!1 /dev/null
+DSL EXPRESSION:
+$x = !!1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!", type=OPERATOR:
-            text="!", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="!", type=OPERATOR:
-            text="!", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "!"
+            * operator "!"
+                * int literal "1"
 
 
 mlr filter -v      !!1 /dev/null
+DSL EXPRESSION:
+     !!1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="!", type=OPERATOR:
-        text="!", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="!", type=OPERATOR:
-        text="!", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "!"
+            * operator "!"
+                * int literal "1"
 
 
 mlr put -v $x = ~~1 /dev/null
+DSL EXPRESSION:
+$x = ~~1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="~", type=OPERATOR:
-            text="~", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="~", type=OPERATOR:
-            text="~", type=OPERATOR:
-                text="1", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "~"
+            * operator "~"
+                * int literal "1"
 
 
 mlr filter -v      ~~1 /dev/null
+DSL EXPRESSION:
+     ~~1
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="~", type=OPERATOR:
-        text="~", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="~", type=OPERATOR:
-        text="~", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "~"
+            * operator "~"
+                * int literal "1"
 
 
 mlr put -v $x = 1 ? 2 : 3 /dev/null
+DSL EXPRESSION:
+$x = 1 ? 2 : 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "?:"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
 
 
 mlr filter -v      1 ? 2 : 3 /dev/null
+DSL EXPRESSION:
+     1 ? 2 : 3
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="? :", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="? :", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="2", type=NUMERIC_LITERAL.
-        text="3", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "?:"
+            * int literal "1"
+            * int literal "2"
+            * int literal "3"
 
 
 mlr put -v $x = 1 ? 2 ? 3 : 4 : 5 /dev/null
+DSL EXPRESSION:
+$x = 1 ? 2 ? 3 : 4 : 5
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="? :", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-                text="4", type=NUMERIC_LITERAL.
-            text="5", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="? :", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="3", type=NUMERIC_LITERAL.
-                text="4", type=NUMERIC_LITERAL.
-            text="5", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "?:"
+            * int literal "1"
+            * operator "?:"
+                * int literal "2"
+                * int literal "3"
+                * int literal "4"
+            * int literal "5"
 
 
 mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
+DSL EXPRESSION:
+     1 ? 2 ? 3 : 4 : 5
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="? :", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="? :", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-            text="4", type=NUMERIC_LITERAL.
-        text="5", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="? :", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="? :", type=OPERATOR:
-            text="2", type=NUMERIC_LITERAL.
-            text="3", type=NUMERIC_LITERAL.
-            text="4", type=NUMERIC_LITERAL.
-        text="5", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "?:"
+            * int literal "1"
+            * operator "?:"
+                * int literal "2"
+                * int literal "3"
+                * int literal "4"
+            * int literal "5"
 
 
 mlr put -v $x = 1 ? 2 : 3 ? 4 : 5 /dev/null
+DSL EXPRESSION:
+$x = 1 ? 2 : 3 ? 4 : 5
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="? :", type=OPERATOR:
-                text="3", type=NUMERIC_LITERAL.
-                text="4", type=NUMERIC_LITERAL.
-                text="5", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="x", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="? :", type=OPERATOR:
-                text="3", type=NUMERIC_LITERAL.
-                text="4", type=NUMERIC_LITERAL.
-                text="5", type=NUMERIC_LITERAL.
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "?:"
+            * int literal "1"
+            * int literal "2"
+            * operator "?:"
+                * int literal "3"
+                * int literal "4"
+                * int literal "5"
 
 
 mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
+DSL EXPRESSION:
+     1 ? 2 : 3 ? 4 : 5
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="? :", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="2", type=NUMERIC_LITERAL.
-        text="? :", type=OPERATOR:
-            text="3", type=NUMERIC_LITERAL.
-            text="4", type=NUMERIC_LITERAL.
-            text="5", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="? :", type=OPERATOR:
-        text="1", type=NUMERIC_LITERAL.
-        text="2", type=NUMERIC_LITERAL.
-        text="? :", type=OPERATOR:
-            text="3", type=NUMERIC_LITERAL.
-            text="4", type=NUMERIC_LITERAL.
-            text="5", type=NUMERIC_LITERAL.
+* statement block
+    * bare boolean
+        * operator "?:"
+            * int literal "1"
+            * int literal "2"
+            * operator "?:"
+                * int literal "3"
+                * int literal "4"
+                * int literal "5"
 
 
