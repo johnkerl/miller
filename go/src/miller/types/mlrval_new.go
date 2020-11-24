@@ -62,15 +62,19 @@ func MlrvalFromVoid() Mlrval {
 }
 
 func MlrvalFromString(input string) Mlrval {
-	return Mlrval{
-		mvtype:        MT_STRING,
-		printrep:      input,
-		printrepValid: true,
-		intval:        0,
-		floatval:      0.0,
-		boolval:       false,
-		arrayval:      nil,
-		mapval:        nil,
+	if input == "" {
+		return MlrvalFromVoid()
+	} else {
+		return Mlrval{
+			mvtype:        MT_STRING,
+			printrep:      input,
+			printrepValid: true,
+			intval:        0,
+			floatval:      0.0,
+			boolval:       false,
+			arrayval:      nil,
+			mapval:        nil,
+		}
 	}
 }
 

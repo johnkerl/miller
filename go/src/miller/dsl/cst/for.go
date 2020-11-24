@@ -2,6 +2,7 @@ package cst
 
 import (
 	"errors"
+	"fmt"
 
 	"miller/dsl"
 	"miller/lib"
@@ -180,9 +181,16 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 			}
 		}
 
+	} else if mlrval.IsAbsent() {
+		// Data-heterogeneity no-op
+
 	} else {
-		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map or array.")
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: looped-over item is not a map or array; got %s",
+				mlrval.GetTypeName(),
+			),
+		)
 	}
 
 	return nil, nil
@@ -351,9 +359,16 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 			}
 		}
 
+	} else if mlrval.IsAbsent() {
+		// Data-heterogeneity no-op
+
 	} else {
-		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map or array.")
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: looped-over item is not a map or array; got %s",
+				mlrval.GetTypeName(),
+			),
+		)
 	}
 
 	return nil, nil
@@ -533,9 +548,16 @@ func (this *ForLoopMultivariableNode) executeOuter(
 			}
 		}
 
+	} else if mlrval.IsAbsent() {
+		// Data-heterogeneity no-op
+
 	} else {
-		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map or array.")
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: looped-over item is not a map or array; got %s",
+				mlrval.GetTypeName(),
+			),
+		)
 	}
 
 	return nil, nil
@@ -608,9 +630,16 @@ func (this *ForLoopMultivariableNode) executeInner(
 			}
 		}
 
+	} else if mlrval.IsAbsent() {
+		// Data-heterogeneity no-op
+
 	} else {
-		// TODO: give more context
-		return nil, errors.New("Miller: looped-over item is not a map or array.")
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: looped-over item is not a map or array; got %s",
+				mlrval.GetTypeName(),
+			),
+		)
 	}
 
 	return nil, nil
