@@ -43,6 +43,36 @@ NUMBER OF CASES FAILED 0
 PASS
 ```
 
+All cases (as of November 2020 -- Go port in progress, not all C cases succeeding yet as many things are not ported):
+
+```
+$ reg-test/run
+Using mlr executable ./reg-test/../../go/mlr
+PASS  ./reg-test/cases/case-altkv.sh
+PASS  ./reg-test/cases/case-bootstrap.sh
+FAIL  ./reg-test/cases/case-c-auxents.sh
+PASS  ./reg-test/cases/case-c-awkish-conds.sh
+FAIL  ./reg-test/cases/case-c-bar.sh
+...
+PASS  ./reg-test/cases/case-go-skip-trivial-records.sh
+PASS  ./reg-test/cases/case-go-sort-within-records.sh
+PASS  ./reg-test/cases/case-go-sort.sh
+PASS  ./reg-test/cases/case-go-tail.sh
+PASS  ./reg-test/cases/case-go-unsparsify.sh
+PASS  ./reg-test/cases/case-min-max-types.sh
+PASS  ./reg-test/cases/case-no-filter-in-filter.sh
+PASS  ./reg-test/cases/case-remove-empty-columns.sh
+PASS  ./reg-test/cases/case-sample.sh
+PASS  ./reg-test/cases/case-shuffle.sh
+PASS  ./reg-test/cases/case-subr.sh
+
+NUMBER OF MILLER INVOCATIONS 3767
+NUMBER OF CASES PASSED 127
+NUMBER OF CASES FAILED 91
+
+FAIL
+```
+
 Single case, with verbosity:
 
 ```
