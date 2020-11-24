@@ -12,6 +12,7 @@ rrv ./reg-test/cases/case-c-dsl-for-srec-loops.sh
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
+rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 * str s = "a"; s = 3 doesn't trigger -- needs gate-retention ...
 
 rrv ./reg-test/cases/case-c-dsl-null-empty-handling.sh
@@ -199,14 +200,3 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
-
-================================================================
-GATING
-
-rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
-
-================================================================
-:)
-rrv ./reg-test/cases/case-c-dsl-multipart-scripts.sh
-rrv ./reg-test/cases/case-c-dsl-trailing-commas.sh
-
