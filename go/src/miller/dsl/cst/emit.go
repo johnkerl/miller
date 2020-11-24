@@ -1,3 +1,7 @@
+// ================================================================
+// This handles emit statements.
+// ================================================================
+
 package cst
 
 import (
@@ -5,10 +9,6 @@ import (
 	"miller/lib"
 	"miller/types"
 )
-
-// ================================================================
-// This handles emit statements.
-// ================================================================
 
 // ----------------------------------------------------------------
 type EmitStatementNode struct {
@@ -46,8 +46,8 @@ func (this *EmitStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 		)
 	}
 
-	// xxx wip
-	// xxx need to reshape rvalue mlvarls -> mlrmaps; publish w/ contexts; method for that
+	// xxx WIP
+	// xxx need to reshape rvalue mlrvals -> mlrmaps; publish w/ contexts; method for that
 
 	//	outputChannel <- types.NewRecordAndContext(
 	//		mlrmap goes here,

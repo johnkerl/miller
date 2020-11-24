@@ -1,10 +1,3 @@
-package cst
-
-import (
-	"miller/dsl"
-	"miller/lib"
-)
-
 // ================================================================
 // CST build/execute for AST operator/function nodes
 //
@@ -12,6 +5,13 @@ import (
 // syntactically. Binary operators are infix, like '1+2', while functions are
 // prefix, like 'max(1,2)'. Both parse to the same AST shape.
 // ================================================================
+
+package cst
+
+import (
+	"miller/dsl"
+	"miller/lib"
+)
 
 // ----------------------------------------------------------------
 // Function lookup:

@@ -1,3 +1,10 @@
+// ================================================================
+// This handles ENV["FOO"] on the right-hand side of an assignment.  Note that
+// environment variables aren't arbitrarily indexable like maps are -- they're
+// only a single-level map from string to string, managed indirectly through
+// library routines.
+// ================================================================
+
 package cst
 
 import (
@@ -7,13 +14,6 @@ import (
 	"miller/lib"
 	"miller/types"
 )
-
-// ================================================================
-// This handles ENV["FOO"] on the right-hand side of an assignment.  Note that
-// environment variables aren't arbitrarily indexable like maps are -- they're
-// only a single-level map from string to string, managed indirectly through
-// library routines.
-// ================================================================
 
 type EnvironmentVariableNode struct {
 	nameEvaluable IEvaluable

@@ -1,3 +1,7 @@
+// ================================================================
+// Main type definitions for CST build/execute
+// ================================================================
+
 package cst
 
 import (
@@ -6,23 +10,6 @@ import (
 	"miller/dsl"
 	"miller/types"
 )
-
-// ================================================================
-// Main type definitions for CST build/execute
-// ================================================================
-
-// ----------------------------------------------------------------
-// There are three CST roots: begin-block, body-block, and end-block.
-//
-// Next-level items are:
-// * srec assignments
-// * oosvar assignments
-// * localvar assignments
-// * emit et al.
-// * bare-boolean
-// * break/continue/return
-// * statement block (if-body, for-body, etc)
-// ----------------------------------------------------------------
 
 // ----------------------------------------------------------------
 // When we do mlr put '...DSL expression here...', this state is what is needed

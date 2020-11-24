@@ -19,14 +19,19 @@ no need to bootstrap a parser for the parser-generator language
 
 ! still need functional put -S / put -F ... sigh.
 
+! subr
+! emitp/emitf
+
 ! bug on set-var/bind-var
   - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! int map keys: what to do with:
   o '{1:2}' treat as '{"1":2}'
   o 'm[1]' treat as 'm["1"]'
   o positional indexing for maps -- use [[]] [[[]]] ?
   o pothole: auto-extend of foo[NR] -- this now creates an array not a map
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ! --jvstack as no-op
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.

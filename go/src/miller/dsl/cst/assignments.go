@@ -1,13 +1,13 @@
+// ================================================================
+// CST build/execute for assignment and unset statements.
+// ================================================================
+
 package cst
 
 import (
 	"miller/dsl"
 	"miller/lib"
 )
-
-// ================================================================
-// CST build/execute for assignment and unset statements.
-// ================================================================
 
 // ================================================================
 func (this *RootNode) BuildAssignmentNode(

@@ -1,3 +1,8 @@
+// ================================================================
+// This is for things that get us out of statement blocks: break, continue,
+// return.
+// ================================================================
+
 package cst
 
 import (
@@ -6,11 +11,6 @@ import (
 	"miller/dsl"
 	"miller/lib"
 )
-
-// ================================================================
-// This is for things that get us out of statement blocks: break, continue,
-// return.
-// ================================================================
 
 // ----------------------------------------------------------------
 type BreakNode struct {
@@ -39,8 +39,6 @@ func (this *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, er
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeContinue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
-
-	// TODO: get type-gate mask
 
 	return &ContinueNode{}, nil
 }
@@ -81,7 +79,7 @@ func (this *ReturnNode) Execute(state *State) (*BlockExitPayload, error) {
 			nil,
 		}, nil
 	} else {
-		// This can be of type MT_ERROR but there is no Go-level error return
+		// This can be of type MT_ERROR but we do not use Go-level error return here
 		returnValue := this.returnValueExpression.Evaluate(state) // TODO: TypeGatedMlrval
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VALUE,

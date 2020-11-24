@@ -1,13 +1,3 @@
-package cst
-
-import (
-	"container/list"
-	"fmt"
-
-	"miller/lib"
-	"miller/types"
-)
-
 // ================================================================
 // Stack frames for begin/end/if/for/function blocks
 //
@@ -32,6 +22,16 @@ import (
 //       a = 2            <-- this should create new inner 'a', not update the outer 'a'
 //     }
 // ================================================================
+
+package cst
+
+import (
+	"container/list"
+	"fmt"
+
+	"miller/lib"
+	"miller/types"
+)
 
 // ================================================================
 // STACK METHODS

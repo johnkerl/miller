@@ -1,3 +1,8 @@
+// ================================================================
+// CST build/execute for statements: assignments, bare booleans,
+// break/continue/return, etc.
+// ================================================================
+
 package cst
 
 import (
@@ -5,11 +10,6 @@ import (
 
 	"miller/dsl"
 )
-
-// ================================================================
-// CST build/execute for statements: assignments, bare booleans,
-// break/continue/return, etc.
-// ================================================================
 
 // ----------------------------------------------------------------
 func (this *RootNode) BuildStatementNode(

@@ -1,3 +1,8 @@
+// ================================================================
+// CST build/execute for AST array-literal, map-literal, index-access, and
+// slice-access nodes
+// ================================================================
+
 package cst
 
 import (
@@ -5,11 +10,6 @@ import (
 	"miller/lib"
 	"miller/types"
 )
-
-// ================================================================
-// CST build/execute for AST array-literal, map-literal, index-access, and
-// slice-access nodes
-// ================================================================
 
 // ----------------------------------------------------------------
 type ArrayLiteralNode struct {

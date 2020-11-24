@@ -1,3 +1,8 @@
+// ================================================================
+// This is for Lvalues, i.e. things on the left-hand-side of an assignment
+// statement.
+// ================================================================
+
 package cst
 
 import (
@@ -9,9 +14,6 @@ import (
 	"miller/lib"
 	"miller/types"
 )
-
-// This is for Lvalues, i.e. things on the left-hand-side of an assignment
-// statement.
 
 // ----------------------------------------------------------------
 func (this *RootNode) BuildAssignableNode(

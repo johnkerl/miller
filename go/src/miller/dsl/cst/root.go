@@ -1,3 +1,8 @@
+// ================================================================
+// Top-level entry point for building a CST from an AST at parse time, and for
+// executing the CST at runtime.
+// ================================================================
+
 package cst
 
 import (
@@ -7,11 +12,6 @@ import (
 	"miller/dsl"
 	"miller/types"
 )
-
-// ================================================================
-// Top-level entry point for building a CST from an AST at parse time, and for
-// executing the CST at runtime.
-// ================================================================
 
 // ----------------------------------------------------------------
 func NewEmptyRoot() *RootNode {

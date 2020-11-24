@@ -1,12 +1,14 @@
+// ================================================================
+// This is for begin and end blocks, but not the main block which is direct
+// from the CST root.
+// ================================================================
+
 package cst
 
 import (
 	"miller/dsl"
 	"miller/lib"
 )
-
-// This is for begin and end blocks, but not the main block which is direct
-// from the CST root.
 
 // ----------------------------------------------------------------
 func NewStatementBlockNode() *StatementBlockNode {
@@ -107,10 +109,13 @@ func (this *StatementBlockNode) Execute(state *State) (*BlockExitPayload, error)
 	return nil, nil
 }
 
+// ----------------------------------------------------------------
 // Assumes the caller has wrapped PushStackFrame() / PopStackFrame().  That
 // could be done here, but is instead done in the caller to simplify the
 // binding of for-loop variables. In particular, in
+//
 //   'for (i = 0; i < 10; i += 1) {...}'
+//
 // the 'i = 0' and 'i += 1' are StatementBlocks and if they pushed their
 // own stack frame then the 'i=0' would be in an evanescent, isolated frame.
 

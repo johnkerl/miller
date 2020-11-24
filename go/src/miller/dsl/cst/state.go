@@ -1,3 +1,9 @@
+// ================================================================
+// Tracks everything needed for statement evaluation/assignment in the Miller
+// DSL runtimne: current record/context (the latter being NF, NR, etc);
+// out-of-stream variables; local-variable stack; etc.
+// ================================================================
+
 package cst
 
 import (

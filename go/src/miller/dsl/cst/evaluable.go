@@ -1,3 +1,9 @@
+// ================================================================
+// This handles anything on the right-hand sides of assignment statements.
+// (Also, computed field names on the left-hand sides of assignment
+// statements.)
+// ================================================================
+
 package cst
 
 import (
@@ -9,12 +15,6 @@ import (
 	"miller/lib"
 	"miller/types"
 )
-
-// ================================================================
-// This handles anything on the right-hand sides of assignment statements.
-// (Also, computed field names on the left-hand sides of assignment
-// statements.)
-// ================================================================
 
 // ----------------------------------------------------------------
 func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {

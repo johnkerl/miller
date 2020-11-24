@@ -1,3 +1,8 @@
+// ================================================================
+// This is for awkish pattern-action-blocks, like mlr put 'NR > 10 { ... }'.
+// Just shorthand for if-statements without elif/else.
+// ================================================================
+
 package cst
 
 import (
@@ -7,11 +12,6 @@ import (
 	"miller/lib"
 	"miller/types"
 )
-
-// ================================================================
-// This is for awkish pattern-action-blocks, like mlr put 'NR > 10 { ... }'.
-// Just shorthand for if-statements without elif/else.
-// ================================================================
 
 type CondBlockNode struct {
 	conditionNode      IEvaluable

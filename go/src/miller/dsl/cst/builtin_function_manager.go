@@ -1,3 +1,9 @@
+// ================================================================
+// Adding a new builtin function:
+// * New entry in BUILTIN_FUNCTION_LOOKUP_TABLE
+// * Implement the function in mlrval_functions.go
+// ================================================================
+
 package cst
 
 import (
@@ -5,12 +11,6 @@ import (
 	"miller/types"
 	"os"
 )
-
-// ================================================================
-// Adding a new builtin function:
-// * New entry in BUILTIN_FUNCTION_LOOKUP_TABLE
-// * Implement the function in mlrval_functions.go
-// ================================================================
 
 // ================================================================
 type BuiltinFunctionInfo struct {

@@ -1,11 +1,5 @@
-! rrv --show
-
 ================================================================
 BUG:
-
-rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
-* mlr: filter expressions must end in a final boolean statement.
--> abandon this requirement? doc if so.
 
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
@@ -25,12 +19,9 @@ MULTIPLE ISSUES:
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 * bug mlr filter $nosuchfield>.3 ./reg-test/input/abixy
 * ofmt
-* env
 -> split up this big case-file
 
 * typeof prints different things -- regularize ...
-
-* 'x=' -> MT_EMPTY vs MT_STRING
 
 ================================================================
 LF/CRLF ETC.
@@ -120,6 +111,10 @@ rrv ./reg-test/cases/case-c-barred-pprint.sh
 
 ================================================================
 BACKWARD INCOMPATIBILITIES:
+
+rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
+* mlr: filter expressions must end in a final boolean statement.
+-> abandon this requirement? doc if so.
 
 rrv ./reg-test/cases/case-c-label.sh
 * handles old/new clashes differently from C impl :^/
