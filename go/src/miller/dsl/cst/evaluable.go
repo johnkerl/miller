@@ -62,7 +62,9 @@ type IndirectFieldValueNode struct {
 	fieldNameEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildIndirectFieldValueNode(astNode *dsl.ASTNode) (*IndirectFieldValueNode, error) {
+func (this *RootNode) BuildIndirectFieldValueNode(
+	astNode *dsl.ASTNode,
+) (*IndirectFieldValueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)

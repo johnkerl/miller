@@ -2,6 +2,8 @@ package cst
 
 import (
 	"errors"
+	"fmt"
+	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -43,6 +45,10 @@ func (this *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return this.BuildIndexedLvalueNode(astNode)
+		break
+
+	case dsl.NodeTypeEnvironmentVariable:
+		return this.BuildEnvironmentVariableLvalueNode(astNode)
 		break
 	}
 
@@ -677,4 +683,88 @@ func (this *IndexedLvalueNode) UnsetIndexed(
 ) {
 	// We are the delegator, not the delegatee
 	lib.InternalCodingErrorIf(true)
+}
+
+// ----------------------------------------------------------------
+type EnvironmentVariableLvalueNode struct {
+	nameExpression IEvaluable
+}
+
+func (this *RootNode) BuildEnvironmentVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEnvironmentVariable)
+	lib.InternalCodingErrorIf(astNode == nil)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+	nameExpression, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+
+	return NewEnvironmentVariableLvalueNode(nameExpression), nil
+}
+
+func NewEnvironmentVariableLvalueNode(
+	nameExpression IEvaluable,
+) *EnvironmentVariableLvalueNode {
+	return &EnvironmentVariableLvalueNode{
+		nameExpression: nameExpression,
+	}
+}
+
+func (this *EnvironmentVariableLvalueNode) Assign(
+	rvalue *types.Mlrval,
+	state *State,
+) error {
+	// AssignmentNode checks for absentness of the rvalue, so we just assign
+	// whatever we get
+	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+
+	name := this.nameExpression.Evaluate(state)
+	if name.IsAbsent() {
+		return nil
+	}
+
+	if !name.IsString() {
+		return errors.New(
+			fmt.Sprintf(
+				"ENV[...] assignments must have string names; got %s \"%s\"\n",
+				name.GetTypeName(),
+				name.String(),
+			),
+		)
+	}
+
+	os.Setenv(name.String(), rvalue.String())
+	return nil
+}
+
+func (this *EnvironmentVariableLvalueNode) AssignIndexed(
+	rvalue *types.Mlrval,
+	indices []*types.Mlrval,
+	state *State,
+) error {
+	return errors.New("Miller: ENV[...] cannot be indexed.")
+}
+
+func (this *EnvironmentVariableLvalueNode) Unset(
+	state *State,
+) {
+	name := this.nameExpression.Evaluate(state)
+	if name.IsAbsent() {
+		return
+	}
+
+	if !name.IsString() {
+		// TODO: needs error-return
+		return
+	}
+
+	os.Unsetenv(name.String())
+}
+
+func (this *EnvironmentVariableLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	// TODO: needs error return
+	//return errors.New("Miller: ENV[...] cannot be indexed.")
 }

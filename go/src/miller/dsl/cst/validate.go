@@ -247,4 +247,5 @@ var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeIndirectOosvarValue:   true,
 	dsl.NodeTypeFullOosvar:            true,
 	dsl.NodeTypeLocalVariable:         true,
+	dsl.NodeTypeEnvironmentVariable:   true,
 }
