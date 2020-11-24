@@ -106,6 +106,12 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 				return err
 			}
 
+		} else if astChild.Type == dsl.NodeTypeSubroutineDefinition {
+			err := this.BuildAndInstallUDS(astChild)
+			if err != nil {
+				return err
+			}
+
 		} else if astChild.Type == dsl.NodeTypeBeginBlock || astChild.Type == dsl.NodeTypeEndBlock {
 			statementBlockNode, err := this.BuildStatementBlockNodeFromBeginOrEnd(astChild)
 			if err != nil {

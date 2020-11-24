@@ -333,3 +333,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	return nil
 }
+
+func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
+	return nil // TODO
+}

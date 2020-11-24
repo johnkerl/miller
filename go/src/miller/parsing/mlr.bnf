@@ -1716,8 +1716,8 @@ ReturnStatement
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeReturn) >>
 
   // For user-defined subroutines
-  // | return
-  //    << dsl.NewASTNodeZary($0, dsl.NodeTypeReturn) >>
+  | return
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeReturn) >>
 ;
 
 // ================================================================

@@ -18,7 +18,6 @@ func (this *RootNode) BuildStatementNode(
 
 	var statement IExecutable = nil
 	var err error = nil
-	// xxx more to do
 	switch astNode.Type {
 
 	case dsl.NodeTypeAssignment:
@@ -83,6 +82,12 @@ func (this *RootNode) BuildStatementNode(
 		return nil, errors.New(
 			"Miller: functions may only be declared at top level.",
 		)
+	case dsl.NodeTypeSubroutineDefinition:
+		return nil, errors.New(
+			"Miller: subroutines may only be declared at top level.",
+		)
+	case dsl.NodeTypeSubroutineCallsite:
+		return this.BuildSubroutineCallsiteNode(astNode)
 
 	case dsl.NodeTypeBreak:
 		return this.BuildBreakNode(astNode)

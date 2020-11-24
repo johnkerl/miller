@@ -44,7 +44,9 @@ func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 		return this.BuildEnvironmentVariableNode(astNode)
 
 	// Operators are just functions with infix syntax so we treat them like
-	// functions in the CST.
+	// functions in the CST. (The distinction between infix syntax, e.g.
+	// '1+2', and prefix syntax, e.g. 'plus(1,2)' disappears post-parse -- both
+	// parse to the same-shape AST.)
 	case dsl.NodeTypeOperator:
 		return this.BuildFunctionCallsiteNode(astNode)
 	case dsl.NodeTypeFunctionCallsite:

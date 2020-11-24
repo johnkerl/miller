@@ -3226,4 +3226,14 @@ var productionsTable = ProdTab{
 			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeReturn)
 		},
 	},
+	ProdTabEntry{
+		String: `ReturnStatement : return	<< dsl.NewASTNodeZary(X[0], dsl.NodeTypeReturn) >>`,
+		Id:         "ReturnStatement",
+		NTType:     92,
+		Index:      258,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib) (Attrib, error) {
+			return dsl.NewASTNodeZary(X[0], dsl.NodeTypeReturn)
+		},
+	},
 }

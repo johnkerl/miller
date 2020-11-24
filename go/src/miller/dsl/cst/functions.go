@@ -1,9 +1,13 @@
 // ================================================================
-// CST build/execute for AST operator/function nodes
+// CST build/execute for AST operator/function nodes, and subroutine nodes.
 //
 // Operators and functions are semantically the same thing -- they differ only
 // syntactically. Binary operators are infix, like '1+2', while functions are
 // prefix, like 'max(1,2)'. Both parse to the same AST shape.
+//
+// Subroutines can't be used as rvalues; their invocation must be the entire
+// statement. Nonetheless, their name-resolution, argument/parameter binding,
+// etc. are very similar to functions.
 // ================================================================
 
 package cst
@@ -85,4 +89,8 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
 		return udfCallsiteNode, nil
 	}
+}
+
+func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecutable, error) {
+	return nil, nil // TODO
 }
