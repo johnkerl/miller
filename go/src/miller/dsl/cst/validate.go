@@ -37,7 +37,7 @@ func ValidateAST(
 
 	if ast.RootNode.Children != nil {
 		for _, astChild := range ast.RootNode.Children {
-			return validateASTAux(
+			err := validateASTAux(
 				astChild,
 				isFilter,
 				atTopLevel,
@@ -49,6 +49,9 @@ func ValidateAST(
 				isAssignmentLHS,
 				isUnset,
 			)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -127,15 +130,6 @@ func validateASTAux(
 			astNode.Type == dsl.NodeTypeFullSrec {
 			return errors.New(
 				"Miller: begin/end blocks cannot refer to records via $x, $*, etc.",
-			)
-		}
-	}
-
-	// Check: filter statements cannot be in begin/end
-	if inBeginOrEnd {
-		if astNode.Type == dsl.NodeTypeBareBoolean {
-			return errors.New(
-				"Miller: begin/end blocks cannot have bare booleans: there is no record to filter",
 			)
 		}
 	}

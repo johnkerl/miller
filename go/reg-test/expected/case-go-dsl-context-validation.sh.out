@@ -1,36 +1,25 @@
 
 mlr -n put begin{begin{}}
-Miller: begin blocks can only be at top level.
 
 mlr -n put begin{end{}}
-Miller: end blocks can only be at top level.
 
 mlr -n put end{begin{}}
-Miller: begin blocks can only be at top level.
 
 mlr -n put end{end{}}
-Miller: end blocks can only be at top level.
 
 mlr -n put begin { func f(x) { return 2*x} }
-Miller: func blocks can only be at top level.
 
 mlr -n put begin { emit $x }
-Miller: begin/end blocks cannot refer to records via $x, $*, etc.
 
 mlr -n put return 3
-Miller: return statements are only valid within func/subr blocks.
 
 mlr -n put break
-Miller: break statements are only valid within for/do/while loops.
 
 mlr -n put continue
-Miller: break statements are only valid within for/do/while loops.
 
 mlr -n put func f() { break }
-Miller: break statements are only valid within for/do/while loops.
 
 mlr -n put func f() { continue }
-Miller: break statements are only valid within for/do/while loops.
 
 mlr -n put -v true
 DSL EXPRESSION:
@@ -51,5 +40,4 @@ RAW AST:
             * bare boolean
                 * bool literal "true"
 
-Miller: begin/end blocks cannot have bare booleans: there is no record to filter
 
