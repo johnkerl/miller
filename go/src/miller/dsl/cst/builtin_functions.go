@@ -237,6 +237,12 @@ func (this *RootNode) BuildBinaryFunctionCallsiteNode(
 			evaluable2,
 		), nil
 	}
+	if builtinFunctionInfo.name == "???" {
+		return this.BuildEmptyCoalesceOperatorNode(
+			evaluable1,
+			evaluable2,
+		), nil
+	}
 
 	return &BinaryFunctionCallsiteNode{
 		binaryFunc: builtinFunctionInfo.binaryFunc,
@@ -466,6 +472,8 @@ func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
 }
 
 // ================================================================
+// a ?? b evaluates to b only when a is absent. Example: '$foo ?? 0' when the
+// current record has no field $foo.
 type AbsentCoalesceOperatorNode struct{ a, b IEvaluable }
 
 func (this *RootNode) BuildAbsentCoalesceOperatorNode(a, b IEvaluable) *AbsentCoalesceOperatorNode {
@@ -484,6 +492,29 @@ func (this *AbsentCoalesceOperatorNode) Evaluate(state *State) types.Mlrval {
 
 	bout := this.b.Evaluate(state)
 	return bout
+}
+
+// ================================================================
+// a ?? b evaluates to b only when a is absent or empty. Example: '$foo ?? 0'
+// when the current record has no field $foo, or when $foo is empty..
+type EmptyCoalesceOperatorNode struct{ a, b IEvaluable }
+
+func (this *RootNode) BuildEmptyCoalesceOperatorNode(a, b IEvaluable) *EmptyCoalesceOperatorNode {
+	return &EmptyCoalesceOperatorNode{a: a, b: b}
+}
+
+// This is different from most of the evaluator functions in that it does
+// short-circuiting: the second argument is not evaluated if the first
+// argument is not absent.
+func (this *EmptyCoalesceOperatorNode) Evaluate(state *State) types.Mlrval {
+	aout := this.a.Evaluate(state)
+	atype := aout.GetType()
+	if atype == types.MT_ABSENT || atype == types.MT_VOID || (atype == types.MT_STRING && aout.String() == "")  {
+		bout := this.b.Evaluate(state)
+		return bout
+	} else {
+		return aout
+	}
 }
 
 // ================================================================

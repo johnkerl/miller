@@ -662,6 +662,10 @@ side), e.g. '$name !=~ "^a.*b$"'.`,
 		binaryFunc: BinaryShortCircuitPlaceholder,
 	},
 	{
+		name:       "???",
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+	{
 		name:       "^^",
 		binaryFunc: types.MlrvalLogicalXOR,
 	},

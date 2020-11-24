@@ -2,7 +2,14 @@
 TOP OF LIST:
 
 small:
+! no-op --jvstack
+* justWroteEmptyLine -> pprint too ...
+! nidx @ 10-min
+! text-put @ 10-min
+
+medium:
 ! gating after: 'int x = 1; x = "abc"'
+! still need functional put -S / put -F ... sigh.
 
 big:
 ! emitp/emitf
@@ -24,8 +31,6 @@ no need to bootstrap a parser for the parser-generator language
   - "format-" prefix etc for format-specific case; other prefixes ... ?
   - diff the *.err files -- ?
 
-! still need functional put -S / put -F ... sigh.
-
 * README.md doc section on reg-test/run fu
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -36,15 +41,9 @@ no need to bootstrap a parser for the parser-generator language
   o pothole: auto-extend of foo[NR] -- this now creates an array not a map
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! --jvstack as no-op
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 
-* justWroteEmptyLine -> pprint too ...
-
 * new columns-to-arrays and arrays-to-columns for stan format
-
-! nidx @ 10-min
-! text-put @ 10-min
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
@@ -87,13 +86,8 @@ no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * UDF nexts:
-  o UT for mixing put -f/-e
   o more functions (see below)
   o function metadata, w/ sort-by, for online help
-  o double-check $-anything in begin/end
-  o regexes & associated functions -- necessary or not?
-  o mlr_expect_fail extraneous check output; wut
-  o ENV
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
@@ -367,3 +361,4 @@ NITS/NON-IMMEDIATE:
   o intended as a heterogenity feature ...
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
+* mlrdoc the ??? operator
