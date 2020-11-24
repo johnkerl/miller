@@ -100,6 +100,7 @@ type MapperLabel struct {
 func NewMapperLabel(
 	newNames []string,
 ) (*MapperLabel, error) {
+	// TODO: make this a library function.
 	uniquenessChecker := make(map[string]bool)
 	for _, newName := range newNames {
 		_, ok := uniquenessChecker[newName]

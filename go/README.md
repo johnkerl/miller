@@ -168,3 +168,7 @@ nil through the reader/mapper/writer sequence.
   * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
   * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
   * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the `Mlrval` class implements.
+ 
+## Software-testing methodology
+
+See [./reg-test/README.md](./reg-test/README.md).

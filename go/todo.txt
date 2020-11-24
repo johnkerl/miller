@@ -1,6 +1,15 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+small:
+! gating after: 'int x = 1; x = "abc"'
+
+big:
+! emitp/emitf
+! array/map ...........
+! json-null as type; & all dispo matrices/vectors ...
+! smart fmtnum
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * parser-fu:
   o iterative LALR grok
@@ -14,16 +23,8 @@ no need to bootstrap a parser for the parser-generator language
 * reg-test:
   - "format-" prefix etc for format-specific case; other prefixes ... ?
   - diff the *.err files -- ?
-  - mlr label: check unique
-  - rr --show option to cat out the .out files ...
 
 ! still need functional put -S / put -F ... sigh.
-
-! subr
-! emitp/emitf
-
-! bug on set-var/bind-var
-  - 'int x = 1; x = "abc"' doesn't gate -- needs type-mask within the stack.
 
 * README.md doc section on reg-test/run fu
 
