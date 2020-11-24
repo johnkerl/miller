@@ -40,6 +40,9 @@ func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 	case dsl.NodeTypeIndirectFieldValue:
 		return this.BuildIndirectFieldValueNode(astNode)
 
+	case dsl.NodeTypeEnvironmentVariable:
+		return this.BuildEnvironmentVariableNode(astNode)
+
 	// Operators are just functions with infix syntax so we treat them like
 	// functions in the CST.
 	case dsl.NodeTypeOperator:
@@ -48,10 +51,6 @@ func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 		return this.BuildFunctionCallsiteNode(astNode)
 
 	}
-
-	// xxx if/while/etc
-	// xxx function
-	// xxx more
 
 	return nil, errors.New(
 		"CST BuildEvaluableNode: unhandled AST node type " + string(astNode.Type),

@@ -207,6 +207,8 @@ func (this *ASTNode) Text() string {
 		return tokenText
 	case NodeTypeConstant:
 		return tokenText
+	case NodeTypeEnvironmentVariable:
+		return "ENV[\"" + tokenText + "\"]"
 
 	case NodeTypeDirectFieldValue:
 		return "$" + tokenText

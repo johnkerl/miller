@@ -20,9 +20,6 @@ rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 * Needs to do this:
   "Continuation statements are split into the final boolean, and the statements before (if any)."
 
-rrv ./reg-test/cases/case-c-label.sh
-* handles old/new clashes differently from C impl :^/
-
 ================================================================
 ENV
 
@@ -129,6 +126,9 @@ rrv ./reg-test/cases/case-c-barred-pprint.sh
 
 ================================================================
 BACKWARD INCOMPATIBILITIES:
+
+rrv ./reg-test/cases/case-c-label.sh
+* handles old/new clashes differently from C impl :^/
 
 rrv ./reg-test/cases/case-c-dsl-print.sh
 rrv ./reg-test/cases/case-c-dsl-substr.sh
