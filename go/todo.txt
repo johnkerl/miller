@@ -5,7 +5,6 @@ small:
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
-! slice: empty lower/higher
 
 medium:
 ! gating after: 'int x = 1; x = "abc"'
@@ -21,16 +20,29 @@ big:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * array-map:
-  o '{1:2}' treat as '{"1":2}'
-  o 'm[1]' treat as 'm["1"]'
-  o positional indexing for maps -- use [[]] [[[]]]
+  k positional indexing for maps -- use [[]] [[[]]]
+  k '{1:2}' treat as '{"1":2}'
+  o on read: 'm[1]' treat as 'm["1"]' if already exists as map
+  o on write: 'm[1]' treat as 'm["1"]' on read if already exists as map
 
   o auto-deepen logic -- foo[NR] -- should create a map not an array
+    - idea is arrays are created with explicit array literals, then extended as such
+    - otherwise preserve map semantics
+    - doc clearly that these are different:
+      begin {
+        foo = []
+      }
+      foo[NR] = $foo # auto-extends a array with indices 1,2,3,...
+      --versus--
+      foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...
+
   o auto-lengthen logic ...
     - ./types/mlrmap_accessors.go
     - ./types/mlrval_collections.go
     - ./types/mlrval_new.go
     - ./types/mlrval_new.go
+  o remove the [positional] semantics and all unneeded supporting code, except
+    as used by [[position]] and [[[position]]].
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
