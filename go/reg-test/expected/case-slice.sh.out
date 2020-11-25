@@ -154,10 +154,10 @@ mlr -n --ojson put
   "m1x": (error)
 }
 {
-  "s0x": (error),
-  "s1x": (error),
-  "s5x": (error),
-  "s7x": (error),
-  "s9x": (error)
+  "s0x": "",
+  "s1x": "abcdefg",
+  "s5x": "efg",
+  "s7x": "g",
+  "s9x": ""
 }
 
