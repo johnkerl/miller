@@ -8,7 +8,7 @@ The job of the GOCC parser is to turn the DSL string into an AST.
 
 The job of the CST builder is to turn the AST into a CST.
 
-The job of the `put` and `filter` mappers is to execute the CST statements on each input record.
+The job of the `put` and `filter` transformers is to execute the CST statements on each input record.
 
 # Source-code representation
 

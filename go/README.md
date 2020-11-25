@@ -52,7 +52,7 @@ Either Go has improved since 2015, or I'm a better Go programmer than I used to 
 
 Note: in some sense Go-Miller is *less* efficient but in a way that doesn't significantly affect wall time. Namely, doing `mlr cat` on a million-record data file on my bargain-value MacBook Pro, the C version takes about 2.5 seconds and the Go version takes about 3 seconds. So in terms of wall time -- which is what we care most about, how long we have to wait -- it's about the same.
 
-A way to look a little deeper at resource usage is to run `htop`, while processing a 10x larger file, so it'll take 25 or 30 seconds rather than 2.5 or 3. This way we can look at the steady-state resource consumption. I found that the C version -- which is purely single-threaded -- is taking 100% CPU. And the Go version, which uses concurrency and channels and `MAXPROCS=4`, with reader/mapper/writer each on their own CPU, is taking about 240% CPU. So Go-Miller is taking up not just a little more CPU, but a lot more -- yet, it does more work in parallel, and finishes the job in about the same amount of time.
+A way to look a little deeper at resource usage is to run `htop`, while processing a 10x larger file, so it'll take 25 or 30 seconds rather than 2.5 or 3. This way we can look at the steady-state resource consumption. I found that the C version -- which is purely single-threaded -- is taking 100% CPU. And the Go version, which uses concurrency and channels and `MAXPROCS=4`, with reader/transformer/writer each on their own CPU, is taking about 240% CPU. So Go-Miller is taking up not just a little more CPU, but a lot more -- yet, it does more work in parallel, and finishes the job in about the same amount of time.
 
 Even commodity hardware has multiple CPUs these days -- and the Go code is *much* easier to read, extend, and improve than the C code -- so I'll call this a net win for Miller.
 
@@ -89,15 +89,15 @@ Miller is a multi-format record-stream processor, where a **record** is a
 sequence of key-value pairs. The basic **stream** operation is:
 
 * **read** records in some specified file format;
-* **map** the input records to output records in some user-specified way, using a **chain** of **mappers** (also sometimes called **verbs**) -- sort, filter, cut, put, etc.;
+* **map** the input records to output records in some user-specified way, using a **chain** of **transformers** (also sometimes called **verbs**) -- sort, filter, cut, put, etc.;
 * **write** the records in some specified file format.
 
 So, in broad overview, the key packages are:
 
-* `src/miller/stream`   -- connect input -> mapping -> output via Go channels
-* `src/miller/input`    -- read input records
-* `src/miller/mapping`  -- map input records to output records
-* `src/miller/output`   -- write output records
+* `src/miller/stream`        -- connect input -> transforms -> output via Go channels
+* `src/miller/input`         -- read input records
+* `src/miller/transforming`  -- transform input records to output records
+* `src/miller/output`        -- write output records
 * The rest are details to support this.
 
 ## Directory-structure details
@@ -118,13 +118,13 @@ So, in broad overview, the key packages are:
   * Implementation of the `Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
   * `Mlrmap` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `mlrmap.go` for more details.
   * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
-* `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a mapper chain of `put` then `filter`, and a JSON record-writer.
+* `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
 * `src/miller/clitypes` contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
-* `src/miller/stream` is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-mappers, to record-writing/formatting, to terminal standard output.
+* `src/miller/stream` is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
 * `src/miller/input` is as above -- one record-reader type per supported input file format, and a factory method.
 * `src/miller/output` is as above -- one record-writer type per supported output file format, and a factory method.
-* `src/miller/mapping` contains the abstract record-mapper interface datatype, as well as the Go-channel chaining mechanism for piping one mapper into the next.
-* `src/miller/mappers` is all the concreate record-mappers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `mapping`, so all files in `mappers` would be of the same type.
+* `src/miller/transforming` contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
+* `src/miller/transformers` is all the concreate record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
 * `src/miller/parsing` contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
 * `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.
@@ -133,15 +133,15 @@ So, in broad overview, the key packages are:
 
 Through out the code, records are passed by reference (as are most things, for
 that matter, to reduce unnecessary data copies). In particular, records can be
-nil through the reader/mapper/writer sequence.
+nil through the reader/transformer/writer sequence.
 
 * Record-readers produce a nil record-pointer to signify end of input stream.
-* Each mapper takes a record-pointer as input and produces a sequence of zero or more record-pointers.
-  * Many mappers, such as `cat`, `cut`, `rename`, etc. produce one output record per input record.
-  * The `filter` mapper produces one or zero output records per input record depending on whether the record passed the filter.
-  * The `nothing` mapper produces zero output records.
-  * The `sort` and `tac` mappers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-record end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-record end-of-stream marker.
-  * Many mappers such as `stats1` and `count` also retain input records, then produce output once there is no more input to them.
+* Each transformer takes a record-pointer as input and produces a sequence of zero or more record-pointers.
+  * Many transformers, such as `cat`, `cut`, `rename`, etc. produce one output record per input record.
+  * The `filter` transformer produces one or zero output records per input record depending on whether the record passed the filter.
+  * The `nothing` transformer produces zero output records.
+  * The `sort` and `tac` transformers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-record end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-record end-of-stream marker.
+  * Many transformers such as `stats1` and `count` also retain input records, then produce output once there is no more input to them.
 * A null record-pointer at end of stream is passed to record-writers so that they may produce final output.
   * Most writers produce their output one record at a time.
   * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
@@ -149,10 +149,10 @@ nil through the reader/mapper/writer sequence.
 ## Memory management
 
 * Go has garbage collection which immediately simplifies the coding compared to the C port.
-* Pointers are used freely for record-processing: record-readers allocate pointed records; pointed records are passed on Go channels from record-readers to record-mappers to record-writers.
-  * Any mapper which passes an input record through is fine -- be it unmodifed as in `mlr cat` or modified as in `mlr cut`.
-  * If a mapper drops a record (`mlr filter` in false cases, for example, or `mlr nothing`) it will be GCed.
-  * One caveat is any mapper which produces multiples, e.g. `mlr repeat` -- this needs to explicitly copy records instead of producing multiple pointers to the same record.
+* Pointers are used freely for record-processing: record-readers allocate pointed records; pointed records are passed on Go channels from record-readers to record-transformers to record-writers.
+  * Any transformer which passes an input record through is fine -- be it unmodifed as in `mlr cat` or modified as in `mlr cut`.
+  * If a transformer drops a record (`mlr filter` in false cases, for example, or `mlr nothing`) it will be GCed.
+  * One caveat is any transformer which produces multiples, e.g. `mlr repeat` -- this needs to explicitly copy records instead of producing multiple pointers to the same record.
 * Right-hand-sides of DSL expressions all pass around pointers to records and Mlrvals.
   * Lvalue expressions return pointed `*types.Mlrmap` so they can be assigned to; rvalue expressions return non-pointed `types.Mlrval` but these are very shallow copies -- the int/string/etc types are copied but maps/arrays are passed by reference in the rvalue expression-evaluators.
 * Copy-on-write is done on map/array put -- for example, in the assignment phase of a DSL statement, where an rvalue is assigned to an lvalue.
