@@ -1,7 +1,7 @@
 // ================================================================
 // Items which might better belong in miller/cli, but which are placed in a
 // deeper package to avoid a package-dependency cycle between miller/cli and
-// miller/mapping.
+// miller/transforming.
 // ================================================================
 
 package clitypes
@@ -69,7 +69,7 @@ type TOptions struct {
 
 	FileNames []string
 
-	// These are used to construct the mapper list. In particular, for in-place mode
+	// These are used to construct the transformer list. In particular, for in-place mode
 	// they're reconstructed for each file.  We make copies since each pass through a
 	// CLI-parser operates destructively, principally by running strtok over
 	// comma-delimited field-name lists.

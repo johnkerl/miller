@@ -8,7 +8,7 @@ import (
 	"miller/clitypes"
 	"miller/dsl/cst"
 	"miller/lib"
-	"miller/mapping"
+	"miller/transforming"
 	"miller/version"
 )
 
@@ -26,7 +26,7 @@ const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
 	options clitypes.TOptions,
-	recordMappers []mapping.IRecordMapper,
+	recordTransformers []transforming.IRecordTransformer,
 	err error,
 ) {
 	options = clitypes.DefaultOptions()
@@ -100,7 +100,7 @@ func ParseCommandLine(args []string) (
 	//		return nil;
 	//	}
 
-	//	// Construct the mapper list for single use, e.g. the normal streaming case wherein the
+	//	// Construct the transformer list for single use, e.g. the normal streaming case wherein the
 	//	// mappers operate on all input files. Also retain information needed to construct them
 	//	// for each input file, for in-place mode.
 	//	options.mapper_argb = argi;
@@ -108,9 +108,9 @@ func ParseCommandLine(args []string) (
 	//	options.non_in_place_argv = copy_argv(args);
 	//	options.argc = argc;
 	//	*ppmapper_list = cli_parse_mappers(options.non_in_place_argv, &argi, argc, popts);
-	recordMappers, err = parseMappers(args, &argi, argc, &options)
+	recordTransformers, err = parseMappers(args, &argi, argc, &options)
 	if err != nil {
-		return options, recordMappers, err
+		return options, recordTransformers, err
 	}
 
 	// There may already be one or more because of --from on the command line,
@@ -133,21 +133,21 @@ func ParseCommandLine(args []string) (
 		lib.SeedRandom(options.RandSeed)
 	}
 
-	return options, recordMappers, nil
+	return options, recordTransformers, nil
 }
 
 // ----------------------------------------------------------------
 // Returns a list of mappers, from the starting point in args given by *pargi.
-// Bumps *pargi to point to remaining post-mapper-setup args, i.e. filenames.
+// Bumps *pargi to point to remaining post-transformer-setup args, i.e. filenames.
 
 func parseMappers(
 	args []string,
 	pargi *int,
 	argc int,
 	options *clitypes.TOptions,
-) ([]mapping.IRecordMapper, error) {
+) ([]transforming.IRecordTransformer, error) {
 
-	mapperList := make([]mapping.IRecordMapper, 0)
+	mapperList := make([]transforming.IRecordTransformer, 0)
 	argi := *pargi
 
 	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
@@ -166,7 +166,7 @@ func parseMappers(
 		checkArgCount(args, argi, argc, 1)
 		verb := args[argi]
 
-		mapperSetup := lookUpMapperSetup(verb)
+		mapperSetup := lookUpTransformerSetup(verb)
 		if mapperSetup == nil {
 			fmt.Fprintf(os.Stderr,
 				"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
@@ -176,9 +176,9 @@ func parseMappers(
 
 		// It's up to the parse func to print its usage on CLI-parse failure.
 		// Also note: this assumes main reader/writer opts are all parsed
-		// *before* mapper parse-CLI methods are invoked.
+		// *before* transformer parse-CLI methods are invoked.
 
-		mapper := mapperSetup.ParseCLIFunc(
+		transformer := mapperSetup.ParseCLIFunc(
 			&argi,
 			argc,
 			args,
@@ -187,7 +187,7 @@ func parseMappers(
 			&options.WriterOptions,
 		)
 
-		if mapper == nil {
+		if transformer == nil {
 			// Error message already printed out
 			os.Exit(1)
 		}
@@ -197,7 +197,7 @@ func parseMappers(
 		//			options.no_input = true;
 		//		}
 
-		mapperList = append(mapperList, mapper)
+		mapperList = append(mapperList, transformer)
 
 		if argi >= argc || args[argi] != "then" {
 			break

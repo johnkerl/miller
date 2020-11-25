@@ -7,7 +7,7 @@ import (
 
 	"miller/clitypes"
 	"miller/input"
-	"miller/mapping"
+	"miller/transforming"
 	"miller/output"
 	"miller/types"
 )
@@ -22,13 +22,13 @@ import (
 //
 // * Record-writes don't need them (OPS et al. are already in the
 //   writer-options struct). However, we have chained mappers using the 'then'
-//   command-line syntax. This means a given mapper might be piping its output
-//   to a record-writer, or another mapper. So, the record-and-context pair goes
+//   command-line syntax. This means a given transformer might be piping its output
+//   to a record-writer, or another transformer. So, the record-and-context pair goes
 //   to the record-writers even though they don't need the contexts.
 
 func Stream(
 	options clitypes.TOptions,
-	recordMappers []mapping.IRecordMapper,
+	recordTransformers []transforming.IRecordTransformer,
 ) error {
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
@@ -47,7 +47,7 @@ func Stream(
 		return errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
 	}
 
-	// Set up the reader-to-mapper and mapper-to-writer channels.
+	// Set up the reader-to-transformer and transformer-to-writer channels.
 	inputChannel := make(chan *types.RecordAndContext, 10)
 	outputChannel := make(chan *types.RecordAndContext, 1)
 
@@ -57,11 +57,11 @@ func Stream(
 	errorChannel := make(chan error, 1)
 	doneChannel := make(chan bool, 1)
 
-	// Start the reader, mapper, and writer. Let them run until fatal input
+	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
 	go recordReader.Read(options.FileNames, *initialContext, inputChannel, errorChannel)
-	go mapping.ChainMapper(inputChannel, recordMappers, outputChannel)
+	go transforming.ChainTransformer(inputChannel, recordTransformers, outputChannel)
 	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, os.Stdout)
 
 	done := false

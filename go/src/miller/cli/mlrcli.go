@@ -477,7 +477,7 @@ package cli
 //}
 
 // ----------------------------------------------------------------
-// For mapper join which has its own input-format overrides.
+// For transformer join which has its own input-format overrides.
 //
 // Mainly this just takes the main-opts flag whenever the join-opts flag was not
 // specified by the user. But it's a bit more complex when main and join input
@@ -544,7 +544,7 @@ package cli
 //		pfunc_opts.input_json_flatten_separator = pmain_opts.input_json_flatten_separator;
 //}
 
-// Similar to cli_merge_reader_opts but for mapper tee & mapper put which have their
+// Similar to cli_merge_reader_opts but for transformer tee & transformer put which have their
 // own output-format overrides.
 
 //void cli_merge_writer_opts(clitypes.TWriterOptions* pfunc_opts, TWriterOptions* pmain_opts) {
