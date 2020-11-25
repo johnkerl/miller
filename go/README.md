@@ -127,7 +127,7 @@ So, in broad overview, the key packages are:
 * [src/miller/transformers](./src/miller/transformers) is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
 * [src/miller/parsing](./src/miller/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
 * [src/miller/dsl](./src/miller/dsl) contains [`ast_types.go`](src/miller/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* [src/miller/dsl/cst](./src/miller/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [src/miller/dsl/cst/README.md](./src/miller/dsl/cst/README.md)` for more information.
+* [src/miller/dsl/cst](./src/miller/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [src/miller/dsl/cst/README.md](./src/miller/dsl/cst/README.md) for more information.
 
 ## Nil-record conventions
 
