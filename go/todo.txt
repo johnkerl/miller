@@ -2,6 +2,7 @@
 TOP OF LIST:
 
 small:
+* "mapping"/"Map" -> something ......
 * keys/values -> get_keys/get_values
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
@@ -10,6 +11,9 @@ small:
 medium:
 ! gating after: 'int x = 1; x = "abc"'
 ! still need functional put -S / put -F ... sigh.
+? records as mlrmap -> mlrval?
+  o reduce $* copy ...
+  o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
 
 big:
 ! emitp/emitf
@@ -30,8 +34,6 @@ no need to bootstrap a parser for the parser-generator language
 * reg-test:
   - "format-" prefix etc for format-specific case; other prefixes ... ?
   - diff the *.err files -- ?
-
-* README.md doc section on reg-test/run fu
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! int map keys: what to do with:
