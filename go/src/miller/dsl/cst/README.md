@@ -2,16 +2,16 @@ See [go/src/miller/dsl/README.md](https://github.com/johnkerl/miller/blob/master
 
 ## Files
 
-* `types.go` is a starting point for seeing datatypes involved in the concrete syntax tree.
+* [`types.go`](./types.go) is a starting point for seeing datatypes involved in the concrete syntax tree.
   * `IExecutable` is the interface for executable nodes, such as assignment statements, or statement blocks (if-bodies, etc.).
   * `IEvaluable` is the interface for evaluable expressions (e.g. right-hand sides of assignment statements).
-* `root.go` contains the top-level logic for building a CST from an AST at parse time (`cstRoot, err := cst.Build(astRoot)`), as well as executing the CST on a per-record basis (`cstRoot.Execute(cstState)`). See also the [`put` transformer](https://github.com/johnkerl/miller/blob/master/go/src/miller/transformers/put.go).
+* [`root.go`](./root.go) contains the top-level logic for building a CST from an AST at parse time (`cstRoot, err := cst.Build(astRoot)`), as well as executing the CST on a per-record basis (`cstRoot.Execute(cstState)`). See also the [`put` transformer](../..//transformers/put.go).
 
 ## Notes
 
 Go is a strongly typed language, but the AST is polymorphic. This results in if/else or switch statements as an AST is walked.
 
-Also, when we modify code, there can be changes in the [BNF grammar](https://github.com/johnkerl/miller/blob/master/go/src/miller/parsing/mlr.bnf) not yet reflected in the [AST](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/ast.go). Likewise, there can be AST changes not yet reflected here. (Example: you are partway through adding a new binary operator to the grammar.)
+Also, when we modify code, there can be changes in the [BNF grammar](../..//parsing/mlr.bnf) not yet reflected in the [AST](../..//src/millerdsl/ast_types.go). Likewise, there can be AST changes not yet reflected here. (Example: you are partway through adding a new binary operator to the grammar.)
 
 As a result, throughout the code, there are error checks which may seem redundant but which are in place to make incremental development more pleasant and robust.
 

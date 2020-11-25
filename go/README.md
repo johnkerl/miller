@@ -11,7 +11,7 @@
 * Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have reg-test coverage
 * All `TODO`/`xxx` comments in Go, BNF source code, and case-files are resolved
 * Release notes including Go-only features, and C/Go backward-incompatibilities
-* Docs updated at https://miller.readthedocs.io/ (`../docs`)
+* Docs updated at https://miller.readthedocs.io/ [`../docs](../docs/))
 * Equivalent of `./configure`, whatever that turns out to be
 
 # Trying out the Go port
@@ -72,7 +72,7 @@ During the coding of Miller, I've been guided by the following:
   * Names of files, variables, functions, etc. should be fully spelled out (e.g. `NewEvaluableLeafNode`), except for a small number of most-used names where a longer name would cause unnecessary line-wraps (e.g. `Mlrval` instead of `MillerValue` since this appears very very often).
   * Code should not be too clever. This includes some reasonable amounts of code duplication from time to time, to keep things inline, rather than lasagna code.
   * Things should be transparent.  For example, `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
-  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as `mlr.go`, `mlr.bnf`, `stream.go`, etc.
+  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as [mlr.go](./mlr.go), [mlr.bnf](./src/miller/parsing/mlr.bnf), [stream.go](./src/miller/stream/stream.go), etc.
 * *Miller should be pleasant to write.*
   * It should be quick to answer the question *Did I just break anything?* -- hence the `build` and `reg_test/run` regression scripts.
   * It should be quick to find out what to do next as you iteratively develop -- see for example [cst/README.md](https://github.com/johnkerl/miller/blob/master/go/src/miller/dsl/cst/README.md).
@@ -94,10 +94,10 @@ sequence of key-value pairs. The basic **stream** operation is:
 
 So, in broad overview, the key packages are:
 
-* `src/miller/stream`        -- connect input -> transforms -> output via Go channels
-* `src/miller/input`         -- read input records
-* `src/miller/transforming`  -- transform input records to output records
-* `src/miller/output`        -- write output records
+* [src/miller/stream](./src/miller/stream) -- connect input -> transforms -> output via Go channels
+* [src/miller/input](./src/miller/input) -- read input records
+* [src/miller/transforming](./src/miller/transforming) -- transform input records to output records
+* [src/miller/output](./src/miller/output) -- write output records
 * The rest are details to support this.
 
 ## Directory-structure details
@@ -113,21 +113,21 @@ So, in broad overview, the key packages are:
 
 ### Miller per se
 
-* The main entry point is `mlr.go`; everything else in `src/miller`.
-* `src/miller/lib`:
-  * Implementation of the `Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
-  * `Mlrmap` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `mlrmap.go` for more details.
-  * `context` supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
-* `src/miller/cli` is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
-* `src/miller/clitypes` contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
-* `src/miller/stream` is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
-* `src/miller/input` is as above -- one record-reader type per supported input file format, and a factory method.
-* `src/miller/output` is as above -- one record-writer type per supported output file format, and a factory method.
-* `src/miller/transforming` contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
-* `src/miller/transformers` is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
-* `src/miller/parsing` contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
-* `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.
+* The main entry point is [mlr.go](./mlr.go); everything else in [src/miller](./src/miller).
+* [src/miller/lib](./src/miller/lib):
+  * Implementation of the [`Mlrval`](./src/miller/types/mlrval.go) datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
+  * [`Mlrmap`](./src/miller/types/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./src/miller/types/mlrmap.go) for more details.
+  * [`context`](./src/miller/types/context.go) supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
+* [src/miller/cli](./src/miller/cli) is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
+* [`src/miller/clitypes`](./src/miller/clitypes) contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
+* [`src/miller/stream`](./src/miller/stream) is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
+* [`src/miller/input`](./src/miller/input) is as above -- one record-reader type per supported input file format, and a factory method.
+* [`src/miller/output`](./src/miller/output) is as above -- one record-writer type per supported output file format, and a factory method.
+* [`src/miller/transforming`](./src/miller/transforming) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
+* [`src/miller/transformers](./src/miller/transformers)` is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
+* [`src/miller/parsing`](./src/miller/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
+* [`src/miller/dsl`](./src/miller/dsl) contains [`ast_types.go`](src/miller/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
+* [`src/miller/dsl/cst`](./src/miller/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [src/miller/dsl/cst/README.md](./src/miller/dsl/cst/README.md)` for more information.
 
 ## Nil-record conventions
 
@@ -159,7 +159,7 @@ nil through the reader/transformer/writer sequence.
 
 ## More about mlrvals
 
-`Mlrval` is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
+[`Mlrval`](./src/miller/types/mlrval.go) is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
 
 * Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type. Nothing is written to the `$out` field in this case. See also [here](http://johnkerl.org/miller/doc/reference.html#Null_data:_empty_and_absent) for more information.
 * Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`. This is an overlap with `string` type, since a void value looks like an empty string. I've gone back and forth on this (including when I was writing the C implementation) -- whether to retain `void` as a distinct type from empty-string, or not. I ended up keeping it as it made the `Mlrval` logic easier to understand.
@@ -167,7 +167,7 @@ nil through the reader/transformer/writer sequence.
 * Miller's number handling makes auto-overflow from int to float transparent, while preserving the possibility of 64-bit bitwise arithmetic.
   * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
   * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
-  * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the `Mlrval` class implements.
+  * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the [`Mlrval`](./src/miller/types/mlrval.go) class implements.
  
 ## Software-testing methodology
 

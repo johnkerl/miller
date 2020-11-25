@@ -21,8 +21,6 @@ big:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * array-map:
-  o array-slice unpanic
-
   o '{1:2}' treat as '{"1":2}'
   o 'm[1]' treat as 'm["1"]'
   o positional indexing for maps -- use [[]] [[[]]]
@@ -228,7 +226,6 @@ CATEGORIES:
 ----------------------------------------------------------------
 MAYBE:
 
-* string index/slice access
 * string/array slices on assignment LHS -- ?
 * push/pop/shift/unshift subroutines
 
@@ -380,3 +377,4 @@ NITS/NON-IMMEDIATE:
   o ....
   o ....
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
+* doc: string index/slice access on RHS
