@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var DecimateSetup = transforming.TransformerSetup{
 	Verb:         "decimate",
-	ParseCLIFunc: mapperDecimateParseCLI,
+	ParseCLIFunc: transformerDecimateParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperDecimateParseCLI(
+func transformerDecimateParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -64,7 +64,7 @@ func mapperDecimateParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperDecimateUsage(ostream, args[0], verb, flagSet)
+		transformerDecimateUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -86,7 +86,7 @@ func mapperDecimateParseCLI(
 	return transformer
 }
 
-func mapperDecimateUsage(
+func transformerDecimateUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

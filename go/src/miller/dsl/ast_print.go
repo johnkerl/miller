@@ -167,8 +167,8 @@ func (this *ASTNode) ChildrenAreAllLeaves() bool {
 
 // ----------------------------------------------------------------
 // Some nodes have non-nil tokens; other, nil. And token-types can have spaces
-// in them. In this method we use custom mappings to always get a whitespace-free
-// representation of the content of a single AST node.
+// in them. In this method we use custom mappings to always get a
+// whitespace-free representation of the content of a single AST node.
 
 func (this *ASTNode) Text() string {
 	tokenText := ""

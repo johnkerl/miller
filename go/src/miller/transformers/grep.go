@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var GrepSetup = transforming.TransformerSetup{
 	Verb:         "grep",
-	ParseCLIFunc: mapperGrepParseCLI,
+	ParseCLIFunc: transformerGrepParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperGrepParseCLI(
+func transformerGrepParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -52,7 +52,7 @@ func mapperGrepParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperGrepUsage(ostream, args[0], verb, flagSet)
+		transformerGrepUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -92,7 +92,7 @@ func mapperGrepParseCLI(
 	return transformer
 }
 
-func mapperGrepUsage(
+func transformerGrepUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

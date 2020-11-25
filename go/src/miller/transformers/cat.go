@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var CatSetup = transforming.TransformerSetup{
 	Verb:         "cat",
-	ParseCLIFunc: mapperCatParseCLI,
+	ParseCLIFunc: transformerCatParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperCatParseCLI(
+func transformerCatParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -58,7 +58,7 @@ func mapperCatParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperCatUsage(ostream, args[0], verb, flagSet)
+		transformerCatUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -82,7 +82,7 @@ func mapperCatParseCLI(
 	return transformer
 }
 
-func mapperCatUsage(
+func transformerCatUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

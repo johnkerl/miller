@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	//"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var FillDownSetup = transforming.TransformerSetup{
 	Verb:         "fill-down",
-	ParseCLIFunc: mapperFillDownParseCLI,
+	ParseCLIFunc: transformerFillDownParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperFillDownParseCLI(
+func transformerFillDownParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -62,7 +62,7 @@ With -a, a field is 'missing' only if it is absent.`,
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperFillDownUsage(ostream, args[0], verb, flagSet)
+		transformerFillDownUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -82,7 +82,7 @@ With -a, a field is 'missing' only if it is absent.`,
 	return transformer
 }
 
-func mapperFillDownUsage(
+func transformerFillDownUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

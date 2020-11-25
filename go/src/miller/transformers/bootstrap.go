@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var BootstrapSetup = transforming.TransformerSetup{
 	Verb:         "bootstrap",
-	ParseCLIFunc: mapperBootstrapParseCLI,
+	ParseCLIFunc: transformerBootstrapParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperBootstrapParseCLI(
+func transformerBootstrapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -49,7 +49,7 @@ func mapperBootstrapParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperBootstrapUsage(ostream, args[0], verb, flagSet)
+		transformerBootstrapUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -66,7 +66,7 @@ func mapperBootstrapParseCLI(
 	return transformer
 }
 
-func mapperBootstrapUsage(
+func transformerBootstrapUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
@@ -117,7 +117,7 @@ func (this *TransformerBootstrap) Map(
 		//
 		// About memory management:
 		//
-		// Normally in Miller mappers we pass through pointers to records.
+		// Normally in Miller transformers we pass through pointers to records.
 		// Here, though, since we do sampling with replacement, a record could
 		// be emitted twice or more. To avoid producing multiple records in the
 		// output stream pointing to the same memory, we would have to copy the

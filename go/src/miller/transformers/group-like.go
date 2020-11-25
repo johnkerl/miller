@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var GroupLikeSetup = transforming.TransformerSetup{
 	Verb:         "group-like",
-	ParseCLIFunc: mapperGroupLikeParseCLI,
+	ParseCLIFunc: transformerGroupLikeParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperGroupLikeParseCLI(
+func transformerGroupLikeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperGroupLikeParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperGroupLikeUsage(ostream, args[0], verb, flagSet)
+		transformerGroupLikeUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,7 +58,7 @@ func mapperGroupLikeParseCLI(
 	return transformer
 }
 
-func mapperGroupLikeUsage(
+func transformerGroupLikeUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

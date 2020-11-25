@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var ShuffleSetup = transforming.TransformerSetup{
 	Verb:         "shuffle",
-	ParseCLIFunc: mapperShuffleParseCLI,
+	ParseCLIFunc: transformerShuffleParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperShuffleParseCLI(
+func transformerShuffleParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperShuffleParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperShuffleUsage(ostream, args[0], verb, flagSet)
+		transformerShuffleUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,7 +58,7 @@ func mapperShuffleParseCLI(
 	return transformer
 }
 
-func mapperShuffleUsage(
+func transformerShuffleUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

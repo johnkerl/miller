@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -13,11 +13,11 @@ import (
 // ----------------------------------------------------------------
 var CheckSetup = transforming.TransformerSetup{
 	Verb:         "check",
-	ParseCLIFunc: mapperCheckParseCLI,
+	ParseCLIFunc: transformerCheckParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperCheckParseCLI(
+func transformerCheckParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -38,7 +38,7 @@ func mapperCheckParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperCheckUsage(ostream, args[0], verb, flagSet)
+		transformerCheckUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -55,7 +55,7 @@ func mapperCheckParseCLI(
 	return transformer
 }
 
-func mapperCheckUsage(
+func transformerCheckUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

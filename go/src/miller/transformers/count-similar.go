@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var CountSimilarSetup = transforming.TransformerSetup{
 	Verb:         "count-similar",
-	ParseCLIFunc: mapperCountSimilarParseCLI,
+	ParseCLIFunc: transformerCountSimilarParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperCountSimilarParseCLI(
+func transformerCountSimilarParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -53,7 +53,7 @@ func mapperCountSimilarParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperCountSimilarUsage(ostream, args[0], verb, flagSet)
+		transformerCountSimilarUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -61,7 +61,7 @@ func mapperCountSimilarParseCLI(
 	}
 
 	if *pGroupByFieldNames == "" {
-		mapperCountSimilarUsage(os.Stderr, args[0], verb, flagSet)
+		transformerCountSimilarUsage(os.Stderr, args[0], verb, flagSet)
 		os.Exit(1)
 	}
 
@@ -78,7 +78,7 @@ func mapperCountSimilarParseCLI(
 	return transformer
 }
 
-func mapperCountSimilarUsage(
+func transformerCountSimilarUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

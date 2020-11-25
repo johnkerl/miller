@@ -285,13 +285,13 @@ func (this *Mlrmap) GetKeysJoined() string {
 }
 
 // ----------------------------------------------------------------
-// For group-by in several mappers.  If the record is 'a=x,b=y,c=3,d=4,e=5' and
+// For group-by in several transformers.  If the record is 'a=x,b=y,c=3,d=4,e=5' and
 // selectedFieldNames is 'a,b,c' then values are 'x,y,3'. This is returned as a
 // comma-joined string.  The boolean ok is false if not all selected field
 // names were present in the record.
 //
 // It's OK for the selected-field-namees list to be empty. This happens for
-// mappers which support a -g option but are invoked without it (e.g. 'mlr tail
+// transformers which support a -g option but are invoked without it (e.g. 'mlr tail
 // -n 1' vs 'mlr tail -n 1 -g a,b,c'). In this case the return value is simply
 // the empty string.
 func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string, bool) {

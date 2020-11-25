@@ -39,7 +39,7 @@
 //
 // ================================================================
 
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -58,11 +58,11 @@ import (
 // ----------------------------------------------------------------
 var SortSetup = transforming.TransformerSetup{
 	Verb:         "sort",
-	ParseCLIFunc: mapperSortParseCLI,
+	ParseCLIFunc: transformerSortParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperSortParseCLI(
+func transformerSortParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -76,7 +76,7 @@ func mapperSortParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Unlike other mappers, we can't use flagSet here. The syntax of 'mlr
+	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
 	// sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
 	// first sort lexically on field a, then numerically on field b, then
 	// lexically on field c. The flagSet API would let the '-f c' clobber the
@@ -89,7 +89,7 @@ func mapperSortParseCLI(
 		if !strings.HasPrefix(args[argi], "-") {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			mapperSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
@@ -134,13 +134,13 @@ func mapperSortParseCLI(
 			argi += 2
 
 		} else {
-			mapperSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
 		}
 	}
 
 	if len(groupByFieldNameList) == 0 {
-		mapperSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 		os.Exit(1)
 	}
 
@@ -158,12 +158,12 @@ func mapperSortParseCLI(
 func checkArgCountSort(args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
 		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
-		mapperSortUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
+		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
 		os.Exit(1)
 	}
 }
 
-func mapperSortUsage(
+func transformerSortUsage(
 	o *os.File,
 	exitCode int,
 	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError

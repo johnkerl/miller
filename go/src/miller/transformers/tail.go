@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var TailSetup = transforming.TransformerSetup{
 	Verb:         "tail",
-	ParseCLIFunc: mapperTailParseCLI,
+	ParseCLIFunc: transformerTailParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperTailParseCLI(
+func transformerTailParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -57,7 +57,7 @@ func mapperTailParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperTailUsage(ostream, args[0], verb, flagSet)
+		transformerTailUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -77,7 +77,7 @@ func mapperTailParseCLI(
 	return transformer
 }
 
-func mapperTailUsage(
+func transformerTailUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

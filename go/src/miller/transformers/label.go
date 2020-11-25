@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"errors"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var LabelSetup = transforming.TransformerSetup{
 	Verb:         "label",
-	ParseCLIFunc: mapperLabelParseCLI,
+	ParseCLIFunc: transformerLabelParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperLabelParseCLI(
+func transformerLabelParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperLabelParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperLabelUsage(ostream, args[0], verb, flagSet)
+		transformerLabelUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -73,7 +73,7 @@ func mapperLabelParseCLI(
 	return transformer
 }
 
-func mapperLabelUsage(
+func transformerLabelUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

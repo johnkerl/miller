@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var RemoveEmptyColumnsSetup = transforming.TransformerSetup{
 	Verb:         "remove-empty-columns",
-	ParseCLIFunc: mapperRemoveEmptyColumnsParseCLI,
+	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperRemoveEmptyColumnsParseCLI(
+func transformerRemoveEmptyColumnsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -40,7 +40,7 @@ func mapperRemoveEmptyColumnsParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperRemoveEmptyColumnsUsage(ostream, args[0], verb, flagSet)
+		transformerRemoveEmptyColumnsUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -57,7 +57,7 @@ func mapperRemoveEmptyColumnsParseCLI(
 	return transformer
 }
 
-func mapperRemoveEmptyColumnsUsage(
+func transformerRemoveEmptyColumnsUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

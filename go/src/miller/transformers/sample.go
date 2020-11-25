@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var SampleSetup = transforming.TransformerSetup{
 	Verb:         "sample",
-	ParseCLIFunc: mapperSampleParseCLI,
+	ParseCLIFunc: transformerSampleParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperSampleParseCLI(
+func transformerSampleParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -53,7 +53,7 @@ func mapperSampleParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperSampleUsage(ostream, args[0], verb, flagSet)
+		transformerSampleUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -61,7 +61,7 @@ func mapperSampleParseCLI(
 	}
 
 	if *pSampleCount < 0 {
-		mapperSampleUsage(os.Stderr, args[0], verb, flagSet)
+		transformerSampleUsage(os.Stderr, args[0], verb, flagSet)
 		os.Exit(1)
 	}
 
@@ -78,7 +78,7 @@ func mapperSampleParseCLI(
 	return transformer
 }
 
-func mapperSampleUsage(
+func transformerSampleUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
@@ -176,7 +176,7 @@ func (this *sampleBucketType) handleRecord(
 		// Always accept new entries until the bucket is full.
 		//
 		// Note: we need to copy the record since Go is concurrent and all
-		// Miller mappers execute in their own goroutine -- if we just keep a
+		// Miller transformers execute in their own goroutine -- if we just keep a
 		// pointer, a downstream transformer mutate the pointed-to record between
 		// our saving it and our re-using it.
 		this.recordsAndContexts[this.nused] = inrecAndContext.Copy()

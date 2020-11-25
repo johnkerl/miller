@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var TacSetup = transforming.TransformerSetup{
 	Verb:         "tac",
-	ParseCLIFunc: mapperTacParseCLI,
+	ParseCLIFunc: transformerTacParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperTacParseCLI(
+func transformerTacParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -39,7 +39,7 @@ func mapperTacParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperTacUsage(ostream, args[0], verb, flagSet)
+		transformerTacUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -56,7 +56,7 @@ func mapperTacParseCLI(
 	return transformer
 }
 
-func mapperTacUsage(
+func transformerTacUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

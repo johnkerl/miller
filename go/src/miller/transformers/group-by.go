@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var GroupBySetup = transforming.TransformerSetup{
 	Verb:         "group-by",
-	ParseCLIFunc: mapperGroupByParseCLI,
+	ParseCLIFunc: transformerGroupByParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperGroupByParseCLI(
+func transformerGroupByParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperGroupByParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperGroupByUsage(ostream, args[0], verb, flagSet)
+		transformerGroupByUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -68,7 +68,7 @@ func mapperGroupByParseCLI(
 	return transformer
 }
 
-func mapperGroupByUsage(
+func transformerGroupByUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

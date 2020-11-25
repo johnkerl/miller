@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var CountSetup = transforming.TransformerSetup{
 	Verb:         "count",
-	ParseCLIFunc: mapperCountParseCLI,
+	ParseCLIFunc: transformerCountParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperCountParseCLI(
+func transformerCountParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -58,7 +58,7 @@ func mapperCountParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperCountUsage(ostream, args[0], verb, flagSet)
+		transformerCountUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -79,7 +79,7 @@ func mapperCountParseCLI(
 	return transformer
 }
 
-func mapperCountUsage(
+func transformerCountUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

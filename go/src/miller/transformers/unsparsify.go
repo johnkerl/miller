@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"container/list"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var UnsparsifySetup = transforming.TransformerSetup{
 	Verb:         "unsparsify",
-	ParseCLIFunc: mapperUnsparsifyParseCLI,
+	ParseCLIFunc: transformerUnsparsifyParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperUnsparsifyParseCLI(
+func transformerUnsparsifyParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -54,7 +54,7 @@ modified, and operation will be streaming.`,
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperUnsparsifyUsage(ostream, args[0], verb, flagSet)
+		transformerUnsparsifyUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -74,7 +74,7 @@ modified, and operation will be streaming.`,
 	return transformer
 }
 
-func mapperUnsparsifyUsage(
+func transformerUnsparsifyUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

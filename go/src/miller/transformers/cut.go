@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var CutSetup = transforming.TransformerSetup{
 	Verb:         "cut",
-	ParseCLIFunc: mapperCutParseCLI,
+	ParseCLIFunc: transformerCutParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperCutParseCLI(
+func transformerCutParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -71,7 +71,7 @@ Default is to retain them in the order found in the input data.`,
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperCutUsage(ostream, args[0], verb, flagSet)
+		transformerCutUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -99,7 +99,7 @@ Default is to retain them in the order found in the input data.`,
 	return transformer
 }
 
-func mapperCutUsage(
+func transformerCutUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
@@ -163,7 +163,7 @@ func NewTransformerCut(
 //		pstate->pfield_name_set    = hss_from_slls(pfield_name_list);
 //		pstate->nregex             = 0;
 //		pstate->regexes            = NULL;
-//		pmapper->pprocess_func     = mapper_cut_process_no_regexes;
+//		ptransformer->pprocess_func     = transformer_cut_process_no_regexes;
 //	} else {
 //		pstate->pfield_name_list   = NULL;
 //		pstate->pfield_name_set    = NULL;
@@ -176,7 +176,7 @@ func NewTransformerCut(
 //			regcomp_or_die_quoted(&pstate->regexes[i], pe->value, REG_NOSUB);
 //		}
 //		slls_free(pfield_name_list);
-//		pmapper->pprocess_func = mapper_cut_process_with_regexes;
+//		ptransformer->pprocess_func = transformer_cut_process_with_regexes;
 //	}
 
 // ----------------------------------------------------------------
@@ -251,9 +251,9 @@ func (this *TransformerCut) exclude(
 
 // xxx to port:
 //// ----------------------------------------------------------------
-//static sllv_t* mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+//static sllv_t* transformer_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 //	if (pinrec != NULL) {
-//		mapper_cut_state_t* pstate = (mapper_cut_state_t*)pvstate;
+//		transformer_cut_state_t* pstate = (transformer_cut_state_t*)pvstate;
 //		// Loop over the record and free the fields to be discarded, being
 //		// careful about the fact that we're modifying what we're looping over.
 //		for (lrece_t* pe = pinrec->phead; pe != NULL; /* next in loop */) {

@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"errors"
@@ -21,7 +21,7 @@ import (
 // ----------------------------------------------------------------
 var PutSetup = transforming.TransformerSetup{
 	Verb:         "put",
-	ParseCLIFunc: mapperPutParseCLI,
+	ParseCLIFunc: transformerPutParseCLI,
 	IgnoresInput: false,
 }
 
@@ -30,11 +30,11 @@ var PutSetup = transforming.TransformerSetup{
 // * check other things from the C impl
 var FilterSetup = transforming.TransformerSetup{
 	Verb:         "filter",
-	ParseCLIFunc: mapperPutParseCLI,
+	ParseCLIFunc: transformerPutParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperPutParseCLI(
+func transformerPutParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -59,7 +59,7 @@ func mapperPutParseCLI(
 
 	// Parse local flags.
 	//
-	// Unlike other mappers, we can't use flagSet here. The syntax of 'mlr put'
+	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
 	// and 'mlr filter' is they need to be able to take -f and/or -e more than
 	// once, and Go flags can't handle that.
 
@@ -68,7 +68,7 @@ func mapperPutParseCLI(
 			break // No more flag options to process
 
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			mapperPutUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerPutUsage(os.Stdout, 0, errorHandling, args[0], verb)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
@@ -143,7 +143,7 @@ func mapperPutParseCLI(
 			argi++
 
 		} else {
-			mapperPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
 		}
 	}
@@ -154,7 +154,7 @@ func mapperPutParseCLI(
 	if needExpressionArg {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
-			mapperPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
 		}
 		dslString = args[argi]
@@ -199,12 +199,12 @@ func mapperPutParseCLI(
 func checkArgCountPut(args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
 		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
-		mapperPutUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
+		transformerPutUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
 		os.Exit(1)
 	}
 }
 
-func mapperPutUsage(
+func transformerPutUsage(
 	o *os.File,
 	exitCode int,
 	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError

@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"errors"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var RenameSetup = transforming.TransformerSetup{
 	Verb:         "rename",
-	ParseCLIFunc: mapperRenameParseCLI,
+	ParseCLIFunc: transformerRenameParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperRenameParseCLI(
+func transformerRenameParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperRenameParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperRenameUsage(ostream, args[0], verb, flagSet)
+		transformerRenameUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -73,7 +73,7 @@ func mapperRenameParseCLI(
 	return transformer
 }
 
-func mapperRenameUsage(
+func transformerRenameUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

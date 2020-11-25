@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var ReorderSetup = transforming.TransformerSetup{
 	Verb:         "reorder",
-	ParseCLIFunc: mapperReorderParseCLI,
+	ParseCLIFunc: transformerReorderParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperReorderParseCLI(
+func transformerReorderParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -52,7 +52,7 @@ func mapperReorderParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperReorderUsage(ostream, args[0], verb, flagSet)
+		transformerReorderUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -60,7 +60,7 @@ func mapperReorderParseCLI(
 	}
 
 	if *pFieldNames == "" {
-		mapperReorderUsage(os.Stderr, args[0], verb, flagSet)
+		transformerReorderUsage(os.Stderr, args[0], verb, flagSet)
 		os.Exit(1)
 	}
 
@@ -77,7 +77,7 @@ func mapperReorderParseCLI(
 	return transformer
 }
 
-func mapperReorderUsage(
+func transformerReorderUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

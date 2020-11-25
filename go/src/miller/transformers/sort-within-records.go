@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -13,11 +13,11 @@ import (
 // ----------------------------------------------------------------
 var SortWithinRecordsSetup = transforming.TransformerSetup{
 	Verb:         "sort-within-records",
-	ParseCLIFunc: mapperSortWithinRecordsParseCLI,
+	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperSortWithinRecordsParseCLI(
+func transformerSortWithinRecordsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -42,7 +42,7 @@ func mapperSortWithinRecordsParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperSortWithinRecordsUsage(ostream, args[0], verb, flagSet)
+		transformerSortWithinRecordsUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -59,7 +59,7 @@ func mapperSortWithinRecordsParseCLI(
 	return transformer
 }
 
-func mapperSortWithinRecordsUsage(
+func transformerSortWithinRecordsUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

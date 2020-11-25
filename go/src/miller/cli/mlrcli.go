@@ -192,7 +192,7 @@ package cli
 //	cli_reader_opts_init(&options.ReaderOptions);
 //	cli_writer_opts_init(&options.WriterOptions);
 //
-//	options.mapper_argb     = 0;
+//	options.transformer_argb     = 0;
 //	options.filenames       = slls_alloc();
 //
 //	options.ofmt            = nil;

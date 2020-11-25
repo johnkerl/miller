@@ -101,13 +101,13 @@ func ParseCommandLine(args []string) (
 	//	}
 
 	//	// Construct the transformer list for single use, e.g. the normal streaming case wherein the
-	//	// mappers operate on all input files. Also retain information needed to construct them
+	//	// transformers operate on all input files. Also retain information needed to construct them
 	//	// for each input file, for in-place mode.
-	//	options.mapper_argb = argi;
+	//	options.transformer_argb = argi;
 	//	options.original_argv = args;
 	//	options.non_in_place_argv = copy_argv(args);
 	//	options.argc = argc;
-	//	*ppmapper_list = cli_parse_mappers(options.non_in_place_argv, &argi, argc, popts);
+	//	*pptransformer_list = cli_parse_transformers(options.non_in_place_argv, &argi, argc, popts);
 	recordTransformers, err = parseTransformers(args, &argi, argc, &options)
 	if err != nil {
 		return options, recordTransformers, err
@@ -137,7 +137,7 @@ func ParseCommandLine(args []string) (
 }
 
 // ----------------------------------------------------------------
-// Returns a list of mappers, from the starting point in args given by *pargi.
+// Returns a list of transformers, from the starting point in args given by *pargi.
 // Bumps *pargi to point to remaining post-transformer-setup args, i.e. filenames.
 
 func parseTransformers(
@@ -147,7 +147,7 @@ func parseTransformers(
 	options *clitypes.TOptions,
 ) ([]transforming.IRecordTransformer, error) {
 
-	mapperList := make([]transforming.IRecordTransformer, 0)
+	transformerList := make([]transforming.IRecordTransformer, 0)
 	argi := *pargi
 
 	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
@@ -166,8 +166,8 @@ func parseTransformers(
 		checkArgCount(args, argi, argc, 1)
 		verb := args[argi]
 
-		mapperSetup := lookUpTransformerSetup(verb)
-		if mapperSetup == nil {
+		transformerSetup := lookUpTransformerSetup(verb)
+		if transformerSetup == nil {
 			fmt.Fprintf(os.Stderr,
 				"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
 				os.Args[0], verb, os.Args[0])
@@ -178,7 +178,7 @@ func parseTransformers(
 		// Also note: this assumes main reader/writer opts are all parsed
 		// *before* transformer parse-CLI methods are invoked.
 
-		transformer := mapperSetup.ParseCLIFunc(
+		transformer := transformerSetup.ParseCLIFunc(
 			&argi,
 			argc,
 			args,
@@ -192,12 +192,12 @@ func parseTransformers(
 			os.Exit(1)
 		}
 
-		//		if (mapperSetup.IgnoresInput && len(mapperList) == 0) {
+		//		if (transformerSetup.IgnoresInput && len(transformerList) == 0) {
 		//			// e.g. then-chain starts with seqgen
 		//			options.no_input = true;
 		//		}
 
-		mapperList = append(mapperList, transformer)
+		transformerList = append(transformerList, transformer)
 
 		if argi >= argc || args[argi] != "then" {
 			break
@@ -206,7 +206,7 @@ func parseTransformers(
 	}
 
 	*pargi = argi
-	return mapperList, nil
+	return transformerList, nil
 }
 
 // ----------------------------------------------------------------

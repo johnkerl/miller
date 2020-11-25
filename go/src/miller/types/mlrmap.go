@@ -35,12 +35,12 @@
 // * Meanwhile there are few repeated accesses to a given record: the
 //   access-to-construct ratio is quite low for Miller data records.  Miller
 //   instantiates thousands, millions, billions of records (depending on the
-//   input data) but accesses each record only once per mapping operation.
+//   input data) but accesses each record only once per transforming operation.
 //   (This is in contrast to accumulator hashmaps which are repeatedly accessed
 //   during a stats run.)
 //
 // * The hashed impl computes hashsums for *all* fields whether operated on or not,
-//   for the benefit of the *few* fields looked up during the mapping operation.
+//   for the benefit of the *few* fields looked up during the transforming operation.
 //
 // * The hashless impl only keeps string pointers.  Lookups are done at runtime
 //   doing prefix search on the key names. Assuming field names are distinct,

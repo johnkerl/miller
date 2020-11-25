@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var GapSetup = transforming.TransformerSetup{
 	Verb:         "gap",
-	ParseCLIFunc: mapperGapParseCLI,
+	ParseCLIFunc: transformerGapParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperGapParseCLI(
+func transformerGapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -52,14 +52,14 @@ func mapperGapParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperGapUsage(ostream, args[0], verb, flagSet)
+		transformerGapUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
 	if *pGapCount == -1 && *pGroupByFieldNames == "" {
-		mapperGapUsage(os.Stderr, args[0], verb, flagSet)
+		transformerGapUsage(os.Stderr, args[0], verb, flagSet)
 		os.Exit(1)
 	}
 
@@ -76,7 +76,7 @@ func mapperGapParseCLI(
 	return transformer
 }
 
-func mapperGapUsage(
+func transformerGapUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

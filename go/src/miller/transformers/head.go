@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var HeadSetup = transforming.TransformerSetup{
 	Verb:         "head",
-	ParseCLIFunc: mapperHeadParseCLI,
+	ParseCLIFunc: transformerHeadParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperHeadParseCLI(
+func transformerHeadParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -56,7 +56,7 @@ func mapperHeadParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperHeadUsage(ostream, args[0], verb, flagSet)
+		transformerHeadUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -76,7 +76,7 @@ func mapperHeadParseCLI(
 	return transformer
 }
 
-func mapperHeadUsage(
+func transformerHeadUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

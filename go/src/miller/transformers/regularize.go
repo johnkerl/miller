@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -15,11 +15,11 @@ import (
 // ----------------------------------------------------------------
 var RegularizeSetup = transforming.TransformerSetup{
 	Verb:         "regularize",
-	ParseCLIFunc: mapperRegularizeParseCLI,
+	ParseCLIFunc: transformerRegularizeParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperRegularizeParseCLI(
+func transformerRegularizeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperRegularizeParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperRegularizeUsage(ostream, args[0], verb, flagSet)
+		transformerRegularizeUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,7 +58,7 @@ func mapperRegularizeParseCLI(
 	return transformer
 }
 
-func mapperRegularizeUsage(
+func transformerRegularizeUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

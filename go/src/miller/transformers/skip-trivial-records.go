@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -13,11 +13,11 @@ import (
 // ----------------------------------------------------------------
 var SkipTrivialRecordsSetup = transforming.TransformerSetup{
 	Verb:         "skip-trivial-records",
-	ParseCLIFunc: mapperSkipTrivialRecordsParseCLI,
+	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperSkipTrivialRecordsParseCLI(
+func transformerSkipTrivialRecordsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -39,7 +39,7 @@ func mapperSkipTrivialRecordsParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperSkipTrivialRecordsUsage(ostream, args[0], verb, flagSet)
+		transformerSkipTrivialRecordsUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -56,7 +56,7 @@ func mapperSkipTrivialRecordsParseCLI(
 	return transformer
 }
 
-func mapperSkipTrivialRecordsUsage(
+func transformerSkipTrivialRecordsUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

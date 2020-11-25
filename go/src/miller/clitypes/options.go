@@ -77,7 +77,7 @@ type TOptions struct {
 	//	char**  original_argv;
 	//	char**  non_in_place_argv;
 	//	int     argc;
-	//	int     mapper_argb;
+	//	int     transformer_argb;
 	//
 	//
 	//	char* ofmt;

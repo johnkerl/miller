@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var AltkvSetup = transforming.TransformerSetup{
 	Verb:         "altkv",
-	ParseCLIFunc: mapperAltkvParseCLI,
+	ParseCLIFunc: transformerAltkvParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperAltkvParseCLI(
+func transformerAltkvParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -40,7 +40,7 @@ func mapperAltkvParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperAltkvUsage(ostream, args[0], verb, flagSet)
+		transformerAltkvUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -57,7 +57,7 @@ func mapperAltkvParseCLI(
 	return transformer
 }
 
-func mapperAltkvUsage(
+func transformerAltkvUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

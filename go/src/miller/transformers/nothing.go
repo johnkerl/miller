@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -13,11 +13,11 @@ import (
 // ----------------------------------------------------------------
 var NothingSetup = transforming.TransformerSetup{
 	Verb:         "nothing",
-	ParseCLIFunc: mapperNothingParseCLI,
+	ParseCLIFunc: transformerNothingParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperNothingParseCLI(
+func transformerNothingParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -38,7 +38,7 @@ func mapperNothingParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		mapperNothingUsage(ostream, args[0], verb, flagSet)
+		transformerNothingUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -55,7 +55,7 @@ func mapperNothingParseCLI(
 	return transformer
 }
 
-func mapperNothingUsage(
+func transformerNothingUsage(
 	o *os.File,
 	argv0 string,
 	verb string,

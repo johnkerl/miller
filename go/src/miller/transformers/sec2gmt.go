@@ -1,4 +1,4 @@
-package mappers
+package transformers
 
 import (
 	"flag"
@@ -14,11 +14,11 @@ import (
 // ----------------------------------------------------------------
 var Sec2GMTSetup = transforming.TransformerSetup{
 	Verb:         "sec2gmt",
-	ParseCLIFunc: mapperSec2GMTParseCLI,
+	ParseCLIFunc: transformerSec2GMTParseCLI,
 	IgnoresInput: false,
 }
 
-func mapperSec2GMTParseCLI(
+func transformerSec2GMTParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -41,7 +41,7 @@ func mapperSec2GMTParseCLI(
 		if args[argi][0] != '-' {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			mapperSec2GMTUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerSec2GMTUsage(os.Stdout, 0, errorHandling, args[0], verb)
 			argi += 1
 
 		} else if args[argi] == "-1" {
@@ -73,7 +73,7 @@ func mapperSec2GMTParseCLI(
 			argi++
 
 		} else {
-			mapperSec2GMTUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerSec2GMTUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)
 		}
 	}
@@ -83,7 +83,7 @@ func mapperSec2GMTParseCLI(
 	}
 
 	if argi >= argc {
-		mapperSec2GMTUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerSec2GMTUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 		os.Exit(1)
 	}
 	fieldNames := args[argi]
@@ -98,7 +98,7 @@ func mapperSec2GMTParseCLI(
 	return transformer
 }
 
-func mapperSec2GMTUsage(
+func transformerSec2GMTUsage(
 	o *os.File,
 	exitCode int,
 	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
