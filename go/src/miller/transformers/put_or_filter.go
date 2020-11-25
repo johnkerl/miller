@@ -12,9 +12,9 @@ import (
 	"miller/dsl"
 	"miller/dsl/cst"
 	"miller/lib"
-	"miller/transforming"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
+	"miller/transforming"
 	"miller/types"
 )
 
@@ -25,9 +25,6 @@ var PutSetup = transforming.TransformerSetup{
 	IgnoresInput: false,
 }
 
-// TODO:
-// * rename this file to put_or_filter.go
-// * check other things from the C impl
 var FilterSetup = transforming.TransformerSetup{
 	Verb:         "filter",
 	ParseCLIFunc: transformerPutParseCLI,
@@ -361,14 +358,15 @@ func (this *TransformerPut) Map(
 		}
 
 		if !this.suppressOutputRecord {
-			wantToPrint := lib.BooleanXOR(this.cstState.FilterResult, this.invertFilter)
-			if wantToPrint {
+			wantToEmit := lib.BooleanXOR(this.cstState.FilterResult, this.invertFilter)
+			if wantToEmit {
 				outputChannel <- types.NewRecordAndContext(
 					outrec,
 					&context,
 				)
 			}
 		}
+
 	} else {
 		this.cstState.Update(nil, &context)
 

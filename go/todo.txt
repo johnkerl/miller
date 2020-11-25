@@ -2,8 +2,6 @@
 TOP OF LIST:
 
 ! better -s in reg_test ... maybe just a different script ...
-! put b-b impl/doc
-  o list (few) diffs put <-> filter
 
 small:
 * justWroteEmptyLine -> pprint too ...
@@ -360,3 +358,11 @@ NITS/NON-IMMEDIATE:
 * mlrdoc the ??? operator
 * document --jvstack is now a back-compat no-op
 * doc about put -S/-F cannot make sense anymore
+* put/filter updates:
+  o filter statement needn't come last anymore: '$u = 1; NR > 5; $v = 2'
+  o put 'NR > 3' and put 'filter NR > 3' are the same.
+    more generally, bare-boolean and filter bare-boolean are synonymous -- 'filter' DSL keyword
+    is legacy.
+  o mlr put and mlr filter are identical except:
+    - mlr put accepts zero statements like 'mlr put ""'; mlr filter requires at least one.
+    - mlr filter 'filter NR > 2' is a syntax error <---- rethink even that .....

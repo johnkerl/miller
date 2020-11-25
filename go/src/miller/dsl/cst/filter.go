@@ -17,7 +17,6 @@ type FilterStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-// TODO: disallow bare boolean except for final statement in 'mlr filter' ...
 func (this *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(
 		astNode.Type != dsl.NodeTypeFilterStatement &&
