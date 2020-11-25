@@ -226,7 +226,7 @@ func mapperPutUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperPut struct {
+type TransformerPut struct {
 	astRootNode          *dsl.AST
 	cstRootNode          *cst.RootNode
 	cstState             *cst.State
@@ -243,7 +243,7 @@ func NewTransformerPut(
 	verbose bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
-) (*MapperPut, error) {
+) (*TransformerPut, error) {
 
 	astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
 	if err != nil {
@@ -287,7 +287,7 @@ func NewTransformerPut(
 		}
 	}
 
-	return &MapperPut{
+	return &TransformerPut{
 		astRootNode:          astRootNode,
 		cstRootNode:          cstRootNode,
 		cstState:             cstState,
@@ -330,7 +330,7 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 	return astRootNode, nil
 }
 
-func (this *MapperPut) Map(
+func (this *TransformerPut) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -19,7 +19,7 @@ type RecordTransformerFunc func(
 	outputChannel chan<- *types.RecordAndContext,
 )
 
-type MapperParseCLIFunc func(
+type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
@@ -30,6 +30,6 @@ type MapperParseCLIFunc func(
 
 type TransformerSetup struct {
 	Verb         string
-	ParseCLIFunc MapperParseCLIFunc
+	ParseCLIFunc TransformerParseCLIFunc
 	IgnoresInput bool
 }

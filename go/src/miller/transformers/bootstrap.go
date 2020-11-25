@@ -88,13 +88,13 @@ See also %s sample and %s shuffle.
 }
 
 // ----------------------------------------------------------------
-type MapperBootstrap struct {
+type TransformerBootstrap struct {
 	recordsAndContexts *list.List
 	nout               int
 }
 
-func NewTransformerBootstrap(nout int) (*MapperBootstrap, error) {
-	this := &MapperBootstrap{
+func NewTransformerBootstrap(nout int) (*TransformerBootstrap, error) {
+	this := &TransformerBootstrap{
 		recordsAndContexts: list.New(),
 		nout:               nout,
 	}
@@ -102,7 +102,7 @@ func NewTransformerBootstrap(nout int) (*MapperBootstrap, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *MapperBootstrap) Map(
+func (this *TransformerBootstrap) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

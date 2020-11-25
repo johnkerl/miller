@@ -123,7 +123,7 @@ features of system grep, you can do
 }
 
 // ----------------------------------------------------------------
-type MapperGrep struct {
+type TransformerGrep struct {
 	regexp *regexp.Regexp
 	invert bool
 }
@@ -131,8 +131,8 @@ type MapperGrep struct {
 func NewTransformerGrep(
 	regexp *regexp.Regexp,
 	invert bool,
-) (*MapperGrep, error) {
-	this := &MapperGrep{
+) (*TransformerGrep, error) {
+	this := &TransformerGrep{
 		regexp: regexp,
 		invert: invert,
 	}
@@ -140,7 +140,7 @@ func NewTransformerGrep(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperGrep) Map(
+func (this *TransformerGrep) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -98,7 +98,7 @@ func mapperCountSimilarUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperCountSimilar struct {
+type TransformerCountSimilar struct {
 	// Input:
 	groupByFieldNameList []string
 	counterFieldName     string
@@ -111,9 +111,9 @@ type MapperCountSimilar struct {
 func NewTransformerCountSimilar(
 	groupByFieldNames string,
 	counterFieldName string,
-) (*MapperCountSimilar, error) {
+) (*TransformerCountSimilar, error) {
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-	this := &MapperCountSimilar{
+	this := &TransformerCountSimilar{
 		groupByFieldNameList: groupByFieldNameList,
 		counterFieldName:     counterFieldName,
 		recordListsByGroup:   lib.NewOrderedMap(),
@@ -122,7 +122,7 @@ func NewTransformerCountSimilar(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCountSimilar) Map(
+func (this *TransformerCountSimilar) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

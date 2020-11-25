@@ -108,7 +108,7 @@ func ParseCommandLine(args []string) (
 	//	options.non_in_place_argv = copy_argv(args);
 	//	options.argc = argc;
 	//	*ppmapper_list = cli_parse_mappers(options.non_in_place_argv, &argi, argc, popts);
-	recordTransformers, err = parseMappers(args, &argi, argc, &options)
+	recordTransformers, err = parseTransformers(args, &argi, argc, &options)
 	if err != nil {
 		return options, recordTransformers, err
 	}
@@ -140,7 +140,7 @@ func ParseCommandLine(args []string) (
 // Returns a list of mappers, from the starting point in args given by *pargi.
 // Bumps *pargi to point to remaining post-transformer-setup args, i.e. filenames.
 
-func parseMappers(
+func parseTransformers(
 	args []string,
 	pargi *int,
 	argc int,

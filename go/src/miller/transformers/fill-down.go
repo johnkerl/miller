@@ -99,7 +99,7 @@ func mapperFillDownUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperFillDown struct {
+type TransformerFillDown struct {
 	// input
 	fillDownFieldNames []string
 	onlyIfAbsent       bool
@@ -111,8 +111,8 @@ type MapperFillDown struct {
 func NewTransformerFillDown(
 	fillDownFieldNames string,
 	onlyIfAbsent bool,
-) (*MapperFillDown, error) {
-	this := &MapperFillDown{
+) (*TransformerFillDown, error) {
+	this := &TransformerFillDown{
 		fillDownFieldNames: lib.SplitString(fillDownFieldNames, ","),
 		onlyIfAbsent:       onlyIfAbsent,
 		lastNonNullValues:  make(map[string]*types.Mlrval),
@@ -121,7 +121,7 @@ func NewTransformerFillDown(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperFillDown) Map(
+func (this *TransformerFillDown) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

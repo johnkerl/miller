@@ -75,20 +75,20 @@ func mapperRegularizeUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperRegularize struct {
+type TransformerRegularize struct {
 	// map from string to []string
 	sortedToOriginal map[string][]string
 }
 
-func NewTransformerRegularize() (*MapperRegularize, error) {
-	this := &MapperRegularize{
+func NewTransformerRegularize() (*TransformerRegularize, error) {
+	this := &TransformerRegularize{
 		make(map[string][]string),
 	}
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *MapperRegularize) Map(
+func (this *TransformerRegularize) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

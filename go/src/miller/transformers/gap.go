@@ -93,7 +93,7 @@ func mapperGapUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperGap struct {
+type TransformerGap struct {
 	// input
 	gapCount             int64
 	groupByFieldNameList []string
@@ -107,11 +107,11 @@ type MapperGap struct {
 func NewTransformerGap(
 	gapCount int64,
 	groupByFieldNames string,
-) (*MapperGap, error) {
+) (*TransformerGap, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	this := &MapperGap{
+	this := &TransformerGap{
 		gapCount:             gapCount,
 		groupByFieldNameList: groupByFieldNameList,
 
@@ -129,14 +129,14 @@ func NewTransformerGap(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperGap) Map(
+func (this *TransformerGap) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	this.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
-func (this *MapperGap) mapUnkeyed(
+func (this *TransformerGap) mapUnkeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -156,7 +156,7 @@ func (this *MapperGap) mapUnkeyed(
 	}
 }
 
-func (this *MapperGap) mapKeyed(
+func (this *TransformerGap) mapKeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

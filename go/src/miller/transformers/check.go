@@ -72,15 +72,15 @@ func mapperCheckUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperCheck struct {
+type TransformerCheck struct {
 	// stateless
 }
 
-func NewTransformerCheck() (*MapperCheck, error) {
-	return &MapperCheck{}, nil
+func NewTransformerCheck() (*TransformerCheck, error) {
+	return &TransformerCheck{}, nil
 }
 
-func (this *MapperCheck) Map(
+func (this *TransformerCheck) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -33,7 +33,7 @@ func ChainTransformer(
 			ochan = intermediateChannels[i]
 		}
 
-		go runSingleMapper(
+		go runSingleTransformer(
 			ichan,
 			recordTransformer,
 			ochan,
@@ -41,7 +41,7 @@ func ChainTransformer(
 	}
 }
 
-func runSingleMapper(
+func runSingleTransformer(
 	inputChannel <-chan *types.RecordAndContext,
 	recordTransformer IRecordTransformer,
 	outputChannel chan<- *types.RecordAndContext,

@@ -77,13 +77,13 @@ all input records are read. See also %s bootstrap and %s sample.
 }
 
 // ----------------------------------------------------------------
-type MapperShuffle struct {
+type TransformerShuffle struct {
 	recordsAndContexts *list.List
 }
 
-func NewTransformerShuffle() (*MapperShuffle, error) {
+func NewTransformerShuffle() (*TransformerShuffle, error) {
 
-	this := &MapperShuffle{
+	this := &TransformerShuffle{
 		recordsAndContexts: list.New(),
 	}
 
@@ -91,7 +91,7 @@ func NewTransformerShuffle() (*MapperShuffle, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *MapperShuffle) Map(
+func (this *TransformerShuffle) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

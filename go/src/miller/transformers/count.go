@@ -101,7 +101,7 @@ func mapperCountUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperCount struct {
+type TransformerCount struct {
 	// input
 	groupByFieldNameList []string
 	showCountsOnly       bool
@@ -125,11 +125,11 @@ func NewTransformerCount(
 	groupByFieldNames string,
 	showCountsOnly bool,
 	outputFieldName string,
-) (*MapperCount, error) {
+) (*TransformerCount, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	this := &MapperCount{
+	this := &TransformerCount{
 		groupByFieldNameList: groupByFieldNameList,
 		showCountsOnly:       showCountsOnly,
 		outputFieldName:      outputFieldName,
@@ -149,7 +149,7 @@ func NewTransformerCount(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCount) Map(
+func (this *TransformerCount) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -157,7 +157,7 @@ func (this *MapperCount) Map(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCount) countUngrouped(
+func (this *TransformerCount) countUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -176,7 +176,7 @@ func (this *MapperCount) countUngrouped(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCount) countGrouped(
+func (this *TransformerCount) countGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

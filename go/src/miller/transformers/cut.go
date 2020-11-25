@@ -122,7 +122,7 @@ func mapperCutUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperCut struct {
+type TransformerCut struct {
 	fieldNameList []string
 	fieldNameSet  map[string]bool
 
@@ -134,11 +134,11 @@ func NewTransformerCut(
 	doArgOrder bool,
 	doComplement bool,
 	doComplementLong bool,
-) (*MapperCut, error) {
+) (*TransformerCut, error) {
 
 	fieldNameSet := lib.StringListToSet(fieldNameList)
 
-	this := &MapperCut{
+	this := &TransformerCut{
 		fieldNameList: fieldNameList,
 		fieldNameSet:  fieldNameSet,
 	}
@@ -180,7 +180,7 @@ func NewTransformerCut(
 //	}
 
 // ----------------------------------------------------------------
-func (this *MapperCut) Map(
+func (this *TransformerCut) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -189,7 +189,7 @@ func (this *MapperCut) Map(
 
 // ----------------------------------------------------------------
 // mlr cut -f a,b,c
-func (this *MapperCut) includeWithInputOrder(
+func (this *TransformerCut) includeWithInputOrder(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -212,7 +212,7 @@ func (this *MapperCut) includeWithInputOrder(
 
 // ----------------------------------------------------------------
 // mlr cut -o -f a,b,c
-func (this *MapperCut) includeWithArgOrder(
+func (this *TransformerCut) includeWithArgOrder(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -234,7 +234,7 @@ func (this *MapperCut) includeWithArgOrder(
 
 // ----------------------------------------------------------------
 // mlr cut -x -f a,b,c
-func (this *MapperCut) exclude(
+func (this *TransformerCut) exclude(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -105,7 +105,7 @@ func mapperDecimateUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperDecimate struct {
+type TransformerDecimate struct {
 	decimateCount        int64
 	remainderToKeep      int64
 	groupByFieldNameList []string
@@ -119,7 +119,7 @@ func NewTransformerDecimate(
 	atStart bool,
 	atEnd bool,
 	groupByFieldNames string,
-) (*MapperDecimate, error) {
+) (*TransformerDecimate, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
@@ -128,7 +128,7 @@ func NewTransformerDecimate(
 		remainderToKeep = 0
 	}
 
-	this := &MapperDecimate{
+	this := &TransformerDecimate{
 		decimateCount:        decimateCount,
 		remainderToKeep:      remainderToKeep,
 		groupByFieldNameList: groupByFieldNameList,
@@ -139,7 +139,7 @@ func NewTransformerDecimate(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperDecimate) Map(
+func (this *TransformerDecimate) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

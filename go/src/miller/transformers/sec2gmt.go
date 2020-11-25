@@ -120,7 +120,7 @@ func mapperSec2GMTUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperSec2GMT struct {
+type TransformerSec2GMT struct {
 	fieldNameList    []string
 	numDecimalPlaces int
 }
@@ -128,8 +128,8 @@ type MapperSec2GMT struct {
 func NewTransformerSec2GMT(
 	fieldNames string,
 	numDecimalPlaces int,
-) (*MapperSec2GMT, error) {
-	this := &MapperSec2GMT{
+) (*TransformerSec2GMT, error) {
+	this := &TransformerSec2GMT{
 		fieldNameList:    lib.SplitString(fieldNames, ","),
 		numDecimalPlaces: numDecimalPlaces,
 	}
@@ -137,7 +137,7 @@ func NewTransformerSec2GMT(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperSec2GMT) Map(
+func (this *TransformerSec2GMT) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

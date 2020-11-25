@@ -100,7 +100,7 @@ func mapperReorderUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperReorder struct {
+type TransformerReorder struct {
 	// input
 	fieldNameList []string
 
@@ -111,14 +111,14 @@ type MapperReorder struct {
 func NewTransformerReorder(
 	fieldNames string,
 	putAtEnd bool,
-) (*MapperReorder, error) {
+) (*TransformerReorder, error) {
 
 	fieldNameList := lib.SplitString(fieldNames, ",")
 	if !putAtEnd {
 		lib.ReverseStringList(fieldNameList)
 	}
 
-	this := &MapperReorder{
+	this := &TransformerReorder{
 		fieldNameList: fieldNameList,
 	}
 
@@ -132,7 +132,7 @@ func NewTransformerReorder(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperReorder) Map(
+func (this *TransformerReorder) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -140,7 +140,7 @@ func (this *MapperReorder) Map(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperReorder) reorderToStart(
+func (this *TransformerReorder) reorderToStart(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -157,7 +157,7 @@ func (this *MapperReorder) reorderToStart(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperReorder) reorderToEnd(
+func (this *TransformerReorder) reorderToEnd(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

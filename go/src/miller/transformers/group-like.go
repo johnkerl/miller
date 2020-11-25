@@ -75,14 +75,14 @@ func mapperGroupLikeUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperGroupLike struct {
+type TransformerGroupLike struct {
 	// map from string to *list.List
 	recordListsByGroup *lib.OrderedMap
 }
 
-func NewTransformerGroupLike() (*MapperGroupLike, error) {
+func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 
-	this := &MapperGroupLike{
+	this := &TransformerGroupLike{
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
 
@@ -90,7 +90,7 @@ func NewTransformerGroupLike() (*MapperGroupLike, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *MapperGroupLike) Map(
+func (this *TransformerGroupLike) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

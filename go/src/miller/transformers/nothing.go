@@ -71,15 +71,15 @@ func mapperNothingUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperNothing struct {
+type TransformerNothing struct {
 	// stateless
 }
 
-func NewTransformerNothing() (*MapperNothing, error) {
-	return &MapperNothing{}, nil
+func NewTransformerNothing() (*TransformerNothing, error) {
+	return &TransformerNothing{}, nil
 }
 
-func (this *MapperNothing) Map(
+func (this *TransformerNothing) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

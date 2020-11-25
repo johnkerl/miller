@@ -71,17 +71,17 @@ func mapperTacUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperTac struct {
+type TransformerTac struct {
 	recordsAndContexts *list.List
 }
 
-func NewTransformerTac() (*MapperTac, error) {
-	return &MapperTac{
+func NewTransformerTac() (*TransformerTac, error) {
+	return &TransformerTac{
 		recordsAndContexts: list.New(),
 	}, nil
 }
 
-func (this *MapperTac) Map(
+func (this *TransformerTac) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -72,16 +72,16 @@ func mapperAltkvUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperAltkv struct {
+type TransformerAltkv struct {
 }
 
-func NewTransformerAltkv() (*MapperAltkv, error) {
-	this := &MapperAltkv{}
+func NewTransformerAltkv() (*TransformerAltkv, error) {
+	this := &TransformerAltkv{}
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *MapperAltkv) Map(
+func (this *TransformerAltkv) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

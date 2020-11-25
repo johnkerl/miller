@@ -72,16 +72,16 @@ func mapperSkipTrivialRecordsUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperSkipTrivialRecords struct {
+type TransformerSkipTrivialRecords struct {
 }
 
-func NewTransformerSkipTrivialRecords() (*MapperSkipTrivialRecords, error) {
-	this := &MapperSkipTrivialRecords{}
+func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) {
+	this := &TransformerSkipTrivialRecords{}
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *MapperSkipTrivialRecords) Map(
+func (this *TransformerSkipTrivialRecords) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

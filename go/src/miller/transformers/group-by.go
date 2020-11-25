@@ -85,7 +85,7 @@ func mapperGroupByUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperGroupBy struct {
+type TransformerGroupBy struct {
 	// input
 	groupByFieldNameList []string
 
@@ -96,11 +96,11 @@ type MapperGroupBy struct {
 
 func NewTransformerGroupBy(
 	groupByFieldNames string,
-) (*MapperGroupBy, error) {
+) (*TransformerGroupBy, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	this := &MapperGroupBy{
+	this := &TransformerGroupBy{
 		groupByFieldNameList: groupByFieldNameList,
 
 		recordListsByGroup: lib.NewOrderedMap(),
@@ -110,7 +110,7 @@ func NewTransformerGroupBy(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperGroupBy) Map(
+func (this *TransformerGroupBy) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

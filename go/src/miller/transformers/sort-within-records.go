@@ -76,18 +76,18 @@ func mapperSortWithinRecordsUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperSortWithinRecords struct {
+type TransformerSortWithinRecords struct {
 }
 
-func NewTransformerSortWithinRecords() (*MapperSortWithinRecords, error) {
+func NewTransformerSortWithinRecords() (*TransformerSortWithinRecords, error) {
 
-	this := &MapperSortWithinRecords{}
+	this := &TransformerSortWithinRecords{}
 
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *MapperSortWithinRecords) Map(
+func (this *TransformerSortWithinRecords) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

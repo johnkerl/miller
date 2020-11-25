@@ -93,13 +93,13 @@ useful names to otherwise integer-indexed fields.
 }
 
 // ----------------------------------------------------------------
-type MapperLabel struct {
+type TransformerLabel struct {
 	newNames []string
 }
 
 func NewTransformerLabel(
 	newNames []string,
-) (*MapperLabel, error) {
+) (*TransformerLabel, error) {
 	// TODO: make this a library function.
 	uniquenessChecker := make(map[string]bool)
 	for _, newName := range newNames {
@@ -115,7 +115,7 @@ func NewTransformerLabel(
 		uniquenessChecker[newName] = true
 	}
 
-	this := &MapperLabel{
+	this := &TransformerLabel{
 		newNames: newNames,
 	}
 
@@ -123,7 +123,7 @@ func NewTransformerLabel(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperLabel) Map(
+func (this *TransformerLabel) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

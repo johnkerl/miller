@@ -94,7 +94,7 @@ func mapperTailUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperTail struct {
+type TransformerTail struct {
 	// input
 	tailCount            uint64
 	groupByFieldNameList []string
@@ -107,11 +107,11 @@ type MapperTail struct {
 func NewTransformerTail(
 	tailCount uint64,
 	groupByFieldNames string,
-) (*MapperTail, error) {
+) (*TransformerTail, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	this := &MapperTail{
+	this := &TransformerTail{
 		tailCount:            tailCount,
 		groupByFieldNameList: groupByFieldNameList,
 
@@ -122,7 +122,7 @@ func NewTransformerTail(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperTail) Map(
+func (this *TransformerTail) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

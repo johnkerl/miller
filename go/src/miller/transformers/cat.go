@@ -97,7 +97,7 @@ func mapperCatUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperCat struct {
+type TransformerCat struct {
 	doCounters           bool
 	groupByFieldNameList []string
 
@@ -113,7 +113,7 @@ func NewTransformerCat(
 	doCounters bool,
 	pCounterFieldName *string,
 	groupByFieldNames string,
-) (*MapperCat, error) {
+) (*TransformerCat, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
@@ -123,7 +123,7 @@ func NewTransformerCat(
 		doCounters = true
 	}
 
-	this := &MapperCat{
+	this := &TransformerCat{
 		doCounters:           doCounters,
 		groupByFieldNameList: groupByFieldNameList,
 		counter:              0,
@@ -145,7 +145,7 @@ func NewTransformerCat(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCat) Map(
+func (this *TransformerCat) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -153,7 +153,7 @@ func (this *MapperCat) Map(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCat) simpleCat(
+func (this *TransformerCat) simpleCat(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -161,7 +161,7 @@ func (this *MapperCat) simpleCat(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCat) countersUngrouped(
+func (this *TransformerCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -176,7 +176,7 @@ func (this *MapperCat) countersUngrouped(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperCat) countersGrouped(
+func (this *TransformerCat) countersGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -97,7 +97,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 }
 
 // ----------------------------------------------------------------
-type MapperUnsparsify struct {
+type TransformerUnsparsify struct {
 	fillerMlrval       types.Mlrval
 	recordsAndContexts *list.List
 	fieldNamesSeen     *lib.OrderedMap
@@ -107,7 +107,7 @@ type MapperUnsparsify struct {
 func NewTransformerUnsparsify(
 	fillerString string,
 	specifiedFieldNames string,
-) (*MapperUnsparsify, error) {
+) (*TransformerUnsparsify, error) {
 
 	specifiedFieldNameList := lib.SplitString(specifiedFieldNames, ",")
 	fieldNamesSeen := lib.NewOrderedMap()
@@ -115,7 +115,7 @@ func NewTransformerUnsparsify(
 		fieldNamesSeen.Put(specifiedFieldName, specifiedFieldName)
 	}
 
-	this := &MapperUnsparsify{
+	this := &TransformerUnsparsify{
 		fillerMlrval:       types.MlrvalFromString(fillerString),
 		recordsAndContexts: list.New(),
 		fieldNamesSeen:     fieldNamesSeen,
@@ -131,7 +131,7 @@ func NewTransformerUnsparsify(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperUnsparsify) Map(
+func (this *TransformerUnsparsify) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -139,7 +139,7 @@ func (this *MapperUnsparsify) Map(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperUnsparsify) mapNonStreaming(
+func (this *TransformerUnsparsify) mapNonStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -175,7 +175,7 @@ func (this *MapperUnsparsify) mapNonStreaming(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperUnsparsify) mapStreaming(
+func (this *TransformerUnsparsify) mapStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

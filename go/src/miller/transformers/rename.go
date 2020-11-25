@@ -88,13 +88,13 @@ func mapperRenameUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperRename struct {
+type TransformerRename struct {
 	oldToNewNames *lib.OrderedMap
 }
 
 func NewTransformerRename(
 	names []string,
-) (*MapperRename, error) {
+) (*TransformerRename, error) {
 	if len(names)%2 != 0 {
 		return nil, errors.New("Rename: names string must have even length.")
 	}
@@ -107,7 +107,7 @@ func NewTransformerRename(
 		oldToNewNames.Put(oldName, newName)
 	}
 
-	this := &MapperRename{
+	this := &TransformerRename{
 		oldToNewNames: oldToNewNames,
 	}
 
@@ -115,7 +115,7 @@ func NewTransformerRename(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperRename) Map(
+func (this *TransformerRename) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

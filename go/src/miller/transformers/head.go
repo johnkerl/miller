@@ -99,7 +99,7 @@ func mapperHeadUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperHead struct {
+type TransformerHead struct {
 	// input
 	headCount            uint64
 	groupByFieldNameList []string
@@ -113,11 +113,11 @@ type MapperHead struct {
 func NewTransformerHead(
 	headCount uint64,
 	groupByFieldNames string,
-) (*MapperHead, error) {
+) (*TransformerHead, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	this := &MapperHead{
+	this := &TransformerHead{
 		headCount:            headCount,
 		groupByFieldNameList: groupByFieldNameList,
 
@@ -135,14 +135,14 @@ func NewTransformerHead(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperHead) Map(
+func (this *TransformerHead) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	this.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
-func (this *MapperHead) mapUnkeyed(
+func (this *TransformerHead) mapUnkeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -157,7 +157,7 @@ func (this *MapperHead) mapUnkeyed(
 	}
 }
 
-func (this *MapperHead) mapKeyed(
+func (this *TransformerHead) mapKeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

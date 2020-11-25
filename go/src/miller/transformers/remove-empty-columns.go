@@ -72,13 +72,13 @@ func mapperRemoveEmptyColumnsUsage(
 }
 
 // ----------------------------------------------------------------
-type MapperRemoveEmptyColumns struct {
+type TransformerRemoveEmptyColumns struct {
 	recordsAndContexts      *list.List
 	namesWithNonEmptyValues map[string]bool
 }
 
-func NewTransformerRemoveEmptyColumns() (*MapperRemoveEmptyColumns, error) {
-	this := &MapperRemoveEmptyColumns{
+func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) {
+	this := &TransformerRemoveEmptyColumns{
 		recordsAndContexts:      list.New(),
 		namesWithNonEmptyValues: make(map[string]bool),
 	}
@@ -86,7 +86,7 @@ func NewTransformerRemoveEmptyColumns() (*MapperRemoveEmptyColumns, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *MapperRemoveEmptyColumns) Map(
+func (this *TransformerRemoveEmptyColumns) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

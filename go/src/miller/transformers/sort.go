@@ -210,7 +210,7 @@ func mapperSortUsage(
 //   o sort that
 // * output is simply for each slot in the array, emit each record in the group
 
-type MapperSort struct {
+type TransformerSort struct {
 	// -- Input
 	groupByFieldNameList []string
 	comparatorFuncs      []types.ComparatorFunc
@@ -226,9 +226,9 @@ type MapperSort struct {
 func NewTransformerSort(
 	groupByFieldNameList []string,
 	comparatorFuncs []types.ComparatorFunc,
-) (*MapperSort, error) {
+) (*TransformerSort, error) {
 
-	this := &MapperSort{
+	this := &TransformerSort{
 		groupByFieldNameList: groupByFieldNameList,
 		comparatorFuncs:      comparatorFuncs,
 
@@ -246,7 +246,7 @@ type GroupingKeysAndMlrvals struct {
 	mlrvals     []types.Mlrval
 }
 
-func (this *MapperSort) Map(
+func (this *TransformerSort) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

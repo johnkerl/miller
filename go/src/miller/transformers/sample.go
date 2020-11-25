@@ -103,7 +103,7 @@ type sampleBucketType struct {
 	recordsAndContexts []*types.RecordAndContext
 }
 
-type MapperSample struct {
+type TransformerSample struct {
 	groupByFieldNameList []string
 	sampleCount          int64
 	bucketsByGroup       *lib.OrderedMap
@@ -112,8 +112,8 @@ type MapperSample struct {
 func NewTransformerSample(
 	sampleCount int64,
 	groupByFieldNames string,
-) (*MapperSample, error) {
-	this := &MapperSample{
+) (*TransformerSample, error) {
+	this := &TransformerSample{
 		sampleCount:          sampleCount,
 		groupByFieldNameList: lib.SplitString(groupByFieldNames, ","),
 		bucketsByGroup:       lib.NewOrderedMap(),
@@ -122,7 +122,7 @@ func NewTransformerSample(
 }
 
 // ----------------------------------------------------------------
-func (this *MapperSample) Map(
+func (this *TransformerSample) Map(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
