@@ -535,9 +535,8 @@ FieldValue
   : DirectFieldValue
   | IndirectFieldValue
   | BracedFieldValue
-  //| PositionalFieldName
-  //| PositionalFieldValue
-  // ...
+  | PositionalFieldName
+  | PositionalFieldValue
 ;
 
 // Note: the field name is "$name" not "name" since field_name
@@ -561,6 +560,16 @@ IndirectFieldValue
 BracedFieldValue
   : braced_field_name
     << dsl.NewASTNodeStripDollarOrAtSignAndCurlyBraces($0, dsl.NodeTypeDirectFieldValue) >>
+;
+
+PositionalFieldName
+  : "$[[" Rvalue "]]"
+    << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypePositionalFieldName) >>
+;
+
+PositionalFieldValue
+  : "$[[[" Rvalue "]]]"
+    << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypePositionalFieldValue) >>
 ;
 
 FullSrec
@@ -1198,7 +1207,11 @@ ENV
 // For Array or Map -- which one, to be determined at runtime.
 
 // ----------------------------------------------------------------
-MlrvalOrFunction : ArrayOrMapIndexAccess ;
+MlrvalOrFunction
+  : ArrayOrMapIndexAccess
+  | ArrayOrMapPositionalNameAccess
+  | ArrayOrMapPositionalValueAccess
+  | ArraySliceAccess ;
 
 ArrayOrMapIndexAccess
   : MlrvalOrFunction "[" Rvalue "]"
@@ -1210,7 +1223,26 @@ ArrayOrMapIndexAccess
     )>>
 ;
 
-MlrvalOrFunction : ArraySliceAccess ;
+ArrayOrMapPositionalNameAccess
+  : MlrvalOrFunction "[[" Rvalue "]]"
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NodeTypeArrayOrMapPositionalNameAccess,
+    )>>
+;
+
+ArrayOrMapPositionalValueAccess
+  : MlrvalOrFunction "[[[" Rvalue "]]]"
+    << dsl.NewASTNodeBinary(
+      dsl.NewASTToken("[]", $1),
+      $0,
+      $2,
+      dsl.NodeTypeArrayOrMapPositionalValueAccess,
+    )>>
+;
+
 
 ArraySliceAccess
 

@@ -1,6 +1,6 @@
 run_mlr --from $indir/s.dkvp --idkvp --opprint put '$z = {"a":$a,"b":$b,"i":$i,"x":$x,"y":$y}["b"]'
 
-run_mlr --from $indir/s.dkvp --from $indir/t.dkvp --ojson put '$z=[1,2,[NR,[FILENAME,5],$x*$y]]'
+run_mlr --from $indir/s.dkvp --from $indir/t.dkvp --ojson put '$z=[ 1,2,[NR,[FILENAME,5],$x*$y] ]'
 
 run_mlr --from $indir/s.dkvp --idkvp --ojson put '$z = $*["a"]'
 run_mlr --from $indir/s.dkvp --idkvp --ojson put '$z = $*'

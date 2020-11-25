@@ -37,9 +37,15 @@ const (
 	NodeTypeArraySliceAccess          = "array-slice access"
 	NodeTypeArraySliceEmptyLowerIndex = "array-slice empty lower index"
 	NodeTypeArraySliceEmptyUpperIndex = "array-slice empty upper index"
-	NodeTypeContextVariable           = "context variable"
-	NodeTypeConstant                  = "mathematical constant"
-	NodeTypeEnvironmentVariable       = "environment variable"
+
+	NodeTypePositionalFieldName             = "positionally-indexed field name"
+	NodeTypePositionalFieldValue            = "positionally-indexed field value"
+	NodeTypeArrayOrMapPositionalNameAccess  = "positionally-indexed map key"
+	NodeTypeArrayOrMapPositionalValueAccess = "positionally-indexed map value"
+
+	NodeTypeContextVariable     = "context variable"
+	NodeTypeConstant            = "mathematical constant"
+	NodeTypeEnvironmentVariable = "environment variable"
 
 	NodeTypeDirectFieldValue    = "direct field value"
 	NodeTypeIndirectFieldValue  = "indirect field value"

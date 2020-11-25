@@ -1,9 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! better -s in reg_test ... maybe just a different script ...
-
 small:
+! hyperlink source-files in all README.md files
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
@@ -17,6 +16,7 @@ medium:
 big:
 ! emitp/emitf
 ! array/map ...........
+  - array-slice unpanic
 ! json-null as type; & all dispo matrices/vectors ...
 ! smart fmtnum
 
@@ -45,6 +45,8 @@ no need to bootstrap a parser for the parser-generator language
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 
 * new columns-to-arrays and arrays-to-columns for stan format
+
+* single-line JSON for DKVP/CSV/etc ...
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
@@ -366,3 +368,8 @@ NITS/NON-IMMEDIATE:
   o mlr put and mlr filter are identical except:
     - mlr put accepts zero statements like 'mlr put ""'; mlr filter requires at least one.
     - mlr filter 'filter NR > 2' is a syntax error <---- rethink even that .....
+* [[...]] / [[[...]]]:
+  o ....
+  o ....
+  o ....
+  o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
