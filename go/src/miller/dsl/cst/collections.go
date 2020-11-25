@@ -102,17 +102,238 @@ func (this *RootNode) BuildArraySliceAccessNode(
 	return this.BuildPanicNode(astNode)
 }
 
-//	if astNode.Type == dsl.NodeTypeArraySliceEmptyLowerIndex {
-//		return BuildPanicNode(astNode) // xxx temp
-//	}
-//	if astNode.Type == dsl.NodeTypeArraySliceEmptyUpperIndex {
-//		return BuildPanicNode(astNode) // xxx temp
-//	}
+// ================================================================
+// For input record 'a=7,b=8,c=9',  $[[2]] = "b"
 
-// ----------------------------------------------------------------
-// This is for computing map entries at runtime. For example, in mlr put 'mymap
-// = {"sum": $x + $y, "diff": $x - $y}; ...', the first pair would have key
-// being string-literal "sum" and value being the evaluable expression '$x + $y'.
+type PositionalFieldNameNode struct {
+	indexEvaluable IEvaluable
+}
+
+func (this *RootNode) BuildPositionalFieldNameNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+
+	indexASTNode := astNode.Children[0]
+
+	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &PositionalFieldNameNode{
+		indexEvaluable: indexEvaluable,
+	}, nil
+}
+
+// TODO: code-dedupe these next four Evaluate methods
+func (this *PositionalFieldNameNode) Evaluate(state *State) types.Mlrval {
+	indexMlrval := this.indexEvaluable.Evaluate(state)
+	if indexMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+
+	index, ok := indexMlrval.GetIntValue()
+	if !ok {
+		return types.MlrvalFromError()
+	}
+
+	name := state.Inrec.GetNameAtPositionalIndex(index)
+	if name == nil {
+		return types.MlrvalFromAbsent()
+	}
+
+	return types.MlrvalFromString(*name)
+}
+
+// ================================================================
+// For input record 'a=7,b=8,c=9',  $[[2]] = 8
+
+type PositionalFieldValueNode struct {
+	indexEvaluable IEvaluable
+}
+
+func (this *RootNode) BuildPositionalFieldValueNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+
+	indexASTNode := astNode.Children[0]
+
+	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &PositionalFieldValueNode{
+		indexEvaluable: indexEvaluable,
+	}, nil
+}
+
+func (this *PositionalFieldValueNode) Evaluate(state *State) types.Mlrval {
+	indexMlrval := this.indexEvaluable.Evaluate(state)
+	if indexMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+
+	index, ok := indexMlrval.GetIntValue()
+	if !ok {
+		return types.MlrvalFromError()
+	}
+
+	retval := state.Inrec.GetWithPositionalIndex(index)
+	if retval == nil {
+		return types.MlrvalFromAbsent()
+	}
+
+	return *retval
+}
+
+// ================================================================
+// For x = [7,8,9], x[[2]] = 2
+// For y = {"a":7,"b":8,"c":9}, y[[2]] = "b"
+type ArrayOrMapPositionalNameAccessNode struct {
+	baseEvaluable  IEvaluable
+	indexEvaluable IEvaluable
+}
+
+func (this *RootNode) BuildArrayOrMapPositionalNameAccessNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalNameAccess)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+
+	baseASTNode := astNode.Children[0]
+	indexASTNode := astNode.Children[1]
+
+	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	if err != nil {
+		return nil, err
+	}
+	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ArrayOrMapPositionalNameAccessNode{
+		baseEvaluable:  baseEvaluable,
+		indexEvaluable: indexEvaluable,
+	}, nil
+}
+
+func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(state *State) types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	indexMlrval := this.indexEvaluable.Evaluate(state)
+
+	if indexMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+
+	index, ok := indexMlrval.GetIntValue()
+	if !ok {
+		return types.MlrvalFromError()
+	}
+
+	if baseMlrval.IsArray() {
+		n, _ := baseMlrval.GetArrayLength()
+		zindex, ok := types.UnaliasArrayLengthIndex(int64(n), index)
+		if ok {
+			return types.MlrvalFromInt64(zindex + 1) // Miller user-space indices are 1-up
+		} else {
+			return types.MlrvalFromAbsent()
+		}
+
+	} else if baseMlrval.IsMap() {
+		name := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
+		if name == nil {
+			return types.MlrvalFromAbsent()
+		} else {
+			return types.MlrvalFromString(*name)
+		}
+
+	} else if baseMlrval.IsAbsent() {
+		return baseMlrval
+
+	} else {
+		return types.MlrvalFromError()
+	}
+}
+
+// ================================================================
+// For x = [7,8,9], x[[2]] = 8
+// For y = {"a":7,"b":8,"c":9}, y[[2]] = 8
+type ArrayOrMapPositionalValueAccessNode struct {
+	baseEvaluable  IEvaluable
+	indexEvaluable IEvaluable
+}
+
+func (this *RootNode) BuildArrayOrMapPositionalValueAccessNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalValueAccess)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+
+	baseASTNode := astNode.Children[0]
+	indexASTNode := astNode.Children[1]
+
+	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	if err != nil {
+		return nil, err
+	}
+	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ArrayOrMapPositionalValueAccessNode{
+		baseEvaluable:  baseEvaluable,
+		indexEvaluable: indexEvaluable,
+	}, nil
+}
+
+func (this *ArrayOrMapPositionalValueAccessNode) Evaluate(state *State) types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	indexMlrval := this.indexEvaluable.Evaluate(state)
+
+	if indexMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+
+	index, ok := indexMlrval.GetIntValue()
+	if !ok {
+		return types.MlrvalFromError()
+	}
+
+	if baseMlrval.IsArray() {
+		return baseMlrval.ArrayGet(&indexMlrval)
+
+	} else if baseMlrval.IsMap() {
+		value := baseMlrval.GetMap().GetWithPositionalIndex(index)
+		if value == nil {
+			return types.MlrvalFromAbsent()
+		}
+
+		retval := value.Copy()
+		return *retval
+
+	} else if baseMlrval.IsAbsent() {
+		return baseMlrval
+
+	} else {
+		return types.MlrvalFromError()
+	}
+}
+
+// ================================================================
+// This is for computing map entries at runtime. For example, in
+//
+//   mlr put 'mymap = {"sum": $x + $y, "diff": $x - $y}; ...'
+//
+// the first pair would have key being string-literal "sum" and value being the
+// evaluable expression '$x + $y'.
+
 type EvaluablePair struct {
 	Key   IEvaluable
 	Value IEvaluable

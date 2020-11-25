@@ -25,22 +25,34 @@ func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 
 	switch astNode.Type {
 
-	case dsl.NodeTypeArrayLiteral:
+	case dsl.NodeTypeArrayLiteral: // [...]
 		return this.BuildArrayLiteralNode(astNode)
 
-	case dsl.NodeTypeMapLiteral:
+	case dsl.NodeTypeMapLiteral: // {...}
 		return this.BuildMapLiteralNode(astNode)
 
-	case dsl.NodeTypeArrayOrMapIndexAccess:
+	case dsl.NodeTypeArrayOrMapIndexAccess: // x[...]
 		return this.BuildArrayOrMapIndexAccessNode(astNode)
 
-	case dsl.NodeTypeArraySliceAccess:
+	case dsl.NodeTypeArraySliceAccess: // myarray[lo:hi]
 		return this.BuildArraySliceAccessNode(astNode)
 
-	case dsl.NodeTypeIndirectFieldValue:
+	case dsl.NodeTypePositionalFieldName: // $[[...]]
+		return this.BuildPositionalFieldNameNode(astNode)
+
+	case dsl.NodeTypePositionalFieldValue: // $[[[...]]]
+		return this.BuildPositionalFieldValueNode(astNode)
+
+	case dsl.NodeTypeArrayOrMapPositionalNameAccess: // mymap[[...]]]
+		return this.BuildArrayOrMapPositionalNameAccessNode(astNode)
+
+	case dsl.NodeTypeArrayOrMapPositionalValueAccess: // mymap[[[...]]]
+		return this.BuildArrayOrMapPositionalValueAccessNode(astNode)
+
+	case dsl.NodeTypeIndirectFieldValue: // $[...]
 		return this.BuildIndirectFieldValueNode(astNode)
 
-	case dsl.NodeTypeEnvironmentVariable:
+	case dsl.NodeTypeEnvironmentVariable: // ENV["NAME"]
 		return this.BuildEnvironmentVariableNode(astNode)
 
 	// Operators are just functions with infix syntax so we treat them like

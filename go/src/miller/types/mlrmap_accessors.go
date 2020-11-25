@@ -137,6 +137,8 @@ func (this *Mlrmap) GetKeys() []string {
 }
 
 // ----------------------------------------------------------------
+// TODO: update this comment regarding syntax
+//
 // For '$[1]' etc. in the DSL.
 //
 // Notes:
@@ -146,6 +148,7 @@ func (this *Mlrmap) GetKeys() []string {
 //   get the -1st field than the nth.
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
+
 func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 	mapEntry := this.findEntryByPositionalIndex(position)
 	if mapEntry == nil {
@@ -154,6 +157,7 @@ func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 	return mapEntry.Value
 }
 
+// TODO: update for array/map project
 func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 	if index.mvtype == MT_STRING {
 		return this.Get(&index.printrep), nil
@@ -164,6 +168,14 @@ func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 			"Record/map indices must be string or positional-int; got " + index.GetTypeName(),
 		)
 	}
+}
+
+func (this *Mlrmap) GetNameAtPositionalIndex(position int64) *string {
+	mapEntry := this.findEntryByPositionalIndex(position)
+	if mapEntry == nil {
+		return nil
+	}
+	return mapEntry.Key
 }
 
 func (this *Mlrmap) RemoveWithPositionalIndex(position int64) {

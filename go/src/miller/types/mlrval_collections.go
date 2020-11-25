@@ -85,7 +85,7 @@ func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	}
 	value := arrayGetAliased(&this.arrayval, mindex.intval)
 	if value == nil {
-		return MlrvalFromError()
+		return MlrvalFromAbsent()
 	} else {
 		return *value
 	}
@@ -135,10 +135,10 @@ func arrayPutAliased(array *[]Mlrval, mindex int64, value *Mlrval) bool {
 
 func unaliasArrayIndex(array *[]Mlrval, mindex int64) (int64, bool) {
 	n := int64(len(*array))
-	return unaliasArrayLengthIndex(n, mindex)
+	return UnaliasArrayLengthIndex(n, mindex)
 }
 
-func unaliasArrayLengthIndex(n int64, mindex int64) (int64, bool) {
+func UnaliasArrayLengthIndex(n int64, mindex int64) (int64, bool) {
 	if 1 <= mindex && mindex <= n {
 		zindex := mindex - 1
 		return zindex, true

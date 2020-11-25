@@ -444,12 +444,12 @@ mlr --from ./reg-test/input/s.dkvp head -n 1 then put -q
   dump;
 
 {
-  "is_absent_array_out_of_bounds": false,
-  "is_present_array_out_of_bounds": true,
+  "is_absent_array_out_of_bounds": true,
+  "is_present_array_out_of_bounds": false,
   "is_empty_array_out_of_bounds": false,
   "is_not_empty_array_out_of_bounds": true,
-  "is_null_array_out_of_bounds": false,
-  "is_not_null_array_out_of_bounds": true,
+  "is_null_array_out_of_bounds": true,
+  "is_not_null_array_out_of_bounds": false,
   "is_bool_array_out_of_bounds": false,
   "is_boolean_array_out_of_bounds": false,
   "is_float_array_out_of_bounds": false,
@@ -487,12 +487,12 @@ mlr --from ./reg-test/input/s.dkvp head -n 1 then put -q
   dump;
 
 {
-  "is_absent_array_out_of_bounds": false,
-  "is_present_array_out_of_bounds": true,
+  "is_absent_array_out_of_bounds": true,
+  "is_present_array_out_of_bounds": false,
   "is_empty_array_out_of_bounds": false,
   "is_not_empty_array_out_of_bounds": true,
-  "is_null_array_out_of_bounds": false,
-  "is_not_null_array_out_of_bounds": true,
+  "is_null_array_out_of_bounds": true,
+  "is_not_null_array_out_of_bounds": false,
   "is_bool_array_out_of_bounds": false,
   "is_boolean_array_out_of_bounds": false,
   "is_float_array_out_of_bounds": false,

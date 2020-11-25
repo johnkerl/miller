@@ -1,3 +1,5 @@
+// Most tests are in reg-test/run
+
 package dsl
 
 import (

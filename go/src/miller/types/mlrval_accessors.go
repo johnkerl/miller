@@ -130,6 +130,14 @@ func (this *Mlrval) GetArray() []Mlrval {
 	}
 }
 
+func (this *Mlrval) GetArrayLength() (int, bool) {
+	if this.mvtype == MT_ARRAY {
+		return len(this.arrayval), true
+	} else {
+		return -999, false
+	}
+}
+
 func (this *Mlrval) GetMap() *Mlrmap {
 	if this.mvtype == MT_MAP {
 		return this.mapval

@@ -81,8 +81,8 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 	strlen := int64(len(ma.printrep))
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
-	m, mok := unaliasArrayLengthIndex(strlen, mb.intval)
-	n, nok := unaliasArrayLengthIndex(strlen, mc.intval)
+	m, mok := UnaliasArrayLengthIndex(strlen, mb.intval)
+	n, nok := UnaliasArrayLengthIndex(strlen, mc.intval)
 
 	if !mok || !nok {
 		return MlrvalFromString("")
