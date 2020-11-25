@@ -1,3 +1,4 @@
+
 run_mlr -n --ojson put '
   end {
     a = [1,2,3,4,5,6,7];
@@ -39,3 +40,60 @@ run_mlr -n --ojson put '
     };
   }
 '
+
+run_mlr -n --ojson put '
+  end {
+    a = [1,2,3,4,5,6,7];
+    m = {"a": 1, "b": 2};
+    s = "abcdefg";
+
+    emit {
+      "ax0": a[:0],
+      "ax1": a[:1],
+      "ax5": a[:5],
+      "ax7": a[:7],
+      "ax9": a[:9],
+    };
+
+    emit {
+      "mx1": m[:1],
+    };
+
+    emit {
+      "sx0": s[:0],
+      "sx1": s[:1],
+      "sx5": s[:5],
+      "sx7": s[:7],
+      "sx9": s[:9],
+    };
+  }
+'
+
+run_mlr -n --ojson put '
+  end {
+    a = [1,2,3,4,5,6,7];
+    m = {"a": 1, "b": 2};
+    s = "abcdefg";
+
+    emit {
+      "a0x": a[0:],
+      "a1x": a[1:],
+      "a5x": a[5:],
+      "a7x": a[7:],
+      "a9x": a[9:],
+    };
+
+    emit {
+      "m1x": m[1:],
+    };
+
+    emit {
+      "s0x": s[0:],
+      "s1x": s[1:],
+      "s5x": s[5:],
+      "s7x": s[7:],
+      "s9x": s[9:],
+    };
+  }
+'
+

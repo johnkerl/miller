@@ -59,6 +59,13 @@ func (this *RootNode) BuildLeafNode(
 		return this.BuildConstantNode(astNode)
 		break
 
+	case dsl.NodeTypeArraySliceEmptyLowerIndex:
+		return this.BuildArraySliceEmptyLowerIndexNode(astNode)
+		break
+	case dsl.NodeTypeArraySliceEmptyUpperIndex:
+		return this.BuildArraySliceEmptyUpperIndexNode(astNode)
+		break
+
 	case dsl.NodeTypePanic:
 		return this.BuildPanicNode(astNode)
 		break
@@ -418,6 +425,40 @@ func (this *RootNode) BuildMathENode() *MathENode {
 }
 func (this *MathENode) Evaluate(state *State) types.Mlrval {
 	return types.MlrvalFromFloat64(math.E)
+}
+
+// ================================================================
+type LiteralOneNode struct {
+}
+
+// In array slices like 'myarray[:4]', the lower index is always 1 since Miller
+// user-space indices are 1-up.
+func (this *RootNode) BuildArraySliceEmptyLowerIndexNode(
+	astNode *dsl.ASTNode,
+) (*LiteralOneNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyLowerIndex)
+	return &LiteralOneNode{}, nil
+}
+func (this *LiteralOneNode) Evaluate(state *State) types.Mlrval {
+	return types.MlrvalFromInt64(1)
+}
+
+// ================================================================
+type LiteralEmptyStringNode struct {
+}
+
+// In array slices like 'myarray[4:]', the upper index is always n, where n is
+// the length of the array, since Miller user-space indices are 1-up. However,
+// we don't have access to the array length in this AST node so we return ""
+// so the slice-index CST node can compute it.
+func (this *RootNode) BuildArraySliceEmptyUpperIndexNode(
+	astNode *dsl.ASTNode,
+) (*LiteralEmptyStringNode, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyUpperIndex)
+	return &LiteralEmptyStringNode{}, nil
+}
+func (this *LiteralEmptyStringNode) Evaluate(state *State) types.Mlrval {
+	return types.MlrvalFromString("")
 }
 
 // ----------------------------------------------------------------

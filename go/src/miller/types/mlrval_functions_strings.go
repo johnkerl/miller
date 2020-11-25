@@ -72,17 +72,29 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 			return MlrvalFromError()
 		}
 	}
+	// TODO: fix this with regard to UTF-8 and runes.
+	strlen := int64(len(ma.printrep))
+
+	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
+	// empty in the DSL expression it comes in here as a 1. But when the upper
+	// index is empty in the DSL expression it comes in here as "".
 	if !mb.IsInt() {
 		return MlrvalFromError()
 	}
-	if !mc.IsInt() {
+	lowerMindex := mb.intval
+
+	upperMindex := strlen
+	if mc.IsEmpty() {
+		// Keep strlen
+	} else if !mc.IsInt() {
 		return MlrvalFromError()
+	} else {
+		upperMindex = mc.intval
 	}
-	strlen := int64(len(ma.printrep))
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
-	m, mok := UnaliasArrayLengthIndex(strlen, mb.intval)
-	n, nok := UnaliasArrayLengthIndex(strlen, mc.intval)
+	m, mok := UnaliasArrayLengthIndex(strlen, lowerMindex)
+	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
 		return MlrvalFromString("")
