@@ -2,7 +2,7 @@
 TOP OF LIST:
 
 small:
-! no-op --jvstack
+* keys/values -> get_keys/get_values
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
@@ -362,3 +362,4 @@ NITS/NON-IMMEDIATE:
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
 * mlrdoc the ??? operator
+* document --jvstack is now a back-compat no-op
