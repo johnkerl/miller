@@ -68,6 +68,6 @@ func get_point_plot(cr, ci, maxits) {
 		return ".";
 	} else {
 		int level = (iti // @levelstep) % strlen(@chars);
-		return substr(@chars, level, level);
+		return substr(@chars, level+1, level+1);
 	}
 }

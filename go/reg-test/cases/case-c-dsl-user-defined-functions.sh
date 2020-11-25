@@ -55,14 +55,15 @@ run_mlr --from $indir/abixy --opprint put '
 
 run_mlr --from $indir/abixy --opprint put '
   func f(n) {
-    if (is_present(@fcache[n])) {
-      return @fcache[n]
+    str sn = string(n); # for map keys
+    if (is_present(@fcache[sn])) {
+      return @fcache[sn]
     } else {
       num rv = 1;
       if (n >= 2) {
         rv = f(n-1) + f(n-2)
       }
-      @fcache[n] = rv;
+      @fcache[sn] = rv;
       return rv
     }
   }

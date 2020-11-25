@@ -102,7 +102,6 @@ rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 rrv ./reg-test/cases/case-c-label.sh
 * handles old/new clashes differently from C impl :^/
 
-rrv ./reg-test/cases/case-c-dsl-print.sh
 rrv ./reg-test/cases/case-c-dsl-substr.sh
 
 rrv -C20 ./reg-test/cases/case-c-dsl-user-defined-functions.sh
@@ -189,3 +188,4 @@ rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
 
 ================================================================
+rrv -C20 ./reg-test/cases/case-c-dsl-user-defined-functions.sh
