@@ -14,11 +14,6 @@ rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 ================================================================
 MULTIPLE ISSUES:
 
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
-* bug mlr filter $nosuchfield>.3 ./reg-test/input/abixy
-* ofmt
--> split up this big case-file
-
 * typeof prints different things -- regularize ...
 
 ================================================================
@@ -29,9 +24,8 @@ rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
 rrv ./reg-test/cases/case-c-missing-final-lf.sh
 
 ================================================================
-PUT -S / -F / -A
+PUT -a
 
-rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 * put -a
 
@@ -78,11 +72,8 @@ PARTIALLY IMPLEMENTED:
 
 rrv ./reg-test/cases/case-c-clean-whitespace.sh
 rrv ./reg-test/cases/case-c-cut.sh
-rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-scientific-notation.sh
-rrv ./reg-test/cases/case-c-format-values.sh
 rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
-rrv ./reg-test/cases/case-c-localvar-unsets.sh
 rrv ./reg-test/cases/case-c-rfc-csv.sh
 rrv ./reg-test/cases/case-c-space-padding.sh
 rrv ./reg-test/cases/case-c-utf8-alignment.sh
@@ -98,20 +89,21 @@ BACKWARD INCOMPATIBILITIES:
 rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
 * mlr: filter expressions must end in a final boolean statement.
 -> abandon this requirement? doc if so.
+* mlr --from s --opprint filter '$u=1; NR > 3; $v=2'
+* mlr --from s --opprint put    '$u=1; NR > 3; $v=2' <---- make sure this does NOT filter, though
 
 rrv ./reg-test/cases/case-c-label.sh
 * handles old/new clashes differently from C impl :^/
 
 rrv ./reg-test/cases/case-c-dsl-substr.sh
-
-rrv -C20 ./reg-test/cases/case-c-dsl-user-defined-functions.sh
-* array 1-up
+* format-strings? gah. needs smart fmtnum regardless.
 
 ================================================================
-NEED EMITP/MULTI-EMIT
+NEED EMITP/MULTI-EMIT/PRINT-WITH-REDIRECT
 
 rrv ./reg-test/cases/case-c-dsl-absent-empty.sh
 rrv ./reg-test/cases/case-c-dsl-break-continue.sh
+rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
 rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
 rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
@@ -121,6 +113,10 @@ rrv -C20 ./reg-test/cases/case-c-dsl-type-predicates.sh
 
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 * print-with-redirect
+
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
+* print-with-redirect
+-> split up this big case-file
 
 ================================================================
 NOT IMPLEMENTED YET:
@@ -156,6 +152,7 @@ rrv ./reg-test/cases/case-c-dsl-regex-captures.sh
 rrv ./reg-test/cases/case-c-dsl-regex-matching.sh
 rrv ./reg-test/cases/case-c-dsl-stack-allocation.sh
 rrv ./reg-test/cases/case-c-format-values.sh
+rrv ./reg-test/cases/case-c-format-values.sh
 rrv ./reg-test/cases/case-c-fraction.sh
 rrv ./reg-test/cases/case-c-having-fields.sh
 rrv ./reg-test/cases/case-c-head-early-out.sh
@@ -188,4 +185,3 @@ rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
 
 ================================================================
-rrv -C20 ./reg-test/cases/case-c-dsl-user-defined-functions.sh

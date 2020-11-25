@@ -7,8 +7,8 @@ import (
 
 	"miller/clitypes"
 	"miller/input"
-	"miller/transforming"
 	"miller/output"
+	"miller/transforming"
 	"miller/types"
 )
 

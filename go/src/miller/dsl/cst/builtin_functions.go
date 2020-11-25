@@ -509,7 +509,7 @@ func (this *RootNode) BuildEmptyCoalesceOperatorNode(a, b IEvaluable) *EmptyCoal
 func (this *EmptyCoalesceOperatorNode) Evaluate(state *State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
-	if atype == types.MT_ABSENT || atype == types.MT_VOID || (atype == types.MT_STRING && aout.String() == "")  {
+	if atype == types.MT_ABSENT || atype == types.MT_VOID || (atype == types.MT_STRING && aout.String() == "") {
 		bout := this.b.Evaluate(state)
 		return bout
 	} else {

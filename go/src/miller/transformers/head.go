@@ -105,9 +105,9 @@ type TransformerHead struct {
 	groupByFieldNameList []string
 
 	// state
-	recordTransformerFunc   transforming.RecordTransformerFunc
-	unkeyedRecordCount uint64
-	keyedRecordCounts  map[string]uint64
+	recordTransformerFunc transforming.RecordTransformerFunc
+	unkeyedRecordCount    uint64
+	keyedRecordCounts     map[string]uint64
 }
 
 func NewTransformerHead(

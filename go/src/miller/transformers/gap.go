@@ -99,9 +99,9 @@ type TransformerGap struct {
 	groupByFieldNameList []string
 
 	// state
-	recordTransformerFunc    transforming.RecordTransformerFunc
-	recordCount         int64
-	previousGroupingKey string
+	recordTransformerFunc transforming.RecordTransformerFunc
+	recordCount           int64
+	previousGroupingKey   string
 }
 
 func NewTransformerGap(

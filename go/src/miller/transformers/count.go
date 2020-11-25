@@ -109,7 +109,7 @@ type TransformerCount struct {
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
-	ungroupedCount   int64
+	ungroupedCount        int64
 	// Example:
 	// * Suppose group-by fields are a,b.
 	// * One record has a=foo,b=bar

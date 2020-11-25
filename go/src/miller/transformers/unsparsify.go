@@ -98,10 +98,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 
 // ----------------------------------------------------------------
 type TransformerUnsparsify struct {
-	fillerMlrval       types.Mlrval
-	recordsAndContexts *list.List
-	fieldNamesSeen     *lib.OrderedMap
-	recordTransformerFunc   transforming.RecordTransformerFunc
+	fillerMlrval          types.Mlrval
+	recordsAndContexts    *list.List
+	fieldNamesSeen        *lib.OrderedMap
+	recordTransformerFunc transforming.RecordTransformerFunc
 }
 
 func NewTransformerUnsparsify(

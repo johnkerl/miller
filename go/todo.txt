@@ -1,15 +1,17 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! better -s in reg_test ... maybe just a different script ...
+! put b-b impl/doc
+  o list (few) diffs put <-> filter
+
 small:
-* keys/values -> get_keys/get_values
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
 
 medium:
 ! gating after: 'int x = 1; x = "abc"'
-! still need functional put -S / put -F ... sigh.
 ? records as mlrmap -> mlrval?
   o reduce $* copy ...
   o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
@@ -93,7 +95,6 @@ no need to bootstrap a parser for the parser-generator language
   !! strlen for UTF-8; wat
   ! regex captures
   o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
-  o put -n https://github.com/johnkerl/miller/issues/77#issuecomment-370375671
   o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
 
 * bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
@@ -103,7 +104,6 @@ no need to bootstrap a parser for the parser-generator language
   this should happen intentionally, not accidentally.
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
-* UDS
 
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
@@ -111,11 +111,6 @@ no need to bootstrap a parser for the parser-generator language
 
 * sliding-window averages into mapper step (C + Go)
 * stats1 rank
-
-* some more verbs
-  o easies first
-  o having-fields -x feature ... or something
-  o join, stats1, stats2
 
 * double-check rand-seeding
   o all rand invocations should go through the seeder for UT/other determinism
@@ -364,3 +359,4 @@ NITS/NON-IMMEDIATE:
 * note about non-determinism for DSL print/dump vs record output-stream now ...
 * mlrdoc the ??? operator
 * document --jvstack is now a back-compat no-op
+* doc about put -S/-F cannot make sense anymore
