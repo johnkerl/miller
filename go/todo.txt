@@ -23,16 +23,22 @@ big:
   k positional indexing for maps -- use [[]] [[[]]]
   k '{1:2}' treat as '{"1":2}'
 
-  o new logic on read:
-    - tbd
-  o new logic on write:
-    - if exists: tbd
-    - auto-lengthen: tbd
-    - auto-deepen: tbd
+  o cases to update:
+    - case-go-dsl-array-index-alias.sh
+
+  o read paths:
+    - BuildArrayOrMapIndexAccessNode::Evaluate
+      > Mlrval:: ArrayGet
+        ! looks OK ...
+      > Mlrval:: MapGet
+        * Mlrval::GetWithMlrvalIndex
+    - explicit [[...]] / [[[.]]] paths:
+      > Mlrmap::GetNameAtPositionalIndex
+      > Mlrmap::GetWithPositionalIndex
 
   o write paths:
     - maps:
-      > Mlrmap::PutCopyWithMlrvalIndex
+      k Mlrmap::PutCopyWithMlrvalIndex
         * here is string/int logic
       > Mlrmap::PutIndexed
         * putIndexedOnMap
@@ -46,19 +52,6 @@ big:
     - arrays:
       > ArrayPut
         ! Needs abend on invalids
-  o read paths:
-    - BuildArrayOrMapIndexAccessNode::Evaluate
-      > Mlrval:: ArrayGet
-        ! looks OK ...
-      > Mlrval:: MapGet
-    - explicit [[...]] / [[[.]]] paths:
-      > Mlrmap::GetNameAtPositionalIndex
-      > Mlrmap::GetWithPositionalIndex
-
-  o old logic on read: 'm[1]' treat as 'm["1"]' if already exists as map
-      -> Mlrmap::GetWithMlrvalIndex
-  o old logic on write: 'm[1]' treat as 'm["1"]' on read if already exists as map
-
 
   o auto-deepen logic -- foo[NR] -- should create a map not an array
     - idea is arrays are created with explicit array literals, then extended as such
@@ -76,8 +69,12 @@ big:
     - ./types/mlrval_collections.go
     - ./types/mlrval_new.go
     - ./types/mlrval_new.go
+
   o remove the [positional] semantics and all unneeded supporting code, except
     as used by [[position]] and [[[position]]].
+
+  o check deadness of Mlrmap::findEntryByPositionalIndex
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
