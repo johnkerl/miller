@@ -37,10 +37,10 @@ run_mlr -n put 'end {print splitavx("a,b,c", "=", ",")}'
 run_mlr -n put 'end {print splita("3,4,5", ",")}'
 run_mlr -n put 'end {print splitax("3,4,5", ",")}'
 
-run_mlr --ojson --from $indir/s.dkvp put '$keys   = keys($*)'
-run_mlr --ojson --from $indir/s.dkvp put '$values = values($*)'
-run_mlr --ojson --from $indir/s.dkvp put '$keys   = keys([7,8,9])'
-run_mlr --ojson --from $indir/s.dkvp put '$values = values([7,8,9])'
+run_mlr --ojson --from $indir/s.dkvp put '$keys   = get_keys($*)'
+run_mlr --ojson --from $indir/s.dkvp put '$values = get_values($*)'
+run_mlr --ojson --from $indir/s.dkvp put '$keys   = get_keys([7,8,9])'
+run_mlr --ojson --from $indir/s.dkvp put '$values = get_values([7,8,9])'
 
 run_mlr --ojson --from $indir/s.dkvp put 'begin{@v=[]} @v = append(@v, NR); $v=@v'
 

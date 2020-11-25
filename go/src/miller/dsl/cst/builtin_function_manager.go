@@ -555,14 +555,14 @@ map/array, same as length.`,
 		unaryFunc: types.MlrvalLeafCount,
 	},
 	{
-		name:      "keys",
+		name:      "get_keys",
 		help:      "Returns array of keys of map or array",
-		unaryFunc: types.MlrvalKeys,
+		unaryFunc: types.MlrvalGetKeys,
 	},
 	{
-		name:      "values",
+		name:      "get_values",
 		help:      "Returns array of keys of map or array -- in the latter case, returns a copy of the array",
-		unaryFunc: types.MlrvalValues,
+		unaryFunc: types.MlrvalGetValues,
 	},
 
 	// ----------------------------------------------------------------

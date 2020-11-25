@@ -2,7 +2,6 @@
 TOP OF LIST:
 
 small:
-* "mapping"/"Map" -> something ......
 * keys/values -> get_keys/get_values
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min

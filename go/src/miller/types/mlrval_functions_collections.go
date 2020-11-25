@@ -705,7 +705,7 @@ func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalKeys(ma *Mlrval) Mlrval {
+func MlrvalGetKeys(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_MAP {
 		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
 		i := 0
@@ -728,7 +728,7 @@ func MlrvalKeys(ma *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalValues(ma *Mlrval) Mlrval {
+func MlrvalGetValues(ma *Mlrval) Mlrval {
 	if ma.mvtype == MT_MAP {
 		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
 		i := 0
