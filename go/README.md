@@ -11,7 +11,7 @@
 * Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have reg-test coverage
 * All `TODO`/`xxx` comments in Go, BNF source code, and case-files are resolved
 * Release notes including Go-only features, and C/Go backward-incompatibilities
-* Docs updated at https://miller.readthedocs.io/ [`../docs](../docs/))
+* Docs updated at https://miller.readthedocs.io/ (source-controlled at [../docs](../docs/))
 * Equivalent of `./configure`, whatever that turns out to be
 
 # Trying out the Go port
@@ -119,15 +119,15 @@ So, in broad overview, the key packages are:
   * [`Mlrmap`](./src/miller/types/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./src/miller/types/mlrmap.go) for more details.
   * [`context`](./src/miller/types/context.go) supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * [src/miller/cli](./src/miller/cli) is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
-* [`src/miller/clitypes`](./src/miller/clitypes) contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
-* [`src/miller/stream`](./src/miller/stream) is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
-* [`src/miller/input`](./src/miller/input) is as above -- one record-reader type per supported input file format, and a factory method.
-* [`src/miller/output`](./src/miller/output) is as above -- one record-writer type per supported output file format, and a factory method.
-* [`src/miller/transforming`](./src/miller/transforming) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
-* [`src/miller/transformers](./src/miller/transformers)` is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
-* [`src/miller/parsing`](./src/miller/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
-* [`src/miller/dsl`](./src/miller/dsl) contains [`ast_types.go`](src/miller/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
-* [`src/miller/dsl/cst`](./src/miller/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [src/miller/dsl/cst/README.md](./src/miller/dsl/cst/README.md)` for more information.
+* [src/miller/clitypes](./src/miller/clitypes) contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
+* [src/miller/stream](./src/miller/stream) is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
+* [src/miller/input](./src/miller/input) is as above -- one record-reader type per supported input file format, and a factory method.
+* [src/miller/output](./src/miller/output) is as above -- one record-writer type per supported output file format, and a factory method.
+* [src/miller/transforming](./src/miller/transforming) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
+* [src/miller/transformers](./src/miller/transformers) is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
+* [src/miller/parsing](./src/miller/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
+* [src/miller/dsl](./src/miller/dsl) contains [`ast_types.go`](src/miller/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
+* [src/miller/dsl/cst](./src/miller/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [src/miller/dsl/cst/README.md](./src/miller/dsl/cst/README.md)` for more information.
 
 ## Nil-record conventions
 
