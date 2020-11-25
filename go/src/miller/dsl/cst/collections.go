@@ -92,14 +92,99 @@ func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) types.Mlrval {
 }
 
 // ----------------------------------------------------------------
+type ArraySliceAccessNode struct {
+	baseEvaluable       IEvaluable
+	lowerIndexEvaluable IEvaluable
+	upperIndexEvaluable IEvaluable
+}
+
 func (this *RootNode) BuildArraySliceAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceAccess)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 
-	// TODO
+	baseASTNode := astNode.Children[0]
+	lowerIndexASTNode := astNode.Children[1]
+	upperIndexASTNode := astNode.Children[2]
 
-	return this.BuildPanicNode(astNode)
+	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	lowerIndexEvaluable, err := this.BuildEvaluableNode(lowerIndexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	upperIndexEvaluable, err := this.BuildEvaluableNode(upperIndexASTNode)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ArraySliceAccessNode{
+		baseEvaluable:       baseEvaluable,
+		lowerIndexEvaluable: lowerIndexEvaluable,
+		upperIndexEvaluable: upperIndexEvaluable,
+	}, nil
+}
+
+func (this *ArraySliceAccessNode) Evaluate(state *State) types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	lowerIndexMlrval := this.lowerIndexEvaluable.Evaluate(state)
+	upperIndexMlrval := this.upperIndexEvaluable.Evaluate(state)
+
+	if baseMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+	if baseMlrval.IsString() {
+		return types.MlrvalSubstr(&baseMlrval, &lowerIndexMlrval, &upperIndexMlrval)
+	}
+	array := baseMlrval.GetArray()
+	if array == nil {
+		return types.MlrvalFromError()
+	}
+
+	if lowerIndexMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+	if upperIndexMlrval.IsAbsent() {
+		return types.MlrvalFromAbsent()
+	}
+
+	lowerIndex, ok := lowerIndexMlrval.GetIntValue()
+	if !ok {
+		return types.MlrvalFromError()
+	}
+	upperIndex, ok := upperIndexMlrval.GetIntValue()
+	if !ok {
+		return types.MlrvalFromError()
+	}
+
+	lowerZindex, ok := types.UnaliasArrayIndex(&array, lowerIndex)
+	if !ok { // TODO: absent? error? what is best?
+		return types.MlrvalFromError()
+	}
+	upperZindex, ok := types.UnaliasArrayIndex(&array, upperIndex)
+	if !ok { // TODO: absent? error? what is best?
+		return types.MlrvalFromError()
+	}
+
+	// Go     slices have inclusive lower bound, exclusive upper bound.
+	// Miller slices have inclusive lower bound, inclusive upper bound.
+	var n int64 = 0
+	if lowerZindex <= upperZindex {
+		n = upperZindex - lowerZindex + 1
+	}
+	retval := make([]types.Mlrval, n)
+	di := 0
+	for si := lowerZindex; si <= upperZindex; si++ {
+		retval[di] = *array[si].Copy()
+		di++
+	}
+
+	return types.MlrvalFromArrayLiteralReference(retval)
 }
 
 // ================================================================

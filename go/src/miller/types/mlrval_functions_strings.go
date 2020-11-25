@@ -86,9 +86,12 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 
 	if !mok || !nok {
 		return MlrvalFromString("")
+	} else if (m > n) {
+		return MlrvalFromError()
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
-		// while the 2nd is exclusive.
+		// while the 2nd is exclusive. For Miller, indices are 1-up and both
+		// are inclusive.
 		return MlrvalFromString(ma.printrep[m : n+1])
 	}
 }

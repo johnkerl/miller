@@ -57,7 +57,7 @@
 // Naming conventions:
 //
 // * All userspace indexing is done in this file, ultimately through
-//   the unaliasArrayIndex() function.
+//   the UnaliasArrayIndex() function.
 //
 // * Outside of this file I simply say 'index'.
 //
@@ -114,7 +114,7 @@ func (this *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 
 // ----------------------------------------------------------------
 func arrayGetAliased(array *[]Mlrval, mindex int64) *Mlrval {
-	zindex, ok := unaliasArrayIndex(array, mindex)
+	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
 		return &(*array)[zindex]
 	} else {
@@ -123,7 +123,7 @@ func arrayGetAliased(array *[]Mlrval, mindex int64) *Mlrval {
 }
 
 func arrayPutAliased(array *[]Mlrval, mindex int64, value *Mlrval) bool {
-	zindex, ok := unaliasArrayIndex(array, mindex)
+	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
 		clone := value.Copy()
 		(*array)[zindex] = *clone
@@ -133,7 +133,7 @@ func arrayPutAliased(array *[]Mlrval, mindex int64, value *Mlrval) bool {
 	}
 }
 
-func unaliasArrayIndex(array *[]Mlrval, mindex int64) (int64, bool) {
+func UnaliasArrayIndex(array *[]Mlrval, mindex int64) (int64, bool) {
 	n := int64(len(*array))
 	return UnaliasArrayLengthIndex(n, mindex)
 }
@@ -343,7 +343,7 @@ func putIndexedOnArray(
 				".",
 		)
 	}
-	zindex, inBounds := unaliasArrayIndex(baseArray, mindex.intval)
+	zindex, inBounds := UnaliasArrayIndex(baseArray, mindex.intval)
 
 	if numIndices == 1 {
 		// If last index, then assign.
@@ -478,7 +478,7 @@ func unsetIndexedOnArray(
 				".",
 		)
 	}
-	zindex, inBounds := unaliasArrayIndex(baseArray, mindex.intval)
+	zindex, inBounds := UnaliasArrayIndex(baseArray, mindex.intval)
 
 	// If last index, then unset.
 	if numIndices == 1 {

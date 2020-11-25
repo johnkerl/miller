@@ -149,7 +149,7 @@ func has_key_in_array(ma, mb *Mlrval) Mlrval {
 	if mb.mvtype != MT_INT {
 		return MlrvalFromError()
 	}
-	_, ok := unaliasArrayIndex(&ma.arrayval, mb.intval)
+	_, ok := UnaliasArrayIndex(&ma.arrayval, mb.intval)
 	return MlrvalFromBool(ok)
 }
 
