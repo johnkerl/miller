@@ -187,12 +187,15 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 		// Silent no-ops are not good UX ...
 		return
 	}
-	if key.mvtype != MT_STRING {
-		// TODO: need to be careful about semantics here.
-		// Silent no-ops are not good UX ...
-		return
+
+	if key.mvtype == MT_STRING {
+		this.mapval.PutCopy(&key.printrep, value)
+	} else if key.mvtype == MT_INT {
+		s := key.String()
+		this.mapval.PutCopy(&s, value)
 	}
-	this.mapval.PutCopy(&key.printrep, value)
+	// TODO: need to be careful about semantics here.
+	// Silent no-ops are not good UX ...
 }
 
 // ----------------------------------------------------------------

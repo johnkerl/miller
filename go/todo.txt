@@ -2,7 +2,6 @@
 TOP OF LIST:
 
 small:
-! hyperlink source-files in all README.md files
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
