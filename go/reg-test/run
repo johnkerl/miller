@@ -5,19 +5,21 @@ set -uo pipefail
 # ================================================================
 # MILLER REGRESSION SCRIPT
 #
-# Miller has some source-code-level unit-test routines -- but the
-# vast majority of tests (thousands) are invoked here at the
-# command-line level.
+# Miller has some source-code-level unit-test routines -- but the vast majority
+# of tests (thousands) are invoked here at the command-line level.
 #
-# Output from various mlr command-line invocations, with prepared
-# inputs, is generated and then compared against stored expected
-# output.
+# Output from various mlr command-line invocations, with prepared inputs, is
+# generated and then compared against stored expected output.
 # ================================================================
 
 # ================================================================
 # STRUCTURE
 #
-# * reg-test/cases/case*.sh consist of "invocations" of Miller
+# * A "case file" is a file reg-test/cases/case*.sh.
+#
+# * Each case file reg-test/cases/case*.sh consists of one or more
+#   "invocations" of Miller. An invocation is the mlr executable run once with
+#   certain command-line arguments.
 #
 # * Each case
 #     ./reg-test/cases/case-foo.sh
@@ -46,6 +48,9 @@ set -uo pipefail
 #   o The output of the invocations in the case's actual-output file differs
 #     from the case's expected-output file.
 #
+# * If this script is invoked with -s ("only_show"), it sipmly echoes out the
+#   command line for each invocation and executes it, with no output files
+#   modified, no exit status checked, etc. This is for debug/exploratory mode.
 # ================================================================
 
 # ================================================================
@@ -58,124 +63,191 @@ set -uo pipefail
 
 # ----------------------------------------------------------------
 run_mlr() {
-  # Use just "mlr" for info messages, not full path to mlr
-  if [ "$verbose" = "true" ]; then
-    echo mlr "$@"
-  fi
-  echo mlr "$@" >> $outfile
-  num_invocations_attempted=`expr $num_invocations_attempted + 1`
+  if [ "$only_show" = "true" ]; then
+    echo
+    echo $path_to_mlr "$@"
+    echo
+    $path_to_mlr "$@"
 
-  # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
-  # Instead we use this '$errfile.$$' trick.
-  #
-  # Also note that we could 2>&1 and have a single combined stdout-and-stderr
-  # file. However, experience has shown that the line-ordering isn't
-  # deterministic across multiple platforms, causing a regression test baked
-  # (and passing) on one platform to fail on another. See in particular
-  # https://github.com/johnkerl/miller/issues/293
-
-  $path_to_mlr "$@" >> $outfile 2> $errfile.$$
-  status=$?
-  cat $errfile.$$ >> $errfile
-  rm $errfile.$$ # TODO comment this
-
-  if [ $status -eq 0 ]; then
-    num_invocations_passed=`expr $num_invocations_passed + 1`
   else
+    # Use just "mlr" for info messages, not full path to mlr
     if [ "$verbose" = "true" ]; then
-      echo "Exit status was $status; expected 0."
+      echo mlr "$@"
     fi
-    echo "Exit status was $status; expected 0." >> $outfile
-    num_invocations_failed=`expr $num_invocations_failed + 1`
+    echo mlr "$@" >> $outfile
+    num_invocations_attempted=`expr $num_invocations_attempted + 1`
+
+    # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
+    # Instead we use this '$errfile.$$' trick.
+    #
+    # Also note that we could 2>&1 and have a single combined stdout-and-stderr
+    # file. However, experience has shown that the line-ordering isn't
+    # deterministic across multiple platforms, causing a regression test baked
+    # (and passing) on one platform to fail on another. See in particular
+    # https://github.com/johnkerl/miller/issues/293
+
+    $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+    status=$?
+    cat $errfile.$$ >> $errfile
+    rm $errfile.$$
+
+    if [ $status -eq 0 ]; then
+      num_invocations_passed=`expr $num_invocations_passed + 1`
+    else
+      if [ "$verbose" = "true" ]; then
+        echo "Exit status was $status; expected 0."
+      fi
+      echo "Exit status was $status; expected 0." >> $outfile
+      num_invocations_failed=`expr $num_invocations_failed + 1`
+    fi
+    echo >> $outfile
   fi
-  echo >> $outfile
 }
 
 # ----------------------------------------------------------------
 mlr_expect_fail() {
-  # Use just "mlr" for info messages
-  if [ "$verbose" = "true" ]; then
-    echo mlr "$@"
-  fi
-  echo mlr "$@" >> $outfile 2> $errfile.$$
-  cat $errfile.$$ >> $errfile
-  rm $errfile.$$ # TODO comment this
-  num_invocations_attempted=`expr $num_invocations_attempted + 1`
+  if [ "$only_show" = "true" ]; then
+    echo
+    echo $path_to_mlr "$@"
+    echo
+    $path_to_mlr "$@"
 
-  # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
-  # Instead we use this '$errfile.$$' trick.
-  $path_to_mlr "$@" >> $outfile 2> $errfile.$$
-  status=$?
-  cat $errfile.$$ >> $errfile
-  rm $errfile.$$ # TODO comment this
-
-  if [ $status -eq 1 ]; then
-    num_invocations_passed=`expr $num_invocations_passed + 1`
   else
-    num_invocations_failed=`expr $num_invocations_failed + 1`
+    # Use just "mlr" for info messages
     if [ "$verbose" = "true" ]; then
-      echo "Exit status was $status; expected 1."
+      echo mlr "$@"
     fi
-    echo "Exit status was $status; expected 1." >> $outfile
+    echo mlr "$@" >> $outfile 2> $errfile.$$
+    cat $errfile.$$ >> $errfile
+    rm $errfile.$$
+    num_invocations_attempted=`expr $num_invocations_attempted + 1`
+
+    # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
+    # Instead we use this '$errfile.$$' trick.
+    $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+    status=$?
+    cat $errfile.$$ >> $errfile
+    rm $errfile.$$
+
+    if [ $status -eq 1 ]; then
+      num_invocations_passed=`expr $num_invocations_passed + 1`
+    else
+      num_invocations_failed=`expr $num_invocations_failed + 1`
+      if [ "$verbose" = "true" ]; then
+        echo "Exit status was $status; expected 1."
+      fi
+      echo "Exit status was $status; expected 1." >> $outfile
+    fi
+    echo >> $outfile
   fi
-  echo >> $outfile
 }
 
 # ----------------------------------------------------------------
 run_mlr_no_output() {
-  # Use just "mlr" for info messages, not full path to mlr
-  if [ "$verbose" = "true" ]; then
-    echo mlr "$@"
-  fi
-  echo mlr "$@" >> $outfile
-  num_invocations_attempted=`expr $num_invocations_attempted + 1`
+  if [ "$only_show" = "true" ]; then
+    echo
+    echo $path_to_mlr "$@"
+    echo
+    $path_to_mlr "$@"
 
-  # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
-  # Instead we use this '$errfile.$$' trick.
-  $path_to_mlr "$@" 2> $errfile.$$
-  status=$?
-  cat $errfile.$$ >> $errfile
-  rm $errfile.$$ # TODO comment this
-
-  if [ $status -eq 0 ]; then
-    num_invocations_passed=`expr $num_invocations_passed + 1`
   else
+    # Use just "mlr" for info messages, not full path to mlr
     if [ "$verbose" = "true" ]; then
-      echo "Exit status was $status; expected 0."
+      echo mlr "$@"
     fi
-    echo "Exit status was $status; expected 0." >> $outfile
-    num_invocations_failed=`expr $num_invocations_failed + 1`
+    echo mlr "$@" >> $outfile
+    num_invocations_attempted=`expr $num_invocations_attempted + 1`
+
+    # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
+    # Instead we use this '$errfile.$$' trick.
+    $path_to_mlr "$@" 2> $errfile.$$
+    status=$?
+    cat $errfile.$$ >> $errfile
+    rm $errfile.$$
+
+    if [ $status -eq 0 ]; then
+      num_invocations_passed=`expr $num_invocations_passed + 1`
+    else
+      if [ "$verbose" = "true" ]; then
+        echo "Exit status was $status; expected 0."
+      fi
+      echo "Exit status was $status; expected 0." >> $outfile
+      num_invocations_failed=`expr $num_invocations_failed + 1`
+    fi
+    echo >> $outfile
   fi
-  echo >> $outfile
 }
 
 # ----------------------------------------------------------------
 # Just cats a file while also announcing that fact.
 run_cat() {
-  if [ "$verbose" = "true" ]; then
+  if [ "$only_show" = "true" ]; then
+    echo
     echo cat "$@"
+    echo
+    cat "$@"
+
+  else
+    if [ "$verbose" = "true" ]; then
+      echo cat "$@"
+    fi
+    echo cat "$@" >> $outfile # for diff at end
+    cat "$@" >> $outfile      # for diff at end
+    echo >> $outfile
   fi
-  echo cat "$@" >> $outfile # for diff at end
-  cat "$@" >> $outfile      # for diff at end
-  echo >> $outfile
 }
 
 # ----------------------------------------------------------------
 announce() {
-  echo >> $outfile
-  echo "================================================================" >> $outfile
-  echo "$@" >> $outfile
-  echo >> $outfile
+  if [ "$only_show" = "true" ]; then
+    echo
+    echo "================================================================"
+    echo
+    echo "$@"
+  else
+
+    echo >> $outfile
+    echo "================================================================" >> $outfile
+    echo "$@" >> $outfile
+    echo >> $outfile
+  fi
 }
 
 # ----------------------------------------------------------------
 mention() {
-  echo >> $outfile
-  echo ---------------------------------------------------------------- "$@" >> $outfile
+  if [ "$only_show" = "true" ]; then
+    echo
+    echo ---------------------------------------------------------------- "$@"
+  else
+    echo >> $outfile
+    echo ---------------------------------------------------------------- "$@" >> $outfile
+  fi
 }
 
 # ================================================================
 # START OF SCRIPT PER SE
+
+# ----------------------------------------------------------------
+# Set up for green "PASS", red "FAIL" if output is to a terminal.
+
+if [ "$(uname)" = "Darwin" ]; then
+  export textdefault=$'\033[0m'
+  export         red=$'\033[31;01m'
+  export       green=$'\033[32;01m'
+else
+  export textdefault="\e[0m"
+  export         red="\e[31m"
+  export       green="\e[32m"
+fi
+
+# Bash idiom to test if file descriptor #1 (stdout) is a terminal
+if [[ -t 1 ]]; then
+    PASS="${green}PASS${textdefault}"
+    FAIL="${red}FAIL${textdefault}"
+else
+    PASS="PASS"
+    FAIL="FAIL"
+fi
 
 # ----------------------------------------------------------------
 usage() {
@@ -195,16 +267,19 @@ usage() {
 
 # ----------------------------------------------------------------
 # These next few lines let us be invoked from another directory.
+
 pwd=$(pwd)
 ourdir=`dirname $0`
 srcdir=$ourdir/../..
 path_to_mlr=$srcdir/go/mlr
 
+# ----------------------------------------------------------------
+# Parse the command line.
+
 # Input/output locations
 indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$pwd/output-reg-test
-reloutdir=./output-reg-test
 
 verbose="false"
 only_show="false"
@@ -239,33 +314,18 @@ if [ ! -x "$path_to_mlr" ]; then
   echo "$0: Could not find path to mlr executable $path_to_mlr." 1>&2
 fi
 
-# ----------------------------------------------------------------
-# Set up for green "PASS", red "FAIL" if output is to a terminal.
-
-if [ "$(uname)" = "Darwin" ]; then
-  export textdefault=$'\033[0m'
-  export         red=$'\033[31;01m'
-  export       green=$'\033[32;01m'
-else
-  export textdefault="\e[0m"
-  export         red="\e[31m"
-  export       green="\e[32m"
-fi
-
-# Bash idiom to test if file descriptor #1 (stdout) is a terminal
-if [[ -t 1 ]]; then
-    PASS="${green}PASS${textdefault}"
-    FAIL="${red}FAIL${textdefault}"
-else
-    PASS="PASS"
-    FAIL="FAIL"
+if [ "$only_show" = "true" ]; then
+  expdir="/nonesuch"
+  outdir="/nonesuch"
 fi
 
 # ----------------------------------------------------------------
 # Prep for output
 
-rm -rf $outdir
-mkdir -p $outdir
+if [ "$only_show" = "false" ]; then
+  rm -rf $outdir
+  mkdir -p $outdir
+fi
 
 echo Using mlr executable $path_to_mlr
 
@@ -281,8 +341,8 @@ num_cases_failed=0
 
 # ----------------------------------------------------------------
 # Set counters for this main script.
-total_num_invocations_attempted=0
 
+total_num_invocations_attempted=0
 
 # ----------------------------------------------------------------
 # Run the case-files.
@@ -308,7 +368,9 @@ for case_file in $case_file_names; do
 
   case_passed=true
 
-  echo > $outfile
+  if [ "$only_show" = "false" ]; then
+    echo > $outfile
+  fi
   num_cases_attempted=`expr $num_cases_attempted + 1`
 
   # Note that 'echo "..." | run_mlr ... ' would be nice in case-files, but, I had
@@ -328,10 +390,6 @@ for case_file in $case_file_names; do
   # ----------------------------------------------------------------
 
   if [ "$only_show" = "true" ]; then
-    echo
-    cat $outfile
-    echo
-    cat $errfile
     continue
   fi
 
@@ -377,6 +435,7 @@ for case_file in $case_file_names; do
     echo
   fi
 
+  # Summarize the case status
   if [ $case_passed = "true" ]; then
     echo -e "$PASS  $case_file"
     num_cases_passed=`expr $num_cases_passed + 1`
@@ -393,7 +452,7 @@ for case_file in $case_file_names; do
 done
 
 # ----------------------------------------------------------------
-# SUMMARIZE
+# SUMMARIZE OVERALL STATUS
 
 if [ "$only_show" = "true" ]; then
   exit 0
