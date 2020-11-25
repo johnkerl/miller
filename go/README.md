@@ -89,7 +89,7 @@ Miller is a multi-format record-stream processor, where a **record** is a
 sequence of key-value pairs. The basic **stream** operation is:
 
 * **read** records in some specified file format;
-* **map** the input records to output records in some user-specified way, using a **chain** of **transformers** (also sometimes called **verbs**) -- sort, filter, cut, put, etc.;
+* **transform** the input records to output records in some user-specified way, using a **chain** of **transformers** (also sometimes called **verbs**) -- sort, filter, cut, put, etc.;
 * **write** the records in some specified file format.
 
 So, in broad overview, the key packages are:
@@ -113,7 +113,7 @@ So, in broad overview, the key packages are:
 
 ### Miller per se
 
-* Main entry point is `mlr.go`; everything else in `src/miller`.
+* The main entry point is `mlr.go`; everything else in `src/miller`.
 * `src/miller/lib`:
   * Implementation of the `Mlrval` datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
   * `Mlrmap` is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see `mlrmap.go` for more details.
@@ -124,7 +124,7 @@ So, in broad overview, the key packages are:
 * `src/miller/input` is as above -- one record-reader type per supported input file format, and a factory method.
 * `src/miller/output` is as above -- one record-writer type per supported output file format, and a factory method.
 * `src/miller/transforming` contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
-* `src/miller/transformers` is all the concreate record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
+* `src/miller/transformers` is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
 * `src/miller/parsing` contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `src/miller/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`.
 * `src/miller/dsl` contains `ast.go` which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * `src/miller/dsl/cst` is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the `README.md` in `src/miller/dsl/cst` for more information.

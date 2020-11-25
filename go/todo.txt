@@ -1,9 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! better -s in reg_test ... maybe just a different script ...
-
 small:
+! hyperlink source-files in all README.md files
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
@@ -17,6 +16,7 @@ medium:
 big:
 ! emitp/emitf
 ! array/map ...........
+  - array-slice unpanic
 ! json-null as type; & all dispo matrices/vectors ...
 ! smart fmtnum
 
