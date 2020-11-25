@@ -155,11 +155,19 @@ func (this *ArraySliceAccessNode) Evaluate(state *State) types.Mlrval {
 
 	lowerIndex, ok := lowerIndexMlrval.GetIntValue()
 	if !ok {
-		return types.MlrvalFromError()
+		if lowerIndexMlrval.IsEmpty() {
+			lowerIndex = 1
+		} else {
+			return types.MlrvalFromError()
+		}
 	}
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
 	if !ok {
-		return types.MlrvalFromError()
+		if upperIndexMlrval.IsEmpty() {
+			upperIndex = int64(len(array))
+		} else {
+			return types.MlrvalFromError()
+		}
 	}
 
 	lowerZindex, ok := types.UnaliasArrayIndex(&array, lowerIndex)

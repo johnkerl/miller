@@ -21,7 +21,7 @@ mlr put $y = substr($x, 3, 3)
 x=abcdefg,y=c
 
 mlr put $y = substr($x, 4, 3)
-x=abcdefg,y=
+x=abcdefg,y=(error)
 
 mlr put $y = substr($x, 2, 5)
 x=1234567,y=2345

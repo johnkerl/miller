@@ -5,6 +5,7 @@ small:
 * justWroteEmptyLine -> pprint too ...
 ! nidx @ 10-min
 ! text-put @ 10-min
+! slice: empty lower/higher
 
 medium:
 ! gating after: 'int x = 1; x = "abc"'
@@ -377,3 +378,4 @@ NITS/NON-IMMEDIATE:
   o ....
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
 * doc: string index/slice access on RHS
+* substr(7,5) -- "" or error?

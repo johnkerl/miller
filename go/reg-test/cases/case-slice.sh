@@ -1,4 +1,4 @@
-mlr -n --ojson put '
+run_mlr -n --ojson put '
   end {
     a = [1,2,3,4,5,6,7];
     m = {"a": 1, "b": 2};
