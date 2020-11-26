@@ -45,11 +45,6 @@ rrv -C1 ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
 rrv -C1 ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
 * int map keys
 
-rrv ./reg-test/cases/case-c-dsl-haskey.sh
-* haskey({3:4}, 3)
-
-rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
-
 ================================================================
 PARTIALLY IMPLEMENTED:
 
@@ -168,21 +163,3 @@ rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
 
 ================================================================
-
-rrv ./reg-test/cases/case-c-localvar-unsets.sh
-
-rrv -C5 ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
-
-rrv ./reg-test/cases/case-c-dsl-split-join.sh
-rrv -C5 ./reg-test/cases/case-c-dsl-asserting.sh
-rrv -C1 ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
-* int map keys
-
-rrv -C1 ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
-* int map keys
-
-rrv ./reg-test/cases/case-c-dsl-haskey.sh
-* haskey({3:4}, 3)
-
-rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
