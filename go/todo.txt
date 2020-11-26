@@ -20,18 +20,9 @@ big:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * array-map:
-  o merge:
-    ./reg-test/cases/case-c-dsl-positional-indexing.sh
-    ./reg-test/cases/case-positional-indexing.sh
-  o cases:
-    ./reg-test/cases/case-go-dsl-array-index-alias.sh
-      i $[[1]]   = "new" -> new-pan
-      i $[[[1]]] = "new" -> a=new
-    ./reg-test/cases/case-positional-indexing.sh
-  o cases to update:
-    ? unset $[[1]]? check c,go
-    ? unset $[[[1]]]? check c,go
-    w case-go-dsl-array-index-alias.sh with $[1] = "new"
+  o $[[1]]   = "new" -> new-pan
+  o $[[[1]]] = "new" -> a=new
+  o unset $[[1]]
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
