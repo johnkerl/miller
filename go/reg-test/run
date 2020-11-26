@@ -283,6 +283,7 @@ path_to_mlr=$srcdir/go/mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$pwd/output-reg-test
+reloutdir=./output-reg-test # used by some case-files
 
 verbose="false"
 only_show="false"
