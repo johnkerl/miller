@@ -154,13 +154,12 @@ func has_key_in_array(ma, mb *Mlrval) Mlrval {
 }
 
 func has_key_in_map(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype == MT_INT {
-		return MlrvalFromFalse()
-	}
-	if mb.mvtype != MT_STRING {
+	if mb.mvtype == MT_STRING || mb.mvtype == MT_INT {
+		s := mb.String()
+		return MlrvalFromBool(ma.mapval.Has(&s))
+	} else {
 		return MlrvalFromError()
 	}
-	return MlrvalFromBool(ma.mapval.Has(&mb.printrep))
 }
 
 func MlrvalHasKey(ma, mb *Mlrval) Mlrval {

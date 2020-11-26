@@ -50,23 +50,6 @@ rrv ./reg-test/cases/case-c-dsl-haskey.sh
 
 rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
 
-rrv ./reg-test/cases/case-c-dsl-is-predicates.sh
-* {1:2} is empty-map in Go; should step up (populate) or step down (error)
-
-  func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
-      if this.mvtype != MT_MAP {
-          // TODO: need to be careful about semantics here.
-          // Silent no-ops are not good UX ...
-          return
-      }
-      if key.mvtype != MT_STRING {
-          // TODO: need to be careful about semantics here.
-          // Silent no-ops are not good UX ...
-          return
-      }
-      this.mapval.PutCopy(&key.printrep, value)
-  }
-
 ================================================================
 PARTIALLY IMPLEMENTED:
 
@@ -185,3 +168,21 @@ rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
 
 ================================================================
+
+rrv ./reg-test/cases/case-c-localvar-unsets.sh
+
+rrv -C5 ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
+
+rrv ./reg-test/cases/case-c-dsl-split-join.sh
+rrv -C5 ./reg-test/cases/case-c-dsl-asserting.sh
+rrv -C1 ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
+* int map keys
+
+rrv -C1 ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
+* int map keys
+
+rrv ./reg-test/cases/case-c-dsl-haskey.sh
+* haskey({3:4}, 3)
+
+rrv ./reg-test/cases/case-c-dsl-extended-typeof.sh
