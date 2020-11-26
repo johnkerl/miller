@@ -20,64 +20,15 @@ big:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * array-map:
-  k positional indexing for maps -- use [[]] [[[]]]
-  k '{1:2}' treat as '{"1":2}'
-
-  o new logic on read:
-    - tbd
-  o new logic on write:
-    - if exists: tbd
-    - auto-lengthen: tbd
-    - auto-deepen: tbd
-
-  o write paths:
-    - maps:
-      > Mlrmap::PutCopyWithMlrvalIndex
-        * here is string/int logic
-      > Mlrmap::PutIndexed
-        * putIndexedOnMap
-          o here is string/int logic
-    - localvars:
-      > SetVariable
-        * BindVariable
-      > SetVariableIndexed
-        * BindVariableIndexed
-          o Mlrval.PutIndexed
-    - arrays:
-      > ArrayPut
-        ! Needs abend on invalids
-  o read paths:
-    - BuildArrayOrMapIndexAccessNode::Evaluate
-      > Mlrval:: ArrayGet
-        ! looks OK ...
-      > Mlrval:: MapGet
-    - explicit [[...]] / [[[.]]] paths:
-      > Mlrmap::GetNameAtPositionalIndex
-      > Mlrmap::GetWithPositionalIndex
-
-  o old logic on read: 'm[1]' treat as 'm["1"]' if already exists as map
-      -> Mlrmap::GetWithMlrvalIndex
-  o old logic on write: 'm[1]' treat as 'm["1"]' on read if already exists as map
-
-
-  o auto-deepen logic -- foo[NR] -- should create a map not an array
-    - idea is arrays are created with explicit array literals, then extended as such
-    - otherwise preserve map semantics
-    - doc clearly that these are different:
-      begin {
-        foo = []
-      }
-      foo[NR] = $foo # auto-extends a array with indices 1,2,3,...
-      --versus--
-      foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...
-
-  o auto-lengthen logic ...
-    - ./types/mlrmap_accessors.go
-    - ./types/mlrval_collections.go
-    - ./types/mlrval_new.go
-    - ./types/mlrval_new.go
-  o remove the [positional] semantics and all unneeded supporting code, except
-    as used by [[position]] and [[[position]]].
+  o cases:
+    ./reg-test/cases/case-go-dsl-array-index-alias.sh
+      i $[[1]]   = "new" -> new-pan
+      i $[[[1]]] = "new" -> a=new
+    ./reg-test/cases/case-positional-indexing.sh
+  o cases to update:
+    ? unset $[[1]]? check c,go
+    ? unset $[[[1]]]? check c,go
+    w case-go-dsl-array-index-alias.sh with $[1] = "new"
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -426,3 +377,14 @@ NITS/NON-IMMEDIATE:
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
 * doc: string index/slice access on RHS
 * substr(7,5) -- "" or error?
+* write up re auto-deepen logic -- foo[NR] -- should create a map not an array unless already array
+  o idea is arrays are created with explicit array literals, then extended as such
+  o otherwise preserve map semantics for backward/awkish compatbility
+  o arrays for JSON
+  o doc clearly that these are different:
+    begin {
+      foo = []
+    }
+    foo[NR] = $foo # auto-extends a array with indices 1,2,3,...
+    --versus--
+    foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...

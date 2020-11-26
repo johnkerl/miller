@@ -312,16 +312,18 @@ func MlrvalFromMap(that *Mlrmap) Mlrval {
 }
 
 // ----------------------------------------------------------------
-// This is for auto-deepen of nested arrays/maps in things like
-// '$foo[1]["a"][2]["b"] = 3' It takes the type of the next index-slot to be
-// created, returing string for map, int for array, error otherwise.
+// This is for auto-deepen of nested maps in things like
+//
+//   $foo[1]["a"][2]["b"] = 3
+//
+// Autocreated levels are maps.  Array levels can be explicitly created e.g.
+//
+//   $foo[1]["a"] ??= []
+//   $foo[1]["a"][2]["b"] = 3
 
 func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
-	if mvtype == MT_STRING {
+	if mvtype == MT_STRING || mvtype == MT_INT {
 		empty := MlrvalEmptyMap()
-		return &empty, nil
-	} else if mvtype == MT_INT {
-		empty := MlrvalEmptyArray()
 		return &empty, nil
 	} else {
 		return nil, errors.New(

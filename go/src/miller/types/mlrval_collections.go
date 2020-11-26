@@ -70,7 +70,8 @@ package types
 
 import (
 	"errors"
-	"strconv"
+	"fmt"
+	"os"
 
 	"miller/lib"
 )
@@ -92,23 +93,35 @@ func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
+// TODO: make this return error so caller can do 'if err == nil { ... }'
 func (this *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 	if this.mvtype != MT_ARRAY {
-		// TODO: need to be careful about semantics here.
-		// Silent no-ops are not good UX ...
-		return
+		fmt.Fprintf(
+			os.Stderr,
+			"Miller: expected array as indexed item in ArrayPut; got %s\n",
+			this.GetTypeName(),
+		)
+		os.Exit(1)
 	}
 	if mindex.mvtype != MT_INT {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
-		return
+		fmt.Fprintf(
+			os.Stderr,
+			"Miller: expected int as index item ArrayPut; got %s\n",
+			mindex.GetTypeName(),
+		)
+		os.Exit(1)
 	}
 
 	ok := arrayPutAliased(&this.arrayval, mindex.intval, value)
-	if ok {
-	} else {
-		// TODO: need to be careful about semantics here.
-		// Silent no-ops are not good UX ...
+	if !ok {
+		fmt.Fprintf(
+			os.Stderr,
+			"Miller: array index %d out of bounds %d..%d\n",
+			mindex.intval, 1, len(this.arrayval),
+		)
+		os.Exit(1)
 	}
 }
 
@@ -167,7 +180,6 @@ func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 
-	// Support positional indices, e.g. '$*[3]' is the same as '$[3]'.
 	mval, err := this.mapval.GetWithMlrvalIndex(key)
 	if err != nil { // xxx maybe error-return in the API
 		return MlrvalFromError()
@@ -213,8 +225,7 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 // * If it's a map-type mlrval then:
 //
 //   o Strings are map keys.
-//   o Integers are interpreted as positional indices, only into existing
-//     fields. (We don't auto-deepen nested maps by positional indices.)
+//   o Integers are stringified, then interpreted as map keys.
 //
 // * If it's an array-type mlrval then:
 //
@@ -288,43 +299,27 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	}
 
 	// If not last index, then recurse.
-	if baseIndex.mvtype == MT_STRING {
-		// Base is map, index is string
-		baseValue := baseMap.Get(&baseIndex.printrep)
-		if baseValue == nil {
-			// Create a new level in order to recurse from
-			nextIndex := indices[1]
-
-			var err error = nil
-			baseValue, err = NewMlrvalForAutoDeepen(nextIndex.mvtype)
-			if err != nil {
-				return err
-			}
-			baseMap.PutReference(&baseIndex.printrep, baseValue)
-		}
-		return baseValue.PutIndexed(indices[1:], rvalue)
-
-	} else if baseIndex.mvtype == MT_INT {
-		// Base is map, index is int
-		baseValue := baseMap.GetWithPositionalIndex(baseIndex.intval)
-		if baseValue == nil {
-			// There is no auto-deepen for positional indices on maps
-			return errors.New(
-				"Miller: positional index " +
-					strconv.Itoa(int(baseIndex.intval)) +
-					" not found.",
-			)
-		}
-		baseValue.PutIndexed(indices[1:], rvalue)
-
-	} else {
+	if baseIndex.mvtype != MT_STRING  && baseIndex.mvtype != MT_INT {
 		// Base is map, index is invalid type
 		return errors.New(
-			"Miller: map indices must be string or positional int; got " + baseIndex.GetTypeName(),
+			"Miller: map indices must be string or int; got " + baseIndex.GetTypeName(),
 		)
 	}
 
-	return nil
+	baseValue := baseMap.Get(&baseIndex.printrep)
+	if baseValue == nil {
+		// Create a new level in order to recurse from
+		nextIndex := indices[1]
+
+		var err error = nil
+		baseValue, err = NewMlrvalForAutoDeepen(nextIndex.mvtype)
+		if err != nil {
+			return err
+		}
+		s := baseIndex.String()
+		baseMap.PutReference(&s, baseValue)
+	}
+	return baseValue.PutIndexed(indices[1:], rvalue)
 }
 
 // ----------------------------------------------------------------
@@ -429,35 +424,29 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 
 	// If last index, then unset.
 	if numIndices == 1 {
-		if baseIndex.mvtype == MT_STRING {
-			baseMap.Remove(&baseIndex.printrep)
-			return nil
-		} else if baseIndex.mvtype == MT_INT {
-			baseMap.RemoveWithPositionalIndex(baseIndex.intval)
+		if baseIndex.mvtype == MT_STRING || baseIndex.mvtype == MT_INT {
+			s := baseIndex.String()
+			baseMap.Remove(&s)
 			return nil
 		} else {
 			return errors.New(
-				"Miller: map indices must be string or positional int; got " +
+				"Miller: map indices must be string or int; got " +
 					baseIndex.GetTypeName(),
 			)
 		}
 	}
 
 	// If not last index, then recurse.
-	if baseIndex.mvtype == MT_STRING {
+	if baseIndex.mvtype == MT_STRING || baseIndex.mvtype == MT_INT {
 		// Base is map, index is string
-		baseValue := baseMap.Get(&baseIndex.printrep)
+		s := baseIndex.String()
+		baseValue := baseMap.Get(&s)
 		return baseValue.UnsetIndexed(indices[1:])
-
-	} else if baseIndex.mvtype == MT_INT {
-		// Base is map, index is int
-		baseValue := baseMap.GetWithPositionalIndex(baseIndex.intval)
-		baseValue.UnsetIndexed(indices[1:])
 
 	} else {
 		// Base is map, index is invalid type
 		return errors.New(
-			"Miller: map indices must be string or positional int; got " + baseIndex.GetTypeName(),
+			"Miller: map indices must be string or int; got " + baseIndex.GetTypeName(),
 		)
 	}
 

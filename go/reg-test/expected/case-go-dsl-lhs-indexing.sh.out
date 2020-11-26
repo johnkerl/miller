@@ -28,7 +28,9 @@ mlr --ojson --from ./reg-test/input/2.dkvp put $abc[NR] = "def"
   "i": 1,
   "x": 0.3467901443380824,
   "y": 0.7268028627434533,
-  "abc": ["def"]
+  "abc": {
+    "1": "def"
+  }
 }
 {
   "a": "eks",
@@ -36,7 +38,9 @@ mlr --ojson --from ./reg-test/input/2.dkvp put $abc[NR] = "def"
   "i": 2,
   "x": 0.7586799647899636,
   "y": 0.5221511083334797,
-  "abc": ["", "def"]
+  "abc": {
+    "2": "def"
+  }
 }
 
 mlr --ojson --from ./reg-test/input/2.dkvp put $abc[FILENAME][NR] = "def"
@@ -47,7 +51,9 @@ mlr --ojson --from ./reg-test/input/2.dkvp put $abc[FILENAME][NR] = "def"
   "x": 0.3467901443380824,
   "y": 0.7268028627434533,
   "abc": {
-    "./reg-test/input/2.dkvp": ["def"]
+    "./reg-test/input/2.dkvp": {
+      "1": "def"
+    }
   }
 }
 {
@@ -57,7 +63,9 @@ mlr --ojson --from ./reg-test/input/2.dkvp put $abc[FILENAME][NR] = "def"
   "x": 0.7586799647899636,
   "y": 0.5221511083334797,
   "abc": {
-    "./reg-test/input/2.dkvp": ["", "def"]
+    "./reg-test/input/2.dkvp": {
+      "2": "def"
+    }
   }
 }
 
@@ -68,11 +76,11 @@ mlr --ojson --from ./reg-test/input/2.dkvp put $abc[NR][FILENAME] = "def"
   "i": 1,
   "x": 0.3467901443380824,
   "y": 0.7268028627434533,
-  "abc": [
-    {
+  "abc": {
+    "1": {
       "./reg-test/input/2.dkvp": "def"
     }
-  ]
+  }
 }
 {
   "a": "eks",
@@ -80,12 +88,11 @@ mlr --ojson --from ./reg-test/input/2.dkvp put $abc[NR][FILENAME] = "def"
   "i": 2,
   "x": 0.7586799647899636,
   "y": 0.5221511083334797,
-  "abc": [
-    "",
-    {
+  "abc": {
+    "2": {
       "./reg-test/input/2.dkvp": "def"
     }
-  ]
+  }
 }
 
 mlr --ojson --from ./reg-test/input/2.dkvp put @abc[FILENAME] = "def"; $ghi = @abc
@@ -117,7 +124,9 @@ mlr --ojson --from ./reg-test/input/2.dkvp put @abc[NR] = "def"; $ghi = @abc
   "i": 1,
   "x": 0.3467901443380824,
   "y": 0.7268028627434533,
-  "ghi": ["def"]
+  "ghi": {
+    "1": "def"
+  }
 }
 {
   "a": "eks",
@@ -125,7 +134,10 @@ mlr --ojson --from ./reg-test/input/2.dkvp put @abc[NR] = "def"; $ghi = @abc
   "i": 2,
   "x": 0.7586799647899636,
   "y": 0.5221511083334797,
-  "ghi": ["def", "def"]
+  "ghi": {
+    "1": "def",
+    "2": "def"
+  }
 }
 
 mlr --ojson --from ./reg-test/input/2.dkvp put @abc[FILENAME][NR] = "def"; $ghi = @abc
@@ -136,7 +148,9 @@ mlr --ojson --from ./reg-test/input/2.dkvp put @abc[FILENAME][NR] = "def"; $ghi 
   "x": 0.3467901443380824,
   "y": 0.7268028627434533,
   "ghi": {
-    "./reg-test/input/2.dkvp": ["def"]
+    "./reg-test/input/2.dkvp": {
+      "1": "def"
+    }
   }
 }
 {
@@ -146,7 +160,10 @@ mlr --ojson --from ./reg-test/input/2.dkvp put @abc[FILENAME][NR] = "def"; $ghi 
   "x": 0.7586799647899636,
   "y": 0.5221511083334797,
   "ghi": {
-    "./reg-test/input/2.dkvp": ["def", "def"]
+    "./reg-test/input/2.dkvp": {
+      "1": "def",
+      "2": "def"
+    }
   }
 }
 
@@ -157,11 +174,11 @@ mlr --ojson --from ./reg-test/input/2.dkvp put @abc[NR][FILENAME] = "def"; $ghi 
   "i": 1,
   "x": 0.3467901443380824,
   "y": 0.7268028627434533,
-  "ghi": [
-    {
+  "ghi": {
+    "1": {
       "./reg-test/input/2.dkvp": "def"
     }
-  ]
+  }
 }
 {
   "a": "eks",
@@ -169,14 +186,14 @@ mlr --ojson --from ./reg-test/input/2.dkvp put @abc[NR][FILENAME] = "def"; $ghi 
   "i": 2,
   "x": 0.7586799647899636,
   "y": 0.5221511083334797,
-  "ghi": [
-    {
+  "ghi": {
+    "1": {
       "./reg-test/input/2.dkvp": "def"
     },
-    {
+    "2": {
       "./reg-test/input/2.dkvp": "def"
     }
-  ]
+  }
 }
 
 mlr --from ./reg-test/input/2.dkvp --ojson put @a = 3; $new=@a

@@ -389,7 +389,15 @@ for case_file in $case_file_names; do
 
   # ----------------------------------------------------------------
   # Run all invocations in the case:
-  . $case_file
+  if [ -f "$case_file" ]; then
+    . $case_file
+  else
+    # Show this error regardless of verbosity
+    echo "Case failed since file not found: $case_file"
+    echo -e "$FAIL  $case_file"
+    num_cases_failed=`expr $num_cases_failed + 1`
+    continue
+  fi
   # ----------------------------------------------------------------
 
   if [ "$only_show" = "true" ]; then

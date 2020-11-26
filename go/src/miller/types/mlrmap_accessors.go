@@ -3,7 +3,6 @@ package types
 import (
 	"bytes"
 	"errors"
-	"strconv"
 
 	"miller/lib"
 )
@@ -69,24 +68,12 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 		this.PutCopy(&key.printrep, value)
 		return nil
 	} else if key.mvtype == MT_INT {
-
-		if key.intval == 0 {
-			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
-		}
-		mapEntry := this.findEntryByPositionalIndex(key.intval)
-		if mapEntry == nil {
-			// There is no auto-deepen for positional indices
-			return errors.New(
-				"Positional index " +
-					strconv.Itoa(int(key.intval)) +
-					" not found.",
-			)
-		}
-		mapEntry.Value = value.Copy()
+		s := key.String()
+		this.PutCopy(&s, value)
 		return nil
 	} else {
 		return errors.New(
-			"Miller: record/map indices must be string or positional-int; got " + key.GetTypeName(),
+			"Miller: record/map indices must be string or int; got " + key.GetTypeName(),
 		)
 	}
 }
@@ -137,9 +124,7 @@ func (this *Mlrmap) GetKeys() []string {
 }
 
 // ----------------------------------------------------------------
-// TODO: update this comment regarding syntax
-//
-// For '$[1]' etc. in the DSL.
+// For '$[[[1]]]' etc. in the DSL.
 //
 // Notes:
 // * This is a linear search.
@@ -157,18 +142,28 @@ func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 	return mapEntry.Value
 }
 
-// TODO: update for array/map project
 func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 	if index.mvtype == MT_STRING {
 		return this.Get(&index.printrep), nil
 	} else if index.mvtype == MT_INT {
-		return this.GetWithPositionalIndex(index.intval), nil
+		s := index.String()
+		return this.Get(&s), nil
 	} else {
 		return nil, errors.New(
-			"Record/map indices must be string or positional-int; got " + index.GetTypeName(),
+			"Record/map indices must be string or int; got " + index.GetTypeName(),
 		)
 	}
 }
+
+// For '$[[1]]' etc. in the DSL.
+//
+// Notes:
+// * This is a linear search.
+// * Indices are 1-up not 0-up
+// * Indices -n..-1 are aliases for 1..n. In particular, it will be faster to
+//   get the -1st field than the nth.
+// * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
+//   fields.
 
 func (this *Mlrmap) GetNameAtPositionalIndex(position int64) *string {
 	mapEntry := this.findEntryByPositionalIndex(position)

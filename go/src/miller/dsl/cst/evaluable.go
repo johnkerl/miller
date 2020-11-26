@@ -96,16 +96,14 @@ func (this *IndirectFieldValueNode) Evaluate(state *State) types.Mlrval { // xxx
 		return types.MlrvalFromAbsent()
 	}
 
-	// Positional indices are supported, e.g. $[3] is the third field in the record.
 	value, err := state.Inrec.GetWithMlrvalIndex(&fieldName)
 	if err != nil {
 		// Key isn't int or string.
-		// xxx needs error-return in the API
+		// TODO: needs error-return in the API
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	if value == nil {
-		// E.g. $[7] but there aren't 7 fields in this record.
 		return types.MlrvalFromAbsent()
 	}
 	return *value

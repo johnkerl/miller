@@ -71,7 +71,10 @@ mlr --from ./reg-test/input/s.dkvp put -q begin{@sum=[]} @sum[1+NR%2] += $x; end
 
 mlr --from ./reg-test/input/s.dkvp put -q begin{} @sum[1+(NR%2)] += $x; end{dump}
 {
-  "sum": ["", 0.5513934501043855]
+  "sum": {
+    "2": 0.5513934501043855,
+    "1": 1.1400793586611044
+  }
 }
 
 mlr --from ./reg-test/input/s.dkvp put nr=NR; $nr=nr
