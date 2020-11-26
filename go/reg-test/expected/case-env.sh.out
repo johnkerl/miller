@@ -49,20 +49,20 @@ RAW AST:
         * string literal "bar"
 
 
-mlr --from s --opprint head -n 2 then put $z = ENV["FOO"]
-a   b   i x                   y                  z
-pan pan 1 0.3467901443380824  0.7268028627434533 BAR
-eks pan 2 -0.7586799647899636 0.5221511083334797 BAR
+mlr --from ./reg-test/input/s.dkvp --opprint head -n 2 then put $z = ENV["FOO"]
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 BAR
+eks pan 2 0.7586799647899636 0.5221511083334797 BAR
 
-mlr --from s --opprint head -n 2 then put $z = ENV["FOO"][1]
-a   b   i x                   y                  z
-pan pan 1 0.3467901443380824  0.7268028627434533 (error)
-eks pan 2 -0.7586799647899636 0.5221511083334797 (error)
+mlr --from ./reg-test/input/s.dkvp --opprint head -n 2 then put $z = ENV["FOO"][1]
+a   b   i x                  y                  z
+pan pan 1 0.3467901443380824 0.7268028627434533 (error)
+eks pan 2 0.7586799647899636 0.5221511083334797 (error)
 
-mlr --from s --opprint head -n 2 then put ENV["FOO"] = "bar"
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 -0.7586799647899636 0.5221511083334797
+mlr --from ./reg-test/input/s.dkvp --opprint head -n 2 then put ENV["FOO"] = "bar"
+a   b   i x                  y
+pan pan 1 0.3467901443380824 0.7268028627434533
+eks pan 2 0.7586799647899636 0.5221511083334797
 
-mlr --from s --opprint head -n 2 then put ENV["FOO"][2] = "bar"
+mlr --from ./reg-test/input/s.dkvp --opprint head -n 2 then put ENV["FOO"][2] = "bar"
 
