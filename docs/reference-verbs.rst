@@ -3089,7 +3089,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 ::
 
     $ wc -l data/colored-shapes.dkvp
-    10078 data/colored-shapes.dkvp
+       10078 data/colored-shapes.dkvp
 
 ::
 
@@ -3231,7 +3231,7 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
 ::
 
     $ wc -l data/repeats.dkvp
-    57 data/repeats.dkvp
+          57 data/repeats.dkvp
 
 ::
 
