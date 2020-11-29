@@ -8,8 +8,6 @@ small:
 * case-file merges:
 
   reg-test/cases/case-count-similar.sh
-  reg-test/cases/case-decimate.sh
-  reg-test/cases/case-dsl-haskey.sh
   reg-test/cases/case-grep.sh
   reg-test/cases/case-group-by.sh
   reg-test/cases/case-group-like.sh
