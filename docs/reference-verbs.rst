@@ -2506,6 +2506,63 @@ were encountered, regardless of the specified sort order:
     x=1
     a=3
 
+.. _reference-verbs-sort-within-records:
+
+sort-within-records
+----------------------------------------------------------------
+
+::
+
+    $ mlr sort-within-records -h
+    Usage: mlr sort-within-records [no options]
+    Outputs records sorted lexically ascending by keys.
+
+::
+
+    $ cat data/sort-within-records.json
+    {
+      "a": 1,
+      "b": 2,
+      "c": 3
+    }
+    {
+      "b": 4,
+      "a": 5,
+      "c": 6
+    }
+    {
+      "c": 7,
+      "b": 8,
+      "a": 9
+    }
+
+::
+
+    $ mlr --ijson --opprint cat data/sort-within-records.json
+    a b c
+    1 2 3
+    
+    b a c
+    4 5 6
+    
+    c b a
+    7 8 9
+
+::
+
+    $ mlr --json sort-within-records data/sort-within-records.json
+    { "a": 1, "b": 2, "c": 3 }
+    { "a": 5, "b": 4, "c": 6 }
+    { "a": 9, "b": 8, "c": 7 }
+
+::
+
+    $ mlr --ijson --opprint sort-within-records data/sort-within-records.json
+    a b c
+    1 2 3
+    5 4 6
+    9 8 7
+
 .. _reference-verbs-stats1:
 
 stats1

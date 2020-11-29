@@ -995,6 +995,31 @@ POKI_RUN_COMMAND{{mlr sort -n  x data/sort-missing.dkvp}}HERE
 
 POKI_RUN_COMMAND{{mlr sort -nr x data/sort-missing.dkvp}}HERE
 
+.. _reference-verbs-sort-within-records:
+
+sort-within-records
+----------------------------------------------------------------
+
+::
+
+POKI_RUN_COMMAND{{mlr sort-within-records -h}}HERE
+
+::
+
+POKI_RUN_COMMAND{{cat data/sort-within-records.json}}HERE
+
+::
+
+POKI_RUN_COMMAND{{mlr --ijson --opprint cat data/sort-within-records.json}}HERE
+
+::
+
+POKI_RUN_COMMAND{{mlr --json sort-within-records data/sort-within-records.json}}HERE
+
+::
+
+POKI_RUN_COMMAND{{mlr --ijson --opprint sort-within-records data/sort-within-records.json}}HERE
+
 .. _reference-verbs-stats1:
 
 stats1
