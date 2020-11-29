@@ -82,7 +82,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
     "y": 1
   }
 }
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   @v = {
@@ -157,7 +156,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
     "y": 1
   }
 ]
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   @v = [
@@ -228,7 +226,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
   "a": ["u", "v"],
   "b": ["w", "x"]
 }
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   @v = {
@@ -287,7 +284,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
   ["u", "v"],
   ["w", "x"]
 ]
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   @v = [
@@ -350,7 +346,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
     "y": 1
   }
 }
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   $v = {
@@ -425,7 +420,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
     "y": 1
   }
 ]
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   $v = [
@@ -496,7 +490,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
   "a": ["u", "v"],
   "b": ["w", "x"]
 }
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   $v = {
@@ -555,7 +548,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
   ["u", "v"],
   ["w", "x"]
 ]
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   $v = [
@@ -752,7 +744,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
     "y": 1
   }
 }
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   v = {
@@ -827,7 +818,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
     "y": 1
   }
 ]
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   v = [
@@ -898,7 +888,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
   "a": ["u", "v"],
   "b": ["w", "x"]
 }
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   v = {
@@ -957,7 +946,6 @@ mlr --from ./reg-test/input/s.dkvp put -q
   ["u", "v"],
   ["w", "x"]
 ]
-(absent)
 
 mlr --from ./reg-test/input/s.dkvp put -q 
   v = [
