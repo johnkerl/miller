@@ -8,8 +8,8 @@ As of September 2020, for 5.9.1 onward, release-specific docs will be handled au
 
 Information here is for documents from before the readthedocs port:
 
-* `Head <https://johnkerl.org//miller-releases/miller-head/doc/index.html>`_
-* `Miller 5.9.1 <https://johnkerl.org//miller-releases/miller-5.9.1/doc/index.html>`_
+* `Head <https://miller.readthedocs.io>`_
+* `Miller 5.9.1 <https://johnkerl.org/miller-releases/miller-5.10.0/docs/_build/html>`_
 * `Miller 5.9.0 <https://johnkerl.org//miller-releases/miller-5.9.0/doc/index.html>`_
 * `Miller 5.8.0 <https://johnkerl.org//miller-releases/miller-5.8.0/doc/index.html>`_
 * `Miller 5.7.0 <https://johnkerl.org//miller-releases/miller-5.7.0/doc/index.html>`_
