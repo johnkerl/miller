@@ -54,12 +54,6 @@ rrv ./reg-test/cases/case-c-barred-pprint.sh
 ================================================================
 BACKWARD INCOMPATIBILITIES:
 
-rrv ./reg-test/cases/case-c-dsl-context-specific-validation.sh
-* mlr: filter expressions must end in a final boolean statement.
--> abandon this requirement? doc if so.
-* mlr --from s --opprint filter '$u=1; NR > 3; $v=2'
-* mlr --from s --opprint put    '$u=1; NR > 3; $v=2' <---- make sure this does NOT filter, though
-
 rrv ./reg-test/cases/case-c-label.sh
 * handles old/new clashes differently from C impl :^/
 
@@ -147,3 +141,5 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
+
+================================================================

@@ -5,9 +5,6 @@ small:
 * justWroteEmptyLine -> pprint too ...
 * nidx @ 10-min
 * text-put @ 10-min
-* case-file merges:
-
-* allow [[...]] / [[[...]]] at assignment LHS
 
 medium:
 ! gating after: 'int x = 1; x = "abc"'
@@ -30,10 +27,9 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-* reg-test:
-  - "format-" prefix etc for format-specific cases; other prefixes ... ?
-  - "verb-" prefix etc for verb-specific cases?
-  - diff the *.err files -- ?
+? reg-test: diff the *.err files?
+
+? allow [[...]] / [[[...]]] at assignment LHS
 
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 
