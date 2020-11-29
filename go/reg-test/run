@@ -477,9 +477,9 @@ echo "NUMBER OF CASES FAILED $num_cases_failed"
 echo
 
 if [ $num_cases_failed -eq 0 ]; then
-  echo -e "$PASS"
+  echo -e "$PASS overall"
   exit 0
 else
-  echo -e "$FAIL"
+  echo -e "$FAIL overall"
   exit 1
 fi
