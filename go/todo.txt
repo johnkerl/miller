@@ -1,22 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! 5.10.1 !
-  sort-within-records
-    ??
-  truncate
-    myfound
-  count -n
-    https://github.com/johnkerl/miller/issues/370
-  seqgen nr/fnr
-    myfound
-  unsparsify -f
-    https://github.com/johnkerl/miller/issues/387
-  pprint headerless
-  golang ask .......
-    ...
-  JSON-parse bug
-    https://github.com/johnkerl/miller/issues/394
+! 5.10.0 !
+! fix release-docs foo
 
 ! gating after: 'int x = 1; x = "abc"'
 
