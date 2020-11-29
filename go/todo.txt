@@ -394,3 +394,4 @@ NITS/NON-IMMEDIATE:
 * reorder locations of get/put/remove methods in mlrval/mlrmap
 * grep out all error message from reg-test outputs & doc them all & make sure index-searchable at readthedocs
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
+* is the truncate DSL function UTF-8 aware?
