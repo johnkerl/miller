@@ -5,6 +5,21 @@ small:
 * justWroteEmptyLine -> pprint too ...
 * nidx @ 10-min
 * text-put @ 10-min
+* case-file merges:
+
+  reg-test/cases/case-count-similar.sh
+  reg-test/cases/case-decimate.sh
+  reg-test/cases/case-dsl-haskey.sh
+  reg-test/cases/case-grep.sh
+  reg-test/cases/case-group-by.sh
+  reg-test/cases/case-group-like.sh
+  reg-test/cases/case-head.sh
+  reg-test/cases/case-regularize.sh
+  reg-test/cases/case-skip-trivial-records.sh
+  reg-test/cases/case-sort-within-records.sh
+  reg-test/cases/case-sort.sh
+  reg-test/cases/case-tail.sh
+  reg-test/cases/case-unsparsify.sh
 
 * allow [[...]] / [[[...]]] at assignment LHS
 
