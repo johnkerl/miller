@@ -4,3 +4,21 @@ a=1,c=2,b=3
 e=4,d=5
 a=6,c=7,b=8
 
+mlr --json --from ./reg-test/input/needs-regularize.json regularize
+{
+  "b": 2,
+  "c": 3,
+  "a": 1
+}
+{
+  "b": 2,
+  "c": 3,
+  "a": 1
+}
+{
+  "d": 4,
+  "a": 1,
+  "b": 2,
+  "c": 3
+}
+
