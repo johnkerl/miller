@@ -1,4 +1,46 @@
 
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put $[1]     = "A";
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+1 A
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put $[[2]]   = "B";
+a pan
+B pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put $[[[3]]] = "C";
+a pan
+b pan
+i C
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put $*[1]     = "A";
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+1 A
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put $*[[2]]   = "B";
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put $*[[[3]]] = "C";
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put 
+  m = $*;
+  m[1]     = "A";
+  m[[2]]   = "B";
+  m[[[3]]] = "C";
+  emit m;
+
+
 mlr --oxtab --from reg-test/input/abixy head -n 1 then put 
   $_1 = ""; # just for visual output-spacing
   $srec_keyed_by_2        = $[2];
@@ -68,6 +110,135 @@ _2
 _3 
 _4 
 
+mlr --ojson --from reg-test/input/abixy head -n 1 then put 
+  $o = {
+    "a": {
+      "x": [1,2,3],
+      "y": [4,5,6],
+    },
+    "b": {
+      "s": [7,8,9],
+      "t": [9,5,1],
+    },
+  };
+  # Expect "(error)" in the output data since strings are not map-indexable
+  $z = $o[[1]]["x"];
+
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533,
+  "o": {
+    "a": {
+      "x": [1, 2, 3],
+      "y": [4, 5, 6]
+    },
+    "b": {
+      "s": [7, 8, 9],
+      "t": [9, 5, 1]
+    }
+  },
+  "z": (error)
+}
+
+mlr --ojson --from reg-test/input/abixy head -n 1 then put 
+  $o = {
+    "a": {
+      "x": [1,2,3],
+      "y": [4,5,6],
+    },
+    "b": {
+      "s": [7,8,9],
+      "t": [9,5,1],
+    },
+  };
+  $z = $o[[[1]]]["x"];
+
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533,
+  "o": {
+    "a": {
+      "x": [1, 2, 3],
+      "y": [4, 5, 6]
+    },
+    "b": {
+      "s": [7, 8, 9],
+      "t": [9, 5, 1]
+    }
+  },
+  "z": [1, 2, 3]
+}
+
+mlr --ojson --from reg-test/input/abixy head -n 1 then put 
+  $o = {
+    "a": {
+      "x": [1,2,3],
+      "y": [4,5,6],
+    },
+    "b": {
+      "s": [7,8,9],
+      "t": [9,5,1],
+    },
+  };
+  $z = $o["a"][[1]];
+
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533,
+  "o": {
+    "a": {
+      "x": [1, 2, 3],
+      "y": [4, 5, 6]
+    },
+    "b": {
+      "s": [7, 8, 9],
+      "t": [9, 5, 1]
+    }
+  },
+  "z": "x"
+}
+
+mlr --ojson --from reg-test/input/abixy head -n 1 then put 
+  $o = {
+    "a": {
+      "x": [1,2,3],
+      "y": [4,5,6],
+    },
+    "b": {
+      "s": [7,8,9],
+      "t": [9,5,1],
+    },
+  };
+  $z = $o["a"][[[1]]];
+
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533,
+  "o": {
+    "a": {
+      "x": [1, 2, 3],
+      "y": [4, 5, 6]
+    },
+    "b": {
+      "s": [7, 8, 9],
+      "t": [9, 5, 1]
+    }
+  },
+  "z": [1, 2, 3]
+}
+
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][1]
 a   b   i x                   y                   z
 pan pan 1 0.3467901443380824  0.7268028627434533  pan
@@ -89,118 +260,68 @@ eks pan 2 0.7586799647899636  0.5221511083334797  pan
 wye wye 3 0.20460330576630303 0.33831852551664776 3
 eks wye 4 0.38139939387114097 0.13418874328430463 0.38139939387114097
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $up   = $[NF]
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][900]
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
-zee pan 6 0.5271261600918548  0.49322128674835697
-eks zee 7 0.6117840605678454  0.1878849191181694
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $down = $[-NF]
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[1]]
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  1
+eks pan 2 0.7586799647899636  0.5221511083334797  1
+wye wye 3 0.20460330576630303 0.33831852551664776 1
+eks wye 4 0.38139939387114097 0.13418874328430463 1
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[-1]]
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  5
+eks pan 2 0.7586799647899636  0.5221511083334797  5
+wye wye 3 0.20460330576630303 0.33831852551664776 5
+eks wye 4 0.38139939387114097 0.13418874328430463 5
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[NR]]
+a   b   i x                   y                   z
+pan pan 1 0.3467901443380824  0.7268028627434533  1
+eks pan 2 0.7586799647899636  0.5221511083334797  2
+wye wye 3 0.20460330576630303 0.33831852551664776 3
+eks wye 4 0.38139939387114097 0.13418874328430463 4
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[900]]
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
-zee pan 6 0.5271261600918548  0.49322128674835697
-eks zee 7 0.6117840605678454  0.1878849191181694
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $up   = $*[NF]
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
-zee pan 6 0.5271261600918548  0.49322128674835697
-eks zee 7 0.6117840605678454  0.1878849191181694
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $down = $*[-NF]
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
-zee pan 6 0.5271261600918548  0.49322128674835697
-eks zee 7 0.6117840605678454  0.1878849191181694
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $up   = $[[NF]]
-a   b   i x                   y                   up
-pan pan 1 0.3467901443380824  0.7268028627434533  y
-eks pan 2 0.7586799647899636  0.5221511083334797  y
-wye wye 3 0.20460330576630303 0.33831852551664776 y
-eks wye 4 0.38139939387114097 0.13418874328430463 y
-wye pan 5 0.5732889198020006  0.8636244699032729  y
-zee pan 6 0.5271261600918548  0.49322128674835697 y
-eks zee 7 0.6117840605678454  0.1878849191181694  y
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $down = $[[-NF]]
-a   b   i x                   y                   down
-pan pan 1 0.3467901443380824  0.7268028627434533  a
-eks pan 2 0.7586799647899636  0.5221511083334797  a
-wye wye 3 0.20460330576630303 0.33831852551664776 a
-eks wye 4 0.38139939387114097 0.13418874328430463 a
-wye pan 5 0.5732889198020006  0.8636244699032729  a
-zee pan 6 0.5271261600918548  0.49322128674835697 a
-eks zee 7 0.6117840605678454  0.1878849191181694  a
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $up   = $*[[NF]]
-a   b   i x                   y                   up
-pan pan 1 0.3467901443380824  0.7268028627434533  y
-eks pan 2 0.7586799647899636  0.5221511083334797  y
-wye wye 3 0.20460330576630303 0.33831852551664776 y
-eks wye 4 0.38139939387114097 0.13418874328430463 y
-wye pan 5 0.5732889198020006  0.8636244699032729  y
-zee pan 6 0.5271261600918548  0.49322128674835697 y
-eks zee 7 0.6117840605678454  0.1878849191181694  y
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $down = $[*[-NF]]
-Exit status was 1; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $up   = $[[[NF]]]
-a   b   i x                   y                   up
-pan pan 1 0.3467901443380824  0.7268028627434533  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729  0.8636244699032729
-zee pan 6 0.5271261600918548  0.49322128674835697 0.49322128674835697
-eks zee 7 0.6117840605678454  0.1878849191181694  0.1878849191181694
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $down = $[[[-NF]]]
-a   b   i x                   y                   down
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[[1]]]
+a   b   i x                   y                   z
 pan pan 1 0.3467901443380824  0.7268028627434533  pan
 eks pan 2 0.7586799647899636  0.5221511083334797  eks
 wye wye 3 0.20460330576630303 0.33831852551664776 wye
 eks wye 4 0.38139939387114097 0.13418874328430463 eks
-wye pan 5 0.5732889198020006  0.8636244699032729  wye
-zee pan 6 0.5271261600918548  0.49322128674835697 zee
-eks zee 7 0.6117840605678454  0.1878849191181694  eks
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $up   = $*[[[NF]]]
-a   b   i x                   y                   up
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[[-1]]]
+a   b   i x                   y                   z
 pan pan 1 0.3467901443380824  0.7268028627434533  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797  0.5221511083334797
 wye wye 3 0.20460330576630303 0.33831852551664776 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729  0.8636244699032729
-zee pan 6 0.5271261600918548  0.49322128674835697 0.49322128674835697
-eks zee 7 0.6117840605678454  0.1878849191181694  0.1878849191181694
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $down = $*[[[-NF]]]
-a   b   i x                   y                   down
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[[NR]]]
+a   b   i x                   y                   z
 pan pan 1 0.3467901443380824  0.7268028627434533  pan
-eks pan 2 0.7586799647899636  0.5221511083334797  eks
-wye wye 3 0.20460330576630303 0.33831852551664776 wye
-eks wye 4 0.38139939387114097 0.13418874328430463 eks
-wye pan 5 0.5732889198020006  0.8636244699032729  wye
-zee pan 6 0.5271261600918548  0.49322128674835697 zee
-eks zee 7 0.6117840605678454  0.1878849191181694  eks
+eks pan 2 0.7586799647899636  0.5221511083334797  pan
+wye wye 3 0.20460330576630303 0.33831852551664776 3
+eks wye 4 0.38139939387114097 0.13418874328430463 0.38139939387114097
+
+mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put $z = [$a,$b,$i,$x,$y][[[900]]]
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
 
 mlr --opprint put unset $c ./reg-test/input/abixy
 a   b   i  x                   y
@@ -253,6 +374,85 @@ eks zee 7  0.6117840605678454  0.1878849191181694
 zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
+
+mlr --opprint put unset $[[1]] ./reg-test/input/abixy
+b   i  x                   y
+pan 1  0.3467901443380824  0.7268028627434533
+pan 2  0.7586799647899636  0.5221511083334797
+wye 3  0.20460330576630303 0.33831852551664776
+wye 4  0.38139939387114097 0.13418874328430463
+pan 5  0.5732889198020006  0.8636244699032729
+pan 6  0.5271261600918548  0.49322128674835697
+zee 7  0.6117840605678454  0.1878849191181694
+wye 8  0.5985540091064224  0.976181385699006
+wye 9  0.03144187646093577 0.7495507603507059
+wye 10 0.5026260055412137  0.9526183602969864
+
+mlr --opprint put unset $[[9]] ./reg-test/input/abixy
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks wye 4  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put unset $[1];
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put unset $[[2]];
+a pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --oxtab --from reg-test/input/abixy head -n 1 then put unset $[[[3]]];
+a pan
+b pan
+x 0.3467901443380824
+y 0.7268028627434533
+
+mlr --oxtab -n put -q 
+  end {
+    @m = {
+      "a": {
+        "x": [1,2,3],
+        "y": [4,5,6],
+      },
+      "b": {
+        "s": [7,8,9],
+        "t": [9,5,1],
+      },
+    };
+    unset @m[[1]];
+    emit @m;
+  }
+
+
+mlr --oxtab -n put -q 
+  end {
+    @m = {
+      "a": {
+        "x": [1,2,3],
+        "y": [4,5,6],
+      },
+      "b": {
+        "s": [7,8,9],
+        "t": [9,5,1],
+      },
+    };
+    unset @m["a"][[1]];
+    emit @m;
+  }
+
 
 mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $[1] = "new"
 a   b   i x                   y                   1
@@ -576,41 +776,9 @@ wye pan 5 0.5732889198020006  0.8636244699032729  new
 zee pan 6 0.5271261600918548  0.49322128674835697 new
 eks zee 7 0.6117840605678454  0.1878849191181694  new
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[1]]    = "new"
-Exit status was 2; expected 0.
+mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[1]] = "new"
 
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[2]]    = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[5]]    = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[-1]]   = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[-2]]   = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[-5]]   = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[1]]]  = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[2]]]  = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[5]]]  = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[-1]]] = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[-2]]] = "new"
-Exit status was 2; expected 0.
-
-mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[-5]]] = "new"
-Exit status was 2; expected 0.
+mlr --opprint --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp put $*[[[1]]] = "new"
 
 mlr --opprint put $NEW = $[[3]] ./reg-test/input/abixy
 a   b   i  x                   y                   NEW
@@ -743,25 +911,17 @@ wye 9  0.03144187646093577 0.7495507603507059
 wye 10 0.5026260055412137  0.9526183602969864
 
 mlr --opprint put $[[1]] = $b;     unset $[[1]] ./reg-test/input/abixy
-pan b   i x                  y
-pan pan 1 0.3467901443380824 0.7268028627434533
-eks pan 2 0.7586799647899636 0.5221511083334797
-
-wye b   i x                   y
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-
-pan b   i x                  y
-wye pan 5 0.5732889198020006 0.8636244699032729
-zee pan 6 0.5271261600918548 0.49322128674835697
-
-zee b   i x                  y
-eks zee 7 0.6117840605678454 0.1878849191181694
-
-wye b   i  x                   y
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
+b   i  x                   y
+pan 1  0.3467901443380824  0.7268028627434533
+pan 2  0.7586799647899636  0.5221511083334797
+wye 3  0.20460330576630303 0.33831852551664776
+wye 4  0.38139939387114097 0.13418874328430463
+pan 5  0.5732889198020006  0.8636244699032729
+pan 6  0.5271261600918548  0.49322128674835697
+zee 7  0.6117840605678454  0.1878849191181694
+wye 8  0.5985540091064224  0.976181385699006
+wye 9  0.03144187646093577 0.7495507603507059
+wye 10 0.5026260055412137  0.9526183602969864
 
 mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ./reg-test/input/abixy
 b   i  x                   y

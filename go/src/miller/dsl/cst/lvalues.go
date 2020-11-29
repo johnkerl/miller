@@ -53,10 +53,14 @@ func (this *RootNode) BuildAssignableNode(
 		break
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
-		return this.BuildArrayOrMapPositionalNameAccessLvalueNode(astNode)
+		return nil, errors.New(
+			"Miller: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
+		)
 		break
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
-		return this.BuildArrayOrMapPositionalValueAccessLvalueNode(astNode)
+		return nil, errors.New(
+			"Miller: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
+		)
 		break
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
@@ -301,9 +305,12 @@ func (this *PositionalFieldNameLvalueNode) UnsetIndexed(
 ) {
 	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 	if indices == nil {
-		name := lhsFieldIndex.String()
-		// xxx positional
-		state.Inrec.Remove(&name)
+		index, ok := lhsFieldIndex.GetIntValue()
+		if ok {
+			state.Inrec.RemoveWithPositionalIndex(index)
+		} else {
+			// TODO: incorporate error-return into this API
+		}
 	} else {
 		// xxx positional
 		state.Inrec.UnsetIndexed(
@@ -388,6 +395,8 @@ func (this *PositionalFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
+// Same code as PositionalFieldNameLvalueNode.
+// May as well let them do 'unset $[[[7]]]' as well as $[[7]]'.
 func (this *PositionalFieldValueLvalueNode) Unset(
 	state *State,
 ) {
@@ -400,9 +409,12 @@ func (this *PositionalFieldValueLvalueNode) UnsetIndexed(
 ) {
 	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 	if indices == nil {
-		name := lhsFieldIndex.String()
-		// xxx positional
-		state.Inrec.Remove(&name)
+		index, ok := lhsFieldIndex.GetIntValue()
+		if ok {
+			state.Inrec.RemoveWithPositionalIndex(index)
+		} else {
+			// TODO: incorporate error-return into this API
+		}
 	} else {
 		// xxx positional
 		state.Inrec.UnsetIndexed(
@@ -771,195 +783,6 @@ func (this *LocalVariableLvalueNode) UnsetIndexed(
 		state.stack.UnsetVariable(this.typeGatedMlrvalName.Name)
 	} else {
 		state.stack.UnsetVariableIndexed(this.typeGatedMlrvalName.Name, indices)
-	}
-}
-
-// ----------------------------------------------------------------
-// Set the name at 2nd positional index in the current stream record: e.g.
-// '$[[2]] = "abc"
-
-type ArrayOrMapPositionalNameAccessLvalueNode struct {
-	lhsFieldIndexExpression IEvaluable
-}
-
-func (this *RootNode) BuildArrayOrMapPositionalNameAccessLvalueNode(
-	astNode *dsl.ASTNode,
-) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalNameAccess)
-	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	lhsFieldIndexExpression, err := this.BuildEvaluableNode(astNode.Children[0])
-	if err != nil {
-		return nil, err
-	}
-
-	return NewArrayOrMapPositionalNameAccessLvalueNode(lhsFieldIndexExpression), nil
-}
-
-func NewArrayOrMapPositionalNameAccessLvalueNode(
-	lhsFieldIndexExpression IEvaluable,
-) *ArrayOrMapPositionalNameAccessLvalueNode {
-	return &ArrayOrMapPositionalNameAccessLvalueNode{
-		lhsFieldIndexExpression: lhsFieldIndexExpression,
-	}
-}
-
-func (this *ArrayOrMapPositionalNameAccessLvalueNode) Assign(
-	rvalue *types.Mlrval,
-	state *State,
-) error {
-	// AssignmentNode checks for absentness of the rvalue, so we just assign
-	// whatever we get
-	lib.InternalCodingErrorIf(rvalue.IsAbsent())
-
-	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
-
-	index, ok := lhsFieldIndex.GetIntValue()
-	if ok {
-		// TODO: incorporate error-return into this API
-		state.Inrec.PutNameWithPositionalIndex(index, rvalue)
-		return nil
-	} else {
-		return errors.New(
-			fmt.Sprintf(
-				"Miller: positional index for $[[...]] assignment must be integer; got %s.",
-				lhsFieldIndex.GetTypeName(),
-			),
-		)
-	}
-}
-
-func (this *ArrayOrMapPositionalNameAccessLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
-	state *State,
-) error {
-	// TODO: reconsider this if /when we decide to allow string-slice
-	// assignments.
-	return errors.New(
-		"Miller: $[[...]] = ... expressions are not indexable.",
-	)
-}
-
-func (this *ArrayOrMapPositionalNameAccessLvalueNode) Unset(
-	state *State,
-) {
-	this.UnsetIndexed(nil, state)
-}
-
-func (this *ArrayOrMapPositionalNameAccessLvalueNode) UnsetIndexed(
-	indices []*types.Mlrval,
-	state *State,
-) {
-	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
-	if indices == nil {
-		name := lhsFieldIndex.String()
-		// xxx positional
-		state.Inrec.Remove(&name)
-	} else {
-		// xxx positional
-		state.Inrec.UnsetIndexed(
-			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
-		)
-	}
-}
-
-// ----------------------------------------------------------------
-// Set the value at 2nd positional index in the current stream record: e.g.
-// '$[[[2]]] = "abc"
-
-type ArrayOrMapPositionalValueAccessLvalueNode struct {
-	lhsFieldIndexExpression IEvaluable
-}
-
-func (this *RootNode) BuildArrayOrMapPositionalValueAccessLvalueNode(
-	astNode *dsl.ASTNode,
-) (IAssignable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalValueAccess)
-	lib.InternalCodingErrorIf(astNode == nil)
-	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	lhsFieldIndexExpression, err := this.BuildEvaluableNode(astNode.Children[0])
-	if err != nil {
-		return nil, err
-	}
-
-	return NewArrayOrMapPositionalValueAccessLvalueNode(lhsFieldIndexExpression), nil
-}
-
-func NewArrayOrMapPositionalValueAccessLvalueNode(
-	lhsFieldIndexExpression IEvaluable,
-) *ArrayOrMapPositionalValueAccessLvalueNode {
-	return &ArrayOrMapPositionalValueAccessLvalueNode{
-		lhsFieldIndexExpression: lhsFieldIndexExpression,
-	}
-}
-
-func (this *ArrayOrMapPositionalValueAccessLvalueNode) Assign(
-	rvalue *types.Mlrval,
-	state *State,
-) error {
-	return this.AssignIndexed(rvalue, nil, state)
-}
-
-func (this *ArrayOrMapPositionalValueAccessLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
-	state *State,
-) error {
-	// AssignmentNode checks for absentness of the rvalue, so we just assign
-	// whatever we get
-	lib.InternalCodingErrorIf(rvalue.IsAbsent())
-
-	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
-
-	if indices == nil {
-		index, ok := lhsFieldIndex.GetIntValue()
-		if ok {
-			// TODO: incorporate error-return into this API
-			//err := state.Inrec.PutCopyWithPositionalIndex(&lhsFieldIndex, rvalue)
-			//if err != nil {
-			//return err
-			//}
-			//return nil
-			state.Inrec.PutCopyWithPositionalIndex(index, rvalue)
-			return nil
-		} else {
-			return errors.New(
-				fmt.Sprintf(
-					"Miller: positional index for $[[[...]]] assignment must be integer; got %s.",
-					lhsFieldIndex.GetTypeName(),
-				),
-			)
-		}
-	} else {
-		// xxx positional
-		return state.Inrec.PutIndexed(
-			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
-			rvalue,
-		)
-	}
-}
-
-func (this *ArrayOrMapPositionalValueAccessLvalueNode) Unset(
-	state *State,
-) {
-	this.UnsetIndexed(nil, state)
-}
-
-func (this *ArrayOrMapPositionalValueAccessLvalueNode) UnsetIndexed(
-	indices []*types.Mlrval,
-	state *State,
-) {
-	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
-	if indices == nil {
-		name := lhsFieldIndex.String()
-		// xxx positional
-		state.Inrec.Remove(&name)
-	} else {
-		// xxx positional
-		state.Inrec.UnsetIndexed(
-			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
-		)
 	}
 }
 

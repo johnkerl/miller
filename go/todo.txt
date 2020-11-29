@@ -23,6 +23,7 @@ big:
   o $[[1]]   = "new" -> new-pan
   o $[[[1]]] = "new" -> a=new
   o unset $[[1]]
+  o disallow array [[...]] / [[[...]]] at LHS ?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -383,3 +384,6 @@ NITS/NON-IMMEDIATE:
     --versus--
     foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...
 * reorder locations of get/put/remove methods in mlrval/mlrmap
+* doc re [[...]] / [[[...]]] at assignment LHS for $ only: idea is we want to allow ordering for
+  stream data, but not for localvars/oosvars (where ordering isn't relevant)
+  -> BUT maybe support this since intermediate variables can lead from/to data.
