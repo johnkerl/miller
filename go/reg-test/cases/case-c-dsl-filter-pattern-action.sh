@@ -1,3 +1,8 @@
+# ----------------------------------------------------------------
+run_mlr --from $indir/s.dkvp put 'NR == 2 { $z = 100 }'
+run_mlr --from $indir/s.dkvp put 'NR != 2 { $z = 100 }'
+
+# ----------------------------------------------------------------
 run_mlr --opprint put '         $x > 0.5;  $z = "flag"'  $indir/abixy
 run_mlr --opprint put '       !($x > 0.5); $z = "flag"'  $indir/abixy
 run_mlr --opprint put 'filter   $x > 0.5;  $z = "flag"'  $indir/abixy
