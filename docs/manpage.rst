@@ -28,7 +28,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
            insertion-ordered hash map.  This encompasses a variety of data
            formats, including but not limited to the familiar CSV, TSV, and JSON.
            (Miller can handle positionally-indexed data as a special case.) This
-           manpage documents Miller v5.10.0.
+           manpage documents Miller v5.10.0-dev.
     
     EXAMPLES
        COMMAND-LINE SYNTAX
