@@ -72,13 +72,6 @@ mlr --opprint put $f=asserting_empty_map($nosuch) ./reg-test/input/nullvals.dkvp
 mlr --opprint put $f=asserting_empty_map(@nosuch) ./reg-test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_empty_map({1:2}) ./reg-test/input/nullvals.dkvp
-a x y z f
-b 1 2 - {}
-b 3 4 - {}
-b 5 - - {}
-b - 6 - {}
-b - - - {}
-Exit status was 0; expected 1.
 
 mlr --opprint put @somesuch=1;$f=asserting_empty_map(@somesuch) ./reg-test/input/nullvals.dkvp
 
@@ -117,11 +110,21 @@ b - - - {
 
 mlr --opprint put $f=asserting_map({1:2}) ./reg-test/input/nullvals.dkvp
 a x y z f
-b 1 2 - {}
-b 3 4 - {}
-b 5 - - {}
-b - 6 - {}
-b - - - {}
+b 1 2 - {
+  "1": 2
+}
+b 3 4 - {
+  "1": 2
+}
+b 5 - - {
+  "1": 2
+}
+b - 6 - {
+  "1": 2
+}
+b - - - {
+  "1": 2
+}
 
 mlr --opprint put $f=asserting_map({}) ./reg-test/input/nullvals.dkvp
 a x y z f
@@ -177,7 +180,22 @@ b - - - {
 }
 
 mlr --opprint put $f=asserting_nonempty_map({1:2}) ./reg-test/input/nullvals.dkvp
-Exit status was 1; expected 0.
+a x y z f
+b 1 2 - {
+  "1": 2
+}
+b 3 4 - {
+  "1": 2
+}
+b 5 - - {
+  "1": 2
+}
+b - 6 - {
+  "1": 2
+}
+b - - - {
+  "1": 2
+}
 
 mlr --opprint put $f=asserting_nonempty_map($x) ./reg-test/input/nullvals.dkvp
 
@@ -219,11 +237,21 @@ b - - -
 
 mlr --opprint put $f=asserting_not_empty({1:2}) ./reg-test/input/nullvals.dkvp
 a x y z f
-b 1 2 - {}
-b 3 4 - {}
-b 5 - - {}
-b - 6 - {}
-b - - - {}
+b 1 2 - {
+  "1": 2
+}
+b 3 4 - {
+  "1": 2
+}
+b 5 - - {
+  "1": 2
+}
+b - 6 - {
+  "1": 2
+}
+b - - - {
+  "1": 2
+}
 
 mlr --opprint put $nosuch=asserting_not_empty($nosuch) ./reg-test/input/nullvals.dkvp
 a x y z
@@ -250,6 +278,12 @@ b - 6 -
 b - - -
 
 mlr --opprint put $*=asserting_not_empty({1:2}) ./reg-test/input/nullvals.dkvp
+1
+2
+2
+2
+2
+2
 
 mlr --opprint put $f=asserting_not_empty($x) ./reg-test/input/nullvals.dkvp
 
@@ -328,6 +362,12 @@ b - 6 -
 b - - -
 
 mlr --opprint put $*=asserting_not_null({1:2}) ./reg-test/input/nullvals.dkvp
+1
+2
+2
+2
+2
+2
 
 mlr --opprint put $f=asserting_not_null($x) ./reg-test/input/nullvals.dkvp
 
@@ -426,6 +466,12 @@ b - 6 -
 b - - -
 
 mlr --opprint put $*=asserting_present({1:2}) ./reg-test/input/nullvals.dkvp
+1
+2
+2
+2
+2
+2
 
 mlr --opprint put $f=asserting_present($nosuch) ./reg-test/input/nullvals.dkvp
 

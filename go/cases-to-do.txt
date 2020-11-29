@@ -1,6 +1,12 @@
 ================================================================
 BUG:
 
+rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
+* probably buggy in the C impl
+
+rrv ./reg-test/cases/case-c-dsl-split-join.sh
+* splitnv narg 2 vs 3 ?!?
+
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
@@ -28,17 +34,6 @@ PUT -a
 
 rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 * put -a
-
-================================================================
-ARRAY/MAP
-
-rrv ./reg-test/cases/case-c-dsl-asserting.sh
-rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-rrv ./reg-test/cases/case-c-dsl-length-depth-leafcount.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-mapvar-for-loops.sh
-rrv ./reg-test/cases/case-c-dsl-split-join.sh
-rrv ./reg-test/cases/case-c-localvar-unsets.sh
 
 ================================================================
 PARTIALLY IMPLEMENTED:
@@ -76,20 +71,16 @@ NEED EMITP/MULTI-EMIT/PRINT-WITH-REDIRECT
 
 rrv ./reg-test/cases/case-c-dsl-absent-empty.sh
 rrv ./reg-test/cases/case-c-dsl-break-continue.sh
+rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
 rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
 rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
+rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
 
-rrv -C20 ./reg-test/cases/case-c-dsl-type-predicates.sh
-* multi-emit
-
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
-* print-with-redirect
-
-rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
-* print-with-redirect
--> split up this big case-file
+-> split up this big case-file: case-c-dsl-functional-tests.sh
 
 ================================================================
 NOT IMPLEMENTED YET:
@@ -156,5 +147,3 @@ rrv ./reg-test/cases/case-c-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
-
-================================================================

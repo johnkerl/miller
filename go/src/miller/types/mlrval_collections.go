@@ -441,7 +441,9 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 		// Base is map, index is string
 		s := baseIndex.String()
 		baseValue := baseMap.Get(&s)
-		return baseValue.UnsetIndexed(indices[1:])
+		if baseValue != nil {
+			return baseValue.UnsetIndexed(indices[1:])
+		}
 
 	} else {
 		// Base is map, index is invalid type

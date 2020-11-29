@@ -58,7 +58,9 @@ func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 	} else {
 		for _, expression := range this.expressions {
 			evaluation := expression.Evaluate(state)
-			fmt.Fprintln(this.ostream, evaluation.String())
+			if !evaluation.IsAbsent() {
+				fmt.Fprintln(this.ostream, evaluation.String())
+			}
 		}
 	}
 
@@ -142,7 +144,9 @@ func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error)
 				fmt.Fprint(this.ostream, " ")
 			}
 			evaluation := expression.Evaluate(state)
-			fmt.Fprint(this.ostream, evaluation.String())
+			if !evaluation.IsAbsent() {
+				fmt.Fprint(this.ostream, evaluation.String())
+			}
 		}
 		fmt.Fprintf(this.ostream, this.terminator)
 	}

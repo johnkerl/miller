@@ -317,12 +317,8 @@ func (this *StackFrame) SetIndexed(
 	if value == nil {
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
-		if leadingIndex.IsString() {
+		if leadingIndex.IsString() || leadingIndex.IsInt() {
 			newval := types.MlrvalEmptyMap()
-			newval.PutIndexed(indices, mlrval)
-			this.Set(name, &newval)
-		} else if leadingIndex.IsInt() {
-			newval := types.MlrvalEmptyArray()
 			newval.PutIndexed(indices, mlrval)
 			this.Set(name, &newval)
 		} else {
