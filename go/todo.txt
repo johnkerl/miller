@@ -1,13 +1,32 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! 5.10.1 !
+  sort-within-records
+    ??
+  truncate
+    myfound
+  count -n
+    https://github.com/johnkerl/miller/issues/370
+  seqgen nr/fnr
+    myfound
+  unsparsify -f
+    https://github.com/johnkerl/miller/issues/387
+  pprint headerless
+  golang ask .......
+    ...
+  JSON-parse bug
+    https://github.com/johnkerl/miller/issues/394
+
+! gating after: 'int x = 1; x = "abc"'
+
 small:
 * justWroteEmptyLine -> pprint too ...
 * nidx @ 10-min
 * text-put @ 10-min
+* xls note (issue #396) @ file-format docs
 
 medium:
-! gating after: 'int x = 1; x = "abc"'
 ? records as mlrmap -> mlrval?
   o reduce $* copy ...
   o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
@@ -89,8 +108,6 @@ no need to bootstrap a parser for the parser-generator language
 * bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
   https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
 
-!! [[]] etc to avoid inadvertent sequentials for int indices on maps.
-  this should happen intentionally, not accidentally.
 * Check for "Options:" in all mappers
 * check for `f.Value` reassigned in all mappers -- reflects true default?
 
@@ -341,7 +358,7 @@ NITS/NON-IMMEDIATE:
 * case-c-* / case-go-* -> case-* eventually
 * implement min/max for array/map ... using cmp rules
 ! write out thorough min/max/cmp cases for all orderings by type
-* silent zero-pass for-loops on non-collections: 
+* silent zero-pass for-loops on non-collections:
   o intended as a heterogenity feature ...
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
@@ -375,3 +392,5 @@ NITS/NON-IMMEDIATE:
     --versus--
     foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...
 * reorder locations of get/put/remove methods in mlrval/mlrmap
+* grep out all error message from reg-test outputs & doc them all & make sure index-searchable at readthedocs
+* short 'asserting' functions (absent/error); and/or put --strict or somesuch

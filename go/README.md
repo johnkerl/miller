@@ -7,7 +7,7 @@
 
 # Port-completion criteria
 
-* `reg-test/run -g` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
+* `reg-test/run` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
 * Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have reg-test coverage
 * All `TODO`/`xxx` comments in Go, BNF source code, and case-files are resolved
 * Release notes including Go-only features, and C/Go backward-incompatibilities
