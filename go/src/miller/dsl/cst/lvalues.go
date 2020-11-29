@@ -28,6 +28,13 @@ func (this *RootNode) BuildAssignableNode(
 	case dsl.NodeTypeIndirectFieldValue:
 		return this.BuildIndirectFieldValueLvalueNode(astNode)
 		break
+	case dsl.NodeTypePositionalFieldName:
+		return this.BuildPositionalFieldNameLvalueNode(astNode)
+		break
+	case dsl.NodeTypePositionalFieldValue:
+		return this.BuildPositionalFieldValueLvalueNode(astNode)
+		break
+
 	case dsl.NodeTypeFullSrec:
 		return this.BuildFullSrecLvalueNode(astNode)
 		break
@@ -47,6 +54,12 @@ func (this *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeArrayOrMapIndexAccess:
 		return this.BuildIndexedLvalueNode(astNode)
+		break
+	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
+		return nil, nil // TODO
+		break
+	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
+		return nil, nil // TODO
 		break
 
 	case dsl.NodeTypeEnvironmentVariable:
@@ -133,7 +146,9 @@ type IndirectFieldValueLvalueNode struct {
 	lhsFieldNameExpression IEvaluable
 }
 
-func (this *RootNode) BuildIndirectFieldValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
+func (this *RootNode) BuildIndirectFieldValueLvalueNode(
+	astNode *dsl.ASTNode,
+) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
@@ -202,6 +217,195 @@ func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
 	} else {
 		state.Inrec.UnsetIndexed(
 			append([]*types.Mlrval{&lhsFieldName}, indices...),
+		)
+	}
+}
+
+// ----------------------------------------------------------------
+// Set the name at 2nd positional index in the current stream record: e.g.
+// '$[[2]] = "abc"
+
+type PositionalFieldNameLvalueNode struct {
+	lhsFieldIndexExpression IEvaluable
+}
+
+func (this *RootNode) BuildPositionalFieldNameLvalueNode(
+	astNode *dsl.ASTNode,
+) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
+	lib.InternalCodingErrorIf(astNode == nil)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+	lhsFieldIndexExpression, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+
+	return NewPositionalFieldNameLvalueNode(lhsFieldIndexExpression), nil
+}
+
+func NewPositionalFieldNameLvalueNode(
+	lhsFieldIndexExpression IEvaluable,
+) *PositionalFieldNameLvalueNode {
+	return &PositionalFieldNameLvalueNode{
+		lhsFieldIndexExpression: lhsFieldIndexExpression,
+	}
+}
+
+func (this *PositionalFieldNameLvalueNode) Assign(
+	rvalue *types.Mlrval,
+	state *State,
+) error {
+	// AssignmentNode checks for absentness of the rvalue, so we just assign
+	// whatever we get
+	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
+
+	index, ok := lhsFieldIndex.GetIntValue()
+	if ok {
+		// TODO: incorporate error-return into this API
+		state.Inrec.PutNameWithPositionalIndex(index, rvalue)
+		return nil
+	} else {
+		return errors.New(
+			fmt.Sprintf(
+				"Miller: positional index for $[[...]] assignment must be integer; got %s.",
+				lhsFieldIndex.GetTypeName(),
+			),
+		)
+	}
+}
+
+func (this *PositionalFieldNameLvalueNode) AssignIndexed(
+	rvalue *types.Mlrval,
+	indices []*types.Mlrval,
+	state *State,
+) error {
+	// TODO: reconsider this if /when we decide to allow string-slice
+	// assignments.
+	return errors.New(
+		"Miller: $[[...]] = ... expressions are not indexable.",
+	)
+}
+
+func (this *PositionalFieldNameLvalueNode) Unset(
+	state *State,
+) {
+	this.UnsetIndexed(nil, state)
+}
+
+func (this *PositionalFieldNameLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
+	if indices == nil {
+		name := lhsFieldIndex.String()
+		// xxx positional
+		state.Inrec.Remove(&name)
+	} else {
+		// xxx positional
+		state.Inrec.UnsetIndexed(
+			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
+		)
+	}
+}
+
+// ----------------------------------------------------------------
+// Set the value at 2nd positional index in the current stream record: e.g.
+// '$[[[2]]] = "abc"
+
+type PositionalFieldValueLvalueNode struct {
+	lhsFieldIndexExpression IEvaluable
+}
+
+func (this *RootNode) BuildPositionalFieldValueLvalueNode(
+	astNode *dsl.ASTNode,
+) (IAssignable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
+	lib.InternalCodingErrorIf(astNode == nil)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
+	lhsFieldIndexExpression, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+
+	return NewPositionalFieldValueLvalueNode(lhsFieldIndexExpression), nil
+}
+
+func NewPositionalFieldValueLvalueNode(
+	lhsFieldIndexExpression IEvaluable,
+) *PositionalFieldValueLvalueNode {
+	return &PositionalFieldValueLvalueNode{
+		lhsFieldIndexExpression: lhsFieldIndexExpression,
+	}
+}
+
+func (this *PositionalFieldValueLvalueNode) Assign(
+	rvalue *types.Mlrval,
+	state *State,
+) error {
+	return this.AssignIndexed(rvalue, nil, state)
+}
+
+func (this *PositionalFieldValueLvalueNode) AssignIndexed(
+	rvalue *types.Mlrval,
+	indices []*types.Mlrval,
+	state *State,
+) error {
+	// AssignmentNode checks for absentness of the rvalue, so we just assign
+	// whatever we get
+	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
+
+	if indices == nil {
+		index, ok := lhsFieldIndex.GetIntValue()
+		if ok {
+			// TODO: incorporate error-return into this API
+			//err := state.Inrec.PutCopyWithPositionalIndex(&lhsFieldIndex, rvalue)
+			//if err != nil {
+			//return err
+			//}
+			//return nil
+			state.Inrec.PutCopyWithPositionalIndex(index, rvalue)
+			return nil
+		} else {
+			return errors.New(
+				fmt.Sprintf(
+					"Miller: positional index for $[[[...]]] assignment must be integer; got %s.",
+					lhsFieldIndex.GetTypeName(),
+				),
+			)
+		}
+	} else {
+		// xxx positional
+		return state.Inrec.PutIndexed(
+			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
+			rvalue,
+		)
+	}
+}
+
+func (this *PositionalFieldValueLvalueNode) Unset(
+	state *State,
+) {
+	this.UnsetIndexed(nil, state)
+}
+
+func (this *PositionalFieldValueLvalueNode) UnsetIndexed(
+	indices []*types.Mlrval,
+	state *State,
+) {
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
+	if indices == nil {
+		name := lhsFieldIndex.String()
+		// xxx positional
+		state.Inrec.Remove(&name)
+	} else {
+		// xxx positional
+		state.Inrec.UnsetIndexed(
+			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
 		)
 	}
 }

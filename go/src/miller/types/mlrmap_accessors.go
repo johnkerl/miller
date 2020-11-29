@@ -173,6 +173,43 @@ func (this *Mlrmap) GetNameAtPositionalIndex(position int64) *string {
 	return mapEntry.Key
 }
 
+// ----------------------------------------------------------------
+// TODO: put error-return into this API
+func (this *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
+	mapEntry := this.findEntryByPositionalIndex(position)
+
+	if mapEntry != nil {
+		// TODO: rekey the hashmap
+		if name.mvtype == MT_STRING {
+			s := name.printrep
+			mapEntry.Key = &s
+		} else if name.mvtype == MT_INT {
+			s := name.String()
+			mapEntry.Key = &s
+		} else {
+			// TODO: return MlrvalFromError()
+		}
+	} else {
+		// TODO: handle out-of-bounds accesses
+		return
+	}
+}
+
+// ----------------------------------------------------------------
+// Copies the key and value (deep-copying in case the value is array/map).
+// This is safe for DSL use. See also PutReference.
+
+// TODO: put error-return into this API
+func (this *Mlrmap) PutCopyWithPositionalIndex(position int64, value *Mlrval) {
+	mapEntry := this.findEntryByPositionalIndex(position)
+
+	if mapEntry != nil {
+		mapEntry.Value = value.Copy()
+	} else {
+		return
+	}
+}
+
 func (this *Mlrmap) RemoveWithPositionalIndex(position int64) {
 	mapEntry := this.findEntryByPositionalIndex(position)
 	if mapEntry != nil {

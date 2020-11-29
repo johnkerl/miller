@@ -241,14 +241,18 @@ func validateASTAux(
 }
 
 var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
-	dsl.NodeTypeArrayOrMapIndexAccess: true,
-	dsl.NodeTypeArraySliceAccess:      true,
-	dsl.NodeTypeDirectFieldValue:      true,
-	dsl.NodeTypeIndirectFieldValue:    true,
-	dsl.NodeTypeFullSrec:              true,
-	dsl.NodeTypeDirectOosvarValue:     true,
-	dsl.NodeTypeIndirectOosvarValue:   true,
-	dsl.NodeTypeFullOosvar:            true,
-	dsl.NodeTypeLocalVariable:         true,
-	dsl.NodeTypeEnvironmentVariable:   true,
+	dsl.NodeTypeArrayOrMapIndexAccess:           true,
+	dsl.NodeTypeArrayOrMapPositionalNameAccess:  true,
+	dsl.NodeTypeArrayOrMapPositionalValueAccess: true,
+	dsl.NodeTypeArraySliceAccess:                true,
+	dsl.NodeTypeDirectFieldValue:                true,
+	dsl.NodeTypeDirectOosvarValue:               true,
+	dsl.NodeTypeEnvironmentVariable:             true,
+	dsl.NodeTypeFullOosvar:                      true,
+	dsl.NodeTypeFullSrec:                        true,
+	dsl.NodeTypeIndirectFieldValue:              true,
+	dsl.NodeTypeIndirectOosvarValue:             true,
+	dsl.NodeTypeLocalVariable:                   true,
+	dsl.NodeTypePositionalFieldName:             true,
+	dsl.NodeTypePositionalFieldValue:            true,
 }

@@ -299,7 +299,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	}
 
 	// If not last index, then recurse.
-	if baseIndex.mvtype != MT_STRING  && baseIndex.mvtype != MT_INT {
+	if baseIndex.mvtype != MT_STRING && baseIndex.mvtype != MT_INT {
 		// Base is map, index is invalid type
 		return errors.New(
 			"Miller: map indices must be string or int; got " + baseIndex.GetTypeName(),

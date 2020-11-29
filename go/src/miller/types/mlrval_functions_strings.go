@@ -98,7 +98,7 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 
 	if !mok || !nok {
 		return MlrvalFromString("")
-	} else if (m > n) {
+	} else if m > n {
 		return MlrvalFromError()
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
