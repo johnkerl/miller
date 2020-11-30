@@ -2,10 +2,10 @@
 TOP OF LIST:
 
 ! gating after: 'int x = 1; x = "abc"'
+! verb skeletons
+! auxents iterate
+! strptime/strftime experiments ...
 ? doc shift/unshift as using [2:] and append
-
-ongoing:
-* commenting passes ...
 
 small:
 * array-slice: x[2:] for x=[1] should be [] ?
@@ -15,15 +15,13 @@ small:
 * xls note (issue #396) @ file-format docs
 
 medium:
-* function metadata: nargs & class
-  o reorder source-code layout not primarily by arity
-  o auto-sort on mlr -f?
 ? records as mlrmap -> mlrval?
   o reduce $* copy ...
   o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
+* commenting passes ...
 
 big:
-* emitp/emitf
+! emitp/emitf
 * json-null as type; & all dispo matrices/vectors ...
 * smart fmtnum
 * join verb
@@ -350,3 +348,4 @@ NITS/NON-IMMEDIATE:
 * reorder locations of get/put/remove methods in mlrval/mlrmap
 * grep out all error message from reg-test outputs & doc them all & make sure index-searchable at readthedocs
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
+* function metadata: auto-sort on mlr -f?

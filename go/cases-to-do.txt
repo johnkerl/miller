@@ -58,7 +58,6 @@ NEED EMITP/MULTI-EMIT/PRINT-WITH-REDIRECT
 rrv ./reg-test/cases/case-c-dsl-absent-empty.sh
 rrv ./reg-test/cases/case-c-dsl-break-continue.sh
 rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-rrv ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
 rrv ./reg-test/cases/case-c-dsl-functional-tests.sh
 rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
