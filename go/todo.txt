@@ -1,16 +1,19 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! string/str in typeofs
-
 ! gating after: 'int x = 1; x = "abc"'
 
+small:
+* array-slice: x[2:] for x=[1] should be [] ?
 * justWroteEmptyLine -> pprint too ...
 * nidx @ 10-min
 * text-put @ 10-min
 * xls note (issue #396) @ file-format docs
 
 medium:
+* function metadata: nargs & class
+  o reorder source-code layout not primarily by arity
+  o auto-sort on mlr -f?
 ? records as mlrmap -> mlrval?
   o reduce $* copy ...
   o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
@@ -33,15 +36,13 @@ o iterate on a parser-generator with JSON config file
 no need to bootstrap a parser for the parser-generator language
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-? reg-test: diff the *.err files?
-
-? allow [[...]] / [[[...]]] at assignment LHS
-
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 
 * new columns-to-arrays and arrays-to-columns for stan format
 
-* single-line JSON for DKVP/CSV/etc ...
+? reg-test: diff the *.err files?
+? allow [[...]] / [[[...]]] at assignment LHS
+? single-line JSON for DKVP/CSV/etc ...
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
@@ -116,15 +117,9 @@ no need to bootstrap a parser for the parser-generator language
 ! quoted DKVP
   - what about csvlite-style -- ? needs a --dkvplite ?
 
-* clean up 'mlr --help' to not advertise things it doesn't do yet
-
-* ASV? golang csv package parameterizes comma but not crlf :(
-
 * mlr -f / -F
   o others in mlrcli_parse.go
   o copy over all operator help-strings from ../c
-
-* $map.attr1.attr2 syntax for DSL -- ? needs override of "." operator w/ symbols ... ?
 
 ================================================================
 REMAINING VERBS:
@@ -170,6 +165,8 @@ REMAINING FUNCTIONS:
 https://github.com/lestrrat-go/strftime
 https://github.com/pbnjay/strptime
 
+? push/pop/shift/unshift functions
+
 ================================================================
 CATEGORIES:
 
@@ -190,7 +187,7 @@ CATEGORIES:
     detection -- needs an input-stream delegator -- ?
   o --allow-ragged-csv-input|--ragged
   o non-lite DKVP reader/writer
-  o comment-filtering-compaosed io.Reader
+  o comment-filtering-composed io.Reader
   o make a pprint reader w/ width-detect
 
 * widen DSL coverage
@@ -210,12 +207,12 @@ CATEGORIES:
   o sort within nested data structures?
   o array-sort, map-key sort, map-value sort in the DSL?
   o closures for sorting and more -- ?!?
+  o or maybe just use UDFs ...
 
 ----------------------------------------------------------------
 MAYBE:
 
 * string/array slices on assignment LHS -- ?
-* push/pop/shift/unshift subroutines
 
 ----------------------------------------------------------------
 GOCC UPSTREAMS:
