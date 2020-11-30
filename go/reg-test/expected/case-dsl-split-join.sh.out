@@ -49,14 +49,14 @@ mlr -n put end {print splitkvx("a=3,b=4,c=5", "=", ",")}
   "c": "5"
 }
 
-mlr -n put end {print splitnv("a=3,b=4,c=5", "=", ",")}
+mlr -n put end {print splitnv("3,4,5", ",")}
 {
   "1": 3,
   "2": 4,
   "3": 5
 }
 
-mlr -n put end {print splitnvx("a=3,b=4,c=5", "=", ",")}
+mlr -n put end {print splitnvx("3,4,5", ",")}
 {
   "1": "3",
   "2": "4",
@@ -77,37 +77,19 @@ mlr -n put end {print splitkvx("a,b,c", "=", ",")}
   "3": "c"
 }
 
-mlr -n put end {print splitnv("a,b,c", "=", ",")}
+mlr -n put end {print splitnv("a,b,c", ",")}
 {
   "1": "a",
   "2": "b",
   "3": "c"
 }
 
-mlr -n put end {print splitnvx("a,b,c", "=", ",")}
+mlr -n put end {print splitnvx("a,b,c", ",")}
 {
   "1": "a",
   "2": "b",
   "3": "c"
 }
-
-mlr -n put end {print splitak("a=3,b=4,c=5", "=", ",")}
-["a", "b", "c"]
-
-mlr -n put end {print splitav("a=3,b=4,c=5", "=", ",")}
-[3, 4, 5]
-
-mlr -n put end {print splitavx("a=3,b=4,c=5", "=", ",")}
-["3", "4", "5"]
-
-mlr -n put end {print splitak("a,b,c", "=", ",")}
-["1", "2", "3"]
-
-mlr -n put end {print splitav("a,b,c", "=", ",")}
-["a", "b", "c"]
-
-mlr -n put end {print splitavx("a,b,c", "=", ",")}
-["a", "b", "c"]
 
 mlr -n put end {print splita("3,4,5", ",")}
 [3, 4, 5]
@@ -115,7 +97,7 @@ mlr -n put end {print splita("3,4,5", ",")}
 mlr -n put end {print splitax("3,4,5", ",")}
 ["3", "4", "5"]
 
-mlr --ojson --from ./reg-test/input/s.dkvp put $keys   = keys($*)
+mlr --ojson --from ./reg-test/input/s.dkvp put $keys   = get_keys($*)
 {
   "a": "pan",
   "b": "pan",
@@ -149,7 +131,7 @@ mlr --ojson --from ./reg-test/input/s.dkvp put $keys   = keys($*)
   "keys": ["a", "b", "i", "x", "y"]
 }
 
-mlr --ojson --from ./reg-test/input/s.dkvp put $values = values($*)
+mlr --ojson --from ./reg-test/input/s.dkvp put $values = get_values($*)
 {
   "a": "pan",
   "b": "pan",
@@ -183,7 +165,7 @@ mlr --ojson --from ./reg-test/input/s.dkvp put $values = values($*)
   "values": ["eks", "wye", 4, 0.38139939387114097, 0.13418874328430463]
 }
 
-mlr --ojson --from ./reg-test/input/s.dkvp put $keys   = keys([7,8,9])
+mlr --ojson --from ./reg-test/input/s.dkvp put $keys   = get_keys([7,8,9])
 {
   "a": "pan",
   "b": "pan",
@@ -217,7 +199,7 @@ mlr --ojson --from ./reg-test/input/s.dkvp put $keys   = keys([7,8,9])
   "keys": [1, 2, 3]
 }
 
-mlr --ojson --from ./reg-test/input/s.dkvp put $values = values([7,8,9])
+mlr --ojson --from ./reg-test/input/s.dkvp put $values = get_values([7,8,9])
 {
   "a": "pan",
   "b": "pan",

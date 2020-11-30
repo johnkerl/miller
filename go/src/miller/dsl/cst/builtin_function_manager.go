@@ -851,33 +851,15 @@ splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
 	{
 		name: "splitnv",
 		help: `Splits string by separator into integer-indexed map with type inference. Example:
-splitnv("a=3,b=4,c=5", "=", ",") = {"1":3,"2":4,"3":5}`,
-		ternaryFunc: types.MlrvalSplitNV,
+splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
+		binaryFunc: types.MlrvalSplitNV,
 	},
 	{
 		name: "splitnvx",
 		help: `Splits string by separator into integer-indexed map without type
 inference (values are strings). Example:
-splitnvx("a=3,b=4,c=5", "=", ",") = {"1":"3","2":"4","3":"5"}`,
-		ternaryFunc: types.MlrvalSplitNVX,
-	},
-	{
-		name: "splitak",
-		help: `Splits keys out of string representation of map into array. Example:
-splitak("a=3,b=4,c=5", "=", ",") = ["a","b","c"]`,
-		ternaryFunc: types.MlrvalSplitAK,
-	},
-	{
-		name: "splitav",
-		help: `Splits type-inferred values out of string representation of map into array. Example:
-splitav("a=3,b=4,c=5", "=", ",") = [3,4,5]`,
-		ternaryFunc: types.MlrvalSplitAV,
-	},
-	{
-		name: "splitavx",
-		help: `Splits non-type-inferred values out of string representation of map into array. Example:
-splitav("a=3,b=4,c=5", "=", ",") = ["3","4","5"]`,
-		ternaryFunc: types.MlrvalSplitAVX,
+splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
+		binaryFunc: types.MlrvalSplitNVX,
 	},
 
 	// Variadic built-in functions

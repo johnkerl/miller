@@ -1,9 +1,10 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! string/str in typeofs
+
 ! gating after: 'int x = 1; x = "abc"'
 
-small:
 * justWroteEmptyLine -> pprint too ...
 * nidx @ 10-min
 * text-put @ 10-min
@@ -18,6 +19,9 @@ big:
 * emitp/emitf
 * json-null as type; & all dispo matrices/vectors ...
 * smart fmtnum
+* join verb
+* stats1 verb
+* stats2 verb
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * parser-fu:

@@ -482,179 +482,47 @@ func MlrvalSplitKVX(ma, mb, mc *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-// splitnv("a=3,b=4,c=5", "=", ",") -> {"1":3,"2":4,"3":5}
-func MlrvalSplitNV(ma, mb, mc *Mlrval) Mlrval {
+// splitnv("a,b,c", ",") -> {"1":"a","2":"b","3":"c"}
+func MlrvalSplitNV(ma, mb *Mlrval) Mlrval {
 	if ma.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
 	if mb.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	fieldSeparator := mc.printrep
 
 	retval := MlrvalEmptyMap()
 
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
+	fields := lib.SplitString(ma.printrep, mb.printrep)
 	for i, field := range fields {
-		pair := strings.SplitN(field, pairSeparator, 2)
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-		if len(pair) == 1 {
-			value := MlrvalFromInferredType(pair[0])
-			retval.mapval.PutReference(&key, &value)
-		} else if len(pair) == 2 {
-			value := MlrvalFromInferredType(pair[1])
-			retval.mapval.PutReference(&key, &value)
-		} else {
-			lib.InternalCodingErrorIf(true)
-		}
+		value := MlrvalFromInferredType(field)
+		retval.mapval.PutReference(&key, &value)
 	}
 
 	return retval
 }
 
 // ----------------------------------------------------------------
-// splitnvx("a=3,b=4,c=5", "=", ",") -> {"1":"3","2":"4","3":"5"}
-func MlrvalSplitNVX(ma, mb, mc *Mlrval) Mlrval {
+// splitnvx("3,4,5", ",") -> {"1":"3","2":"4","3":"5"}
+func MlrvalSplitNVX(ma, mb *Mlrval) Mlrval {
 	if ma.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
 	if mb.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	fieldSeparator := mc.printrep
 
 	retval := MlrvalEmptyMap()
 
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
+	fields := lib.SplitString(ma.printrep, mb.printrep)
 	for i, field := range fields {
-		pair := strings.SplitN(field, pairSeparator, 2)
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-		if len(pair) == 1 {
-			value := MlrvalFromString(pair[0])
-			retval.mapval.PutReference(&key, &value)
-		} else if len(pair) == 2 {
-			value := MlrvalFromString(pair[1])
-			retval.mapval.PutReference(&key, &value)
-		} else {
-			lib.InternalCodingErrorIf(true)
-		}
+		value := MlrvalFromString(field)
+		retval.mapval.PutReference(&key, &value)
 	}
 
 	return retval
-}
-
-// ----------------------------------------------------------------
-// splitak("a=3,b=4,c=5", "=", ",") -> ["a","b","c"]
-func MlrvalSplitAK(ma, mb, mc *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	if mb.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	fieldSeparator := mc.printrep
-
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
-
-	retval := NewSizedMlrvalArray(int64(len(fields)))
-
-	for i, field := range fields {
-		pair := strings.SplitN(field, pairSeparator, 2)
-
-		if len(pair) == 1 {
-			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-			retval.arrayval[i] = MlrvalFromString(key)
-		} else if len(pair) == 2 {
-			key := MlrvalFromInferredType(pair[0])
-			retval.arrayval[i] = key
-		} else {
-			lib.InternalCodingErrorIf(true)
-		}
-	}
-
-	return *retval
-}
-
-// ----------------------------------------------------------------
-// splitav("a=3,b=4,c=5", "=", ",") -> [3,4,5]
-func MlrvalSplitAV(ma, mb, mc *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	if mb.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	fieldSeparator := mc.printrep
-
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
-
-	retval := NewSizedMlrvalArray(int64(len(fields)))
-
-	for i, field := range fields {
-		pair := strings.SplitN(field, pairSeparator, 2)
-		if len(pair) == 1 {
-			value := MlrvalFromInferredType(pair[0])
-			retval.arrayval[i] = value
-		} else if len(pair) == 2 {
-			value := MlrvalFromInferredType(pair[1])
-			retval.arrayval[i] = value
-		} else {
-			lib.InternalCodingErrorIf(true)
-		}
-	}
-
-	return *retval
-}
-
-// ----------------------------------------------------------------
-// splitav("a=3,b=4,c=5", "=", ",") -> ["3","4","5"]
-func MlrvalSplitAVX(ma, mb, mc *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	if mb.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
-		return MlrvalFromError()
-	}
-	fieldSeparator := mc.printrep
-
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
-
-	retval := NewSizedMlrvalArray(int64(len(fields)))
-
-	for i, field := range fields {
-		pair := strings.SplitN(field, pairSeparator, 2)
-		if len(pair) == 1 {
-			value := MlrvalFromString(pair[0])
-			retval.arrayval[i] = value
-		} else if len(pair) == 2 {
-			value := MlrvalFromString(pair[1])
-			retval.arrayval[i] = value
-		} else {
-			lib.InternalCodingErrorIf(true)
-		}
-	}
-
-	return *retval
 }
 
 // ----------------------------------------------------------------

@@ -18,21 +18,13 @@ run_mlr -n put 'end {print joinkv({"a":3,"b":4,"c":5}, "=", ",")}'
 
 run_mlr -n put 'end {print splitkv("a=3,b=4,c=5", "=", ",")}'
 run_mlr -n put 'end {print splitkvx("a=3,b=4,c=5", "=", ",")}'
-run_mlr -n put 'end {print splitnv("a=3,b=4,c=5", "=", ",")}'
-run_mlr -n put 'end {print splitnvx("a=3,b=4,c=5", "=", ",")}'
+run_mlr -n put 'end {print splitnv("3,4,5", ",")}'
+run_mlr -n put 'end {print splitnvx("3,4,5", ",")}'
 
 run_mlr -n put 'end {print splitkv("a,b,c", "=", ",")}'
 run_mlr -n put 'end {print splitkvx("a,b,c", "=", ",")}'
-run_mlr -n put 'end {print splitnv("a,b,c", "=", ",")}'
-run_mlr -n put 'end {print splitnvx("a,b,c", "=", ",")}'
-
-run_mlr -n put 'end {print splitak("a=3,b=4,c=5", "=", ",")}'
-run_mlr -n put 'end {print splitav("a=3,b=4,c=5", "=", ",")}'
-run_mlr -n put 'end {print splitavx("a=3,b=4,c=5", "=", ",")}'
-
-run_mlr -n put 'end {print splitak("a,b,c", "=", ",")}'
-run_mlr -n put 'end {print splitav("a,b,c", "=", ",")}'
-run_mlr -n put 'end {print splitavx("a,b,c", "=", ",")}'
+run_mlr -n put 'end {print splitnv("a,b,c", ",")}'
+run_mlr -n put 'end {print splitnvx("a,b,c", ",")}'
 
 run_mlr -n put 'end {print splita("3,4,5", ",")}'
 run_mlr -n put 'end {print splitax("3,4,5", ",")}'
