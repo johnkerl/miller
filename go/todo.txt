@@ -2,6 +2,10 @@
 TOP OF LIST:
 
 ! gating after: 'int x = 1; x = "abc"'
+? doc shift/unshift as using [2:] and append
+
+ongoing:
+* commenting passes ...
 
 small:
 * array-slice: x[2:] for x=[1] should be [] ?
@@ -86,7 +90,6 @@ no need to bootstrap a parser for the parser-generator language
 
 * UDF nexts:
   o more functions (see below)
-  o function metadata, w/ sort-by, for online help
   o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
@@ -220,23 +223,6 @@ GOCC UPSTREAMS:
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
 
 ----------------------------------------------------------------
-DEV NOTES:
-
-* build-dsl
-* build
-* fmter
-* check
-* git diff to see what changed
-* commit
-
-----------------------------------------------------------------
-PARSER/LEXER PLAN:
-
-* grok ch27
-* grok pike-lexer slides
-* dragon at ... what level ?
-
-----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
 
 * "Miller: " prefixes on all errors.New
@@ -260,7 +246,6 @@ NITS/NON-IMMEDIATE:
   o inrec *types.Mlrmap is good for default no-copy across channels ... needs
     a big red flag though for things like the repeat verb (maybe *only* that one ...)
 ! clean up the AST API. ish! :^/
-* defer reg_test/run until there is quite a bit more verb/dsl/io expansion
 * doc: no boolish truthy falsy
 * json:
   d thorough UT for json mlrval-parser including various expect-fail error cases
@@ -285,24 +270,15 @@ NITS/NON-IMMEDIATE:
   o moral: miller is a name-indexed tool as its primary purpose. positional
     indexing is supported but it can be confusing.
 * mlrdoc: there should have always been a >>> and >>>=, and now there are
-! systime printing out in scientific notation :(
 ! head early-out -- cite the relevant issue & fix the right way ...
 * relnotes: label b,i,x vs x,i,b change
-* put -- multiple -f? as in C impl?
-* emit { int : string } results in absent-something :^/
 * doc note 'array' is now a keyword
 * dump is now redundant? print @*
 * double-check dump CR-terminators depending on expression type
-* doc nullish-coalesece, along with its precedence
-* ordering of builtin functions in mlr -f output ........
-  ? primarily by type, secondarily by name?
-* CST validators: remove references to bare-boolean last statement in main block
-  - this is a feature
 * good example of wording for why/when to make a breaking release:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
 * make truncate() UTF8-friendly
-* (absent) print on dump -- should simply be empty
 * document array-unset as shiftback
 ! error if UDF has same name as built-in
 * huge commenting pass
@@ -318,7 +294,6 @@ NITS/NON-IMMEDIATE:
 * doc one-variable for is over keys for maps, elements for arrays
 * asserting_{type}: os.Exit(1) -> return nil, err flow?
 * test put/filter w/ various combinations of -s/-e/-f
-* math operators on map? array? e.g. a<b for contains? (prefer functions ...)
 * more text examples in mlr-put doc
 * mt_void keep-or-not .......
   o check dispo matrices
@@ -332,21 +307,18 @@ NITS/NON-IMMEDIATE:
 * port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
 * doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
   o xref to 1-up note.
-* why error? mlr put '$y=true; $y &= $x<0.5' s
 * line/column caret at parse-error messages -- would require some GOCC refactoring
   in order to get the full DSL string and the line/number info into the same method
 * csvlite rd/wr: comment for USV/ASV too. no need for escaping then.
 * comment schema-change supported only in csvlite reader, not csv reader
 * for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
 * neaten mlr gap -g (default) print
-* case-c-* / case-go-* -> case-* eventually
-* implement min/max for array/map ... using cmp rules
 ! write out thorough min/max/cmp cases for all orderings by type
 * silent zero-pass for-loops on non-collections:
   o intended as a heterogenity feature ...
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
-* mlrdoc the ??? operator
+* mlrdoc the ?? and ??? operators
 * document --jvstack is now a back-compat no-op
 * doc about put -S/-F cannot make sense anymore
 * put/filter updates:
@@ -378,4 +350,3 @@ NITS/NON-IMMEDIATE:
 * reorder locations of get/put/remove methods in mlrval/mlrmap
 * grep out all error message from reg-test outputs & doc them all & make sure index-searchable at readthedocs
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
-* is the truncate DSL function UTF-8 aware?
