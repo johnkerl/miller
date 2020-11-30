@@ -47,38 +47,7 @@ type BuiltinFunctionInfo struct {
 var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 
 	// ----------------------------------------------------------------
-	// Zary built-in functions
-	{
-		name:     "systime",
-		class:    FUNC_CLASS_TIME,
-		help:     "help string will go here",
-		zaryFunc: types.MlrvalSystime,
-	},
-	{
-		name:     "uptime",
-		class:    FUNC_CLASS_TIME,
-		help:     "help string will go here",
-		zaryFunc: types.MlrvalUptime,
-	},
-	{
-		name:     "systimeint",
-		class:    FUNC_CLASS_TIME,
-		help:     "help string will go here",
-		zaryFunc: types.MlrvalSystimeInt,
-	},
-	{
-		name:     "urand",
-		class:    FUNC_CLASS_MATH,
-		zaryFunc: types.MlrvalUrand,
-	},
-	{
-		name:     "urand32",
-		class:    FUNC_CLASS_MATH,
-		zaryFunc: types.MlrvalUrand32,
-	},
-
-	// ----------------------------------------------------------------
-	// Multiple-arity built-in functions
+	// FUNC_CLASS_ARITHMETIC
 	{
 		name:               "+",
 		class:              FUNC_CLASS_ARITHMETIC,
@@ -86,6 +55,7 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 		binaryFunc:         types.MlrvalBinaryPlus,
 		hasMultipleArities: true,
 	},
+
 	{
 		name:               "-",
 		class:              FUNC_CLASS_ARITHMETIC,
@@ -93,6 +63,609 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 		binaryFunc:         types.MlrvalBinaryMinus,
 		hasMultipleArities: true,
 	},
+
+	{
+		name:       "*",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalTimes,
+	},
+
+	{
+		name:       "/",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalDivide,
+	},
+
+	{
+		name:       "//",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalIntDivide,
+	},
+
+	{
+		name:       "**",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalPow,
+	},
+
+	{
+		name:       "pow",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalPow,
+	},
+
+	{
+		name:       ".+",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalDotPlus,
+	},
+
+	{
+		name:       ".-",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalDotMinus,
+	},
+
+	{
+		name:       ".*",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalDotTimes,
+	},
+
+	{
+		name:       "./",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalDotDivide,
+	},
+
+	{
+		name:       "%",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalModulus,
+	},
+
+	{
+		name:      "~",
+		class:     FUNC_CLASS_ARITHMETIC,
+		unaryFunc: types.MlrvalBitwiseNOT,
+	},
+
+	{
+		name:       "&",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalBitwiseAND,
+	},
+
+	{
+		name:       "|",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalBitwiseOR,
+	},
+
+	{
+		name:       "^",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalBitwiseXOR,
+	},
+
+	{
+		name:       "<<",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalLeftShift,
+	},
+
+	{
+		name:       ">>",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalSignedRightShift,
+	},
+
+	{
+		name:       ">>>",
+		class:      FUNC_CLASS_ARITHMETIC,
+		binaryFunc: types.MlrvalUnsignedRightShift,
+	},
+
+	{
+		name:      "bitcount",
+		class:     FUNC_CLASS_ARITHMETIC,
+		help:      "Count of 1-bits.",
+		unaryFunc: types.MlrvalBitCount,
+	},
+
+	{
+		name:        "madd",
+		class:       FUNC_CLASS_ARITHMETIC,
+		help:        `a + b mod m (integers)`,
+		ternaryFunc: types.MlrvalModAdd,
+	},
+
+	{
+		name:        "msub",
+		class:       FUNC_CLASS_ARITHMETIC,
+		help:        `a - b mod m (integers)`,
+		ternaryFunc: types.MlrvalModSub,
+	},
+
+	{
+		name:        "mmul",
+		class:       FUNC_CLASS_ARITHMETIC,
+		help:        `a * b mod m (integers)`,
+		ternaryFunc: types.MlrvalModMul,
+	},
+
+	{
+		name:        "mexp",
+		class:       FUNC_CLASS_ARITHMETIC,
+		help:        `a ** b mod m (integers)`,
+		ternaryFunc: types.MlrvalModExp,
+	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_BOOLEAN
+	{
+		name:      "!",
+		class:     FUNC_CLASS_BOOLEAN,
+		unaryFunc: types.MlrvalLogicalNOT,
+	},
+
+	{
+		name:       "==",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalEquals,
+	},
+
+	{
+		name:       "!=",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalNotEquals,
+	},
+
+	{
+		name:       ">",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalGreaterThan,
+	},
+
+	{
+		name:       ">=",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalGreaterThanOrEquals,
+	},
+
+	{
+		name:       "<",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalLessThan,
+	},
+
+	{
+		name:       "<=",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalLessThanOrEquals,
+	},
+
+	{
+		name:  "=~",
+		class: FUNC_CLASS_BOOLEAN,
+		help: `String (left-hand side) matches regex (right-hand
+side), e.g. '$name =~ "^a.*b$"'.`,
+		binaryFunc: types.MlrvalStringMatchesRegexp,
+	},
+
+	{
+		name:  "!=~",
+		class: FUNC_CLASS_BOOLEAN,
+		help: `String (left-hand side) does not match regex (right-hand
+side), e.g. '$name !=~ "^a.*b$"'.`,
+		binaryFunc: types.MlrvalStringDoesNotMatchRegexp,
+	},
+
+	{
+		name:       "&&",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+
+	{
+		name:       "||",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+
+	{
+		name:       "??",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+
+	{
+		name:       "???",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+
+	{
+		name:       "^^",
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalLogicalXOR,
+	},
+
+	{
+		name:        "?:",
+		class:       FUNC_CLASS_BOOLEAN,
+		ternaryFunc: TernaryShortCircuitPlaceholder,
+	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_STRING
+
+	{
+		name:       ".",
+		class:      FUNC_CLASS_STRING,
+		binaryFunc: types.MlrvalDot,
+	},
+
+	{
+		name:      "capitalize",
+		class:     FUNC_CLASS_STRING,
+		help:      "Convert string's first character to uppercase.",
+		unaryFunc: types.MlrvalCapitalize,
+	},
+
+	{
+		name:      "clean_whitespace",
+		class:     FUNC_CLASS_STRING,
+		help:      "Same as collapse_whitespace and strip.",
+		unaryFunc: types.MlrvalCleanWhitespace,
+	},
+
+	{
+		name:      "collapse_whitespace",
+		class:     FUNC_CLASS_STRING,
+		help:      "Strip repeated whitespace from string.",
+		unaryFunc: types.MlrvalCollapseWhitespace,
+	},
+
+	{
+		name:        "gsub",
+		class:       FUNC_CLASS_STRING,
+		ternaryFunc: types.MlrvalGsub,
+	},
+
+	{
+		name:      "lstrip",
+		class:     FUNC_CLASS_STRING,
+		help:      "Strip leading whitespace from string.",
+		unaryFunc: types.MlrvalLStrip,
+	},
+
+	{
+		name:      "rstrip",
+		class:     FUNC_CLASS_STRING,
+		help:      "Strip trailing whitespace from string.",
+		unaryFunc: types.MlrvalRStrip,
+	},
+
+	{
+		name:      "strip",
+		class:     FUNC_CLASS_STRING,
+		help:      "Strip leading and trailing whitespace from string.",
+		unaryFunc: types.MlrvalStrip,
+	},
+
+	{
+		name:      "strlen",
+		class:     FUNC_CLASS_STRING,
+		help:      "String length.",
+		unaryFunc: types.MlrvalStrlen,
+	},
+
+	{
+		name:        "ssub",
+		class:       FUNC_CLASS_STRING,
+		ternaryFunc: types.MlrvalSsub,
+	},
+
+	{
+		name:        "sub",
+		class:       FUNC_CLASS_STRING,
+		ternaryFunc: types.MlrvalSub,
+	},
+
+	{
+		name:  "substr",
+		class: FUNC_CLASS_STRING,
+		help: `substr(s,m,n) gives substring of s from 1-up position m to n
+inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
+		ternaryFunc: types.MlrvalSubstr,
+	},
+
+	{
+		name:      "tolower",
+		class:     FUNC_CLASS_STRING,
+		help:      "Convert string to lowercase.",
+		unaryFunc: types.MlrvalToLower,
+	},
+
+	{
+		name:      "toupper",
+		class:     FUNC_CLASS_STRING,
+		help:      "Convert string to uppercase.",
+		unaryFunc: types.MlrvalToUpper,
+	},
+
+	{
+		name:       "truncate",
+		class:      FUNC_CLASS_STRING,
+		binaryFunc: types.MlrvalTruncate,
+	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_MATH
+
+	{
+		name:      "abs",
+		class:     FUNC_CLASS_MATH,
+		help:      "Absolute value.",
+		unaryFunc: types.MlrvalAbs,
+	},
+
+	{
+		name:      "acos",
+		class:     FUNC_CLASS_MATH,
+		help:      "Inverse trigonometric cosine.",
+		unaryFunc: types.MlrvalAcos,
+	},
+
+	{
+		name:      "acosh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Inverse hyperbolic cosine.",
+		unaryFunc: types.MlrvalAcosh,
+	},
+
+	{
+		name:      "asin",
+		class:     FUNC_CLASS_MATH,
+		help:      "Inverse trigonometric sine.",
+		unaryFunc: types.MlrvalAsin,
+	},
+
+	{
+		name:      "asinh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Inverse hyperbolic sine.",
+		unaryFunc: types.MlrvalAsinh,
+	},
+
+	{
+		name:      "atan",
+		class:     FUNC_CLASS_MATH,
+		help:      "One-argument arctangent.",
+		unaryFunc: types.MlrvalAtan,
+	},
+
+	{
+		name:      "atanh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Inverse hyperbolic tangent.",
+		unaryFunc: types.MlrvalAtanh,
+	},
+
+	{
+		name:       "atan2",
+		class:      FUNC_CLASS_MATH,
+		help:       "Two-argument arctangent.",
+		binaryFunc: types.MlrvalAtan2,
+	},
+
+	{
+		name:      "cbrt",
+		class:     FUNC_CLASS_MATH,
+		help:      "Cube root.",
+		unaryFunc: types.MlrvalCbrt,
+	},
+
+	{
+		name:      "ceil",
+		class:     FUNC_CLASS_MATH,
+		help:      "Ceiling: nearest integer at or above.",
+		unaryFunc: types.MlrvalCeil,
+	},
+
+	{
+		name:      "cos",
+		class:     FUNC_CLASS_MATH,
+		help:      "Trigonometric cosine.",
+		unaryFunc: types.MlrvalCos,
+	},
+
+	{
+		name:      "cosh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Hyperbolic cosine.",
+		unaryFunc: types.MlrvalCosh,
+	},
+
+	{
+		name:      "erf",
+		class:     FUNC_CLASS_MATH,
+		help:      "Error function.",
+		unaryFunc: types.MlrvalErf,
+	},
+
+	{
+		name:      "erfc",
+		class:     FUNC_CLASS_MATH,
+		help:      "Complementary error function.",
+		unaryFunc: types.MlrvalErfc,
+	},
+
+	{
+		name:      "exp",
+		class:     FUNC_CLASS_MATH,
+		help:      "Exponential function e**x.",
+		unaryFunc: types.MlrvalExp,
+	},
+
+	{
+		name:      "expm1",
+		class:     FUNC_CLASS_MATH,
+		help:      "e**x - 1.",
+		unaryFunc: types.MlrvalExpm1,
+	},
+
+	{
+		name:      "floor",
+		class:     FUNC_CLASS_MATH,
+		help:      "Floor: nearest integer at or below.",
+		unaryFunc: types.MlrvalFloor,
+	},
+
+	{
+		name:  "invqnorm",
+		class: FUNC_CLASS_MATH,
+		help: `Inverse of normal cumulative distribution function.
+Note that invqorm(urand()) is normally distributed.`,
+		unaryFunc: types.MlrvalInvqnorm,
+	},
+
+	{
+		name:      "log",
+		class:     FUNC_CLASS_MATH,
+		help:      "Natural (base-e) logarithm.",
+		unaryFunc: types.MlrvalLog,
+	},
+
+	{
+		name:      "log10",
+		class:     FUNC_CLASS_MATH,
+		help:      "Base-10 logarithm.",
+		unaryFunc: types.MlrvalLog10,
+	},
+
+	{
+		name:      "log1p",
+		class:     FUNC_CLASS_MATH,
+		help:      "log(1-x).",
+		unaryFunc: types.MlrvalLog1p,
+	},
+
+	{
+		name:  "logifit",
+		class: FUNC_CLASS_MATH,
+		help: ` Given m and b from logistic regression, compute fit:
+$yhat=logifit($x,$m,$b).`,
+		ternaryFunc: types.MlrvalLogifit,
+	},
+
+	{
+		name:         "max",
+		class:        FUNC_CLASS_MATH,
+		variadicFunc: types.MlrvalVariadicMax,
+	},
+
+	{
+		name:         "min",
+		class:        FUNC_CLASS_MATH,
+		variadicFunc: types.MlrvalVariadicMin,
+	},
+
+	{
+		name:      "qnorm",
+		class:     FUNC_CLASS_MATH,
+		help:      `Normal cumulative distribution function.`,
+		unaryFunc: types.MlrvalQnorm,
+	},
+
+	{
+		name:      "round",
+		class:     FUNC_CLASS_MATH,
+		help:      "Round to nearest integer.",
+		unaryFunc: types.MlrvalRound,
+	},
+
+	{
+		name:      "sgn",
+		class:     FUNC_CLASS_MATH,
+		help:      ` +1, 0, -1 for positive, zero, negative input respectively.`,
+		unaryFunc: types.MlrvalSgn,
+	},
+
+	{
+		name:      "sin",
+		class:     FUNC_CLASS_MATH,
+		help:      "Trigonometric sine.",
+		unaryFunc: types.MlrvalSin,
+	},
+
+	{
+		name:      "sinh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Hyperbolic sine.",
+		unaryFunc: types.MlrvalSinh,
+	},
+
+	{
+		name:      "sqrt",
+		class:     FUNC_CLASS_MATH,
+		help:      "Square root.",
+		unaryFunc: types.MlrvalSqrt,
+	},
+
+	{
+		name:      "tan",
+		class:     FUNC_CLASS_MATH,
+		help:      "Trigonometric tangent.",
+		unaryFunc: types.MlrvalTan,
+	},
+
+	{
+		name:      "tanh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Hyperbolic tangent.",
+		unaryFunc: types.MlrvalTanh,
+	},
+
+	{
+		name:  "roundm",
+		class: FUNC_CLASS_MATH,
+		help: `Round to nearest multiple of m: roundm($x,$m) is
+the same as round($x/$m)*$m.`,
+		binaryFunc: types.MlrvalRoundm,
+	},
+
+	{
+		name:     "urand",
+		class:    FUNC_CLASS_MATH,
+		zaryFunc: types.MlrvalUrand,
+	},
+
+	{
+		name:  "urandint",
+		class: FUNC_CLASS_MATH,
+		help: `Integer uniformly distributed between inclusive
+integer endpoints.`,
+		binaryFunc: types.MlrvalUrandInt,
+	},
+
+	{
+		name:       "urandrange",
+		class:      FUNC_CLASS_MATH,
+		help:       `Floating-point numbers uniformly distributed on the interval [a, b).`,
+		binaryFunc: types.MlrvalUrandRange,
+	},
+
+	{
+		name:     "urand32",
+		class:    FUNC_CLASS_MATH,
+		zaryFunc: types.MlrvalUrand32,
+	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_TIME
+
 	{
 		name:  "sec2gmt",
 		class: FUNC_CLASS_TIME,
@@ -104,286 +677,29 @@ Leaves non-numbers as-is.`,
 		hasMultipleArities: true,
 	},
 
+	{
+		name:     "systime",
+		class:    FUNC_CLASS_TIME,
+		help:     "help string will go here",
+		zaryFunc: types.MlrvalSystime,
+	},
+
+	{
+		name:     "systimeint",
+		class:    FUNC_CLASS_TIME,
+		help:     "help string will go here",
+		zaryFunc: types.MlrvalSystimeInt,
+	},
+
+	{
+		name:     "uptime",
+		class:    FUNC_CLASS_TIME,
+		help:     "help string will go here",
+		zaryFunc: types.MlrvalUptime,
+	},
+
 	// ----------------------------------------------------------------
-	// Unary built-in functions
-	{
-		name:      "~",
-		class:     FUNC_CLASS_ARITHMETIC,
-		unaryFunc: types.MlrvalBitwiseNOT,
-	},
-	{
-		name:      "!",
-		class:     FUNC_CLASS_ARITHMETIC,
-		unaryFunc: types.MlrvalLogicalNOT,
-	},
-
-	{
-		name:      "abs",
-		class:     FUNC_CLASS_MATH,
-		help:      "Absolute value.",
-		unaryFunc: types.MlrvalAbs,
-	},
-	{
-		name:      "acos",
-		class:     FUNC_CLASS_MATH,
-		help:      "Inverse trigonometric cosine.",
-		unaryFunc: types.MlrvalAcos,
-	},
-	{
-		name:      "acosh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Inverse hyperbolic cosine.",
-		unaryFunc: types.MlrvalAcosh,
-	},
-	{
-		name:      "asin",
-		class:     FUNC_CLASS_MATH,
-		help:      "Inverse trigonometric sine.",
-		unaryFunc: types.MlrvalAsin,
-	},
-	{
-		name:      "asinh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Inverse hyperbolic sine.",
-		unaryFunc: types.MlrvalAsinh,
-	},
-	{
-		name:      "atan",
-		class:     FUNC_CLASS_MATH,
-		help:      "One-argument arctangent.",
-		unaryFunc: types.MlrvalAtan,
-	},
-	{
-		name:      "atanh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Inverse hyperbolic tangent.",
-		unaryFunc: types.MlrvalAtanh,
-	},
-	{
-		name:      "cbrt",
-		class:     FUNC_CLASS_MATH,
-		help:      "Cube root.",
-		unaryFunc: types.MlrvalCbrt,
-	},
-	{
-		name:      "ceil",
-		class:     FUNC_CLASS_MATH,
-		help:      "Ceiling: nearest integer at or above.",
-		unaryFunc: types.MlrvalCeil,
-	},
-	{
-		name:      "cos",
-		class:     FUNC_CLASS_MATH,
-		help:      "Trigonometric cosine.",
-		unaryFunc: types.MlrvalCos,
-	},
-	{
-		name:      "cosh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Hyperbolic cosine.",
-		unaryFunc: types.MlrvalCosh,
-	},
-	{
-		name:      "erf",
-		class:     FUNC_CLASS_MATH,
-		help:      "Error function.",
-		unaryFunc: types.MlrvalErf,
-	},
-	{
-		name:      "erfc",
-		class:     FUNC_CLASS_MATH,
-		help:      "Complementary error function.",
-		unaryFunc: types.MlrvalErfc,
-	},
-	{
-		name:      "exp",
-		class:     FUNC_CLASS_MATH,
-		help:      "Exponential function e**x.",
-		unaryFunc: types.MlrvalExp,
-	},
-	{
-		name:      "expm1",
-		class:     FUNC_CLASS_MATH,
-		help:      "e**x - 1.",
-		unaryFunc: types.MlrvalExpm1,
-	},
-	{
-		name:      "floor",
-		class:     FUNC_CLASS_MATH,
-		help:      "Floor: nearest integer at or below.",
-		unaryFunc: types.MlrvalFloor,
-	},
-	{
-		name:  "invqnorm",
-		class: FUNC_CLASS_MATH,
-		help: `Inverse of normal cumulative distribution function.
-Note that invqorm(urand()) is normally distributed.`,
-		unaryFunc: types.MlrvalInvqnorm,
-	},
-	{
-		name:      "log",
-		class:     FUNC_CLASS_MATH,
-		help:      "Natural (base-e) logarithm.",
-		unaryFunc: types.MlrvalLog,
-	},
-	{
-		name:      "log10",
-		class:     FUNC_CLASS_MATH,
-		help:      "Base-10 logarithm.",
-		unaryFunc: types.MlrvalLog10,
-	},
-	{
-		name:      "log1p",
-		class:     FUNC_CLASS_MATH,
-		help:      "log(1-x).",
-		unaryFunc: types.MlrvalLog1p,
-	},
-	{
-		name:      "qnorm",
-		class:     FUNC_CLASS_MATH,
-		help:      `Normal cumulative distribution function.`,
-		unaryFunc: types.MlrvalQnorm,
-	},
-	{
-		name:      "round",
-		class:     FUNC_CLASS_MATH,
-		help:      "Round to nearest integer.",
-		unaryFunc: types.MlrvalRound,
-	},
-	{
-		name:      "sgn",
-		class:     FUNC_CLASS_MATH,
-		help:      ` +1, 0, -1 for positive, zero, negative input respectively.`,
-		unaryFunc: types.MlrvalSgn,
-	},
-	{
-		name:      "sin",
-		class:     FUNC_CLASS_MATH,
-		help:      "Trigonometric sine.",
-		unaryFunc: types.MlrvalSin,
-	},
-	{
-		name:      "sinh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Hyperbolic sine.",
-		unaryFunc: types.MlrvalSinh,
-	},
-	{
-		name:      "sqrt",
-		class:     FUNC_CLASS_MATH,
-		help:      "Square root.",
-		unaryFunc: types.MlrvalSqrt,
-	},
-	{
-		name:      "tan",
-		class:     FUNC_CLASS_MATH,
-		help:      "Trigonometric tangent.",
-		unaryFunc: types.MlrvalTan,
-	},
-	{
-		name:      "tanh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Hyperbolic tangent.",
-		unaryFunc: types.MlrvalTanh,
-	},
-	{
-		name:      "bitcount",
-		class:     FUNC_CLASS_ARITHMETIC,
-		help:      "Count of 1-bits.",
-		unaryFunc: types.MlrvalBitCount,
-	},
-	{
-		name:      "clean_whitespace",
-		class:     FUNC_CLASS_STRING,
-		help:      "Same as collapse_whitespace and strip.",
-		unaryFunc: types.MlrvalCleanWhitespace,
-	},
-	{
-		name:      "collapse_whitespace",
-		class:     FUNC_CLASS_STRING,
-		help:      "Strip repeated whitespace from string.",
-		unaryFunc: types.MlrvalCollapseWhitespace,
-	},
-	{
-		name:      "length",
-		class:     FUNC_CLASS_COLLECTIONS,
-		help:      "Counts number of top-level entries in array/map. Scalars have length 1.",
-		unaryFunc: types.MlrvalLength,
-	},
-	{
-		name:      "lstrip",
-		class:     FUNC_CLASS_STRING,
-		help:      "Strip leading whitespace from string.",
-		unaryFunc: types.MlrvalLStrip,
-	},
-	{
-		name:      "rstrip",
-		class:     FUNC_CLASS_STRING,
-		help:      "Strip trailing whitespace from string.",
-		unaryFunc: types.MlrvalRStrip,
-	},
-
-	{
-		name:      "string",
-		class:     FUNC_CLASS_CONVERSION,
-		help:      "Convert int/float/bool/string/array/map to string.",
-		unaryFunc: types.MlrvalToString,
-	},
-	{
-		name:      "int",
-		class:     FUNC_CLASS_CONVERSION,
-		help:      "Convert int/float/bool/string to int.",
-		unaryFunc: types.MlrvalToInt,
-	},
-	{
-		name:      "float",
-		class:     FUNC_CLASS_CONVERSION,
-		help:      "Convert int/float/bool/string to float.",
-		unaryFunc: types.MlrvalToFloat,
-	},
-	{
-		name:      "boolean",
-		class:     FUNC_CLASS_CONVERSION,
-		help:      "Convert int/float/bool/string to boolean.",
-		unaryFunc: types.MlrvalToBoolean,
-	},
-	{
-		name:      "hexfmt",
-		class:     FUNC_CLASS_CONVERSION,
-		help:      `Convert int to hex string, e.g. 255 to "0xff".`,
-		unaryFunc: types.MlrvalHexfmt,
-	},
-
-	{
-		name:      "strip",
-		class:     FUNC_CLASS_STRING,
-		help:      "Strip leading and trailing whitespace from string.",
-		unaryFunc: types.MlrvalStrip,
-	},
-	{
-		name:      "strlen",
-		class:     FUNC_CLASS_STRING,
-		help:      "String length.",
-		unaryFunc: types.MlrvalStrlen,
-	},
-	{
-		name:      "tolower",
-		class:     FUNC_CLASS_STRING,
-		help:      "Convert string to lowercase.",
-		unaryFunc: types.MlrvalToLower,
-	},
-	{
-		name:      "toupper",
-		class:     FUNC_CLASS_STRING,
-		help:      "Convert string to uppercase.",
-		unaryFunc: types.MlrvalToUpper,
-	},
-	{
-		name:      "capitalize",
-		class:     FUNC_CLASS_STRING,
-		help:      "Convert string's first character to uppercase.",
-		unaryFunc: types.MlrvalCapitalize,
-	},
+	// FUNC_CLASS_TYPING
 
 	{
 		name:      "is_absent",
@@ -391,108 +707,126 @@ Note that invqorm(urand()) is normally distributed.`,
 		help:      "False if field is present in input, true otherwise",
 		unaryFunc: types.MlrvalIsAbsent,
 	},
-	{
-		name:      "is_error",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if if argument is an error, such as taking string length of an integer.",
-		unaryFunc: types.MlrvalIsError,
-	},
-	{
-		name:      "is_bool",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if field is present with boolean value. Synonymous with is_boolean.",
-		unaryFunc: types.MlrvalIsBool,
-	},
-	{
-		name:      "is_boolean",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if field is present with boolean value. Synonymous with is_bool.",
-		unaryFunc: types.MlrvalIsBoolean,
-	},
-	{
-		name:      "is_empty",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if field is present in input with empty string value, false otherwise.",
-		unaryFunc: types.MlrvalIsEmpty,
-	},
-	{
-		name:      "is_empty_map",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if argument is a map which is empty.",
-		unaryFunc: types.MlrvalIsEmptyMap,
-	},
-	{
-		name:      "is_float",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if field is present with value inferred to be float",
-		unaryFunc: types.MlrvalIsFloat,
-	},
-	{
-		name:      "is_int",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if field is present with value inferred to be int",
-		unaryFunc: types.MlrvalIsInt,
-	},
-	{
-		name:      "is_map",
-		class:     FUNC_CLASS_TYPING,
-		help:      "True if argument is a map.",
-		unaryFunc: types.MlrvalIsMap,
-	},
+
 	{
 		name:      "is_array",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if argument is an array.",
 		unaryFunc: types.MlrvalIsArray,
 	},
+
+	{
+		name:      "is_bool",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if field is present with boolean value. Synonymous with is_boolean.",
+		unaryFunc: types.MlrvalIsBool,
+	},
+
+	{
+		name:      "is_boolean",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if field is present with boolean value. Synonymous with is_bool.",
+		unaryFunc: types.MlrvalIsBoolean,
+	},
+
+	{
+		name:      "is_empty",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if field is present in input with empty string value, false otherwise.",
+		unaryFunc: types.MlrvalIsEmpty,
+	},
+
+	{
+		name:      "is_empty_map",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if argument is a map which is empty.",
+		unaryFunc: types.MlrvalIsEmptyMap,
+	},
+
+	{
+		name:      "is_error",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if if argument is an error, such as taking string length of an integer.",
+		unaryFunc: types.MlrvalIsError,
+	},
+
+	{
+		name:      "is_float",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if field is present with value inferred to be float",
+		unaryFunc: types.MlrvalIsFloat,
+	},
+
+	{
+		name:      "is_int",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if field is present with value inferred to be int",
+		unaryFunc: types.MlrvalIsInt,
+	},
+
+	{
+		name:      "is_map",
+		class:     FUNC_CLASS_TYPING,
+		help:      "True if argument is a map.",
+		unaryFunc: types.MlrvalIsMap,
+	},
+
 	{
 		name:      "is_nonempty_map",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if argument is a map which is non-empty.",
 		unaryFunc: types.MlrvalIsNonEmptyMap,
 	},
+
 	{
 		name:      "is_not_empty",
 		class:     FUNC_CLASS_TYPING,
 		help:      "False if field is present in input with empty value, true otherwise",
 		unaryFunc: types.MlrvalIsNotEmpty,
 	},
+
 	{
 		name:      "is_not_map",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if argument is not a map.",
 		unaryFunc: types.MlrvalIsNotMap,
 	},
+
 	{
 		name:      "is_not_array",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if argument is not an array.",
 		unaryFunc: types.MlrvalIsNotArray,
 	},
+
 	{
 		name:      "is_not_null",
 		class:     FUNC_CLASS_TYPING,
 		help:      "False if argument is null (empty or absent), true otherwise.",
 		unaryFunc: types.MlrvalIsNotNull,
 	},
+
 	{
 		name:      "is_null",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if argument is null (empty or absent), false otherwise.",
 		unaryFunc: types.MlrvalIsNull,
 	},
+
 	{
 		name:      "is_numeric",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if field is present with value inferred to be int or float",
 		unaryFunc: types.MlrvalIsNumeric,
 	},
+
 	{
 		name:      "is_present",
 		class:     FUNC_CLASS_TYPING,
 		help:      "True if field is present in input, false otherwise.",
 		unaryFunc: types.MlrvalIsPresent,
 	},
+
 	{
 		name:      "is_string",
 		class:     FUNC_CLASS_TYPING,
@@ -507,62 +841,7 @@ Note that invqorm(urand()) is normally distributed.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingAbsent,
 	},
-	{
-		name:  "asserting_error",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_error on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingError,
-	},
-	{
-		name:  "asserting_bool",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_bool on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingBool,
-	},
-	{
-		name:  "asserting_boolean",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_boolean on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingBoolean,
-	},
-	{
-		name:  "asserting_empty",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_empty on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingEmpty,
-	},
-	{
-		name:  "asserting_empty_map",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_empty_map on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingEmptyMap,
-	},
-	{
-		name:  "asserting_float",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_float on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingFloat,
-	},
-	{
-		name:  "asserting_int",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_int on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingInt,
-	},
-	{
-		name:  "asserting_map",
-		class: FUNC_CLASS_TYPING,
-		help: `Aborts with an error if is_map on the argument returns false,
-else returns its argument.`,
-		contextualUnaryFunc: types.MlrvalAssertingMap,
-	},
+
 	{
 		name:  "asserting_array",
 		class: FUNC_CLASS_TYPING,
@@ -570,6 +849,71 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingArray,
 	},
+
+	{
+		name:  "asserting_bool",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_bool on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingBool,
+	},
+
+	{
+		name:  "asserting_boolean",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_boolean on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingBoolean,
+	},
+
+	{
+		name:  "asserting_error",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_error on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingError,
+	},
+
+	{
+		name:  "asserting_empty",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_empty on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingEmpty,
+	},
+
+	{
+		name:  "asserting_empty_map",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_empty_map on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingEmptyMap,
+	},
+
+	{
+		name:  "asserting_float",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_float on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingFloat,
+	},
+
+	{
+		name:  "asserting_int",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_int on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingInt,
+	},
+
+	{
+		name:  "asserting_map",
+		class: FUNC_CLASS_TYPING,
+		help: `Aborts with an error if is_map on the argument returns false,
+else returns its argument.`,
+		contextualUnaryFunc: types.MlrvalAssertingMap,
+	},
+
 	{
 		name:  "asserting_nonempty_map",
 		class: FUNC_CLASS_TYPING,
@@ -577,6 +921,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNonEmptyMap,
 	},
+
 	{
 		name:  "asserting_not_empty",
 		class: FUNC_CLASS_TYPING,
@@ -584,6 +929,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNotEmpty,
 	},
+
 	{
 		name:  "asserting_not_map",
 		class: FUNC_CLASS_TYPING,
@@ -591,6 +937,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNotMap,
 	},
+
 	{
 		name:  "asserting_not_array",
 		class: FUNC_CLASS_TYPING,
@@ -598,6 +945,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNotArray,
 	},
+
 	{
 		name:  "asserting_not_null",
 		class: FUNC_CLASS_TYPING,
@@ -605,6 +953,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNotNull,
 	},
+
 	{
 		name:  "asserting_null",
 		class: FUNC_CLASS_TYPING,
@@ -612,6 +961,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNull,
 	},
+
 	{
 		name:  "asserting_numeric",
 		class: FUNC_CLASS_TYPING,
@@ -619,6 +969,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingNumeric,
 	},
+
 	{
 		name:  "asserting_present",
 		class: FUNC_CLASS_TYPING,
@@ -626,6 +977,7 @@ else returns its argument.`,
 else returns its argument.`,
 		contextualUnaryFunc: types.MlrvalAssertingPresent,
 	},
+
 	{
 		name:  "asserting_string",
 		class: FUNC_CLASS_TYPING,
@@ -640,197 +992,24 @@ else returns its argument.`,
 		help:      "Convert argument to type of argument (e.g. \"str\"). For debug.",
 		unaryFunc: types.MlrvalTypeof,
 	},
-	{
-		name:      "depth",
-		class:     FUNC_CLASS_COLLECTIONS,
-		help:      "Prints maximum depth of map/array. Scalars have depth 0.",
-		unaryFunc: types.MlrvalDepth,
-	},
-	{
-		name:  "leafcount",
-		class: FUNC_CLASS_COLLECTIONS,
-		help: `Counts total number of terminal values in map/array. For single-level
-map/array, same as length.`,
-		unaryFunc: types.MlrvalLeafCount,
-	},
-	{
-		name:      "get_keys",
-		class:     FUNC_CLASS_COLLECTIONS,
-		help:      "Returns array of keys of map or array",
-		unaryFunc: types.MlrvalGetKeys,
-	},
-	{
-		name:      "get_values",
-		class:     FUNC_CLASS_COLLECTIONS,
-		help:      "Returns array of keys of map or array -- in the latter case, returns a copy of the array",
-		unaryFunc: types.MlrvalGetValues,
-	},
 
 	// ----------------------------------------------------------------
-	// Binary built-in functions
+	// FUNC_CLASS_CONVERSION
+
 	{
-		name:       ".",
-		class:      FUNC_CLASS_STRING,
-		binaryFunc: types.MlrvalDot,
-	},
-	{
-		name:       "*",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalTimes,
-	},
-	{
-		name:       "/",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalDivide,
-	},
-	{
-		name:       "//",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalIntDivide,
-	},
-	{
-		name:       "**",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalPow,
-	},
-	{
-		name:       "pow",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalPow,
-	},
-	{
-		name:       ".+",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalDotPlus,
-	},
-	{
-		name:       ".-",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalDotMinus,
-	},
-	{
-		name:       ".*",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalDotTimes,
-	},
-	{
-		name:       "./",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalDotDivide,
-	},
-	{
-		name:       "%",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalModulus,
+		name:      "boolean",
+		class:     FUNC_CLASS_CONVERSION,
+		help:      "Convert int/float/bool/string to boolean.",
+		unaryFunc: types.MlrvalToBoolean,
 	},
 
 	{
-		name:       "==",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalEquals,
-	},
-	{
-		name:       "!=",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalNotEquals,
-	},
-	{
-		name:       ">",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalGreaterThan,
-	},
-	{
-		name:       ">=",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalGreaterThanOrEquals,
-	},
-	{
-		name:       "<",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalLessThan,
-	},
-	{
-		name:       "<=",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalLessThanOrEquals,
-	},
-	{
-		name:  "=~",
-		class: FUNC_CLASS_BOOLEAN,
-		help: `String (left-hand side) matches regex (right-hand
-side), e.g. '$name =~ "^a.*b$"'.`,
-		binaryFunc: types.MlrvalStringMatchesRegexp,
-	},
-	{
-		name:  "!=~",
-		class: FUNC_CLASS_BOOLEAN,
-		help: `String (left-hand side) does not match regex (right-hand
-side), e.g. '$name !=~ "^a.*b$"'.`,
-		binaryFunc: types.MlrvalStringDoesNotMatchRegexp,
+		name:      "float",
+		class:     FUNC_CLASS_CONVERSION,
+		help:      "Convert int/float/bool/string to float.",
+		unaryFunc: types.MlrvalToFloat,
 	},
 
-	{
-		name:       "&&",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: BinaryShortCircuitPlaceholder,
-	},
-	{
-		name:       "||",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: BinaryShortCircuitPlaceholder,
-	},
-	{
-		name:       "??",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: BinaryShortCircuitPlaceholder,
-	},
-	{
-		name:       "???",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: BinaryShortCircuitPlaceholder,
-	},
-	{
-		name:       "^^",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalLogicalXOR,
-	},
-	{
-		name:       "&",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalBitwiseAND,
-	},
-	{
-		name:       "|",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalBitwiseOR,
-	},
-	{
-		name:       "^",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: types.MlrvalBitwiseXOR,
-	},
-	{
-		name:       "<<",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalLeftShift,
-	},
-	{
-		name:       ">>",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalSignedRightShift,
-	},
-	{
-		name:       ">>>",
-		class:      FUNC_CLASS_ARITHMETIC,
-		binaryFunc: types.MlrvalUnsignedRightShift,
-	},
-	{
-		name:  "roundm",
-		class: FUNC_CLASS_MATH,
-		help: `Round to nearest multiple of m: roundm($x,$m) is
-the same as round($x/$m)*$m.`,
-		binaryFunc: types.MlrvalRoundm,
-	},
 	{
 		name:  "fmtnum",
 		class: FUNC_CLASS_CONVERSION,
@@ -840,37 +1019,17 @@ printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.`,
 	},
 
 	{
-		name:  "urandint",
-		class: FUNC_CLASS_MATH,
-		help: `Integer uniformly distributed between inclusive
-integer endpoints.`,
-		binaryFunc: types.MlrvalUrandInt,
-	},
-	{
-		name:       "urandrange",
-		class:      FUNC_CLASS_MATH,
-		help:       `Floating-point numbers uniformly distributed on the interval [a, b).`,
-		binaryFunc: types.MlrvalUrandRange,
+		name:      "hexfmt",
+		class:     FUNC_CLASS_CONVERSION,
+		help:      `Convert int to hex string, e.g. 255 to "0xff".`,
+		unaryFunc: types.MlrvalHexfmt,
 	},
 
 	{
-		name:       "atan2",
-		class:      FUNC_CLASS_MATH,
-		help:       "Two-argument arctangent.",
-		binaryFunc: types.MlrvalAtan2,
-	},
-	{
-		name:       "truncate",
-		class:      FUNC_CLASS_STRING,
-		binaryFunc: types.MlrvalTruncate,
-	},
-	{
-		name:  "haskey",
-		class: FUNC_CLASS_COLLECTIONS,
-		help: `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
-Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.`,
-		binaryFunc: types.MlrvalHasKey,
+		name:      "int",
+		class:     FUNC_CLASS_CONVERSION,
+		help:      "Convert int/float/bool/string to int.",
+		unaryFunc: types.MlrvalToInt,
 	},
 
 	{
@@ -881,6 +1040,7 @@ joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
 joink([1,2,3], ",") = "1,2,3".`,
 		binaryFunc: types.MlrvalJoinK,
 	},
+
 	{
 		name:  "joinv",
 		class: FUNC_CLASS_CONVERSION,
@@ -889,97 +1049,7 @@ joinv([3,4,5], ",") = "3,4,5"
 joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
 		binaryFunc: types.MlrvalJoinV,
 	},
-	{
-		name:  "splita",
-		class: FUNC_CLASS_CONVERSION,
-		help: `Splits string into array with type inference. Example:
-splita("3,4,5", ",") = [3,4,5]`,
-		binaryFunc: types.MlrvalSplitA,
-	},
-	{
-		name:  "splitax",
-		class: FUNC_CLASS_CONVERSION,
-		help: `Splits string into array without type inference. Example:
-splita("3,4,5", ",") = ["3","4","5"]`,
-		binaryFunc: types.MlrvalSplitAX,
-	},
-	{
-		name:       "append",
-		class:      FUNC_CLASS_COLLECTIONS,
-		help:       "Appends second argument to end of first argument, which must be an array.",
-		binaryFunc: types.MlrvalAppend,
-	},
 
-	//pow (class=math #args=2): Exponentiation; same as **.
-	//roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
-	//urandrange (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
-	//urandint (class=math #args=2): Integer uniformly distributed between inclusive
-	//atan2 (class=math #args=2): Two-argument arctangent.
-
-	// Ternary built-in functions
-	//logifit (class=math #args=3): Given m and b from logistic regression, compute
-	//madd (class=math #args=3): a + b mod m (integers)
-	//mexp (class=math #args=3): a ** b mod m (integers)
-	//mmul (class=math #args=3): a * b mod m (integers)
-	//msub (class=math #args=3): a - b mod m (integers)
-	{
-		name:        "?:",
-		class:       FUNC_CLASS_BOOLEAN,
-		ternaryFunc: TernaryShortCircuitPlaceholder,
-	},
-	{
-		name:        "ssub",
-		class:       FUNC_CLASS_STRING,
-		ternaryFunc: types.MlrvalSsub,
-	},
-	{
-		name:        "sub",
-		class:       FUNC_CLASS_STRING,
-		ternaryFunc: types.MlrvalSub,
-	},
-	{
-		name:        "gsub",
-		class:       FUNC_CLASS_STRING,
-		ternaryFunc: types.MlrvalGsub,
-	},
-	{
-		name:  "substr",
-		class: FUNC_CLASS_STRING,
-		help: `substr(s,m,n) gives substring of s from 1-up position m to n
-inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
-		ternaryFunc: types.MlrvalSubstr,
-	},
-	{
-		name:        "madd",
-		class:       FUNC_CLASS_ARITHMETIC,
-		help:        `a + b mod m (integers)`,
-		ternaryFunc: types.MlrvalModAdd,
-	},
-	{
-		name:        "msub",
-		class:       FUNC_CLASS_ARITHMETIC,
-		help:        `a - b mod m (integers)`,
-		ternaryFunc: types.MlrvalModSub,
-	},
-	{
-		name:        "mmul",
-		class:       FUNC_CLASS_ARITHMETIC,
-		help:        `a * b mod m (integers)`,
-		ternaryFunc: types.MlrvalModMul,
-	},
-	{
-		name:        "mexp",
-		class:       FUNC_CLASS_ARITHMETIC,
-		help:        `a ** b mod m (integers)`,
-		ternaryFunc: types.MlrvalModExp,
-	},
-	{
-		name:  "logifit",
-		class: FUNC_CLASS_MATH,
-		help: ` Given m and b from logistic regression, compute fit:
-$yhat=logifit($x,$m,$b).`,
-		ternaryFunc: types.MlrvalLogifit,
-	},
 	{
 		name:  "joinkv",
 		class: FUNC_CLASS_CONVERSION,
@@ -990,12 +1060,29 @@ joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
 	},
 
 	{
+		name:  "splita",
+		class: FUNC_CLASS_CONVERSION,
+		help: `Splits string into array with type inference. Example:
+splita("3,4,5", ",") = [3,4,5]`,
+		binaryFunc: types.MlrvalSplitA,
+	},
+
+	{
+		name:  "splitax",
+		class: FUNC_CLASS_CONVERSION,
+		help: `Splits string into array without type inference. Example:
+splita("3,4,5", ",") = ["3","4","5"]`,
+		binaryFunc: types.MlrvalSplitAX,
+	},
+
+	{
 		name:  "splitkv",
 		class: FUNC_CLASS_CONVERSION,
 		help: `Splits string by separators into map with type inference. Example:
 splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
 		ternaryFunc: types.MlrvalSplitKV,
 	},
+
 	{
 		name:  "splitkvx",
 		class: FUNC_CLASS_CONVERSION,
@@ -1004,6 +1091,7 @@ values are strings). Example:
 splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
 		ternaryFunc: types.MlrvalSplitKVX,
 	},
+
 	{
 		name:  "splitnv",
 		class: FUNC_CLASS_CONVERSION,
@@ -1011,6 +1099,7 @@ splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
 splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
 		binaryFunc: types.MlrvalSplitNV,
 	},
+
 	{
 		name:  "splitnvx",
 		class: FUNC_CLASS_CONVERSION,
@@ -1020,16 +1109,86 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 		binaryFunc: types.MlrvalSplitNVX,
 	},
 
-	// Variadic built-in functions
 	{
-		name:         "max",
-		class:        FUNC_CLASS_MATH,
-		variadicFunc: types.MlrvalVariadicMax,
+		name:      "string",
+		class:     FUNC_CLASS_CONVERSION,
+		help:      "Convert int/float/bool/string/array/map to string.",
+		unaryFunc: types.MlrvalToString,
 	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_COLLECTIONS
+
 	{
-		name:         "min",
-		class:        FUNC_CLASS_MATH,
-		variadicFunc: types.MlrvalVariadicMin,
+		name:       "append",
+		class:      FUNC_CLASS_COLLECTIONS,
+		help:       "Appends second argument to end of first argument, which must be an array.",
+		binaryFunc: types.MlrvalAppend,
+	},
+
+	{
+		name:      "depth",
+		class:     FUNC_CLASS_COLLECTIONS,
+		help:      "Prints maximum depth of map/array. Scalars have depth 0.",
+		unaryFunc: types.MlrvalDepth,
+	},
+
+	{
+		name:      "get_keys",
+		class:     FUNC_CLASS_COLLECTIONS,
+		help:      "Returns array of keys of map or array",
+		unaryFunc: types.MlrvalGetKeys,
+	},
+
+	{
+		name:      "get_values",
+		class:     FUNC_CLASS_COLLECTIONS,
+		help:      "Returns array of keys of map or array -- in the latter case, returns a copy of the array",
+		unaryFunc: types.MlrvalGetValues,
+	},
+
+	{
+		name:  "haskey",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
+Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.`,
+		binaryFunc: types.MlrvalHasKey,
+	},
+
+	{
+		name:  "leafcount",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `Counts total number of terminal values in map/array. For single-level
+map/array, same as length.`,
+		unaryFunc: types.MlrvalLeafCount,
+	},
+
+	{
+		name:      "length",
+		class:     FUNC_CLASS_COLLECTIONS,
+		help:      "Counts number of top-level entries in array/map. Scalars have length 1.",
+		unaryFunc: types.MlrvalLength,
+	},
+
+	{
+		name:  "mapdiff",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `With 0 args, returns empty map. With 1 arg, returns copy of arg.
+With 2 or more, returns copy of arg 1 with all keys from any of remaining
+argument maps removed.`,
+		variadicFunc: types.MlrvalMapDiff,
+	},
+
+	{
+		name:  "mapexcept",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `Returns a map with keys from remaining arguments, if any, unset.
+Remaining arguments can be strings or arrays of string.
+E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
+and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
+		variadicFunc:         types.MlrvalMapExcept,
+		minimumVariadicArity: 1,
 	},
 
 	{
@@ -1042,16 +1201,7 @@ and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
 		variadicFunc:         types.MlrvalMapSelect,
 		minimumVariadicArity: 1,
 	},
-	{
-		name:  "mapexcept",
-		class: FUNC_CLASS_COLLECTIONS,
-		help: `Returns a map with keys from remaining arguments, if any, unset.
-Remaining arguments can be strings or arrays of string.
-E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
-and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
-		variadicFunc:         types.MlrvalMapExcept,
-		minimumVariadicArity: 1,
-	},
+
 	{
 		name:  "mapsum",
 		class: FUNC_CLASS_COLLECTIONS,
@@ -1059,14 +1209,6 @@ and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
 key-value pairs from all arguments. Rightmost collisions win, e.g.
 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
 		variadicFunc: types.MlrvalMapSum,
-	},
-	{
-		name:  "mapdiff",
-		class: FUNC_CLASS_COLLECTIONS,
-		help: `With 0 args, returns empty map. With 1 arg, returns copy of arg.
-With 2 or more, returns copy of arg 1 with all keys from any of remaining
-argument maps removed.`,
-		variadicFunc: types.MlrvalMapDiff,
 	},
 }
 
