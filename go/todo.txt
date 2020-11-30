@@ -1,8 +1,6 @@
+-- commit to trigger readthedocs build --
 ----------------------------------------------------------------
 TOP OF LIST:
-
-! 5.10.0 !
-! fix release-docs foo
 
 ! gating after: 'int x = 1; x = "abc"'
 
