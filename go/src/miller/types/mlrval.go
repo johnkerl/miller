@@ -100,7 +100,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"error",
 	"absent",
 	"void",
-	"str",
+	"string",
 	"int",
 	"float",
 	"bool",

@@ -4,9 +4,6 @@ BUG:
 rrv ./reg-test/cases/case-c-dsl-mapvar-assignments.sh
 * probably buggy in the C impl
 
-rrv ./reg-test/cases/case-c-dsl-split-join.sh
-* splitnv narg 2 vs 3 ?!?
-
 rrv ./reg-test/cases/case-c-dsl-forbind-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-localvar-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-local-map-variable-typedecl.sh
@@ -16,11 +13,6 @@ rrv ./reg-test/cases/case-c-dsl-argpass-typedecl.sh
 rrv ./reg-test/cases/case-c-dsl-triple-for-loops.sh
 * Needs to do this:
   "Continuation statements are split into the final boolean, and the statements before (if any)."
-
-================================================================
-MULTIPLE ISSUES:
-
-* typeof prints different things -- regularize ...
 
 ================================================================
 LF/CRLF ETC.
