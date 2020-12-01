@@ -69,6 +69,7 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	{
 		name:       "*",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Multiplication, with integer*integer overflow to float.`,
 		binaryFunc: types.MlrvalTimes,
 	},
 
@@ -222,9 +223,11 @@ regex-match operator: try '$y = ~$x'.`,
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_BOOLEAN
+
 	{
 		name:      "!",
 		class:     FUNC_CLASS_BOOLEAN,
+		help:      `Logical negation.`,
 		unaryFunc: types.MlrvalLogicalNOT,
 	},
 
@@ -245,12 +248,14 @@ regex-match operator: try '$y = ~$x'.`,
 
 	{
 		name:       ">",
+		help:       `String/numeric greater-than. Mixing number and string results in string compare.`,
 		class:      FUNC_CLASS_BOOLEAN,
 		binaryFunc: types.MlrvalGreaterThan,
 	},
 
 	{
 		name:       ">=",
+		help:       `String/numeric greater-than-or-equals. Mixing number and string results in string compare.`,
 		class:      FUNC_CLASS_BOOLEAN,
 		binaryFunc: types.MlrvalGreaterThanOrEquals,
 	},
@@ -258,12 +263,14 @@ regex-match operator: try '$y = ~$x'.`,
 	{
 		name:       "<",
 		class:      FUNC_CLASS_BOOLEAN,
+		help:       `String/numeric less-than. Mixing number and string results in string compare.`,
 		binaryFunc: types.MlrvalLessThan,
 	},
 
 	{
 		name:       "<=",
 		class:      FUNC_CLASS_BOOLEAN,
+		help:       `String/numeric less-than-or-equals. Mixing number and string results in string compare.`,
 		binaryFunc: types.MlrvalLessThanOrEquals,
 	},
 
@@ -323,28 +330,18 @@ regex-match operator: try '$y = ~$x'.`,
 		ternaryFunc: TernaryShortCircuitPlaceholder,
 	},
 
-	// TODO: fold these in ...
-
-	// > (class=boolean #args=2): help: `String/numeric greater-than. Mixing number and string
-	// results in string compare.`,
-
-	// >= (class=boolean #args=2): help: `String/numeric greater-than-or-equals. Mixing number
-	// and string results in string compare.`,
-
-	// < (class=boolean #args=2): help: `String/numeric less-than. Mixing number and string
-	// results in string compare.`,
-
-	// <= (class=boolean #args=2): help: `String/numeric less-than-or-equals. Mixing number
-	// and string results in string compare.`,
-
-	// ! (class=boolean #args=1): help: `Logical negation.`,
-
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_STRING
+
+	// TODO:
+	// regextract : help: `Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'`,
+	// regextract_or_else : help: `Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'`,
+	// system : help: `Run command string, yielding its stdout minus final carriage return.
 
 	{
 		name:       ".",
 		class:      FUNC_CLASS_STRING,
+		help:       `String concatenation.`,
 		binaryFunc: types.MlrvalDot,
 	},
 
@@ -372,6 +369,7 @@ regex-match operator: try '$y = ~$x'.`,
 	{
 		name:        "gsub",
 		class:       FUNC_CLASS_STRING,
+		help:        `Example: '$name=gsub($name, "old", "new")' (replace all).`,
 		ternaryFunc: types.MlrvalGsub,
 	},
 
@@ -406,12 +404,14 @@ regex-match operator: try '$y = ~$x'.`,
 	{
 		name:        "ssub",
 		class:       FUNC_CLASS_STRING,
+		help:        `Like sub but does no regexing. No characters are special.`,
 		ternaryFunc: types.MlrvalSsub,
 	},
 
 	{
 		name:        "sub",
 		class:       FUNC_CLASS_STRING,
+		help:        `Example: '$name=sub($name, "old", "new")' (replace once).`,
 		ternaryFunc: types.MlrvalSub,
 	},
 
@@ -440,49 +440,9 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 	{
 		name:       "truncate",
 		class:      FUNC_CLASS_STRING,
+		help:       `Truncates string first argument to max length of int second argument.`,
 		binaryFunc: types.MlrvalTruncate,
 	},
-
-	// . (class=string #args=2): String concatenation.
-	//
-	// gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
-	// (replace all).
-	//
-	// regextract (class=string #args=2): Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
-	// .
-	//
-	// regextract_or_else (class=string #args=3): Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
-	// .
-	//
-	// strlen (class=string #args=1): String length.
-	//
-	// sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
-	// (replace once).
-	//
-	// ssub (class=string #args=3): Like sub but does no regexing. No characters are special.
-	//
-	// substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n
-	// inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
-	//
-	// tolower (class=string #args=1): Convert string to lowercase.
-	//
-	// toupper (class=string #args=1): Convert string to uppercase.
-	//
-	// truncate (class=string #args=2): Truncates string first argument to max length of int second argument.
-	//
-	// capitalize (class=string #args=1): Convert string's first character to uppercase.
-	//
-	// lstrip (class=string #args=1): Strip leading whitespace from string.
-	//
-	// rstrip (class=string #args=1): Strip trailing whitespace from string.
-	//
-	// strip (class=string #args=1): Strip leading and trailing whitespace from string.
-	//
-	// collapse_whitespace (class=string #args=1): Strip repeated whitespace from string.
-	//
-	// clean_whitespace (class=string #args=1): Same as collapse_whitespace and strip.
-	//
-	// system (class=string #args=1): Run command string, yielding its stdout minus final carriage return.
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_MATH
@@ -530,17 +490,17 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 	},
 
 	{
-		name:      "atanh",
-		class:     FUNC_CLASS_MATH,
-		help:      "Inverse hyperbolic tangent.",
-		unaryFunc: types.MlrvalAtanh,
-	},
-
-	{
 		name:       "atan2",
 		class:      FUNC_CLASS_MATH,
 		help:       "Two-argument arctangent.",
 		binaryFunc: types.MlrvalAtan2,
+	},
+
+	{
+		name:      "atanh",
+		class:     FUNC_CLASS_MATH,
+		help:      "Inverse hyperbolic tangent.",
+		unaryFunc: types.MlrvalAtanh,
 	},
 
 	{
@@ -646,12 +606,14 @@ $yhat=logifit($x,$m,$b).`,
 	{
 		name:         "max",
 		class:        FUNC_CLASS_MATH,
+		help:         `Max of n numbers; null loses.`,
 		variadicFunc: types.MlrvalVariadicMax,
 	},
 
 	{
 		name:         "min",
 		class:        FUNC_CLASS_MATH,
+		help:         `Min of n numbers; null loses.`,
 		variadicFunc: types.MlrvalVariadicMin,
 	},
 
@@ -720,16 +682,17 @@ the same as round($x/$m)*$m.`,
 	},
 
 	{
-		name:     "urand",
-		class:    FUNC_CLASS_MATH,
+		name:  "urand",
+		class: FUNC_CLASS_MATH,
+		help: `Floating-point numbers uniformly distributed on the unit interval.
+Int-valued example: '$n=floor(20+urand()*11)'.`,
 		zaryFunc: types.MlrvalUrand,
 	},
 
 	{
-		name:  "urandint",
-		class: FUNC_CLASS_MATH,
-		help: `Integer uniformly distributed between inclusive
-integer endpoints.`,
+		name:       "urandint",
+		class:      FUNC_CLASS_MATH,
+		help:       `Integer uniformly distributed between inclusive integer endpoints.`,
 		binaryFunc: types.MlrvalUrandInt,
 	},
 
@@ -743,99 +706,9 @@ integer endpoints.`,
 	{
 		name:     "urand32",
 		class:    FUNC_CLASS_MATH,
+		help:     `Integer uniformly distributed 0 and 2**32-1 inclusive.`,
 		zaryFunc: types.MlrvalUrand32,
 	},
-
-	// abs (class=math #args=1): Absolute value.
-	//
-	// acos (class=math #args=1): Inverse trigonometric cosine.
-	//
-	// acosh (class=math #args=1): Inverse hyperbolic cosine.
-	//
-	// asin (class=math #args=1): Inverse trigonometric sine.
-	//
-	// asinh (class=math #args=1): Inverse hyperbolic sine.
-	//
-	// atan (class=math #args=1): One-argument arctangent.
-	//
-	// atan2 (class=math #args=2): Two-argument arctangent.
-	//
-	// atanh (class=math #args=1): Inverse hyperbolic tangent.
-	//
-	// cbrt (class=math #args=1): Cube root.
-	//
-	// ceil (class=math #args=1): Ceiling: nearest integer at or above.
-	//
-	// cos (class=math #args=1): Trigonometric cosine.
-	//
-	// cosh (class=math #args=1): Hyperbolic cosine.
-	//
-	// erf (class=math #args=1): Error function.
-	//
-	// erfc (class=math #args=1): Complementary error function.
-	//
-	// exp (class=math #args=1): Exponential function e**x.
-	//
-	// expm1 (class=math #args=1): e**x - 1.
-	//
-	// floor (class=math #args=1): Floor: nearest integer at or below.
-	//
-	// invqnorm (class=math #args=1): Inverse of normal cumulative distribution
-	// function. Note that invqorm(urand()) is normally distributed.
-	//
-	// log (class=math #args=1): Natural (base-e) logarithm.
-	//
-	// log10 (class=math #args=1): Base-10 logarithm.
-	//
-	// log1p (class=math #args=1): log(1-x).
-	//
-	// logifit (class=math #args=3): Given m and b from logistic regression, compute
-	// fit: $yhat=logifit($x,$m,$b).
-	//
-	// madd (class=math #args=3): a + b mod m (integers)
-	//
-	// max (class=math variadic): max of n numbers; null loses
-	//
-	// mexp (class=math #args=3): a ** b mod m (integers)
-	//
-	// min (class=math variadic): Min of n numbers; null loses
-	//
-	// mmul (class=math #args=3): a * b mod m (integers)
-	//
-	// msub (class=math #args=3): a - b mod m (integers)
-	//
-	// pow (class=math #args=2): Exponentiation; same as **.
-	//
-	// qnorm (class=math #args=1): Normal cumulative distribution function.
-	//
-	// round (class=math #args=1): Round to nearest integer.
-	//
-	// roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
-	// the same as round($x/$m)*$m
-	//
-	// sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
-	// negative input.
-	//
-	// sin (class=math #args=1): Trigonometric sine.
-	//
-	// sinh (class=math #args=1): Hyperbolic sine.
-	//
-	// sqrt (class=math #args=1): Square root.
-	//
-	// tan (class=math #args=1): Trigonometric tangent.
-	//
-	// tanh (class=math #args=1): Hyperbolic tangent.
-	//
-	// urand (class=math #args=0): Floating-point numbers uniformly distributed on the unit interval.
-	// Int-valued example: '$n=floor(20+urand()*11)'.
-	//
-	// urandrange (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
-	//
-	// urand32 (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
-	// inclusive.
-	//
-	// urandint (class=math #args=2): Integer uniformly distributed between inclusive
-	// integer endpoints.
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_TIME
@@ -871,6 +744,8 @@ Leaves non-numbers as-is.`,
 		help:     "help string will go here",
 		zaryFunc: types.MlrvalUptime,
 	},
+
+	// TODO:
 
 	// dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
 	// dhms2fsec("5d18h53m20.250000s") = 500000.250000
@@ -1651,6 +1526,7 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 		if i > 0 {
 			fmt.Fprintln(o)
 		}
+		lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
 		fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.class,
