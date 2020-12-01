@@ -51,6 +51,7 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	{
 		name:               "+",
 		class:              FUNC_CLASS_ARITHMETIC,
+		help:               `Addition as binary operator; unary plus operator.`,
 		unaryFunc:          types.MlrvalUnaryPlus,
 		binaryFunc:         types.MlrvalBinaryPlus,
 		hasMultipleArities: true,
@@ -59,6 +60,7 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	{
 		name:               "-",
 		class:              FUNC_CLASS_ARITHMETIC,
+		help:               `Subtraction as binary operator; unary negation operator.`,
 		unaryFunc:          types.MlrvalUnaryMinus,
 		binaryFunc:         types.MlrvalBinaryMinus,
 		hasMultipleArities: true,
@@ -73,77 +75,91 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	{
 		name:       "/",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Division. Integer / integer is floating-point.`,
 		binaryFunc: types.MlrvalDivide,
 	},
 
 	{
 		name:       "//",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Pythonic integer division, rounding toward negative.`,
 		binaryFunc: types.MlrvalIntDivide,
 	},
 
 	{
 		name:       "**",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Exponentiation. Same as pow, but as an infix operator.`,
 		binaryFunc: types.MlrvalPow,
 	},
 
 	{
 		name:       "pow",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Exponentiation. Same as **, but as a function.`,
 		binaryFunc: types.MlrvalPow,
 	},
 
 	{
 		name:       ".+",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Addition, with integer-to-integer overflow.`,
 		binaryFunc: types.MlrvalDotPlus,
 	},
 
 	{
 		name:       ".-",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Subtraction, with integer-to-integer overflow.`,
 		binaryFunc: types.MlrvalDotMinus,
 	},
 
 	{
 		name:       ".*",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Multiplication, with integer-to-integer overflow.`,
 		binaryFunc: types.MlrvalDotTimes,
 	},
 
 	{
 		name:       "./",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Integer division; not pythonic.`,
 		binaryFunc: types.MlrvalDotDivide,
 	},
 
 	{
 		name:       "%",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Remainder; never negative-valued (pythonic).`,
 		binaryFunc: types.MlrvalModulus,
 	},
 
 	{
-		name:      "~",
-		class:     FUNC_CLASS_ARITHMETIC,
+		name:  "~",
+		class: FUNC_CLASS_ARITHMETIC,
+		help: `Bitwise NOT. Beware '$y=~$x' since =~ is the
+regex-match operator: try '$y = ~$x'.`,
 		unaryFunc: types.MlrvalBitwiseNOT,
 	},
 
 	{
 		name:       "&",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Bitwise AND.`,
 		binaryFunc: types.MlrvalBitwiseAND,
 	},
 
 	{
 		name:       "|",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Bitwise OR.`,
 		binaryFunc: types.MlrvalBitwiseOR,
 	},
 
 	{
 		name:       "^",
+		help:       `Bitwise XOR.`,
 		class:      FUNC_CLASS_ARITHMETIC,
 		binaryFunc: types.MlrvalBitwiseXOR,
 	},
@@ -151,18 +167,21 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	{
 		name:       "<<",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Bitwise left-shift.`,
 		binaryFunc: types.MlrvalLeftShift,
 	},
 
 	{
 		name:       ">>",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Bitwise signed right-shift.`,
 		binaryFunc: types.MlrvalSignedRightShift,
 	},
 
 	{
 		name:       ">>>",
 		class:      FUNC_CLASS_ARITHMETIC,
+		help:       `Bitwise unsigned right-shift.`,
 		binaryFunc: types.MlrvalUnsignedRightShift,
 	},
 
@@ -210,14 +229,17 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	},
 
 	{
-		name:       "==",
-		class:      FUNC_CLASS_BOOLEAN,
+		name:  "==",
+		class: FUNC_CLASS_BOOLEAN,
+
+		help:       `String/numeric equality. Mixing number and string results in string compare.`,
 		binaryFunc: types.MlrvalEquals,
 	},
 
 	{
 		name:       "!=",
 		class:      FUNC_CLASS_BOOLEAN,
+		help:       `String/numeric inequality. Mixing number and string results in string compare.`,
 		binaryFunc: types.MlrvalNotEquals,
 	},
 
@@ -246,56 +268,76 @@ var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 	},
 
 	{
-		name:  "=~",
-		class: FUNC_CLASS_BOOLEAN,
-		help: `String (left-hand side) matches regex (right-hand
-side), e.g. '$name =~ "^a.*b$"'.`,
+		name:       "=~",
+		class:      FUNC_CLASS_BOOLEAN,
+		help:       `String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.`,
 		binaryFunc: types.MlrvalStringMatchesRegexp,
 	},
 
 	{
-		name:  "!=~",
-		class: FUNC_CLASS_BOOLEAN,
-		help: `String (left-hand side) does not match regex (right-hand
-side), e.g. '$name !=~ "^a.*b$"'.`,
+		name:       "!=~",
+		class:      FUNC_CLASS_BOOLEAN,
+		help:       `String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.`,
 		binaryFunc: types.MlrvalStringDoesNotMatchRegexp,
 	},
 
 	{
 		name:       "&&",
 		class:      FUNC_CLASS_BOOLEAN,
+		help:       `Logical AND.`,
 		binaryFunc: BinaryShortCircuitPlaceholder,
 	},
 
 	{
 		name:       "||",
 		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: BinaryShortCircuitPlaceholder,
-	},
-
-	{
-		name:       "??",
-		class:      FUNC_CLASS_BOOLEAN,
-		binaryFunc: BinaryShortCircuitPlaceholder,
-	},
-
-	{
-		name:       "???",
-		class:      FUNC_CLASS_BOOLEAN,
+		help:       `Logical OR.`,
 		binaryFunc: BinaryShortCircuitPlaceholder,
 	},
 
 	{
 		name:       "^^",
 		class:      FUNC_CLASS_BOOLEAN,
+		help:       `Logical XOR.`,
 		binaryFunc: types.MlrvalLogicalXOR,
+	},
+
+	{
+		name:       "??",
+		class:      FUNC_CLASS_BOOLEAN,
+		help:       `Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.`,
+		binaryFunc: BinaryShortCircuitPlaceholder,
+	},
+
+	{
+		name:       "???",
+		class:      FUNC_CLASS_BOOLEAN,
+		help:       `Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.`,
+		binaryFunc: BinaryShortCircuitPlaceholder,
 	},
 
 	{
 		name:        "?:",
 		class:       FUNC_CLASS_BOOLEAN,
+		help:        `Standard ternary operator.`,
 		ternaryFunc: TernaryShortCircuitPlaceholder,
 	},
+
+	// TODO: fold these in ...
+
+	// > (class=boolean #args=2): help: `String/numeric greater-than. Mixing number and string
+	// results in string compare.`,
+
+	// >= (class=boolean #args=2): help: `String/numeric greater-than-or-equals. Mixing number
+	// and string results in string compare.`,
+
+	// < (class=boolean #args=2): help: `String/numeric less-than. Mixing number and string
+	// results in string compare.`,
+
+	// <= (class=boolean #args=2): help: `String/numeric less-than-or-equals. Mixing number
+	// and string results in string compare.`,
+
+	// ! (class=boolean #args=1): help: `Logical negation.`,
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_STRING
@@ -400,6 +442,47 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 		class:      FUNC_CLASS_STRING,
 		binaryFunc: types.MlrvalTruncate,
 	},
+
+	// . (class=string #args=2): String concatenation.
+	//
+	// gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
+	// (replace all).
+	//
+	// regextract (class=string #args=2): Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
+	// .
+	//
+	// regextract_or_else (class=string #args=3): Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
+	// .
+	//
+	// strlen (class=string #args=1): String length.
+	//
+	// sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
+	// (replace once).
+	//
+	// ssub (class=string #args=3): Like sub but does no regexing. No characters are special.
+	//
+	// substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n
+	// inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+	//
+	// tolower (class=string #args=1): Convert string to lowercase.
+	//
+	// toupper (class=string #args=1): Convert string to uppercase.
+	//
+	// truncate (class=string #args=2): Truncates string first argument to max length of int second argument.
+	//
+	// capitalize (class=string #args=1): Convert string's first character to uppercase.
+	//
+	// lstrip (class=string #args=1): Strip leading whitespace from string.
+	//
+	// rstrip (class=string #args=1): Strip trailing whitespace from string.
+	//
+	// strip (class=string #args=1): Strip leading and trailing whitespace from string.
+	//
+	// collapse_whitespace (class=string #args=1): Strip repeated whitespace from string.
+	//
+	// clean_whitespace (class=string #args=1): Same as collapse_whitespace and strip.
+	//
+	// system (class=string #args=1): Run command string, yielding its stdout minus final carriage return.
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_MATH
@@ -663,6 +746,97 @@ integer endpoints.`,
 		zaryFunc: types.MlrvalUrand32,
 	},
 
+	// abs (class=math #args=1): Absolute value.
+	//
+	// acos (class=math #args=1): Inverse trigonometric cosine.
+	//
+	// acosh (class=math #args=1): Inverse hyperbolic cosine.
+	//
+	// asin (class=math #args=1): Inverse trigonometric sine.
+	//
+	// asinh (class=math #args=1): Inverse hyperbolic sine.
+	//
+	// atan (class=math #args=1): One-argument arctangent.
+	//
+	// atan2 (class=math #args=2): Two-argument arctangent.
+	//
+	// atanh (class=math #args=1): Inverse hyperbolic tangent.
+	//
+	// cbrt (class=math #args=1): Cube root.
+	//
+	// ceil (class=math #args=1): Ceiling: nearest integer at or above.
+	//
+	// cos (class=math #args=1): Trigonometric cosine.
+	//
+	// cosh (class=math #args=1): Hyperbolic cosine.
+	//
+	// erf (class=math #args=1): Error function.
+	//
+	// erfc (class=math #args=1): Complementary error function.
+	//
+	// exp (class=math #args=1): Exponential function e**x.
+	//
+	// expm1 (class=math #args=1): e**x - 1.
+	//
+	// floor (class=math #args=1): Floor: nearest integer at or below.
+	//
+	// invqnorm (class=math #args=1): Inverse of normal cumulative distribution
+	// function. Note that invqorm(urand()) is normally distributed.
+	//
+	// log (class=math #args=1): Natural (base-e) logarithm.
+	//
+	// log10 (class=math #args=1): Base-10 logarithm.
+	//
+	// log1p (class=math #args=1): log(1-x).
+	//
+	// logifit (class=math #args=3): Given m and b from logistic regression, compute
+	// fit: $yhat=logifit($x,$m,$b).
+	//
+	// madd (class=math #args=3): a + b mod m (integers)
+	//
+	// max (class=math variadic): max of n numbers; null loses
+	//
+	// mexp (class=math #args=3): a ** b mod m (integers)
+	//
+	// min (class=math variadic): Min of n numbers; null loses
+	//
+	// mmul (class=math #args=3): a * b mod m (integers)
+	//
+	// msub (class=math #args=3): a - b mod m (integers)
+	//
+	// pow (class=math #args=2): Exponentiation; same as **.
+	//
+	// qnorm (class=math #args=1): Normal cumulative distribution function.
+	//
+	// round (class=math #args=1): Round to nearest integer.
+	//
+	// roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
+	// the same as round($x/$m)*$m
+	//
+	// sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
+	// negative input.
+	//
+	// sin (class=math #args=1): Trigonometric sine.
+	//
+	// sinh (class=math #args=1): Hyperbolic sine.
+	//
+	// sqrt (class=math #args=1): Square root.
+	//
+	// tan (class=math #args=1): Trigonometric tangent.
+	//
+	// tanh (class=math #args=1): Hyperbolic tangent.
+	//
+	// urand (class=math #args=0): Floating-point numbers uniformly distributed on the unit interval.
+	// Int-valued example: '$n=floor(20+urand()*11)'.
+	//
+	// urandrange (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
+	//
+	// urand32 (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
+	// inclusive.
+	//
+	// urandint (class=math #args=2): Integer uniformly distributed between inclusive
+	// integer endpoints.
+
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_TIME
 
@@ -697,6 +871,80 @@ Leaves non-numbers as-is.`,
 		help:     "help string will go here",
 		zaryFunc: types.MlrvalUptime,
 	},
+
+	// dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
+	// dhms2fsec("5d18h53m20.250000s") = 500000.250000
+	//
+	// dhms2sec (class=time #args=1): Recovers integer seconds as in
+	// dhms2sec("5d18h53m20s") = 500000
+	//
+	// fsec2dhms (class=time #args=1): Formats floating-point seconds as in
+	// fsec2dhms(500000.25) = "5d18h53m20.250000s"
+	//
+	// fsec2hms (class=time #args=1): Formats floating-point seconds as in
+	// fsec2hms(5000.25) = "01:23:20.250000"
+	//
+	// gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
+	// the epoch.
+	//
+	// localtime2sec (class=time #args=1): Parses local timestamp as integer seconds since
+	// the epoch. Consults $TZ environment variable.
+	//
+	// hms2fsec (class=time #args=1): Recovers floating-point seconds as in
+	// hms2fsec("01:23:20.250000") = 5000.250000
+	//
+	// hms2sec (class=time #args=1): Recovers integer seconds as in
+	// hms2sec("01:23:20") = 5000
+	//
+	// sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
+	// = "5d18h53m20s"
+	//
+	// sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
+	// as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+	// Leaves non-numbers as-is.
+	//
+	// sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
+	// decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
+	// Leaves non-numbers as-is.
+	//
+	// sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
+	// as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
+	// Leaves non-numbers as-is.
+	//
+	// sec2localtime (class=time #args=1): Formats seconds since epoch (integer part)
+	// as local timestamp, e.g. sec2localtime(1440768801.7) = "2015-08-28T13:33:21Z".
+	// Consults $TZ environment variable. Leaves non-numbers as-is.
+	//
+	// sec2localtime (class=time #args=2): Formats seconds since epoch as local timestamp with n
+	// decimal places for seconds, e.g. sec2localtime(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
+	// Consults $TZ environment variable. Leaves non-numbers as-is.
+	//
+	// sec2localdate (class=time #args=1): Formats seconds since epoch (integer part)
+	// as local timestamp with year-month-date, e.g. sec2localdate(1440768801.7) = "2015-08-28".
+	// Consults $TZ environment variable. Leaves non-numbers as-is.
+	//
+	// sec2hms (class=time #args=1): Formats integer seconds as in
+	// sec2hms(5000) = "01:23:20"
+	//
+	// strftime (class=time #args=2): Formats seconds since the epoch as timestamp, e.g.
+	// strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
+	// strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
+	// Format strings are as in the C library (please see "man strftime" on your system),
+	// with the Miller-specific addition of "%1S" through "%9S" which format the seconds
+	// with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
+	// See also strftime_local.
+	//
+	// strftime_local (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
+	//
+	// strptime (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
+	// e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
+	// and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+	// See also strptime_local.
+	//
+	// strptime_local (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
+	//
+	// systime (class=time #args=0): Floating-point seconds since the epoch,
+	// e.g. 1440768801.748936.
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_TYPING
@@ -993,6 +1241,84 @@ else returns its argument.`,
 		unaryFunc: types.MlrvalTypeof,
 	},
 
+	// is_absent (class=typing #args=1): False if field is present in input, true otherwise
+	//
+	// is_bool (class=typing #args=1): True if field is present with boolean value. Synonymous with is_boolean.
+	//
+	// is_boolean (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
+	//
+	// is_empty (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
+	//
+	// is_empty_map (class=typing #args=1): True if argument is a map which is empty.
+	//
+	// is_float (class=typing #args=1): True if field is present with value inferred to be float
+	//
+	// is_int (class=typing #args=1): True if field is present with value inferred to be int
+	//
+	// is_map (class=typing #args=1): True if argument is a map.
+	//
+	// is_nonempty_map (class=typing #args=1): True if argument is a map which is non-empty.
+	//
+	// is_not_empty (class=typing #args=1): False if field is present in input with empty value, true otherwise
+	//
+	// is_not_map (class=typing #args=1): True if argument is not a map.
+	//
+	// is_not_null (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
+	//
+	// is_null (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
+	//
+	// is_numeric (class=typing #args=1): True if field is present with value inferred to be int or float
+	//
+	// is_present (class=typing #args=1): True if field is present in input, false otherwise.
+	//
+	// is_string (class=typing #args=1): True if field is present with string (including empty-string) value
+	//
+	// asserting_absent (class=typing #args=1): Returns argument if it is absent in the input data, else
+	// throws an error.
+	//
+	// asserting_bool (class=typing #args=1): Returns argument if it is present with boolean value, else
+	// throws an error.
+	//
+	// asserting_boolean (class=typing #args=1): Returns argument if it is present with boolean value, else
+	// throws an error.
+	//
+	// asserting_empty (class=typing #args=1): Returns argument if it is present in input with empty value,
+	// else throws an error.
+	//
+	// asserting_empty_map (class=typing #args=1): Returns argument if it is a map with empty value, else
+	// throws an error.
+	//
+	// asserting_float (class=typing #args=1): Returns argument if it is present with float value, else
+	// throws an error.
+	//
+	// asserting_int (class=typing #args=1): Returns argument if it is present with int value, else
+	// throws an error.
+	//
+	// asserting_map (class=typing #args=1): Returns argument if it is a map, else throws an error.
+	//
+	// asserting_nonempty_map (class=typing #args=1): Returns argument if it is a non-empty map, else throws
+	// an error.
+	//
+	// asserting_not_empty (class=typing #args=1): Returns argument if it is present in input with non-empty
+	// value, else throws an error.
+	//
+	// asserting_not_map (class=typing #args=1): Returns argument if it is not a map, else throws an error.
+	//
+	// asserting_not_null (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
+	// else throws an error.
+	//
+	// asserting_null (class=typing #args=1): Returns argument if it is null (empty or absent), else throws
+	// an error.
+	//
+	// asserting_numeric (class=typing #args=1): Returns argument if it is present with int or float value,
+	// else throws an error.
+	//
+	// asserting_present (class=typing #args=1): Returns argument if it is present in input, else throws
+	// an error.
+	//
+	// asserting_string (class=typing #args=1): Returns argument if it is present with string (including
+	// empty-string) value, else throws an error.
+
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_CONVERSION
 
@@ -1116,6 +1442,23 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 		unaryFunc: types.MlrvalToString,
 	},
 
+	// boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
+	//
+	// float (class=conversion #args=1): Convert int/float/bool/string to float.
+	//
+	// fmtnum (class=conversion #args=2): Convert int/float/bool to string using
+	// printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'. WARNING: Miller numbers
+	// are all long long or double. If you use formats like %d or %f, behavior is undefined.
+	//
+	// hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+	//
+	// int (class=conversion #args=1): Convert int/float/bool/string to int.
+	//
+	// string (class=conversion #args=1): Convert int/float/bool/string to string.
+	//
+	// typeof (class=conversion #args=1): Convert argument to type of argument (e.g.
+	// MT_STRING). For debug.
+
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_COLLECTIONS
 
@@ -1211,6 +1554,47 @@ key-value pairs from all arguments. Rightmost collisions win, e.g.
 		variadicFunc: types.MlrvalMapSum,
 	},
 }
+
+// depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
+//
+// haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+// 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
+//
+// joink (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
+//
+// joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
+//
+// joinv (class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
+//
+// leafcount (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
+// same as length.
+//
+// length (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
+//
+// mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
+// With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+//
+// mapexcept (class=maps variadic): Returns a map with keys from remaining arguments, if any, unset.
+// E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+//
+// mapselect (class=maps variadic): Returns a map with only keys from remaining arguments set.
+// E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
+//
+// mapsum (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
+// key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+//
+// splitkv (class=maps #args=3): Splits string by separators into map with type inference.
+// E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+//
+// splitkvx (class=maps #args=3): Splits string by separators into map without type inference (keys and
+// values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
+// '{"a" : "1", "b" : "2", "c" : "3"}'.
+//
+// splitnv (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
+// E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+//
+// splitnvx (class=maps #args=2): Splits string by separator into integer-indexed map without type
+// inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
 
 // ================================================================
 type BuiltinFunctionManager struct {
