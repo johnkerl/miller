@@ -108,9 +108,13 @@ func ParseCommandLine(args []string) (
 	//	options.non_in_place_argv = copy_argv(args);
 	//	options.argc = argc;
 	//	*pptransformer_list = cli_parse_transformers(options.non_in_place_argv, &argi, argc, popts);
-	recordTransformers, err = parseTransformers(args, &argi, argc, &options)
+
+	recordTransformers, ignoresInput, err := parseTransformers(args, &argi, argc, &options)
 	if err != nil {
 		return options, recordTransformers, err
+	}
+	if ignoresInput {
+		options.NoInput = true // e.g. then-chain begins with seqgen
 	}
 
 	// There may already be one or more because of --from on the command line,
@@ -145,9 +149,15 @@ func parseTransformers(
 	pargi *int,
 	argc int,
 	options *clitypes.TOptions,
-) ([]transforming.IRecordTransformer, error) {
+) (
+	transformerList []transforming.IRecordTransformer,
+	ignoresInput bool,
+	err error,
+) {
 
-	transformerList := make([]transforming.IRecordTransformer, 0)
+	transformerList = make([]transforming.IRecordTransformer, 0)
+	ignoresInput = false
+
 	argi := *pargi
 
 	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
@@ -162,6 +172,8 @@ func parseTransformers(
 		os.Exit(1)
 	}
 
+	onFirst := true
+
 	for {
 		checkArgCount(args, argi, argc, 1)
 		verb := args[argi]
@@ -174,10 +186,15 @@ func parseTransformers(
 			os.Exit(1)
 		}
 
+		// E.g. then-chain begins with seqgen
+		if onFirst && transformerSetup.IgnoresInput {
+			ignoresInput = true
+		}
+		onFirst = false
+
 		// It's up to the parse func to print its usage on CLI-parse failure.
 		// Also note: this assumes main reader/writer opts are all parsed
 		// *before* transformer parse-CLI methods are invoked.
-
 		transformer := transformerSetup.ParseCLIFunc(
 			&argi,
 			argc,
@@ -192,11 +209,6 @@ func parseTransformers(
 			os.Exit(1)
 		}
 
-		//		if (transformerSetup.IgnoresInput && len(transformerList) == 0) {
-		//			// e.g. then-chain starts with seqgen
-		//			options.no_input = true;
-		//		}
-
 		transformerList = append(transformerList, transformer)
 
 		if argi >= argc || args[argi] != "then" {
@@ -206,7 +218,7 @@ func parseTransformers(
 	}
 
 	*pargi = argi
-	return transformerList, nil
+	return transformerList, ignoresInput, nil
 }
 
 // ----------------------------------------------------------------
