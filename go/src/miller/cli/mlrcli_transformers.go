@@ -35,6 +35,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.ReorderSetup,
 	transformers.SampleSetup,
 	transformers.Sec2GMTSetup,
+	transformers.SeqgenSetup,
 	transformers.ShuffleSetup,
 	transformers.SkipTrivialRecordsSetup,
 	transformers.SortSetup,
