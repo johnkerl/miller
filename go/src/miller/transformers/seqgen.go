@@ -112,10 +112,11 @@ func transformerSeqgenUsage(
 
 // ----------------------------------------------------------------
 type TransformerSeqgen struct {
-	fieldName string
-	start     types.Mlrval
-	stop      types.Mlrval
-	step      types.Mlrval
+	fieldName      string
+	start          types.Mlrval
+	stop           types.Mlrval
+	step           types.Mlrval
+	doneComparator types.BinaryFunc
 }
 
 // ----------------------------------------------------------------
@@ -128,9 +129,10 @@ func NewTransformerSeqgen(
 	start := types.MlrvalFromInferredType(startString)
 	stop := types.MlrvalFromInferredType(stopString)
 	step := types.MlrvalFromInferredType(stepString)
+	var doneComparator types.BinaryFunc = nil
 
-	// TODO: libify
-	if !start.IsNumeric() {
+	fstart, startIsNumeric := start.GetNumericToFloatValue()
+	if !startIsNumeric {
 		return nil, errors.New(
 			fmt.Sprintf(
 				"mlr seqgen: start value should be number; got \"%s\"",
@@ -139,7 +141,8 @@ func NewTransformerSeqgen(
 		)
 	}
 
-	if !stop.IsNumeric() {
+	fstop, stopIsNumeric := stop.GetNumericToFloatValue()
+	if !stopIsNumeric {
 		return nil, errors.New(
 			fmt.Sprintf(
 				"mlr seqgen: stop value should be number; got \"%s\"",
@@ -148,7 +151,8 @@ func NewTransformerSeqgen(
 		)
 	}
 
-	if !step.IsNumeric() {
+	fstep, stepIsNumeric := step.GetNumericToFloatValue()
+	if !stepIsNumeric {
 		return nil, errors.New(
 			fmt.Sprintf(
 				"mlr seqgen: step value should be number; got \"%s\"",
@@ -157,11 +161,26 @@ func NewTransformerSeqgen(
 		)
 	}
 
+	if fstep > 0 {
+		doneComparator = types.MlrvalGreaterThan
+	} else if fstep < 0 {
+		doneComparator = types.MlrvalLessThan
+	} else {
+		if fstart == fstop {
+			doneComparator = types.MlrvalEquals
+		} else {
+			return nil, errors.New(
+				"mlr seqgen: step must not be zero unless start == stop.",
+			)
+		}
+	}
+
 	return &TransformerSeqgen{
-		fieldName: fieldName,
-		start:     start,
-		stop:      stop,
-		step:      step,
+		fieldName:      fieldName,
+		start:          start,
+		stop:           stop,
+		step:           step,
+		doneComparator: doneComparator,
 	}, nil
 }
 
@@ -175,7 +194,7 @@ func (this *TransformerSeqgen) Map(
 	context.UpdateForStartOfFile("seqgen")
 
 	for {
-		mdone := types.MlrvalGreaterThan(&counter, &this.stop)
+		mdone := this.doneComparator(&counter, &this.stop)
 		done, _ := mdone.GetBoolValue()
 		if done {
 			break
