@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -74,12 +75,17 @@ func transformerSeqgenParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	transformer, _ := NewTransformerSeqgen(
+	transformer, err := NewTransformerSeqgen(
 		*pFieldName,
 		*pStartString,
 		*pStopString,
 		*pStepString,
 	)
+	// TODO: put error return into this API
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer
@@ -119,13 +125,43 @@ func NewTransformerSeqgen(
 	stopString string,
 	stepString string,
 ) (*TransformerSeqgen, error) {
-	// xxx check int/float
+	start := types.MlrvalFromInferredType(startString)
+	stop := types.MlrvalFromInferredType(stopString)
+	step := types.MlrvalFromInferredType(stepString)
+
+	// TODO: libify
+	if !start.IsNumeric() {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"mlr seqgen: start value should be number; got \"%s\"",
+				startString,
+			),
+		)
+	}
+
+	if !stop.IsNumeric() {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"mlr seqgen: stop value should be number; got \"%s\"",
+				stopString,
+			),
+		)
+	}
+
+	if !step.IsNumeric() {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"mlr seqgen: step value should be number; got \"%s\"",
+				stepString,
+			),
+		)
+	}
 
 	return &TransformerSeqgen{
 		fieldName: fieldName,
-		start:     types.MlrvalFromInferredType(startString),
-		stop:      types.MlrvalFromInferredType(stopString),
-		step:      types.MlrvalFromInferredType(stepString),
+		start:     start,
+		stop:      stop,
+		step:      step,
 	}, nil
 }
 

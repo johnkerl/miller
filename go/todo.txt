@@ -1,6 +1,9 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! bug
+  mlr seqgen --start true
+
 ! gating after: 'int x = 1; x = "abc"'
 ! verb skeletons
 ! auxents iterate
