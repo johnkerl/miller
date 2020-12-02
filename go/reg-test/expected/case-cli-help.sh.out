@@ -188,6 +188,19 @@ Options:
 -1 through -9: format the seconds using 1..9 decimal places, respectively.
 
 ================================================================
+Usage: ./reg-test/../../go/mlr seqgen [options]
+Passes input records directly to output. Most useful for format conversion.
+Produces a sequence of counters.  Discards the input record stream. Produces
+output as specified by the following options:
+ -f (default i) Field name for counters.
+ -start (default 1) Inclusive start value.
+ -step (default 1) Step value
+ -stop (default 100) Inclusive stop value.
+Start, stop, and/or step may be floating-point. Output is integer if start,
+stop, and step are all integers. Step may be negative. It may not be zero
+unless start == stop.
+
+================================================================
 Usage: ./reg-test/../../go/mlr shuffle {no options}
 Outputs records randomly permuted. No output records are produced until
 all input records are read. See also ./reg-test/../../go/mlr bootstrap and ./reg-test/../../go/mlr sample.
