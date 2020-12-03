@@ -2,6 +2,7 @@ package input
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"encoding/json"
@@ -91,7 +92,12 @@ func (this *RecordReaderJSON) processHandle(
 			for _, mlrval := range records {
 				if !mlrval.IsMap() {
 					// TODO: more context
-					errorChannel <- errors.New("Valid but unmillerable JSON")
+					errorChannel <- errors.New(
+						fmt.Sprintf(
+							"Valid but unmillerable JSON. Expected map (JSON object); got %s.",
+							mlrval.GetTypeName(),
+						),
+					)
 					return
 				}
 				record := mlrval.GetMap()
@@ -108,8 +114,12 @@ func (this *RecordReaderJSON) processHandle(
 			}
 
 		} else {
-			// TODO: more context
-			errorChannel <- errors.New("Valid but unmillerable JSON")
+			errorChannel <- errors.New(
+				fmt.Sprintf(
+					"Valid but unmillerable JSON. Expected map (JSON object); got %s.",
+					mlrval.GetTypeName(),
+				),
+			)
 			return
 		}
 	}

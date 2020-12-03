@@ -104,7 +104,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"int",
 	"float",
 	"bool",
-	"arr",
+	"array",
 	"map",
 }
 

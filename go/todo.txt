@@ -1,9 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! bug
-  mlr seqgen --start true
-
+! mlrrc
+! --x2b & doc
 ! gating after: 'int x = 1; x = "abc"'
 ! verb skeletons
 ! auxents iterate
@@ -71,7 +70,7 @@ no need to bootstrap a parser for the parser-generator language
     - %d int: ok
     - %d float: int(x) then ok
     - %d string: convert to %s
-    - %f int: float(x) thenok
+    - %f int: float(x) then ok
     - %f float: as is
     - %f string: convert to %s
     - %s int: convert to %d
@@ -127,7 +126,6 @@ no need to bootstrap a parser for the parser-generator language
 ================================================================
 REMAINING VERBS:
 
-seqgen
 having-fields
 repeat
 
