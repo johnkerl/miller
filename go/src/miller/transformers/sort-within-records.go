@@ -87,7 +87,7 @@ func NewTransformerSortWithinRecords() (*TransformerSortWithinRecords, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSortWithinRecords) Map(
+func (this *TransformerSortWithinRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

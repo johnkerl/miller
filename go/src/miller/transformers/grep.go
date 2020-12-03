@@ -140,7 +140,7 @@ func NewTransformerGrep(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGrep) Map(
+func (this *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

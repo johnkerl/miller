@@ -8,7 +8,7 @@ import (
 )
 
 type IRecordTransformer interface {
-	Map(
+	Transform(
 		inrecAndContext *types.RecordAndContext,
 		outputChannel chan<- *types.RecordAndContext,
 	)

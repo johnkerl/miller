@@ -145,7 +145,7 @@ func NewTransformerCat(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCat) Map(
+func (this *TransformerCat) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

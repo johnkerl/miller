@@ -122,7 +122,7 @@ func NewTransformerTail(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerTail) Map(
+func (this *TransformerTail) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

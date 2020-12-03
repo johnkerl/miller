@@ -185,7 +185,7 @@ func NewTransformerSeqgen(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSeqgen) Map(
+func (this *TransformerSeqgen) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

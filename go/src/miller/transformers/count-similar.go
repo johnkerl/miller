@@ -122,7 +122,7 @@ func NewTransformerCountSimilar(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCountSimilar) Map(
+func (this *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

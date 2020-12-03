@@ -90,7 +90,7 @@ func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGroupLike) Map(
+func (this *TransformerGroupLike) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

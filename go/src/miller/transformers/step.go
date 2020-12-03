@@ -231,7 +231,7 @@ func NewTransformerStep(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerStep) Map(
+func (this *TransformerStep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

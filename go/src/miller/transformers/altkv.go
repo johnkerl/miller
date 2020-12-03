@@ -81,7 +81,7 @@ func NewTransformerAltkv() (*TransformerAltkv, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerAltkv) Map(
+func (this *TransformerAltkv) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -246,7 +246,7 @@ type GroupingKeysAndMlrvals struct {
 	mlrvals     []types.Mlrval
 }
 
-func (this *TransformerSort) Map(
+func (this *TransformerSort) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

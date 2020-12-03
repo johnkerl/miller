@@ -180,7 +180,7 @@ func NewTransformerCut(
 //	}
 
 // ----------------------------------------------------------------
-func (this *TransformerCut) Map(
+func (this *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -48,7 +48,7 @@ func runSingleTransformer(
 ) {
 	for {
 		recordAndContext := <-inputChannel
-		recordTransformer.Map(recordAndContext, outputChannel)
+		recordTransformer.Transform(recordAndContext, outputChannel)
 		if recordAndContext.Record == nil { // end of stream
 			break
 		}
