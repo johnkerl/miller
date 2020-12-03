@@ -349,3 +349,4 @@ NITS/NON-IMMEDIATE:
 * grep out all error message from reg-test outputs & doc them all & make sure index-searchable at readthedocs
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
 * function metadata: auto-sort on mlr -f?
+* --x2b @ help-doc .go; etc

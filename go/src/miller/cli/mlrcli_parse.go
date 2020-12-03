@@ -870,6 +870,12 @@ func parseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "pprint"
 		argi += 1
+	} else if args[argi] == "--c2b" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "pprint"
+		writerOptions.BarredPprintOutput = true
+		argi += 1
 	} else if args[argi] == "--c2x" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
@@ -912,6 +918,13 @@ func parseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "pprint"
 		argi += 1
+	} else if args[argi] == "--t2b" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "pprint"
+		writerOptions.BarredPprintOutput = true
+		argi += 1
 	} else if args[argi] == "--t2x" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
@@ -948,6 +961,11 @@ func parseReaderWriterOptions(
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "pprint"
 		argi += 1
+	} else if args[argi] == "--d2b" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "pprint"
+		writerOptions.BarredPprintOutput = true
+		argi += 1
 	} else if args[argi] == "--d2x" {
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "xtab"
@@ -980,6 +998,11 @@ func parseReaderWriterOptions(
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "pprint"
 		argi += 1
+	} else if args[argi] == "--n2b" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "pprint"
+		writerOptions.BarredPprintOutput = true
+		argi += 1
 	} else if args[argi] == "--n2x" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "xtab"
@@ -1011,6 +1034,11 @@ func parseReaderWriterOptions(
 	} else if args[argi] == "--j2p" {
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--j2b" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "pprint"
+		writerOptions.BarredPprintOutput = true
 		argi += 1
 	} else if args[argi] == "--j2x" {
 		readerOptions.InputFileFormat = "json"
@@ -1093,6 +1121,11 @@ func parseReaderWriterOptions(
 	} else if args[argi] == "--x2p" {
 		readerOptions.InputFileFormat = "xtab"
 		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
+	} else if args[argi] == "--x2b" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "pprint"
+		writerOptions.BarredPprintOutput = true
 		argi += 1
 		//	} else if args[argi] == "--x2m" {
 		//		readerOptions.InputFileFormat = "xtab";
