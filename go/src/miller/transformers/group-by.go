@@ -110,7 +110,7 @@ func NewTransformerGroupBy(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGroupBy) Map(
+func (this *TransformerGroupBy) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

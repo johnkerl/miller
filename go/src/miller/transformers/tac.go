@@ -81,7 +81,7 @@ func NewTransformerTac() (*TransformerTac, error) {
 	}, nil
 }
 
-func (this *TransformerTac) Map(
+func (this *TransformerTac) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

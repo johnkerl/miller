@@ -395,6 +395,23 @@ func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 	return buffer.String(), mlrvals, true
 }
 
+// As above but only returns the array. For step.
+func (this *Mlrmap) GetSelectedValues(selectedFieldNames []string) (
+	[]Mlrval,
+	bool,
+) {
+	mlrvals := make([]Mlrval, 0, len(selectedFieldNames))
+
+	for _, selectedFieldName := range selectedFieldNames {
+		entry := this.findEntry(&selectedFieldName)
+		if entry == nil {
+			return mlrvals, false
+		}
+		mlrvals = append(mlrvals, *entry.Value.Copy())
+	}
+	return mlrvals, true
+}
+
 // ----------------------------------------------------------------
 func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
 	entry := this.findEntry(oldKey)

@@ -81,7 +81,7 @@ func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) 
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSkipTrivialRecords) Map(
+func (this *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -86,7 +86,7 @@ func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) 
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRemoveEmptyColumns) Map(
+func (this *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

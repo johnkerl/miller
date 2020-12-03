@@ -135,7 +135,7 @@ func NewTransformerHead(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHead) Map(
+func (this *TransformerHead) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

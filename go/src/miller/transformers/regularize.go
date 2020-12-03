@@ -88,7 +88,7 @@ func NewTransformerRegularize() (*TransformerRegularize, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRegularize) Map(
+func (this *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

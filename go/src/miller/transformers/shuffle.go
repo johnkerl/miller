@@ -91,7 +91,7 @@ func NewTransformerShuffle() (*TransformerShuffle, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerShuffle) Map(
+func (this *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

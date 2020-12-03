@@ -102,7 +102,7 @@ func NewTransformerBootstrap(nout int) (*TransformerBootstrap, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerBootstrap) Map(
+func (this *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

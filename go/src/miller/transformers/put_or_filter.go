@@ -327,7 +327,7 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 	return astRootNode, nil
 }
 
-func (this *TransformerPut) Map(
+func (this *TransformerPut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -131,7 +131,7 @@ func NewTransformerUnsparsify(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnsparsify) Map(
+func (this *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

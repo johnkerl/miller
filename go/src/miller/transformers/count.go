@@ -149,7 +149,7 @@ func NewTransformerCount(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCount) Map(
+func (this *TransformerCount) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

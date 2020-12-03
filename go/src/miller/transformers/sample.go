@@ -122,7 +122,7 @@ func NewTransformerSample(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSample) Map(
+func (this *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

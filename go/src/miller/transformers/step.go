@@ -161,40 +161,21 @@ func transformerStepUsage(
 }
 
 // ----------------------------------------------------------------
-// Multilevel hashmap structure:
-// {
-//   ["s","t"] : {              <--- group-by field names
-//     ["x","y"] : {            <--- value field names
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
-//   ["u","v"] : {
-//     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
-//   ["u","w"] : {
-//     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
-// }
-
 type tStepper struct {
 }
 
 type TransformerStep struct {
 	// Input:
+	stepperNames    []string
 	valueFieldNames []string
+	groupByFieldNames []string
 
 	// State:
 
 	valueFieldValues []types.Mlrval // scratch space used per-record
 
-	// Map from group-by field names to value-field names to array of stepper objects
+	// Map from group-by field names to value-field names to array of stepper objects.
+	// See the Transform method below for more details.
 	groups map[string]map[string][]tStepper
 }
 
@@ -224,24 +205,133 @@ func NewTransformerStep(
 
 	// TODO: flesh out
 	this := &TransformerStep{
+		stepperNames:    stepperNames,
 		valueFieldNames: valueFieldNames,
+		groupByFieldNames: groupByFieldNames,
 	}
 
 	return this, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerStep) Map(
+// Multilevel hashmap structure:
+// {
+//   ["s","t"] : {              <--- group-by field names
+//     ["x","y"] : {            <--- value field names
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","v"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+//   ["u","w"] : {
+//     ["x","y"] : {
+//       "corr" : C stats2_corr_t object,
+//       "cov"  : C stats2_cov_t  object
+//     }
+//   },
+// }
+
+func (this *TransformerStep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
-		// TODO: flesh out
-		outputChannel <- inrecAndContext
-	} else {
+
+	if inrec == nil { // end of record stream
 		outputChannel <- inrecAndContext
 	}
+
+	// ["s", "t"]
+	groupingKey, groupByFieldValues, gok := inrec.GetSelectedValuesAndJoined(this.groupByFieldNames)
+	if !gok { // current record doesn't have fields to be stepped; pass it along
+		outputChannel <- inrecAndContext
+		return
+	}
+
+	// ["x", "y"]
+	valueFieldValues, vok := inrec.GetSelectedValues(this.valueFieldNames)
+	if !vok { // current record doesn't have fields to be stepped; pass it along
+		outputChannel <- inrecAndContext
+		return
+	}
+
+	groupToAccField := this.groups[groupingKey]
+	if groupToAccField == nil {
+		// Populate the groups data structure on first reference if needed
+		groupToAccField := make(map[string][]tStepper)
+		this.groups[groupingKey] = groupToAccField
+	}
+
+	// for x=1 and y=2:
+	for i, valueFieldName := range this.valueFieldNames {
+		// TODO: make it sparse in the GetSelectedValues() ... no `vok` return ...
+		valueFieldValue := valueFieldValues[i]
+		//		char* value_field_sval = pstate->pvalue_field_values->strings[i];
+		//		if (value_field_sval == NULL) // Key not present
+		//			continue;
+
+		//		int have_dval = FALSE;
+		//		int have_nval = FALSE;
+		//		double value_field_dval = -999.0;
+		//		mv_t   value_field_nval = mv_absent();
+		//
+		//		lhmsv_t* pacc_field_to_acc_state = lhmsv_get(pgroup_to_acc_field, value_field_name);
+		//		if (pacc_field_to_acc_state == NULL) {
+		//			pacc_field_to_acc_state = lhmsv_alloc();
+		//			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_state, NO_FREE);
+		//		}
+
+		// for "delta", "rsum"
+		for _, stepperName := range this.stepperNames {
+			//			tStepper* stepper = lhmsv_get(pacc_field_to_acc_state, stepperName);
+			//			if (stepper == NULL) {
+			//				stepper = make_step(stepperName, value_field_name, pstate->allow_int_float,
+			//					pstate->pstring_alphas, pstate->pewma_suffixes);
+			//				if (stepper == NULL) {
+			//					fprintf(stderr, "mlr step: stepper \"%s\" not found.\n",
+			//						stepperName);
+			//					exit(1);
+			//				}
+			//				lhmsv_put(pacc_field_to_acc_state, stepperName, stepper, NO_FREE);
+			//			}
+			//
+			//			if (*value_field_sval == 0) { // Key present with null value
+			//				if (stepper->pzprocess_func != NULL) {
+			//					stepper->pzprocess_func(stepper->pvstate, pinrec);
+			//				}
+			//			} else {
+			//
+			//				if (stepper->pdprocess_func != NULL) {
+			//					if (!have_dval) {
+			//						value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+			//						have_dval = TRUE;
+			//					}
+			//					stepper->pdprocess_func(stepper->pvstate, value_field_dval, pinrec);
+			//				}
+			//
+			//				if (stepper->pnprocess_func != NULL) {
+			//					if (!have_nval) {
+			//						value_field_nval = pstate->allow_int_float
+			//							? mv_scan_number_or_die(value_field_sval)
+			//							: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+			//						have_nval = TRUE;
+			//					}
+			//					stepper->pnprocess_func(stepper->pvstate, &value_field_nval, pinrec);
+			//				}
+			//
+			//				if (stepper->psprocess_func != NULL) {
+			//					stepper->psprocess_func(stepper->pvstate, value_field_sval, pinrec);
+			//				}
+			//			}
+		}
+	}
+
+	outputChannel <- inrecAndContext
 }
 
 // ----------------------------------------------------------------
@@ -262,95 +352,7 @@ func (this *TransformerStep) Map(
 //};
 // ----------------------------------------------------------------
 
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//	mapper_step_state_t* pstate = pvstate;
-//	if (pinrec == NULL)
-//		return sllv_single(NULL);
-//
-//	// ["s", "t"]
-//	mlr_reference_values_from_record_into_string_array(pinrec, pstate->pvalue_field_names, pstate->pvalue_field_values);
-//	slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
-//
-//	if (pgroup_by_field_values == NULL) {
-//		return sllv_single(pinrec);
-//	}
-//
-//	lhmsv_t* pgroup_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
-//	if (pgroup_to_acc_field == NULL) {
-//		pgroup_to_acc_field = lhmsv_alloc();
-//		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field, FREE_ENTRY_KEY);
-//	}
-//
-//	// for x=1 and y=2
-//	int n = pstate->pvalue_field_names->length;
-//	for (int i = 0; i < n; i++) {
-//		char* value_field_name = pstate->pvalue_field_names->strings[i];
-//		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-//		if (value_field_sval == NULL) // Key not present
-//			continue;
-//
-//		int have_dval = FALSE;
-//		int have_nval = FALSE;
-//		double value_field_dval = -999.0;
-//		mv_t   value_field_nval = mv_absent();
-//
-//		lhmsv_t* pacc_field_to_acc_state = lhmsv_get(pgroup_to_acc_field, value_field_name);
-//		if (pacc_field_to_acc_state == NULL) {
-//			pacc_field_to_acc_state = lhmsv_alloc();
-//			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_state, NO_FREE);
-//		}
-//
-//		// for "delta", "rsum"
-//		sllse_t* pc = pstate->pstepper_names->phead;
-//		for ( ; pc != NULL; pc = pc->pnext) {
-//			char* step_name = pc->value;
-//			step_t* pstep = lhmsv_get(pacc_field_to_acc_state, step_name);
-//			if (pstep == NULL) {
-//				pstep = make_step(step_name, value_field_name, pstate->allow_int_float,
-//					pstate->pstring_alphas, pstate->pewma_suffixes);
-//				if (pstep == NULL) {
-//					fprintf(stderr, "mlr step: stepper \"%s\" not found.\n",
-//						step_name);
-//					exit(1);
-//				}
-//				lhmsv_put(pacc_field_to_acc_state, step_name, pstep, NO_FREE);
-//			}
-//
-//			if (*value_field_sval == 0) { // Key present with null value
-//				if (pstep->pzprocess_func != NULL) {
-//					pstep->pzprocess_func(pstep->pvstate, pinrec);
-//				}
-//			} else {
-//
-//				if (pstep->pdprocess_func != NULL) {
-//					if (!have_dval) {
-//						value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-//						have_dval = TRUE;
-//					}
-//					pstep->pdprocess_func(pstep->pvstate, value_field_dval, pinrec);
-//				}
-//
-//				if (pstep->pnprocess_func != NULL) {
-//					if (!have_nval) {
-//						value_field_nval = pstate->allow_int_float
-//							? mv_scan_number_or_die(value_field_sval)
-//							: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-//						have_nval = TRUE;
-//					}
-//					pstep->pnprocess_func(pstep->pvstate, &value_field_nval, pinrec);
-//				}
-//
-//				if (pstep->psprocess_func != NULL) {
-//					pstep->psprocess_func(pstep->pvstate, value_field_sval, pinrec);
-//				}
-//			}
-//		}
-//	}
-//	return sllv_single(pinrec);
-//}
-
-//static step_t* make_step(char* step_name, char* input_field_name, int allow_int_float,
+//static tStepper* make_step(char* step_name, char* input_field_name, int allow_int_float,
 //	slls_t* pstring_alphas, slls_t* pewma_suffixes)
 //{
 //	for (int i = 0; i < step_lookup_table_length; i++)
@@ -381,18 +383,18 @@ func (this *TransformerStep) Map(
 //	step_delta_state_t* pstate = pvstate;
 //	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 //}
-//static step_t* step_delta_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_delta_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
 //	pstate->prev = mv_absent();
 //	pstate->allow_int_float = allow_int_float;
 //	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = NULL;
-//	pstep->pnprocess_func = step_delta_nprocess;
-//	pstep->psprocess_func = NULL;
-//	pstep->pzprocess_func = step_delta_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = NULL;
+//	stepper->pnprocess_func = step_delta_nprocess;
+//	stepper->psprocess_func = NULL;
+//	stepper->pzprocess_func = step_delta_zprocess;
+//	return stepper;
 //}
 
 //// ----------------------------------------------------------------
@@ -410,18 +412,18 @@ func (this *TransformerStep) Map(
 //	step_shift_state_t* pstate = pvstate;
 //	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 //}
-//static step_t* step_shift_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_shift_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_shift_state_t* pstate = mlr_malloc_or_die(sizeof(step_shift_state_t));
 //	pstate->prev = mlr_strdup_or_die("");
 //	pstate->allow_int_float = allow_int_float;
 //	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_shift");
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = NULL;
-//	pstep->pnprocess_func = NULL;
-//	pstep->psprocess_func = step_shift_sprocess;
-//	pstep->pzprocess_func = step_shift_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = NULL;
+//	stepper->pnprocess_func = NULL;
+//	stepper->psprocess_func = step_shift_sprocess;
+//	stepper->pzprocess_func = step_shift_zprocess;
+//	return stepper;
 //}
 
 //// ----------------------------------------------------------------
@@ -445,18 +447,18 @@ func (this *TransformerStep) Map(
 //	step_from_first_state_t* pstate = pvstate;
 //	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 //}
-//static step_t* step_from_first_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_from_first_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_from_first_state_t* pstate = mlr_malloc_or_die(sizeof(step_from_first_state_t));
 //	pstate->first = mv_absent();
 //	pstate->allow_int_float = allow_int_float;
 //	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_from_first");
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = NULL;
-//	pstep->pnprocess_func = step_from_first_nprocess;
-//	pstep->psprocess_func = NULL;
-//	pstep->pzprocess_func = step_from_first_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = NULL;
+//	stepper->pnprocess_func = step_from_first_nprocess;
+//	stepper->psprocess_func = NULL;
+//	stepper->pzprocess_func = step_from_first_zprocess;
+//	return stepper;
 //}
 
 //// ----------------------------------------------------------------
@@ -481,19 +483,19 @@ func (this *TransformerStep) Map(
 //	step_ratio_state_t* pstate = pvstate;
 //	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 //}
-//static step_t* step_ratio_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_ratio_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_ratio_state_t* pstate = mlr_malloc_or_die(sizeof(step_ratio_state_t));
 //	pstate->prev          = -999.0;
 //	pstate->have_prev     = FALSE;
 //	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_ratio");
 //
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = step_ratio_dprocess;
-//	pstep->pnprocess_func = NULL;
-//	pstep->psprocess_func = NULL;
-//	pstep->pzprocess_func = step_ratio_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = step_ratio_dprocess;
+//	stepper->pnprocess_func = NULL;
+//	stepper->psprocess_func = NULL;
+//	stepper->pzprocess_func = step_ratio_zprocess;
+//	return stepper;
 //}
 
 //// ----------------------------------------------------------------
@@ -512,18 +514,18 @@ func (this *TransformerStep) Map(
 //	step_rsum_state_t* pstate = pvstate;
 //	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 //}
-//static step_t* step_rsum_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_rsum_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
 //	pstate->allow_int_float = allow_int_float;
 //	pstate->rsum = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
 //	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = NULL;
-//	pstep->pnprocess_func = step_rsum_nprocess;
-//	pstep->psprocess_func = NULL;
-//	pstep->pzprocess_func = step_rsum_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = NULL;
+//	stepper->pnprocess_func = step_rsum_nprocess;
+//	stepper->psprocess_func = NULL;
+//	stepper->pzprocess_func = step_rsum_zprocess;
+//	return stepper;
 //}
 
 //// ----------------------------------------------------------------
@@ -542,19 +544,19 @@ func (this *TransformerStep) Map(
 //	step_counter_state_t* pstate = pvstate;
 //	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
 //}
-//static step_t* step_counter_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_counter_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
 //	pstate->counter = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
 //	pstate->one     = allow_int_float ? mv_from_int(1LL) : mv_from_float(1.0);
 //	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
 //
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = NULL;
-//	pstep->pnprocess_func = NULL;
-//	pstep->psprocess_func = step_counter_sprocess;
-//	pstep->pzprocess_func = step_counter_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = NULL;
+//	stepper->pnprocess_func = NULL;
+//	stepper->psprocess_func = step_counter_sprocess;
+//	stepper->pzprocess_func = step_counter_zprocess;
+//	return stepper;
 //}
 
 //// ----------------------------------------------------------------
@@ -592,8 +594,8 @@ func (this *TransformerStep) Map(
 //		lrec_put(prec, pstate->output_field_names[i], "", NO_FREE);
 //}
 
-//static step_t* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstring_alphas, slls_t* pewma_suffixes) {
-//	step_t* pstep              = mlr_malloc_or_die(sizeof(step_t));
+//static tStepper* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstring_alphas, slls_t* pewma_suffixes) {
+//	tStepper* stepper              = mlr_malloc_or_die(sizeof(tStepper));
 //
 //	step_ewma_state_t* pstate  = mlr_malloc_or_die(sizeof(step_ewma_state_t));
 //	int n                      = pstring_alphas->length;
@@ -616,10 +618,10 @@ func (this *TransformerStep) Map(
 //	}
 //	pstate->have_prevs = FALSE;
 //
-//	pstep->pvstate        = (void*)pstate;
-//	pstep->pdprocess_func = step_ewma_dprocess;
-//	pstep->pnprocess_func = NULL;
-//	pstep->psprocess_func = NULL;
-//	pstep->pzprocess_func = step_ewma_zprocess;
-//	return pstep;
+//	stepper->pvstate        = (void*)pstate;
+//	stepper->pdprocess_func = step_ewma_dprocess;
+//	stepper->pnprocess_func = NULL;
+//	stepper->psprocess_func = NULL;
+//	stepper->pzprocess_func = step_ewma_zprocess;
+//	return stepper;
 //}

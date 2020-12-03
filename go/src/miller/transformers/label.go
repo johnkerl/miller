@@ -123,7 +123,7 @@ func NewTransformerLabel(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerLabel) Map(
+func (this *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

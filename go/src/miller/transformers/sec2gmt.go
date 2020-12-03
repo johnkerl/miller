@@ -137,7 +137,7 @@ func NewTransformerSec2GMT(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSec2GMT) Map(
+func (this *TransformerSec2GMT) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

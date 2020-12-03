@@ -139,7 +139,7 @@ func NewTransformerDecimate(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerDecimate) Map(
+func (this *TransformerDecimate) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

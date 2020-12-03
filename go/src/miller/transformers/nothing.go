@@ -79,7 +79,7 @@ func NewTransformerNothing() (*TransformerNothing, error) {
 	return &TransformerNothing{}, nil
 }
 
-func (this *TransformerNothing) Map(
+func (this *TransformerNothing) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

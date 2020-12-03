@@ -121,7 +121,7 @@ func NewTransformerFillDown(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFillDown) Map(
+func (this *TransformerFillDown) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

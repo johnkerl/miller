@@ -129,7 +129,7 @@ func NewTransformerGap(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGap) Map(
+func (this *TransformerGap) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

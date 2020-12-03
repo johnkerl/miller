@@ -115,7 +115,7 @@ func NewTransformerRename(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRename) Map(
+func (this *TransformerRename) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

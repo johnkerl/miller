@@ -132,7 +132,7 @@ func NewTransformerReorder(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReorder) Map(
+func (this *TransformerReorder) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
