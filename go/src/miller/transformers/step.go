@@ -6,21 +6,11 @@ import (
 	"os"
 
 	"miller/clitypes"
-	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
 
-// TODO
-//#define DEFAULT_STRING_ALPHA "0.5"
-
-//typedef struct _step_t {
-//	void* pvstate;
-//	step_dprocess_func_t* pdprocess_func;
-//	step_nprocess_func_t* pnprocess_func;
-//	step_sprocess_func_t* psprocess_func;
-//	step_zprocess_func_t* pzprocess_func;
-//} step_t;
+const DEFAULT_STRING_ALPHA = "0.5"
 
 // ----------------------------------------------------------------
 var StepSetup = transforming.TransformerSetup{
@@ -28,46 +18,6 @@ var StepSetup = transforming.TransformerSetup{
 	ParseCLIFunc: transformerStepParseCLI,
 	IgnoresInput: false,
 }
-
-//static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv,
-//	cli_reader_opts_t* _, cli_writer_opts_t* __)
-//{
-//	slls_t*         pstepper_names        = NULL;
-//	string_array_t* pvalue_field_names    = NULL;
-//	slls_t*         pgroup_by_field_names = slls_alloc();
-//	slls_t*         pstring_alphas        = slls_single_no_free(DEFAULT_STRING_ALPHA);
-//	slls_t*         pewma_suffixes        = NULL;
-//	int             allow_int_float       = TRUE;
-//
-//	char* verb = argv[(*pargi)++];
-//
-//	ap_state_t* pstate = ap_alloc();
-//	ap_define_string_list_flag(pstate,  "-a", &pstepper_names);
-//	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
-//	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
-//	ap_define_string_list_flag(pstate,  "-d", &pstring_alphas);
-//	ap_define_string_list_flag(pstate,  "-o", &pewma_suffixes);
-//	ap_define_false_flag(pstate,        "-F", &allow_int_float);
-//
-//	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-//		mapper_step_usage(stderr, argv[0], verb);
-//		return NULL;
-//	}
-//
-//	if (pstepper_names == NULL || pvalue_field_names == NULL) {
-//		mapper_step_usage(stderr, argv[0], verb);
-//		return NULL;
-//	}
-//	if (pstring_alphas != NULL && pewma_suffixes != NULL) {
-//		if (pewma_suffixes->length != pstring_alphas->length) {
-//			mapper_step_usage(stderr, argv[0], verb);
-//			return NULL;
-//		}
-//	}
-//
-//	return mapper_step_alloc(pstate, pstepper_names, pvalue_field_names, pgroup_by_field_names,
-//		allow_int_float, pstring_alphas, pewma_suffixes);
-//}
 
 func transformerStepParseCLI(
 	pargi *int,
@@ -86,33 +36,41 @@ func transformerStepParseCLI(
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
 
-	pStepCount := flagSet.Int64(
-		"n",
-		-1,
-		`Print a step every n records.`,
+	pStepperNames := flagSet.String(
+		"a",
+		"",
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
+	)
+
+	pValueFieldNames := flagSet.String(
+		"f",
+		"",
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
 
 	pGroupByFieldNames := flagSet.String(
 		"g",
 		"",
-		"Print a step whenever values of these fields (e.g. a,b,c) changes",
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
 
-//	fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n");
-//	for (int i = 0; i < step_lookup_table_length; i++) {
-//		fprintf(o, "  %-8s %s\n", step_lookup_table[i].name, step_lookup_table[i].desc);
-//	}
-//	fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n");
-//	fprintf(o, "-g {d,e,f} Optional group-by-field names\n");
-//	fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n");
-//	fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n");
-//	fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n");
-//	fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n");
-//	fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", argv0, verb);
-//	fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA);
-//	fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n");
-//	fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n");
-//	fprintf(o, "           as the number of -d values.\n");
+	pStringAlphas := flagSet.String(
+		"d",
+		DEFAULT_STRING_ALPHA,
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
+	)
+
+	pEWMASuffixes := flagSet.String(
+		"o",
+		"",
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
+	)
+
+	pAllowIntFloat := flagSet.Bool(
+		"F",
+		false,
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
+	)
 
 	flagSet.Usage = func() {
 		ostream := os.Stderr
@@ -125,18 +83,31 @@ func transformerStepParseCLI(
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
 		return nil
 	}
-	if *pStepCount == -1 && *pGroupByFieldNames == "" {
-		transformerStepUsage(os.Stderr, args[0], verb, flagSet)
-		os.Exit(1)
+
+	// TODO
+	if *pStepperNames == "" || *pValueFieldNames == "" {
+		//		mapper_step_usage(stderr, argv[0], verb);
+		//		return NULL;
+	}
+	if *pStringAlphas != "" && *pEWMASuffixes != "" {
+		//		if (pewma_suffixes->length != pstring_alphas->length) {
+		//			mapper_step_usage(stderr, argv[0], verb);
+		//			return NULL;
+		//		}
 	}
 
 	// Find out how many flags were consumed by this verb and advance for the
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
+	// TOOD: catch err
 	transformer, _ := NewTransformerStep(
-		*pStepCount,
+		*pStepperNames,
+		*pValueFieldNames,
 		*pGroupByFieldNames,
+		*pStringAlphas,
+		*pEWMASuffixes,
+		*pAllowIntFloat,
 	)
 
 	*pargi = argi
@@ -150,30 +121,49 @@ func transformerStepUsage(
 	flagSet *flag.FlagSet,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n");
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
+	// For this transformer, we do NOT use flagSet.VisitAll -- we use our own print statements.
 
-	fmt.Fprintf(o, "\n");
-	fmt.Fprintf(o, "Examples:\n");
-	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", argv0, verb);
-	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", argv0, verb);
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", argv0, verb);
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", argv0, verb);
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", argv0, verb);
+	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
+	// TODO
+	//	for (int i = 0; i < step_lookup_table_length; i++) {
+	//		fprintf(o, "  %-8s %s\n", step_lookup_table[i].name, step_lookup_table[i].desc);
+	//	}
 
-	fmt.Fprintf(o, "\n");
-	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n");
-	fmt.Fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n");
-	fmt.Fprintf(o, "for more information on EWMA.\n");
+	fmt.Fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n")
+
+	fmt.Fprintf(o, "-g {d,e,f} Optional group-by-field names\n")
+
+	fmt.Fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n")
+
+	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
+	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
+	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
+	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", argv0, verb)
+	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
+
+	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
+	fmt.Fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n")
+	fmt.Fprintf(o, "           as the number of -d values.\n")
+
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Examples:\n")
+	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", argv0, verb)
+
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
+	fmt.Fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n")
+	fmt.Fprintf(o, "for more information on EWMA.\n")
 }
 
 // ----------------------------------------------------------------
 type TransformerStep struct {
 	// input
-	stepCount             int64
+	stepCount            int64
 	groupByFieldNameList []string
 
 	// state
@@ -232,25 +222,29 @@ type TransformerStep struct {
 //};
 
 func NewTransformerStep(
-	stepCount int64,
+	stepperNames string,
+	valueFieldNames string,
 	groupByFieldNames string,
+	stringAlphas string,
+	EWMASuffixes string,
+	allowIntFloat bool,
 ) (*TransformerStep, error) {
 
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
+	//groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
 	this := &TransformerStep{
-		stepCount:             stepCount,
-		groupByFieldNameList: groupByFieldNameList,
+		//stepCount:             stepCount,
+		//groupByFieldNameList: groupByFieldNameList,
 
-		recordCount:         0,
-		previousGroupingKey: "",
+		//recordCount:         0,
+		//previousGroupingKey: "",
 	}
 
-	if len(groupByFieldNameList) == 0 {
-		this.recordTransformerFunc = this.mapUnkeyed
-	} else {
-		this.recordTransformerFunc = this.mapKeyed
-	}
+	//if len(groupByFieldNameList) == 0 {
+	//this.recordTransformerFunc = this.mapUnkeyed
+	//} else {
+	//this.recordTransformerFunc = this.mapKeyed
+	//}
 
 	return this, nil
 }
