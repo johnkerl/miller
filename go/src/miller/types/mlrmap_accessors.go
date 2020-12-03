@@ -395,21 +395,21 @@ func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 	return buffer.String(), mlrvals, true
 }
 
-// As above but only returns the array. For step.
-func (this *Mlrmap) GetSelectedValues(selectedFieldNames []string) (
-	[]Mlrval,
-	bool,
+// As above but only returns the array. Also, these are references, NOT copies. For step.
+func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) (
+	[]*Mlrval,
 ) {
-	mlrvals := make([]Mlrval, 0, len(selectedFieldNames))
+	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 
 	for _, selectedFieldName := range selectedFieldNames {
 		entry := this.findEntry(&selectedFieldName)
-		if entry == nil {
-			return mlrvals, false
+		if entry != nil {
+			mlrvals = append(mlrvals, entry.Value)
+		} else {
+			mlrvals = append(mlrvals, nil)
 		}
-		mlrvals = append(mlrvals, *entry.Value.Copy())
 	}
-	return mlrvals, true
+	return mlrvals
 }
 
 // ----------------------------------------------------------------

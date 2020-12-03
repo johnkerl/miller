@@ -176,7 +176,7 @@ type TransformerStep struct {
 
 	// Map from group-by field names to value-field names to array of stepper objects.
 	// See the Transform method below for more details.
-	groups map[string]map[string][]tStepper
+	groups map[string]map[string]map[string]*tStepper
 }
 
 func NewTransformerStep(
@@ -208,6 +208,7 @@ func NewTransformerStep(
 		stepperNames:    stepperNames,
 		valueFieldNames: valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
+		groups: make(map[string]map[string]map[string]*tStepper),
 	}
 
 	return this, nil
@@ -247,23 +248,19 @@ func (this *TransformerStep) Transform(
 	}
 
 	// ["s", "t"]
-	groupingKey, groupByFieldValues, gok := inrec.GetSelectedValuesAndJoined(this.groupByFieldNames)
+	groupingKey, gok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 	if !gok { // current record doesn't have fields to be stepped; pass it along
 		outputChannel <- inrecAndContext
 		return
 	}
 
 	// ["x", "y"]
-	valueFieldValues, vok := inrec.GetSelectedValues(this.valueFieldNames)
-	if !vok { // current record doesn't have fields to be stepped; pass it along
-		outputChannel <- inrecAndContext
-		return
-	}
+	valueFieldValues := inrec.ReferenceSelectedValues(this.valueFieldNames)
 
 	groupToAccField := this.groups[groupingKey]
 	if groupToAccField == nil {
 		// Populate the groups data structure on first reference if needed
-		groupToAccField := make(map[string][]tStepper)
+		groupToAccField := make(map[string]map[string]*tStepper)
 		this.groups[groupingKey] = groupToAccField
 	}
 
@@ -271,34 +268,34 @@ func (this *TransformerStep) Transform(
 	for i, valueFieldName := range this.valueFieldNames {
 		// TODO: make it sparse in the GetSelectedValues() ... no `vok` return ...
 		valueFieldValue := valueFieldValues[i]
-		//		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-		//		if (value_field_sval == NULL) // Key not present
-		//			continue;
+		if valueFieldValue == nil { // not present in the current record
+			continue;
+		}
 
 		//		int have_dval = FALSE;
 		//		int have_nval = FALSE;
 		//		double value_field_dval = -999.0;
 		//		mv_t   value_field_nval = mv_absent();
-		//
-		//		lhmsv_t* pacc_field_to_acc_state = lhmsv_get(pgroup_to_acc_field, value_field_name);
-		//		if (pacc_field_to_acc_state == NULL) {
-		//			pacc_field_to_acc_state = lhmsv_alloc();
-		//			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_state, NO_FREE);
-		//		}
+
+		accFieldToAccState := groupToAccField[valueFieldName]
+		if accFieldToAccState == nil {
+			accFieldToAccState = make(map[string]*tStepper)
+			groupToAccField[valueFieldName] = accFieldToAccState
+		}
 
 		// for "delta", "rsum"
 		for _, stepperName := range this.stepperNames {
-			//			tStepper* stepper = lhmsv_get(pacc_field_to_acc_state, stepperName);
-			//			if (stepper == NULL) {
-			//				stepper = make_step(stepperName, value_field_name, pstate->allow_int_float,
-			//					pstate->pstring_alphas, pstate->pewma_suffixes);
-			//				if (stepper == NULL) {
-			//					fprintf(stderr, "mlr step: stepper \"%s\" not found.\n",
+			stepper := accFieldToAccState[stepperName]
+			if stepper == nil {
+			//				stepper = newStepper(stepperName, value_field_name, pstate->allow_int_float,
+			//					this.stringAlphas, this.EWMASuffixes);
+			//				if stepper == nil {
+			//					fmt.Fprintf(os.Stderr, "mlr step: stepper \"%s\" not found.\n",
 			//						stepperName);
-			//					exit(1);
+			//					os.Exit(1);
 			//				}
-			//				lhmsv_put(pacc_field_to_acc_state, stepperName, stepper, NO_FREE);
-			//			}
+			//				accFieldToAccState[stepperName] = stepper
+			}
 			//
 			//			if (*value_field_sval == 0) { // Key present with null value
 			//				if (stepper->pzprocess_func != NULL) {
@@ -352,7 +349,7 @@ func (this *TransformerStep) Transform(
 //};
 // ----------------------------------------------------------------
 
-//static tStepper* make_step(char* step_name, char* input_field_name, int allow_int_float,
+//static tStepper* newStepper(char* step_name, char* input_field_name, int allow_int_float,
 //	slls_t* pstring_alphas, slls_t* pewma_suffixes)
 //{
 //	for (int i = 0; i < step_lookup_table_length; i++)
