@@ -1,11 +1,13 @@
 package transformers
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -36,32 +38,20 @@ func transformerStepParseCLI(
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
 
-	pStepperNames := flagSet.String(
+	pStepperNamesString := flagSet.String(
 		"a",
 		"",
 		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
 
-	pValueFieldNames := flagSet.String(
+	pValueFieldNamesString := flagSet.String(
 		"f",
 		"",
 		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
 
-	pGroupByFieldNames := flagSet.String(
+	pGroupByFieldNamesString := flagSet.String(
 		"g",
-		"",
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
-
-	pStringAlphas := flagSet.String(
-		"d",
-		DEFAULT_STRING_ALPHA,
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
-
-	pEWMASuffixes := flagSet.String(
-		"o",
 		"",
 		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
@@ -69,6 +59,18 @@ func transformerStepParseCLI(
 	pAllowIntFloat := flagSet.Bool(
 		"F",
 		false,
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
+	)
+
+	pAlphasString := flagSet.String(
+		"d",
+		DEFAULT_STRING_ALPHA,
+		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
+	)
+
+	pEWMASuffixesString := flagSet.String(
+		"o",
+		"",
 		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
 
@@ -84,31 +86,29 @@ func transformerStepParseCLI(
 		return nil
 	}
 
-	// TODO
-	if *pStepperNames == "" || *pValueFieldNames == "" {
-		//		mapper_step_usage(stderr, argv[0], verb);
-		//		return NULL;
-	}
-	if *pStringAlphas != "" && *pEWMASuffixes != "" {
-		//		if (pewma_suffixes->length != pstring_alphas->length) {
-		//			mapper_step_usage(stderr, argv[0], verb);
-		//			return NULL;
-		//		}
+	stepperNames := lib.SplitString(*pStepperNamesString, ",")
+	valueFieldNames := lib.SplitString(*pValueFieldNamesString, ",")
+	groupByFieldNames := lib.SplitString(*pGroupByFieldNamesString, ",")
+	stringAlphas := lib.SplitString(*pAlphasString, ",")
+	EWMASuffixes := lib.SplitString(*pEWMASuffixesString, ",")
+
+	transformer, err := NewTransformerStep(
+		stepperNames,
+		valueFieldNames,
+		groupByFieldNames,
+		stringAlphas,
+		EWMASuffixes,
+		*pAllowIntFloat,
+	)
+	// TODO: put error return into this API
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	// Find out how many flags were consumed by this verb and advance for the
 	// next verb
 	argi = len(args) - len(flagSet.Args())
-
-	// TOOD: catch err
-	transformer, _ := NewTransformerStep(
-		*pStepperNames,
-		*pValueFieldNames,
-		*pGroupByFieldNames,
-		*pStringAlphas,
-		*pEWMASuffixes,
-		*pAllowIntFloat,
-	)
 
 	*pargi = argi
 	return transformer
@@ -161,28 +161,6 @@ func transformerStepUsage(
 }
 
 // ----------------------------------------------------------------
-type TransformerStep struct {
-	// input
-	stepCount            int64
-	groupByFieldNameList []string
-
-	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
-	recordCount           int64
-	previousGroupingKey   string
-}
-
-//typedef struct _mapper_step_state_t {
-//	slls_t*         pstepper_names;
-//	string_array_t* pvalue_field_names;    // parameter
-//	string_array_t* pvalue_field_values;   // scratch space used per-record
-//	slls_t*         pgroup_by_field_names; // parameter
-//	lhmslv_t*       groups;
-//	bool            allow_int_float;
-//	slls_t*         pstring_alphas;
-//	slls_t*         pewma_suffixes;
-//} mapper_step_state_t;
-
 // Multilevel hashmap structure:
 // {
 //   ["s","t"] : {              <--- group-by field names
@@ -205,6 +183,68 @@ type TransformerStep struct {
 //   },
 // }
 
+type tStepper struct {
+}
+
+type TransformerStep struct {
+	// Input:
+	valueFieldNames []string
+
+	// State:
+
+	valueFieldValues []types.Mlrval // scratch space used per-record
+
+	// Map from group-by field names to value-field names to array of stepper objects
+	groups map[string]map[string][]tStepper
+}
+
+func NewTransformerStep(
+	stepperNames []string,
+	valueFieldNames []string,
+	groupByFieldNames []string,
+	stringAlphas []string,
+	EWMASuffixes []string,
+	allowIntFloat bool,
+) (*TransformerStep, error) {
+
+	if len(stepperNames) == 0 || len(valueFieldNames) == 0 {
+		return nil, errors.New(
+			// TODO: parameterize verb here somehow
+			"mlr step: -a and -f are both required arguments.",
+		)
+	}
+	if len(stringAlphas) != 0 && len(EWMASuffixes) != 0 {
+		if len(EWMASuffixes) != len(stringAlphas) {
+			return nil, errors.New(
+				// TODO: parameterize verb here somehow
+				"mlr step: If -d and -o are provied, their values must have the same length.",
+			)
+		}
+	}
+
+	// TODO: flesh out
+	this := &TransformerStep{
+		valueFieldNames: valueFieldNames,
+	}
+
+	return this, nil
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerStep) Map(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	inrec := inrecAndContext.Record
+	if inrec != nil { // not end of record stream
+		// TODO: flesh out
+		outputChannel <- inrecAndContext
+	} else {
+		outputChannel <- inrecAndContext
+	}
+}
+
+// ----------------------------------------------------------------
 //typedef struct _step_lookup_t {
 //	name string
 //	allocFunc stepAllocFunc
@@ -220,66 +260,7 @@ type TransformerStep struct {
 //	{"counter",    step_counter_alloc,    "Count instances of field(s) between successive records"},
 //	{"ewma",       step_ewma_alloc,       "Exponentially weighted moving average over successive records"},
 //};
-
-func NewTransformerStep(
-	stepperNames string,
-	valueFieldNames string,
-	groupByFieldNames string,
-	stringAlphas string,
-	EWMASuffixes string,
-	allowIntFloat bool,
-) (*TransformerStep, error) {
-
-	//groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-
-	this := &TransformerStep{
-		//stepCount:             stepCount,
-		//groupByFieldNameList: groupByFieldNameList,
-
-		//recordCount:         0,
-		//previousGroupingKey: "",
-	}
-
-	//if len(groupByFieldNameList) == 0 {
-	//this.recordTransformerFunc = this.mapUnkeyed
-	//} else {
-	//this.recordTransformerFunc = this.mapKeyed
-	//}
-
-	return this, nil
-}
-
-//// ----------------------------------------------------------------
-//static mapper_t* mapper_step_alloc(ap_state_t* pargp, slls_t* pstepper_names, string_array_t* pvalue_field_names,
-//	slls_t* pgroup_by_field_names, int allow_int_float, slls_t* pstring_alphas, slls_t* pewma_suffixes)
-//{
-//	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-//
-//	mapper_step_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_step_state_t));
-//
-//	pstate->pargp                 = pargp;
-//	pstate->pstepper_names        = pstepper_names;
-//	pstate->pvalue_field_names    = pvalue_field_names;
-//	pstate->pvalue_field_values   = string_array_alloc(pvalue_field_names->length);
-//	pstate->pgroup_by_field_names = pgroup_by_field_names;
-//	pstate->groups                = lhmslv_alloc();
-//	pstate->allow_int_float       = allow_int_float;
-//	pstate->pstring_alphas        = pstring_alphas;
-//	pstate->pewma_suffixes        = pewma_suffixes;
-//
-//	pmapper->pvstate       = pstate;
-//	pmapper->pprocess_func = mapper_step_process;
-//
-//	return pmapper;
-//}
-
 // ----------------------------------------------------------------
-func (this *TransformerStep) Map(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
-}
 
 //// ----------------------------------------------------------------
 //static sllv_t* mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
@@ -378,53 +359,6 @@ func (this *TransformerStep) Map(
 //				pstring_alphas, pewma_suffixes);
 //	return NULL;
 //}
-
-func (this *TransformerStep) mapUnkeyed(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
-
-		if this.recordCount > 0 && this.recordCount%this.stepCount == 0 {
-			newrec := types.NewMlrmapAsRecord()
-			outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
-		}
-		outputChannel <- inrecAndContext
-
-		this.recordCount++
-
-	} else {
-		outputChannel <- inrecAndContext
-	}
-}
-
-func (this *TransformerStep) mapKeyed(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
-
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
-		if !ok {
-			groupingKey = ""
-		}
-
-		if groupingKey != this.previousGroupingKey && this.recordCount > 0 {
-			newrec := types.NewMlrmapAsRecord()
-			outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
-		}
-
-		outputChannel <- inrecAndContext
-
-		this.previousGroupingKey = groupingKey
-		this.recordCount++
-
-	} else {
-		outputChannel <- inrecAndContext
-	}
-}
 
 //// ----------------------------------------------------------------
 //typedef struct _step_delta_state_t {
