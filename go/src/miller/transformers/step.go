@@ -56,7 +56,9 @@ func transformerStepParseCLI(
 		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
 	)
 
-	pAllowIntFloat := flagSet.Bool(
+	// As of Miller 6 this happens automatically, but the flag is accepted
+	// as a no-op for backward compatibility with Miller 5 and below.
+	_ = flagSet.Bool(
 		"F",
 		false,
 		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
@@ -98,7 +100,6 @@ func transformerStepParseCLI(
 		groupByFieldNames,
 		stringAlphas,
 		EWMASuffixes,
-		*pAllowIntFloat,
 	)
 	// TODO: put error return into this API
 	if err != nil {
@@ -135,6 +136,8 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "-g {d,e,f} Optional group-by-field names\n")
 
 	fmt.Fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n")
+	fmt.Fprintf(o, "           As of Miller 6 this happens automatically, but the flag is accepted\n")
+	fmt.Fprintf(o, "           as a no-op for backward compatibility with Miller 5 and below.\n")
 
 	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
 	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
@@ -166,7 +169,6 @@ type TransformerStep struct {
 	stepperNames      []string
 	valueFieldNames   []string
 	groupByFieldNames []string
-	allowIntFloat     bool
 	stringAlphas      []string
 	EWMASuffixes      []string
 
@@ -184,7 +186,6 @@ func NewTransformerStep(
 	groupByFieldNames []string,
 	stringAlphas []string,
 	EWMASuffixes []string,
-	allowIntFloat bool,
 ) (*TransformerStep, error) {
 
 	if len(stepperNames) == 0 || len(valueFieldNames) == 0 {
@@ -197,17 +198,15 @@ func NewTransformerStep(
 		if len(EWMASuffixes) != len(stringAlphas) {
 			return nil, errors.New(
 				// TODO: parameterize verb here somehow
-				"mlr step: If -d and -o are provied, their values must have the same length.",
+				"mlr step: If -d and -o are provided, their values must have the same length.",
 			)
 		}
 	}
 
-	// TODO: flesh out
 	this := &TransformerStep{
 		stepperNames:      stepperNames,
 		valueFieldNames:   valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
-		allowIntFloat:     allowIntFloat,
 		stringAlphas:      stringAlphas,
 		EWMASuffixes:      EWMASuffixes,
 		groups:            make(map[string]map[string]map[string]tStepper),
@@ -217,26 +216,33 @@ func NewTransformerStep(
 }
 
 // ----------------------------------------------------------------
-// Multilevel hashmap structure:
+// Multilevel hashmap structure for the `groups` field example:
+//
+// * Group-by field names = ["a", "b"]
+// * Value field names = ["x", "y"]
+// * Steppers ["rsum", "delta"]
+//
 // {
-//   ["s","t"] : {              <--- group-by field names
-//     ["x","y"] : {            <--- value field names
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
+//   "s,t" : {        <-- for records where 'a=s,b=t'
+//     "x": {
+//       "rsum": rsum stepper object,
+//       "delta": delta stepper object,
+//     },
+//     "y": {
+//       "rsum": rsum stepper object,
+//       "delta": delta stepper object,
 //     }
 //   },
-//   ["u","v"] : {
-//     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
+//   "u,v" : {        <-- for records where 'a=u,b=v'
+//     "x": {
+//       "rsum": rsum stepper object,
+//       "delta": delta stepper object,
+//     },
+//     "y": {
+//       "rsum": rsum stepper object,
+//       "delta": delta stepper object,
 //     }
-//   },
-//   ["u","w"] : {
-//     ["x","y"] : {
-//       "corr" : C stats2_corr_t object,
-//       "cov"  : C stats2_cov_t  object
-//     }
-//   },
+//   }
 // }
 
 func (this *TransformerStep) Transform(
@@ -250,16 +256,16 @@ func (this *TransformerStep) Transform(
 		return
 	}
 
-	// ["s", "t"]
+	// Group-by field names are ["a", "b"]
+	// Input data {"a": "s", "b": "t", "x": 3.4, "y": 5.6}
+	// Grouping key is "s,t"
 	groupingKey, gok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 	if !gok { // current record doesn't have fields to be stepped; pass it along
 		outputChannel <- inrecAndContext
 		return
 	}
 
-	// ["x", "y"]
-	valueFieldValues := inrec.ReferenceSelectedValues(this.valueFieldNames)
-
+	// Create the data structure on first reference
 	groupToAccField := this.groups[groupingKey]
 	if groupToAccField == nil {
 		// Populate the groups data structure on first reference if needed
@@ -267,9 +273,11 @@ func (this *TransformerStep) Transform(
 		this.groups[groupingKey] = groupToAccField
 	}
 
-	// for x=1 and y=2:
+	// [3.4, 5.6]
+	valueFieldValues := inrec.ReferenceSelectedValues(this.valueFieldNames)
+
+	// for x=3.4 and y=5.6:
 	for i, valueFieldName := range this.valueFieldNames {
-		// TODO: make it sparse in the GetSelectedValues() ... no `vok` return ...
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
 			continue
@@ -281,14 +289,13 @@ func (this *TransformerStep) Transform(
 			groupToAccField[valueFieldName] = accFieldToAccState
 		}
 
-		// for "delta", "rsum"
+		// for "delta", "rsum":
 		for _, stepperName := range this.stepperNames {
 			stepper, present := accFieldToAccState[stepperName]
 			if !present {
 				stepper = allocateStepper(
 					stepperName,
 					valueFieldName,
-					this.allowIntFloat,
 					this.stringAlphas,
 					this.EWMASuffixes,
 				)
@@ -300,17 +307,6 @@ func (this *TransformerStep) Transform(
 				}
 				accFieldToAccState[stepperName] = stepper
 			}
-
-			// xxx
-			// https://stackoverflow.com/questions/44370277/type-is-pointer-to-interface-not-interface-confusion
-			//
-			// A pointer to a struct and a pointer to an interface are not the
-			// same.
-			//
-			// An interface can store either a struct directly or a pointer to
-			// a struct. In the latter case, you still just use the interface
-			// directly, not a pointer to the interface. For example:
-
 			stepper.process(valueFieldValue, inrec)
 		}
 	}
@@ -319,22 +315,10 @@ func (this *TransformerStep) Transform(
 }
 
 // ================================================================
-// File-local utility function
-
-func makeIntOrFloat(literal int64, allowIntFloat bool) types.Mlrval {
-	if allowIntFloat {
-		return types.MlrvalFromInt64(literal)
-	} else {
-		return types.MlrvalFromFloat64(float64(literal))
-	}
-}
-
-// ================================================================
 // Lookups for individual steppers, like "delta" or "rsum"
 
 type tStepperAllocator func(
 	inputFieldName string,
-	allowIntFloat bool,
 	stringAlphas []string,
 	EWMASuffixes []string,
 ) tStepper
@@ -354,15 +338,14 @@ var STEPPER_LOOKUP_TABLE = []tStepperLookup{
 	{"shift", stepperShiftAlloc, "Include value(s) in field(s) from previous record, if any"},
 	{"from-first", stepperFromFirstAlloc, "Compute differences in field(s) from first record"},
 	{"ratio", stepperRatioAlloc, "Compute ratios in field(s) between successive records"},
-	//{"rsum", stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
-	//{"counter", stepperCounterAlloc, "Count instances of field(s) between successive records"},
-	//{"ewma", stepperEwmaAlloc, "Exponentially weighted moving average over successive records"},
+	{"rsum", stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
+	{"counter", stepperCounterAlloc, "Count instances of field(s) between successive records"},
+	{"ewma", stepperEWMAAlloc, "Exponentially weighted moving average over successive records"},
 }
 
 func allocateStepper(
 	stepperName string,
 	inputFieldName string,
-	allowIntFloat bool,
 	stringAlphas []string,
 	EWMASuffixes []string,
 ) tStepper {
@@ -370,7 +353,6 @@ func allocateStepper(
 		if stepperLookup.name == stepperName {
 			return stepperLookup.stepperAllocator(
 				inputFieldName,
-				allowIntFloat,
 				stringAlphas,
 				EWMASuffixes,
 			)
@@ -386,19 +368,16 @@ func allocateStepper(
 type tStepperDelta struct {
 	previous        *types.Mlrval
 	outputFieldName string
-	allowIntFloat   bool
 }
 
 func stepperDeltaAlloc(
 	inputFieldName string,
-	allowIntFloat bool,
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
 	return &tStepperDelta{
 		previous:        nil,
 		outputFieldName: inputFieldName + "_delta",
-		allowIntFloat:   allowIntFloat,
 	}
 }
 
@@ -408,7 +387,7 @@ func (this *tStepperDelta) process(
 ) {
 	var delta types.Mlrval
 	if this.previous == nil {
-		delta = makeIntOrFloat(0, this.allowIntFloat)
+		delta = types.MlrvalFromInt64(0)
 	} else {
 		delta = types.MlrvalBinaryMinus(valueFieldValue, this.previous)
 	}
@@ -424,19 +403,16 @@ func (this *tStepperDelta) process(
 type tStepperShift struct {
 	previous        *types.Mlrval
 	outputFieldName string
-	allowIntFloat   bool
 }
 
 func stepperShiftAlloc(
 	inputFieldName string,
-	allowIntFloat bool,
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
 	return &tStepperShift{
 		previous:        nil,
 		outputFieldName: inputFieldName + "_shift",
-		allowIntFloat:   allowIntFloat,
 	}
 }
 
@@ -458,19 +434,16 @@ func (this *tStepperShift) process(
 type tStepperFromFirst struct {
 	first           *types.Mlrval
 	outputFieldName string
-	allowIntFloat   bool
 }
 
 func stepperFromFirstAlloc(
 	inputFieldName string,
-	allowIntFloat bool,
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
 	return &tStepperFromFirst{
 		first:           nil,
 		outputFieldName: inputFieldName + "_from_first",
-		allowIntFloat:   allowIntFloat,
 	}
 }
 
@@ -480,34 +453,28 @@ func (this *tStepperFromFirst) process(
 ) {
 	var from_first types.Mlrval
 	if this.first == nil {
-		from_first = makeIntOrFloat(0, this.allowIntFloat)
+		from_first = types.MlrvalFromInt64(0)
 		this.first = valueFieldValue.Copy()
 	} else {
 		from_first = types.MlrvalBinaryMinus(valueFieldValue, this.first)
 	}
 	inrec.PutCopy(&this.outputFieldName, &from_first)
-
-	// TODO: from C impl: if input is empty:
-	// lrec_put(prec, this.output_field_name, "", NO_FREE);
 }
 
 // ================================================================
 type tStepperRatio struct {
 	previous        *types.Mlrval
 	outputFieldName string
-	allowIntFloat   bool
 }
 
 func stepperRatioAlloc(
 	inputFieldName string,
-	allowIntFloat bool,
 	_unused1 []string,
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRatio{
 		previous:        nil,
 		outputFieldName: inputFieldName + "_ratio",
-		allowIntFloat:   allowIntFloat,
 	}
 }
 
@@ -517,167 +484,144 @@ func (this *tStepperRatio) process(
 ) {
 	var ratio types.Mlrval
 	if this.previous == nil {
-		ratio = makeIntOrFloat(1, this.allowIntFloat)
+		ratio = types.MlrvalFromInt64(1)
 	} else {
 		ratio = types.MlrvalDivide(valueFieldValue, this.previous)
 	}
 	inrec.PutCopy(&this.outputFieldName, &ratio)
 
 	this.previous = valueFieldValue.Copy()
-
-	// TODO: from C impl: if input is empty:
-	// lrec_put(prec, this.output_field_name, "", NO_FREE);
 }
 
-//// ----------------------------------------------------------------
-//typedef struct _step_ratio_state_t {
-//	double prev;
-//	int    have_prev;
-//	char*  output_field_name;
-//} step_ratio_state_t;
-//static void step_ratio_dprocess(double fltv, lrec_t* prec) {
-//	double ratio = 1.0;
-//	if (this.have_prev) {
-//		ratio = fltv / this.prev;
-//	} else {
-//		this.have_prev = TRUE;
-//	}
-//	lrec_put(prec, this.output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
-//		FREE_ENTRY_VALUE);
-//	this.prev = fltv;
-//}
-//static void step_ratio_zprocess(lrec_t* prec) {
-//	lrec_put(prec, this.output_field_name, "", NO_FREE);
-//}
-//static tStepper* step_ratio_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
-//	step_ratio_state_t* pstate = mlr_malloc_or_die(sizeof(step_ratio_state_t));
-//	this.prev          = -999.0;
-//	this.have_prev     = FALSE;
-//	this.output_field_name = mlr_paste_2_strings(input_field_name, "_ratio");
-//
-//	stepper->pdprocess_func = step_ratio_dprocess;
-//	stepper->pnprocess_func = nil;
-//	stepper->psprocess_func = nil;
-//	stepper->pzprocess_func = step_ratio_zprocess;
-//	return stepper;
-//}
+// ================================================================
+type tStepperRsum struct {
+	rsum            types.Mlrval
+	outputFieldName string
+}
 
-//// ----------------------------------------------------------------
-//typedef struct _step_rsum_state_t {
-//	mv_t   rsum;
-//	char*  output_field_name;
-//	int    allow_int_float;
-//} step_rsum_state_t;
-//static void step_rsum_nprocess(mv_t* pnumv, lrec_t* prec) {
-//	this.rsum = x_xx_plus_func(&this.rsum, pnumv);
-//	lrec_put(prec, this.output_field_name, mv_alloc_format_val(&this.rsum),
-//		FREE_ENTRY_VALUE);
-//}
-//static void step_rsum_zprocess(lrec_t* prec) {
-//	lrec_put(prec, this.output_field_name, "", NO_FREE);
-//}
-//static tStepper* step_rsum_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
-//	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
-//	this.allow_int_float = allow_int_float;
-//	this.rsum = this.allow_int_float ? types.MlrvalFromInt64(0) : MlrvalFromFloat64(0.0);
-//	this.output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
-//	stepper->pdprocess_func = nil;
-//	stepper->pnprocess_func = step_rsum_nprocess;
-//	stepper->psprocess_func = nil;
-//	stepper->pzprocess_func = step_rsum_zprocess;
-//	return stepper;
-//}
+func stepperRsumAlloc(
+	inputFieldName string,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperRsum{
+		rsum:            types.MlrvalFromInt64(0),
+		outputFieldName: inputFieldName + "_rsum",
+	}
+}
 
-//// ----------------------------------------------------------------
-//typedef struct _step_counter_state_t {
-//	mv_t counter;
-//	mv_t one;
-//	char*  output_field_name;
-//} step_counter_state_t;
-//static void step_counter_sprocess(char* strv, lrec_t* prec) {
-//	this.counter = x_xx_plus_func(&this.counter, &this.one);
-//	lrec_put(prec, this.output_field_name, mv_alloc_format_val(&this.counter),
-//		FREE_ENTRY_VALUE);
-//}
-//static void step_counter_zprocess(lrec_t* prec) {
-//	lrec_put(prec, this.output_field_name, "", NO_FREE);
-//}
-//static tStepper* step_counter_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
-//	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
-//	this.counter = allow_int_float ? types.MlrvalFromInt64(0) : MlrvalFromFloat64(0.0);
-//	this.one     = allow_int_float ? types.MlrvalFromInt64(1) : MlrvalFromFloat64(1.0);
-//	this.output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
-//
-//	stepper->pdprocess_func = nil;
-//	stepper->pnprocess_func = nil;
-//	stepper->psprocess_func = step_counter_sprocess;
-//	stepper->pzprocess_func = step_counter_zprocess;
-//	return stepper;
-//}
+func (this *tStepperRsum) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	this.rsum = types.MlrvalBinaryPlus(valueFieldValue, &this.rsum)
+	inrec.PutCopy(&this.outputFieldName, &this.rsum)
+}
 
-//// ----------------------------------------------------------------
-//// https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
-//typedef struct _step_ewma_state_t {
-//	int     num_alphas;
-//	double* alphas;
-//	double* alphacompls;
-//	double* prevs;
-//	int     have_prevs;
-//	char**  output_field_names;
-//} step_ewma_state_t;
-//static void step_ewma_dprocess(double fltv, lrec_t* prec) {
-//	if (!this.have_prevs) {
-//		for (int i = 0; i < this.num_alphas; i++) {
-//			lrec_put(prec, this.output_field_names[i], mlr_alloc_string_from_double(fltv, MLR_GLOBALS.ofmt),
-//				FREE_ENTRY_VALUE);
-//			this.prevs[i] = fltv;
-//		}
-//		this.have_prevs = TRUE;
-//	} else {
-//		for (int i = 0; i < this.num_alphas; i++) {
-//			double curr = fltv;
-//			curr = this.alphas[i] * curr + this.alphacompls[i] * this.prevs[i];
-//			lrec_put(prec, this.output_field_names[i], mlr_alloc_string_from_double(curr, MLR_GLOBALS.ofmt),
-//				FREE_ENTRY_VALUE);
-//			this.prevs[i] = curr;
-//		}
-//	}
-//}
-//static void step_ewma_zprocess(lrec_t* prec) {
-//	for (int i = 0; i < this.num_alphas; i++)
-//		lrec_put(prec, this.output_field_names[i], "", NO_FREE);
-//}
+// ================================================================
+type tStepperCounter struct {
+	counter         types.Mlrval
+	one             types.Mlrval
+	outputFieldName string
+}
 
-//static tStepper* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstring_alphas, slls_t* pewma_suffixes) {
-//	tStepper* stepper              = mlr_malloc_or_die(sizeof(tStepper));
-//
-//	step_ewma_state_t* pstate  = mlr_malloc_or_die(sizeof(step_ewma_state_t));
-//	int n                      = pstring_alphas->length;
-//	this.num_alphas         = n;
-//	this.alphas             = mlr_malloc_or_die(n * sizeof(double));
-//	this.alphacompls        = mlr_malloc_or_die(n * sizeof(double));
-//	this.prevs              = mlr_malloc_or_die(n * sizeof(double));
-//	this.have_prevs         = FALSE;
-//	this.output_field_names = mlr_malloc_or_die(n * sizeof(char*));
-//	slls_t* psuffixes = (pewma_suffixes == nil) ? pstring_alphas : pewma_suffixes;
-//	sllse_t* pe = pstring_alphas->phead;
-//	sllse_t* pf = psuffixes->phead;
-//	for (int i = 0; i < n; i++, pe = pe->pnext, pf = pf->pnext) {
-//		char* string_alpha     = pe->value;
-//		char* suffix           = pf->value;
-//		this.alphas[i]      = mlr_double_from_string_or_die(string_alpha);
-//		this.alphacompls[i] = 1.0 - this.alphas[i];
-//		this.prevs[i]       = 0.0;
-//		this.output_field_names[i] = mlr_paste_3_strings(input_field_name, "_ewma_", suffix);
-//	}
-//	this.have_prevs = FALSE;
-//
-//	stepper->pdprocess_func = step_ewma_dprocess;
-//	stepper->pnprocess_func = nil;
-//	stepper->psprocess_func = nil;
-//	stepper->pzprocess_func = step_ewma_zprocess;
-//	return stepper;
-//}
+func stepperCounterAlloc(
+	inputFieldName string,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperCounter{
+		counter:         types.MlrvalFromInt64(0),
+		one:             types.MlrvalFromInt64(1),
+		outputFieldName: inputFieldName + "_counter",
+	}
+}
+
+func (this *tStepperCounter) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	this.counter = types.MlrvalBinaryPlus(&this.counter, &this.one)
+	inrec.PutCopy(&this.outputFieldName, &this.counter)
+}
+
+// ----------------------------------------------------------------
+// https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+
+// ================================================================
+type tStepperEWMA struct {
+	alphas           []types.Mlrval
+	oneMinusAlphas   []types.Mlrval
+	prevs            []types.Mlrval
+	outputFieldNames []string
+	havePrevs        bool
+}
+
+func stepperEWMAAlloc(
+	inputFieldName string,
+	stringAlphas []string,
+	EWMASuffixes []string,
+) tStepper {
+
+	// We trust our caller has already checked len(stringAlphas) ==
+	// len(EWMASuffixes) in the CLI parser.
+	n := len(stringAlphas)
+
+	alphas := make([]types.Mlrval, n)
+	oneMinusAlphas := make([]types.Mlrval, n)
+	prevs := make([]types.Mlrval, n)
+	outputFieldNames := make([]string, n)
+
+	suffixes := stringAlphas
+	if len(EWMASuffixes) != 0 {
+		suffixes = EWMASuffixes
+	}
+
+	for i, stringAlpha := range stringAlphas {
+		suffix := suffixes[i]
+
+		dalpha, ok := lib.TryFloat64FromString(stringAlpha)
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr step: could not parse \"%s\" as floating-point EWMA coefficient.\n",
+				stringAlpha,
+			)
+			os.Exit(1)
+		}
+		alphas[i] = types.MlrvalFromFloat64(dalpha)
+		oneMinusAlphas[i] = types.MlrvalFromFloat64(1.0 - dalpha)
+		prevs[i] = types.MlrvalFromFloat64(0.0)
+		outputFieldNames[i] = inputFieldName + "_ewma_" + suffix
+	}
+
+	return &tStepperEWMA{
+		alphas:           alphas,
+		oneMinusAlphas:   oneMinusAlphas,
+		prevs:            prevs,
+		outputFieldNames: outputFieldNames,
+		havePrevs:        false,
+	}
+}
+
+func (this *tStepperEWMA) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	if !this.havePrevs {
+		for i, _ := range this.alphas {
+			inrec.PutCopy(&this.outputFieldNames[i], valueFieldValue)
+			this.prevs[i] = *valueFieldValue.Copy()
+		}
+		this.havePrevs = true
+	} else {
+		for i, _ := range this.alphas {
+			curr := valueFieldValue.Copy()
+			product1 := types.MlrvalTimes(curr, &this.alphas[i])
+			product2 := types.MlrvalTimes(&this.prevs[i], &this.oneMinusAlphas[i])
+			next := types.MlrvalBinaryPlus(&product1, &product2)
+			inrec.PutCopy(&this.outputFieldNames[i], &next)
+			this.prevs[i] = next
+		}
+	}
+}
