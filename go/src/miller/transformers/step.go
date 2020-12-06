@@ -125,10 +125,10 @@ func transformerStepUsage(
 	// For this transformer, we do NOT use flagSet.VisitAll -- we use our own print statements.
 
 	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
-	// TODO
-	//	for (int i = 0; i < step_lookup_table_length; i++) {
-	//		fprintf(o, "  %-8s %s\n", step_lookup_table[i].name, step_lookup_table[i].desc);
-	//	}
+	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
+		fmt.Fprintf(o, "  %-8s %s\n", stepperLookup.name, stepperLookup.desc)
+	}
+	fmt.Fprintf(o, "\n")
 
 	fmt.Fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n")
 
@@ -161,22 +161,21 @@ func transformerStepUsage(
 }
 
 // ----------------------------------------------------------------
-type tStepper struct {
-}
-
 type TransformerStep struct {
-	// Input:
-	stepperNames    []string
-	valueFieldNames []string
+	// INPUT
+	stepperNames      []string
+	valueFieldNames   []string
 	groupByFieldNames []string
+	allowIntFloat     bool
+	stringAlphas      []string
+	EWMASuffixes      []string
 
-	// State:
-
-	valueFieldValues []types.Mlrval // scratch space used per-record
-
-	// Map from group-by field names to value-field names to array of stepper objects.
-	// See the Transform method below for more details.
-	groups map[string]map[string]map[string]*tStepper
+	// STATE
+	// Scratch space used per-record
+	valueFieldValues []types.Mlrval
+	// Map from group-by field names to value-field names to array of
+	// stepper objects.  See the Transform method below for more details.
+	groups map[string]map[string]map[string]tStepper
 }
 
 func NewTransformerStep(
@@ -205,10 +204,13 @@ func NewTransformerStep(
 
 	// TODO: flesh out
 	this := &TransformerStep{
-		stepperNames:    stepperNames,
-		valueFieldNames: valueFieldNames,
+		stepperNames:      stepperNames,
+		valueFieldNames:   valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
-		groups: make(map[string]map[string]map[string]*tStepper),
+		allowIntFloat:     allowIntFloat,
+		stringAlphas:      stringAlphas,
+		EWMASuffixes:      EWMASuffixes,
+		groups:            make(map[string]map[string]map[string]tStepper),
 	}
 
 	return this, nil
@@ -245,6 +247,7 @@ func (this *TransformerStep) Transform(
 
 	if inrec == nil { // end of record stream
 		outputChannel <- inrecAndContext
+		return
 	}
 
 	// ["s", "t"]
@@ -260,7 +263,7 @@ func (this *TransformerStep) Transform(
 	groupToAccField := this.groups[groupingKey]
 	if groupToAccField == nil {
 		// Populate the groups data structure on first reference if needed
-		groupToAccField := make(map[string]map[string]*tStepper)
+		groupToAccField = make(map[string]map[string]tStepper)
 		this.groups[groupingKey] = groupToAccField
 	}
 
@@ -269,194 +272,262 @@ func (this *TransformerStep) Transform(
 		// TODO: make it sparse in the GetSelectedValues() ... no `vok` return ...
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
-			continue;
+			continue
 		}
-
-		//		int have_dval = FALSE;
-		//		int have_nval = FALSE;
-		//		double value_field_dval = -999.0;
-		//		mv_t   value_field_nval = mv_absent();
 
 		accFieldToAccState := groupToAccField[valueFieldName]
 		if accFieldToAccState == nil {
-			accFieldToAccState = make(map[string]*tStepper)
+			accFieldToAccState = make(map[string]tStepper)
 			groupToAccField[valueFieldName] = accFieldToAccState
 		}
 
 		// for "delta", "rsum"
 		for _, stepperName := range this.stepperNames {
-			stepper := accFieldToAccState[stepperName]
-			if stepper == nil {
-			//				stepper = newStepper(stepperName, value_field_name, pstate->allow_int_float,
-			//					this.stringAlphas, this.EWMASuffixes);
-			//				if stepper == nil {
-			//					fmt.Fprintf(os.Stderr, "mlr step: stepper \"%s\" not found.\n",
-			//						stepperName);
-			//					os.Exit(1);
-			//				}
-			//				accFieldToAccState[stepperName] = stepper
+			stepper, present := accFieldToAccState[stepperName]
+			if !present {
+				stepper = allocateStepper(
+					stepperName,
+					valueFieldName,
+					this.allowIntFloat,
+					this.stringAlphas,
+					this.EWMASuffixes,
+				)
+				if stepper == nil {
+					// TODO: parameterize verb name
+					fmt.Fprintf(os.Stderr, "mlr step: stepper \"%s\" not found.\n",
+						stepperName)
+					os.Exit(1)
+				}
+				accFieldToAccState[stepperName] = stepper
 			}
+
+			// xxx
+			// https://stackoverflow.com/questions/44370277/type-is-pointer-to-interface-not-interface-confusion
 			//
-			//			if (*value_field_sval == 0) { // Key present with null value
-			//				if (stepper->pzprocess_func != NULL) {
-			//					stepper->pzprocess_func(stepper->pvstate, pinrec);
-			//				}
-			//			} else {
+			// A pointer to a struct and a pointer to an interface are not the
+			// same.
 			//
-			//				if (stepper->pdprocess_func != NULL) {
-			//					if (!have_dval) {
-			//						value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-			//						have_dval = TRUE;
-			//					}
-			//					stepper->pdprocess_func(stepper->pvstate, value_field_dval, pinrec);
-			//				}
-			//
-			//				if (stepper->pnprocess_func != NULL) {
-			//					if (!have_nval) {
-			//						value_field_nval = pstate->allow_int_float
-			//							? mv_scan_number_or_die(value_field_sval)
-			//							: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-			//						have_nval = TRUE;
-			//					}
-			//					stepper->pnprocess_func(stepper->pvstate, &value_field_nval, pinrec);
-			//				}
-			//
-			//				if (stepper->psprocess_func != NULL) {
-			//					stepper->psprocess_func(stepper->pvstate, value_field_sval, pinrec);
-			//				}
-			//			}
+			// An interface can store either a struct directly or a pointer to
+			// a struct. In the latter case, you still just use the interface
+			// directly, not a pointer to the interface. For example:
+
+			stepper.process(valueFieldValue, inrec)
 		}
 	}
 
 	outputChannel <- inrecAndContext
 }
 
-// ----------------------------------------------------------------
-//typedef struct _step_lookup_t {
-//	name string
-//	allocFunc stepAllocFunc
-//	desc string;
-//} step_lookup_t;
+// ================================================================
+// File-local utility function
 
-//static step_lookup_t step_lookup_table[] = {
-//	{"delta",      step_delta_alloc,      "Compute differences in field(s) between successive records"},
-//	{"shift",      step_shift_alloc,      "Include value(s) in field(s) from previous record, if any"},
-//	{"from-first", step_from_first_alloc, "Compute differences in field(s) from first record"},
-//	{"ratio",      step_ratio_alloc,      "Compute ratios in field(s) between successive records"},
-//	{"rsum",       step_rsum_alloc,       "Compute running sums of field(s) between successive records"},
-//	{"counter",    step_counter_alloc,    "Count instances of field(s) between successive records"},
-//	{"ewma",       step_ewma_alloc,       "Exponentially weighted moving average over successive records"},
-//};
-// ----------------------------------------------------------------
+func makeIntOrFloat(literal int64, allowIntFloat bool) types.Mlrval {
+	if allowIntFloat {
+		return types.MlrvalFromInt64(literal)
+	} else {
+		return types.MlrvalFromFloat64(float64(literal))
+	}
+}
 
-//static tStepper* newStepper(char* step_name, char* input_field_name, int allow_int_float,
-//	slls_t* pstring_alphas, slls_t* pewma_suffixes)
-//{
-//	for (int i = 0; i < step_lookup_table_length; i++)
-//		if (streq(step_name, step_lookup_table[i].name))
-//			return step_lookup_table[i].palloc_func(input_field_name, allow_int_float,
-//				pstring_alphas, pewma_suffixes);
-//	return NULL;
-//}
+// ================================================================
+// Lookups for individual steppers, like "delta" or "rsum"
 
-//// ----------------------------------------------------------------
-//typedef struct _step_delta_state_t {
-//	mv_t  prev;
-//	char* output_field_name;
-//	int   allow_int_float;
-//} step_delta_state_t;
-//static void step_delta_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
-//	step_delta_state_t* pstate = pvstate;
-//	mv_t delta;
-//	if (mv_is_null(&pstate->prev)) {
-//		delta = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-//	} else {
-//		delta = x_xx_minus_func(pnumv, &pstate->prev);
-//	}
-//	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&delta), FREE_ENTRY_VALUE);
-//	pstate->prev = *pnumv;
-//}
-//static void step_delta_zprocess(void* pvstate, lrec_t* prec) {
-//	step_delta_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
-//}
-//static tStepper* step_delta_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
-//	step_delta_state_t* pstate = mlr_malloc_or_die(sizeof(step_delta_state_t));
-//	pstate->prev = mv_absent();
-//	pstate->allow_int_float = allow_int_float;
-//	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_delta");
-//	stepper->pvstate        = (void*)pstate;
-//	stepper->pdprocess_func = NULL;
-//	stepper->pnprocess_func = step_delta_nprocess;
-//	stepper->psprocess_func = NULL;
-//	stepper->pzprocess_func = step_delta_zprocess;
-//	return stepper;
-//}
+type tStepperAllocator func(
+	inputFieldName string,
+	allowIntFloat bool,
+	stringAlphas []string,
+	EWMASuffixes []string,
+) tStepper
 
-//// ----------------------------------------------------------------
-//typedef struct _step_shift_state_t {
-//	char* prev;
-//	char* output_field_name;
-//	int   allow_int_float;
-//} step_shift_state_t;
-//static void step_shift_sprocess(void* pvstate, char* strv, lrec_t* prec) {
-//	step_shift_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, pstate->prev, FREE_ENTRY_VALUE);
-//	pstate->prev = mlr_strdup_or_die(strv);
-//}
-//static void step_shift_zprocess(void* pvstate, lrec_t* prec) {
-//	step_shift_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
-//}
-//static tStepper* step_shift_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
-//	step_shift_state_t* pstate = mlr_malloc_or_die(sizeof(step_shift_state_t));
-//	pstate->prev = mlr_strdup_or_die("");
-//	pstate->allow_int_float = allow_int_float;
-//	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_shift");
-//	stepper->pvstate        = (void*)pstate;
-//	stepper->pdprocess_func = NULL;
-//	stepper->pnprocess_func = NULL;
-//	stepper->psprocess_func = step_shift_sprocess;
-//	stepper->pzprocess_func = step_shift_zprocess;
-//	return stepper;
-//}
+type tStepper interface {
+	process(valueFieldValue *types.Mlrval, inputRecord *types.Mlrmap)
+}
 
-//// ----------------------------------------------------------------
-//typedef struct _step_from_first_state_t {
-//	mv_t  first;
-//	char* output_field_name;
-//	int   allow_int_float;
-//} step_from_first_state_t;
-//static void step_from_first_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
-//	step_from_first_state_t* pstate = pvstate;
-//	mv_t from_first;
-//	if (mv_is_null(&pstate->first)) {
-//		from_first = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-//		pstate->first = *pnumv;
-//	} else {
-//		from_first = x_xx_minus_func(pnumv, &pstate->first);
-//	}
-//	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&from_first), FREE_ENTRY_VALUE);
-//}
-//static void step_from_first_zprocess(void* pvstate, lrec_t* prec) {
-//	step_from_first_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
-//}
-//static tStepper* step_from_first_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
-//	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
-//	step_from_first_state_t* pstate = mlr_malloc_or_die(sizeof(step_from_first_state_t));
-//	pstate->first = mv_absent();
-//	pstate->allow_int_float = allow_int_float;
-//	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_from_first");
-//	stepper->pvstate        = (void*)pstate;
-//	stepper->pdprocess_func = NULL;
-//	stepper->pnprocess_func = step_from_first_nprocess;
-//	stepper->psprocess_func = NULL;
-//	stepper->pzprocess_func = step_from_first_zprocess;
-//	return stepper;
-//}
+type tStepperLookup struct {
+	name             string
+	stepperAllocator tStepperAllocator
+	desc             string
+}
+
+var STEPPER_LOOKUP_TABLE = []tStepperLookup{
+	{"delta", stepperDeltaAlloc, "Compute differences in field(s) between successive records"},
+	{"shift", stepperShiftAlloc, "Include value(s) in field(s) from previous record, if any"},
+	{"from-first", stepperFromFirstAlloc, "Compute differences in field(s) from first record"},
+	{"ratio", stepperRatioAlloc, "Compute ratios in field(s) between successive records"},
+	//{"rsum", stepperRsumAlloc, "Compute running sums of field(s) between successive records"},
+	//{"counter", stepperCounterAlloc, "Count instances of field(s) between successive records"},
+	//{"ewma", stepperEwmaAlloc, "Exponentially weighted moving average over successive records"},
+}
+
+func allocateStepper(
+	stepperName string,
+	inputFieldName string,
+	allowIntFloat bool,
+	stringAlphas []string,
+	EWMASuffixes []string,
+) tStepper {
+	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
+		if stepperLookup.name == stepperName {
+			return stepperLookup.stepperAllocator(
+				inputFieldName,
+				allowIntFloat,
+				stringAlphas,
+				EWMASuffixes,
+			)
+		}
+	}
+	return nil
+}
+
+// ================================================================
+// Implementations of individual steppers, like "delta" or "rsum"
+
+// ================================================================
+type tStepperDelta struct {
+	previous        *types.Mlrval
+	outputFieldName string
+	allowIntFloat   bool
+}
+
+func stepperDeltaAlloc(
+	inputFieldName string,
+	allowIntFloat bool,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperDelta{
+		previous:        nil,
+		outputFieldName: inputFieldName + "_delta",
+		allowIntFloat:   allowIntFloat,
+	}
+}
+
+func (this *tStepperDelta) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	var delta types.Mlrval
+	if this.previous == nil {
+		delta = makeIntOrFloat(0, this.allowIntFloat)
+	} else {
+		delta = types.MlrvalBinaryMinus(valueFieldValue, this.previous)
+	}
+	inrec.PutCopy(&this.outputFieldName, &delta)
+
+	this.previous = valueFieldValue.Copy()
+
+	// TODO: from C impl: if input is empty:
+	// lrec_put(prec, this.output_field_name, "", NO_FREE);
+}
+
+// ================================================================
+type tStepperShift struct {
+	previous        *types.Mlrval
+	outputFieldName string
+	allowIntFloat   bool
+}
+
+func stepperShiftAlloc(
+	inputFieldName string,
+	allowIntFloat bool,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperShift{
+		previous:        nil,
+		outputFieldName: inputFieldName + "_shift",
+		allowIntFloat:   allowIntFloat,
+	}
+}
+
+func (this *tStepperShift) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	if this.previous == nil {
+		shift := types.MlrvalFromVoid()
+		inrec.PutCopy(&this.outputFieldName, &shift)
+	} else {
+		inrec.PutCopy(&this.outputFieldName, this.previous)
+		this.previous = valueFieldValue.Copy()
+	}
+	this.previous = valueFieldValue.Copy()
+}
+
+// ================================================================
+type tStepperFromFirst struct {
+	first           *types.Mlrval
+	outputFieldName string
+	allowIntFloat   bool
+}
+
+func stepperFromFirstAlloc(
+	inputFieldName string,
+	allowIntFloat bool,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperFromFirst{
+		first:           nil,
+		outputFieldName: inputFieldName + "_from_first",
+		allowIntFloat:   allowIntFloat,
+	}
+}
+
+func (this *tStepperFromFirst) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	var from_first types.Mlrval
+	if this.first == nil {
+		from_first = makeIntOrFloat(0, this.allowIntFloat)
+		this.first = valueFieldValue.Copy()
+	} else {
+		from_first = types.MlrvalBinaryMinus(valueFieldValue, this.first)
+	}
+	inrec.PutCopy(&this.outputFieldName, &from_first)
+
+	// TODO: from C impl: if input is empty:
+	// lrec_put(prec, this.output_field_name, "", NO_FREE);
+}
+
+// ================================================================
+type tStepperRatio struct {
+	previous        *types.Mlrval
+	outputFieldName string
+	allowIntFloat   bool
+}
+
+func stepperRatioAlloc(
+	inputFieldName string,
+	allowIntFloat bool,
+	_unused1 []string,
+	_unused2 []string,
+) tStepper {
+	return &tStepperRatio{
+		previous:        nil,
+		outputFieldName: inputFieldName + "_ratio",
+		allowIntFloat:   allowIntFloat,
+	}
+}
+
+func (this *tStepperRatio) process(
+	valueFieldValue *types.Mlrval,
+	inrec *types.Mlrmap,
+) {
+	var ratio types.Mlrval
+	if this.previous == nil {
+		ratio = makeIntOrFloat(1, this.allowIntFloat)
+	} else {
+		ratio = types.MlrvalDivide(valueFieldValue, this.previous)
+	}
+	inrec.PutCopy(&this.outputFieldName, &ratio)
+
+	this.previous = valueFieldValue.Copy()
+
+	// TODO: from C impl: if input is empty:
+	// lrec_put(prec, this.output_field_name, "", NO_FREE);
+}
 
 //// ----------------------------------------------------------------
 //typedef struct _step_ratio_state_t {
@@ -464,33 +535,30 @@ func (this *TransformerStep) Transform(
 //	int    have_prev;
 //	char*  output_field_name;
 //} step_ratio_state_t;
-//static void step_ratio_dprocess(void* pvstate, double fltv, lrec_t* prec) {
-//	step_ratio_state_t* pstate = pvstate;
+//static void step_ratio_dprocess(double fltv, lrec_t* prec) {
 //	double ratio = 1.0;
-//	if (pstate->have_prev) {
-//		ratio = fltv / pstate->prev;
+//	if (this.have_prev) {
+//		ratio = fltv / this.prev;
 //	} else {
-//		pstate->have_prev = TRUE;
+//		this.have_prev = TRUE;
 //	}
-//	lrec_put(prec, pstate->output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
+//	lrec_put(prec, this.output_field_name, mlr_alloc_string_from_double(ratio, MLR_GLOBALS.ofmt),
 //		FREE_ENTRY_VALUE);
-//	pstate->prev = fltv;
+//	this.prev = fltv;
 //}
-//static void step_ratio_zprocess(void* pvstate, lrec_t* prec) {
-//	step_ratio_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+//static void step_ratio_zprocess(lrec_t* prec) {
+//	lrec_put(prec, this.output_field_name, "", NO_FREE);
 //}
 //static tStepper* step_ratio_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
 //	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_ratio_state_t* pstate = mlr_malloc_or_die(sizeof(step_ratio_state_t));
-//	pstate->prev          = -999.0;
-//	pstate->have_prev     = FALSE;
-//	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_ratio");
+//	this.prev          = -999.0;
+//	this.have_prev     = FALSE;
+//	this.output_field_name = mlr_paste_2_strings(input_field_name, "_ratio");
 //
-//	stepper->pvstate        = (void*)pstate;
 //	stepper->pdprocess_func = step_ratio_dprocess;
-//	stepper->pnprocess_func = NULL;
-//	stepper->psprocess_func = NULL;
+//	stepper->pnprocess_func = nil;
+//	stepper->psprocess_func = nil;
 //	stepper->pzprocess_func = step_ratio_zprocess;
 //	return stepper;
 //}
@@ -501,26 +569,23 @@ func (this *TransformerStep) Transform(
 //	char*  output_field_name;
 //	int    allow_int_float;
 //} step_rsum_state_t;
-//static void step_rsum_nprocess(void* pvstate, mv_t* pnumv, lrec_t* prec) {
-//	step_rsum_state_t* pstate = pvstate;
-//	pstate->rsum = x_xx_plus_func(&pstate->rsum, pnumv);
-//	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&pstate->rsum),
+//static void step_rsum_nprocess(mv_t* pnumv, lrec_t* prec) {
+//	this.rsum = x_xx_plus_func(&this.rsum, pnumv);
+//	lrec_put(prec, this.output_field_name, mv_alloc_format_val(&this.rsum),
 //		FREE_ENTRY_VALUE);
 //}
-//static void step_rsum_zprocess(void* pvstate, lrec_t* prec) {
-//	step_rsum_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+//static void step_rsum_zprocess(lrec_t* prec) {
+//	lrec_put(prec, this.output_field_name, "", NO_FREE);
 //}
 //static tStepper* step_rsum_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
 //	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_rsum_state_t* pstate = mlr_malloc_or_die(sizeof(step_rsum_state_t));
-//	pstate->allow_int_float = allow_int_float;
-//	pstate->rsum = pstate->allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-//	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
-//	stepper->pvstate        = (void*)pstate;
-//	stepper->pdprocess_func = NULL;
+//	this.allow_int_float = allow_int_float;
+//	this.rsum = this.allow_int_float ? types.MlrvalFromInt64(0) : MlrvalFromFloat64(0.0);
+//	this.output_field_name = mlr_paste_2_strings(input_field_name, "_rsum");
+//	stepper->pdprocess_func = nil;
 //	stepper->pnprocess_func = step_rsum_nprocess;
-//	stepper->psprocess_func = NULL;
+//	stepper->psprocess_func = nil;
 //	stepper->pzprocess_func = step_rsum_zprocess;
 //	return stepper;
 //}
@@ -531,26 +596,23 @@ func (this *TransformerStep) Transform(
 //	mv_t one;
 //	char*  output_field_name;
 //} step_counter_state_t;
-//static void step_counter_sprocess(void* pvstate, char* strv, lrec_t* prec) {
-//	step_counter_state_t* pstate = pvstate;
-//	pstate->counter = x_xx_plus_func(&pstate->counter, &pstate->one);
-//	lrec_put(prec, pstate->output_field_name, mv_alloc_format_val(&pstate->counter),
+//static void step_counter_sprocess(char* strv, lrec_t* prec) {
+//	this.counter = x_xx_plus_func(&this.counter, &this.one);
+//	lrec_put(prec, this.output_field_name, mv_alloc_format_val(&this.counter),
 //		FREE_ENTRY_VALUE);
 //}
-//static void step_counter_zprocess(void* pvstate, lrec_t* prec) {
-//	step_counter_state_t* pstate = pvstate;
-//	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+//static void step_counter_zprocess(lrec_t* prec) {
+//	lrec_put(prec, this.output_field_name, "", NO_FREE);
 //}
 //static tStepper* step_counter_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
 //	tStepper* stepper = mlr_malloc_or_die(sizeof(tStepper));
 //	step_counter_state_t* pstate = mlr_malloc_or_die(sizeof(step_counter_state_t));
-//	pstate->counter = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
-//	pstate->one     = allow_int_float ? mv_from_int(1LL) : mv_from_float(1.0);
-//	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
+//	this.counter = allow_int_float ? types.MlrvalFromInt64(0) : MlrvalFromFloat64(0.0);
+//	this.one     = allow_int_float ? types.MlrvalFromInt64(1) : MlrvalFromFloat64(1.0);
+//	this.output_field_name = mlr_paste_2_strings(input_field_name, "_counter");
 //
-//	stepper->pvstate        = (void*)pstate;
-//	stepper->pdprocess_func = NULL;
-//	stepper->pnprocess_func = NULL;
+//	stepper->pdprocess_func = nil;
+//	stepper->pnprocess_func = nil;
 //	stepper->psprocess_func = step_counter_sprocess;
 //	stepper->pzprocess_func = step_counter_zprocess;
 //	return stepper;
@@ -566,29 +628,27 @@ func (this *TransformerStep) Transform(
 //	int     have_prevs;
 //	char**  output_field_names;
 //} step_ewma_state_t;
-//static void step_ewma_dprocess(void* pvstate, double fltv, lrec_t* prec) {
-//	step_ewma_state_t* pstate = pvstate;
-//	if (!pstate->have_prevs) {
-//		for (int i = 0; i < pstate->num_alphas; i++) {
-//			lrec_put(prec, pstate->output_field_names[i], mlr_alloc_string_from_double(fltv, MLR_GLOBALS.ofmt),
+//static void step_ewma_dprocess(double fltv, lrec_t* prec) {
+//	if (!this.have_prevs) {
+//		for (int i = 0; i < this.num_alphas; i++) {
+//			lrec_put(prec, this.output_field_names[i], mlr_alloc_string_from_double(fltv, MLR_GLOBALS.ofmt),
 //				FREE_ENTRY_VALUE);
-//			pstate->prevs[i] = fltv;
+//			this.prevs[i] = fltv;
 //		}
-//		pstate->have_prevs = TRUE;
+//		this.have_prevs = TRUE;
 //	} else {
-//		for (int i = 0; i < pstate->num_alphas; i++) {
+//		for (int i = 0; i < this.num_alphas; i++) {
 //			double curr = fltv;
-//			curr = pstate->alphas[i] * curr + pstate->alphacompls[i] * pstate->prevs[i];
-//			lrec_put(prec, pstate->output_field_names[i], mlr_alloc_string_from_double(curr, MLR_GLOBALS.ofmt),
+//			curr = this.alphas[i] * curr + this.alphacompls[i] * this.prevs[i];
+//			lrec_put(prec, this.output_field_names[i], mlr_alloc_string_from_double(curr, MLR_GLOBALS.ofmt),
 //				FREE_ENTRY_VALUE);
-//			pstate->prevs[i] = curr;
+//			this.prevs[i] = curr;
 //		}
 //	}
 //}
-//static void step_ewma_zprocess(void* pvstate, lrec_t* prec) {
-//	step_ewma_state_t* pstate = pvstate;
-//	for (int i = 0; i < pstate->num_alphas; i++)
-//		lrec_put(prec, pstate->output_field_names[i], "", NO_FREE);
+//static void step_ewma_zprocess(lrec_t* prec) {
+//	for (int i = 0; i < this.num_alphas; i++)
+//		lrec_put(prec, this.output_field_names[i], "", NO_FREE);
 //}
 
 //static tStepper* step_ewma_alloc(char* input_field_name, int unused, slls_t* pstring_alphas, slls_t* pewma_suffixes) {
@@ -596,29 +656,28 @@ func (this *TransformerStep) Transform(
 //
 //	step_ewma_state_t* pstate  = mlr_malloc_or_die(sizeof(step_ewma_state_t));
 //	int n                      = pstring_alphas->length;
-//	pstate->num_alphas         = n;
-//	pstate->alphas             = mlr_malloc_or_die(n * sizeof(double));
-//	pstate->alphacompls        = mlr_malloc_or_die(n * sizeof(double));
-//	pstate->prevs              = mlr_malloc_or_die(n * sizeof(double));
-//	pstate->have_prevs         = FALSE;
-//	pstate->output_field_names = mlr_malloc_or_die(n * sizeof(char*));
-//	slls_t* psuffixes = (pewma_suffixes == NULL) ? pstring_alphas : pewma_suffixes;
+//	this.num_alphas         = n;
+//	this.alphas             = mlr_malloc_or_die(n * sizeof(double));
+//	this.alphacompls        = mlr_malloc_or_die(n * sizeof(double));
+//	this.prevs              = mlr_malloc_or_die(n * sizeof(double));
+//	this.have_prevs         = FALSE;
+//	this.output_field_names = mlr_malloc_or_die(n * sizeof(char*));
+//	slls_t* psuffixes = (pewma_suffixes == nil) ? pstring_alphas : pewma_suffixes;
 //	sllse_t* pe = pstring_alphas->phead;
 //	sllse_t* pf = psuffixes->phead;
 //	for (int i = 0; i < n; i++, pe = pe->pnext, pf = pf->pnext) {
 //		char* string_alpha     = pe->value;
 //		char* suffix           = pf->value;
-//		pstate->alphas[i]      = mlr_double_from_string_or_die(string_alpha);
-//		pstate->alphacompls[i] = 1.0 - pstate->alphas[i];
-//		pstate->prevs[i]       = 0.0;
-//		pstate->output_field_names[i] = mlr_paste_3_strings(input_field_name, "_ewma_", suffix);
+//		this.alphas[i]      = mlr_double_from_string_or_die(string_alpha);
+//		this.alphacompls[i] = 1.0 - this.alphas[i];
+//		this.prevs[i]       = 0.0;
+//		this.output_field_names[i] = mlr_paste_3_strings(input_field_name, "_ewma_", suffix);
 //	}
-//	pstate->have_prevs = FALSE;
+//	this.have_prevs = FALSE;
 //
-//	stepper->pvstate        = (void*)pstate;
 //	stepper->pdprocess_func = step_ewma_dprocess;
-//	stepper->pnprocess_func = NULL;
-//	stepper->psprocess_func = NULL;
+//	stepper->pnprocess_func = nil;
+//	stepper->psprocess_func = nil;
 //	stepper->pzprocess_func = step_ewma_zprocess;
 //	return stepper;
 //}
