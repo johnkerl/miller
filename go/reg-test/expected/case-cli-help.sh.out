@@ -235,6 +235,33 @@ Usage: ./reg-test/../../go/mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
 
 ================================================================
+Usage: ./reg-test/../../go/mlr step [options]
+Computes values dependent on the previous record, optionally grouped by category.
+-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
+-f {a,b,c} Value-field names on which to compute statistics
+-g {d,e,f} Optional group-by-field names
+-F         Computes integerable things (e.g. counter) in floating point.
+-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
+           smoothing), near under under 1 is light smoothing, near over 0 is
+           heavy smoothing. Multiple weights may be specified, e.g.
+           "./reg-test/../../go/mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
+           is "-d 0.5".
+-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
+           the -d values. If supplied, the number of -o values must be the same
+           as the number of -d values.
+
+Examples:
+  ./reg-test/../../go/mlr step -a rsum -f request_size
+  ./reg-test/../../go/mlr step -a delta -f request_size -g hostname
+  ./reg-test/../../go/mlr step -a ewma -d 0.1,0.9 -f x,y
+  ./reg-test/../../go/mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
+  ./reg-test/../../go/mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
+
+Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
+https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
+for more information on EWMA.
+
+================================================================
 Usage: ./reg-test/../../go/mlr tac
 Prints records in reverse order from the order in which they were encountered.
 
