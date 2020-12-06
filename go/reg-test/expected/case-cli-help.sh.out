@@ -238,9 +238,19 @@ Outputs records sorted lexically ascending by keys.
 Usage: ./reg-test/../../go/mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
+  delta    Compute differences in field(s) between successive records
+  shift    Include value(s) in field(s) from previous record, if any
+  from-first Compute differences in field(s) from first record
+  ratio    Compute ratios in field(s) between successive records
+  rsum     Compute running sums of field(s) between successive records
+  counter  Count instances of field(s) between successive records
+  ewma     Exponentially weighted moving average over successive records
+
 -f {a,b,c} Value-field names on which to compute statistics
 -g {d,e,f} Optional group-by-field names
 -F         Computes integerable things (e.g. counter) in floating point.
+           As of Miller 6 this happens automatically, but the flag is accepted
+           as a no-op for backward compatibility with Miller 5 and below.
 -d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
            smoothing), near under under 1 is light smoothing, near over 0 is
            heavy smoothing. Multiple weights may be specified, e.g.

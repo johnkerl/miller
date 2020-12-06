@@ -127,7 +127,7 @@ rrv ./reg-test/cases/case-c-stats1-percentile-interpolation.sh
 rrv ./reg-test/cases/case-c-stats1-regexed-field-names.sh
 rrv ./reg-test/cases/case-c-stats1.sh
 rrv ./reg-test/cases/case-c-stats2.sh
-rrv ./reg-test/cases/case-c-step.sh
+rrv ./reg-test/cases/case-c-verb-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
