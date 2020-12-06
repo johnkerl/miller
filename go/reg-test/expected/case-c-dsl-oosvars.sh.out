@@ -1,413 +1,205 @@
 
 mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg-test/input/abixy
+DSL EXPRESSION:
+begin{@ox=0}; $d=$x-@ox; @ox=$x
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="x", type=FIELD_NAME.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="x", type=FIELD_NAME.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "ox"
+                * int literal "0"
+    * assignment "="
+        * direct field value "d"
+        * operator "-"
+            * direct field value "x"
+            * direct oosvar value "ox"
+    * assignment "="
+        * direct oosvar value "ox"
+        * direct field value "x"
 
 a   b   i  x                   y                   d
-pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
-eks pan 2  0.7586799647899636  0.5221511083334797  0.411890
-wye wye 3  0.20460330576630303 0.33831852551664776 -0.554077
-eks wye 4  0.38139939387114097 0.13418874328430463 0.176796
-wye pan 5  0.5732889198020006  0.8636244699032729  0.191890
-zee pan 6  0.5271261600918548  0.49322128674835697 -0.046163
-eks zee 7  0.6117840605678454  0.1878849191181694  0.084658
-zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
-hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
-pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
+pan pan 1  0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2  0.7586799647899636  0.5221511083334797  0.41188982045188116
+wye wye 3  0.20460330576630303 0.33831852551664776 -0.5540766590236605
+eks wye 4  0.38139939387114097 0.13418874328430463 0.17679608810483793
+wye pan 5  0.5732889198020006  0.8636244699032729  0.19188952593085962
+zee pan 6  0.5271261600918548  0.49322128674835697 -0.04616275971014583
+eks zee 7  0.6117840605678454  0.1878849191181694  0.08465790047599064
+zee wye 8  0.5985540091064224  0.976181385699006   -0.013230051461422976
+hat wye 9  0.03144187646093577 0.7495507603507059  -0.5671121326454867
+pan wye 10 0.5026260055412137  0.9526183602969864  0.47118412908027796
 
 mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg-test/input/abixy
+DSL EXPRESSION:
+begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x
 RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "ox"
+                * string literal "no"
+    * assignment "="
+        * direct field value "d"
+        * operator "?:"
+            * operator "=="
+                * direct oosvar value "ox"
+                * string literal "no"
+            * float literal "1.0"
+            * operator "/"
+                * direct field value "x"
+                * direct oosvar value "ox"
+    * assignment "="
+        * direct oosvar value "ox"
+        * direct field value "x"
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="no", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="no", type=STRING_LITERAL.
-            text="1.0", type=NUMERIC_LITERAL.
-            text="/", type=OPERATOR:
-                text="x", type=FIELD_NAME.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-            text="no", type=STRING_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="no", type=STRING_LITERAL.
-            text="1.0", type=NUMERIC_LITERAL.
-            text="/", type=OPERATOR:
-                text="x", type=FIELD_NAME.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-a   b   i  x                   y                   d         x_ratio
-pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
-eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
-wye wye 3  0.20460330576630303 0.33831852551664776 0.269683  0.269683
-eks wye 4  0.38139939387114097 0.13418874328430463 1.864092  1.864092
-wye pan 5  0.5732889198020006  0.8636244699032729  1.503120  1.503120
-zee pan 6  0.5271261600918548  0.49322128674835697 0.919477  0.919477
-eks zee 7  0.6117840605678454  0.1878849191181694  1.160603  1.160603
-zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
-hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
-pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
+a   b   i  x                   y                   d                   x_ratio
+pan pan 1  0.3467901443380824  0.7268028627434533  1.0                 1
+eks pan 2  0.7586799647899636  0.5221511083334797  2.187720663855815   2.187720663855815
+wye wye 3  0.20460330576630303 0.33831852551664776 0.269683285788292   0.269683285788292
+eks wye 4  0.38139939387114097 0.13418874328430463 1.8640920411460684  1.8640920411460684
+wye pan 5  0.5732889198020006  0.8636244699032729  1.5031196404986713  1.5031196404986713
+zee pan 6  0.5271261600918548  0.49322128674835697 0.919477320918588   0.919477320918588
+eks zee 7  0.6117840605678454  0.1878849191181694  1.1606027302102375  1.1606027302102375
+zee wye 8  0.5985540091064224  0.976181385699006   0.978374638513558   0.978374638513558
+hat wye 9  0.03144187646093577 0.7495507603507059  0.05252972327071228 0.05252972327071228
+pan wye 10 0.5026260055412137  0.9526183602969864  15.985878138211305  15.985878138211305
 
 mlr --opprint put -v $d=$x/@ox; @ox=$x then step -a ratio -f x ./reg-test/input/abixy
+DSL EXPRESSION:
+$d=$x/@ox; @ox=$x
 RAW AST:
+* statement block
+    * assignment "="
+        * direct field value "d"
+        * operator "/"
+            * direct field value "x"
+            * direct oosvar value "ox"
+    * assignment "="
+        * direct oosvar value "ox"
+        * direct field value "x"
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="x", type=FIELD_NAME.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="/", type=OPERATOR:
-            text="x", type=FIELD_NAME.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-a   b   i  x                   y                   d         x_ratio
-pan pan 1  0.3467901443380824  0.7268028627434533  0.346790  1.000000
-eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
-wye wye 3  0.20460330576630303 0.33831852551664776 0.269683  0.269683
-eks wye 4  0.38139939387114097 0.13418874328430463 1.864092  1.864092
-wye pan 5  0.5732889198020006  0.8636244699032729  1.503120  1.503120
-zee pan 6  0.5271261600918548  0.49322128674835697 0.919477  0.919477
-eks zee 7  0.6117840605678454  0.1878849191181694  1.160603  1.160603
-zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
-hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
-pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
+a   b   i  x                   y                   d                   x_ratio
+pan pan 1  0.3467901443380824  0.7268028627434533  0.3467901443380824  1
+eks pan 2  0.7586799647899636  0.5221511083334797  2.187720663855815   2.187720663855815
+wye wye 3  0.20460330576630303 0.33831852551664776 0.269683285788292   0.269683285788292
+eks wye 4  0.38139939387114097 0.13418874328430463 1.8640920411460684  1.8640920411460684
+wye pan 5  0.5732889198020006  0.8636244699032729  1.5031196404986713  1.5031196404986713
+zee pan 6  0.5271261600918548  0.49322128674835697 0.919477320918588   0.919477320918588
+eks zee 7  0.6117840605678454  0.1878849191181694  1.1606027302102375  1.1606027302102375
+zee wye 8  0.5985540091064224  0.976181385699006   0.978374638513558   0.978374638513558
+hat wye 9  0.03144187646093577 0.7495507603507059  0.05252972327071228 0.05252972327071228
+pan wye 10 0.5026260055412137  0.9526183602969864  15.985878138211305  15.985878138211305
 
 mlr --opprint put -v begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x then step -a ratio -f x ./reg-test/input/abixy
+DSL EXPRESSION:
+begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x
 RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "ox"
+                * string literal "no"
+    * assignment "="
+        * direct field value "d"
+        * operator "?:"
+            * operator "=="
+                * direct oosvar value "ox"
+                * string literal "no"
+            * float literal "1.0"
+            * operator "/"
+                * direct field value "x"
+                * direct oosvar value "ox"
+    * assignment "="
+        * direct oosvar value "ox"
+        * direct field value "x"
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="no", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="no", type=STRING_LITERAL.
-            text="1.0", type=NUMERIC_LITERAL.
-            text="/", type=OPERATOR:
-                text="x", type=FIELD_NAME.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-            text="no", type=STRING_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="? :", type=OPERATOR:
-            text="==", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="no", type=STRING_LITERAL.
-            text="1.0", type=NUMERIC_LITERAL.
-            text="/", type=OPERATOR:
-                text="x", type=FIELD_NAME.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-a   b   i  x                   y                   d         x_ratio
-pan pan 1  0.3467901443380824  0.7268028627434533  1.000000  1.000000
-eks pan 2  0.7586799647899636  0.5221511083334797  2.187721  2.187721
-wye wye 3  0.20460330576630303 0.33831852551664776 0.269683  0.269683
-eks wye 4  0.38139939387114097 0.13418874328430463 1.864092  1.864092
-wye pan 5  0.5732889198020006  0.8636244699032729  1.503120  1.503120
-zee pan 6  0.5271261600918548  0.49322128674835697 0.919477  0.919477
-eks zee 7  0.6117840605678454  0.1878849191181694  1.160603  1.160603
-zee wye 8  0.5985540091064224  0.976181385699006   0.978375  0.978375
-hat wye 9  0.03144187646093577 0.7495507603507059  0.052530  0.052530
-pan wye 10 0.5026260055412137  0.9526183602969864  15.985878 15.985878
+a   b   i  x                   y                   d                   x_ratio
+pan pan 1  0.3467901443380824  0.7268028627434533  1.0                 1
+eks pan 2  0.7586799647899636  0.5221511083334797  2.187720663855815   2.187720663855815
+wye wye 3  0.20460330576630303 0.33831852551664776 0.269683285788292   0.269683285788292
+eks wye 4  0.38139939387114097 0.13418874328430463 1.8640920411460684  1.8640920411460684
+wye pan 5  0.5732889198020006  0.8636244699032729  1.5031196404986713  1.5031196404986713
+zee pan 6  0.5271261600918548  0.49322128674835697 0.919477320918588   0.919477320918588
+eks zee 7  0.6117840605678454  0.1878849191181694  1.1606027302102375  1.1606027302102375
+zee wye 8  0.5985540091064224  0.976181385699006   0.978374638513558   0.978374638513558
+hat wye 9  0.03144187646093577 0.7495507603507059  0.05252972327071228 0.05252972327071228
+pan wye 10 0.5026260055412137  0.9526183602969864  15.985878138211305  15.985878138211305
 
 mlr --opprint put -v begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum ./reg-test/input/abixy
+DSL EXPRESSION:
+begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="rsum", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="rsum", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="rsum", type=STRING_LITERAL.
-            text="x", type=FIELD_NAME.
-    text="=", type=SREC_ASSIGNMENT:
-        text="rsum", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="rsum", type=STRING_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="rsum", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="rsum", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="rsum", type=STRING_LITERAL.
-            text="x", type=FIELD_NAME.
-    text="=", type=SREC_ASSIGNMENT:
-        text="rsum", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="rsum", type=STRING_LITERAL.
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "rsum"
+                * int literal "0"
+    * assignment "="
+        * direct oosvar value "rsum"
+        * operator "+"
+            * direct oosvar value "rsum"
+            * direct field value "x"
+    * assignment "="
+        * direct field value "rsum"
+        * direct oosvar value "rsum"
 
 a   b   i  x                   y                   rsum
-pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
-eks pan 2  0.7586799647899636  0.5221511083334797  1.105470
-wye wye 3  0.20460330576630303 0.33831852551664776 1.310073
-eks wye 4  0.38139939387114097 0.13418874328430463 1.691473
-wye pan 5  0.5732889198020006  0.8636244699032729  2.264762
-zee pan 6  0.5271261600918548  0.49322128674835697 2.791888
-eks zee 7  0.6117840605678454  0.1878849191181694  3.403672
-zee wye 8  0.5985540091064224  0.976181385699006   4.002226
-hat wye 9  0.03144187646093577 0.7495507603507059  4.033668
-pan wye 10 0.5026260055412137  0.9526183602969864  4.536294
+pan pan 1  0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2  0.7586799647899636  0.5221511083334797  1.105470109128046
+wye wye 3  0.20460330576630303 0.33831852551664776 1.3100734148943491
+eks wye 4  0.38139939387114097 0.13418874328430463 1.6914728087654902
+wye pan 5  0.5732889198020006  0.8636244699032729  2.264761728567491
+zee pan 6  0.5271261600918548  0.49322128674835697 2.7918878886593457
+eks zee 7  0.6117840605678454  0.1878849191181694  3.403671949227191
+zee wye 8  0.5985540091064224  0.976181385699006   4.0022259583336135
+hat wye 9  0.03144187646093577 0.7495507603507059  4.033667834794549
+pan wye 10 0.5026260055412137  0.9526183602969864  4.536293840335763
 
 mlr --opprint put -v begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg-test/input/abixy
+DSL EXPRESSION:
+begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="c", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="za", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zb", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zc", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="i", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="a", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="b", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="c", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="za", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zb", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zc", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="i", type=FIELD_NAME.
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "a"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "b"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "c"
+                * int literal "0"
+    * assignment "="
+        * direct field value "za"
+        * direct oosvar value "a"
+    * assignment "="
+        * direct field value "zb"
+        * direct oosvar value "b"
+    * assignment "="
+        * direct field value "zc"
+        * direct oosvar value "c"
+    * assignment "="
+        * direct field value "d"
+        * operator "+"
+            * operator "+"
+                * direct oosvar value "a"
+                * direct oosvar value "b"
+            * direct oosvar value "c"
+    * assignment "="
+        * direct oosvar value "a"
+        * direct oosvar value "b"
+    * assignment "="
+        * direct oosvar value "b"
+        * direct oosvar value "c"
+    * assignment "="
+        * direct oosvar value "c"
+        * direct field value "i"
 
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
@@ -422,117 +214,46 @@ hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
 mlr --opprint put -v begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i ./reg-test/input/abixy
+DSL EXPRESSION:
+begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="c", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="za", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zb", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zc", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="i", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="a", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="b", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="c", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="za", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zb", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="zc", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="+", type=OPERATOR:
-            text="+", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="i", type=FIELD_NAME.
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "a"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "b"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "c"
+                * int literal "0"
+    * assignment "="
+        * direct field value "za"
+        * direct oosvar value "a"
+    * assignment "="
+        * direct field value "zb"
+        * direct oosvar value "b"
+    * assignment "="
+        * direct field value "zc"
+        * direct oosvar value "c"
+    * assignment "="
+        * direct field value "d"
+        * operator "+"
+            * operator "+"
+                * direct oosvar value "a"
+                * direct oosvar value "b"
+            * direct oosvar value "c"
+    * assignment "="
+        * direct oosvar value "a"
+        * direct oosvar value "b"
+    * assignment "="
+        * direct oosvar value "b"
+        * direct oosvar value "c"
+    * assignment "="
+        * direct oosvar value "c"
+        * direct field value "i"
 
 a   b   i  x                   y                   za zb zc d
 pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
@@ -547,513 +268,50 @@ hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
 pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24
 
 mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg-test/input/abixy
+DSL EXPRESSION:
+begin{@ox=0}; $d=$x-@ox; @ox=$x
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="ox", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="x", type=FIELD_NAME.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="d", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="x", type=FIELD_NAME.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="ox", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="ox", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "ox"
+                * int literal "0"
+    * assignment "="
+        * direct field value "d"
+        * operator "-"
+            * direct field value "x"
+            * direct oosvar value "ox"
+    * assignment "="
+        * direct oosvar value "ox"
+        * direct field value "x"
 
 a   b   i  x                   y                   d
-pan pan 1  0.3467901443380824  0.7268028627434533  0.346790
-eks pan 2  0.7586799647899636  0.5221511083334797  0.411890
-wye wye 3  0.20460330576630303 0.33831852551664776 -0.554077
-eks wye 4  0.38139939387114097 0.13418874328430463 0.176796
-wye pan 5  0.5732889198020006  0.8636244699032729  0.191890
-zee pan 6  0.5271261600918548  0.49322128674835697 -0.046163
-eks zee 7  0.6117840605678454  0.1878849191181694  0.084658
-zee wye 8  0.5985540091064224  0.976181385699006   -0.013230
-hat wye 9  0.03144187646093577 0.7495507603507059  -0.567112
-pan wye 10 0.5026260055412137  0.9526183602969864  0.471184
+pan pan 1  0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2  0.7586799647899636  0.5221511083334797  0.41188982045188116
+wye wye 3  0.20460330576630303 0.33831852551664776 -0.5540766590236605
+eks wye 4  0.38139939387114097 0.13418874328430463 0.17679608810483793
+wye pan 5  0.5732889198020006  0.8636244699032729  0.19188952593085962
+zee pan 6  0.5271261600918548  0.49322128674835697 -0.04616275971014583
+eks zee 7  0.6117840605678454  0.1878849191181694  0.08465790047599064
+zee wye 8  0.5985540091064224  0.976181385699006   -0.013230051461422976
+hat wye 9  0.03144187646093577 0.7495507603507059  -0.5671121326454867
+pan wye 10 0.5026260055412137  0.9526183602969864  0.47118412908027796
 
 mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg-test/input/abixy
-RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="a", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="b", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="emitf", type=EMITF:
-                text="emitf", type=EMITF:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="a", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-            text="emitf", type=EMITF:
-                text="emitf", type=EMITF:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="b", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-            text="emitf", type=EMITF:
-                text="emitf", type=EMITF:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="c", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="emitf", type=EMITF:
-            text="emitf", type=EMITF:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-        text="emitf", type=EMITF:
-            text="emitf", type=EMITF:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-        text="emitf", type=EMITF:
-            text="emitf", type=EMITF:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="c", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="a", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="b", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-a=pan
-b=wye
-c=0.502626
+Exit status was 1; expected 0.
 
 mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg-test/input/abixy
-RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="a", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="b", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="emitf", type=EMITF:
-                text="emitf", type=EMITF:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="a", type=STRING_LITERAL.
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="b", type=STRING_LITERAL.
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="c", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="emitf", type=EMITF:
-            text="emitf", type=EMITF:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="c", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="a", type=STRING_LITERAL.
-        text="a", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="b", type=STRING_LITERAL.
-        text="b", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="c", type=STRING_LITERAL.
-        text="x", type=FIELD_NAME.
-
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-a=pan,b=wye,c=0.502626
+Exit status was 1; expected 0.
 
 mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean} ./reg-test/input/abixy
-RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="count", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="sum", type=STRING_LITERAL.
-                text="0.0", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="count", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="count", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="sum", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="sum", type=STRING_LITERAL.
-            text="x", type=FIELD_NAME.
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="mean", type=STRING_LITERAL.
-                text="/", type=OPERATOR:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="sum", type=STRING_LITERAL.
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="count", type=STRING_LITERAL.
-            text="emitf", type=EMITF:
-                text="emitf", type=EMITF:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="mean", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="count", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="sum", type=STRING_LITERAL.
-            text="0.0", type=NUMERIC_LITERAL.
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="mean", type=STRING_LITERAL.
-            text="/", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="sum", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="count", type=STRING_LITERAL.
-        text="emitf", type=EMITF:
-            text="emitf", type=EMITF:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="mean", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="count", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="count", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="sum", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="sum", type=STRING_LITERAL.
-            text="x", type=FIELD_NAME.
-
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
-mean
-0.453629
+Exit status was 1; expected 0.
 
 mlr --opprint put -v end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ./reg-test/input/abixy
-RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="mean", type=STRING_LITERAL.
-                text="/", type=OPERATOR:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="sum", type=STRING_LITERAL.
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="count", type=STRING_LITERAL.
-            text="emitf", type=EMITF:
-                text="emitf", type=EMITF:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="mean", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="count", type=STRING_LITERAL.
-                text="0", type=NUMERIC_LITERAL.
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="sum", type=STRING_LITERAL.
-                text="0.0", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="count", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="count", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="sum", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="sum", type=STRING_LITERAL.
-            text="x", type=FIELD_NAME.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="count", type=STRING_LITERAL.
-            text="0", type=NUMERIC_LITERAL.
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="sum", type=STRING_LITERAL.
-            text="0.0", type=NUMERIC_LITERAL.
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="mean", type=STRING_LITERAL.
-            text="/", type=OPERATOR:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="sum", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="count", type=STRING_LITERAL.
-        text="emitf", type=EMITF:
-            text="emitf", type=EMITF:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="mean", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="count", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="count", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="sum", type=STRING_LITERAL.
-        text="+", type=OPERATOR:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="sum", type=STRING_LITERAL.
-            text="x", type=FIELD_NAME.
-
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
-mean
-0.453629
+Exit status was 1; expected 0.
 
 mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6} /dev/null
-RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="begin", type=BEGIN:
-        text="begin_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="a", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="b", type=STRING_LITERAL.
-                    text="1", type=NUMERIC_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="c", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="d", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="e", type=STRING_LITERAL.
-            text="i", type=FIELD_NAME.
-            text="+", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="j", type=FIELD_NAME.
-            text="3", type=NUMERIC_LITERAL.
-        text="4", type=FIELD_NAME.
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="f", type=STRING_LITERAL.
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="g", type=STRING_LITERAL.
-                        text="5", type=NUMERIC_LITERAL.
-                        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                            text="h", type=STRING_LITERAL.
-                text="6", type=NUMERIC_LITERAL.
-
-BLOCKED AST:
-
-BEGIN-BLOCK:
-text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="begin_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="a", type=STRING_LITERAL.
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="b", type=STRING_LITERAL.
-                text="1", type=NUMERIC_LITERAL.
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="=", type=OOSVAR_ASSIGNMENT:
-            text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                text="f", type=STRING_LITERAL.
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="g", type=STRING_LITERAL.
-                    text="5", type=NUMERIC_LITERAL.
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="h", type=STRING_LITERAL.
-            text="6", type=NUMERIC_LITERAL.
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=SREC_ASSIGNMENT:
-        text="c", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="d", type=STRING_LITERAL.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="e", type=STRING_LITERAL.
-            text="i", type=FIELD_NAME.
-            text="+", type=OPERATOR:
-                text="2", type=NUMERIC_LITERAL.
-                text="j", type=FIELD_NAME.
-            text="3", type=NUMERIC_LITERAL.
-        text="4", type=FIELD_NAME.
-
+Exit status was 1; expected 0.
 
 mlr put @y[$a]=$y; end{dump} ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -1068,20 +326,16 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 {
   "y": {
-    "pan": 0.952618,
-    "eks": 0.187885,
-    "wye": 0.863624,
-    "zee": 0.976181,
-    "hat": 0.749551
+    "pan": 0.9526183602969864,
+    "eks": 0.1878849191181694,
+    "wye": 0.8636244699032729,
+    "zee": 0.976181385699006,
+    "hat": 0.7495507603507059
   }
 }
 
 mlr stats1 -a sum -f y -g a ./reg-test/input/abixy
-a=pan,y_sum=1.679421
-a=eks,y_sum=0.844225
-a=wye,y_sum=1.201943
-a=zee,y_sum=1.469403
-a=hat,y_sum=0.749551
+Exit status was 1; expected 0.
 
 mlr put @y_sum[$a] = $y; end{dump} ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -1096,11 +350,11 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 {
   "y_sum": {
-    "pan": 0.952618,
-    "eks": 0.187885,
-    "wye": 0.863624,
-    "zee": 0.976181,
-    "hat": 0.749551
+    "pan": 0.9526183602969864,
+    "eks": 0.1878849191181694,
+    "wye": 0.8636244699032729,
+    "zee": 0.976181385699006,
+    "hat": 0.7495507603507059
   }
 }
 
@@ -1162,8 +416,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ./re
 }
 {
   "s": 9,
-  "t": {
-  },
+  "t": {},
   "u": {
     "1": {
       "2": 9
@@ -1207,8 +460,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ./re
   "t": {
     "1": 9
   },
-  "u": {
-  }
+  "u": {}
 }
 
 mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ./reg-test/input/unset1.dkvp
@@ -1229,8 +481,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ./re
     "1": 9
   },
   "u": {
-    "1": {
-    }
+    "1": {}
   }
 }
 
@@ -1448,6 +699,21 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ./re
   }
 }
 {
+  "s": 9,
+  "t": {
+    "1": 9,
+    "4": 9
+  },
+  "u": {
+    "1": {
+      "2": 9,
+      "3": 9
+    },
+    "4": {
+      "5": 9,
+      "6": 9
+    }
+  }
 }
 
 mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ./reg-test/input/unset4.dkvp
@@ -1468,8 +734,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ./re
     }
   }
 }
-{
-}
+{}
 
 mlr put unset $x ./reg-test/input/unset4.dkvp
 a=1,b=2
@@ -1486,44 +751,39 @@ aaa=999
 mlr --from ./reg-test/input/abixy put x = 1; print "OX=".x; unset x; print "NX=".x
 OX=1
 NX=
+OX=1
+NX=
+OX=1
+NX=
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-OX=1
-NX=
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-OX=1
-NX=
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 OX=1
 NX=
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 OX=1
 NX=
+OX=1
+NX=
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 OX=1
 NX=
+OX=1
+NX=
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-OX=1
-NX=
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-OX=1
-NX=
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 OX=1
 NX=
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 OX=1
 NX=
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg-test/input/abixy
-variable.name=4.536294
 
 mlr put -q @{variable.name}[$a] += $x; end{emit @{variable.name},"a"} ./reg-test/input/abixy
-a=pan,variable.name=0.849416
-a=eks,variable.name=1.751863
-a=wye,variable.name=0.777892
-a=zee,variable.name=1.125680
-a=hat,variable.name=0.031442
+Exit status was 1; expected 0.
 
 mlr put for (k,v in $*) { if (k == "i") {unset $[k]}} ./reg-test/input/abixy
 a=pan,b=pan,x=0.3467901443380824,y=0.7268028627434533
@@ -1548,41 +808,5 @@ mlr --opprint --from ./reg-test/input/abixy put -q
     emitp @output, "NR", "k"
   }
 
-NR k output
-1  a pan
-1  b pan
-1  x 0.3467901443380824
-1  y 0.7268028627434533
-2  a eks
-2  b pan
-2  x 0.7586799647899636
-2  y 0.5221511083334797
-3  a wye
-3  b wye
-3  x 0.20460330576630303
-3  y 0.33831852551664776
-5  a wye
-5  b pan
-5  x 0.5732889198020006
-5  y 0.8636244699032729
-6  a zee
-6  b pan
-6  x 0.5271261600918548
-6  y 0.49322128674835697
-7  a eks
-7  b zee
-7  x 0.6117840605678454
-7  y 0.1878849191181694
-8  a zee
-8  b wye
-8  x 0.5985540091064224
-8  y 0.976181385699006
-9  a hat
-9  b wye
-9  x 0.03144187646093577
-9  y 0.7495507603507059
-10 a pan
-10 b wye
-10 x 0.5026260055412137
-10 y 0.9526183602969864
+Exit status was 1; expected 0.
 

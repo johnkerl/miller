@@ -63,6 +63,7 @@ rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
 rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
 rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
+rrv ./reg-test/cases/case-c-dsl-oosvars.sh
 rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
 
 -> split up this big case-file: case-c-dsl-functional-tests.sh
@@ -81,9 +82,6 @@ rrv -C1 ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
 
 rrv ./reg-test/cases/case-c-het-pprint-input.sh
 * new pprint reader not done yet
-
-rrv ./reg-test/cases/case-c-dsl-oosvars.sh
-* uses mlr step
 
 rrv ./reg-test/cases/case-c-auxents.sh
 rrv ./reg-test/cases/case-c-bar.sh
@@ -127,7 +125,6 @@ rrv ./reg-test/cases/case-c-stats1-percentile-interpolation.sh
 rrv ./reg-test/cases/case-c-stats1-regexed-field-names.sh
 rrv ./reg-test/cases/case-c-stats1.sh
 rrv ./reg-test/cases/case-c-stats2.sh
-rrv ./reg-test/cases/case-c-verb-step.sh
 rrv ./reg-test/cases/case-c-top.sh
 rrv ./reg-test/cases/case-c-uniq.sh
 rrv ./reg-test/cases/case-c-utf8-bom.sh
