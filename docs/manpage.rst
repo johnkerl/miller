@@ -651,7 +651,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
     	   NR == 3
     	 '
     
-           Please see http://johnkerl.org/miller/doc/reference.html for more information
+           Please see https://miller.readthedocs.io/en/latest/reference.html for more information
            including function list. Or "mlr -f". Please also see "mlr grep" which is
            useful when you don't yet know which field name(s) you're looking for.
            Please see in particular:
@@ -810,7 +810,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
     	 --repifs
     	 --repips
            Please use "mlr --usage-separator-options" for information on specifying separators.
-           Please see http://johnkerl.org/miller/doc/reference-verbs.html#join for more information
+           Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
            including examples.
     
        label
@@ -1035,7 +1035,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
            Please see also 'mlr -k' for examples using redirected output.
     
-           Please see http://johnkerl.org/miller/doc/reference.html for more information
+           Please see https://miller.readthedocs.io/en/latest/reference.html for more information
            including function list. Or "mlr -f".
            Please see in particular:
     	 http://www.johnkerl.org/miller/doc/reference-verbs.html#put
@@ -1354,7 +1354,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
     	 mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
     	 mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
     
-           Please see http://johnkerl.org/miller/doc/reference-verbs.html#filter or
+           Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
            https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
            for more information on EWMA.
     
@@ -2377,4 +2377,4 @@ This is simply a copy of what you should see on running **man mlr** at a command
     
     
     
-    				  2020-11-29			     MILLER(1)
+    				  2020-12-06			     MILLER(1)

@@ -142,7 +142,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "\n");
 	fprintf(o, "Please see also '%s -k' for examples using redirected output.\n", argv0);
 	fprintf(o, "\n");
-	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
+	fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
 	fprintf(o, "Please see in particular:\n");
 	fprintf(o, "  http://www.johnkerl.org/miller/doc/reference-verbs.html#put\n");
@@ -173,7 +173,7 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    NR == 3\n");
 	fprintf(o, "  '\n");
 	fprintf(o, "\n");
-	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
+	fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\". Please also see \"%s grep\" which is\n", argv0, argv0);
 	fprintf(o, "useful when you don't yet know which field name(s) you're looking for.\n");
 	fprintf(o, "Please see in particular:\n");

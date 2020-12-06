@@ -805,7 +805,7 @@ filter
         NR == 3
       '
     
-    Please see http://johnkerl.org/miller/doc/reference.html for more information
+    Please see https://miller.readthedocs.io/en/latest/reference.html for more information
     including function list. Or "mlr -f". Please also see "mlr grep" which is
     useful when you don't yet know which field name(s) you're looking for.
     Please see in particular:
@@ -1328,7 +1328,7 @@ join
       --repifs
       --repips
     Please use "mlr --usage-separator-options" for information on specifying separators.
-    Please see http://johnkerl.org/miller/doc/reference-verbs.html#join for more information
+    Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
     including examples.
 
 Examples:
@@ -1896,7 +1896,7 @@ put
     
     Please see also 'mlr -k' for examples using redirected output.
     
-    Please see http://johnkerl.org/miller/doc/reference.html for more information
+    Please see https://miller.readthedocs.io/en/latest/reference.html for more information
     including function list. Or "mlr -f".
     Please see in particular:
       http://www.johnkerl.org/miller/doc/reference-verbs.html#put
@@ -2869,7 +2869,7 @@ step
       mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
       mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
     
-    Please see http://johnkerl.org/miller/doc/reference-verbs.html#filter or
+    Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
     https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
     for more information on EWMA.
 
