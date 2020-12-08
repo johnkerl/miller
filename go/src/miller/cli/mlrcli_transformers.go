@@ -26,6 +26,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.GroupBySetup,
 	transformers.GroupLikeSetup,
 	transformers.HeadSetup,
+	transformers.JoinSetup,
 	transformers.LabelSetup,
 	transformers.NothingSetup,
 	transformers.PutSetup,

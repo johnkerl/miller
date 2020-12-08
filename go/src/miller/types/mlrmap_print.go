@@ -8,6 +8,7 @@ import (
 // ----------------------------------------------------------------
 func (this *Mlrmap) Print() {
 	this.Fprint(os.Stdout)
+	os.Stdout.WriteString("\n")
 }
 func (this *Mlrmap) Fprint(file *os.File) {
 	(*file).WriteString(this.ToDKVPString())
@@ -23,7 +24,6 @@ func (this *Mlrmap) ToDKVPString() string {
 			buffer.WriteString(",")
 		}
 	}
-	buffer.WriteString("\n")
 	return buffer.String()
 }
 

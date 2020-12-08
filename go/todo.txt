@@ -1,13 +1,17 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! mlr step iterate
 ! mlrrc
-! dsl `any` type w/ doc
+! join
+!! fix all typemasks!!
+! fix var/any type-mask
+  o C/Go UT
 ! gating after: 'int x = 1; x = "abc"'
 ! verb skeletons
 ! auxents iterate
 ! strptime/strftime experiments ...
+! emitp/emitf
+* regex ...
 ? doc shift/unshift as using [2:] and append
 
 small:
@@ -145,7 +149,6 @@ uniq
 
 nest
 reshape
-step
 join
 merge-fields
 stats1
@@ -351,3 +354,4 @@ NITS/NON-IMMEDIATE:
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
 * function metadata: auto-sort on mlr -f?
 * --x2b @ help-doc .go; etc
+? remove flagSet x all -- ? for consistency?

@@ -395,10 +395,10 @@ func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 	return buffer.String(), mlrvals, true
 }
 
-// As above but only returns the array. Also, these are references, NOT copies. For step.
-func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) (
-	[]*Mlrval,
-) {
+// As above but only returns the array. Also, these are references, NOT copies.
+// For step and join.
+func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*Mlrval, bool) {
+	allFound := true
 	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 
 	for _, selectedFieldName := range selectedFieldNames {
@@ -407,9 +407,10 @@ func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) (
 			mlrvals = append(mlrvals, entry.Value)
 		} else {
 			mlrvals = append(mlrvals, nil)
+			allFound = false
 		}
 	}
-	return mlrvals
+	return mlrvals, allFound
 }
 
 // ----------------------------------------------------------------

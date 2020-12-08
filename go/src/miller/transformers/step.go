@@ -274,7 +274,7 @@ func (this *TransformerStep) Transform(
 	}
 
 	// [3.4, 5.6]
-	valueFieldValues := inrec.ReferenceSelectedValues(this.valueFieldNames)
+	valueFieldValues, _ := inrec.ReferenceSelectedValues(this.valueFieldNames)
 
 	// for x=3.4 and y=5.6:
 	for i, valueFieldName := range this.valueFieldNames {
