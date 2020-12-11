@@ -545,6 +545,7 @@ func moveRecordsAndContexts(
 			break
 		}
 		destination.PushBack(element)
+		source.Remove(element)
 	}
 }
 
