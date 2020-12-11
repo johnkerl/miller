@@ -300,12 +300,11 @@ func (this *tJoinBucketKeeper) initialFill() {
 		}
 		if this.peekRecordAndContext.Record.HasSelectedKeys(this.leftJoinFieldNames) {
 			break
-		} else {
-			if this.leftUnpaireds == nil {
-				this.leftUnpaireds = list.New()
-			}
-			this.leftUnpaireds.PushBack(this.peekRecordAndContext)
 		}
+		if this.leftUnpaireds == nil {
+			this.leftUnpaireds = list.New()
+		}
+		this.leftUnpaireds.PushBack(this.peekRecordAndContext)
 	}
 
 	if this.peekRecordAndContext == nil {
@@ -441,12 +440,11 @@ func (this *tJoinBucketKeeper) advanceTo(
 
 				if this.peekRecordAndContext.Record.HasSelectedKeys(this.leftJoinFieldNames) {
 					break
-				} else {
-					if this.leftUnpaireds == nil {
-						this.leftUnpaireds = list.New()
-					}
-					this.leftUnpaireds.PushBack(this.peekRecordAndContext)
 				}
+				if this.leftUnpaireds == nil {
+					this.leftUnpaireds = list.New()
+				}
+				this.leftUnpaireds.PushBack(this.peekRecordAndContext)
 			}
 
 			// Double break from double for-loop
@@ -544,7 +542,7 @@ func moveRecordsAndContexts(
 		if element == nil {
 			break
 		}
-		destination.PushBack(element)
+		destination.PushBack(element.Value.(*types.RecordAndContext))
 		source.Remove(element)
 	}
 }
