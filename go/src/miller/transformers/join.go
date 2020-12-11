@@ -298,7 +298,7 @@ type TransformerJoin struct {
 	leftUnpairableRecordsAndContexts *list.List
 
 	// For sorted/doubly-streaming input
-	//tJoinBucketKeeper* joinBucketKeeper
+	joinBucketKeeper *tJoinBucketKeeper
 
 	recordTransformerFunc transforming.RecordTransformerFunc
 }
@@ -317,7 +317,7 @@ func NewTransformerJoin(
 		ingested:                         false,
 		leftBucketsByJoinFieldValues:     nil,
 		leftUnpairableRecordsAndContexts: nil,
-		//joinBucketKeeper : nil
+		joinBucketKeeper:                 nil,
 	}
 
 	if opts.allowUnsortedInput {
@@ -333,11 +333,12 @@ func NewTransformerJoin(
 		// miss anything. This lets people do joins that would otherwise take
 		// too much RAM.
 
-		//	this.joinBucketKeeper = newJoinBucketKeeper(
-		//		opts.prepipe,
-		//		opts.leftFileName,
-		//		&opts.reader_opts,
-		//		opts.leftJoinFieldNames),
+		this.joinBucketKeeper = newJoinBucketKeeper(
+			//		opts.prepipe,
+			opts.leftFileName,
+			&opts.joinReaderOptions,
+			opts.leftJoinFieldNames,
+		)
 
 		this.recordTransformerFunc = this.transformDoublyStreaming
 	}
@@ -362,6 +363,9 @@ func (this *TransformerJoin) transformHalfStreaming(
 ) {
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
+	//
+	// TODO: check if this is still true for the Go port, once everything else
+	// is done.
 	if !this.ingested { // First call
 		this.ingestLeftFile()
 		this.ingested = true
@@ -369,8 +373,10 @@ func (this *TransformerJoin) transformHalfStreaming(
 
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		groupingKey, allFound := inrec.GetSelectedValuesJoined(this.opts.rightJoinFieldNames)
-		if allFound {
+		groupingKey, hasAllJoinKeys := inrec.GetSelectedValuesJoined(
+			this.opts.rightJoinFieldNames,
+		)
+		if hasAllJoinKeys {
 			iLeftBucket := this.leftBucketsByJoinFieldValues.Get(groupingKey)
 			if iLeftBucket == nil {
 				if this.opts.emitRightUnpairables {
@@ -396,44 +402,45 @@ func (this *TransformerJoin) transformHalfStreaming(
 
 // ----------------------------------------------------------------
 func (this *TransformerJoin) transformDoublyStreaming(
-	inrecAndContext *types.RecordAndContext,
+	rightRecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	//	tJoinBucketKeeper* keeper = this.joinBucketKeeper; // keystroke-saver
-	//	sllv_t* leftRecords = nil
-	//	sllv_t* bucketLeftUnpairable = nil
-	//	sllv_t* pout_recs = sllv_alloc()
+	keeper := this.joinBucketKeeper // keystroke-saver
 
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	rightRec := rightRecAndContext.Record
 
-		_ /*rightFieldValues*/, allFound := inrec.ReferenceSelectedValues(this.opts.rightJoinFieldNames)
-		if allFound {
-			// keeper.emit(rightFieldValues, &leftRecords, &bucketLeftUnpairable)
+	if rightRec != nil { // not end of record stream
+
+		rightFieldValues, hasAllJoinKeys := rightRec.ReferenceSelectedValues(
+			this.opts.rightJoinFieldNames,
+		)
+		if hasAllJoinKeys {
+			keeper.advanceOrDrain(rightFieldValues)
 		}
 		if this.opts.emitLeftUnpairables {
-			//	if (bucketLeftUnpairable != nil && bucketLeftUnpairable.length > 0) {
-			//		sllv_transfer(pout_recs, bucketLeftUnpairable)
-			//	}
+			keeper.outputAndReleaseLeftUnpaireds(outputChannel)
 		}
+
+		lefts := keeper.joinBucket.recordsAndContexts // keystroke-saver
 
 		if this.opts.emitRightUnpairables {
-			//	if (leftRecords == nil || leftRecords.length == 0) {
-			//		outputChannel <- inrecAndContext
-			//	}
+			if lefts == nil || lefts.Len() == 0 {
+				outputChannel <- rightRecAndContext
+			}
 		}
 
-		//	if (this.opts.emitPairables && leftRecords != nil) {
-		//		this.formAndEmitPairs(leftRecordsAndContexts, inrec, outputChannel)
-		//	}
+		if this.opts.emitPairables && lefts != nil {
+			this.formAndEmitPairs(lefts, rightRecAndContext, outputChannel)
+		}
 
 	} else { // end of record stream
-		// keeper.emit(nil, &leftRecords, &bucketLeftUnpairable)
+		keeper.advanceOrDrain(nil)
+
 		if this.opts.emitLeftUnpairables {
-			// sllv_transfer(pout_recs, bucketLeftUnpairable)
+			keeper.outputAndReleaseLeftUnpaireds(outputChannel)
 		}
 
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputChannel <- rightRecAndContext // emit end-of-stream marker
 	}
 }
 
@@ -491,6 +498,7 @@ func (this *TransformerJoin) ingestLeftFile() {
 				done = true
 				break // breaks the switch, not the for, in Golang
 			}
+
 			groupingKey, leftFieldValues, ok := leftrec.GetSelectedValuesAndJoined(
 				this.opts.leftJoinFieldNames,
 			)

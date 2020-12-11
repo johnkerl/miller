@@ -413,6 +413,17 @@ func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*Mlr
 	return mlrvals, allFound
 }
 
+// Similar to the above but only checks availability. For join.
+func (this *Mlrmap) HasSelectedKeys(selectedFieldNames []string) bool {
+	for _, selectedFieldName := range selectedFieldNames {
+		entry := this.findEntry(&selectedFieldName)
+		if entry == nil {
+			return false
+		}
+	}
+	return true
+}
+
 // ----------------------------------------------------------------
 func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
 	entry := this.findEntry(oldKey)
