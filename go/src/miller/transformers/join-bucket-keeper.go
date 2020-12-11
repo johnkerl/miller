@@ -525,6 +525,7 @@ func (this *tJoinBucketKeeper) outputAndReleaseLeftUnpaireds(
 			}
 			recordAndContext := element.Value.(*types.RecordAndContext)
 			outputChannel <- recordAndContext
+			this.leftUnpaireds.Remove(element)
 		}
 	}
 }
