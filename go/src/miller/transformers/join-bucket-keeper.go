@@ -410,10 +410,10 @@ func (this *tJoinBucketKeeper) advanceTo(
 	peekFieldValues, hasAllJoinKeys := peekRec.ReferenceSelectedValues(
 		this.leftJoinFieldNames,
 	)
-	// TODO: We need a double condition here ... the peek record is either
-	// heterogeneous or homogeneous.  (Or, change that, and ensure elsewhere
-	// the peek record is homogeneous.) The former is destined for
-	// left-unpaired and shouldn't be lexically compared. The latter should be.
+	// We use a double condition here, implemented as a double for-loop. The
+	// peek record is either heterogeneous or homogeneous. The former is
+	// destined for left-unpaired and shouldn't be lexically compared. The
+	// latter should be.
 	lib.InternalCodingErrorIf(!hasAllJoinKeys)
 
 	cmp := compareLexicallyPP(peekFieldValues, rightFieldValues)
@@ -432,7 +432,6 @@ func (this *tJoinBucketKeeper) advanceTo(
 			for {
 				// Skip over records not having the join keys. These go straight to the
 				// left-unpaired list.
-
 				this.peekRecordAndContext = this.readRecord()
 				if this.peekRecordAndContext == nil {
 					break

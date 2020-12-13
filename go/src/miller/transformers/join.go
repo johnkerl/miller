@@ -193,21 +193,20 @@ func transformerJoinParseCLI(
 	//	cli_merge_reader_opts(&opts.reader_opts, pmain_reader_opts)
 
 	if opts.leftFileName == "" {
-		// TODO: "mlr" -> os.Args[0] throughout the codebase
-		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)
+		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", os.Args[0], verb)
 		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
-			"mlr", verb)
+			os.Args[0], verb)
 		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
-		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", "mlr", verb)
+		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", os.Args[0], verb)
 		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 		return nil
 	}
@@ -225,7 +224,7 @@ func transformerJoinParseCLI(
 	if llen != rlen || llen != olen {
 		fmt.Fprintf(os.Stderr,
 			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
-			"mlr", verb, llen, rlen, olen)
+			os.Args[0], verb, llen, rlen, olen)
 		os.Exit(1)
 	}
 
@@ -267,7 +266,7 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n")
 	fmt.Fprintf(o, "               In this case, the entire left file will be loaded into memory.\n")
 	fmt.Fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
-		"mlr") // TODO: parameterize or inline
+		os.Args[0])
 	fmt.Fprintf(o, "               If you wish to use a prepipe command for the main input as well\n")
 	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
 	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")

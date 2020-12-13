@@ -357,3 +357,4 @@ NITS/NON-IMMEDIATE:
 * function metadata: auto-sort on mlr -f?
 * --x2b @ help-doc .go; etc
 ? remove flagSet x all -- ? for consistency?
+* "mlr" -> os.Args[0] throughout the codebase
