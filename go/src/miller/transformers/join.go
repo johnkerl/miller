@@ -374,10 +374,12 @@ func (this *TransformerJoin) transformHalfStreaming(
 				if this.opts.emitRightUnpairables {
 					outputChannel <- inrecAndContext
 				}
-			} else if this.opts.emitPairables {
+			} else {
 				leftBucket := iLeftBucket.(*tJoinBucket)
 				leftBucket.wasPaired = true
-				this.formAndEmitPairs(leftBucket.recordsAndContexts, inrecAndContext, outputChannel)
+				if this.opts.emitPairables {
+					this.formAndEmitPairs(leftBucket.recordsAndContexts, inrecAndContext, outputChannel)
+				}
 			}
 		} else if this.opts.emitRightUnpairables {
 			outputChannel <- inrecAndContext
@@ -385,8 +387,8 @@ func (this *TransformerJoin) transformHalfStreaming(
 
 	} else { // end of record stream
 		if this.opts.emitLeftUnpairables {
-			this.emitLeftUnpairables(outputChannel)
 			this.emitLeftUnpairedBuckets(outputChannel)
+			this.emitLeftUnpairables(outputChannel)
 		}
 		outputChannel <- inrecAndContext // emit end-of-stream marker
 	}
