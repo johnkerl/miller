@@ -1,9 +1,25 @@
 
 mlr --json join -s -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -s -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -19,10 +35,26 @@ x,a,b
 4,5,50
 
 mlr --json join -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -38,10 +70,26 @@ x,a,b
 4,5,50
 
 mlr --json join -s -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -s -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -57,10 +105,26 @@ x,a,b
 4,5,50
 
 mlr --json join -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -76,10 +140,26 @@ x,a,b
 4,5,50
 
 mlr --json join -s -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -s -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -95,10 +175,26 @@ x,a,b
 4,5,50
 
 mlr --json join -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -114,10 +210,26 @@ x,a,b
 4,5,50
 
 mlr --json join -s -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -s -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -133,10 +245,26 @@ x,a,b
 4,5,50
 
 mlr --json join -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --dkvp join -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.dkvp
 x=1,a=2,b=20
@@ -152,58 +280,202 @@ x,a,b
 4,5,50
 
 mlr --ijson --ojson join -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --idkvp --ojson join -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.dkvp
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --icsvlite --ojson join -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.csv
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --ijson --ojson join -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --idkvp --ojson join -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.dkvp
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --icsvlite --ojson join -i dkvp -j x -f ./reg-test/input/multi-format-join-a.dkvp ./reg-test/input/multi-format-join-b.csv
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --ijson --ojson join -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.json
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --idkvp --ojson join -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.dkvp
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --icsvlite --ojson join -i json -j x -f ./reg-test/input/multi-format-join-a.json ./reg-test/input/multi-format-join-b.csv
-{ "x": 1, "a": 2, "b": 20 }
-{ "x": 2, "a": 3, "b": 30 }
-{ "x": 3, "a": 4, "b": 40 }
-{ "x": 4, "a": 5, "b": 50 }
+{
+  "x": 1,
+  "a": 2,
+  "b": 20
+}
+{
+  "x": 2,
+  "a": 3,
+  "b": 30
+}
+{
+  "x": 3,
+  "a": 4,
+  "b": 40
+}
+{
+  "x": 4,
+  "a": 5,
+  "b": 50
+}
 
 mlr --ijson --odkvp join -i csvlite -j x -f ./reg-test/input/multi-format-join-a.csv ./reg-test/input/multi-format-join-b.json
 x=1,a=2,b=20
