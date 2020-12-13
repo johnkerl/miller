@@ -88,11 +88,8 @@ func transformerJoinParseCLI(
 	// Parse local flags
 	opts := newJoinOptions()
 
-	// TODO
-	//cli_reader_opts_init(&opts.joinReaderOptions)
-
 	if mainReaderOptions != nil { // for 'mlr --usage-all-verbs', it's nil
-		// TODO: comment
+		// TODO: make sure this is a full nested-struct copy.
 		opts.joinReaderOptions = *mainReaderOptions // struct copy
 	}
 
@@ -103,9 +100,8 @@ func transformerJoinParseCLI(
 			transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
 			return nil // help intentionally requested
 
-			// TODO
-			// } else if (cli_handle_reader_options(args, argc, &argi, &opts.joinReaderOptions)) {
-			//   // handled
+		} else if clitypes.ParseReaderOptions(args, argc, &argi, &opts.joinReaderOptions) {
+			// handled
 
 		} else if args[argi] == "--prepipe" {
 			if (argc - argi) < 2 {
@@ -188,9 +184,6 @@ func transformerJoinParseCLI(
 			os.Exit(1)
 		}
 	}
-
-	// TODO
-	//	cli_merge_reader_opts(&opts.reader_opts, pmain_reader_opts)
 
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", os.Args[0], verb)
