@@ -12,13 +12,13 @@ import (
 
 // ----------------------------------------------------------------
 type tJoinBucket struct {
-	leftFieldValues    []types.Mlrval
+	leftFieldValues    []*types.Mlrval
 	recordsAndContexts *list.List
 	wasPaired          bool
 }
 
 func newJoinBucket(
-	leftFieldValues []types.Mlrval,
+	leftFieldValues []*types.Mlrval,
 ) *tJoinBucket {
 	return &tJoinBucket{
 		leftFieldValues:    leftFieldValues,

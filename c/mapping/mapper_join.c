@@ -354,7 +354,43 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	sllv_t* pbucket_left_unpaired = NULL;
 	sllv_t* pout_recs = sllv_alloc();
 
-	if (pright_rec == NULL) { // End of input record stream
+	if (pright_rec != NULL) { // Not end of input record stream
+		int produced_right = FALSE;
+		slls_t* pright_field_values = mlr_reference_selected_values_from_record(pright_rec,
+			pstate->popts->pright_join_field_names);
+
+		if (pright_field_values != NULL) {
+			join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_records, &pbucket_left_unpaired);
+			slls_free(pright_field_values);
+		}
+
+		if (pstate->popts->emit_left_unpairables) {
+			if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length > 0) {
+				sllv_transfer(pout_recs, pbucket_left_unpaired);
+			}
+		}
+
+		if (pstate->popts->emit_right_unpairables) {
+			if (pleft_records == NULL || pleft_records->length == 0) {
+				sllv_append(pout_recs, pright_rec);
+				produced_right = TRUE;
+			}
+		}
+
+		if (pstate->popts->emit_pairables && pleft_records != NULL) {
+			mapper_join_form_pairs(pleft_records, pright_rec, pstate, pout_recs);
+		}
+
+		if (!produced_right)
+			lrec_free(pright_rec);
+		// pleft_records are not caller-owned; we don't free them.
+		if (pbucket_left_unpaired)
+			while (pbucket_left_unpaired->phead)
+				lrec_free(sllv_pop(pbucket_left_unpaired));
+		sllv_free(pbucket_left_unpaired);
+		return pout_recs;
+
+	} else { // end of input record stream
 		join_bucket_keeper_emit(pkeeper, NULL, &pleft_records, &pbucket_left_unpaired);
 		if (pstate->popts->emit_left_unpairables) {
 			sllv_transfer(pout_recs, pbucket_left_unpaired);
@@ -368,41 +404,6 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 		sllv_append(pout_recs, NULL);
 		return pout_recs;
 	}
-
-	int produced_right = FALSE;
-	slls_t* pright_field_values = mlr_reference_selected_values_from_record(pright_rec,
-		pstate->popts->pright_join_field_names);
-
-	if (pright_field_values != NULL) {
-		join_bucket_keeper_emit(pkeeper, pright_field_values, &pleft_records, &pbucket_left_unpaired);
-		slls_free(pright_field_values);
-	}
-
-	if (pstate->popts->emit_left_unpairables) {
-		if (pbucket_left_unpaired != NULL && pbucket_left_unpaired->length > 0) {
-			sllv_transfer(pout_recs, pbucket_left_unpaired);
-		}
-	}
-
-	if (pstate->popts->emit_right_unpairables) {
-		if (pleft_records == NULL || pleft_records->length == 0) {
-			sllv_append(pout_recs, pright_rec);
-			produced_right = TRUE;
-		}
-	}
-
-	if (pstate->popts->emit_pairables && pleft_records != NULL) {
-		mapper_join_form_pairs(pleft_records, pright_rec, pstate, pout_recs);
-	}
-
-	if (!produced_right)
-		lrec_free(pright_rec);
-	// pleft_records are not caller-owned; we don't free them.
-	if (pbucket_left_unpaired)
-		while (pbucket_left_unpaired->phead)
-			lrec_free(sllv_pop(pbucket_left_unpaired));
-	sllv_free(pbucket_left_unpaired);
-	return pout_recs;
 }
 
 // ----------------------------------------------------------------

@@ -3,6 +3,8 @@ TOP OF LIST:
 
 ! mlrrc
 ! join
+  > clean up VERBOSE in joiner-files
+  > needs UT per se
 !! fix all typemasks!!
 ! fix var/any type-mask
   o C/Go UT

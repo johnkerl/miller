@@ -165,10 +165,10 @@ func CopyMlrvalArray(input []Mlrval) []Mlrval {
 	return output
 }
 
-func CopyMlrvalPointerArray(input []*Mlrval) []Mlrval {
-	output := make([]Mlrval, len(input))
+func CopyMlrvalPointerArray(input []*Mlrval) []*Mlrval {
+	output := make([]*Mlrval, len(input))
 	for i, element := range input {
-		output[i] = *(element.Copy())
+		output[i] = element.Copy()
 	}
 	return output
 }

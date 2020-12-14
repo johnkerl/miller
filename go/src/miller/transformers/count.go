@@ -222,10 +222,10 @@ func (this *TransformerCount) countGrouped(
 				// * Grouping values for key is ["foo", "bar"]
 				// Here we populate a record with "a=foo,b=bar".
 
-				groupingValuesForKey := this.groupingValues.Get(groupingKey).([]types.Mlrval)
+				groupingValuesForKey := this.groupingValues.Get(groupingKey).([]*types.Mlrval)
 				i := 0
 				for _, groupingValueForKey := range groupingValuesForKey {
-					newrec.PutCopy(&this.groupByFieldNameList[i], &groupingValueForKey)
+					newrec.PutCopy(&this.groupByFieldNameList[i], groupingValueForKey)
 					i++
 				}
 

@@ -366,10 +366,10 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 // For sort.
 func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 	string,
-	[]Mlrval,
+	[]*Mlrval,
 	bool,
 ) {
-	mlrvals := make([]Mlrval, 0, len(selectedFieldNames))
+	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 
 	if len(selectedFieldNames) == 0 {
 		// The fall-through is functionally correct, but this is quicker with
@@ -390,7 +390,7 @@ func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 		// This may be an array or map, or just a string/int/etc. Regardless we
 		// stringify it.
 		buffer.WriteString(entry.Value.String())
-		mlrvals = append(mlrvals, *entry.Value.Copy())
+		mlrvals = append(mlrvals, entry.Value.Copy())
 	}
 	return buffer.String(), mlrvals, true
 }

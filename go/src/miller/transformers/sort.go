@@ -243,7 +243,7 @@ func NewTransformerSort(
 // ----------------------------------------------------------------
 type GroupingKeysAndMlrvals struct {
 	groupingKey string
-	mlrvals     []types.Mlrval
+	mlrvals     []*types.Mlrval
 }
 
 func (this *TransformerSort) Transform(
@@ -292,8 +292,8 @@ func (this *TransformerSort) Transform(
 		sort.Slice(groupingKeysAndMlrvals, func(i, j int) bool {
 			for k, comparator := range this.comparatorFuncs {
 				result := comparator(
-					&groupingKeysAndMlrvals[i].mlrvals[k],
-					&groupingKeysAndMlrvals[j].mlrvals[k],
+					groupingKeysAndMlrvals[i].mlrvals[k],
+					groupingKeysAndMlrvals[j].mlrvals[k],
 				)
 				if result < 0 {
 					return true
@@ -328,7 +328,7 @@ func groupHeadsToArray(groupHeads *lib.OrderedMap) []GroupingKeysAndMlrvals {
 	for entry := groupHeads.Head; entry != nil; entry = entry.Next {
 		retval[i] = GroupingKeysAndMlrvals{
 			groupingKey: entry.Key,
-			mlrvals:     entry.Value.([]types.Mlrval),
+			mlrvals:     entry.Value.([]*types.Mlrval),
 		}
 		i++
 	}

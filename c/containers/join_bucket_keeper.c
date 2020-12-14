@@ -202,7 +202,6 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 {
 	*pprecords_paired        = NULL;
 	*pprecords_left_unpaired = NULL;
-	int cmp = 0;
 
 	if (pkeeper->state == LEFT_STATE_0_PREFILL) {
 		join_bucket_keeper_initial_fill(pkeeper, pprecords_left_unpaired);
@@ -211,7 +210,7 @@ void join_bucket_keeper_emit(join_bucket_keeper_t* pkeeper, slls_t* pright_field
 
 	if (pright_field_values != NULL) { // Not right EOF
 		if (pkeeper->state == LEFT_STATE_1_FULL || pkeeper->state == LEFT_STATE_2_LAST_BUCKET) {
-			cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
+			int cmp = slls_compare_lexically(pkeeper->pbucket->pleft_field_values, pright_field_values);
 			if (cmp < 0) {
 				// Advance left until match or left EOF.
 				join_bucket_keeper_advance_to(pkeeper, pright_field_values, pprecords_paired, pprecords_left_unpaired);
