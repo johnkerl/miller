@@ -266,7 +266,9 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 	if this.state == LEFT_STATE_0_PREFILL {
 		////fmt.Printf("-- initial fill\n") // VERBOSE
 		this.prepareForFirstJoinBucket()
-		this.fillNextJoinBucket()
+		if this.peekRecordAndContext != nil {
+			this.fillNextJoinBucket()
+		}
 		this.state = this.computeState()
 	}
 
