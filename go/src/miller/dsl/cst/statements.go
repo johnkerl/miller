@@ -39,6 +39,10 @@ func (this *RootNode) BuildStatementNode(
 
 	case dsl.NodeTypeEmitStatement:
 		return this.BuildEmitStatementNode(astNode)
+	case dsl.NodeTypeEmitFStatement:
+		return this.BuildEmitFStatementNode(astNode)
+	case dsl.NodeTypeEmitPStatement:
+		return this.BuildEmitPStatementNode(astNode)
 	case dsl.NodeTypeDumpStatement:
 		return this.BuildDumpStatementNode(astNode)
 	case dsl.NodeTypeEdumpStatement:

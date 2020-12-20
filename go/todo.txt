@@ -39,6 +39,23 @@ big:
 * stats2 verb
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+EMITX:
+
+* emit: single record (more if in parens); more args are indices
+* emitf: simple side-by-sides
+* emitp: like emit but w/ different column-smashing
+
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
+pan=0.346790
+pan=0.758680,wye=0.381399
+wye=0.204603,pan=0.573289
+
+$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+a=pan,sum:pan=0.346790
+a=eks,sum:pan=0.758680,sum:wye=0.381399
+a=wye,sum:wye=0.204603,sum:pan=0.573289
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * parser-fu:
   o iterative LALR grok
 - jackson notes

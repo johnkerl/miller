@@ -10,7 +10,7 @@ import (
 	"miller/types"
 )
 
-// ----------------------------------------------------------------
+// ================================================================
 type EmitStatementNode struct {
 	emitEvaluable IEvaluable
 	// xxx to do:
@@ -95,3 +95,96 @@ func (this *EmitStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 //         "sum": 5.6
 //       }
 //     ]
+
+// ================================================================
+type EmitPStatementNode struct {
+	emitpEvaluable IEvaluable
+	// xxx to do:
+	// * required array of evaluables
+	// * optional array of indexing keys
+}
+
+// ----------------------------------------------------------------
+func (this *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitPStatement)
+	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
+
+	emitpEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+	return &EmitPStatementNode{
+		emitpEvaluable: emitpEvaluable,
+	}, nil
+}
+
+func (this *EmitPStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+	emitpResult := this.emitpEvaluable.Evaluate(state)
+
+	if emitpResult.IsAbsent() {
+		return nil, nil
+	}
+
+	if emitpResult.IsMap() {
+		state.OutputChannel <- types.NewRecordAndContext(
+			emitpResult.Copy().GetMap(),
+			state.Context, // xxx clone ?
+		)
+	}
+
+	// xxx WIP
+	// xxx need to reshape rvalue mlrvals -> mlrmaps; publish w/ contexts; method for that
+
+	//	outputChannel <- types.NewRecordAndContext(
+	//		mlrmap goes here,
+	//		&context,
+	//	)
+
+	return nil, nil
+}
+
+// ================================================================
+type EmitFStatementNode struct {
+	emitfEvaluable IEvaluable
+	// xxx to do:
+	// array of names
+}
+
+// ----------------------------------------------------------------
+func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitFStatement)
+	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
+
+	emitfEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+	return &EmitFStatementNode{
+		emitfEvaluable: emitfEvaluable,
+	}, nil
+}
+
+func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+	emitfResult := this.emitfEvaluable.Evaluate(state)
+
+	if emitfResult.IsAbsent() {
+		return nil, nil
+	}
+
+	if emitfResult.IsMap() {
+		state.OutputChannel <- types.NewRecordAndContext(
+			emitfResult.Copy().GetMap(),
+			state.Context, // xxx clone ?
+		)
+	}
+
+	// xxx WIP
+	// xxx need to reshape rvalue mlrvals -> mlrmaps; publish w/ contexts; method for that
+
+	//	outputChannel <- types.NewRecordAndContext(
+	//		mlrmap goes here,
+	//		&context,
+	//	)
+
+	return nil, nil
+}

@@ -333,7 +333,8 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 // keys.  Any other records found along the way, lacking the necessary
 // join-field keys, are moved to the left-unpaired list.
 
-func (this *tJoinBucketKeeper) prepareForFirstJoinBucket() { for {
+func (this *tJoinBucketKeeper) prepareForFirstJoinBucket() {
+	for {
 		// Skip over records not having the join keys. These go straight to the
 		// left-unpaired list.
 		this.peekRecordAndContext = this.readRecord()

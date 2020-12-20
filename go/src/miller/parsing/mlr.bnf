@@ -162,6 +162,8 @@ edump    : 'e' 'd' 'u' 'm' 'p' ;
 elif     : 'e' 'l' 'i' 'f' ;
 else     : 'e' 'l' 's' 'e' ;
 emit     : 'e' 'm' 'i' 't' ;
+emitf    : 'e' 'm' 'i' 't' 'f' ;
+emitp    : 'e' 'm' 'i' 't' 'p' ;
 end      : 'e' 'n' 'd' ;
 filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 for      : 'f' 'o' 'r' ;
@@ -392,6 +394,8 @@ BracelessStatement
   | BareBoolean
   | FilterStatement
   | EmitStatement
+  | EmitPStatement
+  | EmitFStatement
   | DumpStatement
   | EdumpStatement
   | PrintStatement
@@ -449,6 +453,16 @@ FilterStatement
 EmitStatement
   : emit Rvalue // xxx more to do
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
+;
+
+EmitPStatement
+  : emitp Rvalue // xxx more to do
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitPStatement) >>
+;
+
+EmitFStatement
+  : emitf Rvalue // xxx more to do
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitFStatement) >>
 ;
 
 DumpStatement
