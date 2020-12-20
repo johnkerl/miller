@@ -3,6 +3,7 @@ TOP OF LIST:
 
 ! emitp/emitf
 ! mlrrc
+* pprint emit at schema-change or EOS
 
 !! fix all typemasks!!
 ! fix var/any type-mask
@@ -144,6 +145,7 @@ no need to bootstrap a parser for the parser-generator language
   - how with whitespace regex -- ?
 ! quoted DKVP
   - what about csvlite-style -- ? needs a --dkvplite ?
+! pprint emit on schema change, not all-at-end.
 
 * mlr -f / -F flags
   o others in mlrcli_parse.go
@@ -313,6 +315,8 @@ NITS/NON-IMMEDIATE:
   o also document pre/post conditions for flag and non-flag usages x all mappers
 * need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
 ? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
+i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older (emitp 3.5.0).
+  if i were starting clean-slate, i'd have had just a single `emit`.
 * doc one-variable for is over keys for maps, elements for arrays
 * asserting_{type}: os.Exit(1) -> return nil, err flow?
 * test put/filter w/ various combinations of -s/-e/-f

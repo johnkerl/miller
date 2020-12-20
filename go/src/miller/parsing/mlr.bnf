@@ -460,9 +460,21 @@ EmitPStatement
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitPStatement) >>
 ;
 
+// Examples:
+//   emitf @a
+//   emitf @a, @b
+// Each argument must be a non-indexed oosvar/localvar/fieldname.
+// These restrictions are enforced in the CST logic, to keep this parser/AST
+// logic simpler.
 EmitFStatement
-  : emitf Rvalue // xxx more to do
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitFStatement) >>
+  : emitf FcnArgs
+    << dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        $0,
+        dsl.NodeTypeDumpStatement,
+      ),
+      $1,
+    ) >>
 ;
 
 DumpStatement

@@ -144,27 +144,43 @@ func (this *EmitPStatementNode) Execute(state *State) (*BlockExitPayload, error)
 }
 
 // ================================================================
+// Examples:
+//   emitf @a
+//   emitf @a, @b
+// Each argument must be a non-indexed oosvar/localvar/fieldname.
+// These restrictions are enforced here in the CST logic, to keep the
+// parser/AST logic simpler.
+
 type EmitFStatementNode struct {
-	emitfEvaluable IEvaluable
-	// xxx to do:
-	// array of names
+	emitfEvaluables []IEvaluable
 }
 
 // ----------------------------------------------------------------
+// $ mlr -n put -v 'emitf @a,@b,@c'
+// DSL EXPRESSION:
+// emitf @a,@b,@c
+// RAW AST:
+// * statement block
+//     * dump statement "emitf"
+//         * direct oosvar value "a"
+//         * direct oosvar value "b"
+//         * direct oosvar value "c"
+
 func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitFStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
 
-	emitfEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
+	emitfEvaluables[i], err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
 	return &EmitFStatementNode{
-		emitfEvaluable: emitfEvaluable,
+		emitfEvaluables: emitfEvaluables,
 	}, nil
 }
 
 func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+	xxx
 	emitfResult := this.emitfEvaluable.Evaluate(state)
 
 	if emitfResult.IsAbsent() {
@@ -174,17 +190,9 @@ func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error)
 	if emitfResult.IsMap() {
 		state.OutputChannel <- types.NewRecordAndContext(
 			emitfResult.Copy().GetMap(),
-			state.Context, // xxx clone ?
+			state.Context.Copy(),
 		)
 	}
-
-	// xxx WIP
-	// xxx need to reshape rvalue mlrvals -> mlrmaps; publish w/ contexts; method for that
-
-	//	outputChannel <- types.NewRecordAndContext(
-	//		mlrmap goes here,
-	//		&context,
-	//	)
 
 	return nil, nil
 }
