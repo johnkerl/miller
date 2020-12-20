@@ -106,9 +106,7 @@ rrv ./reg-test/cases/case-c-head-early-out.sh
 rrv ./reg-test/cases/case-c-histogram.sh
 rrv ./reg-test/cases/case-c-in-place-processing.sh
 rrv ./reg-test/cases/case-c-int-float-stats1-step1.sh
-rrv ./reg-test/cases/case-c-join-mixed-format.sh
 rrv ./reg-test/cases/case-c-join-prepipe.sh
-rrv ./reg-test/cases/case-c-join.sh
 rrv ./reg-test/cases/case-c-json-io.sh
 rrv ./reg-test/cases/case-c-lf-crlf-and-autodetect.sh
 rrv ./reg-test/cases/case-c-markdown-output.sh

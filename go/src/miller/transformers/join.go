@@ -405,15 +405,9 @@ func (this *TransformerJoin) transformDoublyStreaming(
 ) {
 	keeper := this.joinBucketKeeper // keystroke-saver
 
-	////fmt.Println() // VERBOSE
-	////keeper.dump("pre") // VERBOSE
-
 	rightRec := rightRecAndContext.Record
 
 	if rightRec != nil { // not end of record stream
-
-		////fmt.Println("RIGHT REC", rightRec.ToDKVPString()) // VERBOSE
-
 		isPaired := false
 
 		rightFieldValues, hasAllJoinKeys := rightRec.ReferenceSelectedValues(
@@ -422,8 +416,6 @@ func (this *TransformerJoin) transformDoublyStreaming(
 		if hasAllJoinKeys {
 			isPaired = keeper.findJoinBucket(rightFieldValues)
 		}
-		////fmt.Println("IS_PAIRED", isPaired) // VERBOSE
-		////keeper.dump("post") // VERBOSE
 		if this.opts.emitLeftUnpairables {
 			keeper.outputAndReleaseLeftUnpaireds(outputChannel)
 		} else {
