@@ -259,6 +259,7 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 ) bool {
 	// TODO: comment me
 	isPaired := false
+	////fmt.Println("RET0", isPaired)
 
 	// This will produce a join bucket on the left side (if there is any at all
 	// to be had) but it may or may not make the join keys from the current
@@ -276,12 +277,8 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 		////fmt.Printf("-- state %d\n", this.state) // VERBOSE
 		if this.state == LEFT_STATE_1_FULL || this.state == LEFT_STATE_2_LAST_BUCKET {
 
-			////for i, lv := range this.joinBucket.leftFieldValues { // VERBOSE
-			////fmt.Printf("-- lfv[%d] = %s\n", i, lv.String()) // VERBOSE
-			////} // VERBOSE
-			////for j, rv := range rightFieldValues { // VERBOSE
-			////fmt.Printf("-- rfv[%d] = %s\n", j, rv.String()) // VERBOSE
-			////} // VERBOSE
+			////dumpFieldValues("lfv", this.joinBucket.leftFieldValues)
+			////dumpFieldValues("rfv", rightFieldValues)
 
 			cmp := compareLexically(this.joinBucket.leftFieldValues, rightFieldValues)
 			////fmt.Printf("-- cmp %d\n", cmp) // VERBOSE
@@ -301,15 +298,22 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 				}
 				////this.dump("after fill-next") // VERBOSE
 
-				// TODO: explain why this.joinBucket won't be null here.
-				cmp := compareLexically(
-					this.joinBucket.leftFieldValues,
-					rightFieldValues,
-				)
-				if cmp == 0 {
-					////fmt.Println("IS PAIRED CASE 2") // VERBOSE
-					isPaired = true
-					this.joinBucket.wasPaired = true
+				// TODO: privatize more
+				if this.joinBucket.recordsAndContexts.Len() > 0 {
+					// TODO: explain why this.joinBucket won't be null here.
+					////dumpFieldValues("lfv", this.joinBucket.leftFieldValues)
+					////dumpFieldValues("rfv", rightFieldValues)
+					cmp := compareLexically(
+						this.joinBucket.leftFieldValues,
+						rightFieldValues,
+					)
+					////fmt.Println("cmp=%d\n", cmp)
+					if cmp == 0 {
+						////fmt.Println("IS PAIRED CASE 2") // VERBOSE
+						isPaired = true
+						////fmt.Println("RET1", isPaired)
+						this.joinBucket.wasPaired = true
+					}
 				}
 
 			} else if cmp == 0 {
@@ -317,11 +321,13 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 				////fmt.Println("IS PAIRED CASE 1") // VERBOSE
 				this.joinBucket.wasPaired = true
 				isPaired = true
+				////fmt.Println("RET2", isPaired)
 			} else {
 				// E.g. joining on "id", current right-record has id=5,
 				// previous join-bucket had id=4, new one has id=6.  No match
 				// and no need to advance left.
 				isPaired = false
+				////fmt.Println("RET3", isPaired)
 			}
 		} else if this.state != LEFT_STATE_3_EOF {
 			fmt.Fprintf(
@@ -338,6 +344,7 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 
 	this.state = this.computeState()
 
+	////fmt.Println("RETX", isPaired)
 	return isPaired
 }
 
@@ -383,12 +390,14 @@ func (this *tJoinBucketKeeper) prepareForFirstJoinBucket() {
 func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 	rightFieldValues []*types.Mlrval,
 ) {
+	////fmt.Println("prepareForNewJoinBucket ENTER")
 	if !this.joinBucket.wasPaired {
 		moveRecordsAndContexts(this.leftUnpaireds, this.joinBucket.recordsAndContexts)
 	}
 	this.joinBucket = newJoinBucket(nil)
 
 	if this.peekRecordAndContext == nil { // left EOF
+		////fmt.Println("prepareForNewJoinBucket EXIT 1")
 		return
 	}
 
@@ -396,8 +405,7 @@ func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 	peekFieldValues, hasAllJoinKeys := peekRec.ReferenceSelectedValues(
 		this.leftJoinFieldNames,
 	)
-	////fmt.Println("----------------------------------------------------------------") // VERBOSE
-	////fmt.Println("PEEK REC IS NON-NIL")                                              // VERBOSE
+	////fmt.Println("PEEK REC IS NON-NIL", peekRec.ToDKVPString()) // VERBOSE
 	lib.InternalCodingErrorIf(!hasAllJoinKeys)
 
 	// We use a double condition here, implemented as a double for-loop. The
@@ -407,6 +415,7 @@ func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 
 	cmp := compareLexically(peekFieldValues, rightFieldValues)
 	if cmp >= 0 {
+		////fmt.Println("prepareForNewJoinBucket EXIT 2")
 		return
 	}
 
@@ -425,9 +434,11 @@ func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 				////fmt.Println("PEEK REC IS READ NIL") // VERBOSE
 				break
 			}
-			////fmt.Println("PEEK REC IS READ NON-NIL") // VERBOSE
+			peekRec := this.peekRecordAndContext.Record
+			////fmt.Println("PEEK REC IS READ NON-NIL", peekRec.ToDKVPString()) // VERBOSE
 
-			if this.peekRecordAndContext.Record.HasSelectedKeys(this.leftJoinFieldNames) {
+			if peekRec.HasSelectedKeys(this.leftJoinFieldNames) {
+				////fmt.Println("PEEK REC HAS SEL BREAK")
 				break
 			}
 			this.leftUnpaireds.PushBack(this.peekRecordAndContext)
@@ -435,22 +446,28 @@ func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 
 		// Double break from double for-loop
 		if this.peekRecordAndContext == nil {
+			////fmt.Println("PEEK REC LEOF")
 			this.leof = true
 			break
 		}
 
 		peekRec := this.peekRecordAndContext.Record
+		////fmt.Println("PEEK REC IS NOW", peekRec.ToDKVPString())
 		// The second return value is a has-all-join-keys indicator -- but
 		// we already checked above, so we leave it as _.
 		peekFieldValues, _ := peekRec.ReferenceSelectedValues(
 			this.leftJoinFieldNames,
 		)
+		////dumpFieldValues("PFV", peekFieldValues)
+		////dumpFieldValues("RFV", rightFieldValues)
 
 		cmp = compareLexically(peekFieldValues, rightFieldValues)
+		////fmt.Printf("CMP %d\n", cmp)
 		if cmp >= 0 {
 			break
 		}
 	}
+	////fmt.Println("prepareForNewJoinBucket EXIT 3")
 }
 
 // ----------------------------------------------------------------
@@ -469,8 +486,8 @@ func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 // * peekRecordAndContext has the join keys
 
 func (this *tJoinBucketKeeper) fillNextJoinBucket() {
-	////fmt.Println("-- fillNextJoinBucket enter") // VERBOSE
 	peekRec := this.peekRecordAndContext.Record
+	////fmt.Println("-- fillNextJoinBucket enter", peekRec.ToDKVPString()) // VERBOSE
 	peekFieldValues, hasAllJoinKeys := peekRec.ReferenceSelectedValues(
 		this.leftJoinFieldNames,
 	)
@@ -506,6 +523,8 @@ func (this *tJoinBucketKeeper) fillNextJoinBucket() {
 		)
 
 		if hasAllJoinKeys {
+			////dumpFieldValues("lfv", this.joinBucket.leftFieldValues)
+			////dumpFieldValues("pfv", peekFieldValues)
 			cmp := compareLexically(
 				this.joinBucket.leftFieldValues,
 				peekFieldValues,
@@ -624,14 +643,12 @@ func moveRecordsAndContexts(
 // ----------------------------------------------------------------
 // Returns -1, 0, 1 as left <, ==, > right, using lexical comparison only (even
 // for numerical values).
-//
-// We assume (and do not check on each call) that both arrays have the same
-// length.
 
 func compareLexically(
 	leftFieldValues []*types.Mlrval,
 	rightFieldValues []*types.Mlrval,
 ) int {
+	lib.InternalCodingErrorIf(len(leftFieldValues) != len(rightFieldValues))
 	n := len(leftFieldValues)
 	for i := 0; i < n; i++ {
 		left := leftFieldValues[i].String()
@@ -644,8 +661,6 @@ func compareLexically(
 	}
 	return 0
 }
-
-// TODO: make leftJoinFieldValues be an array of pointers; then simplify this.
 
 // ================================================================
 func (this *tJoinBucketKeeper) dump(prefix string) {
@@ -680,4 +695,10 @@ func (this *tJoinBucketKeeper) dump(prefix string) {
 	}
 
 	fmt.Printf("------------------------------------------------------\n")
+}
+
+func dumpFieldValues(name string, values []*types.Mlrval) {
+	for i, value := range values { // VERBOSE
+		fmt.Printf("-- %s[%d] = %s\n", name, i, value.String()) // VERBOSE
+	} // VERBOSE
 }

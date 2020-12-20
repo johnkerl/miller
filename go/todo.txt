@@ -4,7 +4,9 @@ TOP OF LIST:
 ! mlrrc
 ! join
   > clean up VERBOSE in joiner-files
-  > needs UT per se
+  > joinBucketKeeper & joinBucket need to be privatized
+  > rewrite join-bucket-keeper.go entirely
+  > also needs UT per se (not just regression)
 !! fix all typemasks!!
 ! fix var/any type-mask
   o C/Go UT

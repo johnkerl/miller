@@ -535,10 +535,10 @@ func (this *TransformerJoin) formAndEmitPairs(
 	rightRecordAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	//fmt.Println("-- pairs start")
+	////fmt.Println("-- pairs start") // VERBOSE
 	// Loop over each to-be-paired-with record from the left file.
 	for pe := leftRecordsAndContexts.Front(); pe != nil; pe = pe.Next() {
-		//fmt.Println("-- pairs pe")
+		////fmt.Println("-- pairs pe") // VERBOSE
 		leftRecordAndContext := pe.Value.(*types.RecordAndContext)
 		leftrec := leftRecordAndContext.Record
 		rightrec := rightRecordAndContext.Record
@@ -575,8 +575,8 @@ func (this *TransformerJoin) formAndEmitPairs(
 				outrec.PutCopy(&key, pr.Value)
 			}
 		}
-		//fmt.Println("-- pairs outrec")
-		//outrec.Print()
+		////fmt.Println("-- pairs outrec") // VERBOSE
+		////outrec.Print() // VERBOSE
 
 		// Clone the right record's context (NR, FILENAME, etc) to use for the new output record
 		context := rightRecordAndContext.Context // struct copy
@@ -585,7 +585,7 @@ func (this *TransformerJoin) formAndEmitPairs(
 		// Emit the new joined record on the downstream channel
 		outputChannel <- outrecAndContext
 	}
-	//fmt.Println("-- pairs end")
+	////fmt.Println("-- pairs end") // VERBOSE
 }
 
 // ----------------------------------------------------------------
