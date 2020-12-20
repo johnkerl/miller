@@ -450,11 +450,21 @@ FilterStatement
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
 ;
 
+// Examples:
+//   emit @a
+//   emit (@a, @b)
+//   emit @a, "x", "y"
+//   emit (@a, @b), "x", "y"
+// First argument (single or in parentheses) must be non-indexed
+// oosvar/localvar/fieldname, so we can use their names as keys in the emitted
+// record.  These restrictions are enforced in the CST logic, to keep this
+// parser/AST logic simpler.
 EmitStatement
   : emit Rvalue // xxx more to do
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
 ;
 
+// Examples: syntactically identical to emit.
 EmitPStatement
   : emitp Rvalue // xxx more to do
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitPStatement) >>
@@ -462,10 +472,10 @@ EmitPStatement
 
 // Examples:
 //   emitf @a
-//   emitf @a, @b
-// Each argument must be a non-indexed oosvar/localvar/fieldname.
-// These restrictions are enforced in the CST logic, to keep this parser/AST
-// logic simpler.
+//   emitf @a, b, $c
+// Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
+// their names as keys in the emitted record.  These restrictions are enforced
+// in the CST logic, to keep this parser/AST logic simpler.
 EmitFStatement
   : emitf FcnArgs
     << dsl.AdoptChildren(

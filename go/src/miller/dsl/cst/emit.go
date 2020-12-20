@@ -152,11 +152,9 @@ func (this *EmitPStatementNode) Execute(state *State) (*BlockExitPayload, error)
 //   emitf @a
 //   emitf @a, @b
 //
-// Each argument must be a non-indexed oosvar/localvar/fieldname (i.e.
-// something with a name so we can make key-value pairs.)
-//
-// These restrictions are enforced here in the CST logic, to keep the
-// parser/AST logic simpler.
+// Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
+// their names as keys in the emitted record.  These restrictions are enforced
+// in the CST logic, to keep this parser/AST logic simpler.
 
 type EmitFStatementNode struct {
 	emitfNames      []string
