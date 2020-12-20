@@ -35,7 +35,6 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 }
 
 // ----------------------------------------------------------------
-// TODO this is very naive at present -- needs copy from the C version.
 func (this *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
 ) {
@@ -59,10 +58,10 @@ func (this *RecordWriterPPRINT) Write(
 			joinedHeader := strings.Join(outrec.GetKeys(), ",")
 			if *this.lastJoinedHeader != joinedHeader {
 				// Print and free old batch
-				this.writeHeterogenousList(this.batch, this.barred)
-				// Print a newline
-				// TODO: fix me -- don't write final extra newline at end of stream
-				os.Stdout.WriteString("\n")
+				if this.writeHeterogenousList(this.batch, this.barred) {
+					// Print a newline
+					os.Stdout.WriteString("\n")
+				}
 				// Start a new batch
 				this.batch = list.New()
 				this.batch.PushBack(outrec)
@@ -82,14 +81,20 @@ func (this *RecordWriterPPRINT) Write(
 }
 
 // ----------------------------------------------------------------
+// Returns false if there was nothing but empty record(s), e.g. 'mlr gap -n 10'.
 func (this *RecordWriterPPRINT) writeHeterogenousList(
 	records *list.List,
 	barred bool,
-) {
+) bool {
 	maxWidths := make(map[string]int)
+	var maxNR int64 = 0
 
 	for e := records.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*types.Mlrmap)
+		nr := outrec.FieldCount
+		if maxNR < nr {
+			maxNR = nr
+		}
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			width := utf8.RuneCountInString(pe.Value.String())
 			if width == 0 {
@@ -102,17 +107,22 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 		}
 	}
 
-	// Column name may be longer/shorter than all data values in the column
-	for key, oldMaxWidth := range maxWidths {
-		width := utf8.RuneCountInString(key)
-		if width > oldMaxWidth {
-			maxWidths[key] = width
-		}
-	}
-	if barred {
-		this.writeHeterogenousListBarred(records, maxWidths)
+	if maxNR == 0 {
+		return false
 	} else {
-		this.writeHeterogenousListNonBarred(records, maxWidths)
+		// Column name may be longer/shorter than all data values in the column
+		for key, oldMaxWidth := range maxWidths {
+			width := utf8.RuneCountInString(key)
+			if width > oldMaxWidth {
+				maxWidths[key] = width
+			}
+		}
+		if barred {
+			this.writeHeterogenousListBarred(records, maxWidths)
+		} else {
+			this.writeHeterogenousListNonBarred(records, maxWidths)
+		}
+		return true
 	}
 }
 
