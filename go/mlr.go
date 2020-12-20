@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"runtime/pprof"
 
+	"miller/auxents"
 	"miller/cli"
 	"miller/stream"
 )
@@ -47,6 +48,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "CPU profile started.\n")
 		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\n")
 	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// 'mlr lecat' or any other non-miller-per-se toolery which is delivered
+	// (for convenience) within the mlr executable. If argv[1] is found then
+	// this function will not return.
+	auxents.Dispatch(os.Args)
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Start of Miller main per se

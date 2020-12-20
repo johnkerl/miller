@@ -1,6 +1,6 @@
 // ================================================================
 // Adding a new builtin function:
-// * New entry in BUILTIN_FUNCTION_LOOKUP_TABLE
+// * New entry in _BUILTIN_FUNCTION_LOOKUP_TABLE
 // * Implement the function in mlrval_functions.go
 // ================================================================
 
@@ -44,7 +44,7 @@ type BuiltinFunctionInfo struct {
 }
 
 // ================================================================
-var BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
+var _BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_ARITHMETIC
@@ -1481,7 +1481,7 @@ type BuiltinFunctionManager struct {
 }
 
 func NewBuiltinFunctionManager() *BuiltinFunctionManager {
-	lookupTable := &BUILTIN_FUNCTION_LOOKUP_TABLE
+	lookupTable := &_BUILTIN_FUNCTION_LOOKUP_TABLE
 	hashTable := hashifyLookupTable(lookupTable)
 	return &BuiltinFunctionManager{
 		lookupTable: lookupTable,

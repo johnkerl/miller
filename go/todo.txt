@@ -4,7 +4,6 @@ TOP OF LIST:
 ! emitp/emitf
 * stats1 verb
 ! mlrrc
-* pprint emit at schema-change or EOS
 
 !! fix all typemasks!!
 ! fix var/any type-mask
