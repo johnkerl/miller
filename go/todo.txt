@@ -2,6 +2,7 @@
 TOP OF LIST:
 
 ! emitp/emitf
+* stats1 verb
 ! mlrrc
 
 !! fix all typemasks!!
@@ -34,7 +35,6 @@ big:
 ! emitp/emitf
 * json-null as type; & all dispo matrices/vectors ...
 * smart fmtnum
-* join verb
 * stats1 verb
 * stats2 verb
 
