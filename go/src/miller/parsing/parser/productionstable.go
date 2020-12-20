@@ -421,13 +421,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `EmitFStatement : emitf Rvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEmitFStatement) >>`,
+		String: `EmitFStatement : emitf FcnArgs	<< dsl.AdoptChildren(
+      dsl.NewASTNodeNestable(
+        X[0],
+        dsl.NodeTypeDumpStatement,
+      ),
+      X[1],
+    ) >>`,
 		Id:         "EmitFStatement",
 		NTType:     13,
 		Index:      40,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeEmitFStatement)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypeDumpStatement,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{
