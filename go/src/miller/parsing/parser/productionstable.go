@@ -424,7 +424,7 @@ var productionsTable = ProdTab{
 		String: `EmitFStatement : emitf FcnArgs	<< dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         X[0],
-        dsl.NodeTypeDumpStatement,
+        dsl.NodeTypeEmitFStatement,
       ),
       X[1],
     ) >>`,
@@ -436,7 +436,7 @@ var productionsTable = ProdTab{
 			return dsl.AdoptChildren(
 				dsl.NewASTNodeNestable(
 					X[0],
-					dsl.NodeTypeDumpStatement,
+					dsl.NodeTypeEmitFStatement,
 				),
 				X[1],
 			)

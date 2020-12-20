@@ -298,17 +298,121 @@ zee wye 8  0.5985540091064224  0.976181385699006   -0.013230051461422976
 hat wye 9  0.03144187646093577 0.7495507603507059  -0.5671121326454867
 pan wye 10 0.5026260055412137  0.9526183602969864  0.47118412908027796
 
-mlr put -v @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg-test/input/abixy
-Exit status was 1; expected 0.
+mlr put -q @a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c} ./reg-test/input/abixy
+a=pan
+b=wye
+c=0.5026260055412137
 
-mlr put -v @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg-test/input/abixy
-Exit status was 1; expected 0.
+mlr put -q @a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c} ./reg-test/input/abixy
+a=pan,b=wye,c=0.5026260055412137
+
+mlr --from ./reg-test/input/abixy put -q @a=1;b=2;$c=3;emitf @a,b,$c
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
+a=1,b=2,c=3
 
 mlr --opprint put -v begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean} ./reg-test/input/abixy
-Exit status was 1; expected 0.
+DSL EXPRESSION:
+begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "count"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "sum"
+                * float literal "0.0"
+    * assignment "="
+        * direct oosvar value "count"
+        * operator "+"
+            * direct oosvar value "count"
+            * int literal "1"
+    * assignment "="
+        * direct oosvar value "sum"
+        * operator "+"
+            * direct oosvar value "sum"
+            * direct field value "x"
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "mean"
+                * operator "/"
+                    * direct oosvar value "sum"
+                    * direct oosvar value "count"
+            * emitf statement "emitf"
+                * direct oosvar value "mean"
+
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks wye 4  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+
+mean
+0.45362938403357633
 
 mlr --opprint put -v end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x ./reg-test/input/abixy
-Exit status was 1; expected 0.
+DSL EXPRESSION:
+end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x
+RAW AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "mean"
+                * operator "/"
+                    * direct oosvar value "sum"
+                    * direct oosvar value "count"
+            * emitf statement "emitf"
+                * direct oosvar value "mean"
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "count"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "sum"
+                * float literal "0.0"
+    * assignment "="
+        * direct oosvar value "count"
+        * operator "+"
+            * direct oosvar value "count"
+            * int literal "1"
+    * assignment "="
+        * direct oosvar value "sum"
+        * operator "+"
+            * direct oosvar value "sum"
+            * direct field value "x"
+
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks wye 4  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+
+mean
+0.45362938403357633
 
 mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6} /dev/null
 Exit status was 1; expected 0.
@@ -766,18 +870,18 @@ OX=1
 NX=
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-OX=1
-NX=
-OX=1
-NX=
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+OX=1
+NX=
+OX=1
+NX=
+OX=1
+NX=
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-OX=1
-NX=
-OX=1
-NX=
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+OX=1
+NX=
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg-test/input/abixy

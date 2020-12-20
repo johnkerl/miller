@@ -82,3 +82,8 @@ func (this *Context) UpdateForInputRecord(inrec *Mlrmap) {
 		this.FNR++
 	}
 }
+
+func (this *Context) Copy() *Context {
+	that := *this
+	return &that
+}

@@ -8,8 +8,9 @@ run_mlr --opprint put -v 'begin{@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a
 run_mlr --opprint put -v 'begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i' $indir/abixy
 run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy
 
-run_mlr put -v '@a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c}' $indir/abixy
-run_mlr put -v '@a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c}' $indir/abixy
+run_mlr put -q '@a=$a; @b=$b; @c=$x; end {emitf @a; emitf @b; emitf @c}' $indir/abixy
+run_mlr put -q '@a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c}' $indir/abixy
+run_mlr --from $indir/abixy put -q '@a=1;b=2;$c=3;emitf @a,b,$c'
 
 run_mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean}' $indir/abixy
 run_mlr --opprint put -v 'end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x' $indir/abixy

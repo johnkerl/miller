@@ -26,3 +26,15 @@ run_mlr -n put 'end {
   emitp (@a, b, {2:{3:12}}), "t", "u";
   emit  (@a, b, {2:{3:12}}), "t", "u";
 }'
+
+run_mlr --opprint --from $indir/abixy put -q '
+  @output[NR] = $*;
+  end {
+    for ((nr, k), v in @output) {
+      if (nr == 4 || k == "i") {
+        unset @output[nr][k]
+      }
+    }
+    emitp @output, "NR", "k"
+  }
+'

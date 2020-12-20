@@ -5,6 +5,10 @@
 package cst
 
 import (
+	"errors"
+	"fmt"
+	"os"
+
 	"miller/dsl"
 	"miller/lib"
 	"miller/types"
@@ -147,52 +151,92 @@ func (this *EmitPStatementNode) Execute(state *State) (*BlockExitPayload, error)
 // Examples:
 //   emitf @a
 //   emitf @a, @b
-// Each argument must be a non-indexed oosvar/localvar/fieldname.
+//
+// Each argument must be a non-indexed oosvar/localvar/fieldname (i.e.
+// something with a name so we can make key-value pairs.)
+//
 // These restrictions are enforced here in the CST logic, to keep the
 // parser/AST logic simpler.
 
 type EmitFStatementNode struct {
+	emitfNames      []string
 	emitfEvaluables []IEvaluable
 }
 
 // ----------------------------------------------------------------
-// $ mlr -n put -v 'emitf @a,@b,@c'
+// $ mlr -n put -v 'emitf a,$b,@c'
 // DSL EXPRESSION:
-// emitf @a,@b,@c
+// emitf a,$b,@c
 // RAW AST:
 // * statement block
 //     * dump statement "emitf"
-//         * direct oosvar value "a"
-//         * direct oosvar value "b"
+//         * local variable "a"
+//         * direct field value "b"
 //         * direct oosvar value "c"
 
 func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitFStatement)
-	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
+	n := len(astNode.Children)
+	lib.InternalCodingErrorIf(n < 1)
 
-	emitfEvaluables[i], err := this.BuildEvaluableNode(astNode.Children[0])
-	if err != nil {
-		return nil, err
+	emitfNames := make([]string, n)
+	emitfEvaluables := make([]IEvaluable, n)
+	for i, childNode := range astNode.Children {
+		emitfName, err := getNameFromNamedNode(childNode)
+		if err != nil {
+			return nil, err
+		}
+		emitfEvaluable, err := this.BuildEvaluableNode(childNode)
+		if err != nil {
+			return nil, err
+		}
+		emitfNames[i] = emitfName
+		emitfEvaluables[i] = emitfEvaluable
 	}
 	return &EmitFStatementNode{
+		emitfNames:      emitfNames,
 		emitfEvaluables: emitfEvaluables,
 	}, nil
 }
 
 func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	xxx
-	emitfResult := this.emitfEvaluable.Evaluate(state)
+	newrec := types.NewMlrmapAsRecord()
+	for i, emitfEvaluable := range this.emitfEvaluables {
+		emitfName := this.emitfNames[i]
+		emitfValue := emitfEvaluable.Evaluate(state)
 
-	if emitfResult.IsAbsent() {
-		return nil, nil
+		if !emitfValue.IsAbsent() {
+			newrec.PutCopy(&emitfName, &emitfValue)
+		}
 	}
-
-	if emitfResult.IsMap() {
-		state.OutputChannel <- types.NewRecordAndContext(
-			emitfResult.Copy().GetMap(),
-			state.Context.Copy(),
-		)
-	}
+	state.OutputChannel <- types.NewRecordAndContext(
+		newrec,
+		state.Context.Copy(),
+	)
 
 	return nil, nil
+}
+
+// ================================================================
+// HELPER FUNCTIONS
+
+// For emitf: gets the name of a non-indexed oosvar, localvar, or field name;
+// otherwise, returns error.
+//
+// TODO: support indirects like 'emitf @[x."_sum"]'
+
+func getNameFromNamedNode(astNode *dsl.ASTNode) (string, error) {
+	if astNode.Type == dsl.NodeTypeDirectOosvarValue {
+		return string(astNode.Token.Lit), nil
+	} else if astNode.Type == dsl.NodeTypeLocalVariable {
+		return string(astNode.Token.Lit), nil
+	} else if astNode.Type == dsl.NodeTypeDirectFieldValue {
+		return string(astNode.Token.Lit), nil
+	}
+	return "", errors.New(
+		fmt.Sprintf(
+			"%s: can't get name of node type \"%s\" for emitf.",
+			os.Args[0], string(astNode.Type),
+		),
+	)
 }

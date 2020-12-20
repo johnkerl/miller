@@ -56,6 +56,25 @@ a=pan,sum:pan=0.346790
 a=eks,sum:pan=0.758680,sum:wye=0.381399
 a=wye,sum:wye=0.204603,sum:pan=0.573289
 
+$ grep -c emitf $(grep -l emitf $cases/case*sh)
+./reg-test/cases/case-c-dsl-absent-empty.sh:2
+./reg-test/cases/case-c-dsl-oosvars.sh:4
+./reg-test/cases/case-c-dsl-parameterized-emit.sh:7
+./reg-test/cases/case-c-dsl-redirects.sh:53
+
+$ grep -c emitp $(grep -l emitp $cases/case*sh)
+./reg-test/cases/case-c-dsl-absent-empty.sh:8
+./reg-test/cases/case-c-dsl-break-continue.sh:8
+./reg-test/cases/case-c-dsl-for-oosvar-loops.sh:4
+./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh:4
+./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh:38
+./reg-test/cases/case-c-dsl-mapvar-emit.sh:6
+./reg-test/cases/case-c-dsl-oosvar-assignments.sh:21
+./reg-test/cases/case-c-dsl-oosvars.sh:1
+./reg-test/cases/case-c-dsl-parameterized-emit.sh:54
+./reg-test/cases/case-c-dsl-prefixed-unprefixed-emit.sh:20
+./reg-test/cases/case-c-dsl-redirects.sh:172
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * parser-fu:
   o iterative LALR grok

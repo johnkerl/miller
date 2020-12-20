@@ -471,7 +471,7 @@ EmitFStatement
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
         $0,
-        dsl.NodeTypeDumpStatement,
+        dsl.NodeTypeEmitFStatement,
       ),
       $1,
     ) >>
