@@ -14,15 +14,23 @@ import (
 
 // ostream *os.File in constructors/factory
 type RecordWriterPPRINT struct {
+	// Input:
 	records *list.List
 	// For detecting schema changes: we print a newline and the new header.
 	barred bool
+
+	// State:
+	lastJoinedHeader *string
+	batch            *list.List
 }
 
 func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriterPPRINT {
 	return &RecordWriterPPRINT{
 		records: list.New(),
 		barred:  writerOptions.BarredPprintOutput,
+
+		lastJoinedHeader: nil,
+		batch:            list.New(),
 	}
 }
 
@@ -31,52 +39,45 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 func (this *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
 ) {
-	// No output until end of record stream, since we need to find out max
-	// width down each column.
-	if outrec != nil {
-		this.records.PushBack(outrec)
-		return
-	}
-
 	// Group records by have-same-schema or not. Pretty-print each
 	// homoegeneous sublist, or "batch".
+	//
+	// No output until end of a homogeneous batch of records, since we need to
+	// find out max width down each column.
 
-	var lastJoinedHeader *string = nil
-	batch := list.New()
-	for {
-		head := this.records.Front()
-		if head == nil {
-			break
-		}
-		record := head.Value.(*types.Mlrmap)
-		this.records.Remove(head)
+	if outrec != nil { // Not end of record stream
 
-		if lastJoinedHeader == nil {
-			// First output record
-			// New batch
-			// No old batch to print
-			batch.PushBack(record)
-			temp := strings.Join(record.GetKeys(), ",")
-			lastJoinedHeader = &temp
+		if this.lastJoinedHeader == nil {
+			// First output record:
+			// * New batch
+			// * No old batch to print
+			this.batch.PushBack(outrec)
+			temp := strings.Join(outrec.GetKeys(), ",")
+			this.lastJoinedHeader = &temp
 		} else {
-			joinedHeader := strings.Join(record.GetKeys(), ",")
-			if *lastJoinedHeader != joinedHeader {
+			// May or may not continue the same homogeneous batch
+			joinedHeader := strings.Join(outrec.GetKeys(), ",")
+			if *this.lastJoinedHeader != joinedHeader {
 				// Print and free old batch
-				this.writeHeterogenousList(batch, this.barred)
+				this.writeHeterogenousList(this.batch, this.barred)
 				// Print a newline
+				// TODO: fix me -- don't write final extra newline at end of stream
 				os.Stdout.WriteString("\n")
 				// Start a new batch
-				batch = list.New()
-				batch.PushBack(record)
-				lastJoinedHeader = &joinedHeader
+				this.batch = list.New()
+				this.batch.PushBack(outrec)
+				this.lastJoinedHeader = &joinedHeader
 			} else {
 				// Continue the batch
-				batch.PushBack(record)
+				this.batch.PushBack(outrec)
 			}
 		}
-	}
-	if batch.Front() != nil {
-		this.writeHeterogenousList(batch, this.barred)
+
+	} else { // End of record stream
+
+		if this.batch.Front() != nil {
+			this.writeHeterogenousList(this.batch, this.barred)
+		}
 	}
 }
 
