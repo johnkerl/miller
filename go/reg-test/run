@@ -158,7 +158,6 @@ run_mlr_no_output() {
     if [ "$verbose" = "true" ]; then
       echo mlr "$@"
     fi
-    echo mlr "$@" >> $outfile
     num_invocations_attempted=`expr $num_invocations_attempted + 1`
 
     # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.

@@ -2,6 +2,8 @@
 TOP OF LIST:
 
 ! emitp/emitf
+! auxents iterate
+
 * stats1 verb
 ! mlrrc
 
@@ -11,7 +13,6 @@ TOP OF LIST:
 ! gating after: 'int x = 1; x = "abc"'
 
 ! verb skeletons
-! auxents iterate
 ! strptime/strftime experiments ...
 * regex ...
 ? doc shift/unshift as using [2:] and append

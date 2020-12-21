@@ -6,8 +6,12 @@
 package auxents
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
+	"regexp"
+	"strings"
 )
 
 // ----------------------------------------------------------------
@@ -27,10 +31,10 @@ var _AUX_LOOKUP_TABLE = []tAuxLookupEntry{}
 func init() {
 	_AUX_LOOKUP_TABLE = []tAuxLookupEntry{
 		{"aux-list", auxListMain, auxListUsage},
-		//	{ "lecat",           lecat_main,           lecat_usage           },
-		//	{ "termcvt",         termcvt_main,         termcvt_usage         },
-		//	{ "hex",             hex_main,             hex_usage             },
-		//	{ "unhex",           unhex_main,           unhex_usage           },
+		{"lecat", lecatMain, lecatUsage},
+		{"termcvt", termcvtMain, termcvtUsage},
+		{"hex", hexMain, hexUsage},
+		{"unhex", unhexMain, unhexUsage},
 	}
 }
 
@@ -78,214 +82,228 @@ func ShowAuxEntries(ostream *os.File) {
 }
 
 // ================================================================
-//static void lecat_usage(char* verbName, ostream *os.File, int exitCode) {
-//	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", os.Args[0], verbName);
-//	fmt.Fprintf(ostream, "Simply echoes input, but flags CR characters in red and LF characters in green.\n");
-//	fmt.Fprintf(ostream, "If zero file names are supplied, standard input is read.\n");
-//	fmt.Fprintf(ostream, "Options:\n");
-//	fmt.Fprintf(ostream, "--mono: don't try to colorize the output\n");
-//	fmt.Fprintf(ostream, "-h or --help: print this message\n");
-//	os.Exit(exitCode);
-//}
+func lecatUsage(verbName string, ostream *os.File, exitCode int) {
+	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Simply echoes input, but flags CR characters in red and LF characters in green.\n")
+	fmt.Fprintf(ostream, "If zero file names are supplied, standard input is read.\n")
+	fmt.Fprintf(ostream, "Options:\n")
+	fmt.Fprintf(ostream, "--mono: don't try to colorize the output\n")
+	fmt.Fprintf(ostream, "-h or --help: print this message\n")
+	os.Exit(exitCode)
+}
 
-//static int lecat_main(int argc, char** argv) {
-//	int ok = 1;
-//	int do_color = TRUE;
-//
-//	if (argc >= 3) {
-//		if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
-//			lecat_usage(argv[0], argv[1], stdout, 0);
-//		}
-//	}
-//
-//	// 'mlr' and 'lecat' are already argv[0] and argv[1].
-//	int argb = 2;
-//	if (argc >= 3 && argv[argb][0] == '-') {
-//		if (streq(argv[argb], "--mono")) {
-//			do_color = FALSE;
-//			argb++;
-//		} else {
-//			fmt.Fprintf(stderr, "%s %s: unrecognized option \"%s\".\n",
-//				argv[0], argv[1], argv[argb]);
-//			return 1;
-//		}
-//	}
-//
-//	if (argb == argc) {
-//		ok = ok && lecat_stream(stdin, do_color);
-//	} else {
-//		for (int argi = argb; argi < argc; argi++) {
-//			char* file_name = argv[argi];
-//			FILE* input_stream = fopen(file_name, "r");
-//			if (input_stream == NULL) {
-//				perror(file_name);
-//				os.Exit(1);
-//			}
-//			ok = lecat_stream(input_stream, do_color);
-//			fclose(input_stream);
-//		}
-//	}
-//	return ok ? 0 : 1;
-//}
+func lecatMain(args []string) int {
+	doColor := true
 
-//static int lecat_stream(inputStream *os.File, doColor bool) {
-//	while (1) {
-//		int c = fgetc(input_stream);
-//		if (c == EOF)
-//			break;
-//		if (c == '\r') {
-//			if (do_color)
-//				printf("\033[31;01m"); // xterm red
-//			printf("[CR]");
-//			if (do_color)
-//				printf("\033[0m");
-//		} else if (c == '\n') {
-//			if (do_color)
-//				printf("\033[32;01m"); // xterm green
-//			printf("[LF]\n");
-//			if (do_color)
-//				printf("\033[0m");
-//		} else {
-//			putchar(c);
-//		}
-//	}
-//	return 1;
-//}
+	// 'mlr' and 'hex' are already argv[0] and argv[1].
+	verb := args[1]
+	args = args[2:]
+	if len(args) >= 1 {
+		if args[0] == "-h" || args[0] == "--help" {
+			hexUsage(verb, os.Stdout, 0)
+		}
 
-//// ================================================================
-//static int termcvt_stream(inputStream *os.File, outputStream *os.File, char* inend, char* outend) {
-//	size_t line_length = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
-//	int inend_length = strlen(inend);
-//	while (1) {
-//		char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, inend, inend_length, &line_length);
-//		if (line == NULL) {
-//			break;
-//		}
-//		fputs(line, output_stream);
-//		fputs(outend, output_stream);
-//		free(line);
-//	}
-//	return 1;
-//}
+		if args[0][0] == '-' {
+			if args[0] == "--mono" {
+				doColor = false
+				args = args[1:]
+			} else {
+				fmt.Fprintf(os.Stderr, "%s %s: unrecognized option \"%s\".\n",
+					os.Args[0], verb, args[0],
+				)
+				os.Exit(1)
+			}
+		}
+	}
 
-//// ----------------------------------------------------------------
-//static void termcvt_usage(char* verbName, ostream *os.File, int exitCode) {
-//	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", os.Args[0], verbName);
-//	fmt.Fprintf(ostream, "Option (exactly one is required):\n");
-//	fmt.Fprintf(ostream, "--cr2crlf\n");
-//	fmt.Fprintf(ostream, "--lf2crlf\n");
-//	fmt.Fprintf(ostream, "--crlf2cr\n");
-//	fmt.Fprintf(ostream, "--crlf2lf\n");
-//	fmt.Fprintf(ostream, "--cr2lf\n");
-//	fmt.Fprintf(ostream, "--lf2cr\n");
-//	fmt.Fprintf(ostream, "-I in-place processing (default is to write to stdout)\n");
-//	fmt.Fprintf(ostream, "-h or --help: print this message\n");
-//	fmt.Fprintf(ostream, "Zero file names means read from standard input.\n");
-//	fmt.Fprintf(ostream, "Output is always to standard output; files are not written in-place.\n");
-//	os.Exit(exitCode);
-//}
+	if len(args) == 0 {
+		lecatFile(os.Stdin, doColor)
+	} else {
+		for _, filename := range args {
 
-//// ----------------------------------------------------------------
-//static int termcvt_main(int argc, char** argv) {
-//	int ok = 1;
-//	char* inend  = "\n";
-//	char* outend = "\n";
-//	int do_in_place = FALSE;
-//
-//	// argv[0] is 'mlr'
-//	// argv[1] is 'termcvt'
-//	// argv[2] is '--some-option'
-//	// argv[3] and above are filenames
-//	if (argc < 2)
-//		termcvt_usage(argv[0], argv[1], stderr, 1);
-//	int argi;
-//	for (argi = 2; argi < argc; argi++) {
-//		char* opt = argv[argi];
-//
-//		if (opt[0] != '-')
-//			break;
-//
-//		if (streq(opt, "-h") || streq(opt, "--help")) {
-//			termcvt_usage(argv[0], argv[1], stdout, 0);
-//		} else if (streq(opt, "-I")) {
-//			do_in_place = TRUE;
-//		} else if (streq(opt, "--cr2crlf")) {
-//			inend  = "\r";
-//			outend = "\r\n";
-//		} else if (streq(opt, "--lf2crlf")) {
-//			inend  = "\n";
-//			outend = "\r\n";
-//		} else if (streq(opt, "--crlf2cr")) {
-//			inend  = "\r\n";
-//			outend = "\r";
-//		} else if (streq(opt, "--lf2cr")) {
-//			inend  = "\n";
-//			outend = "\r";
-//		} else if (streq(opt, "--crlf2lf")) {
-//			inend  = "\r\n";
-//			outend = "\n";
-//		} else if (streq(opt, "--cr2lf")) {
-//			inend  = "\r";
-//			outend = "\n";
-//		} else {
-//			termcvt_usage(argv[0], argv[1], stdout, 0);
-//		}
-//	}
-//
-//	int nfiles = argc - argi;
-//	if (nfiles == 0) {
-//		ok = ok && termcvt_stream(stdin, stdout, inend, outend);
-//
-//	} else if (do_in_place) {
-//		for (; argi < argc; argi++) {
-//			char* file_name = argv[argi];
-//			char* temp_name = alloc_suffixed_temp_file_name(file_name);
-//			FILE* input_stream = fopen(file_name, "r");
-//			FILE* output_stream = fopen(temp_name, "wb");
-//
-//			if (input_stream == NULL) {
-//				perror("fopen");
-//				fmt.Fprintf(stderr, "%s: Could not open \"%s\" for read.\n",
-//					os.Args[0], file_name);
-//				os.Exit(1);
-//			}
-//			if (output_stream == NULL) {
-//				perror("fopen");
-//				fmt.Fprintf(stderr, "%s: Could not open \"%s\" for write.\n",
-//					os.Args[0], temp_name);
-//				os.Exit(1);
-//			}
-//
-//			ok = termcvt_stream(input_stream, output_stream, inend, outend);
-//
-//			fclose(input_stream);
-//			fclose(output_stream);
-//
-//			int rc = rename(temp_name, file_name);
-//			if (rc != 0) {
-//				perror("rename");
-//				fmt.Fprintf(stderr, "%s: Could not rename \"%s\" to \"%s\".\n",
-//					os.Args[0], temp_name, file_name);
-//				os.Exit(1);
-//			}
-//			free(temp_name);
-//		}
-//
-//	} else {
-//		for (; argi < argc; argi++) {
-//			char* file_name = argv[argi];
-//			FILE* input_stream = fopen(file_name, "r");
-//			if (input_stream == NULL) {
-//				perror(file_name);
-//				os.Exit(1);
-//			}
-//			ok = termcvt_stream(input_stream, stdout, inend, outend);
-//			fclose(input_stream);
-//		}
-//
-//	}
-//	return ok ? 0 : 1;
-//}
+			istream, err := os.Open(filename)
+			if err != nil {
+				// TODO: os.Args[0]
+				fmt.Fprintln(os.Stderr, "mlr lecat:", err)
+				os.Exit(1)
+			}
+
+			lecatFile(istream, doColor)
+
+			istream.Close()
+		}
+	}
+	return 0
+}
+
+func lecatFile(istream *os.File, doColor bool) {
+	reader := bufio.NewReader(istream)
+	for {
+		c, err := reader.ReadByte()
+		if err == io.EOF {
+			break
+		}
+		if c == '\r' {
+			if doColor {
+				fmt.Printf("\033[31;01m") // xterm red
+			}
+			fmt.Printf("[CR]")
+			if doColor {
+				fmt.Printf("\033[0m")
+			}
+		} else if c == '\n' {
+			if doColor {
+				fmt.Printf("\033[32;01m") // xterm green
+			}
+			fmt.Printf("[LF]\n")
+			if doColor {
+				fmt.Printf("\033[0m")
+			}
+		} else {
+			fmt.Printf("%c", c)
+		}
+	}
+}
+
+// ================================================================
+func termcvtUsage(verbName string, ostream *os.File, exitCode int) {
+	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Option (exactly one is required):\n")
+	fmt.Fprintf(ostream, "--cr2crlf\n")
+	fmt.Fprintf(ostream, "--lf2crlf\n")
+	fmt.Fprintf(ostream, "--crlf2cr\n")
+	fmt.Fprintf(ostream, "--crlf2lf\n")
+	fmt.Fprintf(ostream, "--cr2lf\n")
+	fmt.Fprintf(ostream, "--lf2cr\n")
+	fmt.Fprintf(ostream, "-I in-place processing (default is to write to stdout)\n")
+	fmt.Fprintf(ostream, "-h or --help: print this message\n")
+	fmt.Fprintf(ostream, "Zero file names means read from standard input.\n")
+	fmt.Fprintf(ostream, "Output is always to standard output; files are not written in-place.\n")
+	os.Exit(exitCode)
+}
+
+func termcvtMain(args []string) int {
+	inTerm := "\n"
+	outTerm := "\n"
+	doInPlace := false
+
+	// 'mlr' and 'termcvt' are already argv[0] and argv[1].
+	verb := args[1]
+	args = args[2:]
+	if len(args) < 1 {
+		termcvtUsage(verb, os.Stderr, 1)
+	}
+
+	for len(args) >= 1 {
+		opt := args[0]
+		if opt[0] != '-' {
+			break
+		}
+		args = args[1:]
+
+		if opt == "-h" || opt == "--help" {
+			termcvtUsage(verb, os.Stdout, 0)
+		} else if opt == "-I" {
+			doInPlace = true
+		} else if opt == "--cr2crlf" {
+			inTerm = "\r"
+			outTerm = "\r\n"
+		} else if opt == "--lf2crlf" {
+			inTerm = "\n"
+			outTerm = "\r\n"
+		} else if opt == "--crlf2cr" {
+			inTerm = "\r\n"
+			outTerm = "\r"
+		} else if opt == "--lf2cr" {
+			inTerm = "\n"
+			outTerm = "\r"
+		} else if opt == "--crlf2lf" {
+			inTerm = "\r\n"
+			outTerm = "\n"
+		} else if opt == "--cr2lf" {
+			inTerm = "\r"
+			outTerm = "\n"
+		} else {
+			termcvtUsage(verb, os.Stderr, 1)
+		}
+	}
+
+	if len(args) == 0 {
+		termcvtFile(os.Stdin, os.Stdout, inTerm, outTerm)
+
+	} else if doInPlace {
+		for _, filename := range args {
+			// TODO: make re-entrant via long-random suffix
+			suffix := "-termcvt-temp"
+			tempname := filename + suffix
+
+			istream, err := os.Open(filename)
+			if err != nil {
+				// TODO: os.Args[0]
+				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				os.Exit(1)
+			}
+
+			ostream, err := os.Open(tempname)
+			if err != nil {
+				// TODO: os.Args[0]
+				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				os.Exit(1)
+			}
+
+			termcvtFile(istream, ostream, inTerm, outTerm)
+
+			istream.Close()
+			// TODO: check return status
+			ostream.Close()
+
+			err = os.Rename(tempname, filename)
+			if err != nil {
+				// TODO: os.Args[0]
+				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				os.Exit(1)
+			}
+		}
+
+	} else {
+		for _, filename := range args {
+
+			istream, err := os.Open(filename)
+			if err != nil {
+				// TODO: os.Args[0]
+				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+				os.Exit(1)
+			}
+
+			termcvtFile(istream, os.Stdout, inTerm, outTerm)
+
+			istream.Close()
+		}
+	}
+	return 0
+}
+
+func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm string) {
+	lineReader := bufio.NewReader(istream)
+	inTermFinal := []byte(inTerm[len(inTerm)-1:])[0] // bufio.Reader.ReadString takes char not string delimiter :(
+
+	for {
+		line, err := lineReader.ReadString(inTermFinal)
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			// TODO: os.Args[0]
+			fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
+			os.Exit(1)
+		}
+
+		// This is how to do a chomp:
+		line = strings.TrimRight(line, inTerm)
+		ostream.Write([]byte(line + outTerm))
+	}
+}
 
 // ================================================================
 // Copyright (c) 1998 John Kerl.
@@ -307,177 +325,207 @@ func ShowAuxEntries(ostream *os.File) {
 // 00000070: 70 71 72 73  74 75 76 77  78 79 7a 7b  7c 7d 7e 7f |pqrstuvwxyz{|}~.|
 // ================================================================
 
-//#define LINE_LENGTH_MAX 8192
-
 // ----------------------------------------------------------------
-//static void hex_usage(char* verbName, ostream *os.File, int exitCode) {
-//	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", os.Args[0], verbName);
-//	fmt.Fprintf(ostream, "Simple hex-dump.\n");
-//	fmt.Fprintf(ostream, "If zero file names are supplied, standard input is read.\n");
-//	fmt.Fprintf(ostream, "Options:\n");
-//	fmt.Fprintf(ostream, "-r: print only raw hex without leading offset indicators or trailing ASCII dump.\n");
-//	fmt.Fprintf(ostream, "-h or --help: print this message\n");
-//	os.Exit(exitCode);
-//}
+func hexUsage(verbName string, ostream *os.File, exitCode int) {
+	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Simple hex-dump.\n")
+	fmt.Fprintf(ostream, "If zero file names are supplied, standard input is read.\n")
+	fmt.Fprintf(ostream, "Options:\n")
+	fmt.Fprintf(ostream, "-r: print only raw hex without leading offset indicators or trailing ASCII dump.\n")
+	fmt.Fprintf(ostream, "-h or --help: print this message\n")
+	os.Exit(exitCode)
+}
 
-//----------------------------------------------------------------------
-// 'mlr' and 'hex' are already argv[0] and argv[1].
+func hexMain(args []string) int {
+	doRaw := false
 
-//static int hex_main(int argc, char **argv) {
-//	char * filename;
-//	FILE * in_fp;
-//	FILE * out_fp;
-//	int do_raw = 0;
-//	int argi = 2;
-//
-//	if (argc >= 3) {
-//		if (streq(argv[2], "-r")) {
-//			do_raw = 1;
-//			argi++;
-//		} else if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
-//			hex_usage(argv[0], argv[1], stdout, 0);
-//		}
-//	}
-//
-//	int num_file_names = argc - argi;
-//
-//	if (num_file_names == 0) {
-//#ifdef WINDOWS
-//		setmode(fileno(stdin), O_BINARY);
-//#endif //WINDOWS
-//		hex_dump_fp(stdin, stdout, do_raw);
-//	} else {
-//		for ( ; argi < argc; argi++) {
-//			if (!do_raw) {
-//				if (num_file_names > 1)
-//					printf("%s:\n", argv[argi]);
-//			}
-//			filename = argv[argi];
-//			in_fp    = fopen(filename, "rb");
-//			out_fp   = stdout;
-//			if (in_fp == NULL) {
-//				fmt.Fprintf(stderr, "Couldn't open \"%s\"; skipping.\n",
-//					filename);
-//			}
-//			else {
-//				hex_dump_fp(in_fp, out_fp, do_raw);
-//				fclose(in_fp);
-//				if (out_fp != stdout)
-//					fclose(out_fp);
-//
-//			}
-//			if (!do_raw) {
-//				if (num_file_names > 1)
-//					printf("\n");
-//			}
-//		}
-//	}
-//
-//	return 0;
-//}
+	// 'mlr' and 'hex' are already argv[0] and argv[1].
+	verb := args[1]
+	args = args[2:]
+	if len(args) >= 1 {
+		if args[0] == "-r" {
+			doRaw = true
+			args = args[1:]
+		} else if args[0] == "-h" || args[0] == "--help" {
+			hexUsage(verb, os.Stdout, 0)
+		}
+	}
 
-//// ----------------------------------------------------------------
-//static void hex_dump_fp(FILE *in_fp, out_fp *os.File, int do_raw) {
-//	const int bytes_per_clump = 4;
-//	const int clumps_per_line = 4;
-//	const int buffer_size = bytes_per_clump * clumps_per_line;
-//	unsigned char buf[buffer_size];
-//	long num_bytes_read;
-//	long num_bytes_total = 0;
-//	int byteno;
-//
-//	while ((num_bytes_read=fread(buf, sizeof(unsigned char),
-//		buffer_size, in_fp)) > 0)
-//	{
-//		if (!do_raw) {
-//			printf("%08lx: ", num_bytes_total);
-//		}
-//
-//		for (byteno = 0; byteno < num_bytes_read; byteno++) {
-//			unsigned int temp = buf[byteno];
-//			printf("%02x ", temp);
-//			if ((byteno % bytes_per_clump) ==
-//			(bytes_per_clump - 1))
-//			{
-//				if ((byteno > 0) && (byteno < buffer_size-1))
-//					printf(" ");
-//			}
-//		}
-//		for (byteno = num_bytes_read; byteno < buffer_size; byteno++) {
-//			printf("   ");
-//			if ((byteno % bytes_per_clump) ==
-//			(bytes_per_clump - 1))
-//			{
-//				if ((byteno > 0) && (byteno < buffer_size-1))
-//					printf(" ");
-//			}
-//		}
-//
-//		if (!do_raw) {
-//			printf("|");
-//			for (byteno = 0; byteno < num_bytes_read; byteno++) {
-//				unsigned char temp = buf[byteno];
-//				if (!isprint(temp))
-//					temp = '.';
-//				printf("%c", temp);
-//			}
-//
-//			printf("|");
-//		}
-//
-//		printf("\n");
-//		num_bytes_total += num_bytes_read;
-//	}
-//}
+	if len(args) == 0 {
+		hexDumpFile(os.Stdin, os.Stdout, doRaw)
+	} else {
+		for _, filename := range args {
+			// Print filename if there is more than one file, unless raw output
+			// was requested.
+			if !doRaw && len(args) > 1 {
+				fmt.Printf("%s:\n", filename)
+			}
+
+			istream, err := os.Open(filename)
+			if err != nil {
+				// TODO: os.Args[0]
+				fmt.Fprintln(os.Stderr, "mlr hex:", err)
+				os.Exit(1)
+			}
+
+			hexDumpFile(istream, os.Stdout, doRaw)
+
+			istream.Close()
+			if !doRaw && len(args) > 1 {
+				fmt.Println()
+			}
+		}
+	}
+
+	return 0
+}
+
+func hexDumpFile(istream *os.File, ostream *os.File, doRaw bool) {
+	const bytesPerClump = 4
+	const clumpsPerLine = 4
+	const bufferSize = bytesPerClump * clumpsPerLine
+
+	buffer := make([]byte, bufferSize)
+	eof := false
+	offset := 0
+
+	for !eof {
+		numBytesRead, err := io.ReadFull(istream, buffer)
+		if err == io.EOF {
+			err = nil
+			eof = true
+			break
+		}
+
+		// io.ErrUnexpectedEOF is the normal case when the file size isn't an
+		// exact multiple of our buffer size.
+		if err != nil && err != io.ErrUnexpectedEOF {
+			fmt.Fprintln(os.Stderr, "mlr hex:", err)
+			os.Exit(1)
+		}
+
+		// Print offset "pre" part
+		if !doRaw {
+			fmt.Printf("%08x: ", offset)
+		}
+
+		// Print hex payload
+		for i := 0; i < bufferSize; i++ {
+			if i < numBytesRead {
+				fmt.Printf("%02x ", buffer[i])
+			} else {
+				fmt.Printf("   ")
+			}
+			if (i % bytesPerClump) == (bytesPerClump - 1) {
+				if (i > 0) && (i < bufferSize-1) {
+					fmt.Printf(" ")
+				}
+			}
+		}
+
+		// Print ASCII-dump "post" part
+		if !doRaw {
+			fmt.Printf("|")
+
+			for i := 0; i < numBytesRead; i++ {
+				if buffer[i] >= 0x20 && buffer[i] <= 0x7e {
+					fmt.Printf("%c", buffer[i])
+				} else {
+					fmt.Printf(".")
+				}
+			}
+			fmt.Printf("|")
+		}
+
+		// Print line end
+		fmt.Printf("\n")
+
+		offset += numBytesRead
+
+	}
+}
 
 // ================================================================
-//static void unhex_usage(char* verbName, ostream *os.File, int exitCode) {
-//	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", os.Args[0], verbName);
-//	fmt.Fprintf(ostream, "Options:\n");
-//	fmt.Fprintf(ostream, "-h or --help: print this message\n");
-//	fmt.Fprintf(ostream, "Zero file names means read from standard input.\n");
-//	fmt.Fprintf(ostream, "Output is always to standard output; files are not written in-place.\n");
-//	os.Exit(exitCode);
-//}
+func unhexUsage(verbName string, ostream *os.File, exitCode int) {
+	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Options:\n")
+	fmt.Fprintf(ostream, "-h or --help: print this message\n")
+	fmt.Fprintf(ostream, "Zero file names means read from standard input.\n")
+	fmt.Fprintf(ostream, "Output is always to standard output; files are not written in-place.\n")
+	os.Exit(exitCode)
+}
 
-// ----------------------------------------------------------------
-//int unhex_main(int argc, char ** argv) {
-//	// 'mlr' and 'unhex' are already argv[0] and argv[1].
-//	if (argc >= 3) {
-//		if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
-//			unhex_usage(argv[0], argv[1], stdout, 0);
-//		}
-//	}
-//
-//	int exitCode = 0;
-//	if (argc == 2) {
-//		unhex_fp(stdin, stdout);
-//	} else {
-//		for (int argi = 2; argi < argc; argi++) {
-//			char* filename = argv[argi];
-//			FILE* istream = fopen(filename, "rb");
-//			if (istream == NULL) {
-//				fmt.Fprintf(stderr, "%s %s: Couldn't open \"%s\"; skipping.\n",
-//					argv[0], argv[1], filename);
-//				exitCode = 1;
-//			} else {
-//				unhex_fp(istream, stdout);
-//				fclose(istream);
-//			}
-//		}
-//	}
-//
-//	return exitCode;
-//}
+func unhexMain(args []string) int {
+	// 'mlr' and 'hex' are already argv[0] and argv[1].
+	verb := args[1]
+	args = args[2:]
 
-// ----------------------------------------------------------------
+	if len(args) >= 1 {
+		if args[0] == "-h" || args[0] == "--help" {
+			hexUsage(verb, os.Stdout, 0)
+		}
+	}
 
-//static void unhex_fp(FILE *istream, FILE *ostream) {
-//	unsigned char byte;
-//	unsigned temp;
-//	int count;
-//	while ((count=fscanf(istream, "%x", &temp)) > 0) {
-//		byte = temp;
-//		fwrite (&byte, sizeof(byte), 1, ostream);
-//	}
-//}
+	if len(args) == 0 {
+		unhexFile(os.Stdin, os.Stdout)
+	} else {
+		for _, filename := range args {
+			istream, err := os.Open(filename)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+				os.Exit(1)
+			}
+			unhexFile(istream, os.Stdout)
+			istream.Close()
+		}
+	}
+
+	return 0
+}
+
+func unhexFile(istream *os.File, ostream *os.File) {
+	// Key insight is os.File implements io.Reader
+	lineReader := bufio.NewReader(istream)
+
+	var scanValue int
+	byteArray := make([]byte, 1)
+
+	re, err := regexp.Compile("\\s+")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "mlr unhex: internal coding error detected.")
+		os.Exit(1)
+	}
+
+	eof := false
+	for !eof {
+		line, err := lineReader.ReadString('\n') // TODO: auto-detect
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+			os.Exit(1)
+		}
+
+		// This is how to do a chomp:
+		line = strings.TrimRight(line, "\n")
+
+		// Ignore "" which can happen on empty lines
+		fields := re.Split(line, -1)
+		for _, field := range fields {
+			if field != "" {
+				n, err := fmt.Sscanf(field, "%x", &scanValue)
+				if err != nil {
+					fmt.Fprintln(os.Stderr, "mlr unhex:", err)
+					os.Exit(1)
+				}
+				if n != 1 {
+					fmt.Fprintln(os.Stderr, "mlr unhex: internal coding error")
+					os.Exit(1)
+				}
+				byteArray[0] = byte(scanValue)
+				ostream.Write(byteArray)
+			}
+		}
+	}
+}
