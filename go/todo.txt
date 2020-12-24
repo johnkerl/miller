@@ -1,8 +1,11 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! flatten/unflatten
+  - api neaten
+  - also need json_parse, json_stringify
+
 ! emitp/emitf
-! auxents iterate
 
 * stats1 verb
 ! mlrrc

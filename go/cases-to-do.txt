@@ -72,6 +72,7 @@ rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
 NOT IMPLEMENTED YET:
 
 rrv ./reg-test/cases/case-c-format-conversion-keystroke-savers.sh
+rrv ./reg-test/cases/case-c-het-pprint-input.sh
 * needs --ipprint
 
 rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
@@ -80,10 +81,6 @@ rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
 rrv -C1 ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
 * regexi
 
-rrv ./reg-test/cases/case-c-het-pprint-input.sh
-* new pprint reader not done yet
-
-rrv ./reg-test/cases/case-c-auxents.sh
 rrv ./reg-test/cases/case-c-bar.sh
 rrv ./reg-test/cases/case-c-compressed-input.sh
 rrv ./reg-test/cases/case-c-count-distinct.sh

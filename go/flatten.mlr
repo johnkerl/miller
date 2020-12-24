@@ -1,0 +1,30 @@
+func flatten_if_map(str prefix, str delim, var input): var {
+  if (is_map(input) || is_array(input)) {
+    return flatten_to_map(prefix, delim, input)
+  } else {
+    return input
+  }
+}
+
+func flatten_to_map(str prefix, str delim, var input): map {
+  map retval = {};
+
+  if (is_map(input) || is_array(input)) {
+    for (k, v in input) {
+      next_prefix = string(k);
+      if (prefix != "") {
+        next_prefix = prefix . delim . string(k);
+      }
+      if (is_map(v) || is_array(v)) {
+        retval = mapsum(retval, flatten_to_map(next_prefix, delim, v))
+      } else {
+        retval[next_prefix] = v
+      }
+    }
+  }
+
+  else {
+    retval = { prefix: input }
+  }
+  return retval
+}
