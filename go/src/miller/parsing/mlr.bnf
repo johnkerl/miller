@@ -599,12 +599,12 @@ BracedFieldValue
 ;
 
 PositionalFieldName
-  : "$[[" Rvalue "]]"
+  : "$[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
     << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypePositionalFieldName) >>
 ;
 
 PositionalFieldValue
-  : "$[[[" Rvalue "]]]"
+  : "$[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
     << dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", $0), $1, dsl.NodeTypePositionalFieldValue) >>
 ;
 
@@ -1260,7 +1260,7 @@ ArrayOrMapIndexAccess
 ;
 
 ArrayOrMapPositionalNameAccess
-  : MlrvalOrFunction "[[" Rvalue "]]"
+  : MlrvalOrFunction "[[" Rvalue "]" "]" // Not "]]" since that would define a token, making '$foo[bar[1]]' a syntax error
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("[]", $1),
       $0,
@@ -1270,7 +1270,7 @@ ArrayOrMapPositionalNameAccess
 ;
 
 ArrayOrMapPositionalValueAccess
-  : MlrvalOrFunction "[[[" Rvalue "]]]"
+  : MlrvalOrFunction "[[[" Rvalue "]" "]" "]" // Not "]]]" since that would define a token, making '$foo[bar[baz[1]]]' a syntax error
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("[]", $1),
       $0,

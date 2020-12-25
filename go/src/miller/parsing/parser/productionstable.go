@@ -715,21 +715,21 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `PositionalFieldName : "$[[" Rvalue "]]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldName) >>`,
+		String: `PositionalFieldName : "$[[" Rvalue "]" "]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldName) >>`,
 		Id:         "PositionalFieldName",
 		NTType:     24,
 		Index:      61,
-		NumSymbols: 3,
+		NumSymbols: 4,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldName)
 		},
 	},
 	ProdTabEntry{
-		String: `PositionalFieldValue : "$[[[" Rvalue "]]]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldValue) >>`,
+		String: `PositionalFieldValue : "$[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldValue) >>`,
 		Id:         "PositionalFieldValue",
 		NTType:     25,
 		Index:      62,
-		NumSymbols: 3,
+		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeUnary(dsl.NewASTToken("$[]", X[0]), X[1], dsl.NodeTypePositionalFieldValue)
 		},
@@ -2441,7 +2441,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayOrMapPositionalNameAccess : MlrvalOrFunction "[[" Rvalue "]]"	<< dsl.NewASTNodeBinary(
+		String: `ArrayOrMapPositionalNameAccess : MlrvalOrFunction "[[" Rvalue "]" "]"	<< dsl.NewASTNodeBinary(
       dsl.NewASTToken("[]", X[1]),
       X[0],
       X[2],
@@ -2450,7 +2450,7 @@ var productionsTable = ProdTab{
 		Id:         "ArrayOrMapPositionalNameAccess",
 		NTType:     62,
 		Index:      202,
-		NumSymbols: 4,
+		NumSymbols: 5,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeBinary(
 				dsl.NewASTToken("[]", X[1]),
@@ -2461,7 +2461,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ArrayOrMapPositionalValueAccess : MlrvalOrFunction "[[[" Rvalue "]]]"	<< dsl.NewASTNodeBinary(
+		String: `ArrayOrMapPositionalValueAccess : MlrvalOrFunction "[[[" Rvalue "]" "]" "]"	<< dsl.NewASTNodeBinary(
       dsl.NewASTToken("[]", X[1]),
       X[0],
       X[2],
@@ -2470,7 +2470,7 @@ var productionsTable = ProdTab{
 		Id:         "ArrayOrMapPositionalValueAccess",
 		NTType:     63,
 		Index:      203,
-		NumSymbols: 4,
+		NumSymbols: 6,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
 			return dsl.NewASTNodeBinary(
 				dsl.NewASTToken("[]", X[1]),
