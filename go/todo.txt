@@ -1,9 +1,18 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+* bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
+* make a less verbose first example at main rmd
+* update for no more jku link
+  https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
+* x /usr/local/go/bin/go x 2
+* put -d/-D -> put -h
+
 ! flatten/unflatten
-  - api neaten
-  - also need json_parse, json_stringify
+  o array-indices for map ...
+  o api neaten
+  o src impl
+  o also need json_parse, json_stringify
 
 ! emitp/emitf
 
@@ -382,6 +391,7 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o ....
   o ....
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
+i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc: string index/slice access on RHS
 * substr(7,5) -- "" or error?
 * write up re auto-deepen logic -- foo[NR] -- should create a map not an array unless already array
@@ -402,6 +412,16 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
 * --x2b @ help-doc .go; etc
 ? remove flagSet x all -- ? for consistency?
 * "mlr" -> os.Args[0] throughout the codebase
+
+* go doc ...
+  o export GOPATH=$(pwd); go doc types.Mlrval
+  o go get golang.org/x/tools/cmd/godoc
+    go get golang.org/x/tools/cmd/vet
+  o brew install go
+    brew upgrade go
+  o https://golang.org/lib/godoc/analysis/help.html
+  o export GOPATH=$(pwd); godoc -http=:6060
+    http://localhost:6060/pkg/miller/
 
 * join
   > clean up VERBOSE in joiner-files
