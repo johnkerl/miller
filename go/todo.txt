@@ -1,18 +1,27 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
 * make a less verbose first example at main rmd
 * update for no more jku link
   https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 * x /usr/local/go/bin/go x 2
 * put -d/-D -> put -h
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! flatten/unflatten
-  o array-indices for map ...
-  o api neaten
-  o src impl
+  k array-indices for map at LHS
+  k unflatten.mlr
+  k array-indices for map at RHS
+  k api neaten
+  k src impl
+  o array-ify how ...
+  o 'string or int' -> 'string, int, or array thereof' throughout
   o also need json_parse, json_stringify
+  o cut -f foo.bar etc -- ? or just flatten ...
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ! emitp/emitf
 

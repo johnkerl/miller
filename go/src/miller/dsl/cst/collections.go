@@ -79,6 +79,7 @@ func (this *RootNode) BuildArrayOrMapIndexAccessNode(
 func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) types.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	indexMlrval := this.indexEvaluable.Evaluate(state)
+
 	// Base-is-array and index-is-int will be checked there
 	if baseMlrval.IsArray() {
 		return baseMlrval.ArrayGet(&indexMlrval)

@@ -1352,6 +1352,16 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 	},
 
 	{
+		name:  "flatten",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `Flattens multi-level maps to single-level ones. Examples:
+flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
+		ternaryFunc: types.MlrvalFlatten,
+	},
+
+	{
 		name:      "get_keys",
 		class:     FUNC_CLASS_COLLECTIONS,
 		help:      "Returns array of keys of map or array",
@@ -1427,6 +1437,16 @@ and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
 key-value pairs from all arguments. Rightmost collisions win, e.g.
 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
 		variadicFunc: types.MlrvalMapSum,
+	},
+
+	{
+		name:  "unflatten",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `Reverses flatten. Example:
+unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
+Useful for nested JSON-like structures for non-JSON file formats like CSV.
+`,
+		binaryFunc: types.MlrvalUnflatten,
 	},
 }
 

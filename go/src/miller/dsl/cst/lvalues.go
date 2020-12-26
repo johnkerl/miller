@@ -870,6 +870,13 @@ func (this *IndexedLvalueNode) Assign(
 		index := indexEvaluable.Evaluate(state)
 		indices[i] = &index
 	}
+
+	// This lets the user do '$y[ ["a", "b", "c"] ] = $x' in lieu of
+	// '$y["a"]["b"]["c"] = $x'.
+	if len(indices) == 1 && indices[0].IsArray() {
+		indices = types.MakePointerArray(indices[0].GetArray())
+	}
+
 	return this.baseLvalue.AssignIndexed(rvalue, indices, state)
 }
 

@@ -311,6 +311,22 @@ func MlrvalFromMap(that *Mlrmap) Mlrval {
 	return this
 }
 
+// Like previous but doesn't copy. Only safe when the argument's sole purpose
+// is to be passed into here.
+func MlrvalFromMapReferenced(that *Mlrmap) Mlrval {
+	this := MlrvalEmptyMap()
+	if that == nil {
+		// xxx maybe return 2nd-arg error in the API
+		return MlrvalFromError()
+	}
+
+	for pe := that.Head; pe != nil; pe = pe.Next {
+		this.mapval.PutReference(pe.Key, pe.Value)
+	}
+
+	return this
+}
+
 // ----------------------------------------------------------------
 // This is for auto-deepen of nested maps in things like
 //

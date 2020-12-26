@@ -628,3 +628,94 @@ func MlrvalAppend(ma, mb *Mlrval) Mlrval {
 	macopy.ArrayAppend(mbcopy)
 	return *macopy
 }
+
+// ----------------------------------------------------------------
+// First argumemnt is prefix.
+// Second argument is delimiter.
+// Third argument is map or array.
+// flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+// flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+func MlrvalFlatten(ma, mb, mc *Mlrval) Mlrval {
+	if mc.mvtype == MT_MAP || mc.mvtype == MT_ARRAY {
+		if ma.mvtype != MT_STRING && ma.mvtype != MT_VOID {
+			return MlrvalFromError()
+		}
+		prefix := ma.printrep
+		if mb.mvtype != MT_STRING {
+			return MlrvalFromError()
+		}
+		delimiter := mb.printrep
+
+		return mlrvalFlattenAux(prefix, delimiter, mc)
+	} else {
+		return *mc
+	}
+}
+
+func mlrvalFlattenAux(prefix string, delimiter string, collection *Mlrval) Mlrval {
+	retval := NewMlrmap()
+
+	if collection.mvtype == MT_MAP {
+
+		for pe := collection.mapval.Head; pe != nil; pe = pe.Next {
+			nextPrefix := *pe.Key
+			if prefix != "" {
+				nextPrefix = prefix + delimiter + nextPrefix
+			}
+			if pe.Value.mvtype == MT_MAP || pe.Value.mvtype == MT_ARRAY {
+				nextResult := mlrvalFlattenAux(nextPrefix, delimiter, pe.Value)
+				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
+				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
+					retval.PutCopy(pf.Key, pf.Value.Copy())
+				}
+			} else {
+				retval.PutCopy(&nextPrefix, pe.Value.Copy())
+			}
+		}
+
+	} else if collection.mvtype == MT_ARRAY {
+		for zindex, value := range collection.arrayval {
+			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
+			if prefix != "" {
+				nextPrefix = prefix + delimiter + nextPrefix
+			}
+			if value.mvtype == MT_MAP || value.mvtype == MT_ARRAY {
+				nextResult := mlrvalFlattenAux(nextPrefix, delimiter, &value)
+				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
+				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
+					retval.PutCopy(pf.Key, pf.Value.Copy())
+				}
+			} else {
+				retval.PutCopy(&nextPrefix, value.Copy())
+			}
+		}
+
+	} else {
+		retval.PutCopy(&prefix, collection.Copy())
+	}
+
+	return MlrvalFromMapReferenced(retval)
+}
+
+// ----------------------------------------------------------------
+// First argument is a map.
+// Second argument is a delimiter string.
+// unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
+func MlrvalUnflatten(ma, mb *Mlrval) Mlrval {
+	if mb.mvtype != MT_STRING {
+		return MlrvalFromError()
+	}
+	if ma.mvtype != MT_MAP {
+		return *ma
+	}
+	oldmap := ma.mapval
+	newmap := NewMlrmap()
+
+	for pe := oldmap.Head; pe != nil; pe = pe.Next {
+		// TODO: factor out a shared helper function bewteen here and MlrvalSplitAX.
+		temp := MlrvalFromString(*pe.Key)
+		arrayOfIndices := MlrvalSplitAX(&temp, mb)
+		newmap.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
+	}
+	return MlrvalFromMapReferenced(newmap)
+}

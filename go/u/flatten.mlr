@@ -1,12 +1,13 @@
-func flatten_if_map(str prefix, str delim, var input): var {
+# Prototype for the DSL flatten function
+func u_flatten(str prefix, str delim, var input): var {
   if (is_map(input) || is_array(input)) {
-    return flatten_to_map(prefix, delim, input)
+    return _flatten_aux(prefix, delim, input)
   } else {
     return input
   }
 }
 
-func flatten_to_map(str prefix, str delim, var input): map {
+func _flatten_aux(str prefix, str delim, var input): map {
   map retval = {};
 
   if (is_map(input) || is_array(input)) {
@@ -16,7 +17,7 @@ func flatten_to_map(str prefix, str delim, var input): map {
         next_prefix = prefix . delim . string(k);
       }
       if (is_map(v) || is_array(v)) {
-        retval = mapsum(retval, flatten_to_map(next_prefix, delim, v))
+        retval = mapsum(retval, _flatten_aux(next_prefix, delim, v))
       } else {
         retval[next_prefix] = v
       }

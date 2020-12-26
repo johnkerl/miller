@@ -1,0 +1,13 @@
+# Prototype for the DSL unflatten function
+func u_unflatten(map input, str delim): var {
+  if (!is_map(input)) {
+    return input
+  }
+
+  map retval = {};
+  for (k, v in input) {
+    arr indices = splitax(k, delim);
+    retval[indices] = v
+  }
+  return retval
+}

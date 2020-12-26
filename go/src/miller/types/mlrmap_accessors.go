@@ -143,6 +143,42 @@ func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
 }
 
 func (this *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
+	if index.mvtype == MT_ARRAY {
+		return this.getWithMlrvalArrayIndex(index)
+	} else {
+		return this.getWithMlrvalSingleIndex(index)
+	}
+}
+
+// This lets the user do '$y = $x[ ["a", "b", "c"] ]' in lieu of
+// '$y = $x["a"]["b"]["c"]'.
+func (this *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
+	current := this
+	var retval *Mlrval = nil
+	lib.InternalCodingErrorIf(index.mvtype != MT_ARRAY)
+	array := index.arrayval
+	n := len(array)
+	for i, piece := range array {
+		next, err := current.GetWithMlrvalIndex(&piece)
+		if err != nil {
+			return nil, err
+		}
+		if i < n-1 {
+			if !next.IsMap() {
+				return nil, errors.New(
+					"Miller: cannot multi-index non-map.",
+				)
+			}
+			current = next.mapval
+		} else {
+			retval = next.Copy()
+		}
+	}
+	lib.InternalCodingErrorIf(retval == nil)
+	return retval, nil
+}
+
+func (this *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 	if index.mvtype == MT_STRING {
 		return this.Get(&index.printrep), nil
 	} else if index.mvtype == MT_INT {
