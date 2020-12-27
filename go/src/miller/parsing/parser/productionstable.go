@@ -506,7 +506,7 @@ var productionsTable = ProdTab{
 		String: `EmittableList : Emittable	<< dsl.NewASTNodeUnary(
       nil,
       X[0],
-      dsl.NodeTypeFunctionCallsite,
+      dsl.NodeTypeEmittableList,
     ) >>`,
 		Id:         "EmittableList",
 		NTType:     14,
@@ -516,7 +516,7 @@ var productionsTable = ProdTab{
 			return dsl.NewASTNodeUnary(
 				nil,
 				X[0],
-				dsl.NodeTypeFunctionCallsite,
+				dsl.NodeTypeEmittableList,
 			)
 		},
 	},
@@ -580,7 +580,7 @@ var productionsTable = ProdTab{
 		String: `EmitKeys : Rvalue	<< dsl.NewASTNodeUnary(
       nil,
       X[0],
-      dsl.NodeTypeFunctionCallsite,
+      dsl.NodeTypeEmitKeys,
     ) >>`,
 		Id:         "EmitKeys",
 		NTType:     16,
@@ -590,7 +590,7 @@ var productionsTable = ProdTab{
 			return dsl.NewASTNodeUnary(
 				nil,
 				X[0],
-				dsl.NodeTypeFunctionCallsite,
+				dsl.NodeTypeEmitKeys,
 			)
 		},
 	},

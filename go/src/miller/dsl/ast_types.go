@@ -65,6 +65,8 @@ const (
 	NodeTypeEmitStatement    = "emit statement"
 	NodeTypeEmitPStatement   = "emitp statement"
 	NodeTypeEmitFStatement   = "emitf statement"
+	NodeTypeEmittableList    = "emittable list"
+	NodeTypeEmitKeys         = "emit keys"
 	NodeTypeDumpStatement    = "dump statement"
 	NodeTypeEdumpStatement   = "edump statement"
 	NodeTypePrintStatement   = "print statement"

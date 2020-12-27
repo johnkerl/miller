@@ -469,6 +469,7 @@ FilterStatement
 // expression within the parentheses. Another (backward-incompatible) solution
 // would be to modify the punctuation, e.g. 'emit [#, #], # #' or
 // 'emit ([#, #], # #)' perhaps.
+
 EmitStatement
   : emit Emittable
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
@@ -521,7 +522,7 @@ EmittableList
     << dsl.NewASTNodeUnary(
       nil,
       $0,
-      dsl.NodeTypeFunctionCallsite,
+      dsl.NodeTypeEmittableList,
     ) >>
 
   // Allow trailing final comma, especially for multiline statements
@@ -546,7 +547,7 @@ EmitKeys
     << dsl.NewASTNodeUnary(
       nil,
       $0,
-      dsl.NodeTypeFunctionCallsite,
+      dsl.NodeTypeEmitKeys,
     ) >>
 
   | Rvalue "," EmitKeys

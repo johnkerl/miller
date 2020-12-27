@@ -17,15 +17,16 @@ import (
 // ================================================================
 type EmitStatementNode struct {
 	emitEvaluable IEvaluable
-	// xxx to do:
-	// * required array of evaluables
-	// * optional array of indexing keys
+
+	// emitEvaluables []IEvaluable
+	// keyEvaluables []IEvaluable
 }
 
 // ----------------------------------------------------------------
 func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
-	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
+	nchild := len(astNode.Children)
+	lib.InternalCodingErrorIf(nchild != 1 && nchild != 2)
 
 	emitEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
@@ -49,14 +50,6 @@ func (this *EmitStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 			state.Context, // xxx clone ?
 		)
 	}
-
-	// xxx WIP
-	// xxx need to reshape rvalue mlrvals -> mlrmaps; publish w/ contexts; method for that
-
-	//	outputChannel <- types.NewRecordAndContext(
-	//		mlrmap goes here,
-	//		&context,
-	//	)
 
 	return nil, nil
 }
