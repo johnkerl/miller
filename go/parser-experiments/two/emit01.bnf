@@ -35,8 +35,17 @@ Root
 // record.  These restrictions are enforced in the CST logic, to keep this
 // parser/AST logic simpler.
 EmitStatement
-  : emit EmitArgs
+  : emit Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
+
+  | emit Rvalue "," EmitArgs
     << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitStatement) >>
+
+  | emit "(" EmitArgs ")"
+    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitStatement) >>
+
+  | emit "(" EmitArgs ")" "," EmitArgs
+    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitStatement) >>
 ;
 
 // ----------------------------------------------------------------
@@ -85,8 +94,6 @@ FcnArgs
 Rvalue
   : Literal
   | "(" Literal ")"
-  | "[" Literal "]"
-  | "[" Literal "," Literal "]"
 ;
 
 Literal

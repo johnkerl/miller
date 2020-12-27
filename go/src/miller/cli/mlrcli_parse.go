@@ -336,56 +336,60 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 func loadMlrrcOrDie(
 	options *clitypes.TOptions,
 ) {
-	// TODO: finish porting
-//	char* env_mlrrc = getenv("MLRRC");
-//	if (env_mlrrc != nil) {
-//		if env_mlrrc == "__none__" {
-//			return;
-//		}
-//		if (tryLoadMlrrc(popts, env_mlrrc)) {
-//			return;
-//		}
-//	}
-//
-//	char* env_home = getenv("HOME");
-//	if (env_home != nil) {
-//		char* path = mlr_paste_2_strings(env_home, "/.mlrrc");
-//		(void)tryLoadMlrrc(popts, path);
-//		free(path);
-//	}
-//
-//	(void)tryLoadMlrrc(popts, "./.mlrrc");
+	env_mlrrc := os.Getenv("MLRRC")
+
+	if env_mlrrc != "" {
+		if env_mlrrc == "__none__" {
+			return
+		}
+		if tryLoadMlrrc(options, env_mlrrc) {
+			return
+		}
+	}
+
+	env_home := os.Getenv("HOME")
+	if env_home != "" {
+		path := env_home + "/.mlrrc"
+		tryLoadMlrrc(options, path)
+	}
+
+	tryLoadMlrrc(options, "./.mlrrc")
 }
 
-//static int tryLoadMlrrc(cli_opts_t* popts, char* path) {
-//	FILE* fp = fopen(path, "r");
-//	if (fp == nil) {
-//		return false;
-//	}
-//
-//	char* line = nil;
-//	size_t linecap = 0;
-//	int rc;
-//	int lineno = 0;
-//
-//	while ((rc = getline(&line, &linecap, fp)) != -1) {
-//		lineno++;
-//		char* line_to_destroy = strdup(line);
-//		if (!handle_mlrrc_line_1(popts, line_to_destroy)) {
-//			fmt.Fprintf(os.Stderr, "Parse error at file \"%s\" line %d: %s\n",
-//				path, lineno, line);
-//			os.Exit(1);
-//		}
-//		free(line_to_destroy);
-//	}
-//
-//	fclose(fp);
-//	if (line != nil) {
-//		free(line);
-//	}
-//
-//	return true;
-//}
+func tryLoadMlrrc(
+	options *clitypes.TOptions,
+	path string,
+) bool {
+
+	// TODO: finish porting
+	//	FILE* fp = fopen(path, "r");
+	//	if (fp == nil) {
+	return false
+	//	}
+	//
+	//	char* line = nil;
+	//	size_t linecap = 0;
+	//	int rc;
+	//	int lineno = 0;
+	//
+	//	while ((rc = getline(&line, &linecap, fp)) != -1) {
+	//		lineno++;
+	//		char* line_to_destroy = strdup(line);
+	//		if (!handle_mlrrc_line_1(popts, line_to_destroy)) {
+	//			fmt.Fprintf(os.Stderr, "Parse error at file \"%s\" line %d: %s\n",
+	//				path, lineno, line);
+	//			os.Exit(1);
+	//		}
+	//		free(line_to_destroy);
+	//	}
+	//
+	//	fclose(fp);
+	//	if (line != nil) {
+	//		free(line);
+	//	}
+	//
+	//	return true;
+}
 
 // Chomps trailing CR, LF, or CR/LF; comment-strips; left-right trims.
 
