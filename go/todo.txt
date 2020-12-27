@@ -24,6 +24,7 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ! emitp/emitf
+  ! bnf comments re S/R conflicts
 
 * stats1 verb
 ! mlrrc
@@ -64,8 +65,8 @@ big:
 EMITX:
 
 * emit: single record (more if in parens); more args are indices
-* emitf: simple side-by-sides
 * emitp: like emit but w/ different column-smashing
+* emitf: simple side-by-sides
 
 $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
 pan=0.346790

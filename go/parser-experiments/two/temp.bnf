@@ -8,8 +8,9 @@ _letter : 'a'-'z' | 'A'-'Z' ;
 _decdig : '0'-'9' ;
 _idchar : _letter | _decdig | '_' ;
 
-non_sigil_name : _idchar { _idchar } ;
-//call : 'c' 'a' 'l' 'l' ;
+emit     : 'e' 'm' 'i' 't' ;
+emitp    : 'e' 'm' 'i' 't' 'p' ;
+emitf    : 'e' 'm' 'i' 't' 'f' ;
 
 // ================================================================
 // IMPORT
@@ -21,44 +22,87 @@ non_sigil_name : _idchar { _idchar } ;
 
 // ----------------------------------------------------------------
 Root
-  : SubroutineCallsite
+  : EmitStatement
+   << dsl.NewAST($0) >>
+  | EmitPStatement
+   << dsl.NewAST($0) >>
+  | EmitFStatement
    << dsl.NewAST($0) >>
 ;
 
 // ----------------------------------------------------------------
-SubroutineCallsite
+// Examples:
+//   emit @a
+//   emit (@a, @b)
+//   emit @a, "x", "y"
+//   emit (@a, @b), "x", "y"
+// First argument (single or in parentheses) must be non-indexed
+// oosvar/localvar/fieldname, so we can use their names as keys in the emitted
+// record.  These restrictions are enforced in the CST logic, to keep this
+// parser/AST logic simpler.
+EmitStatement
+  : emit Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
 
-  : "call" SubroutineName "(" ")"
-    << dsl.NewASTNodeZary(
-      $1,
-      dsl.NodeTypeSubroutineCallsite,
-    ) >>
+  | emit Rvalue "," EmitArgs
+    << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitStatement) >>
 
-  | "call" SubroutineName "(" FcnArgs ")"
-    // As parsed there's an intermediate node between SubroutineCallsite
-    // and the children. Now we can remove it.
-    //
-    // Before:
-    // * SubroutineCallsite "[]"
-    //     * SubroutineCallsite
-    //         * StringLiteral "a"
-    //         * StringLiteral "b"
-    //
-    // After:
-    // * SubroutineCallsite "[]"
-    //     * StringLiteral "a"
-    //     * StringLiteral "b"
+  | emit "(" EmitArgs ")"
+    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitStatement) >>
+
+  | emit "(" EmitArgs ")" "," EmitArgs
+    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitStatement) >>
+;
+
+// Examples: syntactically identical to emit.
+EmitPStatement
+  : emitp Rvalue
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitPStatement) >>
+
+  | emitp Rvalue "," EmitArgs
+    << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitPStatement) >>
+
+  | emitp "(" EmitArgs ")"
+    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitPStatement) >>
+
+  | emitp "(" EmitArgs ")" "," EmitArgs
+    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitPStatement) >>
+;
+
+// Examples:
+//   emitf @a
+//   emitf @a, b, $c
+// Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
+// their names as keys in the emitted record.  These restrictions are enforced
+// in the CST logic, to keep this parser/AST logic simpler.
+EmitFStatement
+  : emitf EmitArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
-        $1,
-        dsl.NodeTypeSubroutineCallsite,
+        $0,
+        dsl.NodeTypeEmitFStatement,
       ),
-      $3,
+      $1,
     ) >>
 ;
 
+
 // ----------------------------------------------------------------
-SubroutineName : non_sigil_name;
+EmitArgs
+  : Rvalue
+    << dsl.NewASTNodeUnary(
+      nil,
+      $0,
+      dsl.NodeTypeFunctionCallsite,
+    ) >>
+
+  // Allow trailing final comma, especially for multiline statements
+  | Rvalue "," EmitArgs
+    << dsl.PrependChild(
+      $2,
+      $0,
+    ) >>
+;
 
 // ----------------------------------------------------------------
 FcnArgs
