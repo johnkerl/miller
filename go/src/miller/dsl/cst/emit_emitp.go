@@ -325,10 +325,99 @@ func (this *EmitXStatementNode) executeLashedNonIndexedEmit(
 func (this *EmitXStatementNode) executeNonLashedIndexedEmitP(
 	state *State,
 ) (*BlockExitPayload, error) {
-
-	primaryEmittable := this.emitEvaluables[0].Evaluate(state)
-	if primaryEmittable.IsAbsent() {
+	emittable := this.emitEvaluables[0].Evaluate(state)
+	if emittable.IsAbsent() {
 		return nil, nil
+	}
+
+	if !emittable.IsMap() {
+		return nil, nil
+	}
+
+	// TODO: libify this
+	indices := make([]types.Mlrval, len(this.indexEvaluables))
+	for i, indexEvaluable := range this.indexEvaluables {
+		index := indexEvaluable.Evaluate(state)
+		if index.IsAbsent() {
+			return nil, nil
+		}
+		if index.IsError() {
+			// TODO: surface this more highly
+			return nil, nil
+		}
+		indices[i] = index
+	}
+
+	return this.executeNonLashedIndexedEmitPAux(
+		this.names[0],
+		emittable.GetMap(),
+		indices,
+		state,
+	)
+}
+
+// Recurses over indices.
+
+// Example input with 'emitp @sums, "a"':
+//
+//  "sums": {
+//    "pan": 0.849416,
+//    "eks": 1.751863,
+//    "wye": 0.777892,
+//    "zee": 1.125680,
+//    "hat": 0.031442
+//  }
+
+// Example output with 'emitp @sums, "a"':
+//
+// {
+//   "a": "pan",
+//   "sums": 0.849416
+// }
+// {
+//   "a": "eks",
+//   "sums": 1.751863
+// }
+// {
+//   "a": "wye",
+//   "sums": 0.777892
+// }
+// {
+//   "a": "zee",
+//   "sums": 1.125680
+// }
+// {
+//   "a": "hat",
+//   "sums": 0.031442
+// }
+
+func (this *EmitXStatementNode) executeNonLashedIndexedEmitPAux(
+	mapName string,
+	emittableMap *types.Mlrmap,
+	indices []types.Mlrval,
+	state *State,
+) (*BlockExitPayload, error) {
+	lib.InternalCodingErrorIf(len(indices) < 1)
+	index := indices[0]
+	indexString := index.String()
+
+	for pe := emittableMap.Head; pe != nil; pe = pe.Next {
+		newrec := types.NewMlrmapAsRecord()
+
+		indexValue := types.MlrvalFromString(*pe.Key)
+		newrec.PutCopy(&indexString, &indexValue)
+
+		indexValueString := indexValue.String()
+
+		// TODO: recurse
+		nextLevel := emittableMap.Get(&indexValueString)
+
+		newrec.PutCopy(&mapName, nextLevel)
+
+		state.OutputChannel <- types.NewRecordAndContext(
+			newrec,
+			state.Context.Copy(),
+		)
 	}
 
 	return nil, nil
@@ -338,10 +427,64 @@ func (this *EmitXStatementNode) executeNonLashedIndexedEmitP(
 func (this *EmitXStatementNode) executeNonLashedIndexedEmit(
 	state *State,
 ) (*BlockExitPayload, error) {
-
-	primaryEmittable := this.emitEvaluables[0].Evaluate(state)
-	if primaryEmittable.IsAbsent() {
+	emittable := this.emitEvaluables[0].Evaluate(state)
+	if emittable.IsAbsent() {
 		return nil, nil
+	}
+
+	if !emittable.IsMap() {
+		return nil, nil
+	}
+
+	// TODO: libify this
+	indices := make([]types.Mlrval, len(this.indexEvaluables))
+	for i, indexEvaluable := range this.indexEvaluables {
+		index := indexEvaluable.Evaluate(state)
+		if index.IsAbsent() {
+			return nil, nil
+		}
+		if index.IsError() {
+			// TODO: surface this more highly
+			return nil, nil
+		}
+		indices[i] = index
+	}
+
+	return this.executeNonLashedIndexedEmitAux(
+		this.names[0],
+		emittable.GetMap(),
+		indices,
+		state,
+	)
+}
+
+func (this *EmitXStatementNode) executeNonLashedIndexedEmitAux(
+	mapName string,
+	emittableMap *types.Mlrmap,
+	indices []types.Mlrval,
+	state *State,
+) (*BlockExitPayload, error) {
+	lib.InternalCodingErrorIf(len(indices) < 1)
+	index := indices[0]
+	indexString := index.String()
+
+	for pe := emittableMap.Head; pe != nil; pe = pe.Next {
+		newrec := types.NewMlrmapAsRecord()
+
+		indexValue := types.MlrvalFromString(*pe.Key)
+		newrec.PutCopy(&indexString, &indexValue)
+
+		indexValueString := indexValue.String()
+
+		// TODO: recurse
+		nextLevel := emittableMap.Get(&indexValueString)
+
+		newrec.PutCopy(&mapName, nextLevel)
+
+		state.OutputChannel <- types.NewRecordAndContext(
+			newrec,
+			state.Context.Copy(),
+		)
 	}
 
 	return nil, nil
