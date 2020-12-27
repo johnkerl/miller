@@ -22,6 +22,26 @@ TOP OF LIST:
   md_emittable ::= md_map_literal
   md_emittable ::= md_fcn_or_subr_call
 * rename case-dsl-emit-temp.sh
+* hm
+  ../c/mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
+
+  a=pan,sum:pan=0.346790,sum:wye=0.502626
+  a=eks,sum:pan=-0.758680,sum:wye=-0.381399,sum:zee=0.611784
+  a=wye,sum:wye=0.204603,sum:pan=0.573289
+  a=zee,sum:pan=0.527126,sum:wye=-0.598554
+  a=hat,sum:wye=0.031442
+
+  ../c/mlr put -q '@sum[$a][$b] += $x; end { emit  @sum, "a" }' s
+
+  a=pan,pan=0.346790,wye=0.502626
+  a=eks,pan=-0.758680,wye=-0.381399,zee=0.611784
+  a=wye,wye=0.204603,pan=0.573289
+  a=zee,pan=0.527126,wye=-0.598554
+  a=hat,wye=0.031442
+
+* --oflatsep
+* double-check all examples at
+  https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
