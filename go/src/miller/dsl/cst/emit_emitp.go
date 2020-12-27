@@ -50,9 +50,8 @@ type EmitXStatementNode struct {
 	// The "x","y" parts.
 	indexEvaluables []IEvaluable
 
-	// For shared code use between emit and emitp.
-	isEmitP bool
-
+	// Appropriate function to evaluate statements, depending on lashed or not,
+	// indexed or not, emit or emitp.
 	executorFunc Executor
 }
 
@@ -133,18 +132,25 @@ func (this *RootNode) buildEmitXStatementNode(
 		names:           names,
 		emitEvaluables:  emitEvaluables,
 		indexEvaluables: indexEvaluables,
-		isEmitP:         isEmitP,
 	}
 
 	if len(emitEvaluables) == 1 {
 		if nchild == 1 {
-			emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexed
+			if isEmitP {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexedEmitp
+			} else {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexedEmit
+			}
 		} else {
 			emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedIndexed
 		}
 	} else {
 		if nchild == 1 {
-			emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexed
+			if isEmitP {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexedEmitP
+			} else {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexedEmit
+			}
 		} else {
 			emitxStatementNode.executorFunc = emitxStatementNode.executeLashedIndexed
 		}
@@ -184,7 +190,8 @@ func (this *EmitXStatementNode) Execute(state *State) (*BlockExitPayload, error)
 
 // ----------------------------------------------------------------
 // Just one mqp or named variable being emitted.
-func (this *EmitXStatementNode) executeNonLashedNonIndexed(
+
+func (this *EmitXStatementNode) executeNonLashedNonIndexedEmitp(
 	state *State,
 ) (*BlockExitPayload, error) {
 	emittable := this.emitEvaluables[0].Evaluate(state)
@@ -194,13 +201,37 @@ func (this *EmitXStatementNode) executeNonLashedNonIndexed(
 
 	if emittable.IsMap() {
 		// Emittable is map
-		var newrec *types.Mlrmap = nil
-		if this.isEmitP {
-			newrec = types.NewMlrmapAsRecord()
-			newrec.PutCopy(&this.names[0], &emittable)
-		} else {
-			newrec = emittable.Copy().GetMap()
-		}
+		newrec := types.NewMlrmapAsRecord()
+		newrec.PutCopy(&this.names[0], &emittable)
+		state.OutputChannel <- types.NewRecordAndContext(
+			newrec,
+			state.Context.Copy(),
+		)
+
+	} else {
+		// Emittable is named variable
+		newrec := types.NewMlrmapAsRecord()
+		newrec.PutCopy(&this.names[0], &emittable)
+		state.OutputChannel <- types.NewRecordAndContext(
+			newrec,
+			state.Context.Copy(),
+		)
+	}
+
+	return nil, nil
+}
+
+func (this *EmitXStatementNode) executeNonLashedNonIndexedEmit(
+	state *State,
+) (*BlockExitPayload, error) {
+	emittable := this.emitEvaluables[0].Evaluate(state)
+	if emittable.IsAbsent() {
+		return nil, nil
+	}
+
+	if emittable.IsMap() {
+		// Emittable is map
+		newrec := emittable.Copy().GetMap()
 		state.OutputChannel <- types.NewRecordAndContext(
 			newrec,
 			state.Context.Copy(),
@@ -233,7 +264,37 @@ func (this *EmitXStatementNode) executeNonLashedIndexed(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeLashedNonIndexed(
+func (this *EmitXStatementNode) executeLashedNonIndexedEmitP(
+	state *State,
+) (*BlockExitPayload, error) {
+
+	newrec := types.NewMlrmapAsRecord()
+
+	for i, emitEvaluable := range this.emitEvaluables {
+		emittable := emitEvaluable.Evaluate(state)
+		if emittable.IsAbsent() {
+			continue
+		}
+
+		if emittable.IsMap() {
+			newrec.PutCopy(&this.names[i], &emittable)
+
+		} else {
+			// Emittable is named variable
+			newrec.PutCopy(&this.names[i], &emittable)
+		}
+	}
+
+	state.OutputChannel <- types.NewRecordAndContext(
+		newrec,
+		state.Context.Copy(),
+	)
+
+	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) executeLashedNonIndexedEmit(
 	state *State,
 ) (*BlockExitPayload, error) {
 
