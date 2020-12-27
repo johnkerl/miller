@@ -10,7 +10,20 @@ TOP OF LIST:
 * put -d/-D -> put -h
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * emitp/emitf
+* to support (from C impl):
+  md_emittable ::= MD_TOKEN_ALL
+  md_emittable ::= MD_TOKEN_FULL_OOSVAR
+  md_emittable ::= md_oosvar_keylist
+  md_emittable ::= md_nonindexed_local_variable
+  md_emittable ::= md_indexed_local_variable
+  md_emittable ::= MD_TOKEN_FULL_SREC
+  md_emittable ::= md_map_literal
+  md_emittable ::= md_fcn_or_subr_call
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 * stats1 verb
 ! mlrrc
 
@@ -437,4 +450,3 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   > joinBucketKeeper & joinBucket need to be privatized
   > rewrite join-bucket-keeper.go entirely
   > also needs UT per se (not just regression)
-

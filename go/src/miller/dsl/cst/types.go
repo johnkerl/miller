@@ -46,6 +46,8 @@ type IExecutable interface {
 	Execute(state *State) (*BlockExitPayload, error)
 }
 
+type Executor func(state *State) (*BlockExitPayload, error)
+
 // ================================================================
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
