@@ -1345,6 +1345,14 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 	},
 
 	{
+		name:  "arrayify",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `Walks through a nested map/array, converting any map with consecutive keys
+"1", "2", ... into an array. Useful to wrap the output of unflatten.`,
+		unaryFunc: types.MlrvalArrayify,
+	},
+
+	{
 		name:      "depth",
 		class:     FUNC_CLASS_COLLECTIONS,
 		help:      "Prints maximum depth of map/array. Scalars have depth 0.",
@@ -1445,7 +1453,7 @@ key-value pairs from all arguments. Rightmost collisions win, e.g.
 		help: `Reverses flatten. Example:
 unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
 Useful for nested JSON-like structures for non-JSON file formats like CSV.
-`,
+See also arrayify.`,
 		binaryFunc: types.MlrvalUnflatten,
 	},
 }

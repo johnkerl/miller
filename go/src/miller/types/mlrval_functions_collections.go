@@ -719,3 +719,43 @@ func MlrvalUnflatten(ma, mb *Mlrval) Mlrval {
 	}
 	return MlrvalFromMapReferenced(newmap)
 }
+
+// ----------------------------------------------------------------
+// Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
+func MlrvalArrayify(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_MAP {
+		convertible := true
+		i := 0
+		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
+			i++
+			if *pe.Key != sval {
+				convertible = false
+			}
+			temp := MlrvalArrayify(pe.Value)
+			pe.Value = &temp
+		}
+
+		if convertible {
+			arrayval := make([]Mlrval, ma.mapval.FieldCount)
+			i := 0
+			for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+				arrayval[i] = *pe.Value.Copy()
+				i++
+			}
+			return MlrvalFromArrayLiteralReference(arrayval)
+
+		} else {
+			return *ma
+		}
+
+	} else if ma.mvtype == MT_ARRAY {
+		for i, _ := range ma.arrayval {
+			ma.arrayval[i] = MlrvalArrayify(&ma.arrayval[i])
+		}
+		return *ma
+
+	} else {
+		return *ma
+	}
+}

@@ -1,0 +1,83 @@
+
+mlr --ojson seqgen --start 1 --stop 1 then put 
+  $x = arrayify({
+    "1": "a",  
+    "2": "b",  
+    "3": "c",  
+  })
+
+{
+  "i": 1,
+  "x": ["a", "b", "c"]
+}
+
+mlr --ojson seqgen --start 1 --stop 1 then put 
+  $x = arrayify({
+    "0": "a",  
+    "1": "b",  
+    "2": "c",  
+  })
+
+{
+  "i": 1,
+  "x": {
+    "0": "a",
+    "1": "b",
+    "2": "c"
+  }
+}
+
+mlr --ojson seqgen --start 1 --stop 1 then put 
+  $x = arrayify({
+    "1": "a",  
+    "3": "b",  
+    "5": "c",  
+  })
+
+{
+  "i": 1,
+  "x": {
+    "1": "a",
+    "3": "b",
+    "5": "c"
+  }
+}
+
+mlr --ojson seqgen --start 1 --stop 1 then put 
+  $x = arrayify({
+    "s": {
+      "1": "a",  
+      "2": "b",  
+      "3": "c",  
+    }
+  })
+
+{
+  "i": 1,
+  "x": {
+    "s": ["a", "b", "c"]
+  }
+}
+
+mlr --ojson seqgen --start 1 --stop 1 then put 
+  $x = arrayify({
+    "1": {
+      "1": "a",  
+      "2": "b",  
+      "3": "c",  
+    },
+    "2": {
+      "1": "d",  
+      "2": "e",  
+      "3": "f",  
+    }
+  })
+
+{
+  "i": 1,
+  "x": [
+    ["a", "b", "c"],
+    ["d", "e", "f"]
+  ]
+}
+

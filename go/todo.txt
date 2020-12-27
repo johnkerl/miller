@@ -17,7 +17,7 @@ TOP OF LIST:
   k array-indices for map at RHS
   k api neaten
   k src impl
-  o array-ify how ...
+  k arrayify how ...
   o 'string or int' -> 'string, int, or array thereof' throughout
   o also need json_parse, json_stringify
   o cut -f foo.bar etc -- ? or just flatten ...
@@ -28,7 +28,7 @@ TOP OF LIST:
 * stats1 verb
 ! mlrrc
 
-!! fix all typemasks!!
+!! fix all typemasks !!
 ! fix var/any type-mask
   o C/Go UT
 ! gating after: 'int x = 1; x = "abc"'
