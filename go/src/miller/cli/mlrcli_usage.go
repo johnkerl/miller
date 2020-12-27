@@ -33,9 +33,9 @@ func mainUsageLong(o *os.File, argv0 string) {
 	mainUsageHelpOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "CUSTOMIZATION VIA .MLRRC:\N");
-	//	mainUsageMlrrc(o, argv0);
-	//	fmt.Fprintf(o, "\n");
+	fmt.Fprintf(o, "CUSTOMIZATION VIA .MLRRC:\n");
+	mainUsageMlrrc(o, argv0);
+	fmt.Fprintf(o, "\n");
 
 	fmt.Fprintf(o, "VERBS:\n")
 	listAllVerbs(o, "  ")
@@ -135,39 +135,39 @@ func mainUsageHelpOptions(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "  -K                           Show a bare listing of keywords by name.\n")
 }
 
-//func mainUsageMlrrc(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.\n");
-//	fmt.Fprintf(o, "For example, if you usually process CSV, then you can put \"--csv\" in your .mlrrc file\n");
-//	fmt.Fprintf(o, "and that will be the default input/output format unless otherwise specified on the command line.\n");
-//	fmt.Fprintf(o, "\n");
-//	fmt.Fprintf(o, "The .mlrrc file format is one \"--flag\" or \"--option value\" per line, with the leading \"--\" optional.\n");
-//	fmt.Fprintf(o, "Hash-style comments and blank lines are ignored.\n");
-//	fmt.Fprintf(o, "\n");
-//	fmt.Fprintf(o, "Sample .mlrrc:\n");
-//	fmt.Fprintf(o, "# Input and output formats are CSV by default (unless otherwise specified\n");
-//	fmt.Fprintf(o, "# on the mlr command line):\n");
-//	fmt.Fprintf(o, "csv\n");
-//	fmt.Fprintf(o, "# These are no-ops for CSV, but when I do use JSON output, I want these\n");
-//	fmt.Fprintf(o, "# pretty-printing options to be used:\n");
-//	fmt.Fprintf(o, "jvstack\n");
-//	fmt.Fprintf(o, "jlistwrap\n");
-//	fmt.Fprintf(o, "\n");
-//	fmt.Fprintf(o, "How to specify location of .mlrrc:\n");
-//	fmt.Fprintf(o, "* If $MLRRC is set:\n");
-//	fmt.Fprintf(o, "  o If its value is \"__none__\" then no .mlrrc files are processed.\n");
-//	fmt.Fprintf(o, "  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax\n");
-//	fmt.Fprintf(o, "    errors, they abort mlr with a usage message (as if you had mistyped something on the\n");
-//	fmt.Fprintf(o, "    command line). If the file can't be loaded at all, though, it is silently skipped.\n");
-//	fmt.Fprintf(o, "  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is\n");
-//	fmt.Fprintf(o, "    set in the environment.\n");
-//	fmt.Fprintf(o, "* Otherwise:\n");
-//	fmt.Fprintf(o, "  o If $HOME/.mlrrc exists, it's then processed as above.\n");
-//	fmt.Fprintf(o, "  o If ./.mlrrc exists, it's then also processed as above.\n");
-//	fmt.Fprintf(o, "  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)\n");
-//	fmt.Fprintf(o, "\n");
-//	fmt.Fprintf(o, "See also:\n");
-//	fmt.Fprintf(o, "https://johnkerl.org/miller/doc/customization.html\n");
-//}
+func mainUsageMlrrc(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.\n");
+	fmt.Fprintf(o, "For example, if you usually process CSV, then you can put \"--csv\" in your .mlrrc file\n");
+	fmt.Fprintf(o, "and that will be the default input/output format unless otherwise specified on the command line.\n");
+	fmt.Fprintf(o, "\n");
+	fmt.Fprintf(o, "The .mlrrc file format is one \"--flag\" or \"--option value\" per line, with the leading \"--\" optional.\n");
+	fmt.Fprintf(o, "Hash-style comments and blank lines are ignored.\n");
+	fmt.Fprintf(o, "\n");
+	fmt.Fprintf(o, "Sample .mlrrc:\n");
+	fmt.Fprintf(o, "# Input and output formats are CSV by default (unless otherwise specified\n");
+	fmt.Fprintf(o, "# on the mlr command line):\n");
+	fmt.Fprintf(o, "csv\n");
+	fmt.Fprintf(o, "# These are no-ops for CSV, but when I do use JSON output, I want these\n");
+	fmt.Fprintf(o, "# pretty-printing options to be used:\n");
+	fmt.Fprintf(o, "jvstack\n");
+	fmt.Fprintf(o, "jlistwrap\n");
+	fmt.Fprintf(o, "\n");
+	fmt.Fprintf(o, "How to specify location of .mlrrc:\n");
+	fmt.Fprintf(o, "* If $MLRRC is set:\n");
+	fmt.Fprintf(o, "  o If its value is \"__none__\" then no .mlrrc files are processed.\n");
+	fmt.Fprintf(o, "  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax\n");
+	fmt.Fprintf(o, "    errors, they abort mlr with a usage message (as if you had mistyped something on the\n");
+	fmt.Fprintf(o, "    command line). If the file can't be loaded at all, though, it is silently skipped.\n");
+	fmt.Fprintf(o, "  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is\n");
+	fmt.Fprintf(o, "    set in the environment.\n");
+	fmt.Fprintf(o, "* Otherwise:\n");
+	fmt.Fprintf(o, "  o If $HOME/.mlrrc exists, it's then processed as above.\n");
+	fmt.Fprintf(o, "  o If ./.mlrrc exists, it's then also processed as above.\n");
+	fmt.Fprintf(o, "  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)\n");
+	fmt.Fprintf(o, "\n");
+	fmt.Fprintf(o, "See also:\n");
+	fmt.Fprintf(o, "https://miller.readthedocs.io/en/latest/customization.html\n");
+}
 
 //func mainUsageFunctions(o *os.File, argv0 string, char* leader) {
 //	fmgr_t* pfmgr = fmgr_alloc();

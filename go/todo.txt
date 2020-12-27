@@ -11,20 +11,10 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! flatten/unflatten
-  k array-indices for map at LHS
-  k unflatten.mlr
-  k array-indices for map at RHS
-  k api neaten
-  k src impl
-  k arrayify how ...
-  o 'string or int' -> 'string, int, or array thereof' throughout
-  o also need json_parse, json_stringify
-  o cut -f foo.bar etc -- ? or just flatten ...
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 ! emitp/emitf
+  ? support emit of array of maps? SR-conflict issue w/ close-parens
   ! bnf comments re S/R conflicts
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * stats1 verb
 ! mlrrc
@@ -153,6 +143,19 @@ no need to bootstrap a parser for the parser-generator language
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fixed-width pprint input-scanner
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! flatten/unflatten
+  k array-indices for map at LHS
+  k unflatten.mlr
+  k array-indices for map at RHS
+  k api neaten
+  k src impl
+  k arrayify how ...
+  o 'string or int' -> 'string, int, or array thereof' throughout
+  o also need json_parse, json_stringify
+  o cut -f foo.bar etc -- ? or just flatten ...
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * UDF nexts:

@@ -457,8 +457,18 @@ FilterStatement
 //   emit (@a, @b), "x", "y"
 // First argument (single or in parentheses) must be non-indexed
 // oosvar/localvar/fieldname, so we can use their names as keys in the emitted
-// record.  These restrictions are enforced in the CST logic, to keep this
-// parser/AST logic simpler.
+// record.
+//
+// We use the Emittable production rule to limit the things being emitted.  It
+// would be fine to use more generally Rvalue -- anything *evaluating* to a
+// map, including function calls -- except that the legacy punctuation design
+// of 'emit (#, #), #, #' means that allowing parenthesized expressions within
+// the '(...)' results in shift-reduce conflicts at parser-gen time.
+//
+// One backward-compatible solution (used here) is to limit the types of
+// expression within the parentheses. Another (backward-incompatible) solution
+// would be to modify the punctuation, e.g. 'emit [#, #], # #' or
+// 'emit ([#, #], # #)' perhaps.
 EmitStatement
   : emit Emittable
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
@@ -492,8 +502,7 @@ EmitPStatement
 //   emitf @a
 //   emitf @a, b, $c
 // Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
-// their names as keys in the emitted record.  These restrictions are enforced
-// in the CST logic, to keep this parser/AST logic simpler.
+// their names as keys in the emitted record.
 EmitFStatement
   : emitf EmittableList
     << dsl.AdoptChildren(
