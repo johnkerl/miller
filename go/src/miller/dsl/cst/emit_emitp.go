@@ -134,25 +134,33 @@ func (this *RootNode) buildEmitXStatementNode(
 		indexEvaluables: indexEvaluables,
 	}
 
-	if len(emitEvaluables) == 1 {
-		if nchild == 1 {
+	if nchild == 1 {
+		if len(emitEvaluables) == 1 {
 			if isEmitP {
 				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexedEmitp
 			} else {
 				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexedEmit
 			}
 		} else {
-			emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedIndexed
-		}
-	} else {
-		if nchild == 1 {
 			if isEmitP {
 				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexedEmitP
 			} else {
 				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexedEmit
 			}
+		}
+	} else {
+		if len(emitEvaluables) == 1 {
+			if isEmitP {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedIndexedEmitP
+			} else {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedIndexedEmit
+			}
 		} else {
-			emitxStatementNode.executorFunc = emitxStatementNode.executeLashedIndexed
+			if isEmitP {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedIndexedEmitP
+			} else {
+				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedIndexedEmit
+			}
 		}
 	}
 
@@ -251,19 +259,6 @@ func (this *EmitXStatementNode) executeNonLashedNonIndexedEmit(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeNonLashedIndexed(
-	state *State,
-) (*BlockExitPayload, error) {
-
-	primaryEmittable := this.emitEvaluables[0].Evaluate(state)
-	if primaryEmittable.IsAbsent() {
-		return nil, nil
-	}
-
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
 func (this *EmitXStatementNode) executeLashedNonIndexedEmitP(
 	state *State,
 ) (*BlockExitPayload, error) {
@@ -327,7 +322,46 @@ func (this *EmitXStatementNode) executeLashedNonIndexedEmit(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeLashedIndexed(
+func (this *EmitXStatementNode) executeNonLashedIndexedEmitP(
+	state *State,
+) (*BlockExitPayload, error) {
+
+	primaryEmittable := this.emitEvaluables[0].Evaluate(state)
+	if primaryEmittable.IsAbsent() {
+		return nil, nil
+	}
+
+	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) executeNonLashedIndexedEmit(
+	state *State,
+) (*BlockExitPayload, error) {
+
+	primaryEmittable := this.emitEvaluables[0].Evaluate(state)
+	if primaryEmittable.IsAbsent() {
+		return nil, nil
+	}
+
+	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) executeLashedIndexedEmitP(
+	state *State,
+) (*BlockExitPayload, error) {
+
+	primaryEmittable := this.emitEvaluables[0].Evaluate(state)
+	if primaryEmittable.IsAbsent() {
+		return nil, nil
+	}
+
+	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) executeLashedIndexedEmit(
 	state *State,
 ) (*BlockExitPayload, error) {
 
