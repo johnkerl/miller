@@ -21,6 +21,7 @@ TOP OF LIST:
   md_emittable ::= MD_TOKEN_FULL_SREC
   md_emittable ::= md_map_literal
   md_emittable ::= md_fcn_or_subr_call
+* rename case-dsl-emit-temp.sh
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
