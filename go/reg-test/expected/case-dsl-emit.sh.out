@@ -1,21 +1,2080 @@
 
-mlr --from ./reg-test/input/s.dkvp --opprint put -q @sum[$a] += $i; emit {"sum": @sum}
-sum
+mlr --from ./reg-test/input/s.dkvp --ojson put -q @sum += $i; emit {"sum": @sum}
 {
+  "sum": 1
+}
+{
+  "sum": 3
+}
+{
+  "sum": 6
+}
+{
+  "sum": 10
+}
+
+mlr --from ./reg-test/input/s.dkvp --ojson put -q @sum[$a] += $i; emit {"sum": @sum}
+{
+  "sum": {
+    "pan": 1
+  }
+}
+{
+  "sum": {
+    "pan": 1,
+    "eks": 2
+  }
+}
+{
+  "sum": {
+    "pan": 1,
+    "eks": 2,
+    "wye": 3
+  }
+}
+{
+  "sum": {
+    "pan": 1,
+    "eks": 6,
+    "wye": 3
+  }
+}
+
+
+================================================================
+1. NON-LASHED NON-INDEXED NAMEDVAR EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sumx;
+  }
+
+{
+  "sumx": 4.536294
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sumx;
+  }
+
+{
+  "sumx": 4.536293840335763
+}
+
+
+================================================================
+1. NON-LASHED NON-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums;
+  }
+
+{
+  "sums": {
+    "pan": {
+      "pan": 0.346790,
+      "wye": 0.502626
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399,
+      "zee": 0.611784
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    },
+    "zee": {
+      "pan": 0.527126,
+      "wye": 0.598554
+    },
+    "hat": {
+      "wye": 0.031442
+    }
+  }
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums;
+  }
+
+{
+  "sums": {
+    "pan": {
+      "pan": 0.3467901443380824,
+      "wye": 0.5026260055412137
+    },
+    "eks": {
+      "pan": 0.7586799647899636,
+      "wye": 0.38139939387114097,
+      "zee": 0.6117840605678454
+    },
+    "wye": {
+      "wye": 0.20460330576630303,
+      "pan": 0.5732889198020006
+    },
+    "zee": {
+      "pan": 0.5271261600918548,
+      "wye": 0.5985540091064224
+    },
+    "hat": {
+      "wye": 0.03144187646093577
+    }
+  }
+}
+
+
+================================================================
+1. NON-LASHED NON-INDEXED NAMEDVAR EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sumx;
+  }
+
+{
+  "sumx": 4.536294
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sumx;
+  }
+
+{
+  "sumx": 4.536293840335763
+}
+
+
+================================================================
+1. NON-LASHED NON-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums;
+  }
+
+{
+  "pan": 0.346790,
+  "wye": 0.502626
+}
+{
+  "pan": 0.758680,
+  "wye": 0.381399,
+  "zee": 0.611784
+}
+{
+  "wye": 0.204603,
+  "pan": 0.573289
+}
+{
+  "pan": 0.527126,
+  "wye": 0.598554
+}
+{
+  "wye": 0.031442
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums;
+  }
+
+{
+  "pan": {
+    "pan": 0.3467901443380824,
+    "wye": 0.5026260055412137
+  },
+  "eks": {
+    "pan": 0.7586799647899636,
+    "wye": 0.38139939387114097,
+    "zee": 0.6117840605678454
+  },
+  "wye": {
+    "wye": 0.20460330576630303,
+    "pan": 0.5732889198020006
+  },
+  "zee": {
+    "pan": 0.5271261600918548,
+    "wye": 0.5985540091064224
+  },
+  "hat": {
+    "wye": 0.03144187646093577
+  }
+}
+
+
+================================================================
+2. LASHED NON-INDEXED NAMEDVAR EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sumx, @countx);
+  }
+
+{
+  "sumx": 4.536294,
+  "countx": 10
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sumx, @countx);
+  }
+
+{
+  "sumx": 4.536293840335763,
+  "countx": 10
+}
+
+
+================================================================
+2. LASHED NON-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts);
+  }
+
+{
+  "sums": {
+    "pan": {
+      "pan": 0.346790,
+      "wye": 0.502626
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399,
+      "zee": 0.611784
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    },
+    "zee": {
+      "pan": 0.527126,
+      "wye": 0.598554
+    },
+    "hat": {
+      "wye": 0.031442
+    }
+  },
+  "counts": {
+    "pan": {
+      "pan": 1,
+      "wye": 1
+    },
+    "eks": {
+      "pan": 1,
+      "wye": 1,
+      "zee": 1
+    },
+    "wye": {
+      "wye": 1,
+      "pan": 1
+    },
+    "zee": {
+      "pan": 1,
+      "wye": 1
+    },
+    "hat": {
+      "wye": 1
+    }
+  }
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts);
+  }
+
+{
+  "sums": {
+    "pan": {
+      "pan": 0.3467901443380824,
+      "wye": 0.5026260055412137
+    },
+    "eks": {
+      "pan": 0.7586799647899636,
+      "wye": 0.38139939387114097,
+      "zee": 0.6117840605678454
+    },
+    "wye": {
+      "wye": 0.20460330576630303,
+      "pan": 0.5732889198020006
+    },
+    "zee": {
+      "pan": 0.5271261600918548,
+      "wye": 0.5985540091064224
+    },
+    "hat": {
+      "wye": 0.03144187646093577
+    }
+  },
+  "counts": {
+    "pan": {
+      "pan": 1,
+      "wye": 1
+    },
+    "eks": {
+      "pan": 1,
+      "wye": 1,
+      "zee": 1
+    },
+    "wye": {
+      "wye": 1,
+      "pan": 1
+    },
+    "zee": {
+      "pan": 1,
+      "wye": 1
+    },
+    "hat": {
+      "wye": 1
+    }
+  }
+}
+
+
+================================================================
+2. LASHED NON-INDEXED NAMEDVAR EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sumx, @countx);
+  }
+
+{
+  "sumx": 4.536294,
+  "countx": 10
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sumx, @countx);
+  }
+
+{
+  "sumx": 4.536293840335763,
+  "countx": 10
+}
+
+
+================================================================
+2. LASHED NON-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts);
+  }
+
+{
+  "pan": 1,
+  "wye": 1
+}
+{
+  "pan": 1,
+  "wye": 1,
+  "zee": 1
+}
+{
+  "wye": 1,
   "pan": 1
 }
 {
   "pan": 1,
-  "eks": 2
+  "wye": 1
 }
 {
-  "pan": 1,
-  "eks": 2,
-  "wye": 3
+  "wye": 1
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts);
+  }
+
+{
+  "pan": {
+    "pan": 1,
+    "wye": 1
+  },
+  "eks": {
+    "pan": 1,
+    "wye": 1,
+    "zee": 1
+  },
+  "wye": {
+    "wye": 1,
+    "pan": 1
+  },
+  "zee": {
+    "pan": 1,
+    "wye": 1
+  },
+  "hat": {
+    "wye": 1
+  }
+}
+
+
+================================================================
+3. NON-LASHED INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a] += $x;
+  @counts[$a] += 1;
+  end {
+    emitp @sums, "a";
+  }
+
+{
+  "a": "pan",
+  "sums": 0.8494161498792961
 }
 {
+  "a": "eks",
+  "sums": 1.75186341922895
+}
+{
+  "a": "wye",
+  "sums": 0.7778922255683036
+}
+{
+  "a": "zee",
+  "sums": 1.1256801691982772
+}
+{
+  "a": "hat",
+  "sums": 0.03144187646093577
+}
+
+
+================================================================
+3. NON-LASHED INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a] += $x;
+  @counts[$a] += 1;
+  end {
+    emit  @sums, "a";
+  }
+
+{
+  "a": "pan",
+  "sums": 0.8494161498792961
+}
+{
+  "a": "eks",
+  "sums": 1.75186341922895
+}
+{
+  "a": "wye",
+  "sums": 0.7778922255683036
+}
+{
+  "a": "zee",
+  "sums": 1.1256801691982772
+}
+{
+  "a": "hat",
+  "sums": 0.03144187646093577
+}
+
+
+================================================================
+3. NON-LASHED UNDER-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a";
+  }
+
+{
+  "a": "pan",
+  "sums": {
+    "pan": 0.346790,
+    "wye": 0.502626
+  }
+}
+{
+  "a": "eks",
+  "sums": {
+    "pan": 0.758680,
+    "wye": 0.381399,
+    "zee": 0.611784
+  }
+}
+{
+  "a": "wye",
+  "sums": {
+    "wye": 0.204603,
+    "pan": 0.573289
+  }
+}
+{
+  "a": "zee",
+  "sums": {
+    "pan": 0.527126,
+    "wye": 0.598554
+  }
+}
+{
+  "a": "hat",
+  "sums": {
+    "wye": 0.031442
+  }
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a";
+  }
+
+{
+  "a": "pan",
+  "sums": {
+    "pan": 0.3467901443380824,
+    "wye": 0.5026260055412137
+  }
+}
+{
+  "a": "eks",
+  "sums": {
+    "pan": 0.7586799647899636,
+    "wye": 0.38139939387114097,
+    "zee": 0.6117840605678454
+  }
+}
+{
+  "a": "wye",
+  "sums": {
+    "wye": 0.20460330576630303,
+    "pan": 0.5732889198020006
+  }
+}
+{
+  "a": "zee",
+  "sums": {
+    "pan": 0.5271261600918548,
+    "wye": 0.5985540091064224
+  }
+}
+{
+  "a": "hat",
+  "sums": {
+    "wye": 0.03144187646093577
+  }
+}
+
+
+================================================================
+3. NON-LASHED AT-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577
+}
+
+
+================================================================
+3. NON-LASHED OVER-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577
+}
+
+
+================================================================
+3. NON-LASHED UNDER-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums, "a";
+  }
+
+{
+  "a": "pan",
+  "pan": 0.346790,
+  "wye": 0.502626
+}
+{
+  "a": "eks",
+  "pan": 0.758680,
+  "wye": 0.381399,
+  "zee": 0.611784
+}
+{
+  "a": "wye",
+  "wye": 0.204603,
+  "pan": 0.573289
+}
+{
+  "a": "zee",
+  "pan": 0.527126,
+  "wye": 0.598554
+}
+{
+  "a": "hat",
+  "wye": 0.031442
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums, "a";
+  }
+
+{
+  "a": "pan",
+  "pan": 0.3467901443380824,
+  "wye": 0.5026260055412137
+}
+{
+  "a": "eks",
+  "pan": 0.7586799647899636,
+  "wye": 0.38139939387114097,
+  "zee": 0.6117840605678454
+}
+{
+  "a": "wye",
+  "wye": 0.20460330576630303,
+  "pan": 0.5732889198020006
+}
+{
+  "a": "zee",
+  "pan": 0.5271261600918548,
+  "wye": 0.5985540091064224
+}
+{
+  "a": "hat",
+  "wye": 0.03144187646093577
+}
+
+
+================================================================
+3. NON-LASHED AT-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums, "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums, "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577
+}
+
+
+================================================================
+3. NON-LASHED OVER-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums, "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  @sums, "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577
+}
+
+
+================================================================
+4. LASHED INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a] += $x;
+  @counts[$a] += 1;
+  end {
+    emitp (@sums, @counts), "a";
+  }
+
+{
+  "a": "pan",
+  "sums": 0.8494161498792961,
+  "counts": 2
+}
+{
+  "a": "eks",
+  "sums": 1.75186341922895,
+  "counts": 3
+}
+{
+  "a": "wye",
+  "sums": 0.7778922255683036,
+  "counts": 2
+}
+{
+  "a": "zee",
+  "sums": 1.1256801691982772,
+  "counts": 2
+}
+{
+  "a": "hat",
+  "sums": 0.03144187646093577,
+  "counts": 1
+}
+
+
+================================================================
+4. LASHED INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a] += $x;
+  @counts[$a] += 1;
+  end {
+    emit  (@sums, @counts), "a";
+  }
+
+{
+  "a": "pan",
+  "sums": 0.8494161498792961,
+  "counts": 2
+}
+{
+  "a": "eks",
+  "sums": 1.75186341922895,
+  "counts": 3
+}
+{
+  "a": "wye",
+  "sums": 0.7778922255683036,
+  "counts": 2
+}
+{
+  "a": "zee",
+  "sums": 1.1256801691982772,
+  "counts": 2
+}
+{
+  "a": "hat",
+  "sums": 0.03144187646093577,
+  "counts": 1
+}
+
+
+================================================================
+4. LASHED UNDER-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts), "a";
+  }
+
+{
+  "a": "pan",
+  "sums": {
+    "pan": 0.346790,
+    "wye": 0.502626
+  },
+  "counts": {
+    "pan": 1,
+    "wye": 1
+  }
+}
+{
+  "a": "eks",
+  "sums": {
+    "pan": 0.758680,
+    "wye": 0.381399,
+    "zee": 0.611784
+  },
+  "counts": {
+    "pan": 1,
+    "wye": 1,
+    "zee": 1
+  }
+}
+{
+  "a": "wye",
+  "sums": {
+    "wye": 0.204603,
+    "pan": 0.573289
+  },
+  "counts": {
+    "wye": 1,
+    "pan": 1
+  }
+}
+{
+  "a": "zee",
+  "sums": {
+    "pan": 0.527126,
+    "wye": 0.598554
+  },
+  "counts": {
+    "pan": 1,
+    "wye": 1
+  }
+}
+{
+  "a": "hat",
+  "sums": {
+    "wye": 0.031442
+  },
+  "counts": {
+    "wye": 1
+  }
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts), "a";
+  }
+
+{
+  "a": "pan",
+  "sums": {
+    "pan": 0.3467901443380824,
+    "wye": 0.5026260055412137
+  },
+  "counts": {
+    "pan": 1,
+    "wye": 1
+  }
+}
+{
+  "a": "eks",
+  "sums": {
+    "pan": 0.7586799647899636,
+    "wye": 0.38139939387114097,
+    "zee": 0.6117840605678454
+  },
+  "counts": {
+    "pan": 1,
+    "wye": 1,
+    "zee": 1
+  }
+}
+{
+  "a": "wye",
+  "sums": {
+    "wye": 0.20460330576630303,
+    "pan": 0.5732889198020006
+  },
+  "counts": {
+    "wye": 1,
+    "pan": 1
+  }
+}
+{
+  "a": "zee",
+  "sums": {
+    "pan": 0.5271261600918548,
+    "wye": 0.5985540091064224
+  },
+  "counts": {
+    "pan": 1,
+    "wye": 1
+  }
+}
+{
+  "a": "hat",
+  "sums": {
+    "wye": 0.03144187646093577
+  },
+  "counts": {
+    "wye": 1
+  }
+}
+
+
+================================================================
+4. LASHED AT-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts), "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442,
+  "counts": 1
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts), "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577,
+  "counts": 1
+}
+
+
+================================================================
+4. LASHED OVER-INDEXED MAP EMITP
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts), "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442,
+  "counts": 1
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp (@sums, @counts), "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577,
+  "counts": 1
+}
+
+
+================================================================
+4. LASHED UNDER-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts), "a";
+  }
+
+{
+  "a": "pan",
   "pan": 1,
-  "eks": 6,
-  "wye": 3
+  "wye": 1
+}
+{
+  "a": "eks",
+  "pan": 1,
+  "wye": 1,
+  "zee": 1
+}
+{
+  "a": "wye",
+  "wye": 1,
+  "pan": 1
+}
+{
+  "a": "zee",
+  "pan": 1,
+  "wye": 1
+}
+{
+  "a": "hat",
+  "wye": 1
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts), "a";
+  }
+
+{
+  "a": "pan",
+  "pan": 1,
+  "wye": 1
+}
+{
+  "a": "eks",
+  "pan": 1,
+  "wye": 1,
+  "zee": 1
+}
+{
+  "a": "wye",
+  "wye": 1,
+  "pan": 1
+}
+{
+  "a": "zee",
+  "pan": 1,
+  "wye": 1
+}
+{
+  "a": "hat",
+  "wye": 1
+}
+
+
+================================================================
+4. LASHED AT-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts), "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442,
+  "counts": 1
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts), "a", "b";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577,
+  "counts": 1
+}
+
+
+================================================================
+4. LASHED OVER-INDEXED MAP EMIT
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts), "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.346790,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.502626,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.758680,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.381399,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.611784,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.204603,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.573289,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.527126,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.598554,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.031442,
+  "counts": 1
+}
+
+mlr --ojson --jvstack --from ./reg-test/input/abixy put -q 
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emit  (@sums, @counts), "a", "b", "c";
+  }
+
+{
+  "a": "pan",
+  "b": "pan",
+  "sums": 0.3467901443380824,
+  "counts": 1
+}
+{
+  "a": "pan",
+  "b": "wye",
+  "sums": 0.5026260055412137,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "sums": 0.7586799647899636,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "wye",
+  "sums": 0.38139939387114097,
+  "counts": 1
+}
+{
+  "a": "eks",
+  "b": "zee",
+  "sums": 0.6117840605678454,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "wye",
+  "sums": 0.20460330576630303,
+  "counts": 1
+}
+{
+  "a": "wye",
+  "b": "pan",
+  "sums": 0.5732889198020006,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "pan",
+  "sums": 0.5271261600918548,
+  "counts": 1
+}
+{
+  "a": "zee",
+  "b": "wye",
+  "sums": 0.5985540091064224,
+  "counts": 1
+}
+{
+  "a": "hat",
+  "b": "wye",
+  "sums": 0.03144187646093577,
+  "counts": 1
 }
 

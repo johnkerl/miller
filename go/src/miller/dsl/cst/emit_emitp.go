@@ -377,7 +377,6 @@ func (this *EmitXStatementNode) executeNonLashedIndexedEmitPAux(
 
 		indexValueString := indexValue.String()
 
-		// TODO: recurse
 		nextLevel := emittableMap.Get(&indexValueString)
 
 		if nextLevel.IsMap() && len(indices) >= 2 {
@@ -440,7 +439,7 @@ func (this *EmitXStatementNode) executeNonLashedIndexedEmit(
 
 // Recurses over indices.
 func (this *EmitXStatementNode) executeNonLashedIndexedEmitAux(
-	mapName string, // TODO: unused
+	mapName string,
 	templateRecord *types.Mlrmap,
 	emittableMap *types.Mlrmap,
 	indices []types.Mlrval,
@@ -458,7 +457,6 @@ func (this *EmitXStatementNode) executeNonLashedIndexedEmitAux(
 
 		indexValueString := indexValue.String()
 
-		// TODO: recurse
 		nextLevel := emittableMap.Get(&indexValueString)
 
 		if nextLevel.IsMap() && len(indices) >= 2 {
@@ -545,16 +543,17 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitPAux(
 		indexValue := types.MlrvalFromString(*pe.Key)
 		newrec.PutCopy(&indexString, &indexValue)
 
+		nextLevels := make([]*types.Mlrval, len(emittableMaps))
 		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
 		for i, _ := range emittableMaps {
 			indexValueString := indexValue.String()
 
 			nextLevel := emittableMaps[i].Get(&indexValueString)
+			nextLevels[i] = nextLevel
 			if nextLevel.IsMap() {
 				nextLevelMaps[i] = nextLevel.GetMap()
 			} else {
 				nextLevelMaps[i] = nil
-				newrec.PutCopy(&mapNames[i], nextLevel)
 			}
 		}
 
@@ -569,10 +568,8 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitPAux(
 			)
 		} else {
 			// end of recursion
-			for _, nextLevelMap := range nextLevelMaps {
-				if nextLevelMap != nil {
-					newrec.Merge(nextLevelMap)
-				}
+			for i, nextLevel := range nextLevels {
+				newrec.PutCopy(&mapNames[i], nextLevel)
 			}
 
 			state.OutputChannel <- types.NewRecordAndContext(
@@ -642,20 +639,17 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
 
 		indexValue := types.MlrvalFromString(*pe.Key)
 		newrec.PutCopy(&indexString, &indexValue)
+		indexValueString := indexValue.String()
 
+		nextLevels := make([]*types.Mlrval, len(emittableMaps))
 		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
 		for i, _ := range emittableMaps {
-			indexValueString := indexValue.String()
-
 			nextLevel := emittableMaps[i].Get(&indexValueString)
+			nextLevels[i] = nextLevel
 			if nextLevel.IsMap() {
 				nextLevelMaps[i] = nextLevel.GetMap()
 			} else {
 				nextLevelMaps[i] = nil
-			}
-
-			if !nextLevel.IsMap() {
-				newrec.PutCopy(&mapNames[i], nextLevel)
 			}
 		}
 
@@ -669,8 +663,15 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
 				state,
 			)
 		} else {
-			// xxx merge ...
 			// end of recursion
+			for i, nextLevel := range nextLevels {
+				if nextLevel.IsMap() {
+					newrec.Merge(nextLevelMaps[i])
+				} else {
+					newrec.PutCopy(&mapNames[i], nextLevel)
+				}
+			}
+
 			state.OutputChannel <- types.NewRecordAndContext(
 				newrec,
 				state.Context.Copy(),
