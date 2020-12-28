@@ -440,7 +440,7 @@ func (this *EmitXStatementNode) executeNonLashedIndexedEmit(
 
 // Recurses over indices.
 func (this *EmitXStatementNode) executeNonLashedIndexedEmitAux(
-	mapName string,
+	mapName string, // TODO: unused
 	templateRecord *types.Mlrmap,
 	emittableMap *types.Mlrmap,
 	indices []types.Mlrval,
@@ -472,7 +472,11 @@ func (this *EmitXStatementNode) executeNonLashedIndexedEmitAux(
 			)
 		} else {
 			// end of recursion
-			newrec.PutCopy(&mapName, nextLevel)
+			if nextLevel.IsMap() {
+				newrec.Merge(nextLevel.GetMap())
+			} else {
+				newrec.PutCopy(&mapName, nextLevel)
+			}
 			state.OutputChannel <- types.NewRecordAndContext(
 				newrec,
 				state.Context.Copy(),
@@ -550,9 +554,8 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitPAux(
 				nextLevelMaps[i] = nextLevel.GetMap()
 			} else {
 				nextLevelMaps[i] = nil
+				newrec.PutCopy(&mapNames[i], nextLevel)
 			}
-
-			newrec.PutCopy(&mapNames[i], nextLevel)
 		}
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
@@ -566,6 +569,12 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitPAux(
 			)
 		} else {
 			// end of recursion
+			for _, nextLevelMap := range nextLevelMaps {
+				if nextLevelMap != nil {
+					newrec.Merge(nextLevelMap)
+				}
+			}
+
 			state.OutputChannel <- types.NewRecordAndContext(
 				newrec,
 				state.Context.Copy(),
@@ -645,7 +654,9 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
 				nextLevelMaps[i] = nil
 			}
 
-			newrec.PutCopy(&mapNames[i], nextLevel)
+			if !nextLevel.IsMap() {
+				newrec.PutCopy(&mapNames[i], nextLevel)
+			}
 		}
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
@@ -658,6 +669,7 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
 				state,
 			)
 		} else {
+			// xxx merge ...
 			// end of recursion
 			state.OutputChannel <- types.NewRecordAndContext(
 				newrec,

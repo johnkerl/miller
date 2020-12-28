@@ -39,7 +39,11 @@ TOP OF LIST:
   a=zee,pan=0.527126,wye=-0.598554
   a=hat,wye=0.031442
 
-* --oflatsep
+* --oflatsep/--iflatsep. also IFLATSEP / OFLATSEP context vars.
+* auto-flatten verbs at output -- ?
+* auto-unflatten verbs at input -- ? opt-in -- ?
+* json_stringify/json_parse functions; verbs too ...
+
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 

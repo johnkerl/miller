@@ -102,6 +102,14 @@ func (this *Mlrmap) PrependCopy(key *string, value *Mlrval) {
 }
 
 // ----------------------------------------------------------------
+// Merges that into this.
+func (this *Mlrmap) Merge(that *Mlrmap) {
+	for pe := that.Head; pe != nil; pe = pe.Next {
+		this.PutCopy(pe.Key, pe.Value)
+	}
+}
+
+// ----------------------------------------------------------------
 func (this *Mlrmap) Get(key *string) *Mlrval {
 	pe := this.findEntry(key)
 	if pe == nil {
