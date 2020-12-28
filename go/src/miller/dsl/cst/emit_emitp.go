@@ -50,9 +50,11 @@ type EmitXStatementNode struct {
 	// The "x","y" parts.
 	indexEvaluables []IEvaluable
 
-	// Appropriate function to evaluate statements, depending on lashed or not,
-	// indexed or not, emit or emitp.
+	// Appropriate function to evaluate statements, depending on indexed or not.
 	executorFunc Executor
+
+	// For code-reuse between executors.
+	isEmitP bool
 }
 
 func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
@@ -132,36 +134,13 @@ func (this *RootNode) buildEmitXStatementNode(
 		names:           names,
 		emitEvaluables:  emitEvaluables,
 		indexEvaluables: indexEvaluables,
+		isEmitP:         isEmitP,
 	}
 
 	if nchild == 1 {
-		if len(emitEvaluables) == 1 {
-			if isEmitP {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexedEmitp
-			} else {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedNonIndexedEmit
-			}
-		} else {
-			if isEmitP {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexedEmitP
-			} else {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedNonIndexedEmit
-			}
-		}
+		emitxStatementNode.executorFunc = emitxStatementNode.executeNonIndexed
 	} else {
-		if len(emitEvaluables) == 1 {
-			if isEmitP {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedIndexedEmitP
-			} else {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeNonLashedIndexedEmit
-			}
-		} else {
-			if isEmitP {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedIndexedEmitP
-			} else {
-				emitxStatementNode.executorFunc = emitxStatementNode.executeLashedIndexedEmit
-			}
-		}
+		emitxStatementNode.executorFunc = emitxStatementNode.executeIndexed
 	}
 
 	return emitxStatementNode, nil
@@ -197,69 +176,7 @@ func (this *EmitXStatementNode) Execute(state *State) (*BlockExitPayload, error)
 }
 
 // ----------------------------------------------------------------
-// Just one mqp or named variable being emitted.
-
-func (this *EmitXStatementNode) executeNonLashedNonIndexedEmitp(
-	state *State,
-) (*BlockExitPayload, error) {
-	emittable := this.emitEvaluables[0].Evaluate(state)
-	if emittable.IsAbsent() {
-		return nil, nil
-	}
-
-	if emittable.IsMap() {
-		// Emittable is map
-		newrec := types.NewMlrmapAsRecord()
-		newrec.PutCopy(&this.names[0], &emittable)
-		state.OutputChannel <- types.NewRecordAndContext(
-			newrec,
-			state.Context.Copy(),
-		)
-
-	} else {
-		// Emittable is named variable
-		newrec := types.NewMlrmapAsRecord()
-		newrec.PutCopy(&this.names[0], &emittable)
-		state.OutputChannel <- types.NewRecordAndContext(
-			newrec,
-			state.Context.Copy(),
-		)
-	}
-
-	return nil, nil
-}
-
-func (this *EmitXStatementNode) executeNonLashedNonIndexedEmit(
-	state *State,
-) (*BlockExitPayload, error) {
-	emittable := this.emitEvaluables[0].Evaluate(state)
-	if emittable.IsAbsent() {
-		return nil, nil
-	}
-
-	if emittable.IsMap() {
-		// Emittable is map
-		newrec := emittable.Copy().GetMap()
-		state.OutputChannel <- types.NewRecordAndContext(
-			newrec,
-			state.Context.Copy(),
-		)
-
-	} else {
-		// Emittable is named variable
-		newrec := types.NewMlrmapAsRecord()
-		newrec.PutCopy(&this.names[0], &emittable)
-		state.OutputChannel <- types.NewRecordAndContext(
-			newrec,
-			state.Context.Copy(),
-		)
-	}
-
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeLashedNonIndexedEmitP(
+func (this *EmitXStatementNode) executeNonIndexed(
 	state *State,
 ) (*BlockExitPayload, error) {
 
@@ -271,222 +188,27 @@ func (this *EmitXStatementNode) executeLashedNonIndexedEmitP(
 			continue
 		}
 
-		if emittable.IsMap() {
+		if this.isEmitP {
 			newrec.PutCopy(&this.names[i], &emittable)
-
 		} else {
-			// Emittable is named variable
-			newrec.PutCopy(&this.names[i], &emittable)
-		}
-	}
-
-	state.OutputChannel <- types.NewRecordAndContext(
-		newrec,
-		state.Context.Copy(),
-	)
-
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeLashedNonIndexedEmit(
-	state *State,
-) (*BlockExitPayload, error) {
-
-	newrec := types.NewMlrmapAsRecord()
-
-	for i, emitEvaluable := range this.emitEvaluables {
-		emittable := emitEvaluable.Evaluate(state)
-		if emittable.IsAbsent() {
-			continue
-		}
-
-		if emittable.IsMap() {
-			// Emittable is map
-			for pe := emittable.GetMap().Head; pe != nil; pe = pe.Next {
-				newrec.PutCopy(pe.Key, pe.Value)
-			}
-
-		} else {
-			// Emittable is named variable
-			newrec.PutCopy(&this.names[i], &emittable)
-		}
-	}
-
-	state.OutputChannel <- types.NewRecordAndContext(
-		newrec,
-		state.Context.Copy(),
-	)
-
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeNonLashedIndexedEmitP(
-	state *State,
-) (*BlockExitPayload, error) {
-	emittable := this.emitEvaluables[0].Evaluate(state)
-	if emittable.IsAbsent() {
-		return nil, nil
-	}
-
-	if !emittable.IsMap() {
-		return nil, nil
-	}
-
-	// TODO: libify this
-	indices := make([]types.Mlrval, len(this.indexEvaluables))
-	for i, indexEvaluable := range this.indexEvaluables {
-		index := indexEvaluable.Evaluate(state)
-		if index.IsAbsent() {
-			return nil, nil
-		}
-		if index.IsError() {
-			// TODO: surface this more highly
-			return nil, nil
-		}
-		indices[i] = index
-	}
-
-	return this.executeNonLashedIndexedEmitPAux(
-		this.names[0],
-		types.NewMlrmapAsRecord(),
-		emittable.GetMap(),
-		indices,
-		state,
-	)
-}
-
-// Recurses over indices.
-func (this *EmitXStatementNode) executeNonLashedIndexedEmitPAux(
-	mapName string,
-	templateRecord *types.Mlrmap,
-	emittableMap *types.Mlrmap,
-	indices []types.Mlrval,
-	state *State,
-) (*BlockExitPayload, error) {
-	lib.InternalCodingErrorIf(len(indices) < 1)
-	index := indices[0]
-	indexString := index.String()
-
-	for pe := emittableMap.Head; pe != nil; pe = pe.Next {
-		newrec := templateRecord.Copy()
-
-		indexValue := types.MlrvalFromString(*pe.Key)
-		newrec.PutCopy(&indexString, &indexValue)
-
-		indexValueString := indexValue.String()
-
-		nextLevel := emittableMap.Get(&indexValueString)
-
-		if nextLevel.IsMap() && len(indices) >= 2 {
-			// recurse
-			this.executeNonLashedIndexedEmitPAux(
-				mapName,
-				newrec,
-				nextLevel.GetMap(),
-				indices[1:],
-				state,
-			)
-		} else {
-			// end of recursion
-			newrec.PutCopy(&mapName, nextLevel)
-			state.OutputChannel <- types.NewRecordAndContext(
-				newrec,
-				state.Context.Copy(),
-			)
-		}
-	}
-
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeNonLashedIndexedEmit(
-	state *State,
-) (*BlockExitPayload, error) {
-	emittable := this.emitEvaluables[0].Evaluate(state)
-	if emittable.IsAbsent() {
-		return nil, nil
-	}
-
-	if !emittable.IsMap() {
-		return nil, nil
-	}
-
-	// TODO: libify this
-	indices := make([]types.Mlrval, len(this.indexEvaluables))
-	for i, indexEvaluable := range this.indexEvaluables {
-		index := indexEvaluable.Evaluate(state)
-		if index.IsAbsent() {
-			return nil, nil
-		}
-		if index.IsError() {
-			// TODO: surface this more highly
-			return nil, nil
-		}
-		indices[i] = index
-	}
-
-	return this.executeNonLashedIndexedEmitAux(
-		this.names[0],
-		types.NewMlrmapAsRecord(),
-		emittable.GetMap(),
-		indices,
-		state,
-	)
-}
-
-// Recurses over indices.
-func (this *EmitXStatementNode) executeNonLashedIndexedEmitAux(
-	mapName string,
-	templateRecord *types.Mlrmap,
-	emittableMap *types.Mlrmap,
-	indices []types.Mlrval,
-	state *State,
-) (*BlockExitPayload, error) {
-	lib.InternalCodingErrorIf(len(indices) < 1)
-	index := indices[0]
-	indexString := index.String()
-
-	for pe := emittableMap.Head; pe != nil; pe = pe.Next {
-		newrec := templateRecord.Copy()
-
-		indexValue := types.MlrvalFromString(*pe.Key)
-		newrec.PutCopy(&indexString, &indexValue)
-
-		indexValueString := indexValue.String()
-
-		nextLevel := emittableMap.Get(&indexValueString)
-
-		if nextLevel.IsMap() && len(indices) >= 2 {
-			// recurse
-			this.executeNonLashedIndexedEmitAux(
-				mapName,
-				newrec,
-				nextLevel.GetMap(),
-				indices[1:],
-				state,
-			)
-		} else {
-			// end of recursion
-			if nextLevel.IsMap() {
-				newrec.Merge(nextLevel.GetMap())
+			if emittable.IsMap() {
+				newrec.Merge(emittable.GetMap())
 			} else {
-				newrec.PutCopy(&mapName, nextLevel)
+				newrec.PutCopy(&this.names[i], &emittable)
 			}
-			state.OutputChannel <- types.NewRecordAndContext(
-				newrec,
-				state.Context.Copy(),
-			)
 		}
 	}
+
+	state.OutputChannel <- types.NewRecordAndContext(
+		newrec,
+		state.Context.Copy(),
+	)
 
 	return nil, nil
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeLashedIndexedEmitP(
+func (this *EmitXStatementNode) executeIndexed(
 	state *State,
 ) (*BlockExitPayload, error) {
 	emittableMaps := make([]*types.Mlrmap, len(this.emitEvaluables))
@@ -516,7 +238,7 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitP(
 		indices[i] = index
 	}
 
-	return this.executeLashedIndexedEmitPAux(
+	return this.executeIndexedAux(
 		this.names,
 		types.NewMlrmapAsRecord(),
 		emittableMaps,
@@ -526,104 +248,7 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitP(
 }
 
 // Recurses over indices.
-func (this *EmitXStatementNode) executeLashedIndexedEmitPAux(
-	mapNames []string,
-	templateRecord *types.Mlrmap,
-	emittableMaps []*types.Mlrmap,
-	indices []types.Mlrval,
-	state *State,
-) (*BlockExitPayload, error) {
-	lib.InternalCodingErrorIf(len(indices) < 1)
-	index := indices[0]
-	indexString := index.String()
-
-	for pe := emittableMaps[0].Head; pe != nil; pe = pe.Next {
-		newrec := templateRecord.Copy()
-
-		indexValue := types.MlrvalFromString(*pe.Key)
-		newrec.PutCopy(&indexString, &indexValue)
-
-		nextLevels := make([]*types.Mlrval, len(emittableMaps))
-		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
-		for i, _ := range emittableMaps {
-			indexValueString := indexValue.String()
-
-			nextLevel := emittableMaps[i].Get(&indexValueString)
-			nextLevels[i] = nextLevel
-			if nextLevel.IsMap() {
-				nextLevelMaps[i] = nextLevel.GetMap()
-			} else {
-				nextLevelMaps[i] = nil
-			}
-		}
-
-		if nextLevelMaps[0] != nil && len(indices) >= 2 {
-			// recurse
-			this.executeLashedIndexedEmitPAux(
-				mapNames,
-				newrec,
-				nextLevelMaps,
-				indices[1:],
-				state,
-			)
-		} else {
-			// end of recursion
-			for i, nextLevel := range nextLevels {
-				newrec.PutCopy(&mapNames[i], nextLevel)
-			}
-
-			state.OutputChannel <- types.NewRecordAndContext(
-				newrec,
-				state.Context.Copy(),
-			)
-		}
-	}
-
-	return nil, nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeLashedIndexedEmit(
-	state *State,
-) (*BlockExitPayload, error) {
-	emittableMaps := make([]*types.Mlrmap, len(this.emitEvaluables))
-	for i, emitEvaluable := range this.emitEvaluables {
-
-		emittable := emitEvaluable.Evaluate(state)
-		if emittable.IsAbsent() {
-			return nil, nil
-		}
-		if !emittable.IsMap() {
-			return nil, nil
-		}
-		emittableMaps[i] = emittable.GetMap()
-	}
-
-	// TODO: libify this
-	indices := make([]types.Mlrval, len(this.indexEvaluables))
-	for i, indexEvaluable := range this.indexEvaluables {
-		index := indexEvaluable.Evaluate(state)
-		if index.IsAbsent() {
-			return nil, nil
-		}
-		if index.IsError() {
-			// TODO: surface this more highly
-			return nil, nil
-		}
-		indices[i] = index
-	}
-
-	return this.executeLashedIndexedEmitAux(
-		this.names,
-		types.NewMlrmapAsRecord(),
-		emittableMaps,
-		indices,
-		state,
-	)
-}
-
-// Recurses over indices.
-func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
+func (this *EmitXStatementNode) executeIndexedAux(
 	mapNames []string,
 	templateRecord *types.Mlrmap,
 	emittableMaps []*types.Mlrmap,
@@ -655,7 +280,7 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
-			this.executeLashedIndexedEmitAux(
+			this.executeIndexedAux(
 				mapNames,
 				newrec,
 				nextLevelMaps,
@@ -664,11 +289,17 @@ func (this *EmitXStatementNode) executeLashedIndexedEmitAux(
 			)
 		} else {
 			// end of recursion
-			for i, nextLevel := range nextLevels {
-				if nextLevel.IsMap() {
-					newrec.Merge(nextLevelMaps[i])
-				} else {
+			if this.isEmitP {
+				for i, nextLevel := range nextLevels {
 					newrec.PutCopy(&mapNames[i], nextLevel)
+				}
+			} else {
+				for i, nextLevel := range nextLevels {
+					if nextLevel.IsMap() {
+						newrec.Merge(nextLevelMaps[i])
+					} else {
+						newrec.PutCopy(&mapNames[i], nextLevel)
+					}
 				}
 			}
 

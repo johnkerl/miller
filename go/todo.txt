@@ -12,6 +12,20 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * emitp/emitf
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* --ijflatsep/--ojflatsep in addition to --jflatsep
+* ctx.IJFLATSEP, ctx.OJFLATSEP
+* flatten/unflatten verbs; json-stringify/json-parse verbs
+  o start with explicit; only implicit later
+* --no-auto-flatten / --no-auto-unflatten
+  o then connect to readers/writers, or wrappers therearound ...
+  o think about how to do 'filter ${x:a:b} == 0'
+
+* then re-do case-dsl-emit.sh w/ --odkvp as well
+
+* then new syntax -- decide x 4
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * to support (from C impl):
   md_emittable ::= MD_TOKEN_ALL
   md_emittable ::= MD_TOKEN_FULL_OOSVAR
