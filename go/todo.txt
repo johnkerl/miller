@@ -14,7 +14,9 @@ TOP OF LIST:
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * --ijflatsep/--ojflatsep in addition to --jflatsep
-* ctx.IJFLATSEP, ctx.OJFLATSEP
+  o ctx.IJFLATSEP, ctx.OJFLATSEP
+  o also @ bnf/cst
+  o also @ online help
 * flatten/unflatten verbs; json-stringify/json-parse verbs
   o start with explicit; only implicit later
 * --no-auto-flatten / --no-auto-unflatten
