@@ -44,10 +44,12 @@ type Context struct {
 	IPS string
 	IFS string
 	IRS string
+	IFLATSEP string
 
 	OPS string
 	OFS string
 	ORS string
+	OFLATSEP string
 }
 
 func NewContext() *Context {
@@ -61,10 +63,12 @@ func NewContext() *Context {
 		IPS: "=",
 		IFS: ",",
 		IRS: "\n",
+		IFLATSEP: ":",
 
 		OPS: "=",
 		OFS: ",",
 		ORS: "\n",
+		OFLATSEP: ":",
 	}
 }
 
