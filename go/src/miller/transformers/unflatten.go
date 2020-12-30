@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -40,6 +41,12 @@ func transformerUnflattenParseCLI(
 		"Separator, defaulting to mlr --jflatsep value",
 	)
 
+	pFieldNames := flagSet.String(
+		"f",
+		"",
+		"Comma-separated list of field names to unflatten (default all).",
+	)
+
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,6 +65,7 @@ func transformerUnflattenParseCLI(
 
 	transformer, _ := NewTransformerUnflatten(
 		*pIFlatSep,
+		*pFieldNames,
 	)
 
 	*pargi = argi
@@ -85,7 +93,8 @@ becomes name 'a' and value '{"b": { "c": 4 }}'.
 // ----------------------------------------------------------------
 type TransformerUnflatten struct {
 	// input
-	iFlatSep string
+	iFlatSep     string
+	fieldNameSet map[string]bool
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
@@ -93,14 +102,37 @@ type TransformerUnflatten struct {
 
 func NewTransformerUnflatten(
 	iFlatSep string,
+	fieldNames string,
 ) (*TransformerUnflatten, error) {
-	return &TransformerUnflatten{
-		iFlatSep: iFlatSep,
-	}, nil
+	var fieldNameSet map[string]bool = nil
+	if fieldNames != "" {
+		fieldNameSet = lib.StringListToSet(
+			lib.SplitString(fieldNames, ","),
+		)
+	}
+
+	retval := &TransformerUnflatten{
+		iFlatSep:     iFlatSep,
+		fieldNameSet: fieldNameSet,
+	}
+	retval.recordTransformerFunc = retval.unflattenAll
+	if fieldNameSet != nil {
+		retval.recordTransformerFunc = retval.unflattenSome
+	}
+
+	return retval, nil
 }
 
 // ----------------------------------------------------------------
 func (this *TransformerUnflatten) Transform(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	this.recordTransformerFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerUnflatten) unflattenAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -111,6 +143,24 @@ func (this *TransformerUnflatten) Transform(
 			iFlatSep = inrecAndContext.Context.IFLATSEP
 		}
 		inrec.Unflatten(iFlatSep)
+		outputChannel <- inrecAndContext
+	} else {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerUnflatten) unflattenSome(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	inrec := inrecAndContext.Record
+	if inrec != nil { // not end of record stream
+		iFlatSep := this.iFlatSep
+		if iFlatSep == "" {
+			iFlatSep = inrecAndContext.Context.IFLATSEP
+		}
+		inrec.UnflattenFields(this.fieldNameSet, iFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

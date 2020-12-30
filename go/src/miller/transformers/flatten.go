@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -40,6 +41,12 @@ func transformerFlattenParseCLI(
 		"Separator, defaulting to mlr --jflatsep value",
 	)
 
+	pFieldNames := flagSet.String(
+		"f",
+		"",
+		"Comma-separated list of field names to flatten (default all).",
+	)
+
 	flagSet.Usage = func() {
 		ostream := os.Stderr
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -58,6 +65,7 @@ func transformerFlattenParseCLI(
 
 	transformer, _ := NewTransformerFlatten(
 		*pOFlatSep,
+		*pFieldNames,
 	)
 
 	*pargi = argi
@@ -85,7 +93,8 @@ and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 // ----------------------------------------------------------------
 type TransformerFlatten struct {
 	// input
-	oFlatSep string
+	oFlatSep     string
+	fieldNameSet map[string]bool
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
@@ -93,14 +102,38 @@ type TransformerFlatten struct {
 
 func NewTransformerFlatten(
 	oFlatSep string,
+	fieldNames string,
 ) (*TransformerFlatten, error) {
-	return &TransformerFlatten{
-		oFlatSep: oFlatSep,
-	}, nil
+	var fieldNameSet map[string]bool = nil
+	if fieldNames != "" {
+		fieldNameSet = lib.StringListToSet(
+			lib.SplitString(fieldNames, ","),
+		)
+	}
+
+	retval := &TransformerFlatten{
+		oFlatSep:     oFlatSep,
+		fieldNameSet: fieldNameSet,
+	}
+
+	retval.recordTransformerFunc = retval.flattenAll
+	if fieldNameSet != nil {
+		retval.recordTransformerFunc = retval.flattenSome
+	}
+
+	return retval, nil
 }
 
 // ----------------------------------------------------------------
 func (this *TransformerFlatten) Transform(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	this.recordTransformerFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerFlatten) flattenAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -111,6 +144,24 @@ func (this *TransformerFlatten) Transform(
 			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
 		inrec.Flatten(oFlatSep)
+		outputChannel <- inrecAndContext
+	} else {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerFlatten) flattenSome(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	inrec := inrecAndContext.Record
+	if inrec != nil { // not end of record stream
+		oFlatSep := this.oFlatSep
+		if oFlatSep == "" {
+			oFlatSep = inrecAndContext.Context.OFLATSEP
+		}
+		inrec.FlattenFields(this.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

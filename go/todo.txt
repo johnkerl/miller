@@ -13,6 +13,9 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! fix broken case
+! cmt flatlib
+
 * ctx invars -> ptr w/ cmt
 
 * flatten and unflatten

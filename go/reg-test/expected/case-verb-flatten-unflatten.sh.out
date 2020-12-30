@@ -38,6 +38,44 @@ res.status_code             200
 res.header.content-type     text
 res.header.content-encoding plain
 
+mlr --json flatten -f req ./reg-test/input/flatten-input-2.json
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req:id": 6789,
+  "req:method": "GET",
+  "req:path": "api/check",
+  "req:host": "foo.bar",
+  "req:headers:host": "bar.baz",
+  "req:headers:user-agent": "browser",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
+
+mlr --json flatten -f res ./reg-test/input/flatten-input-2.json
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res:status_code": 200,
+  "res:header:content-type": "text",
+  "res:header:content-encoding": "plain"
+}
+
 mlr --oflatsep @ --from ./reg-test/input/flatten-input-2.json --ijson --oxtab flatten
 hostname                    localhost
 pid                         12345
@@ -152,4 +190,84 @@ req@headers@user-agent      browser
 res@status_code             200
 res@header@content-type     text
 res@header@content-encoding plain
+
+mlr --ixtab --ojson unflatten -s . -f req ./reg-test/input/unflatten-input.xtab
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res.status_code": 200,
+  "res.header.content-type": "text",
+  "res.header.content-encoding": "plain"
+}
+
+mlr --ixtab --ojson unflatten -s . -f res ./reg-test/input/unflatten-input.xtab
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req.id": 6789,
+  "req.method": "GET",
+  "req.path": "api/check",
+  "req.host": "foo.bar",
+  "req.headers.host": "bar.baz",
+  "req.headers.user-agent": "browser",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
+
+mlr --ixtab --ojson unflatten -s . -f req,res ./reg-test/input/unflatten-input.xtab
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
+
+mlr --ixtab --ojson unflatten -s . -f nonesuch,res ./reg-test/input/unflatten-input.xtab
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req.id": 6789,
+  "req.method": "GET",
+  "req.path": "api/check",
+  "req.host": "foo.bar",
+  "req.headers.host": "bar.baz",
+  "req.headers.user-agent": "browser",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
 
