@@ -49,6 +49,11 @@ func ParseReaderOptions(
 		readerOptions.IPS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
+	} else if args[argi] == "--iflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.IFLATSEP = SeparatorFromArg(args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--repifs" {
 		//		readerOptions.allow_repeat_ifs = true;
 		//		argi += 1;
@@ -241,6 +246,11 @@ func ParseWriterOptions(
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
+	} else if args[argi] == "--oflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		writerOptions.OFLATSEP = SeparatorFromArg(args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--xvright" {
 		//		writerOptions.right_justify_xtab_value = true;
 		//		argi += 1;
@@ -421,12 +431,12 @@ func ParseReaderWriterOptions(
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
-		//	} else if args[argi] == "--jflatsep" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		readerOptions.input_json_flatten_separator  = SeparatorFromArg(args[argi+1]);
-		//		writerOptions.output_json_flatten_separator = SeparatorFromArg(args[argi+1]);
-		//		argi += 2;
-		//
+	} else if args[argi] == "--jflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.IFLATSEP = SeparatorFromArg(args[argi+1])
+		writerOptions.OFLATSEP = SeparatorFromArg(args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--io" {
 		//		CheckArgCount(args, argi, argc, 2);
 		//		if (!lhmss_has_key(get_default_rses(), args[argi+1])) {

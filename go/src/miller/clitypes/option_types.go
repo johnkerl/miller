@@ -21,6 +21,7 @@ type TReaderOptions struct {
 	IRS             string
 	IFS             string
 	IPS             string
+	IFLATSEP        string
 
 	//	char* input_json_flatten_separator;
 	//	json_array_ingest_t  json_array_ingest;
@@ -43,10 +44,12 @@ type TReaderOptions struct {
 
 // ----------------------------------------------------------------
 type TWriterOptions struct {
-	OutputFileFormat    string
-	ORS                 string
-	OFS                 string
-	OPS                 string
+	OutputFileFormat string
+	ORS              string
+	OFS              string
+	OPS              string
+	OFLATSEP         string
+
 	HeaderlessCSVOutput bool
 	BarredPprintOutput  bool
 
@@ -108,15 +111,18 @@ func DefaultReaderOptions() TReaderOptions {
 		IRS:             "\n",
 		IFS:             ",",
 		IPS:             "=",
+		IFLATSEP:        ":",
 	}
 }
 
 func DefaultWriterOptions() TWriterOptions {
 	return TWriterOptions{
-		OutputFileFormat:    "dkvp",
-		ORS:                 "\n",
-		OFS:                 ",",
-		OPS:                 "=",
+		OutputFileFormat: "dkvp",
+		ORS:              "\n",
+		OFS:              ",",
+		OPS:              "=",
+		OFLATSEP:         ":",
+
 		HeaderlessCSVOutput: false,
 	}
 }

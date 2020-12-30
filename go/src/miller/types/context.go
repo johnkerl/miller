@@ -1,5 +1,9 @@
 package types
 
+import (
+	"miller/clitypes"
+)
+
 // Since Go is concurrent, the context struct (AWK-like variables such as
 // FILENAME, NF, NR, FNR, etc.) needs to be duplicated and passed through the
 // channels along with each record.
@@ -52,8 +56,8 @@ type Context struct {
 	OFLATSEP string
 }
 
-func NewContext() *Context {
-	return &Context{
+func NewContext(options *clitypes.TOptions) *Context {
+	context := &Context{
 		FILENAME: "(stdin)",
 		FILENUM:  0,
 
@@ -70,6 +74,28 @@ func NewContext() *Context {
 		ORS:      "\n",
 		OFLATSEP: ":",
 	}
+
+	// Remember command-line values to pass along to CST evaluators.  The
+	// options struct-pointer can be nil when invoked by non-DSL verbs such as
+	// join or seqgen.
+	//
+	// TODO: FILENAME/FILENUM/NR/FNR should be in one struct, and the rest in
+	// another. The former vary per record; the latter are command-line-driven
+	// and do not vary per record. All they have in common is they are
+	// awk-like context-variables.
+	if options != nil {
+		context.IPS = options.ReaderOptions.IPS
+		context.IFS = options.ReaderOptions.IFS
+		context.IRS = options.ReaderOptions.IRS
+		context.IFLATSEP = options.ReaderOptions.IFLATSEP
+
+		context.OPS = options.WriterOptions.OPS
+		context.OFS = options.WriterOptions.OFS
+		context.ORS = options.WriterOptions.ORS
+		context.OFLATSEP = options.WriterOptions.OFLATSEP
+	}
+
+	return context
 }
 
 // For the record-readers to update their initial context as each new file is opened.
