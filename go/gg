@@ -1,0 +1,55 @@
+#!/bin/bash
+
+path_to_mlr="./mlr"
+indir="./reg-test/input"
+
+# ----------------------------------------------------------------
+run_mlr() {
+  echo
+  echo $path_to_mlr "$@"
+  echo
+  $path_to_mlr "$@"
+}
+
+# ----------------------------------------------------------------
+mlr_expect_fail() {
+  echo
+  echo $path_to_mlr "$@"
+  echo
+  $path_to_mlr "$@"
+  status=$?
+  if [ $status -eq 0 ]; then
+    echo "failed to fail"
+  fi
+}
+
+# ----------------------------------------------------------------
+run_cat() {
+  echo
+  echo cat "$@"
+  echo
+  cat "$@"
+}
+
+# ----------------------------------------------------------------
+announce() {
+  echo
+  echo "================================================================"
+  echo
+  echo "$@"
+}
+
+# ----------------------------------------------------------------
+mention() {
+  echo
+  echo ---------------------------------------------------------------- "$@"
+}
+
+# ================================================================
+run_mlr --ijson --oxtab flatten $indir/flatten-input-2.json
+run_mlr --ijson --oxtab flatten -f req     $indir/flatten-input-2.json
+run_mlr --ijson --oxtab flatten -f res     $indir/flatten-input-2.json
+run_mlr --ijson --oxtab flatten -f req,res $indir/flatten-input-2.json
+run_mlr --ijson --oxtab flatten -f req,res -s . $indir/flatten-input-2.json
+
+# ================================================================

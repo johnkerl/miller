@@ -11,13 +11,13 @@ import (
 )
 
 // ----------------------------------------------------------------
-var FlattenSetup = transforming.TransformerSetup{
-	Verb:         "flatten",
-	ParseCLIFunc: transformerFlattenParseCLI,
+var UnflattenSetup = transforming.TransformerSetup{
+	Verb:         "unflatten",
+	ParseCLIFunc: transformerUnflattenParseCLI,
 	IgnoresInput: false,
 }
 
-func transformerFlattenParseCLI(
+func transformerUnflattenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -34,7 +34,7 @@ func transformerFlattenParseCLI(
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
 
-	pOFlatSep := flagSet.String(
+	pIFlatSep := flagSet.String(
 		"s",
 		"",
 		"Separator, defaulting to mlr --jflatsep value",
@@ -45,7 +45,7 @@ func transformerFlattenParseCLI(
 		if errorHandling == flag.ContinueOnError { // help intentionally requested
 			ostream = os.Stdout
 		}
-		transformerFlattenUsage(ostream, args[0], verb, flagSet)
+		transformerUnflattenUsage(ostream, args[0], verb, flagSet)
 	}
 	flagSet.Parse(args[argi:])
 	if errorHandling == flag.ContinueOnError { // help intentionally requested
@@ -56,15 +56,15 @@ func transformerFlattenParseCLI(
 	// next verb
 	argi = len(args) - len(flagSet.Args())
 
-	transformer, _ := NewTransformerFlatten(
-		*pOFlatSep,
+	transformer, _ := NewTransformerUnflatten(
+		*pIFlatSep,
 	)
 
 	*pargi = argi
 	return transformer
 }
 
-func transformerFlattenUsage(
+func transformerUnflattenUsage(
 	o *os.File,
 	argv0 string,
 	verb string,
@@ -72,8 +72,8 @@ func transformerFlattenUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprint(o,
-		`Flattens multi-level maps to single-level ones. Example: field with name 'a'
-and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
+		`Reverses flatten. Example: field with name 'a:b:c' and value 4
+becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
@@ -83,34 +83,34 @@ and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 }
 
 // ----------------------------------------------------------------
-type TransformerFlatten struct {
+type TransformerUnflatten struct {
 	// input
-	oFlatSep string
+	iFlatSep string
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
 }
 
-func NewTransformerFlatten(
-	oFlatSep string,
-) (*TransformerFlatten, error) {
-	return &TransformerFlatten{
-		oFlatSep: oFlatSep,
+func NewTransformerUnflatten(
+	iFlatSep string,
+) (*TransformerUnflatten, error) {
+	return &TransformerUnflatten{
+		iFlatSep: iFlatSep,
 	}, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFlatten) Transform(
+func (this *TransformerUnflatten) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		oFlatSep := this.oFlatSep
-		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.OFLATSEP
+		iFlatSep := this.iFlatSep
+		if iFlatSep == "" {
+			iFlatSep = inrecAndContext.Context.IFLATSEP
 		}
-		inrec.Flatten(oFlatSep)
+		inrec.Unflatten(iFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

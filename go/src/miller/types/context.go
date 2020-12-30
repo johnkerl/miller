@@ -41,14 +41,14 @@ type Context struct {
 	NR  int64
 	FNR int64
 
-	IPS string
-	IFS string
-	IRS string
+	IPS      string
+	IFS      string
+	IRS      string
 	IFLATSEP string
 
-	OPS string
-	OFS string
-	ORS string
+	OPS      string
+	OFS      string
+	ORS      string
 	OFLATSEP string
 }
 
@@ -60,14 +60,14 @@ func NewContext() *Context {
 		NR:  0,
 		FNR: 0,
 
-		IPS: "=",
-		IFS: ",",
-		IRS: "\n",
+		IPS:      "=",
+		IFS:      ",",
+		IRS:      "\n",
 		IFLATSEP: ":",
 
-		OPS: "=",
-		OFS: ",",
-		ORS: "\n",
+		OPS:      "=",
+		OFS:      ",",
+		ORS:      "\n",
 		OFLATSEP: ":",
 	}
 }

@@ -83,6 +83,13 @@ TODO: put detailed on-line help here.
     Miller's grammar, to stdout.
 
 ================================================================
+Usage: ./reg-test/../../go/mlr flatten [options]
+Flattens multi-level maps to single-level ones. Example: field with name 'a'
+and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
+Options:
+ -s Separator, defaulting to mlr --jflatsep value
+
+================================================================
 Usage: ./reg-test/../../go/mlr gap [options]
 Emits an empty record every n records, or when certain values change.
  -g (default ) Print a gap whenever values of these fields (e.g. a,b,c) changes
@@ -300,6 +307,13 @@ Usage: ./reg-test/../../go/mlr tail [options]
 Passes through the last n records, optionally by category.
  -g (default ) Optional group-by-field names for tail counts, e.g. a,b,c
  -n (default 10) Tail count to print
+
+================================================================
+Usage: ./reg-test/../../go/mlr unflatten [options]
+Reverses flatten. Example: field with name 'a:b:c' and value 4
+becomes name 'a' and value '{"b": { "c": 4 }}'.
+Options:
+ -s Separator, defaulting to mlr --jflatsep value
 
 ================================================================
 Usage: ./reg-test/../../go/mlr unsparsify [options]

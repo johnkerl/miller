@@ -1,5 +1,11 @@
 package types
 
+import (
+	"strconv"
+
+	"miller/lib"
+)
+
 // ----------------------------------------------------------------
 func (this *Mlrval) GetType() MVType {
 	return this.mvtype
@@ -171,4 +177,52 @@ func CopyMlrvalPointerArray(input []*Mlrval) []*Mlrval {
 		output[i] = element.Copy()
 	}
 	return output
+}
+
+// ---------------------------------------------------------------
+// For the flatten verb and DSL function.
+
+func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
+	retval := NewMlrmap()
+
+	if this.mvtype == MT_MAP {
+
+		for pe := this.mapval.Head; pe != nil; pe = pe.Next {
+			nextPrefix := *pe.Key
+			if prefix != "" {
+				nextPrefix = prefix + delimiter + nextPrefix
+			}
+			if pe.Value.mvtype == MT_MAP || pe.Value.mvtype == MT_ARRAY {
+				nextResult := pe.Value.FlattenToMap(nextPrefix, delimiter)
+				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
+				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
+					retval.PutCopy(pf.Key, pf.Value.Copy())
+				}
+			} else {
+				retval.PutCopy(&nextPrefix, pe.Value.Copy())
+			}
+		}
+
+	} else if this.mvtype == MT_ARRAY {
+		for zindex, value := range this.arrayval {
+			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
+			if prefix != "" {
+				nextPrefix = prefix + delimiter + nextPrefix
+			}
+			if value.mvtype == MT_MAP || value.mvtype == MT_ARRAY {
+				nextResult := value.FlattenToMap(nextPrefix, delimiter)
+				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
+				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
+					retval.PutCopy(pf.Key, pf.Value.Copy())
+				}
+			} else {
+				retval.PutCopy(&nextPrefix, value.Copy())
+			}
+		}
+
+	} else {
+		retval.PutCopy(&prefix, this.Copy())
+	}
+
+	return MlrvalFromMapReferenced(retval)
 }

@@ -13,19 +13,26 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* ctx invars -> ptr w/ cmt
 * --ijflatsep/--ojflatsep in addition to --jflatsep
-  o ctx.IJFLATSEP, ctx.OJFLATSEP
+  i unflatten iflatsep
+  k flatten   oflatsep
+  o ctx.IFLATSEP, ctx.OFLATSEP
   o also @ bnf/cst
   o also @ online help
-* flatten/unflatten verbs; json-stringify/json-parse verbs
-  o start with explicit; only implicit later
+* flatten verb: rm -f since not supported for unflatten -- ?
+* unflatten verb
+  o need -h output
+* json-stringify/json-parse verbs
+* start with explicit verbs; only implicit later
 * --no-auto-flatten / --no-auto-unflatten
   o then connect to readers/writers, or wrappers therearound ...
   o think about how to do 'filter ${x:a:b} == 0'
+    -- 'filter $x["a"]["b"] == 0'
 
 * then re-do case-dsl-emit.sh w/ --odkvp as well
 
-* then new syntax -- decide x 4
+* then new emitx punctuation-syntax -- decide x 4
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * to support (from C impl):

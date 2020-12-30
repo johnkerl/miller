@@ -3,6 +3,7 @@ package types
 import (
 	"bytes"
 	"errors"
+	"strings"
 
 	"miller/lib"
 )
@@ -663,4 +664,58 @@ func (this *Mlrmap) pop() *mlrmapEntry {
 		this.unlink(pe)
 		return pe
 	}
+}
+
+// ================================================================
+// TODO: more comments
+
+// ----------------------------------------------------------------
+// TODO: comment
+func (this *Mlrmap) Flatten(separator string) {
+	if !this.isFlattenable() { // fast path
+		return
+	}
+
+	that := NewMlrmapAsRecord()
+
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		if pe.Value.IsArrayOrMap() {
+			pieces := pe.Value.FlattenToMap(*pe.Key, separator)
+			for pf := pieces.GetMap().Head; pf != nil; pf = pf.Next {
+				that.PutReference(pf.Key, pf.Value)
+			}
+		} else {
+			that.PutReference(pe.Key, pe.Value)
+		}
+	}
+
+	*this = *that
+}
+
+// ----------------------------------------------------------------
+// TODO: comment
+func (this *Mlrmap) isFlattenable() bool {
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		if pe.Value.IsArrayOrMap() {
+			return true
+		}
+	}
+	return false
+}
+
+// ----------------------------------------------------------------
+// TODO: comment
+func (this *Mlrmap) Unflatten(separator string) {
+	that := NewMlrmapAsRecord()
+
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		if strings.Contains(*pe.Key, separator) {
+			arrayOfIndices := mlrvalSplitAXHelper(*pe.Key, separator)
+			that.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
+		} else {
+			that.PutReference(pe.Key, pe.Value)
+		}
+	}
+
+	*this = *that
 }
