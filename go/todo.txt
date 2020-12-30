@@ -13,8 +13,6 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! fix broken case
-
 * ctx invars -> ptr w/ cmt
 
 * start with explicit verbs; only implicit later
