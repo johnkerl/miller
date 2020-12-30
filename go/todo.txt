@@ -20,9 +20,6 @@ TOP OF LIST:
   o ctx.IFLATSEP, ctx.OFLATSEP
   o also @ bnf/cst
   o also @ online help
-* flatten verb: rm -f since not supported for unflatten -- ?
-* unflatten verb
-  o need -h output
 * json-stringify/json-parse verbs
 * start with explicit verbs; only implicit later
 * --no-auto-flatten / --no-auto-unflatten

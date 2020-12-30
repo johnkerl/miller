@@ -245,6 +245,9 @@ func (this *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 	case "IPS":
 		return this.BuildIPSNode(), nil
 		break
+	case "IFLATSEP":
+		return this.BuildIFLATSEPNode(), nil
+		break
 
 	case "ORS":
 		return this.BuildORSNode(), nil
@@ -254,6 +257,9 @@ func (this *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 		break
 	case "OPS":
 		return this.BuildOPSNode(), nil
+		break
+	case "OFLATSEP":
+		return this.BuildOFLATSEPNode(), nil
 		break
 
 	}
@@ -352,6 +358,17 @@ func (this *IPSNode) Evaluate(state *State) types.Mlrval {
 }
 
 // ----------------------------------------------------------------
+type IFLATSEPNode struct {
+}
+
+func (this *RootNode) BuildIFLATSEPNode() *IFLATSEPNode {
+	return &IFLATSEPNode{}
+}
+func (this *IFLATSEPNode) Evaluate(state *State) types.Mlrval {
+	return types.MlrvalFromString(state.Context.IFLATSEP)
+}
+
+// ----------------------------------------------------------------
 type ORSNode struct {
 }
 
@@ -382,6 +399,17 @@ func (this *RootNode) BuildOPSNode() *OPSNode {
 }
 func (this *OPSNode) Evaluate(state *State) types.Mlrval {
 	return types.MlrvalFromString(state.Context.OPS)
+}
+
+// ----------------------------------------------------------------
+type OFLATSEPNode struct {
+}
+
+func (this *RootNode) BuildOFLATSEPNode() *OFLATSEPNode {
+	return &OFLATSEPNode{}
+}
+func (this *OFLATSEPNode) Evaluate(state *State) types.Mlrval {
+	return types.MlrvalFromString(state.Context.OFLATSEP)
 }
 
 // ================================================================
