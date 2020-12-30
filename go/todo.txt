@@ -14,18 +14,16 @@ TOP OF LIST:
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * ctx invars -> ptr w/ cmt
-* --ijflatsep/--ojflatsep in addition to --jflatsep
-  i unflatten iflatsep
-  k flatten   oflatsep
-  o ctx.IFLATSEP, ctx.OFLATSEP
-  o also @ bnf/cst
-  o also @ online help
+
+* flatten and unflatten
+  o consider -f ...
 * json-stringify/json-parse verbs
+  o need -f for sure
+  ! need one-liner JSON option .......
+
 * start with explicit verbs; only implicit later
 * --no-auto-flatten / --no-auto-unflatten
   o then connect to readers/writers, or wrappers therearound ...
-  o think about how to do 'filter ${x:a:b} == 0'
-    -- 'filter $x["a"]["b"] == 0'
 
 * then re-do case-dsl-emit.sh w/ --odkvp as well
 
@@ -406,7 +404,7 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
 * mlrdoc the ?? and ??? operators
-* document --jvstack is now a back-compat no-op
+* document --jvstack is now the default; --no-jvstack
 * doc about put -S/-F cannot make sense anymore
 * put/filter updates:
   o filter statement needn't come last anymore: '$u = 1; NR > 5; $v = 2'

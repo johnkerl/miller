@@ -721,3 +721,47 @@ func MlrvalArrayify(ma *Mlrval) Mlrval {
 		return *ma
 	}
 }
+
+// ----------------------------------------------------------------
+func MlrvalJSONParse(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_VOID {
+		return *ma
+	} else if ma.mvtype != MT_STRING {
+		return MlrvalFromError()
+	} else {
+		output := MlrvalFromPending()
+		err := output.UnmarshalJSON([]byte(ma.printrep))
+		if err == nil {
+			return output
+		} else {
+			return MlrvalFromError()
+		}
+	}
+}
+
+func MlrvalJSONStringifyUnary(ma *Mlrval) Mlrval {
+	outputBytes, err := ma.MarshalJSON(JSON_SINGLE_LINE)
+	if err != nil {
+		return MlrvalFromError()
+	} else {
+		return MlrvalFromString(string(outputBytes))
+	}
+}
+
+func MlrvalJSONStringifyBinary(ma, mb *Mlrval) Mlrval {
+	var jsonFormatting TJSONFormatting = JSON_SINGLE_LINE
+	useMultiline, ok := mb.GetBoolValue()
+	if !ok {
+		return MlrvalFromError()
+	}
+	if useMultiline {
+		jsonFormatting = JSON_MULTILINE
+	}
+
+	outputBytes, err := ma.MarshalJSON(jsonFormatting)
+	if err != nil {
+		return MlrvalFromError()
+	} else {
+		return MlrvalFromString(string(outputBytes))
+	}
+}

@@ -298,8 +298,8 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	    --json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or
 	                                  to be treated as errors.  Please use the jq tool for full
 	                                  JSON (pre)processing.
-	                      --jvstack   Put one key-value pair per line for JSON
-	                                  output.
+	                      --jvstack   Put one key-value pair per line for JSON output.
+	                   --no-jvstack   Put objects/arrays all on one line for JSON output.
 	                --jsonx --ojsonx  Keystroke-savers for --json --jvstack
 	                --jsonx --ojsonx  and --ojson --jvstack, respectively.
 	                      --jlistwrap Wrap JSON output in outermost [ ].

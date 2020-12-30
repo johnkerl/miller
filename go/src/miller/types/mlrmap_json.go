@@ -6,12 +6,14 @@ package types
 
 import (
 	"bytes"
+
+	"miller/lib"
 )
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) MarshalJSON() ([]byte, error) {
+func (this *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error) {
 	var buffer bytes.Buffer
-	mapBytes, err := this.marshalJSONAux(1)
+	mapBytes, err := this.marshalJSONAux(jsonFormatting, 1)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +38,24 @@ func (this *Mlrmap) MarshalJSON() ([]byte, error) {
 //   "b": 2  <-- element nesting depth is 1 for root-level map
 // }         <-- closing curly brace nesting depth is 0 for root-level map
 
-func (this *Mlrmap) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
+func (this *Mlrmap) marshalJSONAux(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
+	if jsonFormatting == JSON_MULTILINE {
+		return this.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth)
+	} else if jsonFormatting == JSON_SINGLE_LINE {
+		return this.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth)
+	} else {
+		lib.InternalCodingErrorIf(true)
+		return nil, nil // not reached
+	}
+}
+
+func (this *Mlrmap) marshalJSONAuxMultiline(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
 	var buffer bytes.Buffer
 
 	buffer.WriteString("{")
@@ -58,7 +77,7 @@ func (this *Mlrmap) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 		buffer.WriteString("\": ")
 
 		// Write the value which is a mlrval
-		valueBytes, err := pe.Value.marshalJSONAux(elementNestingDepth + 1)
+		valueBytes, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1)
 		if err != nil {
 			return nil, err
 		}
@@ -79,6 +98,41 @@ func (this *Mlrmap) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
 	}
+	buffer.WriteString("}")
+
+	return buffer.Bytes(), nil
+}
+
+func (this *Mlrmap) marshalJSONAuxSingleLine(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
+	var buffer bytes.Buffer
+
+	buffer.WriteString("{")
+
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		// Write the key which is necessarily string-valued in Miller, and in
+		// JSON for that matter :)
+		buffer.WriteString("\"")
+		buffer.WriteString(*pe.Key)
+		buffer.WriteString("\": ")
+
+		// Write the value which is a mlrval
+		valueBytes, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1)
+		if err != nil {
+			return nil, err
+		}
+		_, err = buffer.Write(valueBytes)
+		if err != nil {
+			return nil, err
+		}
+
+		if pe.Next != nil {
+			buffer.WriteString(", ")
+		}
+	}
+
 	buffer.WriteString("}")
 
 	return buffer.Bytes(), nil

@@ -55,8 +55,8 @@ type TWriterOptions struct {
 
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;
-	//	stack_json_output_vertically bool;
 	WrapJSONOutputInOuterList bool
+	JSONOutputMultiline       bool // Not using miller/types enum to avoid package cycle
 	//	json_quote_int_keys bool;
 	//	json_quote_non_string_values bool;
 	//	output_json_flatten_separator string;
@@ -123,6 +123,8 @@ func DefaultWriterOptions() TWriterOptions {
 		OPS:              "=",
 		OFLATSEP:         ":",
 
-		HeaderlessCSVOutput: false,
+		HeaderlessCSVOutput:       false,
+		WrapJSONOutputInOuterList: false,
+		JSONOutputMultiline:       true,
 	}
 }

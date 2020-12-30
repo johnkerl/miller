@@ -1393,6 +1393,22 @@ Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller
 	},
 
 	{
+		name:      "json_parse",
+		class:     FUNC_CLASS_COLLECTIONS,
+		help:      `Converts value from JSON-formatted string.`,
+		unaryFunc: types.MlrvalJSONParse,
+	},
+	{
+		name:  "json_stringify",
+		class: FUNC_CLASS_COLLECTIONS,
+		help: `Converts value to JSON-formatted string. Default output is single-line.
+With optional second boolean argument set to true, produces multiline output.`,
+		unaryFunc:          types.MlrvalJSONStringifyUnary,
+		binaryFunc:         types.MlrvalJSONStringifyBinary,
+		hasMultipleArities: true,
+	},
+
+	{
 		name:  "leafcount",
 		class: FUNC_CLASS_COLLECTIONS,
 		help: `Counts total number of terminal values in map/array. For single-level
