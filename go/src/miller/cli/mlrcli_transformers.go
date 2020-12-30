@@ -28,6 +28,8 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.GroupLikeSetup,
 	transformers.HeadSetup,
 	transformers.JoinSetup,
+	transformers.JSONParseSetup,
+	transformers.JSONStringifySetup,
 	transformers.LabelSetup,
 	transformers.NothingSetup,
 	transformers.PutSetup,

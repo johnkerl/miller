@@ -137,3 +137,30 @@ func (this *Mlrmap) marshalJSONAuxSingleLine(
 
 	return buffer.Bytes(), nil
 }
+
+// ----------------------------------------------------------------
+// JSON-stringifies a single field of a record
+func (this *mlrmapEntry) JSONStringifyInPlace(
+	jsonFormatting TJSONFormatting,
+) {
+	outputBytes, err := this.Value.MarshalJSON(jsonFormatting)
+	if err != nil {
+		newValue := MlrvalFromError()
+		this.Value = &newValue
+	} else {
+		newValue := MlrvalFromString(string(outputBytes))
+		this.Value = &newValue
+	}
+}
+
+// ----------------------------------------------------------------
+// JSON-parses a single field of a record
+func (this *mlrmapEntry) JSONParseInPlace() {
+	input := this.Value.String()
+	err := this.Value.UnmarshalJSON([]byte(input))
+	if err != nil {
+		// TODO: make a pointer-return method and simplify callsites
+		newValue := MlrvalFromError()
+		this.Value = &newValue
+	}
+}

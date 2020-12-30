@@ -1,5 +1,19 @@
 
-mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_stringify($req)
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json json-stringify
+{
+  "hostname": "\"localhost\"",
+  "pid": "12345",
+  "req": "{\"id\": 6789, \"method\": \"GET\", \"path\": \"api/check\", \"host\": \"foo.bar\", \"headers\": {\"host\": \"bar.baz\", \"user-agent\": \"browser\"}}",
+  "res": "{\"status_code\": 200, \"header\": {\"content-type\": \"text\", \"content-encoding\": \"plain\"}}"
+}
+
+mlr --ijson --oxtab --from ./reg-test/input/flatten-input-2.json json-stringify then flatten
+hostname "localhost"
+pid      12345
+req      {"id": 6789, "method": "GET", "path": "api/check", "host": "foo.bar", "headers": {"host": "bar.baz", "user-agent": "browser"}}
+res      {"status_code": 200, "header": {"content-type": "text", "content-encoding": "plain"}}
+
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json json-stringify -f req
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -13,7 +27,29 @@ mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_s
   }
 }
 
-mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_stringify($req, false)
+mlr --ijson --oxtab --from ./reg-test/input/flatten-input-2.json json-stringify -f req then flatten
+hostname                    localhost
+pid                         12345
+req                         {"id": 6789, "method": "GET", "path": "api/check", "host": "foo.bar", "headers": {"host": "bar.baz", "user-agent": "browser"}}
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
+
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json json-stringify -f req --jvstack
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": "{\n  \"id\": 6789,\n  \"method\": \"GET\",\n  \"path\": \"api/check\",\n  \"host\": \"foo.bar\",\n  \"headers\": {\n    \"host\": \"bar.baz\",\n    \"user-agent\": \"browser\"\n  }\n}",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
+
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json json-stringify -f req --no-jvstack
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -27,55 +63,127 @@ mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_s
   }
 }
 
-mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_stringify($req, true)
-{
-  "hostname": "localhost",
-  "pid": 12345,
-  "req": "{
-  \"id\": 6789,
-  \"method\": \"GET\",
-  \"path\": \"api/check\",
-  \"host\": \"foo.bar\",
-  \"headers\": {
-    \"host\": \"bar.baz\",
-    \"user-agent\": \"browser\"
+mlr --j2x flatten
+hostname "localhost"
+pid      12345
+req      {"id": 6789, "method": "GET", "path": "api/check", "host": "foo.bar", "headers": {"host": "bar.baz", "user-agent": "browser"}}
+res      {"status_code": 200, "header": {"content-type": "text", "content-encoding": "plain"}}
+
+mlr --j2x json-parse then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
+
+mlr --j2x flatten
+hostname "localhost"
+pid      12345
+req      {
+  "id": 6789,
+  "method": "GET",
+  "path": "api/check",
+  "host": "foo.bar",
+  "headers": {
+    "host": "bar.baz",
+    "user-agent": "browser"
   }
-}",
-  "res": {
-    "status_code": 200,
-    "header": {
-      "content-type": "text",
-      "content-encoding": "plain"
-    }
+}
+res      {
+  "status_code": 200,
+  "header": {
+    "content-type": "text",
+    "content-encoding": "plain"
   }
 }
 
-mlr --ixtab --ojson cat
-{
-  "hostname": "localhost",
-  "pid": 12345,
-  "req": "{\"id\": 6789, \"method\": \"GET\", \"path\": \"api/check\", \"host\": \"foo.bar\", \"headers\": {\"host\": \"bar.baz\", \"user-agent\": \"browser\"}}",
-  "res:status_code": 200,
-  "res:header:content-type": "text",
-  "res:header:content-encoding": "plain"
-}
+mlr --j2x json-parse then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
 
-mlr --ixtab --ojson put $req = json_parse($req)
-{
-  "hostname": "localhost",
-  "pid": 12345,
-  "req": {
-    "id": 6789,
-    "method": "GET",
-    "path": "api/check",
-    "host": "foo.bar",
-    "headers": {
-      "host": "bar.baz",
-      "user-agent": "browser"
-    }
-  },
-  "res:status_code": 200,
-  "res:header:content-type": "text",
-  "res:header:content-encoding": "plain"
-}
+mlr --j2x flatten
+hostname "localhost"
+pid      12345
+req      {"id": 6789, "method": "GET", "path": "api/check", "host": "foo.bar", "headers": {"host": "bar.baz", "user-agent": "browser"}}
+res      {"status_code": 200, "header": {"content-type": "text", "content-encoding": "plain"}}
+
+mlr --j2x json-parse then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
+
+mlr --ijson --oxtab json-parse -f req then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
+
+mlr --xtab json-parse -f req then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
+
+mlr --ijson --oxtab json-parse -f req then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
+
+mlr --ijson --oxtab json-parse -f req then flatten
+hostname                    localhost
+pid                         12345
+req:id                      6789
+req:method                  GET
+req:path                    api/check
+req:host                    foo.bar
+req:headers:host            bar.baz
+req:headers:user-agent      browser
+res:status_code             200
+res:header:content-type     text
+res:header:content-encoding plain
 

@@ -14,15 +14,8 @@ TOP OF LIST:
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix broken case
-! cmt flatlib
 
 * ctx invars -> ptr w/ cmt
-
-* flatten and unflatten
-  o consider -f ...
-* json-stringify/json-parse verbs
-  o need -f for sure
-  ! need one-liner JSON option .......
 
 * start with explicit verbs; only implicit later
 * --no-auto-flatten / --no-auto-unflatten

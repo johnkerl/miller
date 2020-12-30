@@ -151,6 +151,20 @@ which is the same as:
   ./reg-test/../../go/mlr join -f a -f b -nr x -nr y -nr z
 
 ================================================================
+Usage: ./reg-test/../../go/mlr json-parse [options]
+Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
+Options:
+ -f Comma-separated list of field names to json-parse (default all).
+
+================================================================
+Usage: ./reg-test/../../go/mlr json-stringify [options]
+Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
+Options:
+ -f Comma-separated list of field names to json-stringify (default all).
+ -jvstack Produce multi-line output
+ -no-jvstack Produce single-line output
+
+================================================================
 Usage: ./reg-test/../../go/mlr label [options] {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original

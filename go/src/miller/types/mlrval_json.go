@@ -344,7 +344,14 @@ func (this *Mlrval) marshalJSONString() ([]byte, error) {
 	lib.InternalCodingErrorIf(this.mvtype != MT_STRING)
 	var buffer bytes.Buffer
 	buffer.WriteByte('"')
-	buffer.WriteString(strings.Replace(this.printrep, "\"", "\\\"", -1))
+	buffer.WriteString(
+		strings.Replace(
+			strings.Replace(this.printrep, "\"", "\\\"", -1),
+			"\n",
+			"\\n",
+			-1,
+		),
+	)
 	buffer.WriteByte('"')
 	return buffer.Bytes(), nil
 }
