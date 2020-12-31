@@ -9,3 +9,7 @@ req@headers@user-agent      browser
 res@status_code             200
 res@header@content-type     text
 res@header@content-encoding plain
+empty1                      {}
+empty2                      []
+wrapper@empty3              {}
+wrapper@emtpy4              []

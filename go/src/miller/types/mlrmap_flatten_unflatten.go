@@ -103,9 +103,12 @@ func (this *Mlrmap) Unflatten(separator string) {
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(*pe.Key, separator) {
 			arrayOfIndices := mlrvalSplitAXHelper(*pe.Key, separator)
-			that.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
+			that.PutIndexed(
+				MakePointerArray(arrayOfIndices.arrayval),
+				unflattenTerminal(pe.Value).Copy(),
+			)
 		} else {
-			that.PutReference(pe.Key, pe.Value)
+			that.PutReference(pe.Key, unflattenTerminal(pe.Value))
 		}
 	}
 
@@ -126,14 +129,40 @@ func (this *Mlrmap) UnflattenFields(
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			baseIndex := arrayOfIndices.arrayval[0].String()
 			if fieldNameSet[baseIndex] {
-				that.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
+				that.PutIndexed(
+					MakePointerArray(arrayOfIndices.arrayval),
+					unflattenTerminal(pe.Value).Copy(),
+				)
 			} else {
-				that.PutReference(pe.Key, pe.Value)
+				that.PutReference(pe.Key, unflattenTerminal(pe.Value))
 			}
 		} else {
-			that.PutReference(pe.Key, pe.Value)
+			that.PutReference(pe.Key, unflattenTerminal(pe.Value))
 		}
 	}
 
 	*this = *that
+}
+
+// ----------------------------------------------------------------
+// Flatten of empty map and empty array produce "{}" and "[]" as special cases.
+// (Without this, key-spreading would cause such fields to disappear entirely:
+// the field "x" -> {"a": 1, "b": 2} would spread to the pair of fields "x:a"
+// -> 1 and "x:b" -> 2, and the field "x" -> {"a": 1} would spread to the
+// single field "x:a" -> 1, so the field "x" -> {} would spread to zero
+// fields.) Here we reverse that special case of the flatten operation.
+
+func unflattenTerminal(input *Mlrval) *Mlrval {
+	if !input.IsString() {
+		return input
+	}
+	if input.printrep == "{}" {
+		retval := MlrvalFromMapReferenced(NewMlrmap())
+		return &retval
+	}
+	if input.printrep == "[]" {
+		retval := MlrvalFromArrayLiteralReference(make([]Mlrval, 0))
+		return &retval
+	}
+	return input
 }

@@ -186,6 +186,13 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	retval := NewMlrmap()
 
 	if this.mvtype == MT_MAP {
+		// Without this, the for-loop below is zero-pass and fields with "{}"
+		// values would disappear entirely in a JSON-to-CSV conversion.
+		if this.mapval.FieldCount == 0 {
+			if prefix != "" {
+				retval.PutCopy(&prefix, MlrvalPointerFromString("{}"))
+			}
+		}
 
 		for pe := this.mapval.Head; pe != nil; pe = pe.Next {
 			nextPrefix := *pe.Key
@@ -204,6 +211,14 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		}
 
 	} else if this.mvtype == MT_ARRAY {
+		// Without this, the for-loop below is zero-pass and fields with "[]"
+		// values would disappear entirely in a JSON-to-CSV conversion.
+		if len(this.arrayval) == 0 {
+			if prefix != "" {
+				retval.PutCopy(&prefix, MlrvalPointerFromString("[]"))
+			}
+		}
+
 		for zindex, value := range this.arrayval {
 			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
 			if prefix != "" {

@@ -3,8 +3,8 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * stats1 verb
+* {}/[] in flatten/unflatten -- make them reversible
 ! fix all typemasks; 'int x = 1; x = "abc"'
-! mlrrc
 * bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
 * make a less verbose first example at main rmd
 * update for no more jku link

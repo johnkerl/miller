@@ -52,12 +52,12 @@ mlr --opprint put foo=asserting_empty($*) ./reg-test/input/nullvals.dkvp
 mlr --opprint put foo=asserting_empty({1:2}) ./reg-test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_empty_map({}) ./reg-test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+a x y z f
+b 1 2 - {}
+b 3 4 - {}
+b 5 - - {}
+b - 6 - {}
+b - - - {}
 
 mlr --opprint put $f=asserting_empty_map($*) ./reg-test/input/nullvals.dkvp
 
@@ -92,12 +92,12 @@ b - 6 - 2
 b - - - 2
 
 mlr --opprint put $f=asserting_map({}) ./reg-test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+a x y z f
+b 1 2 - {}
+b 3 4 - {}
+b 5 - - {}
+b - 6 - {}
+b - - - {}
 
 mlr --opprint put $f=asserting_map($x) ./reg-test/input/nullvals.dkvp
 

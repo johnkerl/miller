@@ -89,7 +89,7 @@ b.1.y 3
 b.2.x 4
 b.2.y 5
 
-mlr --ijson --ojson --from ./reg-test/input/flatten-input-1.json put $a = flatten("a", ".", $a)
+mlr --ijson --ojson --no-auto-unflatten --from ./reg-test/input/flatten-input-1.json put $a = flatten("a", ".", $a)
 {
   "a": 1,
   "b": {
@@ -130,7 +130,7 @@ mlr --ijson --ojson --from ./reg-test/input/flatten-input-1.json put $a = flatte
   ]
 }
 
-mlr --ijson --ojson --from ./reg-test/input/flatten-input-1.json put $b = flatten("b", ".", $b)
+mlr --ijson --ojson --no-auto-unflatten --from ./reg-test/input/flatten-input-1.json put $b = flatten("b", ".", $b)
 {
   "a": 1,
   "b": {
@@ -176,8 +176,12 @@ req.headers.user-agent      browser
 res.status_code             200
 res.header.content-type     text
 res.header.content-encoding plain
+empty1                      {}
+empty2                      []
+wrapper.empty3              {}
+wrapper.emtpy4              []
 
-mlr --ixtab --ojson --from ./reg-test/input/unflatten-input.xtab put $* = unflatten($*, ".")
+mlr --ixtab --ojson --no-auto-unflatten --from ./reg-test/input/unflatten-input.xtab put $* = unflatten($*, ".")
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -197,6 +201,12 @@ mlr --ixtab --ojson --from ./reg-test/input/unflatten-input.xtab put $* = unflat
       "content-type": "text",
       "content-encoding": "plain"
     }
+  },
+  "empty1": "{}",
+  "empty2": "[]",
+  "wrapper": {
+    "empty3": "{}",
+    "emtpy4": "[]"
   }
 }
 
