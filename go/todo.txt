@@ -8,18 +8,14 @@ TOP OF LIST:
   https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 * x /usr/local/go/bin/go x 2
 * put -d/-D -> put -h
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-* emitp/emitf
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ? ctx invars -> ptr w/ cmt
-
-* then re-do case-dsl-emit.sh w/ --odkvp as well
-
-* then new emitx punctuation-syntax -- decide x 4
+* fixed-width pprint input-scanner
+* 'string or int' -> 'string, int, or array thereof' throughout
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+emitp/emitf:
+* new emitx punctuation-syntax -- decide x 4
 * to support (from C impl):
   md_emittable ::= MD_TOKEN_ALL
   md_emittable ::= MD_TOKEN_FULL_OOSVAR
@@ -29,32 +25,8 @@ TOP OF LIST:
   md_emittable ::= MD_TOKEN_FULL_SREC
   md_emittable ::= md_map_literal
   md_emittable ::= md_fcn_or_subr_call
-* rename case-dsl-emit-temp.sh
-* hm
-  ../c/mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
-
-  a=pan,sum:pan=0.346790,sum:wye=0.502626
-  a=eks,sum:pan=-0.758680,sum:wye=-0.381399,sum:zee=0.611784
-  a=wye,sum:wye=0.204603,sum:pan=0.573289
-  a=zee,sum:pan=0.527126,sum:wye=-0.598554
-  a=hat,sum:wye=0.031442
-
-  ../c/mlr put -q '@sum[$a][$b] += $x; end { emit  @sum, "a" }' s
-
-  a=pan,pan=0.346790,wye=0.502626
-  a=eks,pan=-0.758680,wye=-0.381399,zee=0.611784
-  a=wye,wye=0.204603,pan=0.573289
-  a=zee,pan=0.527126,wye=-0.598554
-  a=hat,wye=0.031442
-
-* --oflatsep/--iflatsep. also IFLATSEP / OFLATSEP context vars.
-* auto-flatten verbs at output -- ?
-* auto-unflatten verbs at input -- ? opt-in -- ?
-* json_stringify/json_parse functions; verbs too ...
-
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * stats1 verb
@@ -86,7 +58,6 @@ medium:
 * commenting passes ...
 
 big:
-! emitp/emitf
 * json-null as type; & all dispo matrices/vectors ...
 * smart fmtnum
 * stats1 verb
@@ -144,23 +115,6 @@ no need to bootstrap a parser for the parser-generator language
 ! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
   o done-reading back-channels in stream.go
     https://gobyexample.com/non-blocking-channel-operations
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! fixed-width pprint input-scanner
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! flatten/unflatten
-  k array-indices for map at LHS
-  k unflatten.mlr
-  k array-indices for map at RHS
-  k api neaten
-  k src impl
-  k arrayify how ...
-  o 'string or int' -> 'string, int, or array thereof' throughout
-  o also need json_parse, json_stringify
-  o cut -f foo.bar etc -- ? or just flatten ...
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * UDF nexts:
