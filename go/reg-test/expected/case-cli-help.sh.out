@@ -335,6 +335,47 @@ Usage: ./reg-test/../../go/mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
 
 ================================================================
+Usage: ./reg-test/../../go/mlr stats1 [options]
+Computes univariate statistics for one or more given fields, accumulated across
+the input record stream.
+Options:
+-a {sum,count,...} Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
+                   one or more of:
+  count    Count instances of fields
+  mode     Find most-frequently-occurring values for fields; first-found wins tie
+  antimode Find least-frequently-occurring values for fields; first-found wins tie
+  sum      Compute sums of specified fields
+  mean     Compute averages (sample means) of specified fields
+  min      Compute minimum values of specified fields
+  max      Compute maximum values of specified fields
+
+-f {a,b,c}   Value-field names on which to compute statistics
+-g {d,e,f}   Optional group-by-field names
+
+[TODO: more]
+Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
+ ./reg-test/../../go/mlr stats1
+Example: mlr stats1 -a count,mode -f size
+ ./reg-test/../../go/mlr stats1
+Example: mlr stats1 -a count,mode -f size -g shape
+ ./reg-test/../../go/mlr stats1
+Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'
+ ./reg-test/../../go/mlr stats1
+        This computes count and mode statistics on all field names beginning
+         with a through h, grouped by all field names starting with k.
+
+Notes:
+* p50 and median are synonymous.
+* min and max output the same results as p0 and p100, respectively, but use
+  less memory.
+* String-valued data make sense unless arithmetic on them is required,
+  e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
+  numbers are less than strings.
+* count and mode allow text input; the rest require numeric input.
+  In particular, 1 and 1.0 are distinct text for count and mode.
+* When there are mode ties, the first-encountered datum wins.
+
+================================================================
 Usage: ./reg-test/../../go/mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:

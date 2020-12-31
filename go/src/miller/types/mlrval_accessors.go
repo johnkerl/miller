@@ -80,6 +80,10 @@ func (this *Mlrval) IsNumeric() bool {
 	return this.mvtype == MT_INT || this.mvtype == MT_FLOAT
 }
 
+func (this *Mlrval) IsIntZero() bool {
+	return this.mvtype == MT_INT && this.intval == 0
+}
+
 func (this *Mlrval) IsBool() bool {
 	return this.mvtype == MT_BOOL
 }
@@ -240,4 +244,15 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	}
 
 	return MlrvalFromMapReferenced(retval)
+}
+
+// ----------------------------------------------------------------
+// Used by stats1.
+
+func (this *Mlrval) Increment() {
+	if this.mvtype == MT_INT {
+		this.intval++
+	} else if this.mvtype == MT_FLOAT {
+		this.floatval++
+	}
 }
