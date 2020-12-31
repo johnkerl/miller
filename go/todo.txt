@@ -8,10 +8,7 @@ TOP OF LIST:
 * do some profiling every so often
 
 quick:
-* bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
 * make a less verbose first example at main rmd
-* update for no more jku link
-  https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
