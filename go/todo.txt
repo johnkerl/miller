@@ -3,15 +3,15 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * stats1 verb
-* {}/[] in flatten/unflatten -- make them reversible
 ! fix all typemasks; 'int x = 1; x = "abc"'
+* I/O redirects
+
+quick:
 * bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
 * make a less verbose first example at main rmd
 * update for no more jku link
   https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 * x /usr/local/go/bin/go x 2
-* put -d/-D -> put -h
-* I/O redirects
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -73,14 +73,42 @@ With -a, a field is 'missing' only if it is absent.
 ================================================================
 Usage: ./reg-test/../../go/mlr filter [options] {DSL expression}
 TODO: put detailed on-line help here.
- -f {file name} File containing a DSL expression.
- -x (default false) Prints records for which {expression} evaluates to false, not true,
-    i.e. invert the sense of the filter expression.
- -q (default false) Does not include the modified record in the output stream.
-    Useful for when all desired output is in begin and/or end blocks.
- -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.
+-f {file name} File containing a DSL expression.
+
+-e {expression} You can use this after -f to add an expression. Example use
+   case: define functions/subroutines in a file you specify with -f, then call
+   them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
+
+-s name=value: Predefines out-of-stream variable @name to have 
+    Thus mlr put -s foo=97 '$column += @foo' is like
+    mlr put 'begin {@foo = 97} $column += @foo'.
+    The value part is subject to type-inferencing.
+    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
+
+-x (default false) Prints records for which {expression} evaluates to false, not true,
+   i.e. invert the sense of the filter expression.
+
+-q Does not include the modified record in the output stream.
+   Useful for when all desired output is in begin and/or end blocks.
+
+-v Prints the expressions's AST (abstract syntax tree), which gives
+   full transparency on the precedence and associativity rules of
+   Miller's grammar, to stdout.
+
+-d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
+   stream processing.
+
+-D Like -d but with output all on one line.
+
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
 
 ================================================================
 Usage: ./reg-test/../../go/mlr flatten [options]
@@ -179,14 +207,42 @@ produced other output.
 ================================================================
 Usage: ./reg-test/../../go/mlr put [options] {DSL expression}
 TODO: put detailed on-line help here.
- -f {file name} File containing a DSL expression.
- -x (default false) Prints records for which {expression} evaluates to false, not true,
-    i.e. invert the sense of the filter expression.
- -q (default false) Does not include the modified record in the output stream.
-    Useful for when all desired output is in begin and/or end blocks.
- -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.
+-f {file name} File containing a DSL expression.
+
+-e {expression} You can use this after -f to add an expression. Example use
+   case: define functions/subroutines in a file you specify with -f, then call
+   them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
+
+-s name=value: Predefines out-of-stream variable @name to have 
+    Thus mlr put -s foo=97 '$column += @foo' is like
+    mlr put 'begin {@foo = 97} $column += @foo'.
+    The value part is subject to type-inferencing.
+    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
+
+-x (default false) Prints records for which {expression} evaluates to false, not true,
+   i.e. invert the sense of the filter expression.
+
+-q Does not include the modified record in the output stream.
+   Useful for when all desired output is in begin and/or end blocks.
+
+-v Prints the expressions's AST (abstract syntax tree), which gives
+   full transparency on the precedence and associativity rules of
+   Miller's grammar, to stdout.
+
+-d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
+   stream processing.
+
+-D Like -d but with output all on one line.
+
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
 
 ================================================================
 Usage: ./reg-test/../../go/mlr regularize [options]
