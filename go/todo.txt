@@ -8,7 +8,6 @@ TOP OF LIST:
 * do some profiling every so often
 
 quick:
-* --jvquoteall etc as documented no-op/pass-through
 * bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
 * make a less verbose first example at main rmd
 * update for no more jku link
