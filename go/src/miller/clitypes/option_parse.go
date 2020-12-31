@@ -58,16 +58,16 @@ func ParseReaderOptions(
 		//		readerOptions.allow_repeat_ifs = true;
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--json-fatal-arrays-on-input" {
-		//		readerOptions.json_array_ingest = JSON_ARRAY_INGEST_FATAL;
-		//		argi += 1;
-		//	} else if args[argi] == "--json-skip-arrays-on-input" {
-		//		readerOptions.json_array_ingest = JSON_ARRAY_INGEST_SKIP;
-		//		argi += 1;
-		//	} else if args[argi] == "--json-map-arrays-on-input" {
-		//		readerOptions.json_array_ingest = JSON_ARRAY_INGEST_AS_MAP;
-		//		argi += 1;
-		//
+
+	} else if args[argi] == "--json-fatal-arrays-on-input" {
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 1
+	} else if args[argi] == "--json-skip-arrays-on-input" {
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 1
+	} else if args[argi] == "--json-map-arrays-on-input" {
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 1
 	} else if args[argi] == "--implicit-csv-header" {
 		readerOptions.UseImplicitCSVHeader = true
 		argi += 1
@@ -276,31 +276,26 @@ func ParseWriterOptions(
 		writerOptions.AutoFlatten = false
 		argi += 1
 
-		//	} else if args[argi] == "--jknquoteint" {
-		//		writerOptions.json_quote_int_keys = false;
-		//		argi += 1;
-		//	} else if args[argi] == "--jquoteall" {
-		//		writerOptions.json_quote_non_string_values = true;
-		//		argi += 1;
-		//	} else if args[argi] == "--jvquoteall" {
-		//		writerOptions.json_quote_non_string_values = true;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--vflatsep" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		writerOptions.oosvar_flatten_separator = SeparatorFromArg(args[argi+1]);
-		//		argi += 2;
-		//
-		//	} else if args[argi] == "-o" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		if (!lhmss_has_key(get_default_rses(), args[argi+1])) {
-		//			fmt.Fprintf(os.Stderr, "%s: unrecognized output format \"%s\".\n",
-		//				os.Args[0], args[argi+1]);
-		//			os.Exit(1);
-		//		}
-		//		writerOptions.OutputFileFormat = args[argi+1];
-		//		argi += 2;
-		//
+	} else if args[argi] == "--jknquoteint" {
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 1
+	} else if args[argi] == "--jquoteall" {
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 1
+	} else if args[argi] == "--jvquoteall" {
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 1
+
+	} else if args[argi] == "--vflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		// No-op pass-through for backward compatibility with Miller 5
+		argi += 2
+
+	} else if args[argi] == "-o" {
+		CheckArgCount(args, argi, argc, 2)
+		writerOptions.OutputFileFormat = args[argi+1]
+		argi += 2
+
 	} else if args[argi] == "--ocsv" {
 		writerOptions.OutputFileFormat = "csv"
 		argi += 1
