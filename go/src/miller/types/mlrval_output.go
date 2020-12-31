@@ -50,7 +50,7 @@ func (this *Mlrval) setPrintRep() {
 		// TODO: handling indentation
 		case MT_ARRAY:
 
-			bytes, err := this.MarshalJSON()
+			bytes, err := this.MarshalJSON(JSON_MULTILINE)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
@@ -61,7 +61,7 @@ func (this *Mlrval) setPrintRep() {
 			break
 		case MT_MAP:
 
-			bytes, err := this.MarshalJSON()
+			bytes, err := this.MarshalJSON(JSON_MULTILINE)
 			// maybe just InternalCodingErrorIf(err != nil)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)

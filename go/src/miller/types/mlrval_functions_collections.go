@@ -550,6 +550,7 @@ func MlrvalSplitA(ma, mb *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // splitax("3,4,5", ",") -> ["3","4","5"]
+
 func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
 	if ma.mvtype != MT_STRING {
 		return MlrvalFromError()
@@ -557,9 +558,15 @@ func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
 	if mb.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
+	input := ma.printrep
 	fieldSeparator := mb.printrep
 
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
+	return *mlrvalSplitAXHelper(input, fieldSeparator)
+}
+
+// Split out for MlrvalSplitAX and MlrvalUnflatten
+func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
+	fields := lib.SplitString(input, separator)
 
 	retval := NewSizedMlrvalArray(int64(len(fields)))
 
@@ -568,7 +575,7 @@ func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
 		retval.arrayval[i] = value
 	}
 
-	return *retval
+	return retval
 }
 
 // ----------------------------------------------------------------
@@ -646,55 +653,10 @@ func MlrvalFlatten(ma, mb, mc *Mlrval) Mlrval {
 		}
 		delimiter := mb.printrep
 
-		return mlrvalFlattenAux(prefix, delimiter, mc)
+		return mc.FlattenToMap(prefix, delimiter)
 	} else {
 		return *mc
 	}
-}
-
-func mlrvalFlattenAux(prefix string, delimiter string, collection *Mlrval) Mlrval {
-	retval := NewMlrmap()
-
-	if collection.mvtype == MT_MAP {
-
-		for pe := collection.mapval.Head; pe != nil; pe = pe.Next {
-			nextPrefix := *pe.Key
-			if prefix != "" {
-				nextPrefix = prefix + delimiter + nextPrefix
-			}
-			if pe.Value.mvtype == MT_MAP || pe.Value.mvtype == MT_ARRAY {
-				nextResult := mlrvalFlattenAux(nextPrefix, delimiter, pe.Value)
-				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
-				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
-					retval.PutCopy(pf.Key, pf.Value.Copy())
-				}
-			} else {
-				retval.PutCopy(&nextPrefix, pe.Value.Copy())
-			}
-		}
-
-	} else if collection.mvtype == MT_ARRAY {
-		for zindex, value := range collection.arrayval {
-			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
-			if prefix != "" {
-				nextPrefix = prefix + delimiter + nextPrefix
-			}
-			if value.mvtype == MT_MAP || value.mvtype == MT_ARRAY {
-				nextResult := mlrvalFlattenAux(nextPrefix, delimiter, &value)
-				lib.InternalCodingErrorIf(nextResult.mvtype != MT_MAP)
-				for pf := nextResult.mapval.Head; pf != nil; pf = pf.Next {
-					retval.PutCopy(pf.Key, pf.Value.Copy())
-				}
-			} else {
-				retval.PutCopy(&nextPrefix, value.Copy())
-			}
-		}
-
-	} else {
-		retval.PutCopy(&prefix, collection.Copy())
-	}
-
-	return MlrvalFromMapReferenced(retval)
 }
 
 // ----------------------------------------------------------------
@@ -709,12 +671,12 @@ func MlrvalUnflatten(ma, mb *Mlrval) Mlrval {
 		return *ma
 	}
 	oldmap := ma.mapval
+	separator := mb.printrep
 	newmap := NewMlrmap()
 
 	for pe := oldmap.Head; pe != nil; pe = pe.Next {
 		// TODO: factor out a shared helper function bewteen here and MlrvalSplitAX.
-		temp := MlrvalFromString(*pe.Key)
-		arrayOfIndices := MlrvalSplitAX(&temp, mb)
+		arrayOfIndices := mlrvalSplitAXHelper(*pe.Key, separator)
 		newmap.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
 	}
 	return MlrvalFromMapReferenced(newmap)
@@ -757,5 +719,49 @@ func MlrvalArrayify(ma *Mlrval) Mlrval {
 
 	} else {
 		return *ma
+	}
+}
+
+// ----------------------------------------------------------------
+func MlrvalJSONParse(ma *Mlrval) Mlrval {
+	if ma.mvtype == MT_VOID {
+		return *ma
+	} else if ma.mvtype != MT_STRING {
+		return MlrvalFromError()
+	} else {
+		output := MlrvalFromPending()
+		err := output.UnmarshalJSON([]byte(ma.printrep))
+		if err == nil {
+			return output
+		} else {
+			return MlrvalFromError()
+		}
+	}
+}
+
+func MlrvalJSONStringifyUnary(ma *Mlrval) Mlrval {
+	outputBytes, err := ma.MarshalJSON(JSON_SINGLE_LINE)
+	if err != nil {
+		return MlrvalFromError()
+	} else {
+		return MlrvalFromString(string(outputBytes))
+	}
+}
+
+func MlrvalJSONStringifyBinary(ma, mb *Mlrval) Mlrval {
+	var jsonFormatting TJSONFormatting = JSON_SINGLE_LINE
+	useMultiline, ok := mb.GetBoolValue()
+	if !ok {
+		return MlrvalFromError()
+	}
+	if useMultiline {
+		jsonFormatting = JSON_MULTILINE
+	}
+
+	outputBytes, err := ma.MarshalJSON(jsonFormatting)
+	if err != nil {
+		return MlrvalFromError()
+	} else {
+		return MlrvalFromString(string(outputBytes))
 	}
 }

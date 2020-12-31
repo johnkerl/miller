@@ -1,0 +1,110 @@
+
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_stringify($req)
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": "{\"id\": 6789, \"method\": \"GET\", \"path\": \"api/check\", \"host\": \"foo.bar\", \"headers\": {\"host\": \"bar.baz\", \"user-agent\": \"browser\"}}",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
+
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_stringify($req, false)
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": "{\"id\": 6789, \"method\": \"GET\", \"path\": \"api/check\", \"host\": \"foo.bar\", \"headers\": {\"host\": \"bar.baz\", \"user-agent\": \"browser\"}}",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
+
+mlr --ijson --ojson --from ./reg-test/input/flatten-input-2.json put $req=json_stringify($req, true)
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": "{\n  \"id\": 6789,\n  \"method\": \"GET\",\n  \"path\": \"api/check\",\n  \"host\": \"foo.bar\",\n  \"headers\": {\n    \"host\": \"bar.baz\",\n    \"user-agent\": \"browser\"\n  }\n}",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
+
+mlr --ixtab --ojson cat
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": "{\"id\": 6789, \"method\": \"GET\", \"path\": \"api/check\", \"host\": \"foo.bar\", \"headers\": {\"host\": \"bar.baz\", \"user-agent\": \"browser\"}}",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
+
+mlr --ixtab --ojson put $req = json_parse($req)
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
+

@@ -220,23 +220,33 @@ func (this *Mlrmap) GetNameAtPositionalIndex(position int64) *string {
 // ----------------------------------------------------------------
 // TODO: put error-return into this API
 func (this *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
-	mapEntry := this.findEntryByPositionalIndex(position)
+	positionalEntry := this.findEntryByPositionalIndex(position)
 
-	if mapEntry != nil {
-		// TODO: rekey the hashmap
-		if name.mvtype == MT_STRING {
-			s := name.printrep
-			mapEntry.Key = &s
-		} else if name.mvtype == MT_INT {
-			s := name.String()
-			mapEntry.Key = &s
-		} else {
-			// TODO: return MlrvalFromError()
-		}
-	} else {
+	if positionalEntry == nil {
 		// TODO: handle out-of-bounds accesses
 		return
 	}
+
+	// TODO: rekey the hashmap
+	s := ""
+	if name.mvtype == MT_STRING {
+		s = name.printrep
+	} else if name.mvtype == MT_INT {
+		s = name.String()
+	} else {
+		// TODO: return MlrvalFromError()
+		return
+	}
+
+	// E.g. there are fields named 'a' and 'b', as positions 1 and 2,
+	// and the user does '$[[1]] = $[[2]]'. Then there would be two b's.
+	mapEntry := this.findEntry(&s)
+	if mapEntry != nil && mapEntry != positionalEntry {
+		this.unlink(mapEntry)
+	}
+
+	lib.InternalCodingErrorIf(s == "")
+	positionalEntry.Key = &s
 }
 
 // ----------------------------------------------------------------

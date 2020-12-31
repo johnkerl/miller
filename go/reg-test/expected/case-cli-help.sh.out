@@ -73,14 +73,50 @@ With -a, a field is 'missing' only if it is absent.
 ================================================================
 Usage: ./reg-test/../../go/mlr filter [options] {DSL expression}
 TODO: put detailed on-line help here.
- -f {file name} File containing a DSL expression.
- -x (default false) Prints records for which {expression} evaluates to false, not true,
-    i.e. invert the sense of the filter expression.
- -q (default false) Does not include the modified record in the output stream.
-    Useful for when all desired output is in begin and/or end blocks.
- -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.
+-f {file name} File containing a DSL expression.
+
+-e {expression} You can use this after -f to add an expression. Example use
+   case: define functions/subroutines in a file you specify with -f, then call
+   them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
+
+-s name=value: Predefines out-of-stream variable @name to have 
+    Thus mlr put -s foo=97 '$column += @foo' is like
+    mlr put 'begin {@foo = 97} $column += @foo'.
+    The value part is subject to type-inferencing.
+    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
+
+-x (default false) Prints records for which {expression} evaluates to false, not true,
+   i.e. invert the sense of the filter expression.
+
+-q Does not include the modified record in the output stream.
+   Useful for when all desired output is in begin and/or end blocks.
+
+-v Prints the expressions's AST (abstract syntax tree), which gives
+   full transparency on the precedence and associativity rules of
+   Miller's grammar, to stdout.
+
+-d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
+   stream processing.
+
+-D Like -d but with output all on one line.
+
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
+
+================================================================
+Usage: ./reg-test/../../go/mlr flatten [options]
+Flattens multi-level maps to single-level ones. Example: field with name 'a'
+and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
+Options:
+ -f Comma-separated list of field names to flatten (default all).
+ -s Separator, defaulting to mlr --jflatsep value
 
 ================================================================
 Usage: ./reg-test/../../go/mlr gap [options]
@@ -143,6 +179,20 @@ which is the same as:
   ./reg-test/../../go/mlr join -f a -f b -nr x -nr y -nr z
 
 ================================================================
+Usage: ./reg-test/../../go/mlr json-parse [options]
+Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
+Options:
+ -f Comma-separated list of field names to json-parse (default all).
+
+================================================================
+Usage: ./reg-test/../../go/mlr json-stringify [options]
+Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
+Options:
+ -f Comma-separated list of field names to json-stringify (default all).
+ -jvstack Produce multi-line output
+ -no-jvstack Produce single-line output
+
+================================================================
 Usage: ./reg-test/../../go/mlr label [options] {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original
@@ -157,14 +207,42 @@ produced other output.
 ================================================================
 Usage: ./reg-test/../../go/mlr put [options] {DSL expression}
 TODO: put detailed on-line help here.
- -f {file name} File containing a DSL expression.
- -x (default false) Prints records for which {expression} evaluates to false, not true,
-    i.e. invert the sense of the filter expression.
- -q (default false) Does not include the modified record in the output stream.
-    Useful for when all desired output is in begin and/or end blocks.
- -v (default false) Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.
+-f {file name} File containing a DSL expression.
+
+-e {expression} You can use this after -f to add an expression. Example use
+   case: define functions/subroutines in a file you specify with -f, then call
+   them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
+
+-s name=value: Predefines out-of-stream variable @name to have 
+    Thus mlr put -s foo=97 '$column += @foo' is like
+    mlr put 'begin {@foo = 97} $column += @foo'.
+    The value part is subject to type-inferencing.
+    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
+
+-x (default false) Prints records for which {expression} evaluates to false, not true,
+   i.e. invert the sense of the filter expression.
+
+-q Does not include the modified record in the output stream.
+   Useful for when all desired output is in begin and/or end blocks.
+
+-v Prints the expressions's AST (abstract syntax tree), which gives
+   full transparency on the precedence and associativity rules of
+   Miller's grammar, to stdout.
+
+-d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
+   stream processing.
+
+-D Like -d but with output all on one line.
+
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
 
 ================================================================
 Usage: ./reg-test/../../go/mlr regularize [options]
@@ -300,6 +378,14 @@ Usage: ./reg-test/../../go/mlr tail [options]
 Passes through the last n records, optionally by category.
  -g (default ) Optional group-by-field names for tail counts, e.g. a,b,c
  -n (default 10) Tail count to print
+
+================================================================
+Usage: ./reg-test/../../go/mlr unflatten [options]
+Reverses flatten. Example: field with name 'a:b:c' and value 4
+becomes name 'a' and value '{"b": { "c": 4 }}'.
+Options:
+ -f Comma-separated list of field names to unflatten (default all).
+ -s Separator, defaulting to mlr --jflatsep value
 
 ================================================================
 Usage: ./reg-test/../../go/mlr unsparsify [options]

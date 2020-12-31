@@ -35,13 +35,16 @@ func transformerFlattenParseCLI(
 	// Parse local flags
 	flagSet := flag.NewFlagSet(verb, errorHandling)
 
-	// flatsep: defaults to global flatsep
-	// field names: default all
+	pOFlatSep := flagSet.String(
+		"s",
+		"",
+		"Separator, defaulting to mlr --jflatsep value",
+	)
 
 	pFieldNames := flagSet.String(
 		"f",
 		"",
-		"Field names to flatten",
+		"Comma-separated list of field names to flatten (default all).",
 	)
 
 	flagSet.Usage = func() {
@@ -61,6 +64,7 @@ func transformerFlattenParseCLI(
 	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerFlatten(
+		*pOFlatSep,
 		*pFieldNames,
 	)
 
@@ -75,9 +79,9 @@ func transformerFlattenUsage(
 	flagSet *flag.FlagSet,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	// TODO: type this up.
 	fmt.Fprint(o,
-		`TO DO: type this up.
+		`Flattens multi-level maps to single-level ones. Example: field with name 'a'
+and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
@@ -89,29 +93,35 @@ func transformerFlattenUsage(
 // ----------------------------------------------------------------
 type TransformerFlatten struct {
 	// input
-	fieldNameList []string
+	oFlatSep     string
+	fieldNameSet map[string]bool
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
 }
 
 func NewTransformerFlatten(
+	oFlatSep string,
 	fieldNames string,
 ) (*TransformerFlatten, error) {
-
-	fieldNameList := lib.SplitString(fieldNames, ",")
-
-	this := &TransformerFlatten{
-		fieldNameList: fieldNameList,
+	var fieldNameSet map[string]bool = nil
+	if fieldNames != "" {
+		fieldNameSet = lib.StringListToSet(
+			lib.SplitString(fieldNames, ","),
+		)
 	}
 
-	if len(fieldNameList) == 0 {
-		this.recordTransformerFunc = this.flattenAll
-	} else {
-		this.recordTransformerFunc = this.flattenSome
+	retval := &TransformerFlatten{
+		oFlatSep:     oFlatSep,
+		fieldNameSet: fieldNameSet,
 	}
 
-	return this, nil
+	retval.recordTransformerFunc = retval.flattenAll
+	if fieldNameSet != nil {
+		retval.recordTransformerFunc = retval.flattenSome
+	}
+
+	return retval, nil
 }
 
 // ----------------------------------------------------------------
@@ -129,7 +139,11 @@ func (this *TransformerFlatten) flattenAll(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		// TODO
+		oFlatSep := this.oFlatSep
+		if oFlatSep == "" {
+			oFlatSep = inrecAndContext.Context.OFLATSEP
+		}
+		inrec.Flatten(oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker
@@ -143,9 +157,11 @@ func (this *TransformerFlatten) flattenSome(
 ) {
 	inrec := inrecAndContext.Record
 	if inrec != nil { // not end of record stream
-		for _, fieldName := range this.fieldNameList {
-			inrec.MoveToTail(&fieldName)
+		oFlatSep := this.oFlatSep
+		if oFlatSep == "" {
+			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
+		inrec.FlattenFields(this.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

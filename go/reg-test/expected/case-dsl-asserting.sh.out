@@ -76,55 +76,20 @@ mlr --opprint put $f=asserting_empty_map({1:2}) ./reg-test/input/nullvals.dkvp
 mlr --opprint put @somesuch=1;$f=asserting_empty_map(@somesuch) ./reg-test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_map($*) ./reg-test/input/nullvals.dkvp
-a x y z f
-b 1 2 - {
-  "a": "b",
-  "x": 1,
-  "y": 2,
-  "z": ""
-}
-b 3 4 - {
-  "a": "b",
-  "x": 3,
-  "y": 4,
-  "z": ""
-}
-b 5 - - {
-  "a": "b",
-  "x": 5,
-  "y": "",
-  "z": ""
-}
-b - 6 - {
-  "a": "b",
-  "x": "",
-  "y": 6,
-  "z": ""
-}
-b - - - {
-  "a": "b",
-  "x": "",
-  "y": "",
-  "z": ""
-}
+a x y z f:a f:x f:y f:z
+b 1 2 - b   1   2   -
+b 3 4 - b   3   4   -
+b 5 - - b   5   -   -
+b - 6 - b   -   6   -
+b - - - b   -   -   -
 
 mlr --opprint put $f=asserting_map({1:2}) ./reg-test/input/nullvals.dkvp
-a x y z f
-b 1 2 - {
-  "1": 2
-}
-b 3 4 - {
-  "1": 2
-}
-b 5 - - {
-  "1": 2
-}
-b - 6 - {
-  "1": 2
-}
-b - - - {
-  "1": 2
-}
+a x y z f:1
+b 1 2 - 2
+b 3 4 - 2
+b 5 - - 2
+b - 6 - 2
+b - - - 2
 
 mlr --opprint put $f=asserting_map({}) ./reg-test/input/nullvals.dkvp
 a x y z f
@@ -147,55 +112,20 @@ mlr --opprint put $f=asserting_map(@nosuch) ./reg-test/input/nullvals.dkvp
 mlr --opprint put @somesuch=1;$f=asserting_map(@somesuch) ./reg-test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_nonempty_map($*) ./reg-test/input/nullvals.dkvp
-a x y z f
-b 1 2 - {
-  "a": "b",
-  "x": 1,
-  "y": 2,
-  "z": ""
-}
-b 3 4 - {
-  "a": "b",
-  "x": 3,
-  "y": 4,
-  "z": ""
-}
-b 5 - - {
-  "a": "b",
-  "x": 5,
-  "y": "",
-  "z": ""
-}
-b - 6 - {
-  "a": "b",
-  "x": "",
-  "y": 6,
-  "z": ""
-}
-b - - - {
-  "a": "b",
-  "x": "",
-  "y": "",
-  "z": ""
-}
+a x y z f:a f:x f:y f:z
+b 1 2 - b   1   2   -
+b 3 4 - b   3   4   -
+b 5 - - b   5   -   -
+b - 6 - b   -   6   -
+b - - - b   -   -   -
 
 mlr --opprint put $f=asserting_nonempty_map({1:2}) ./reg-test/input/nullvals.dkvp
-a x y z f
-b 1 2 - {
-  "1": 2
-}
-b 3 4 - {
-  "1": 2
-}
-b 5 - - {
-  "1": 2
-}
-b - 6 - {
-  "1": 2
-}
-b - - - {
-  "1": 2
-}
+a x y z f:1
+b 1 2 - 2
+b 3 4 - 2
+b 5 - - 2
+b - 6 - 2
+b - - - 2
 
 mlr --opprint put $f=asserting_nonempty_map($x) ./reg-test/input/nullvals.dkvp
 
@@ -236,22 +166,12 @@ b - 6 -
 b - - -
 
 mlr --opprint put $f=asserting_not_empty({1:2}) ./reg-test/input/nullvals.dkvp
-a x y z f
-b 1 2 - {
-  "1": 2
-}
-b 3 4 - {
-  "1": 2
-}
-b 5 - - {
-  "1": 2
-}
-b - 6 - {
-  "1": 2
-}
-b - - - {
-  "1": 2
-}
+a x y z f:1
+b 1 2 - 2
+b 3 4 - 2
+b 5 - - 2
+b - 6 - 2
+b - - - 2
 
 mlr --opprint put $nosuch=asserting_not_empty($nosuch) ./reg-test/input/nullvals.dkvp
 a x y z

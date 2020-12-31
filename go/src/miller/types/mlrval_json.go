@@ -20,6 +20,13 @@ import (
 
 const MLRVAL_JSON_INDENT_STRING string = "  "
 
+type TJSONFormatting int
+
+const (
+	JSON_SINGLE_LINE = 1
+	JSON_MULTILINE   = 2
+)
+
 // ================================================================
 // The JSON decoder (https://golang.org/pkg/encoding/json/#Decoder) is quite
 // nice. What we can have is:
@@ -108,7 +115,11 @@ func (this *Mlrval) UnmarshalJSON(inputBytes []byte) error {
 }
 
 // ----------------------------------------------------------------
-func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err error) {
+func MlrvalDecodeFromJSON(decoder *json.Decoder) (
+	mlrval *Mlrval,
+	eof bool,
+	err error,
+) {
 	// Causes the decoder to unmarshal a number into an interface{} as a Number
 	// instead of as a float64.
 	decoder.UseNumber()
@@ -250,11 +261,16 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (mlrval *Mlrval, eof bool, err 
 }
 
 // ================================================================
-func (this *Mlrval) MarshalJSON() ([]byte, error) {
-	return this.marshalJSONAux(1)
+func (this *Mlrval) MarshalJSON(
+	jsonFormatting TJSONFormatting,
+) ([]byte, error) {
+	return this.marshalJSONAux(jsonFormatting, 1)
 }
 
-func (this *Mlrval) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
+func (this *Mlrval) marshalJSONAux(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
 	switch this.mvtype {
 	case MT_PENDING:
 		return this.marshalJSONPending()
@@ -281,10 +297,10 @@ func (this *Mlrval) marshalJSONAux(elementNestingDepth int) ([]byte, error) {
 		return this.marshalJSONBool()
 		break
 	case MT_ARRAY:
-		return this.marshalJSONArray(elementNestingDepth)
+		return this.marshalJSONArray(jsonFormatting, elementNestingDepth)
 		break
 	case MT_MAP:
-		return this.marshalJSONMap(elementNestingDepth)
+		return this.marshalJSONMap(jsonFormatting, elementNestingDepth)
 		break
 	case MT_DIM: // MT_DIM is one past the last valid type
 		return nil, errors.New("Miller: internal coding error detected")
@@ -328,7 +344,14 @@ func (this *Mlrval) marshalJSONString() ([]byte, error) {
 	lib.InternalCodingErrorIf(this.mvtype != MT_STRING)
 	var buffer bytes.Buffer
 	buffer.WriteByte('"')
-	buffer.WriteString(strings.Replace(this.printrep, "\"", "\\\"", -1))
+	buffer.WriteString(
+		strings.Replace(
+			strings.Replace(this.printrep, "\"", "\\\"", -1),
+			"\n",
+			"\\n",
+			-1,
+		),
+	)
 	buffer.WriteByte('"')
 	return buffer.Bytes(), nil
 }
@@ -352,10 +375,16 @@ func (this *Mlrval) marshalJSONBool() ([]byte, error) {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) marshalJSONArray(elementNestingDepth int) ([]byte, error) {
+func (this *Mlrval) marshalJSONArray(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
 	lib.InternalCodingErrorIf(this.mvtype != MT_ARRAY)
+	lib.InternalCodingErrorIf(jsonFormatting != JSON_SINGLE_LINE && jsonFormatting != JSON_MULTILINE)
 
 	// Put an array of all-terminal nodes all on one line, like '[1,2,3,4,5].
+
+	// TODO: libify
 	allTerminal := true
 	for _, element := range this.arrayval {
 		if element.IsArrayOrMap() {
@@ -363,20 +392,23 @@ func (this *Mlrval) marshalJSONArray(elementNestingDepth int) ([]byte, error) {
 			break
 		}
 	}
-	if allTerminal {
+
+	if allTerminal || (jsonFormatting == JSON_SINGLE_LINE) {
 		return this.marshalJSONArraySingleLine(elementNestingDepth)
 	} else {
-		return this.marshalJSONArrayMultipleLines(elementNestingDepth)
+		return this.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth)
 	}
 }
 
-func (this *Mlrval) marshalJSONArraySingleLine(elementNestingDepth int) ([]byte, error) {
+func (this *Mlrval) marshalJSONArraySingleLine(
+	elementNestingDepth int,
+) ([]byte, error) {
 	n := len(this.arrayval)
 	var buffer bytes.Buffer
 	buffer.WriteByte('[')
 
 	for i, element := range this.arrayval {
-		elementBytes, err := element.marshalJSONAux(elementNestingDepth + 1)
+		elementBytes, err := element.marshalJSONAux(JSON_SINGLE_LINE, elementNestingDepth+1)
 		if err != nil {
 			return nil, err
 		}
@@ -403,7 +435,10 @@ func (this *Mlrval) marshalJSONArraySingleLine(elementNestingDepth int) ([]byte,
 //   "c": 7
 // }
 
-func (this *Mlrval) marshalJSONArrayMultipleLines(elementNestingDepth int) ([]byte, error) {
+func (this *Mlrval) marshalJSONArrayMultipleLines(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
 	n := len(this.arrayval)
 	var buffer bytes.Buffer
 
@@ -414,7 +449,7 @@ func (this *Mlrval) marshalJSONArrayMultipleLines(elementNestingDepth int) ([]by
 	}
 
 	for i, element := range this.arrayval {
-		elementBytes, err := element.marshalJSONAux(elementNestingDepth + 1)
+		elementBytes, err := element.marshalJSONAux(jsonFormatting, elementNestingDepth+1)
 		if err != nil {
 			return nil, err
 		}
@@ -440,9 +475,12 @@ func (this *Mlrval) marshalJSONArrayMultipleLines(elementNestingDepth int) ([]by
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) marshalJSONMap(elementNestingDepth int) ([]byte, error) {
+func (this *Mlrval) marshalJSONMap(
+	jsonFormatting TJSONFormatting,
+	elementNestingDepth int,
+) ([]byte, error) {
 	lib.InternalCodingErrorIf(this.mvtype != MT_MAP)
-	bytes, err := this.mapval.marshalJSONAux(elementNestingDepth)
+	bytes, err := this.mapval.marshalJSONAux(jsonFormatting, elementNestingDepth)
 	if err != nil {
 		return nil, err
 	}

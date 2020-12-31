@@ -204,31 +204,30 @@ mlr --from ./reg-test/input/abixy --opprint put
     begin {
         @a = 0;
         var ell = 1;
-        print "local1 = ".ell;
+        emit ell;
     }
     end {
         emit @a;
         var emm = 2;
-        print "local2 = ".emm;
+        emit emm;
     }
     @a += 1;
     begin {
         @b = 0;
         @c = 0;
-        print "local3 = ".ell;
+        emit ell;;
     }
     @b += 2;
     @c += 3;
     end {
         emit @b;
         emit @c;
-        print "local4 = ".emm;
+        emit emm;
     }
 
-local1 = 1
-local3 = 
-local2 = 2
-local4 = 
+ell
+1
+
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -240,6 +239,19 @@ eks zee 7  0.6117840605678454  0.1878849191181694
 zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
+
+a
+10
+
+emm
+2
+
+b
+20
+
+c
+30
+
 
 mlr --from ./reg-test/input/abixy --opprint put subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)
 TEXT IS NR is 1

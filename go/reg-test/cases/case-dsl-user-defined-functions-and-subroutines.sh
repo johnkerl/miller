@@ -106,25 +106,25 @@ run_mlr --from $indir/abixy --opprint put '
     begin {
         @a = 0;
         var ell = 1;
-        print "local1 = ".ell;
+        emit ell;
     }
     end {
         emit @a;
         var emm = 2;
-        print "local2 = ".emm;
+        emit emm;
     }
     @a += 1;
     begin {
         @b = 0;
         @c = 0;
-        print "local3 = ".ell;
+        emit ell;;
     }
     @b += 2;
     @c += 3;
     end {
         emit @b;
         emit @c;
-        print "local4 = ".emm;
+        emit emm;
     }
 '
 

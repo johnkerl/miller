@@ -12,10 +12,10 @@ run_mlr --ijson --oxtab --from $indir/flatten-input-1.json put '
 
 run_mlr --ijson --oxtab --from $indir/flatten-input-1.json put '$* = flatten("", ".", $*)'
 
-run_mlr --ijson --ojson --from $indir/flatten-input-1.json put '$a = flatten("a", ".", $a)'
+run_mlr --ijson --ojson --no-auto-unflatten --from $indir/flatten-input-1.json put '$a = flatten("a", ".", $a)'
 
-run_mlr --ijson --ojson --from $indir/flatten-input-1.json put '$b = flatten("b", ".", $b)'
+run_mlr --ijson --ojson --no-auto-unflatten --from $indir/flatten-input-1.json put '$b = flatten("b", ".", $b)'
 
 run_mlr --ijson --oxtab --from $indir/flatten-input-2.json put '$* = flatten("", ".", $*)'
 
-run_mlr --ixtab --ojson --from $indir/unflatten-input.xtab put '$* = unflatten($*, ".")'
+run_mlr --ixtab --ojson --no-auto-unflatten --from $indir/unflatten-input.xtab put '$* = unflatten($*, ".")'

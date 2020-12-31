@@ -21,6 +21,7 @@ type TReaderOptions struct {
 	IRS             string
 	IFS             string
 	IPS             string
+	IFLATSEP        string
 
 	//	char* input_json_flatten_separator;
 	//	json_array_ingest_t  json_array_ingest;
@@ -39,27 +40,53 @@ type TReaderOptions struct {
 	//
 	//	// Fake internal-data-generator 'reader'
 	//	generator_opts_t generator_opts;
+
+	// When we read things like
+	//
+	//   x:a=1,x:b=2
+	//
+	// which is how we write out nested data structures for non-nested formats
+	// (all but JSON), the default behavior is to unflatten them back to
+	//
+	//   {"x": {"a": 1}, {"b": 2}}
+	//
+	// unless the user explicitly asks to suppress that.
+	AutoUnflatten bool
 }
 
 // ----------------------------------------------------------------
 type TWriterOptions struct {
-	OutputFileFormat    string
-	ORS                 string
-	OFS                 string
-	OPS                 string
+	OutputFileFormat string
+	ORS              string
+	OFS              string
+	OPS              string
+	OFLATSEP         string
+
 	HeaderlessCSVOutput bool
 	BarredPprintOutput  bool
 
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;
-	//	stack_json_output_vertically bool;
 	WrapJSONOutputInOuterList bool
+	JSONOutputMultiline       bool // Not using miller/types enum to avoid package cycle
 	//	json_quote_int_keys bool;
 	//	json_quote_non_string_values bool;
 	//	output_json_flatten_separator string;
 	//	oosvar_flatten_separator string;
 	//
 	//	quoting_t oquoting;
+
+	// The default behavior is to flatten nested data structures like
+	//
+	//   {"x": {"a": 1}, {"b": 2}}
+	//
+	// down to
+	//
+	//   x:a=1,x:b=2
+	//
+	// which is how we write out nested data structures for non-nested formats
+	// (all but JSON) -- unless the user explicitly asks to suppress that.
+	AutoFlatten bool
 }
 
 // ----------------------------------------------------------------
@@ -108,15 +135,22 @@ func DefaultReaderOptions() TReaderOptions {
 		IRS:             "\n",
 		IFS:             ",",
 		IPS:             "=",
+		IFLATSEP:        ":",
+		AutoUnflatten:   true,
 	}
 }
 
 func DefaultWriterOptions() TWriterOptions {
 	return TWriterOptions{
-		OutputFileFormat:    "dkvp",
-		ORS:                 "\n",
-		OFS:                 ",",
-		OPS:                 "=",
-		HeaderlessCSVOutput: false,
+		OutputFileFormat: "dkvp",
+		ORS:              "\n",
+		OFS:              ",",
+		OPS:              "=",
+		OFLATSEP:         ":",
+
+		HeaderlessCSVOutput:       false,
+		WrapJSONOutputInOuterList: false,
+		JSONOutputMultiline:       true,
+		AutoFlatten:               true,
 	}
 }

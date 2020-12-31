@@ -49,6 +49,11 @@ func ParseReaderOptions(
 		readerOptions.IPS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
+	} else if args[argi] == "--iflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.IFLATSEP = SeparatorFromArg(args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--repifs" {
 		//		readerOptions.allow_repeat_ifs = true;
 		//		argi += 1;
@@ -73,6 +78,10 @@ func ParseReaderOptions(
 
 	} else if args[argi] == "--allow-ragged-csv-input" || args[argi] == "--ragged" {
 		readerOptions.AllowRaggedCSVInput = true
+		argi += 1
+
+	} else if args[argi] == "--no-auto-unflatten" {
+		readerOptions.AutoUnflatten = false
 		argi += 1
 
 	} else if args[argi] == "-i" {
@@ -241,19 +250,30 @@ func ParseWriterOptions(
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
+	} else if args[argi] == "--oflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		writerOptions.OFLATSEP = SeparatorFromArg(args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--xvright" {
 		//		writerOptions.right_justify_xtab_value = true;
 		//		argi += 1;
 		//
 
-		// TODO: comment in detail this is accepted as a no-op for backward
-		// compatibility in Miller 6 and above.
 	} else if args[argi] == "--jvstack" {
-		//writerOptions.stack_json_output_vertically = true;
+		writerOptions.JSONOutputMultiline = true
+		argi += 1
+
+	} else if args[argi] == "--no-jvstack" {
+		writerOptions.JSONOutputMultiline = false
 		argi += 1
 
 	} else if args[argi] == "--jlistwrap" {
 		writerOptions.WrapJSONOutputInOuterList = true
+		argi += 1
+
+	} else if args[argi] == "--no-auto-flatten" {
+		writerOptions.AutoFlatten = false
 		argi += 1
 
 		//	} else if args[argi] == "--jknquoteint" {
@@ -421,12 +441,12 @@ func ParseReaderWriterOptions(
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])
 		argi += 2
 
-		//	} else if args[argi] == "--jflatsep" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		readerOptions.input_json_flatten_separator  = SeparatorFromArg(args[argi+1]);
-		//		writerOptions.output_json_flatten_separator = SeparatorFromArg(args[argi+1]);
-		//		argi += 2;
-		//
+	} else if args[argi] == "--jflatsep" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.IFLATSEP = SeparatorFromArg(args[argi+1])
+		writerOptions.OFLATSEP = SeparatorFromArg(args[argi+1])
+		argi += 2
+
 		//	} else if args[argi] == "--io" {
 		//		CheckArgCount(args, argi, argc, 2);
 		//		if (!lhmss_has_key(get_default_rses(), args[argi+1])) {

@@ -12,6 +12,7 @@ import (
 type RecordWriterJSON struct {
 	// Parameters:
 	wrapJSONOutputInOuterList bool
+	jsonFormatting            types.TJSONFormatting
 
 	// State:
 	onFirst bool
@@ -19,8 +20,13 @@ type RecordWriterJSON struct {
 
 // ----------------------------------------------------------------
 func NewRecordWriterJSON(writerOptions *clitypes.TWriterOptions) *RecordWriterJSON {
+	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
+	if writerOptions.JSONOutputMultiline {
+		jsonFormatting = types.JSON_MULTILINE
+	}
 	return &RecordWriterJSON{
 		wrapJSONOutputInOuterList: writerOptions.WrapJSONOutputInOuterList,
+		jsonFormatting:            jsonFormatting,
 		onFirst:                   true,
 	}
 }
@@ -47,7 +53,7 @@ func (this *RecordWriterJSON) writeWithListWrap(
 
 		// The Mlrmap MarshalJSON doesn't include the final newline, so that we
 		// can place it neatly with commas here (if the user requested them).
-		bytes, err := outrec.MarshalJSON()
+		bytes, err := outrec.MarshalJSON(this.jsonFormatting)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -80,7 +86,7 @@ func (this *RecordWriterJSON) writeWithoutListWrap(
 
 	// The Mlrmap MarshalJSON doesn't include the final newline, so that we
 	// can place it neatly with commas here (if the user requested them).
-	bytes, err := outrec.MarshalJSON()
+	bytes, err := outrec.MarshalJSON(this.jsonFormatting)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

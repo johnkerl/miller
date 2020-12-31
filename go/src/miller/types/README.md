@@ -27,3 +27,13 @@ It's also an ordered map structure, with string keys and Mlrval values. This is 
 # Context
 
 [`types.Context`](./context.go) supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
+
+# A note on JSON
+
+* The code for JSON I/O is mixed between `Mlrval` and `Mlrmap. This is unsurprising since JSON is a mutually recursive data structure -- arrays can contain maps and vice versa.
+* JSON has non-collection types (string, int, float, etc) as well as collection types (array and object).  Support for objects is principally in [./mlrmap_json.go](mlrmap_json.go); support for non-collection types as well as arrays is in [./mlrval_json.go](mlrval_json.go).
+* Both multi-line and single-line formats are supported.
+* Callsites for JSON output are record-writing (e.g. `--ojson`), the `dump` and `print` DSL routines, and the `json_stringify` DSL function.
+  * The choice between single-line and multi-line for JSON record-writing is controlled by `--jvstack` and `--no-jvstack`, the former (multiline) being the default.
+  * The `dump` and `print` DSL routines produce multi-line output without a way for the user to choose single-line output.
+  * The `json_stringify` DSL function lets the user specify multi-line or single-line, with the former being the default,
