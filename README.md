@@ -56,7 +56,23 @@ DUVAL,1731888.18,2785551.63,Residential,Masonry
 ST. JOHNS,29589.12,35207.53,Residential,Wood
 ```
 
-Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more:
+Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more. A simple example:
+
+```
+$ mlr --csv sort -f county flins.csv
+county,tiv_2011,tiv_2012,line
+Duval,1731888.18,2785551.63,Residential
+Highlands,23006.41,19757.91,Residential
+Highlands,49155.16,47362.96,Residential
+Miami Dade,1158674.85,1076001.08,Residential
+Miami Dade,2850980.31,2650932.72,Commercial
+Palm Beach,1174081.5,1856589.17,Residential
+Seminole,22890.55,20848.71,Residential
+St. Johns,29589.12,35207.53,Residential
+```
+
+A more powerful example:
+
 ```
 $ mlr --icsv --opprint --barred \
   put '$tiv_delta = $tiv_2012 - $tiv_2011; unset $tiv_2011, $tiv_2012' \

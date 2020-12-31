@@ -6,9 +6,6 @@ TOP OF LIST:
 * fix all typemasks; 'int x = 1; x = "abc"'
 * I/O redirects
 * do some profiling every so often
-
-quick:
-* make a less verbose first example at main rmd
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
