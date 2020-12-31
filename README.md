@@ -45,15 +45,15 @@ indices, using familiar formats such as CSV, TSV, JSON, and positionally-indexed
 For example, suppose you have a CSV data file like this:
 
 ```
-county,tiv_2011,tiv_2012,line,construction
-SEMINOLE,22890.55,20848.71,Residential,Wood
-MIAMI DADE,1158674.85,1076001.08,Residential,Masonry
-PALM BEACH,1174081.5,1856589.17,Residential,Masonry
-MIAMI DADE,2850980.31,2650932.72,Commercial,Reinforced Masonry
-HIGHLANDS,23006.41,19757.91,Residential,Wood
-HIGHLANDS,49155.16,47362.96,Residential,Wood
-DUVAL,1731888.18,2785551.63,Residential,Masonry
-ST. JOHNS,29589.12,35207.53,Residential,Wood
+county,tiv_2011,tiv_2012,line
+Seminole,22890.55,20848.71,Residential
+Miami Dade,1158674.85,1076001.08,Residential
+Palm Beach,1174081.5,1856589.17,Residential
+Miami Dade,2850980.31,2650932.72,Commercial
+Highlands,23006.41,19757.91,Residential
+Highlands,49155.16,47362.96,Residential
+Duval,1731888.18,2785551.63,Residential
+St. Johns,29589.12,35207.53,Residential
 ```
 
 Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more. A simple example:
