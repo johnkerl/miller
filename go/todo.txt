@@ -2,40 +2,36 @@
 TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* stats1 verb
+! fix all typemasks; 'int x = 1; x = "abc"'
+! mlrrc
 * bmx/rmd link https://sourcegraph.com/github.com/johnkerl/miller
 * make a less verbose first example at main rmd
 * update for no more jku link
   https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 * x /usr/local/go/bin/go x 2
 * put -d/-D -> put -h
-? ctx invars -> ptr w/ cmt
-* fixed-width pprint input-scanner
-* 'string or int' -> 'string, int, or array thereof' throughout
+* I/O redirects
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
 * new emitx punctuation-syntax -- decide x 4
 * to support (from C impl):
-  md_emittable ::= MD_TOKEN_ALL
-  md_emittable ::= MD_TOKEN_FULL_OOSVAR
-  md_emittable ::= md_oosvar_keylist
-  md_emittable ::= md_nonindexed_local_variable
-  md_emittable ::= md_indexed_local_variable
-  md_emittable ::= MD_TOKEN_FULL_SREC
-  md_emittable ::= md_map_literal
-  md_emittable ::= md_fcn_or_subr_call
+  x MD_TOKEN_ALL
+  x md_fcn_or_subr_call
+  x md_indexed_local_variable
+  x md_oosvar_keylist
+  k MD_TOKEN_FULL_OOSVAR
+  k MD_TOKEN_FULL_SREC
+  k md_map_literal
+  k md_nonindexed_local_variable
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-* stats1 verb
-! mlrrc
-
-!! fix all typemasks !!
 ! fix var/any type-mask
   o C/Go UT
-! gating after: 'int x = 1; x = "abc"'
 
 ! verb skeletons
 ! strptime/strftime experiments ...
@@ -50,6 +46,9 @@ small:
 * nidx @ 10-min
 * text-put @ 10-min
 * xls note (issue #396) @ file-format docs
+* ctx invars -> ptr w/ cmt
+* fixed-width pprint input-scanner
+* 'string or int' -> 'string, int, or array thereof' throughout
 
 medium:
 ? records as mlrmap -> mlrval?

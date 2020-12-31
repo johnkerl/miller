@@ -1,9 +1,13 @@
 package cli
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"regexp"
+	"strings"
 
 	"miller/clitypes"
 	"miller/dsl/cst"
@@ -390,137 +394,84 @@ func tryLoadMlrrc(
 	options *clitypes.TOptions,
 	path string,
 ) bool {
+	handle, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	defer handle.Close()
 
-	// TODO: finish porting
-	//	FILE* fp = fopen(path, "r");
-	//	if (fp == nil) {
-	return false
-	//	}
-	//
-	//	char* line = nil;
-	//	size_t linecap = 0;
-	//	int rc;
-	//	int lineno = 0;
-	//
-	//	while ((rc = getline(&line, &linecap, fp)) != -1) {
-	//		lineno++;
-	//		char* line_to_destroy = strdup(line);
-	//		if (!handle_mlrrc_line_1(popts, line_to_destroy)) {
-	//			fmt.Fprintf(os.Stderr, "Parse error at file \"%s\" line %d: %s\n",
-	//				path, lineno, line);
-	//			os.Exit(1);
-	//		}
-	//		free(line_to_destroy);
-	//	}
-	//
-	//	fclose(fp);
-	//	if (line != nil) {
-	//		free(line);
-	//	}
-	//
-	//	return true;
+	lineReader := bufio.NewReader(handle)
+
+	eof := false
+	lineno := 0
+	for !eof {
+		line, err := lineReader.ReadString('\n')
+		if err == io.EOF {
+			err = nil
+			eof = true
+			break
+		}
+		lineno++
+
+		if err != nil {
+			fmt.Fprintln(os.Stderr, os.Args[0], err)
+			os.Exit(1)
+			return false
+		}
+
+		// This is how to do a chomp:
+		// TODO: handle \r\n with libified solution.
+		line = strings.TrimRight(line, "\n")
+
+		if !handleMlrrcLine(options, line) {
+			fmt.Fprintf(os.Stderr, "%s: parse error at file \"%s\" line %d: %s\n",
+				os.Args[0], path, lineno, line,
+			)
+			os.Exit(1)
+		}
+	}
+
+	return true
 }
 
-// Chomps trailing CR, LF, or CR/LF; comment-strips; left-right trims.
+func handleMlrrcLine(
+	options *clitypes.TOptions,
+	line string,
+) bool {
 
-//static int handle_mlrrc_line_1(cli_opts_t* popts, char* line) {
-//	// chomp
-//	size_t len = len(line);
-//	if (len >= 2 && line[len-2] == '\r' && line[len-1] == '\n') {
-//		line[len-2] = 0;
-//	} else if (len >= 1 && (line[len-1] == '\r' || line[len-1] == '\n')) {
-//		line[len-1] = 0;
-//	}
-//
-//	// comment-strip
-//	char* pbang = strstr(line, "#");
-//	if (pbang != nil) {
-//		*pbang = 0;
-//	}
-//
-//	// Left-trim
-//	char* start = line;
-//	while (*start == ' ' || *start == '\t') {
-//		start++;
-//	}
-//
-//	// Right-trim
-//	len = len(start);
-//	char* end = &start[len-1];
-//	while (end > start && (*end == ' ' || *end == '\t')) {
-//		*end = 0;
-//		end--;
-//	}
-//	if (end < start) { // line was whitespace-only
-//		return true;
-//	} else {
-//		return handle_mlrrc_line_2(popts, start);
-//	}
-//}
+	// Comment-strip
+	re := regexp.MustCompile("#.*")
+	line = re.ReplaceAllString(line, "")
 
-// Prepends initial "--" if it's not already there
-//static int handle_mlrrc_line_2(cli_opts_t* popts, char* line) {
-//	size_t len = len(line);
-//
-//	char* dashed_line = nil;
-//	if (len >= 2 && line[0] != '-' && line[1] != '-') {
-//		dashed_line = mlr_paste_2_strings("--", line);
-//	} else {
-//		dashed_line = strdup(line);
-//	}
-//
-//	int rc = handle_mlrrc_line_3(popts, dashed_line);
-//
-//	// Do not free these. The command-line parsers can retain pointers into args strings (rather
-//	// than copying), resulting in freed-memory reads later in the data-processing verbs.
-//	//
-//	// It would be possible to be diligent about making sure all current command-line-parsing
-//	// callsites copy strings rather than pointing to them -- but it would be easy to miss some, and
-//	// also any future codemods might make the same mistake as well.
-//	//
-//	// It's safer (and no big leak) to simply leave these parsed mlrrc lines unfreed.
-//	//
-//	// free(dashed_line);
-//	return rc;
-//}
+	// Left-trim / right-trim
+	line = strings.TrimSpace(line)
 
-// Splits line into args array
-//static int handle_mlrrc_line_3(cli_opts_t* popts, char* line) {
-//	char* args[3];
-//	int argc = 0;
-//	char* split = strpbrk(line, " \t");
-//	if (split == nil) {
-//		args[0] = line;
-//		args[1] = nil;
-//		argc = 1;
-//	} else {
-//		*split = 0;
-//		char* p = split + 1;
-//		while (*p == ' ' || *p == '\t') {
-//			p++;
-//		}
-//		args[0] = line;
-//		args[1] = p;
-//		args[2] = nil;
-//		argc = 2;
-//	}
-//	return handle_mlrrc_line_4(popts, args, argc);
-//}
+	if line == "" { // line was whitespace-only
+		return true
+	}
 
-//static int handle_mlrrc_line_4(cli_opts_t* popts, char** args, int argc) {
-//	int argi = 0;
-//	if (handleReaderOptions(args, argc, &argi, &options.ReaderOptions)) {
-//		// handled
-//	} else if (handleWriterOptions(args, argc, &argi, &options.WriterOptions)) {
-//		// handled
-//	} else if (handleReaderWriterOptions(args, argc, &argi, &options.ReaderOptions, &options.WriterOptions)) {
-//		// handled
-//	} else if (handleMiscOptions(args, argc, &argi, popts)) {
-//		// handled
-//	} else {
-//		// unhandled
-//		return false;
-//	}
-//
-//	return true;
-//}
+	// Prepend initial "--" if it's not already there
+	if !strings.HasPrefix(line, "-") {
+		line = "--" + line
+	}
+
+	// Split line into args array
+	args := strings.Fields(line)
+	argi := 0
+	argc := len(args)
+
+	if clitypes.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+		// handled
+	} else if clitypes.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+		// handled
+	} else if clitypes.ParseReaderWriterOptions(args, argc, &argi,
+		&options.ReaderOptions, &options.WriterOptions) {
+		// handled
+	} else if clitypes.ParseMiscOptions(args, argc, &argi, options) {
+		// handled
+	} else {
+		return false
+	}
+
+	return true
+}
