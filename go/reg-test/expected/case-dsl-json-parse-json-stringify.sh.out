@@ -46,9 +46,13 @@ mlr --ixtab --ojson cat
   "hostname": "localhost",
   "pid": 12345,
   "req": "{\"id\": 6789, \"method\": \"GET\", \"path\": \"api/check\", \"host\": \"foo.bar\", \"headers\": {\"host\": \"bar.baz\", \"user-agent\": \"browser\"}}",
-  "res:status_code": 200,
-  "res:header:content-type": "text",
-  "res:header:content-encoding": "plain"
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
 }
 
 mlr --ixtab --ojson put $req = json_parse($req)
@@ -65,8 +69,12 @@ mlr --ixtab --ojson put $req = json_parse($req)
       "user-agent": "browser"
     }
   },
-  "res:status_code": 200,
-  "res:header:content-type": "text",
-  "res:header:content-encoding": "plain"
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
 }
 

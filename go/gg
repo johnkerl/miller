@@ -46,10 +46,9 @@ mention() {
 }
 
 # ================================================================
-run_mlr --ijson --oxtab flatten $indir/flatten-input-2.json
-run_mlr --ijson --oxtab flatten -f req     $indir/flatten-input-2.json
-run_mlr --ijson --oxtab flatten -f res     $indir/flatten-input-2.json
-run_mlr --ijson --oxtab flatten -f req,res $indir/flatten-input-2.json
-run_mlr --ijson --oxtab flatten -f req,res -s . $indir/flatten-input-2.json
+
+run_mlr --ijson --oxtab --no-auto-flatten --from $indir/flatten-input-1.json put '$* = flatten("", ".", $*)'
+
+run_mlr --ijson --oxtab --from $indir/flatten-input-1.json put '$* = flatten("", ".", $*)'
 
 # ================================================================

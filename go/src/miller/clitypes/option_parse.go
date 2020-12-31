@@ -80,6 +80,10 @@ func ParseReaderOptions(
 		readerOptions.AllowRaggedCSVInput = true
 		argi += 1
 
+	} else if args[argi] == "--no-auto-unflatten" {
+		readerOptions.AutoUnflatten = false
+		argi += 1
+
 	} else if args[argi] == "-i" {
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.InputFileFormat = args[argi+1]
@@ -266,6 +270,10 @@ func ParseWriterOptions(
 
 	} else if args[argi] == "--jlistwrap" {
 		writerOptions.WrapJSONOutputInOuterList = true
+		argi += 1
+
+	} else if args[argi] == "--no-auto-flatten" {
+		writerOptions.AutoFlatten = false
 		argi += 1
 
 		//	} else if args[argi] == "--jknquoteint" {

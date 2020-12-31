@@ -340,6 +340,7 @@ func (this *TransformerPut) Transform(
 		// Execute the begin { ... } before the first input record
 		this.callCount++
 		if this.callCount == 1 {
+			this.cstState.Update(nil, &context)
 			err := this.cstRootNode.ExecuteBeginBlocks(this.cstState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)

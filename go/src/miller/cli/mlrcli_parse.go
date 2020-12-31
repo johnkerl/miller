@@ -8,6 +8,7 @@ import (
 	"miller/clitypes"
 	"miller/dsl/cst"
 	"miller/lib"
+	"miller/transformers"
 	"miller/transforming"
 	"miller/version"
 )
@@ -104,6 +105,35 @@ func ParseCommandLine(args []string) (
 	}
 	if ignoresInput {
 		options.NoInput = true // e.g. then-chain begins with seqgen
+	}
+
+	// Auto-prepend an unflatten verb if input is non-JSON; auto-postpend a
+	// flatten verb if output is non-JSON. This is how we handle nested data
+	// structures (arrays, maps) for non-recursive file formats.
+	if !ignoresInput && options.ReaderOptions.AutoUnflatten {
+		if options.ReaderOptions.InputFileFormat != "json" {
+			transformer, err := transformers.NewTransformerUnflatten(
+				options.ReaderOptions.IFLATSEP,
+				"",
+			)
+			lib.InternalCodingErrorIf(err != nil)
+			lib.InternalCodingErrorIf(transformer == nil)
+			recordTransformers = append(
+				[]transforming.IRecordTransformer{transformer},
+				recordTransformers...,
+			)
+		}
+	}
+	if options.WriterOptions.AutoFlatten {
+		if options.WriterOptions.OutputFileFormat != "json" {
+			transformer, err := transformers.NewTransformerFlatten(
+				options.WriterOptions.OFLATSEP,
+				"",
+			)
+			lib.InternalCodingErrorIf(err != nil)
+			lib.InternalCodingErrorIf(transformer == nil)
+			recordTransformers = append(recordTransformers, transformer)
+		}
 	}
 
 	// There may already be one or more because of --from on the command line,

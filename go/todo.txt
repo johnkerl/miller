@@ -13,11 +13,7 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * emitp/emitf
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-* ctx invars -> ptr w/ cmt
-
-* start with explicit verbs; only implicit later
-* --no-auto-flatten / --no-auto-unflatten
-  o then connect to readers/writers, or wrappers therearound ...
+? ctx invars -> ptr w/ cmt
 
 * then re-do case-dsl-emit.sh w/ --odkvp as well
 
@@ -453,3 +449,5 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   > joinBucketKeeper & joinBucket need to be privatized
   > rewrite join-bucket-keeper.go entirely
   > also needs UT per se (not just regression)
+* cli-doc --no-auto-flatten and --no-auto-unflatten
+* note (fix? doc?) flatten of '$x={}' expands to nothing. not invertible.

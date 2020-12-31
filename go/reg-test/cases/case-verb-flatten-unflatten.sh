@@ -20,3 +20,7 @@ run_mlr --ixtab --ojson unflatten -s . -f req $indir/unflatten-input.xtab
 run_mlr --ixtab --ojson unflatten -s . -f res $indir/unflatten-input.xtab
 run_mlr --ixtab --ojson unflatten -s . -f req,res $indir/unflatten-input.xtab
 run_mlr --ixtab --ojson unflatten -s . -f nonesuch,res $indir/unflatten-input.xtab
+
+# auto-flatten / auto-unflatten
+run_mlr --j2x cat $indir/flatten-input-2.json
+$path_to_mlr --j2x cat $indir/flatten-input-2.json | run_mlr --x2j cat
