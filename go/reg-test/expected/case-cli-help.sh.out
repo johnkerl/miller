@@ -78,6 +78,7 @@ TODO: put detailed on-line help here.
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call
    them with an expression you specify with -e.
+
 (If you mix -e and -f then the expressions are evaluated in the order encountered.
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
@@ -212,6 +213,7 @@ TODO: put detailed on-line help here.
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call
    them with an expression you specify with -e.
+
 (If you mix -e and -f then the expressions are evaluated in the order encountered.
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
