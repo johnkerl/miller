@@ -93,7 +93,7 @@ func transformerSortParseCLI(
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
-			checkArgCountSort(args, argi, argc, 2)
+			checkArgCountSort(verb, args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -101,7 +101,7 @@ func transformerSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-r" {
-			checkArgCountSort(args, argi, argc, 2)
+			checkArgCountSort(verb, args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -109,7 +109,7 @@ func transformerSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-n" {
-			checkArgCountSort(args, argi, argc, 2)
+			checkArgCountSort(verb, args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -117,7 +117,7 @@ func transformerSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-nf" {
-			checkArgCountSort(args, argi, argc, 2)
+			checkArgCountSort(verb, args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -125,7 +125,7 @@ func transformerSortParseCLI(
 			}
 			argi += 2
 		} else if args[argi] == "-nr" {
-			checkArgCountSort(args, argi, argc, 2)
+			checkArgCountSort(verb, args, argi, argc, 2)
 			subList := lib.SplitString(args[argi+1], ",")
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
@@ -155,7 +155,7 @@ func transformerSortParseCLI(
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
 // this let us see if the "10" slot exists.
-func checkArgCountSort(args []string, argi int, argc int, n int) {
+func checkArgCountSort(verb string, args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
 		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
 		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")

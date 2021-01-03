@@ -467,6 +467,23 @@ func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*Mlr
 	return mlrvals, allFound
 }
 
+// As previous but with copying. For stats1.
+func (this *Mlrmap) GetSelectedValues(selectedFieldNames []string) ([]*Mlrval, bool) {
+	allFound := true
+	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
+
+	for _, selectedFieldName := range selectedFieldNames {
+		entry := this.findEntry(&selectedFieldName)
+		if entry != nil {
+			mlrvals = append(mlrvals, entry.Value.Copy())
+		} else {
+			mlrvals = append(mlrvals, nil)
+			allFound = false
+		}
+	}
+	return mlrvals, allFound
+}
+
 // Similar to the above but only checks availability. For join.
 func (this *Mlrmap) HasSelectedKeys(selectedFieldNames []string) bool {
 	for _, selectedFieldName := range selectedFieldNames {

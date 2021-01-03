@@ -3,6 +3,11 @@
 path_to_mlr="./mlr"
 indir="./reg-test/input"
 
+build-go
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
 # ----------------------------------------------------------------
 run_mlr() {
   echo
@@ -47,8 +52,24 @@ mention() {
 
 # ================================================================
 
-run_mlr --ijson --oxtab --no-auto-flatten --from $indir/flatten-input-1.json put '$* = flatten("", ".", $*)'
+for path_to_mlr in ../c/mlr ../go/mlr; do
+  run_mlr --opprint --from $indir/medium.dkvp stats1 -a count,min,max -g a -f b,i,x
+done
 
-run_mlr --ijson --oxtab --from $indir/flatten-input-1.json put '$* = flatten("", ".", $*)'
+for path_to_mlr in ../c/mlr ../go/mlr; do
+  run_mlr --oxtab --from $indir/medium.dkvp stats1 -a count,mode,antimode -f a,b
+done
+
+for path_to_mlr in ../c/mlr ../go/mlr; do
+  run_mlr --oxtab --from $indir/medium.dkvp stats1 -a sum,count,mean,min,max -f i,x
+done
+
+#run_mlr --from $indir/medium.dkvp stats1 -a sum -f x
+#run_mlr --from $indir/medium.dkvp stats1 -a count,sum -f i,x -g a,b
+
+path_to_mlr=../c/mlr
+run_mlr --oxtab stats1 -a count,sum,mean,var,stddev,meaneb,skewness,kurtosis -f i,x,y ../data/medium
+path_to_mlr=../go/mlr
+run_mlr --oxtab stats1 -a count,sum,mean,var,stddev,meaneb,skewness,kurtosis -f i,x,y ../data/medium
 
 # ================================================================
