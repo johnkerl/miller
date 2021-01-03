@@ -353,6 +353,7 @@ Options:
   kurtosis Compute sample kurtosis of specified fields
   min      Compute minimum values of specified fields
   max      Compute maximum values of specified fields
+  median   TEMP FOO
 
 -f {a,b,c}   Value-field names on which to compute statistics
 -g {d,e,f}   Optional group-by-field names

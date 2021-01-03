@@ -322,6 +322,14 @@ func MlrvalLessThanOrEquals(ma, mb *Mlrval) Mlrval {
 	return le_dispositions[ma.mvtype][mb.mvtype](ma, mb)
 }
 
+// For Go's sort.Slice
+func MlrvalLessThanForSort(ma, mb *Mlrval) bool {
+	mretval := lt_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+	retval, ok := mretval.GetBoolValue()
+	lib.InternalCodingErrorIf(!ok)
+	return retval
+}
+
 // ----------------------------------------------------------------
 func MlrvalLogicalAND(ma, mb *Mlrval) Mlrval {
 	if ma.mvtype == MT_BOOL && mb.mvtype == MT_BOOL {

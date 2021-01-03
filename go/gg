@@ -72,6 +72,11 @@ run_mlr --oxtab stats1 -a count,sum,mean,var,stddev,meaneb,skewness,kurtosis -f 
 path_to_mlr=../go/mlr
 run_mlr --oxtab stats1 -a count,sum,mean,var,stddev,meaneb,skewness,kurtosis -f i,x,y ../data/medium
 
+for path_to_mlr in ../c/mlr ../go/mlr; do
+  run_mlr --oxtab --from $indir/abixy-wide stats1 -a median -f i,x,y,a,b
+  #run_mlr --oxtab --from $indir/abixy stats1 -a median -f i,x
+done
+
 #run_mlr --from $indir/medium.dkvp stats1 -a sum -f x
 #run_mlr --from $indir/medium.dkvp stats1 -a count,sum -f i,x -g a,b
 

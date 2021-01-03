@@ -107,8 +107,10 @@ func transformerStats1Usage(
 		`Computes univariate statistics for one or more given fields, accumulated across
 the input record stream.
 Options:
--a {sum,count,...} Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
-                   one or more of:
+-a {sum,count,...} Names of accumulators: one or more of:
+  median   This is the same as p50
+  p10 p25.2 p50 p98 p100 etc.
+  TODO: flags for interpolated percentiles
 `)
 	listStats1Accumulators(o)
 	fmt.Fprint(o, `
@@ -152,6 +154,7 @@ type TransformerStats1 struct {
 	groupByFieldNameList []string
 
 	// State:
+	accumulatorFactory *Stats1AccumulatorFactory
 
 	// Accumulators are indexed by
 	//   groupByFieldName -> valueFieldName -> accumulatorName -> accumulator object
@@ -215,6 +218,7 @@ func NewTransformerStats1(
 		accumulatorNameList:              accumulatorNameList,
 		valueFieldNameList:               valueFieldNameList,
 		groupByFieldNameList:             groupByFieldNameList,
+		accumulatorFactory:               NewStats1AccumulatorFactory(),
 		accumulators:                     lib.NewOrderedMap(),
 		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
 	}
@@ -272,7 +276,7 @@ func (this *TransformerStats1) handleInputRecord(
 			accumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
 			if accumulator == nil {
 				// TODO: validate names at constructor time
-				accumulator = makeStats1Accumulator(accumulatorName)
+				accumulator = this.accumulatorFactory.Make(accumulatorName, valueFieldName)
 				if accumulator == nil {
 					fmt.Fprintf(
 						os.Stderr,

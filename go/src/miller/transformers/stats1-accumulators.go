@@ -96,6 +96,19 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 }
 
 // ----------------------------------------------------------------
+type Stats1AccumulatorFactory struct {
+	// If we are asked for p90 and p95 on the same column, we reuse the
+	// percentile-keeper object to reduce runtime memory consumption.
+	percentileKeepers map[string]*PercentileKeeper
+}
+
+func NewStats1AccumulatorFactory() *Stats1AccumulatorFactory {
+	return &Stats1AccumulatorFactory{
+		percentileKeepers: make(map[string]*PercentileKeeper),
+	}
+}
+
+// ----------------------------------------------------------------
 func listStats1Accumulators(o *os.File) {
 	for _, info := range stats1AccumulatorInfos {
 		fmt.Fprintf(o, "  %-8s %s\n", info.name, info.description)
@@ -103,16 +116,30 @@ func listStats1Accumulators(o *os.File) {
 }
 
 // ----------------------------------------------------------------
-func makeStats1Accumulator(name string) IStats1Accumulator {
+func (this *Stats1AccumulatorFactory) Make(
+	accumulatorName string,
+	valueFieldName string,
+) IStats1Accumulator {
+	if accumulatorName == "median" {
+		// TODO: if ssccanf p%f ...
+		percentileKeeper := this.percentileKeepers[valueFieldName]
+		if percentileKeeper == nil {
+			// xxx have remembered interpolation preference
+			percentileKeeper = NewPercentileKeeper()
+			this.percentileKeepers[valueFieldName] = percentileKeeper
+		}
+		return NewStats1PercentileAccumulator(percentileKeeper, accumulatorName)
+	}
+
 	for _, info := range stats1AccumulatorInfos {
-		if info.name == name {
+		if info.name == accumulatorName {
 			return info.constructor()
 		}
 	}
 	return nil
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 type Stats1CountAccumulator struct {
 	count int64
 }
@@ -400,61 +427,43 @@ func (this *Stats1KurtosisAccumulator) Emit() types.Mlrval {
 	return types.MlrvalGetKurtosis(&mcount, &this.sum, &this.sum2, &this.sum3, &this.sum4)
 }
 
-//// ----------------------------------------------------------------
-//typedef struct _stats1_percentile_state_t {
-//	percentile_keeper_t* ppercentile_keeper;
-//	lhmss_t* poutput_field_names;
-//	int reference_count;
-//	percentile_keeper_emitter_t* ppercentile_keeper_emitter;
-//} stats1_percentile_state_t;
-//static void stats1_percentile_singest(void* pvstate, char* sval) {
-//	stats1_percentile_state_t* pstate = pvstate;
-//	mv_t val = mv_copy_type_infer_string_or_float_or_int(sval);
-//	percentile_keeper_ingest(pstate->ppercentile_keeper, val);
-//}
-//
-//static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
-//	stats1_percentile_state_t* pstate = pvstate;
-//	double p;
-//
-//	if (stats1_acc_name[0] == 'm') { // Pre-validated to be either p{number} or median.
-//		p = 50.0;
-//	} else {
-//		// TODO: do the sscanf once at alloc time and store the double in the state struct for a minor perf gain.
-//		(void)sscanf(stats1_acc_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
-//	}
-//	mv_t v = pstate->ppercentile_keeper_emitter(pstate->ppercentile_keeper, p);
-//	char* s = mv_alloc_format_val(&v);
-//	// For this type, one accumulator tracks many stats1_names, but a single value_field_name.
-//	char* output_field_name = lhmss_get(pstate->poutput_field_names, stats1_acc_name);
-//	if (output_field_name == NULL) {
-//		output_field_name = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
-//		lhmss_put(pstate->poutput_field_names, mlr_strdup_or_die(stats1_acc_name),
-//			output_field_name, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-//	}
-//	lrec_put(poutrec, mlr_strdup_or_die(output_field_name), s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-//}
-//
-//stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
-//	int do_interpolated_percentiles)
-//{
-//	stats1_acc_t* pstats1_acc   = mlr_malloc_or_die(sizeof(stats1_acc_t));
-//	stats1_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_percentile_state_t));
-//	pstate->ppercentile_keeper  = percentile_keeper_alloc();
-//	pstate->poutput_field_names = lhmss_alloc();
-//	pstate->reference_count     = 1;
-//	pstate->ppercentile_keeper_emitter = (do_interpolated_percentiles)
-//		? percentile_keeper_emit_linearly_interpolated
-//		: percentile_keeper_emit_non_interpolated;
-//
-//	pstats1_acc->pvstate        = (void*)pstate;
-//	pstats1_acc->pdingest_func  = NULL;
-//	pstats1_acc->pningest_func  = NULL;
-//	pstats1_acc->psingest_func  = stats1_percentile_singest;
-//	pstats1_acc->pemit_func     = stats1_percentile_emit;
-//	return pstats1_acc;
-//}
-//void stats1_percentile_reuse(stats1_acc_t* pstats1_acc) {
-//	stats1_percentile_state_t* pstate = pstats1_acc->pvstate;
-//	pstate->reference_count++;
-//}
+// ----------------------------------------------------------------
+// TODO: refactor this for use with more than one percentile
+
+type Stats1PercentileAccumulator struct {
+	percentileKeeper *PercentileKeeper
+	percentile float64
+}
+
+func NewStats1PercentileAccumulator(
+	percentileKeeper *PercentileKeeper,
+	name string, // "median" or things like "p99.9"
+) IStats1Accumulator {
+	return &Stats1PercentileAccumulator{
+		percentileKeeper: percentileKeeper,
+		percentile: 50.0, // TEMP
+	}
+}
+
+func (this *Stats1PercentileAccumulator) Ingest(value *types.Mlrval) {
+	this.percentileKeeper.Ingest(value)
+}
+
+func (this *Stats1PercentileAccumulator) Emit(
+//	char* valueFieldName,
+//	char* stats1_acc_name,
+//	lrec_t* outrec,
+) types.Mlrval {
+
+	//	if (stats1_acc_name[0] == 'm') { // Pre-validated to be either p{number} or median.
+	//		p = 50.0;
+	//	} else {
+	//		// TODO: do the sscanf once at alloc time and store the double in the state struct for a minor perf gain.
+	//		(void)sscanf(stats1_acc_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
+	//	}
+
+	// TODO: parameterize
+	v := this.percentileKeeper.EmitNonInterpolated(this.percentile)
+
+	return v
+}

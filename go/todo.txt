@@ -3,7 +3,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! het what
-* stats1 verb
+* stats1 verb: percentiles
 * fix all typemasks; 'int x = 1; x = "abc"'
 * I/O redirects
 * do some profiling every so often
