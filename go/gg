@@ -72,4 +72,7 @@ run_mlr --oxtab stats1 -a count,sum,mean,var,stddev,meaneb,skewness,kurtosis -f 
 path_to_mlr=../go/mlr
 run_mlr --oxtab stats1 -a count,sum,mean,var,stddev,meaneb,skewness,kurtosis -f i,x,y ../data/medium
 
+#run_mlr --from $indir/medium.dkvp stats1 -a sum -f x
+#run_mlr --from $indir/medium.dkvp stats1 -a count,sum -f i,x -g a,b
+
 # ================================================================

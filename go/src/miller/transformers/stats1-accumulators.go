@@ -39,6 +39,7 @@ var stats1AccumulatorInfos []stats1AccumulatorInfo = []stats1AccumulatorInfo{
 		"Find most-frequently-occurring values for fields; first-found wins tie",
 		NewStats1ModeAccumulator,
 	},
+
 	{
 		"antimode",
 		"Find least-frequently-occurring values for fields; first-found wins tie",
