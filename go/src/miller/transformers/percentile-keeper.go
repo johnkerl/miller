@@ -1,3 +1,7 @@
+// ================================================================
+// TODO: comment here
+// ================================================================
+
 package transformers
 
 import (
@@ -9,15 +13,19 @@ import (
 )
 
 type PercentileKeeper struct {
-	data   []*types.Mlrval
-	sorted bool
+	data                      []*types.Mlrval
+	sorted                    bool
+	doInterpolatedPercentiles bool
 }
 
 // ----------------------------------------------------------------
-func NewPercentileKeeper() *PercentileKeeper {
+func NewPercentileKeeper(
+	doInterpolatedPercentiles bool,
+) *PercentileKeeper {
 	return &PercentileKeeper{
-		data:   make([]*types.Mlrval, 0, 1000),
-		sorted: false,
+		data:                      make([]*types.Mlrval, 0, 1000),
+		sorted:                    false,
+		doInterpolatedPercentiles: doInterpolatedPercentiles,
 	}
 }
 
@@ -249,6 +257,14 @@ func (this *PercentileKeeper) sortIfNecessary() {
 }
 
 // ----------------------------------------------------------------
+func (this *PercentileKeeper) Emit(percentile float64) types.Mlrval {
+	if this.doInterpolatedPercentiles {
+		return this.EmitLinearlyInterpolated(percentile)
+	} else {
+		return this.EmitNonInterpolated(percentile)
+	}
+}
+
 func (this *PercentileKeeper) EmitNonInterpolated(percentile float64) types.Mlrval {
 	if len(this.data) == 0 {
 		return types.MlrvalFromAbsent()

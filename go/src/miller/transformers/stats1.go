@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -36,6 +37,7 @@ func transformerStats1ParseCLI(
 	accumulatorNameList := make([]string, 0)
 	valueFieldNameList := make([]string, 0)
 	groupByFieldNameList := make([]string, 0)
+	doInterpolatedPercentiles := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if !strings.HasPrefix(args[argi], "-") {
@@ -59,6 +61,10 @@ func transformerStats1ParseCLI(
 			groupByFieldNameList = lib.SplitString(args[argi+1], ",")
 			argi += 2
 
+		} else if args[argi] == "-i" {
+			doInterpolatedPercentiles = true
+			argi += 1
+
 		} else {
 			transformerStats1Usage(os.Stderr, args[0], verb, nil)
 			os.Exit(1)
@@ -81,6 +87,7 @@ func transformerStats1ParseCLI(
 		accumulatorNameList,
 		valueFieldNameList,
 		groupByFieldNameList,
+		doInterpolatedPercentiles,
 	)
 
 	*pargi = argi
@@ -91,7 +98,10 @@ func transformerStats1ParseCLI(
 // this let us see if the "10" slot exists.
 func checkArgCountStats1(verb string, args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s %s: option \"%s\" missing argument(s).\n", args[0], verb, args[argi])
+		fmt.Fprintf(
+			os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
+			args[0], verb, args[argi],
+		)
 		os.Exit(1)
 	}
 }
@@ -117,6 +127,8 @@ Options:
 -f {a,b,c}   Value-field names on which to compute statistics
 -g {d,e,f}   Optional group-by-field names
 
+-i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
+             Not sensical for string-valued fields.\n");
 [TODO: more]
 `)
 
@@ -149,9 +161,10 @@ Options:
 // ----------------------------------------------------------------
 type TransformerStats1 struct {
 	// Input:
-	accumulatorNameList  []string
-	valueFieldNameList   []string
-	groupByFieldNameList []string
+	accumulatorNameList       []string
+	valueFieldNameList        []string
+	groupByFieldNameList      []string
+	doInterpolatedPercentiles bool
 
 	// State:
 	accumulatorFactory *Stats1AccumulatorFactory
@@ -159,9 +172,9 @@ type TransformerStats1 struct {
 	// Accumulators are indexed by
 	//   groupByFieldName -> valueFieldName -> accumulatorName -> accumulator object
 	// This would be
-	//   accumulators map[string]map[string]map[string]IStats1Accumulator
+	//   namedAccumulators map[string]map[string]map[string]Stats1NamedAccumulator
 	// except we need maps that preserve insertion order.
-	accumulators *lib.OrderedMap
+	namedAccumulators *lib.OrderedMap
 
 	groupingKeysToGroupByFieldValues map[string][]*types.Mlrval
 }
@@ -213,13 +226,26 @@ func NewTransformerStats1(
 	accumulatorNameList []string,
 	valueFieldNameList []string,
 	groupByFieldNameList []string,
+	doInterpolatedPercentiles bool,
 ) (*TransformerStats1, error) {
+	for _, name := range accumulatorNameList {
+		if !validateStats1AccumulatorName(name) {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"%s stats1: accumulator \"%s\" not found.\n",
+					os.Args[0], name,
+				),
+			)
+		}
+	}
+
 	this := &TransformerStats1{
 		accumulatorNameList:              accumulatorNameList,
 		valueFieldNameList:               valueFieldNameList,
 		groupByFieldNameList:             groupByFieldNameList,
+		doInterpolatedPercentiles:        doInterpolatedPercentiles,
 		accumulatorFactory:               NewStats1AccumulatorFactory(),
-		accumulators:                     lib.NewOrderedMap(),
+		namedAccumulators:                lib.NewOrderedMap(),
 		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
 	}
 	return this, nil
@@ -253,12 +279,13 @@ func (this *TransformerStats1) handleInputRecord(
 		return
 	}
 
-	level2 := this.accumulators.Get(groupingKey)
+	level2 := this.namedAccumulators.Get(groupingKey)
 	if level2 == nil {
 		level2 = lib.NewOrderedMap()
-		this.accumulators.Put(groupingKey, level2)
-		// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
-		// then groupByFieldValues is the array ["circle", "blue"].
+		this.namedAccumulators.Put(groupingKey, level2)
+		// E.g. if grouping by "color" and "shape", and the current record has
+		// color=blue, shape=circle, then groupByFieldValues is the array
+		// ["blue", "circle"].
 		groupByFieldValues, _ := inrec.GetSelectedValues(this.groupByFieldNameList)
 		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
 	}
@@ -273,21 +300,16 @@ func (this *TransformerStats1) handleInputRecord(
 			level2.(*lib.OrderedMap).Put(valueFieldName, level3)
 		}
 		for _, accumulatorName := range this.accumulatorNameList {
-			accumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
-			if accumulator == nil {
-				// TODO: validate names at constructor time
-				accumulator = this.accumulatorFactory.Make(accumulatorName, valueFieldName)
-				if accumulator == nil {
-					fmt.Fprintf(
-						os.Stderr,
-						"%s stats1: accumulator \"%s\" not found.\n",
-						os.Args[0], accumulatorName,
-					)
-					os.Exit(1)
-				}
-				level3.(*lib.OrderedMap).Put(accumulatorName, accumulator)
+			namedAccumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
+			if namedAccumulator == nil {
+				namedAccumulator = this.accumulatorFactory.MakeNamedAccumulator(
+					accumulatorName,
+					valueFieldName,
+					this.doInterpolatedPercentiles,
+				)
+				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
 			}
-			accumulator.(IStats1Accumulator).Ingest(valueFieldValue)
+			namedAccumulator.(*Stats1NamedAccumulator).Ingest(valueFieldValue)
 		}
 	}
 }
@@ -297,7 +319,7 @@ func (this *TransformerStats1) handleEndOfRecordStream(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	for pa := this.accumulators.Head; pa != nil; pa = pa.Next {
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
 		groupByFieldValues := this.groupingKeysToGroupByFieldValues[groupingKey]
 
@@ -308,14 +330,11 @@ func (this *TransformerStats1) handleEndOfRecordStream(
 
 		level2 := pa.Value.(*lib.OrderedMap)
 		for pb := level2.Head; pb != nil; pb = pb.Next {
-			valueFieldName := pb.Key
 			level3 := pb.Value.(*lib.OrderedMap)
 			for pc := level3.Head; pc != nil; pc = pc.Next {
-				accumulatorName := pc.Key
-				accumulator := pc.Value.(IStats1Accumulator)
-				output := accumulator.Emit()
-				key := valueFieldName + "_" + accumulatorName
-				newrec.PutCopy(&key, &output)
+				namedAccumulator := pc.Value.(*Stats1NamedAccumulator)
+				key, value := namedAccumulator.Emit()
+				newrec.PutCopy(&key, &value)
 			}
 		}
 		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)

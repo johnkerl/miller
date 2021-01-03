@@ -24,12 +24,12 @@ import (
 
 // ----------------------------------------------------------------
 func MlrvalGetVar(mn, msum, msum2 *Mlrval) Mlrval {
-	n, ok := mn.GetIntValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum, ok := msum.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum2, ok := msum2.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
+	n, isInt := mn.GetIntValue()
+	lib.InternalCodingErrorIf(!isInt)
+	sum, isNumber := msum.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
+	sum2, isNumber := msum2.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
 
 	if n < 2 {
 		return MlrvalFromVoid()
@@ -88,18 +88,18 @@ func MlrvalGetMeanEB(mn, msum, msum2 *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) Mlrval {
-	n, ok := mn.GetIntValue()
-	lib.InternalCodingErrorIf(!ok)
+	n, isInt := mn.GetIntValue()
+	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
 		return MlrvalFromVoid()
 	}
 	fn := float64(n)
-	sum, ok := msum.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum2, ok := msum2.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum3, ok := msum3.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
+	sum, isNumber := msum.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
+	sum2, isNumber := msum2.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
+	sum3, isNumber := msum3.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
 
 	mean := sum / fn
 	numerator := sum3 - mean*(3.0*sum2-2.0*fn*mean*mean)
@@ -125,20 +125,20 @@ func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *Mlrval) Mlrval {
-	n, ok := mn.GetIntValue()
-	lib.InternalCodingErrorIf(!ok)
+	n, isInt := mn.GetIntValue()
+	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
 		return MlrvalFromVoid()
 	}
 	fn := float64(n)
-	sum, ok := msum.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum2, ok := msum2.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum3, ok := msum3.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
-	sum4, ok := msum4.GetNumericToFloatValue()
-	lib.InternalCodingErrorIf(!ok)
+	sum, isNumber := msum.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
+	sum2, isNumber := msum2.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
+	sum3, isNumber := msum3.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
+	sum4, isNumber := msum4.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!isNumber)
 
 	mean := sum / fn
 
