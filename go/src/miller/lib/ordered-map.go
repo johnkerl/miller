@@ -96,6 +96,19 @@ func (this *OrderedMap) Get(key string) interface{} {
 	return nil
 }
 
+// The Get is sufficient for pointer values -- the caller can check if the
+// return value is nil. For int/string values (which are non-nullable) we have
+// this method.
+func (this *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
+	pe := this.findEntry(&key)
+	if pe == nil {
+		return nil, false
+	} else {
+		return pe.Value, true
+	}
+	return nil, false
+}
+
 // ----------------------------------------------------------------
 func (this *OrderedMap) Clear() {
 	this.FieldCount = 0

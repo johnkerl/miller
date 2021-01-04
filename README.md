@@ -45,34 +45,50 @@ indices, using familiar formats such as CSV, TSV, JSON, and positionally-indexed
 For example, suppose you have a CSV data file like this:
 
 ```
-county,tiv_2011,tiv_2012,line,construction
-SEMINOLE,22890.55,20848.71,Residential,Wood
-MIAMI DADE,1158674.85,1076001.08,Residential,Masonry
-PALM BEACH,1174081.5,1856589.17,Residential,Masonry
-MIAMI DADE,2850980.31,2650932.72,Commercial,Reinforced Masonry
-HIGHLANDS,23006.41,19757.91,Residential,Wood
-HIGHLANDS,49155.16,47362.96,Residential,Wood
-DUVAL,1731888.18,2785551.63,Residential,Masonry
-ST. JOHNS,29589.12,35207.53,Residential,Wood
+county,tiv_2011,tiv_2012,line
+St. Johns,29589.12,35207.53,Residential
+Miami Dade,2850980.31,2650932.72,Commercial
+Highlands,49155.16,47362.96,Residential
+Palm Beach,1174081.5,1856589.17,Residential
+Duval,1731888.18,2785551.63,Residential
+Miami Dade,1158674.85,1076001.08,Residential
+Seminole,22890.55,20848.71,Residential
+Highlands,23006.41,19757.91,Residential
 ```
 
-Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more:
+Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more. A simple example:
+
+```
+$ mlr --csv sort -f county flins.csv
+county,tiv_2011,tiv_2012,line
+Duval,1731888.18,2785551.63,Residential
+Highlands,23006.41,19757.91,Residential
+Highlands,49155.16,47362.96,Residential
+Miami Dade,1158674.85,1076001.08,Residential
+Miami Dade,2850980.31,2650932.72,Commercial
+Palm Beach,1174081.5,1856589.17,Residential
+Seminole,22890.55,20848.71,Residential
+St. Johns,29589.12,35207.53,Residential
+```
+
+A more powerful example:
+
 ```
 $ mlr --icsv --opprint --barred \
-  put '$tiv_delta = $tiv_2012 - $tiv_2011; unset $tiv_2011, $tiv_2012' \
+  put '$tiv_delta = int($tiv_2012 - $tiv_2011); unset $tiv_2011, $tiv_2012' \
   then sort -nr tiv_delta flins.csv 
-+------------+-------------+----------------+
-| county     | line        | tiv_delta      |
-+------------+-------------+----------------+
-| Duval      | Residential | 1053663.450000 |
-| Palm Beach | Residential | 682507.670000  |
-| St. Johns  | Residential | 5618.410000    |
-| Highlands  | Residential | -1792.200000   |
-| Seminole   | Residential | -2041.840000   |
-| Highlands  | Residential | -3248.500000   |
-| Miami Dade | Residential | -82673.770000  |
-| Miami Dade | Commercial  | -200047.590000 |
-+------------+-------------+----------------+
++------------+-------------+-----------+
+| county     | line        | tiv_delta |
++------------+-------------+-----------+
+| Duval      | Residential | 1053663   |
+| Palm Beach | Residential | 682508    |
+| St. Johns  | Residential | 5618      |
+| Highlands  | Residential | -1792     |
+| Seminole   | Residential | -2042     |
+| Highlands  | Residential | -3249     |
+| Miami Dade | Residential | -82674    |
+| Miami Dade | Commercial  | -200048   |
++------------+-------------+-----------+
 ```
 
 This is something the Unix toolkit always could have done, and arguably always

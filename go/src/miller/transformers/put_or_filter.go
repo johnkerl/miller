@@ -69,7 +69,7 @@ func transformerPutParseCLI(
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
-			checkArgCountPut(args, argi, argc, 2)
+			checkArgCountPut(verb, args, argi, argc, 2)
 
 			// Get a DSL string from the user-specified filename
 			data, err := ioutil.ReadFile(args[argi+1])
@@ -87,7 +87,7 @@ func transformerPutParseCLI(
 			argi += 2
 
 		} else if args[argi] == "-e" {
-			checkArgCountPut(args, argi, argc, 2)
+			checkArgCountPut(verb, args, argi, argc, 2)
 
 			// Get a DSL string from the user-specified filename
 			if dslString != "" {
@@ -103,7 +103,7 @@ func transformerPutParseCLI(
 			//   mlr put -s sum=0
 			// is like
 			//   mlr put -s 'begin {@sum = 0}'
-			checkArgCountPut(args, argi, argc, 2)
+			checkArgCountPut(verb, args, argi, argc, 2)
 			presets = append(presets, args[argi+1])
 
 			argi += 2
@@ -138,6 +138,16 @@ func transformerPutParseCLI(
 			// TODO: this is a no-op in Miller 6 and above.
 			// Comment this in more detail.
 			argi++
+
+		} else if args[argi] == "--jquoteall" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+		} else if args[argi] == "--jvquoteall" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+		} else if args[argi] == "--jknquoteint" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
 
 		} else {
 			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
@@ -193,10 +203,11 @@ func transformerPutParseCLI(
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
 // this let us see if the "10" slot exists.
-func checkArgCountPut(args []string, argi int, argc int, n int) {
+func checkArgCountPut(verb string, args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
-		transformerPutUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
+		fmt.Fprintf(os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
+			args[0], verb, args[argi],
+		)
 		os.Exit(1)
 	}
 }

@@ -104,6 +104,7 @@ func transformerJoinParseCLI(
 			// handled
 
 		} else if args[argi] == "--prepipe" {
+			// TOOD: checkArgsCount pattern like put/sort
 			if (argc - argi) < 2 {
 				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
 				return nil

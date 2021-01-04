@@ -171,13 +171,8 @@ In this example I am using version 3.4.0; of course that will change for subsequ
   * Attach the release tarball, SRPM, and binaries. Double-check assets were successfully uploaded.
   * Publish the release
 
-* Create the release-specific docs:
-
-  * Pull the Github-generated source ``.tgz`` from Github to ISP miller-releases directory and unpack and ``cd`` into it.
-  * ``cd`` into ``doc`` subdir. Edit ``template.html``'s ``titleinbody`` tag from ``Miller`` to ``Miller 3.4.0`` and poki-build.
-  * ISP upload
-  * At the ISP site, update the latest-revision symlink ``ln -s pub_http_internet/miller-releases/miller-3.4.0 pub_http_internet/miller``.  (This is the main doc URL linked to from the top of the Github repo so it must point to this newly published revision.)
-  * Back in the Github repo, edit ``doc/content-for-release-docs.html`` to include new release, poki-build, push/commit, and ISP upload.
+* Check the release-specific docs:
+  * Look at https://miller.readthedocs.io for new-version docs, after a few minutes' propagation time.
 
 * Notify:
 

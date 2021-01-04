@@ -94,3 +94,7 @@ https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h.
 (one to find end of line, and another to separate fields) as well as most use
 of `malloc`. Note however that standard input cannot be mmapped, so both
 record-reader options are retained.
+
+# Source-code indexing
+
+Please see https://sourcegraph.com/github.com/johnkerl/miller

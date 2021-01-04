@@ -36,9 +36,9 @@ col
 "abc ""def"" \ghi"
 EOF
 
-run_mlr         --ijson --oxtab                              cat $indir/arrays.json
-run_mlr         --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
-run_mlr         --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
-mlr_expect_fail --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
+run_mlr --ijson --oxtab                              cat $indir/arrays.json
+run_mlr --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
+run_mlr --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
+run_mlr --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
 
 run_mlr --json cat $indir/escapes.json

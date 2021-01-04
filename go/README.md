@@ -172,3 +172,7 @@ nil through the reader/transformer/writer sequence.
 ## Software-testing methodology
 
 See [./reg-test/README.md](./reg-test/README.md).
+
+## Source-code indexing
+
+Please see https://sourcegraph.com/github.com/johnkerl/miller
