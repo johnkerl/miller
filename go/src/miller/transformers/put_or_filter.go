@@ -139,6 +139,16 @@ func transformerPutParseCLI(
 			// Comment this in more detail.
 			argi++
 
+		} else if args[argi] == "--jquoteall" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+		} else if args[argi] == "--jvquoteall" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+		} else if args[argi] == "--jknquoteint" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+
 		} else {
 			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 			os.Exit(1)

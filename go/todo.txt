@@ -2,11 +2,16 @@
 TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! het what
+! fix:
+  u/rr ./reg-test/cases/case-c-dsl-absent-empty.sh
+  mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' ./reg-test/input/abixy-het
+  Miller: record/map indices must be string or int; got absent
+
 * stats1 verb: percentiles
-  ! mode/antimode need orderedmap; & comment why
   o actualize -S and -F -- ?
   o regexed
+    - needs implementation of "a.*b"i
+* merge-fields
 * fix all typemasks; 'int x = 1; x = "abc"'
 * I/O redirects
 * do some profiling every so often
@@ -404,3 +409,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   > also needs UT per se (not just regression)
 * cli-doc --no-auto-flatten and --no-auto-unflatten
 * note (fix? doc?) flatten of '$x={}' expands to nothing. not invertible.
+* doc: --jvquoteall --jknquoteint no-ops
