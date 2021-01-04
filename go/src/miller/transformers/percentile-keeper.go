@@ -239,6 +239,7 @@ func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int64, p float64
 		return *array[iindex].Copy()
 	} else {
 		// array[iindex] + frac * (array[iindex+1] - array[iindex])
+		// TODO: just do this in float64.
 		frac := types.MlrvalFromFloat64(findex - float64(iindex))
 		diff := types.MlrvalBinaryMinus(array[iindex+1], array[iindex])
 		prod := types.MlrvalTimes(&frac, &diff)

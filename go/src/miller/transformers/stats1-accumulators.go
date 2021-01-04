@@ -243,12 +243,20 @@ func (this *Stats1AccumulatorFactory) MakeAccumulator(
 		}
 
 		percentileKeeper := percentileKeepersForValueFieldName[groupingKey]
+		isPrimary := false
 		if percentileKeeper == nil {
 			percentileKeeper = NewPercentileKeeper(doInterpolatedPercentiles)
 			percentileKeepersForValueFieldName[groupingKey] = percentileKeeper
+			isPrimary = true
 		}
 
-		return NewStats1PercentileAccumulator(percentileKeeper, percentile)
+		// To conserve memory, percentile-keeprs on the same value-field-name
+		// (and grouping-key) are shared. For example, p25,p75 on field "x".
+		// This means though that each datapoint must be ingested only once
+		// (e.g.  by the p25 accumulator) since it shares a percentile-keepr
+		// with the p75 accumulator. We handle this by tracking the first
+		// construction.
+		return NewStats1PercentileAccumulator(percentileKeeper, percentile, isPrimary)
 	}
 
 	// Then try the lookup table.
@@ -567,23 +575,33 @@ func (this *Stats1KurtosisAccumulator) Emit() types.Mlrval {
 }
 
 // ----------------------------------------------------------------
+// To conserve memory, percentile-keeprs on the same value-field-name (and
+// grouping-key) are shared. For example, p25,p75 on field "x".  This means
+// though that each datapoint must be ingested only once (e.g.  by the p25
+// accumulator) since it shares a percentile-keepr with the p75 accumulator.
+// The isPrimary flag tracks this.
 type Stats1PercentileAccumulator struct {
 	percentileKeeper *PercentileKeeper
 	percentile       float64
+	isPrimary        bool
 }
 
 func NewStats1PercentileAccumulator(
 	percentileKeeper *PercentileKeeper,
 	percentile float64,
+	isPrimary bool,
 ) IStats1Accumulator {
 	return &Stats1PercentileAccumulator{
 		percentileKeeper: percentileKeeper,
 		percentile:       percentile,
+		isPrimary:        isPrimary,
 	}
 }
 
 func (this *Stats1PercentileAccumulator) Ingest(value *types.Mlrval) {
-	this.percentileKeeper.Ingest(value)
+	if this.isPrimary {
+		this.percentileKeeper.Ingest(value)
+	}
 }
 
 func (this *Stats1PercentileAccumulator) Emit() types.Mlrval {
