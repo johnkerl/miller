@@ -130,14 +130,18 @@ func (this *Stats1NamedAccumulator) Emit() (key string, value types.Mlrval) {
 
 // ----------------------------------------------------------------
 // If we are asked for p90 and p95 on the same column, we reuse the
-// percentile-keeper object to reduce runtime memory consumption.
+// percentile-keeper object to reduce runtime memory consumption.  This
+// two-level map is keyed by value-field name and grouping key.  E.g. for 'mlr
+// stats1 -a median -f x,y -g a,b' there will be an entry keyed primarily by
+// the string "x", and secondarily keyed by the values of a and b for a given
+// record.
 type Stats1AccumulatorFactory struct {
-	percentileKeepers map[string]*PercentileKeeper
+	percentileKeepers map[string]map[string]*PercentileKeeper
 }
 
 func NewStats1AccumulatorFactory() *Stats1AccumulatorFactory {
 	return &Stats1AccumulatorFactory{
-		percentileKeepers: make(map[string]*PercentileKeeper),
+		percentileKeepers: make(map[string]map[string]*PercentileKeeper),
 	}
 }
 
@@ -193,12 +197,14 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 // ----------------------------------------------------------------
 func (this *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	accumulatorName string,
+	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
 ) *Stats1NamedAccumulator {
 
 	accumulator := this.MakeAccumulator(
 		accumulatorName,
+		groupingKey,
 		valueFieldName,
 		doInterpolatedPercentiles,
 	)
@@ -223,18 +229,25 @@ func (this *Stats1AccumulatorFactory) MakeNamedAccumulator(
 
 func (this *Stats1AccumulatorFactory) MakeAccumulator(
 	accumulatorName string,
+	groupingKey string,
 	valueFieldName string,
 	doInterpolatedPercentiles bool,
 ) IStats1Accumulator {
 	// First try percentiles, which have parameterized names.
 	percentile, ok := tryPercentileFromName(accumulatorName)
 	if ok {
-		percentileKeeper := this.percentileKeepers[valueFieldName]
-		if percentileKeeper == nil {
-			// TODO: have remembered interpolation preference
-			percentileKeeper = NewPercentileKeeper(doInterpolatedPercentiles)
-			this.percentileKeepers[valueFieldName] = percentileKeeper
+		percentileKeepersForValueFieldName := this.percentileKeepers[valueFieldName]
+		if percentileKeepersForValueFieldName == nil {
+			percentileKeepersForValueFieldName = make(map[string]*PercentileKeeper)
+			this.percentileKeepers[valueFieldName] = percentileKeepersForValueFieldName
 		}
+
+		percentileKeeper := percentileKeepersForValueFieldName[groupingKey]
+		if percentileKeeper == nil {
+			percentileKeeper = NewPercentileKeeper(doInterpolatedPercentiles)
+			percentileKeepersForValueFieldName[groupingKey] = percentileKeeper
+		}
+
 		return NewStats1PercentileAccumulator(percentileKeeper, percentile)
 	}
 
@@ -266,25 +279,34 @@ func (this *Stats1CountAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1ModeAccumulator struct {
-	countsByValue map[string]int64
+	// Needs to be an ordered map to guarantee Miller's semantics that
+	// first-found breaks ties.
+	countsByValue *lib.OrderedMap
 }
 
 func NewStats1ModeAccumulator() IStats1Accumulator {
 	return &Stats1ModeAccumulator{
-		countsByValue: make(map[string]int64),
+		countsByValue: lib.NewOrderedMap(),
 	}
 }
 func (this *Stats1ModeAccumulator) Ingest(value *types.Mlrval) {
 	key := value.String() // 1, 1.0, and 1.000 are distinct
-	this.countsByValue[key] = this.countsByValue[key] + 1
+	iPrevious, ok := this.countsByValue.GetWithCheck(key)
+	if !ok {
+		this.countsByValue.Put(key, int64(1))
+	} else {
+		this.countsByValue.Put(key, iPrevious.(int64)+1)
+	}
 }
 func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
-	if len(this.countsByValue) == 0 {
+	if this.countsByValue.FieldCount == 0 {
 		return types.MlrvalFromError()
 	}
 	maxValue := ""
 	var maxCount = int64(0)
-	for value, count := range this.countsByValue {
+	for pe := this.countsByValue.Head; pe != nil; pe = pe.Next {
+		value := pe.Key
+		count := pe.Value.(int64)
 		if maxValue == "" || count > maxCount {
 			maxValue = value
 			maxCount = count
@@ -295,31 +317,40 @@ func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1AntimodeAccumulator struct {
-	countsByValue map[string]int64
+	// Needs to be an ordered map to guarantee Miller's semantics that
+	// first-found breaks ties.
+	countsByValue *lib.OrderedMap
 }
 
 func NewStats1AntimodeAccumulator() IStats1Accumulator {
 	return &Stats1AntimodeAccumulator{
-		countsByValue: make(map[string]int64),
+		countsByValue: lib.NewOrderedMap(),
 	}
 }
 func (this *Stats1AntimodeAccumulator) Ingest(value *types.Mlrval) {
 	key := value.String() // 1, 1.0, and 1.000 are distinct
-	this.countsByValue[key] = this.countsByValue[key] + 1
+	iPrevious, ok := this.countsByValue.GetWithCheck(key)
+	if !ok {
+		this.countsByValue.Put(key, int64(1))
+	} else {
+		this.countsByValue.Put(key, iPrevious.(int64)+1)
+	}
 }
 func (this *Stats1AntimodeAccumulator) Emit() types.Mlrval {
-	if len(this.countsByValue) == 0 {
+	if this.countsByValue.FieldCount == 0 {
 		return types.MlrvalFromError()
 	}
-	maxValue := ""
-	var maxCount = int64(0)
-	for value, count := range this.countsByValue {
-		if maxValue == "" || count < maxCount {
-			maxValue = value
-			maxCount = count
+	minValue := ""
+	var minCount = int64(0)
+	for pe := this.countsByValue.Head; pe != nil; pe = pe.Next {
+		value := pe.Key
+		count := pe.Value.(int64)
+		if minValue == "" || count < minCount {
+			minValue = value
+			minCount = count
 		}
 	}
-	return types.MlrvalFromString(maxValue)
+	return types.MlrvalFromString(minValue)
 }
 
 // ----------------------------------------------------------------

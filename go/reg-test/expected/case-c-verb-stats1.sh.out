@@ -1,15 +1,63 @@
 
-mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y ./reg-test/input/abixy
-i_mean   i_sum i_count i_min i_max i_antimode i_mode x_mean   x_sum    x_count x_min    x_max    x_antimode         x_mode             y_mean   y_sum    y_count y_min    y_max    y_antimode         y_mode
-5.500000 55    10      1     10    1          1      0.453629 4.536294 10      0.031442 0.758680 0.3467901443380824 0.3467901443380824 0.594454 5.944542 10      0.134189 0.976181 0.7268028627434533 0.7268028627434533
+mlr --oxtab stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y ./reg-test/input/abixy
+i_mean     5.500000
+i_sum      55
+i_count    10
+i_min      1
+i_max      10
+i_antimode 1
+i_mode     1
+x_mean     0.453629
+x_sum      4.536294
+x_count    10
+x_min      0.031442
+x_max      0.758680
+x_antimode 0.3467901443380824
+x_mode     0.3467901443380824
+y_mean     0.594454
+y_sum      5.944542
+y_count    10
+y_min      0.134189
+y_max      0.976181
+y_antimode 0.7268028627434533
+y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y ./reg-test/input/abixy
-i_min i_p10 i_p50 i_median i_antimode i_mode i_p90 i_max x_min    x_p10    x_p50    x_median x_antimode         x_mode             x_p90    x_max    y_min    y_p10    y_p50    y_median y_antimode         y_mode             y_p90    y_max
-1     2     6     6        1          1      10    10    0.031442 0.204603 0.527126 0.527126 0.3467901443380824 0.3467901443380824 0.758680 0.758680 0.134189 0.187885 0.726803 0.726803 0.7268028627434533 0.7268028627434533 0.976181 0.976181
+mlr --oxtab stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y ./reg-test/input/abixy
+i_min      1
+i_p10      2
+i_p50      6
+i_median   6
+i_antimode 1
+i_mode     1
+i_p90      10
+i_max      10
+x_min      0.031442
+x_p10      0.204603
+x_p50      0.527126
+x_median   0.527126
+x_antimode 0.3467901443380824
+x_mode     0.3467901443380824
+x_p90      0.758680
+x_max      0.758680
+y_min      0.134189
+y_p10      0.187885
+y_p50      0.726803
+y_median   0.726803
+y_antimode 0.7268028627434533
+y_mode     0.7268028627434533
+y_p90      0.976181
+y_max      0.976181
 
-mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y ./reg-test/input/abixy
-i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
-5.500000 0.957427 3.027650 0.453629 0.068157 0.215531 0.594454 0.096968 0.306639
+mlr --oxtab stats1 -a mean,meaneb,stddev -f i,x,y ./reg-test/input/abixy
+i_mean   5.500000
+i_meaneb 0.957427
+i_stddev 3.027650
+x_mean   0.453629
+x_meaneb 0.068157
+x_stddev 0.215531
+y_mean   0.594454
+y_meaneb 0.096968
+y_stddev 0.306639
 
 mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y ./reg-test/input/abixy
 a          pan
@@ -282,29 +330,308 @@ y_max      0.976181
 y_antimode 0.7268028627434533
 y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ./reg-test/input/abixy
-a   i_mean   i_sum i_count i_min i_max i_antimode i_mode x_mean   x_sum    x_count x_min    x_max    x_antimode          x_mode              y_mean   y_sum    y_count y_min    y_max    y_antimode          y_mode
-pan 5.500000 11    2       1     10    1          1      0.424708 0.849416 2       0.346790 0.502626 0.3467901443380824  0.3467901443380824  0.839711 1.679421 2       0.726803 0.952618 0.7268028627434533  0.7268028627434533
-eks 4.333333 13    3       2     7     2          2      0.583954 1.751863 3       0.381399 0.758680 0.7586799647899636  0.7586799647899636  0.281408 0.844225 3       0.134189 0.522151 0.5221511083334797  0.5221511083334797
-wye 4.000000 8     2       3     5     3          3      0.388946 0.777892 2       0.204603 0.573289 0.20460330576630303 0.20460330576630303 0.600971 1.201943 2       0.338319 0.863624 0.33831852551664776 0.33831852551664776
-zee 7.000000 14    2       6     8     6          6      0.562840 1.125680 2       0.527126 0.598554 0.5271261600918548  0.5271261600918548  0.734701 1.469403 2       0.493221 0.976181 0.49322128674835697 0.49322128674835697
-hat 9.000000 9     1       9     9     9          9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059  0.7495507603507059
+mlr --oxtab stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ./reg-test/input/abixy
+a          pan
+i_mean     5.500000
+i_sum      11
+i_count    2
+i_min      1
+i_max      10
+i_antimode 1
+i_mode     1
+x_mean     0.424708
+x_sum      0.849416
+x_count    2
+x_min      0.346790
+x_max      0.502626
+x_antimode 0.3467901443380824
+x_mode     0.3467901443380824
+y_mean     0.839711
+y_sum      1.679421
+y_count    2
+y_min      0.726803
+y_max      0.952618
+y_antimode 0.7268028627434533
+y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a ./reg-test/input/abixy
-a   i_min i_p10 i_p50 i_median i_antimode i_mode i_p90 i_max x_min    x_p10    x_p50    x_median x_antimode          x_mode              x_p90    x_max    y_min    y_p10    y_p50    y_median y_antimode          y_mode              y_p90    y_max
-pan 1     1     10    10       1          1      10    10    0.346790 0.346790 0.502626 0.502626 0.3467901443380824  0.3467901443380824  0.502626 0.502626 0.726803 0.726803 0.952618 0.952618 0.7268028627434533  0.7268028627434533  0.952618 0.952618
-eks 2     2     4     4        2          2      7     7     0.381399 0.381399 0.611784 0.611784 0.7586799647899636  0.7586799647899636  0.758680 0.758680 0.134189 0.134189 0.187885 0.187885 0.5221511083334797  0.5221511083334797  0.522151 0.522151
-wye 3     3     5     5        3          3      5     5     0.204603 0.204603 0.573289 0.573289 0.20460330576630303 0.20460330576630303 0.573289 0.573289 0.338319 0.338319 0.863624 0.863624 0.33831852551664776 0.33831852551664776 0.863624 0.863624
-zee 6     6     8     8        6          6      8     8     0.527126 0.527126 0.598554 0.598554 0.5271261600918548  0.5271261600918548  0.598554 0.598554 0.493221 0.493221 0.976181 0.976181 0.49322128674835697 0.49322128674835697 0.976181 0.976181
-hat 9     9     9     9        9          9      9     9     0.031442 0.031442 0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.031442 0.031442 0.749551 0.749551 0.749551 0.749551 0.7495507603507059  0.7495507603507059  0.749551 0.749551
+a          eks
+i_mean     4.333333
+i_sum      13
+i_count    3
+i_min      2
+i_max      7
+i_antimode 2
+i_mode     2
+x_mean     0.583954
+x_sum      1.751863
+x_count    3
+x_min      0.381399
+x_max      0.758680
+x_antimode 0.7586799647899636
+x_mode     0.7586799647899636
+y_mean     0.281408
+y_sum      0.844225
+y_count    3
+y_min      0.134189
+y_max      0.522151
+y_antimode 0.5221511083334797
+y_mode     0.5221511083334797
 
-mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a ./reg-test/input/abixy
-a   i_mean   i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
-pan 5.500000 4.500000 6.363961 0.424708 0.077918 0.110193 0.839711 0.112908 0.159676
-eks 4.333333 1.452966 2.516611 0.583954 0.109797 0.190174 0.281408 0.121365 0.210211
-wye 4.000000 1.000000 1.414214 0.388946 0.184343 0.260700 0.600971 0.262653 0.371447
-zee 7.000000 1.000000 1.414214 0.562840 0.035714 0.050507 0.734701 0.241480 0.341504
-hat 9.000000 -        -        0.031442 -        -        0.749551 -        -
+a          wye
+i_mean     4.000000
+i_sum      8
+i_count    2
+i_min      3
+i_max      5
+i_antimode 3
+i_mode     3
+x_mean     0.388946
+x_sum      0.777892
+x_count    2
+x_min      0.204603
+x_max      0.573289
+x_antimode 0.20460330576630303
+x_mode     0.20460330576630303
+y_mean     0.600971
+y_sum      1.201943
+y_count    2
+y_min      0.338319
+y_max      0.863624
+y_antimode 0.33831852551664776
+y_mode     0.33831852551664776
+
+a          zee
+i_mean     7.000000
+i_sum      14
+i_count    2
+i_min      6
+i_max      8
+i_antimode 6
+i_mode     6
+x_mean     0.562840
+x_sum      1.125680
+x_count    2
+x_min      0.527126
+x_max      0.598554
+x_antimode 0.5271261600918548
+x_mode     0.5271261600918548
+y_mean     0.734701
+y_sum      1.469403
+y_count    2
+y_min      0.493221
+y_max      0.976181
+y_antimode 0.49322128674835697
+y_mode     0.49322128674835697
+
+a          hat
+i_mean     9.000000
+i_sum      9
+i_count    1
+i_min      9
+i_max      9
+i_antimode 9
+i_mode     9
+x_mean     0.031442
+x_sum      0.031442
+x_count    1
+x_min      0.031442
+x_max      0.031442
+x_antimode 0.03144187646093577
+x_mode     0.03144187646093577
+y_mean     0.749551
+y_sum      0.749551
+y_count    1
+y_min      0.749551
+y_max      0.749551
+y_antimode 0.7495507603507059
+y_mode     0.7495507603507059
+
+mlr --oxtab stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a ./reg-test/input/abixy
+a          pan
+i_min      1
+i_p10      1
+i_p50      10
+i_median   10
+i_antimode 1
+i_mode     1
+i_p90      10
+i_max      10
+x_min      0.346790
+x_p10      0.346790
+x_p50      0.502626
+x_median   0.502626
+x_antimode 0.3467901443380824
+x_mode     0.3467901443380824
+x_p90      0.502626
+x_max      0.502626
+y_min      0.726803
+y_p10      0.726803
+y_p50      0.952618
+y_median   0.952618
+y_antimode 0.7268028627434533
+y_mode     0.7268028627434533
+y_p90      0.952618
+y_max      0.952618
+
+a          eks
+i_min      2
+i_p10      2
+i_p50      4
+i_median   4
+i_antimode 2
+i_mode     2
+i_p90      7
+i_max      7
+x_min      0.381399
+x_p10      0.381399
+x_p50      0.611784
+x_median   0.611784
+x_antimode 0.7586799647899636
+x_mode     0.7586799647899636
+x_p90      0.758680
+x_max      0.758680
+y_min      0.134189
+y_p10      0.134189
+y_p50      0.187885
+y_median   0.187885
+y_antimode 0.5221511083334797
+y_mode     0.5221511083334797
+y_p90      0.522151
+y_max      0.522151
+
+a          wye
+i_min      3
+i_p10      3
+i_p50      5
+i_median   5
+i_antimode 3
+i_mode     3
+i_p90      5
+i_max      5
+x_min      0.204603
+x_p10      0.204603
+x_p50      0.573289
+x_median   0.573289
+x_antimode 0.20460330576630303
+x_mode     0.20460330576630303
+x_p90      0.573289
+x_max      0.573289
+y_min      0.338319
+y_p10      0.338319
+y_p50      0.863624
+y_median   0.863624
+y_antimode 0.33831852551664776
+y_mode     0.33831852551664776
+y_p90      0.863624
+y_max      0.863624
+
+a          zee
+i_min      6
+i_p10      6
+i_p50      8
+i_median   8
+i_antimode 6
+i_mode     6
+i_p90      8
+i_max      8
+x_min      0.527126
+x_p10      0.527126
+x_p50      0.598554
+x_median   0.598554
+x_antimode 0.5271261600918548
+x_mode     0.5271261600918548
+x_p90      0.598554
+x_max      0.598554
+y_min      0.493221
+y_p10      0.493221
+y_p50      0.976181
+y_median   0.976181
+y_antimode 0.49322128674835697
+y_mode     0.49322128674835697
+y_p90      0.976181
+y_max      0.976181
+
+a          hat
+i_min      9
+i_p10      9
+i_p50      9
+i_median   9
+i_antimode 9
+i_mode     9
+i_p90      9
+i_max      9
+x_min      0.031442
+x_p10      0.031442
+x_p50      0.031442
+x_median   0.031442
+x_antimode 0.03144187646093577
+x_mode     0.03144187646093577
+x_p90      0.031442
+x_max      0.031442
+y_min      0.749551
+y_p10      0.749551
+y_p50      0.749551
+y_median   0.749551
+y_antimode 0.7495507603507059
+y_mode     0.7495507603507059
+y_p90      0.749551
+y_max      0.749551
+
+mlr --oxtab stats1 -a mean,meaneb,stddev -f i,x,y -g a ./reg-test/input/abixy
+a        pan
+i_mean   5.500000
+i_meaneb 4.500000
+i_stddev 6.363961
+x_mean   0.424708
+x_meaneb 0.077918
+x_stddev 0.110193
+y_mean   0.839711
+y_meaneb 0.112908
+y_stddev 0.159676
+
+a        eks
+i_mean   4.333333
+i_meaneb 1.452966
+i_stddev 2.516611
+x_mean   0.583954
+x_meaneb 0.109797
+x_stddev 0.190174
+y_mean   0.281408
+y_meaneb 0.121365
+y_stddev 0.210211
+
+a        wye
+i_mean   4.000000
+i_meaneb 1.000000
+i_stddev 1.414214
+x_mean   0.388946
+x_meaneb 0.184343
+x_stddev 0.260700
+y_mean   0.600971
+y_meaneb 0.262653
+y_stddev 0.371447
+
+a        zee
+i_mean   7.000000
+i_meaneb 1.000000
+i_stddev 1.414214
+x_mean   0.562840
+x_meaneb 0.035714
+x_stddev 0.050507
+y_mean   0.734701
+y_meaneb 0.241480
+y_stddev 0.341504
+
+a        hat
+i_mean   9.000000
+i_meaneb 
+i_stddev 
+x_mean   0.031442
+x_meaneb 
+x_stddev 
+y_mean   0.749551
+y_meaneb 
+y_stddev 
 
 mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a ./reg-test/input/abixy
 a          pan
@@ -577,44 +904,638 @@ y_max      0.952618
 y_antimode 0.7268028627434533
 y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ./reg-test/input/abixy
-a   b   i_mean    i_sum i_count i_min i_max i_antimode i_mode x_mean   x_sum    x_count x_min    x_max    x_antimode          x_mode              y_mean   y_sum    y_count y_min    y_max    y_antimode          y_mode
-pan pan 1.000000  1     1       1     1     1          1      0.346790 0.346790 1       0.346790 0.346790 0.3467901443380824  0.3467901443380824  0.726803 0.726803 1       0.726803 0.726803 0.7268028627434533  0.7268028627434533
-eks pan 2.000000  2     1       2     2     2          2      0.758680 0.758680 1       0.758680 0.758680 0.7586799647899636  0.7586799647899636  0.522151 0.522151 1       0.522151 0.522151 0.5221511083334797  0.5221511083334797
-wye wye 3.000000  3     1       3     3     3          3      0.204603 0.204603 1       0.204603 0.204603 0.20460330576630303 0.20460330576630303 0.338319 0.338319 1       0.338319 0.338319 0.33831852551664776 0.33831852551664776
-eks wye 4.000000  4     1       4     4     4          4      0.381399 0.381399 1       0.381399 0.381399 0.38139939387114097 0.38139939387114097 0.134189 0.134189 1       0.134189 0.134189 0.13418874328430463 0.13418874328430463
-wye pan 5.000000  5     1       5     5     5          5      0.573289 0.573289 1       0.573289 0.573289 0.5732889198020006  0.5732889198020006  0.863624 0.863624 1       0.863624 0.863624 0.8636244699032729  0.8636244699032729
-zee pan 6.000000  6     1       6     6     6          6      0.527126 0.527126 1       0.527126 0.527126 0.5271261600918548  0.5271261600918548  0.493221 0.493221 1       0.493221 0.493221 0.49322128674835697 0.49322128674835697
-eks zee 7.000000  7     1       7     7     7          7      0.611784 0.611784 1       0.611784 0.611784 0.6117840605678454  0.6117840605678454  0.187885 0.187885 1       0.187885 0.187885 0.1878849191181694  0.1878849191181694
-zee wye 8.000000  8     1       8     8     8          8      0.598554 0.598554 1       0.598554 0.598554 0.5985540091064224  0.5985540091064224  0.976181 0.976181 1       0.976181 0.976181 0.976181385699006   0.976181385699006
-hat wye 9.000000  9     1       9     9     9          9      0.031442 0.031442 1       0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.749551 0.749551 1       0.749551 0.749551 0.7495507603507059  0.7495507603507059
-pan wye 10.000000 10    1       10    10    10         10     0.502626 0.502626 1       0.502626 0.502626 0.5026260055412137  0.5026260055412137  0.952618 0.952618 1       0.952618 0.952618 0.9526183602969864  0.9526183602969864
+mlr --oxtab stats1 -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ./reg-test/input/abixy
+a          pan
+b          pan
+i_mean     1.000000
+i_sum      1
+i_count    1
+i_min      1
+i_max      1
+i_antimode 1
+i_mode     1
+x_mean     0.346790
+x_sum      0.346790
+x_count    1
+x_min      0.346790
+x_max      0.346790
+x_antimode 0.3467901443380824
+x_mode     0.3467901443380824
+y_mean     0.726803
+y_sum      0.726803
+y_count    1
+y_min      0.726803
+y_max      0.726803
+y_antimode 0.7268028627434533
+y_mode     0.7268028627434533
 
-mlr --opprint stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a,b ./reg-test/input/abixy
-a   b   i_min i_p10 i_p50 i_median i_antimode i_mode i_p90 i_max x_min    x_p10    x_p50    x_median x_antimode          x_mode              x_p90    x_max    y_min    y_p10    y_p50    y_median y_antimode          y_mode              y_p90    y_max
-pan pan 1     1     1     1        1          1      1     1     0.346790 0.346790 0.346790 0.346790 0.3467901443380824  0.3467901443380824  0.346790 0.346790 0.726803 0.726803 0.726803 0.726803 0.7268028627434533  0.7268028627434533  0.726803 0.726803
-eks pan 2     2     2     2        2          2      2     2     0.758680 0.758680 0.758680 0.758680 0.7586799647899636  0.7586799647899636  0.758680 0.758680 0.522151 0.522151 0.522151 0.522151 0.5221511083334797  0.5221511083334797  0.522151 0.522151
-wye wye 3     3     3     3        3          3      3     3     0.204603 0.204603 0.204603 0.204603 0.20460330576630303 0.20460330576630303 0.204603 0.204603 0.338319 0.338319 0.338319 0.338319 0.33831852551664776 0.33831852551664776 0.338319 0.338319
-eks wye 4     4     4     4        4          4      4     4     0.381399 0.381399 0.381399 0.381399 0.38139939387114097 0.38139939387114097 0.381399 0.381399 0.134189 0.134189 0.134189 0.134189 0.13418874328430463 0.13418874328430463 0.134189 0.134189
-wye pan 5     5     5     5        5          5      5     5     0.573289 0.573289 0.573289 0.573289 0.5732889198020006  0.5732889198020006  0.573289 0.573289 0.863624 0.863624 0.863624 0.863624 0.8636244699032729  0.8636244699032729  0.863624 0.863624
-zee pan 6     6     6     6        6          6      6     6     0.527126 0.527126 0.527126 0.527126 0.5271261600918548  0.5271261600918548  0.527126 0.527126 0.493221 0.493221 0.493221 0.493221 0.49322128674835697 0.49322128674835697 0.493221 0.493221
-eks zee 7     7     7     7        7          7      7     7     0.611784 0.611784 0.611784 0.611784 0.6117840605678454  0.6117840605678454  0.611784 0.611784 0.187885 0.187885 0.187885 0.187885 0.1878849191181694  0.1878849191181694  0.187885 0.187885
-zee wye 8     8     8     8        8          8      8     8     0.598554 0.598554 0.598554 0.598554 0.5985540091064224  0.5985540091064224  0.598554 0.598554 0.976181 0.976181 0.976181 0.976181 0.976181385699006   0.976181385699006   0.976181 0.976181
-hat wye 9     9     9     9        9          9      9     9     0.031442 0.031442 0.031442 0.031442 0.03144187646093577 0.03144187646093577 0.031442 0.031442 0.749551 0.749551 0.749551 0.749551 0.7495507603507059  0.7495507603507059  0.749551 0.749551
-pan wye 10    10    10    10       10         10     10    10    0.502626 0.502626 0.502626 0.502626 0.5026260055412137  0.5026260055412137  0.502626 0.502626 0.952618 0.952618 0.952618 0.952618 0.9526183602969864  0.9526183602969864  0.952618 0.952618
+a          eks
+b          pan
+i_mean     2.000000
+i_sum      2
+i_count    1
+i_min      2
+i_max      2
+i_antimode 2
+i_mode     2
+x_mean     0.758680
+x_sum      0.758680
+x_count    1
+x_min      0.758680
+x_max      0.758680
+x_antimode 0.7586799647899636
+x_mode     0.7586799647899636
+y_mean     0.522151
+y_sum      0.522151
+y_count    1
+y_min      0.522151
+y_max      0.522151
+y_antimode 0.5221511083334797
+y_mode     0.5221511083334797
 
-mlr --opprint stats1 -a mean,meaneb,stddev -f i,x,y -g a,b ./reg-test/input/abixy
-a   b   i_mean    i_meaneb i_stddev x_mean   x_meaneb x_stddev y_mean   y_meaneb y_stddev
-pan pan 1.000000  -        -        0.346790 -        -        0.726803 -        -
-eks pan 2.000000  -        -        0.758680 -        -        0.522151 -        -
-wye wye 3.000000  -        -        0.204603 -        -        0.338319 -        -
-eks wye 4.000000  -        -        0.381399 -        -        0.134189 -        -
-wye pan 5.000000  -        -        0.573289 -        -        0.863624 -        -
-zee pan 6.000000  -        -        0.527126 -        -        0.493221 -        -
-eks zee 7.000000  -        -        0.611784 -        -        0.187885 -        -
-zee wye 8.000000  -        -        0.598554 -        -        0.976181 -        -
-hat wye 9.000000  -        -        0.031442 -        -        0.749551 -        -
-pan wye 10.000000 -        -        0.502626 -        -        0.952618 -        -
+a          wye
+b          wye
+i_mean     3.000000
+i_sum      3
+i_count    1
+i_min      3
+i_max      3
+i_antimode 3
+i_mode     3
+x_mean     0.204603
+x_sum      0.204603
+x_count    1
+x_min      0.204603
+x_max      0.204603
+x_antimode 0.20460330576630303
+x_mode     0.20460330576630303
+y_mean     0.338319
+y_sum      0.338319
+y_count    1
+y_min      0.338319
+y_max      0.338319
+y_antimode 0.33831852551664776
+y_mode     0.33831852551664776
+
+a          eks
+b          wye
+i_mean     4.000000
+i_sum      4
+i_count    1
+i_min      4
+i_max      4
+i_antimode 4
+i_mode     4
+x_mean     0.381399
+x_sum      0.381399
+x_count    1
+x_min      0.381399
+x_max      0.381399
+x_antimode 0.38139939387114097
+x_mode     0.38139939387114097
+y_mean     0.134189
+y_sum      0.134189
+y_count    1
+y_min      0.134189
+y_max      0.134189
+y_antimode 0.13418874328430463
+y_mode     0.13418874328430463
+
+a          wye
+b          pan
+i_mean     5.000000
+i_sum      5
+i_count    1
+i_min      5
+i_max      5
+i_antimode 5
+i_mode     5
+x_mean     0.573289
+x_sum      0.573289
+x_count    1
+x_min      0.573289
+x_max      0.573289
+x_antimode 0.5732889198020006
+x_mode     0.5732889198020006
+y_mean     0.863624
+y_sum      0.863624
+y_count    1
+y_min      0.863624
+y_max      0.863624
+y_antimode 0.8636244699032729
+y_mode     0.8636244699032729
+
+a          zee
+b          pan
+i_mean     6.000000
+i_sum      6
+i_count    1
+i_min      6
+i_max      6
+i_antimode 6
+i_mode     6
+x_mean     0.527126
+x_sum      0.527126
+x_count    1
+x_min      0.527126
+x_max      0.527126
+x_antimode 0.5271261600918548
+x_mode     0.5271261600918548
+y_mean     0.493221
+y_sum      0.493221
+y_count    1
+y_min      0.493221
+y_max      0.493221
+y_antimode 0.49322128674835697
+y_mode     0.49322128674835697
+
+a          eks
+b          zee
+i_mean     7.000000
+i_sum      7
+i_count    1
+i_min      7
+i_max      7
+i_antimode 7
+i_mode     7
+x_mean     0.611784
+x_sum      0.611784
+x_count    1
+x_min      0.611784
+x_max      0.611784
+x_antimode 0.6117840605678454
+x_mode     0.6117840605678454
+y_mean     0.187885
+y_sum      0.187885
+y_count    1
+y_min      0.187885
+y_max      0.187885
+y_antimode 0.1878849191181694
+y_mode     0.1878849191181694
+
+a          zee
+b          wye
+i_mean     8.000000
+i_sum      8
+i_count    1
+i_min      8
+i_max      8
+i_antimode 8
+i_mode     8
+x_mean     0.598554
+x_sum      0.598554
+x_count    1
+x_min      0.598554
+x_max      0.598554
+x_antimode 0.5985540091064224
+x_mode     0.5985540091064224
+y_mean     0.976181
+y_sum      0.976181
+y_count    1
+y_min      0.976181
+y_max      0.976181
+y_antimode 0.976181385699006
+y_mode     0.976181385699006
+
+a          hat
+b          wye
+i_mean     9.000000
+i_sum      9
+i_count    1
+i_min      9
+i_max      9
+i_antimode 9
+i_mode     9
+x_mean     0.031442
+x_sum      0.031442
+x_count    1
+x_min      0.031442
+x_max      0.031442
+x_antimode 0.03144187646093577
+x_mode     0.03144187646093577
+y_mean     0.749551
+y_sum      0.749551
+y_count    1
+y_min      0.749551
+y_max      0.749551
+y_antimode 0.7495507603507059
+y_mode     0.7495507603507059
+
+a          pan
+b          wye
+i_mean     10.000000
+i_sum      10
+i_count    1
+i_min      10
+i_max      10
+i_antimode 10
+i_mode     10
+x_mean     0.502626
+x_sum      0.502626
+x_count    1
+x_min      0.502626
+x_max      0.502626
+x_antimode 0.5026260055412137
+x_mode     0.5026260055412137
+y_mean     0.952618
+y_sum      0.952618
+y_count    1
+y_min      0.952618
+y_max      0.952618
+y_antimode 0.9526183602969864
+y_mode     0.9526183602969864
+
+mlr --oxtab stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a,b ./reg-test/input/abixy
+a          pan
+b          pan
+i_min      1
+i_p10      1
+i_p50      1
+i_median   1
+i_antimode 1
+i_mode     1
+i_p90      1
+i_max      1
+x_min      0.346790
+x_p10      0.346790
+x_p50      0.346790
+x_median   0.346790
+x_antimode 0.3467901443380824
+x_mode     0.3467901443380824
+x_p90      0.346790
+x_max      0.346790
+y_min      0.726803
+y_p10      0.726803
+y_p50      0.726803
+y_median   0.726803
+y_antimode 0.7268028627434533
+y_mode     0.7268028627434533
+y_p90      0.726803
+y_max      0.726803
+
+a          eks
+b          pan
+i_min      2
+i_p10      2
+i_p50      2
+i_median   2
+i_antimode 2
+i_mode     2
+i_p90      2
+i_max      2
+x_min      0.758680
+x_p10      0.758680
+x_p50      0.758680
+x_median   0.758680
+x_antimode 0.7586799647899636
+x_mode     0.7586799647899636
+x_p90      0.758680
+x_max      0.758680
+y_min      0.522151
+y_p10      0.522151
+y_p50      0.522151
+y_median   0.522151
+y_antimode 0.5221511083334797
+y_mode     0.5221511083334797
+y_p90      0.522151
+y_max      0.522151
+
+a          wye
+b          wye
+i_min      3
+i_p10      3
+i_p50      3
+i_median   3
+i_antimode 3
+i_mode     3
+i_p90      3
+i_max      3
+x_min      0.204603
+x_p10      0.204603
+x_p50      0.204603
+x_median   0.204603
+x_antimode 0.20460330576630303
+x_mode     0.20460330576630303
+x_p90      0.204603
+x_max      0.204603
+y_min      0.338319
+y_p10      0.338319
+y_p50      0.338319
+y_median   0.338319
+y_antimode 0.33831852551664776
+y_mode     0.33831852551664776
+y_p90      0.338319
+y_max      0.338319
+
+a          eks
+b          wye
+i_min      4
+i_p10      4
+i_p50      4
+i_median   4
+i_antimode 4
+i_mode     4
+i_p90      4
+i_max      4
+x_min      0.381399
+x_p10      0.381399
+x_p50      0.381399
+x_median   0.381399
+x_antimode 0.38139939387114097
+x_mode     0.38139939387114097
+x_p90      0.381399
+x_max      0.381399
+y_min      0.134189
+y_p10      0.134189
+y_p50      0.134189
+y_median   0.134189
+y_antimode 0.13418874328430463
+y_mode     0.13418874328430463
+y_p90      0.134189
+y_max      0.134189
+
+a          wye
+b          pan
+i_min      5
+i_p10      5
+i_p50      5
+i_median   5
+i_antimode 5
+i_mode     5
+i_p90      5
+i_max      5
+x_min      0.573289
+x_p10      0.573289
+x_p50      0.573289
+x_median   0.573289
+x_antimode 0.5732889198020006
+x_mode     0.5732889198020006
+x_p90      0.573289
+x_max      0.573289
+y_min      0.863624
+y_p10      0.863624
+y_p50      0.863624
+y_median   0.863624
+y_antimode 0.8636244699032729
+y_mode     0.8636244699032729
+y_p90      0.863624
+y_max      0.863624
+
+a          zee
+b          pan
+i_min      6
+i_p10      6
+i_p50      6
+i_median   6
+i_antimode 6
+i_mode     6
+i_p90      6
+i_max      6
+x_min      0.527126
+x_p10      0.527126
+x_p50      0.527126
+x_median   0.527126
+x_antimode 0.5271261600918548
+x_mode     0.5271261600918548
+x_p90      0.527126
+x_max      0.527126
+y_min      0.493221
+y_p10      0.493221
+y_p50      0.493221
+y_median   0.493221
+y_antimode 0.49322128674835697
+y_mode     0.49322128674835697
+y_p90      0.493221
+y_max      0.493221
+
+a          eks
+b          zee
+i_min      7
+i_p10      7
+i_p50      7
+i_median   7
+i_antimode 7
+i_mode     7
+i_p90      7
+i_max      7
+x_min      0.611784
+x_p10      0.611784
+x_p50      0.611784
+x_median   0.611784
+x_antimode 0.6117840605678454
+x_mode     0.6117840605678454
+x_p90      0.611784
+x_max      0.611784
+y_min      0.187885
+y_p10      0.187885
+y_p50      0.187885
+y_median   0.187885
+y_antimode 0.1878849191181694
+y_mode     0.1878849191181694
+y_p90      0.187885
+y_max      0.187885
+
+a          zee
+b          wye
+i_min      8
+i_p10      8
+i_p50      8
+i_median   8
+i_antimode 8
+i_mode     8
+i_p90      8
+i_max      8
+x_min      0.598554
+x_p10      0.598554
+x_p50      0.598554
+x_median   0.598554
+x_antimode 0.5985540091064224
+x_mode     0.5985540091064224
+x_p90      0.598554
+x_max      0.598554
+y_min      0.976181
+y_p10      0.976181
+y_p50      0.976181
+y_median   0.976181
+y_antimode 0.976181385699006
+y_mode     0.976181385699006
+y_p90      0.976181
+y_max      0.976181
+
+a          hat
+b          wye
+i_min      9
+i_p10      9
+i_p50      9
+i_median   9
+i_antimode 9
+i_mode     9
+i_p90      9
+i_max      9
+x_min      0.031442
+x_p10      0.031442
+x_p50      0.031442
+x_median   0.031442
+x_antimode 0.03144187646093577
+x_mode     0.03144187646093577
+x_p90      0.031442
+x_max      0.031442
+y_min      0.749551
+y_p10      0.749551
+y_p50      0.749551
+y_median   0.749551
+y_antimode 0.7495507603507059
+y_mode     0.7495507603507059
+y_p90      0.749551
+y_max      0.749551
+
+a          pan
+b          wye
+i_min      10
+i_p10      10
+i_p50      10
+i_median   10
+i_antimode 10
+i_mode     10
+i_p90      10
+i_max      10
+x_min      0.502626
+x_p10      0.502626
+x_p50      0.502626
+x_median   0.502626
+x_antimode 0.5026260055412137
+x_mode     0.5026260055412137
+x_p90      0.502626
+x_max      0.502626
+y_min      0.952618
+y_p10      0.952618
+y_p50      0.952618
+y_median   0.952618
+y_antimode 0.9526183602969864
+y_mode     0.9526183602969864
+y_p90      0.952618
+y_max      0.952618
+
+mlr --oxtab stats1 -a mean,meaneb,stddev -f i,x,y -g a,b ./reg-test/input/abixy
+a        pan
+b        pan
+i_mean   1.000000
+i_meaneb 
+i_stddev 
+x_mean   0.346790
+x_meaneb 
+x_stddev 
+y_mean   0.726803
+y_meaneb 
+y_stddev 
+
+a        eks
+b        pan
+i_mean   2.000000
+i_meaneb 
+i_stddev 
+x_mean   0.758680
+x_meaneb 
+x_stddev 
+y_mean   0.522151
+y_meaneb 
+y_stddev 
+
+a        wye
+b        wye
+i_mean   3.000000
+i_meaneb 
+i_stddev 
+x_mean   0.204603
+x_meaneb 
+x_stddev 
+y_mean   0.338319
+y_meaneb 
+y_stddev 
+
+a        eks
+b        wye
+i_mean   4.000000
+i_meaneb 
+i_stddev 
+x_mean   0.381399
+x_meaneb 
+x_stddev 
+y_mean   0.134189
+y_meaneb 
+y_stddev 
+
+a        wye
+b        pan
+i_mean   5.000000
+i_meaneb 
+i_stddev 
+x_mean   0.573289
+x_meaneb 
+x_stddev 
+y_mean   0.863624
+y_meaneb 
+y_stddev 
+
+a        zee
+b        pan
+i_mean   6.000000
+i_meaneb 
+i_stddev 
+x_mean   0.527126
+x_meaneb 
+x_stddev 
+y_mean   0.493221
+y_meaneb 
+y_stddev 
+
+a        eks
+b        zee
+i_mean   7.000000
+i_meaneb 
+i_stddev 
+x_mean   0.611784
+x_meaneb 
+x_stddev 
+y_mean   0.187885
+y_meaneb 
+y_stddev 
+
+a        zee
+b        wye
+i_mean   8.000000
+i_meaneb 
+i_stddev 
+x_mean   0.598554
+x_meaneb 
+x_stddev 
+y_mean   0.976181
+y_meaneb 
+y_stddev 
+
+a        hat
+b        wye
+i_mean   9.000000
+i_meaneb 
+i_stddev 
+x_mean   0.031442
+x_meaneb 
+x_stddev 
+y_mean   0.749551
+y_meaneb 
+y_stddev 
+
+a        pan
+b        wye
+i_mean   10.000000
+i_meaneb 
+i_stddev 
+x_mean   0.502626
+x_meaneb 
+x_stddev 
+y_mean   0.952618
+y_meaneb 
+y_stddev 
 
 mlr --oxtab stats1 -s -a mean,sum,count,min,max,antimode,mode -f i,x,y -g a,b ./reg-test/input/abixy
 a          pan

@@ -38,6 +38,7 @@ func transformerStats1ParseCLI(
 	valueFieldNameList := make([]string, 0)
 	groupByFieldNameList := make([]string, 0)
 	doInterpolatedPercentiles := false
+	doIterativeStats := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if !strings.HasPrefix(args[argi], "-") {
@@ -65,6 +66,18 @@ func transformerStats1ParseCLI(
 			doInterpolatedPercentiles = true
 			argi += 1
 
+		} else if args[argi] == "-s" {
+			doIterativeStats = true
+			argi += 1
+
+		} else if args[argi] == "-S" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+
+		} else if args[argi] == "-F" {
+			// No-op pass-through for backward compatibility with Miller 5
+			argi += 1
+
 		} else {
 			transformerStats1Usage(os.Stderr, args[0], verb, nil)
 			os.Exit(1)
@@ -88,6 +101,7 @@ func transformerStats1ParseCLI(
 		valueFieldNameList,
 		groupByFieldNameList,
 		doInterpolatedPercentiles,
+		doIterativeStats,
 	)
 
 	*pargi = argi
@@ -129,6 +143,9 @@ Options:
 
 -i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
              Not sensical for string-valued fields.\n");
+-s           Print iterative stats. Useful in tail -f contexts (in which
+             case please avoid pprint-format output since end of input
+             stream will never be seen).
 [TODO: more]
 `)
 
@@ -165,6 +182,7 @@ type TransformerStats1 struct {
 	valueFieldNameList        []string
 	groupByFieldNameList      []string
 	doInterpolatedPercentiles bool
+	doIterativeStats          bool
 
 	// State:
 	accumulatorFactory *Stats1AccumulatorFactory
@@ -227,6 +245,7 @@ func NewTransformerStats1(
 	valueFieldNameList []string,
 	groupByFieldNameList []string,
 	doInterpolatedPercentiles bool,
+	doIterativeStats bool,
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
 		if !validateStats1AccumulatorName(name) {
@@ -244,6 +263,7 @@ func NewTransformerStats1(
 		valueFieldNameList:               valueFieldNameList,
 		groupByFieldNameList:             groupByFieldNameList,
 		doInterpolatedPercentiles:        doInterpolatedPercentiles,
+		doIterativeStats:                 doIterativeStats,
 		accumulatorFactory:               NewStats1AccumulatorFactory(),
 		namedAccumulators:                lib.NewOrderedMap(),
 		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
@@ -270,9 +290,12 @@ func (this *TransformerStats1) handleInputRecord(
 ) {
 	inrec := inrecAndContext.Record
 
+	// TODO: make a function-pointer variant for non-iterative which doesn't get the
+	// unnecessary groupByFieldValues.
+
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
 	// then groupingKey is the string "circle,blue".
-	groupingKey, ok := inrec.GetSelectedValuesJoined(
+	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(
 		this.groupByFieldNameList,
 	)
 	if !ok {
@@ -286,7 +309,6 @@ func (this *TransformerStats1) handleInputRecord(
 		// E.g. if grouping by "color" and "shape", and the current record has
 		// color=blue, shape=circle, then groupByFieldValues is the array
 		// ["blue", "circle"].
-		groupByFieldValues, _ := inrec.GetSelectedValues(this.groupByFieldNameList)
 		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
 	}
 	for _, valueFieldName := range this.valueFieldNameList {
@@ -304,6 +326,7 @@ func (this *TransformerStats1) handleInputRecord(
 			if namedAccumulator == nil {
 				namedAccumulator = this.accumulatorFactory.MakeNamedAccumulator(
 					accumulatorName,
+					groupingKey,
 					valueFieldName,
 					this.doInterpolatedPercentiles,
 				)
@@ -312,6 +335,16 @@ func (this *TransformerStats1) handleInputRecord(
 			namedAccumulator.(*Stats1NamedAccumulator).Ingest(valueFieldValue)
 		}
 	}
+
+	if this.doIterativeStats {
+		this.emitIntoOutputRecord(
+			inrecAndContext.Record,
+			groupByFieldValues,
+			level2.(*lib.OrderedMap),
+			inrec,
+		)
+		outputChannel <- inrecAndContext
+	}
 }
 
 // ----------------------------------------------------------------
@@ -319,26 +352,49 @@ func (this *TransformerStats1) handleEndOfRecordStream(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	if this.doIterativeStats {
+		outputChannel <- inrecAndContext // end-of-stream marker
+		return
+	}
+
 	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
+		level2 := pa.Value.(*lib.OrderedMap)
 		groupByFieldValues := this.groupingKeysToGroupByFieldValues[groupingKey]
 
 		newrec := types.NewMlrmapAsRecord()
-		for i, groupByFieldName := range this.groupByFieldNameList {
-			newrec.PutCopy(&groupByFieldName, groupByFieldValues[i])
-		}
 
-		level2 := pa.Value.(*lib.OrderedMap)
-		for pb := level2.Head; pb != nil; pb = pb.Next {
-			level3 := pb.Value.(*lib.OrderedMap)
-			for pc := level3.Head; pc != nil; pc = pc.Next {
-				namedAccumulator := pc.Value.(*Stats1NamedAccumulator)
-				key, value := namedAccumulator.Emit()
-				newrec.PutCopy(&key, &value)
-			}
-		}
+		this.emitIntoOutputRecord(
+			inrecAndContext.Record,
+			groupByFieldValues,
+			level2,
+			newrec,
+		)
+
 		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 	}
 
 	outputChannel <- inrecAndContext // end-of-stream marker
+}
+
+// ----------------------------------------------------------------
+// TODO: comment
+func (this *TransformerStats1) emitIntoOutputRecord(
+	inrec *types.Mlrmap,
+	groupByFieldValues []*types.Mlrval,
+	level2accumulators *lib.OrderedMap,
+	outrec *types.Mlrmap,
+) {
+	for i, groupByFieldName := range this.groupByFieldNameList {
+		outrec.PutCopy(&groupByFieldName, groupByFieldValues[i])
+	}
+
+	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {
+		level3 := pb.Value.(*lib.OrderedMap)
+		for pc := level3.Head; pc != nil; pc = pc.Next {
+			namedAccumulator := pc.Value.(*Stats1NamedAccumulator)
+			key, value := namedAccumulator.Emit()
+			outrec.PutCopy(&key, &value)
+		}
+	}
 }

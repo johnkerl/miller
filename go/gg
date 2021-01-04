@@ -87,4 +87,24 @@ done
 #run_mlr --from $indir/medium.dkvp stats1 -a sum -f x
 #run_mlr --from $indir/medium.dkvp stats1 -a count,sum -f i,x -g a,b
 
+path_to_mlr=../c/mlr
+run_mlr --oxtab stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a ./reg-test/input/abixy
+path_to_mlr=../go/mlr
+run_mlr --oxtab stats1 -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a ./reg-test/input/abixy
+
+path_to_mlr=../c/mlr
+run_mlr stats1 -a p99 -s -f x -g a s
+path_to_mlr=../go/mlr
+run_mlr stats1 -a p99 -s -f x -g a s
+
+path_to_mlr=../c/mlr
+run_mlr stats1 -a p99 -f x -g a s
+path_to_mlr=../go/mlr
+run_mlr stats1 -a p99 -f x -g a s
+
+path_to_mlr=../c/mlr
+run_mlr --opprint stats1 -a mode,antimode -f i,x,y ./reg-test/input/abixy
+path_to_mlr=../go/mlr
+run_mlr --opprint stats1 -a mode,antimode -f i,x,y ./reg-test/input/abixy
+
 # ================================================================
