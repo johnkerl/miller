@@ -869,6 +869,9 @@ func (this *IndexedLvalueNode) Assign(
 	for i, indexEvaluable := range this.indexEvaluables {
 		index := indexEvaluable.Evaluate(state)
 		indices[i] = &index
+		if index.IsAbsent() {
+			return nil
+		}
 	}
 
 	// This lets the user do '$y[ ["a", "b", "c"] ] = $x' in lieu of
