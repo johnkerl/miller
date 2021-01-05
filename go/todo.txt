@@ -4,6 +4,8 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix all typemasks; 'int x = 1; x = "abc"'
 
+! need to rethink concurrency of DSL-print and previous-record write ... :(
+
 * I/O redirects
 
 * merge-fields
