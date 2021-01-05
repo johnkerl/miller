@@ -456,11 +456,11 @@ FilterStatement
 // For dump, emit, tee, print
 
 Redirector
-  : ">"  RedirectTarget ","
+  : ">"  RedirectTarget
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectWrite) >>
-  | ">>" RedirectTarget ","
+  | ">>" RedirectTarget
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectAppend) >>
-  | "|"  RedirectTarget ","
+  | "|"  RedirectTarget
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectPipe) >>
 ;
 
@@ -495,47 +495,47 @@ RedirectTarget
 
 EmitStatement
   : emit Emittable
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
-//  | emit Redirector Emittable
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $1, nil, nil, dsl.NodeTypeEmitStatement) >>
+  | emit Redirector "," Emittable
+    << dsl.NewASTNodeTernary($0, $3, nil, $1, dsl.NodeTypeEmitStatement) >>
 
   | emit "(" EmittableList ")"
-    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitStatement) >>
-//  | emit Redirector "(" EmittableList ")"
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $2, nil, nil, dsl.NodeTypeEmitStatement) >>
+  | emit Redirector "," "(" EmittableList ")"
+    << dsl.NewASTNodeTernary($0, $4, nil, $1, dsl.NodeTypeEmitStatement) >>
 
   | emit Emittable "," EmitKeys
-    << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitStatement) >>
-//  | emit Redirector Emittable "," EmitKeys
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $1, $3, nil, dsl.NodeTypeEmitStatement) >>
+  | emit Redirector "," Emittable "," EmitKeys
+    << dsl.NewASTNodeTernary($0, $3, $5, $1, dsl.NodeTypeEmitStatement) >>
 
   | emit "(" EmittableList ")" "," EmitKeys
-    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitStatement) >>
-//  | emit Redirector "(" EmittableList ")" "," EmitKeys
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $2, $5, nil, dsl.NodeTypeEmitStatement) >>
+  | emit Redirector "," "(" EmittableList ")" "," EmitKeys
+    << dsl.NewASTNodeTernary($0, $4, $7, $1, dsl.NodeTypeEmitStatement) >>
 ;
 
 // Examples: syntactically identical to emit.
 EmitPStatement
   : emitp Emittable
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitPStatement) >>
-//  | emitp Redirector Emittable
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $1, nil, nil, dsl.NodeTypeEmitPStatement) >>
+  | emitp Redirector "," Emittable
+    << dsl.NewASTNodeTernary($0, $3, nil, $1, dsl.NodeTypeEmitPStatement) >>
 
   | emitp "(" EmittableList ")"
-    << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitPStatement) >>
-//  | emitp Redirector "(" EmittableList ")"
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $2, nil, nil, dsl.NodeTypeEmitPStatement) >>
+  | emitp Redirector "," "(" EmittableList ")"
+    << dsl.NewASTNodeTernary($0, $4, nil, $1, dsl.NodeTypeEmitPStatement) >>
 
   | emitp Emittable "," EmitKeys
-    << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitPStatement) >>
-//  | emitp Redirector Emittable "," EmitKeys
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $1, $3, nil, dsl.NodeTypeEmitPStatement) >>
+  | emitp Redirector "," Emittable "," EmitKeys
+    << dsl.NewASTNodeTernary($0, $3, $5, $1, dsl.NodeTypeEmitPStatement) >>
 
   | emitp "(" EmittableList ")" "," EmitKeys
-    << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitPStatement) >>
-//  | emitp Redirector "(" EmittableList ")" "," EmitKeys
-//    // TODO
+    << dsl.NewASTNodeTernary($0, $2, $5, nil, dsl.NodeTypeEmitPStatement) >>
+  | emitp Redirector "," "(" EmittableList ")" "," EmitKeys
+    << dsl.NewASTNodeTernary($0, $4, $7, $1, dsl.NodeTypeEmitPStatement) >>
 ;
 
 // Examples:
@@ -552,7 +552,7 @@ EmitFStatement
       ),
       $1,
     ) >>
-  | emitf Redirector EmittableList
+  | emitf Redirector "," EmittableList
     // TODO
 ;
 
@@ -601,9 +601,9 @@ EmitKeys
 // ----------------------------------------------------------------
 DumpStatement
   : dump
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeDumpStatement) >>
+    << dsl.NewASTNodeUnary($0, nil, dsl.NodeTypeDumpStatement) >>
   | dump Redirector
-    // TODO
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeDumpStatement) >>
 
   | dump FcnArgs
     << dsl.AdoptChildren(
@@ -613,7 +613,7 @@ DumpStatement
       ),
       $1,
     ) >>
-  | dump Redirector FcnArgs
+  | dump Redirector "," FcnArgs
     // TODO
 
 ;
@@ -633,9 +633,9 @@ EdumpStatement
 
 PrintStatement
   : print
-    << dsl.NewASTNodeZary($0, dsl.NodeTypePrintStatement) >>
+    << dsl.NewASTNodeUnary($0, nil, dsl.NodeTypePrintStatement) >>
   | print Redirector
-    // TODO
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintStatement) >>
 
   | print FcnArgs
     << dsl.AdoptChildren(
@@ -645,7 +645,7 @@ PrintStatement
       ),
       $1,
     ) >>
-  | print Redirector FcnArgs
+  | print Redirector "," FcnArgs
     // TODO
 ;
 
@@ -664,9 +664,9 @@ EprintStatement
 
 PrintnStatement
   : printn
-    << dsl.NewASTNodeZary($0, dsl.NodeTypePrintnStatement) >>
+    << dsl.NewASTNodeUnary($0, nil, dsl.NodeTypePrintnStatement) >>
   | printn Redirector
-    // TODO
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintnStatement) >>
 
   | printn FcnArgs
     << dsl.AdoptChildren(
@@ -676,7 +676,7 @@ PrintnStatement
       ),
       $1,
     ) >>
-  | printn Redirector FcnArgs
+  | printn Redirector "," FcnArgs
     // TODO
 ;
 
