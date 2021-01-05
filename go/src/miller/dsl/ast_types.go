@@ -74,6 +74,14 @@ const (
 	NodeTypePrintnStatement  = "printn statement"
 	NodeTypeEprintnStatement = "eprintn statement"
 
+	// For 'print > filename, "string"' et al.
+	NodeTypeRedirectWrite        = "redirect write"
+	NodeTypeRedirectAppend       = "redirect append"
+	NodeTypeRedirectPipe         = "redirect pipe"
+	NodeTypeRedirectTargetStdout = "stdout redirect target"
+	NodeTypeRedirectTargetStderr = "stderr redirect target"
+	NodeTypeRedirectTarget       = "redirect target"
+
 	NodeTypeOperator           = "operator"
 	NodeTypeFunctionCallsite   = "function callsite"
 	NodeTypeSubroutineCallsite = "subroutine callsite"

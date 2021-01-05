@@ -31,6 +31,8 @@ emitp/emitf:
 ! fix var/any type-mask
   o C/Go UT
 
+? parex print regtest -- what about new ast-node types?
+
 ! verb skeletons
 ! strptime/strftime experiments ...
 * regex ...

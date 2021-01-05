@@ -159,13 +159,8 @@ env   : 'E' 'N' 'V' ;
 
 begin    : 'b' 'e' 'g' 'i' 'n' ;
 do       : 'd' 'o' ;
-dump     : 'd' 'u' 'm' 'p' ;
-edump    : 'e' 'd' 'u' 'm' 'p' ;
 elif     : 'e' 'l' 'i' 'f' ;
 else     : 'e' 'l' 's' 'e' ;
-emit     : 'e' 'm' 'i' 't' ;
-emitp    : 'e' 'm' 'i' 't' 'p' ;
-emitf    : 'e' 'm' 'i' 't' 'f' ;
 end      : 'e' 'n' 'd' ;
 filter   : 'f' 'i' 'l' 't' 'e' 'r' ;
 for      : 'f' 'o' 'r' ;
@@ -192,13 +187,18 @@ var   : 'v' 'a' 'r' ;
 unset    : 'u' 'n' 's' 'e' 't' ;
 //all      : 'a' 'l' 'l' ;
 
-print    : 'p' 'r' 'i' 'n' 't' ;
-printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
+dump     : 'd' 'u' 'm' 'p' ;
+edump    : 'e' 'd' 'u' 'm' 'p' ;
+emit     : 'e' 'm' 'i' 't' ;
+emitp    : 'e' 'm' 'i' 't' 'p' ;
+emitf    : 'e' 'm' 'i' 't' 'f' ;
 eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
-//stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
-//stdout   : 's' 't' 'd' 'o' 'u' 't' ;
+print    : 'p' 'r' 'i' 'n' 't' ;
+printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
 //tee      : 't' 'e' 'e' ;
+stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
+stdout   : 's' 't' 'd' 'o' 'u' 't' ;
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -452,6 +452,27 @@ FilterStatement
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeFilterStatement) >>
 ;
 
+// ----------------------------------------------------------------
+// For dump, emit, tee, print
+
+Redirector
+  : ">"  RedirectTarget ","
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectWrite) >>
+  | ">>" RedirectTarget ","
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectAppend) >>
+  | "|"  RedirectTarget ","
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectPipe) >>
+;
+
+RedirectTarget
+  : stdout
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeRedirectTargetStdout) >>
+  | stderr
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeRedirectTargetStderr) >>
+  | Rvalue
+;
+
+// ----------------------------------------------------------------
 // Examples:
 //   emit @a
 //   emit (@a, @b)
@@ -475,30 +496,46 @@ FilterStatement
 EmitStatement
   : emit Emittable
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
+//  | emit Redirector Emittable
+//    // TODO
 
   | emit "(" EmittableList ")"
     << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitStatement) >>
+//  | emit Redirector "(" EmittableList ")"
+//    // TODO
 
   | emit Emittable "," EmitKeys
     << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitStatement) >>
+//  | emit Redirector Emittable "," EmitKeys
+//    // TODO
 
   | emit "(" EmittableList ")" "," EmitKeys
     << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitStatement) >>
+//  | emit Redirector "(" EmittableList ")" "," EmitKeys
+//    // TODO
 ;
 
 // Examples: syntactically identical to emit.
 EmitPStatement
   : emitp Emittable
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitPStatement) >>
+//  | emitp Redirector Emittable
+//    // TODO
 
   | emitp "(" EmittableList ")"
     << dsl.NewASTNodeUnary($0, $2, dsl.NodeTypeEmitPStatement) >>
+//  | emitp Redirector "(" EmittableList ")"
+//    // TODO
 
   | emitp Emittable "," EmitKeys
     << dsl.NewASTNodeBinary($0, $1, $3, dsl.NodeTypeEmitPStatement) >>
+//  | emitp Redirector Emittable "," EmitKeys
+//    // TODO
 
   | emitp "(" EmittableList ")" "," EmitKeys
     << dsl.NewASTNodeBinary($0, $2, $5, dsl.NodeTypeEmitPStatement) >>
+//  | emitp Redirector "(" EmittableList ")" "," EmitKeys
+//    // TODO
 ;
 
 // Examples:
@@ -515,6 +552,8 @@ EmitFStatement
       ),
       $1,
     ) >>
+  | emitf Redirector EmittableList
+    // TODO
 ;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -563,6 +602,9 @@ EmitKeys
 DumpStatement
   : dump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeDumpStatement) >>
+  | dump Redirector
+    // TODO
+
   | dump FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
@@ -571,6 +613,9 @@ DumpStatement
       ),
       $1,
     ) >>
+  | dump Redirector FcnArgs
+    // TODO
+
 ;
 
 EdumpStatement
@@ -589,6 +634,8 @@ EdumpStatement
 PrintStatement
   : print
     << dsl.NewASTNodeZary($0, dsl.NodeTypePrintStatement) >>
+  | print Redirector
+    // TODO
 
   | print FcnArgs
     << dsl.AdoptChildren(
@@ -598,6 +645,8 @@ PrintStatement
       ),
       $1,
     ) >>
+  | print Redirector FcnArgs
+    // TODO
 ;
 
 EprintStatement
@@ -616,6 +665,9 @@ EprintStatement
 PrintnStatement
   : printn
     << dsl.NewASTNodeZary($0, dsl.NodeTypePrintnStatement) >>
+  | printn Redirector
+    // TODO
+
   | printn FcnArgs
     << dsl.AdoptChildren(
       dsl.NewASTNodeNestable(
@@ -624,6 +676,8 @@ PrintnStatement
       ),
       $1,
     ) >>
+  | printn Redirector FcnArgs
+    // TODO
 ;
 
 EprintnStatement
@@ -1885,40 +1939,6 @@ ReturnStatement
 // ================================================================
 // ================================================================
 
-//Statement(A) ::= DumpAppend(B).        { A = B; }
-//Statement(A) ::= DumpPipe(B).          { A = B; }
-//Statement(A) ::= DumpWrite(B).         { A = B; }
-
-//Statement(A) ::= EmitfAppend(B).       { A = B; }
-//Statement(A) ::= EmitfPipe(B).         { A = B; }
-//Statement(A) ::= EmitfWrite(B).        { A = B; }
-
-//Statement(A) ::= EmitAppend(B).        { A = B; }
-//Statement(A) ::= EmitPipe(B).          { A = B; }
-//Statement(A) ::= EmitWrite(B).         { A = B; }
-
-//Statement(A) ::= EmitpAppend(B).       { A = B; }
-//Statement(A) ::= EmitpPipe(B).         { A = B; }
-//Statement(A) ::= EmitpWrite(B).        { A = B; }
-
-//Statement(A) ::= EmitLashed(B).        { A = B; }
-//Statement(A) ::= EmitLashedAppend(B).  { A = B; }
-//Statement(A) ::= EmitLashedPipe(B).    { A = B; }
-//Statement(A) ::= EmitLashedWrite(B).   { A = B; }
-
-//Statement(A) ::= EmitpLashed(B).       { A = B; }
-//Statement(A) ::= EmitpLashedAppend(B). { A = B; }
-//Statement(A) ::= EmitpLashedPipe(B).   { A = B; }
-//Statement(A) ::= EmitpLashedWrite(B).  { A = B; }
-
-//Statement(A) ::= PrintAppend(B).       { A = B; }
-//Statement(A) ::= PrintPipe(B).         { A = B; }
-//Statement(A) ::= PrintWrite(B).        { A = B; }
-
-//Statement(A) ::= PrintnAppend(B).      { A = B; }
-//Statement(A) ::= PrintnPipe(B).        { A = B; }
-//Statement(A) ::= PrintnWrite(B).       { A = B; }
-
-//Statement(A) ::= TeeAppend(B).         { A = B; }
-//Statement(A) ::= TeePipe(B).           { A = B; }
-//Statement(A) ::= TeeWrite(B).          { A = B; }
+// TeeWrite
+// TeeAppend
+// TeePipe

@@ -37,41 +37,28 @@ Root
 EmitStatement
   : emit EmitArgs
     << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeEmitStatement) >>
+  | emit Redirector EmitArgs
+    << dsl.NewASTNodeBinary($0, $2, $1, dsl.NodeTypeEmitStatement) >>
 ;
 
 // ----------------------------------------------------------------
 EmitArgs
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeFunctionCallsite,
-    ) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeFunctionCallsite) >>
 
   | Rvalue "," EmitArgs
-    << dsl.PrependChild(
-      $2,
-      $0,
-    ) >>
+    << dsl.PrependChild($2, $0) >>
 ;
 
 // ----------------------------------------------------------------
 FcnArgs
   : Rvalue
-    << dsl.NewASTNodeUnary(
-      nil,
-      $0,
-      dsl.NodeTypeFunctionCallsite,
-    ) >>
+    << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeFunctionCallsite) >>
 
   // Allow trailing final comma, especially for multiline statements
   | Rvalue "," FcnArgs
-    << dsl.PrependChild(
-      $2,
-      $0,
-    ) >>
+    << dsl.PrependChild($2, $0) >>
 ;
-
 
 // ----------------------------------------------------------------
 Rvalue
@@ -89,4 +76,22 @@ Literal
   : "x" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
   | "y" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
   | "z" << dsl.NewASTNodeZary($0, dsl.NodeTypeStringLiteral) >>
+;
+
+// ----------------------------------------------------------------
+Redirector
+  : ">"  RedirectTarget ","
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectWrite) >>
+  | ">>" RedirectTarget ","
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectAppend) >>
+  | "|"  RedirectTarget ","
+    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeRedirectPipe) >>
+;
+
+RedirectTarget
+  : "stdout"
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeRedirectTargetStdout) >>
+  | "stderr"
+    << dsl.NewASTNodeZary($0, dsl.NodeTypeRedirectTargetStderr) >>
+  | Rvalue
 ;
