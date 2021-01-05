@@ -155,6 +155,7 @@ func validateASTAux(
 		astNode.Type == dsl.NodeTypeDoWhileLoop ||
 		astNode.Type == dsl.NodeTypeForLoopOneVariable ||
 		astNode.Type == dsl.NodeTypeForLoopTwoVariable ||
+		astNode.Type == dsl.NodeTypeForLoopMultivariable ||
 		astNode.Type == dsl.NodeTypeTripleForLoop {
 		nextLevelInLoop = true
 	}
