@@ -7,13 +7,11 @@ TOP OF LIST:
   mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' ./reg-test/input/abixy-het
   Miller: record/map indices must be string or int; got absent
 
-* stats1 verb: percentiles
-  o actualize -S and -F -- ?
-  o regexed
-    - needs implementation of "a.*b"i
-* merge-fields
-* fix all typemasks; 'int x = 1; x = "abc"'
+! fix all typemasks; 'int x = 1; x = "abc"'
+
 * I/O redirects
+
+* merge-fields
 * do some profiling every so often
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -82,6 +80,11 @@ no need to bootstrap a parser for the parser-generator language
 ? reg-test: diff the *.err files?
 ? allow [[...]] / [[[...]]] at assignment LHS
 ? single-line JSON for DKVP/CSV/etc ...
+
+* stats1:
+  o actualize -S and -F -- ?
+  o regexed
+    - needs implementation of "a.*b"i
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
