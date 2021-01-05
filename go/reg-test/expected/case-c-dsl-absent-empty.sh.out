@@ -1,13 +1,13 @@
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg-test/input/abixy
-sum=4.536294
+sum=4.536293840335763
 
 mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg-test/input/abixy
-a=pan,sum=0.849416
-a=eks,sum=1.751863
-a=wye,sum=0.777892
-a=zee,sum=1.125680
-a=hat,sum=0.031442
+a=pan,sum=0.8494161498792961
+a=eks,sum=1.75186341922895
+a=wye,sum=0.7778922255683036
+a=zee,sum=1.1256801691982772
+a=hat,sum=0.03144187646093577
 
 mlr put $nonesuch = @nonesuch ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -22,12 +22,12 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @sum     += $x; end{emitp @sum} ./reg-test/input/abixy-het
-sum=3.963005
+sum=3.9630049205337627
 
 mlr put -q @sum[$a] += $x; end{emitp @sum, "a"} ./reg-test/input/abixy-het
-a=pan,sum=0.849416
-a=eks,sum=1.751863
-a=zee,sum=1.125680
+a=pan,sum=0.8494161498792961
+a=eks,sum=1.75186341922895
+a=zee,sum=1.1256801691982772
 
 mlr put $nonesuch = @nonesuch ./reg-test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -42,30 +42,30 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg-test/input/abixy
-sumtype=float,xtype=float,sum=0.346790
-sumtype=float,xtype=float,sum=1.105470
-sumtype=float,xtype=float,sum=1.310073
-sumtype=float,xtype=float,sum=1.691473
-sumtype=float,xtype=float,sum=2.264762
-sumtype=float,xtype=float,sum=2.791888
-sumtype=float,xtype=float,sum=3.403672
-sumtype=float,xtype=float,sum=4.002226
-sumtype=float,xtype=float,sum=4.033668
-sumtype=float,xtype=float,sum=4.536294
-sum=4.536294
+sumtype=float,xtype=float,sum=0.3467901443380824
+sumtype=float,xtype=float,sum=1.105470109128046
+sumtype=float,xtype=float,sum=1.3100734148943491
+sumtype=float,xtype=float,sum=1.6914728087654902
+sumtype=float,xtype=float,sum=2.264761728567491
+sumtype=float,xtype=float,sum=2.7918878886593457
+sumtype=float,xtype=float,sum=3.403671949227191
+sumtype=float,xtype=float,sum=4.0022259583336135
+sumtype=float,xtype=float,sum=4.033667834794549
+sumtype=float,xtype=float,sum=4.536293840335763
+sum=4.536293840335763
 
 mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg-test/input/abixy-het
-sumtype=float,xtype=float,sum=0.346790
-sumtype=float,xtype=float,sum=1.105470
-sumtype=float,xtype=float,sum=1.310073
-sumtype=float,xtype=float,sum=1.691473
-sumtype=float,xtype=absent,sum=1.691473
-sumtype=float,xtype=float,sum=2.218599
-sumtype=float,xtype=float,sum=2.830383
-sumtype=float,xtype=float,sum=3.428937
-sumtype=float,xtype=float,sum=3.460379
-sumtype=float,xtype=float,sum=3.963005
-sum=3.963005
+sumtype=float,xtype=float,sum=0.3467901443380824
+sumtype=float,xtype=float,sum=1.105470109128046
+sumtype=float,xtype=float,sum=1.3100734148943491
+sumtype=float,xtype=float,sum=1.6914728087654902
+sumtype=float,xtype=absent,sum=1.6914728087654902
+sumtype=float,xtype=float,sum=2.218598968857345
+sumtype=float,xtype=float,sum=2.8303830294251906
+sumtype=float,xtype=float,sum=3.428937038531613
+sumtype=float,xtype=float,sum=3.460378914992549
+sumtype=float,xtype=float,sum=3.9630049205337627
+sum=3.9630049205337627
 
 mlr put $z = $x + $y ./reg-test/input/typeof.dkvp
 x=1,y=2,z=3
@@ -122,17 +122,29 @@ s=
 x=,b=
 
 mlr put @s = @s + $u; emitp @s ./reg-test/input/typeof.dkvp
+
 x=1,y=2
+
 x=1,y=
+
 x=,y=2
+
 x=,y=
+
 a=1,y=2
+
 a=1,y=
+
 a=,y=2
+
 a=,y=
+
 x=1,b=2
+
 x=1,b=
+
 x=,b=2
+
 x=,b=
 
 mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg-test/input/typeof.dkvp
