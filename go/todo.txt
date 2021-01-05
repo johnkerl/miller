@@ -2,11 +2,6 @@
 TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! fix:
-  u/rr ./reg-test/cases/case-c-dsl-absent-empty.sh
-  mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' ./reg-test/input/abixy-het
-  Miller: record/map indices must be string or int; got absent
-
 ! fix all typemasks; 'int x = 1; x = "abc"'
 
 * I/O redirects
@@ -60,7 +55,6 @@ medium:
 big:
 * json-null as type; & all dispo matrices/vectors ...
 * smart fmtnum
-* stats1 verb
 * stats2 verb
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -180,7 +174,6 @@ uniq
 nest
 reshape
 merge-fields
-stats1
 stats2
 
 ================================================================

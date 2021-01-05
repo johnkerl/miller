@@ -79,6 +79,18 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c" , ","); for (k,v 
 1:string a:string
 2:string b:string
 3:string c:string
+1:string a:string
+2:string b:string
+3:string c:string
+1:string a:string
+2:string b:string
+3:string c:string
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
 1=a,2=b,3=c
 1:string a:string
 2:string b:string
@@ -95,20 +107,8 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c" , ","); for (k,v 
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
-1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
@@ -121,6 +121,18 @@ a=1,b=2,3=c
 a:string 1:int
 b:string 2:int
 3:string c:string
+a:string 1:int
+b:string 2:int
+3:string c:string
+a=1,b=2,3=c
+a:string 1:int
+b:string 2:int
+a=1,b=2,3=c
+3:string c:string
+a:string 1:int
+b:string 2:int
+3:string c:string
+a=1,b=2,3=c
 a=1,b=2,3=c
 a:string 1:int
 b:string 2:int
@@ -133,22 +145,10 @@ a=1,b=2,3=c
 a:string 1:int
 b:string 2:int
 3:string c:string
-a=1,b=2,3=c
 a:string 1:int
 b:string 2:int
 3:string c:string
 a=1,b=2,3=c
-a:string 1:int
-b:string 2:int
-3:string c:string
-a=1,b=2,3=c
-a:string 1:int
-b:string 2:int
-3:string c:string
-a=1,b=2,3=c
-a:string 1:int
-b:string 2:int
-3:string c:string
 a=1,b=2,3=c
 a:string 1:int
 b:string 2:int
@@ -161,11 +161,41 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c", IFS); print ">>"
 1:string a:string
 2:string b:string
 3:string c:string
+>>
+<<1=a,2=b,3=c
+
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
 1=a,2=b,3=c
 >>
 <<
 1:string a:string
 2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string1=a,2=b,3=c
+
+2:string b:string
+3:string c:string
+>>
+<<
+1=a,2=b,3=c
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+1=a,2=b,3=c
 3:string c:string
 1=a,2=b,3=c
 >>
@@ -173,46 +203,16 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c", IFS); print ">>"
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 >>
 <<
 1:string a:string
+1=a,2=b,3=c
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 >>
 <<
 1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
@@ -223,42 +223,42 @@ mlr --from ./reg-test/input/abixy-het put $* = splitkv("a=1,b=2,c", IPS, IFS); p
 a:string 1:int
 b:string 2:int
 3:string c:string
+>>
+<<
 a=1,b=2,3=c
+a:string 1:int
+b:string 2:int
+3:string c:string
+>>
+<<
+a:string 1:int
+b:string 2:int
+3:string c:stringa=1,b=2,3=c
+
 >>
 <<
 a:string 1:int
 b:string 2:int
 3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:int
-b:string 2:int
-3:string c:string
 a=1,b=2,3=c
 >>
 <<
 a:string 1:int
 b:string 2:int
 3:string c:string
+>>
+<<
+a:string 1:int
+b:string 2:int
 a=1,b=2,3=c
+3:string c:string
 >>
 <<
 a:string 1:int
 b:string 2:int
 3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:int
-b:string 2:int
-3:string c:string
-a=1,b=2,3=c
->>
-<<
-a:string 1:int
-b:string 2:int
-3:string c:string
 a=1,b=2,3=c
 >>
 <<
@@ -285,11 +285,11 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c", OFS); print ">>"
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 >>
 <<
 1:string a:string
-2:string b:string
+2:string b:string1=a,2=b,3=c
+
 3:string c:string
 1=a,2=b,3=c
 >>
@@ -297,11 +297,29 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c", OFS); print ">>"
 1:string a:string
 2:string b:string
 3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+1=a,2=b,3=c
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
 1=a,2=b,3=c
 >>
 <<
 1:string a:string
 2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+1=a,2=b,3=c
 3:string c:string
 1=a,2=b,3=c
 >>
@@ -309,30 +327,12 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnv("a,b,c", OFS); print ">>"
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 >>
 <<
 1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
 >>
 <<
@@ -347,6 +347,30 @@ mlr --from ./reg-test/input/abixy-het put $* = splitkv("a=1,b=2,c", OPS, OFS); p
 a:string 1:int
 b:string 2:int
 3:string c:string
+>>
+<<
+a=1,b=2,3=c
+a:string 1:int
+b:string 2:int
+3:string c:string
+>>
+<<
+a=1,b=2,3=c
+a:string 1:int
+b:string 2:int
+3:string c:string
+>>
+<<
+a=1,b=2,3=c
+a:string 1:int
+b:string 2:int
+3:string c:string
+>>
+<<
+a:string 1:int
+b:string 2:int
+3:string c:string
+a=1,b=2,3=c
 a=1,b=2,3=c
 >>
 <<
@@ -359,40 +383,16 @@ a=1,b=2,3=c
 a:string 1:int
 b:string 2:int
 3:string c:string
-a=1,b=2,3=c
 >>
 <<
 a:string 1:int
 b:string 2:int
-3:string c:string
-a=1,b=2,3=c
+3:string c:stringa=1,b=2,3=c
+
 >>
 <<
 a:string 1:int
-b:string 2:int
-3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:int
-b:string 2:int
-3:string c:string
-a=1,b=2,3=c
->>
-<<
-a:string 1:int
-b:string 2:int
-3:string c:string
-a=1,b=2,3=c
->>
-<<
-a:string 1:int
-b:string 2:int
-3:string c:string
-a=1,b=2,3=c
->>
-<<
-a:string 1:int
 b:string 2:int
 3:string c:string
 a=1,b=2,3=c
@@ -411,6 +411,10 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c" , ","); for (k, 
 1:string a:string
 2:string b:string
 3:string c:string
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
 1=a,2=b,3=c
 1:string a:string
 2:string b:string
@@ -419,26 +423,22 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c" , ","); for (k, 
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
-1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
+1:string a:string
+2:string b:string1=a,2=b,3=c
+
+3:string c:string
 1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
-1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
 1:string a:string
 2:string b:string
@@ -457,6 +457,22 @@ a=1,b=2,3=c
 a:string 1:string
 b:string 2:string
 3:string c:string
+a:string 1:string
+b:string 2:string
+3:string c:string
+a:string 1:string
+b:string 2:string
+a=1,b=2,3=c
+a=1,b=2,3=c
+3:string c:string
+a=1,b=2,3=c
+a:string 1:string
+b:string 2:string
+3:string c:string
+a:string 1:string
+b:string 2:string
+3:string c:string
+a=1,b=2,3=c
 a=1,b=2,3=c
 a:string 1:string
 b:string 2:string
@@ -465,26 +481,10 @@ a=1,b=2,3=c
 a:string 1:string
 b:string 2:string
 3:string c:string
-a=1,b=2,3=c
 a:string 1:string
 b:string 2:string
 3:string c:string
 a=1,b=2,3=c
-a:string 1:string
-b:string 2:string
-3:string c:string
-a=1,b=2,3=c
-a:string 1:string
-b:string 2:string
-3:string c:string
-a=1,b=2,3=c
-a:string 1:string
-b:string 2:string
-3:string c:string
-a=1,b=2,3=c
-a:string 1:string
-b:string 2:string
-3:string c:string
 a=1,b=2,3=c
 
 mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c", IFS); print ">>".IRS."<<"; for (k, v in $*) {print k.":".typeof(k)." ".v.":".typeof(v)}
@@ -493,6 +493,42 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c", IFS); print ">>
 1:string a:string
 2:string b:string
 3:string c:string
+>>
+<<
+1=a,2=b,3=c
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1=a,2=b,3=c
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1=a,2=b,3=c
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+1=a,2=b,3=c
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
 1=a,2=b,3=c
 >>
 <<
@@ -505,48 +541,12 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c", IFS); print ">>
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 >>
 <<
 1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
 
 mlr --from ./reg-test/input/abixy-het put $* = splitkvx("a=1,b=2,c", IPS, IFS); print ">>".IRS."<<"; for (k, v in $*) {print k.":".typeof(k)." ".v.":".typeof(v)}
@@ -555,9 +555,15 @@ mlr --from ./reg-test/input/abixy-het put $* = splitkvx("a=1,b=2,c", IPS, IFS); 
 a:string 1:string
 b:string 2:string
 3:string c:string
-a=1,b=2,3=c
+>>
+<<a=1,b=2,3=c
+
+a:string 1:string
+b:string 2:string
+3:string c:string
 >>
 <<
+a=1,b=2,3=c
 a:string 1:string
 b:string 2:string
 3:string c:string
@@ -567,48 +573,42 @@ a=1,b=2,3=c
 a:string 1:string
 b:string 2:string
 3:string c:string
+>>
+<<
+a:string 1:string
+b:string 2:string
 a=1,b=2,3=c
+3:string c:string
+>>
+<<
+a:string 1:string
+b:string 2:string
+3:string c:string
 >>
 <<
 a:string 1:string
 b:string 2:string
 3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
+a=1,b=2,3=c
 a=1,b=2,3=c
 >>
 <<
 a:string 1:string
 b:string 2:string
 3:string c:string
+>>
+<<
 a=1,b=2,3=c
+a:string 1:string
+b:string 2:string
+3:string c:string
 >>
 <<
 a:string 1:string
 b:string 2:string
 3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
-a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
-a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
 a=1,b=2,3=c
 
 mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c", OFS); print ">>".ORS."<<"; for (k, v in $*) {print k.":".typeof(k)." ".v.":".typeof(v)}
@@ -617,7 +617,42 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c", OFS); print ">>
 1:string a:string
 2:string b:string
 3:string c:string
+>>
+<<
 1=a,2=b,3=c
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1=a,2=b,3=c
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+1=a,2=b,3=c
+1=a,2=b,3=c
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+2:string b:string
+3:string c:string
+>>
+<<
+1:string a:string
+1=a,2=b,3=c
+1=a,2=b,3=c
+2:string b:string
+3:string c:string
 >>
 <<
 1:string a:string
@@ -625,52 +660,17 @@ mlr --from ./reg-test/input/abixy-het put $* = splitnvx("a,b,c", OFS); print ">>
 3:string c:string
 1=a,2=b,3=c
 >>
-<<
+<<1=a,2=b,3=c
+
 1:string a:string
 2:string b:string
 3:string c:string
-1=a,2=b,3=c
 >>
 <<
 1:string a:string
 2:string b:string
 3:string c:string
 1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
-1=a,2=b,3=c
->>
-<<
-1:string a:string
-2:string b:string
-3:string c:string
 1=a,2=b,3=c
 
 mlr --from ./reg-test/input/abixy-het put $* = splitkvx("a=1,b=2,c", OPS, OFS); print ">>".ORS."<<"; for (k, v in $*) {print k.":".typeof(k)." ".v.":".typeof(v)}
@@ -679,48 +679,48 @@ mlr --from ./reg-test/input/abixy-het put $* = splitkvx("a=1,b=2,c", OPS, OFS); 
 a:string 1:string
 b:string 2:string
 3:string c:string
-a=1,b=2,3=c
+>>
+<<a=1,b=2,3=c
+
+a:string 1:string
+b:string 2:string
+3:string c:string
 >>
 <<
 a:string 1:string
 b:string 2:string
 3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
 a=1,b=2,3=c
 >>
 <<
 a:string 1:string
 b:string 2:string
 3:string c:string
-a=1,b=2,3=c
+>>
+<<
+a:string 1:string
+b:string 2:string
+3:string c:string
+>>
+<<
+a:string 1:string
+b:string 2:string
+3:string c:string
+>>
+<<
+a:string 1:string
+b:string 2:string
+3:string c:string
 >>
 <<
 a:string 1:string
 b:string 2:string
 3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
 a=1,b=2,3=c
->>
-<<
-a:string 1:string
-b:string 2:string
-3:string c:string
+a=1,b=2,3=c
 a=1,b=2,3=c
 >>
 <<
@@ -800,180 +800,69 @@ mlr --oxtab --from ./reg-test/input/abixy-het put s = joinv($*, ":"); $* = split
 1 pan
 2 pan
 3 1
-4 0.346790
-5 0.726803
+4 0.3467901443380824
+5 0.7268028627434533
 
 1 eks
 2 pan
 3 2
-4 0.758680
-5 0.522151
+4 0.7586799647899636
+5 0.5221511083334797
 
 1 wye
 2 wye
 3 3
-4 0.204603
-5 0.338319
+4 0.20460330576630303
+5 0.33831852551664776
 
 1 eks
 2 wye
 3 4
-4 0.381399
-5 0.134189
+4 0.38139939387114097
+5 0.13418874328430463
 
 1 wye
 2 pan
 3 5
-4 0.573289
-5 0.863624
+4 0.5732889198020006
+5 0.8636244699032729
 
 1 zee
 2 pan
 3 6
-4 0.527126
-5 0.493221
+4 0.5271261600918548
+5 0.49322128674835697
 
 1 eks
 2 zee
 3 7
-4 0.611784
-5 0.187885
+4 0.6117840605678454
+5 0.1878849191181694
 
 1 zee
 2 wye
 3 8
-4 0.598554
-5 0.976181
+4 0.5985540091064224
+5 0.976181385699006
 
 1 hat
 2 wye
 3 9
-4 0.031442
-5 0.749551
+4 0.03144187646093577
+5 0.7495507603507059
 
 1 pan
 2 wye
 3 10
-4 0.502626
-5 0.952618
+4 0.5026260055412137
+5 0.9526183602969864
 
 mlr --oxtab --from ./reg-test/input/abixy-het put s = joinkv($*, ":", ";"); $* = splitkv(s, ":", ";"); for (k,v in $*) { print k.":".typeof(k)." ".v.":".typeof(v)}
 a:string pan:string
 b:string pan:string
 i:string 1:int
-x:string 0.346790:float
-y:string 0.726803:float
-a pan
-b pan
-i 1
-x 0.346790
-y 0.726803
-a:string eks:string
-b:string pan:string
-i:string 2:int
-x:string 0.758680:float
-y:string 0.522151:float
-
-a eks
-b pan
-i 2
-x 0.758680
-y 0.522151
-aaa:string wye:string
-b:string wye:string
-i:string 3:int
-x:string 0.204603:float
-y:string 0.338319:float
-
-aaa wye
-b   wye
-i   3
-x   0.204603
-y   0.338319
-a:string eks:string
-bbb:string wye:string
-i:string 4:int
-x:string 0.381399:float
-y:string 0.134189:float
-
-a   eks
-bbb wye
-i   4
-x   0.381399
-y   0.134189
-a:string wye:string
-b:string pan:string
-i:string 5:int
-xxx:string 0.573289:float
-y:string 0.863624:float
-
-a   wye
-b   pan
-i   5
-xxx 0.573289
-y   0.863624
-a:string zee:string
-b:string pan:string
-i:string 6:int
-x:string 0.527126:float
-y:string 0.493221:float
-
-a zee
-b pan
-i 6
-x 0.527126
-y 0.493221
-a:string eks:string
-b:string zee:string
-iii:string 7:int
-x:string 0.611784:float
-y:string 0.187885:float
-
-a   eks
-b   zee
-iii 7
-x   0.611784
-y   0.187885
-a:string zee:string
-b:string wye:string
-i:string 8:int
-x:string 0.598554:float
-yyy:string 0.976181:float
-
-a   zee
-b   wye
-i   8
-x   0.598554
-yyy 0.976181
-aaa:string hat:string
-bbb:string wye:string
-i:string 9:int
-x:string 0.031442:float
-y:string 0.749551:float
-
-aaa hat
-bbb wye
-i   9
-x   0.031442
-y   0.749551
-a:string pan:string
-b:string wye:string
-i:string 10:int
-x:string 0.502626:float
-y:string 0.952618:float
-
-a pan
-b wye
-i 10
-x 0.502626
-y 0.952618
-
-mlr --oxtab --from ./reg-test/input/abixy-het put s = joinkv($*, ":", ";"); $* = splitkvx(s, ":", ";"); for (k,v in $*) { print k.":".typeof(k)." ".v.":".typeof(v)}
-a:string pan:string
-b:string pan:string
-i:string 1:string
-x:string 0.3467901443380824:string
-y:string 0.7268028627434533:string
+x:string 0.3467901443380824:float
+y:string 0.7268028627434533:float
 a pan
 b pan
 i 1
@@ -981,9 +870,120 @@ x 0.3467901443380824
 y 0.7268028627434533
 a:string eks:string
 b:string pan:string
+i:string 2:int
+x:string 0.7586799647899636:float
+y:string 0.5221511083334797:float
+
+a eks
+b pan
+i 2
+x 0.7586799647899636
+y 0.5221511083334797
+aaa:string wye:string
+b:string wye:string
+i:string 3:int
+x:string 0.20460330576630303:float
+y:string 0.33831852551664776:float
+a:string eks:string
+bbb:string wye:string
+
+aaa wye
+b   wye
+i   3
+x   0.20460330576630303
+y   0.33831852551664776
+i:string 4:int
+x:string 0.38139939387114097:float
+y:string 0.13418874328430463:float
+a:string wye:string
+b:string pan:string
+i:string 5:int
+xxx:string 0.5732889198020006:float
+
+a   eks
+bbb wye
+i   4
+x   0.38139939387114097
+y   0.13418874328430463
+y:string 0.8636244699032729:float
+
+a   wye
+b   pan
+i   5
+xxx 0.5732889198020006
+y   0.8636244699032729
+a:string zee:string
+b:string pan:string
+i:string 6:int
+x:string 0.5271261600918548:float
+y:string 0.49322128674835697:float
+
+a zee
+b pan
+i 6
+x 0.5271261600918548
+y 0.49322128674835697
+a:string eks:string
+b:string zee:string
+iii:string 7:int
+x:string 0.6117840605678454:float
+y:string 0.1878849191181694:float
+
+a   eks
+b   zee
+iii 7
+x   0.6117840605678454
+y   0.1878849191181694
+a:string zee:string
+b:string wye:string
+i:string 8:int
+x:string 0.5985540091064224:float
+yyy:string 0.976181385699006:float
+
+a   zee
+b   wye
+i   8
+x   0.5985540091064224
+yyy 0.976181385699006
+aaa:string hat:string
+bbb:string wye:string
+i:string 9:int
+x:string 0.03144187646093577:float
+y:string 0.7495507603507059:float
+
+aaa hat
+bbb wye
+i   9
+x   0.03144187646093577
+y   0.7495507603507059
+a:string pan:string
+b:string wye:string
+i:string 10:int
+x:string 0.5026260055412137:float
+y:string 0.9526183602969864:float
+
+a pan
+b wye
+i 10
+x 0.5026260055412137
+y 0.9526183602969864
+
+mlr --oxtab --from ./reg-test/input/abixy-het put s = joinkv($*, ":", ";"); $* = splitkvx(s, ":", ";"); for (k,v in $*) { print k.":".typeof(k)." ".v.":".typeof(v)}
+a:string pan:string
+b:string pan:string
+i:string 1:string
+x:string 0.3467901443380824:string
+y:string 0.7268028627434533:string
+a:string eks:string
+b:string pan:string
 i:string 2:string
 x:string 0.7586799647899636:string
 y:string 0.5221511083334797:string
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
 
 a eks
 b pan
@@ -995,16 +995,16 @@ b:string wye:string
 i:string 3:string
 x:string 0.20460330576630303:string
 y:string 0.33831852551664776:string
+a:string eks:string
+bbb:string wye:string
+i:string 4:string
+x:string 0.38139939387114097:string
 
 aaa wye
 b   wye
 i   3
 x   0.20460330576630303
 y   0.33831852551664776
-a:string eks:string
-bbb:string wye:string
-i:string 4:string
-x:string 0.38139939387114097:string
 y:string 0.13418874328430463:string
 
 a   eks
@@ -1017,13 +1017,13 @@ b:string pan:string
 i:string 5:string
 xxx:string 0.5732889198020006:string
 y:string 0.8636244699032729:string
+a:string zee:string
 
 a   wye
 b   pan
 i   5
 xxx 0.5732889198020006
 y   0.8636244699032729
-a:string zee:string
 b:string pan:string
 i:string 6:string
 x:string 0.5271261600918548:string
@@ -1050,15 +1050,15 @@ b:string wye:string
 i:string 8:string
 x:string 0.5985540091064224:string
 yyy:string 0.976181385699006:string
+aaa:string hat:string
+bbb:string wye:string
+i:string 9:string
 
 a   zee
 b   wye
 i   8
 x   0.5985540091064224
 yyy 0.976181385699006
-aaa:string hat:string
-bbb:string wye:string
-i:string 9:string
 x:string 0.03144187646093577:string
 y:string 0.7495507603507059:string
 
@@ -1171,11 +1171,11 @@ abc 4
 1:string 2:int
 abc:string 4:int
 5:string xyz:string
+1:string 2:int
 
 1   2
 abc 4
 5   xyz
-1:string 2:int
 abc:string 4:int
 5:string xyz:string
 
@@ -1185,13 +1185,13 @@ abc 4
 1:string 2:int
 abc:string 4:int
 5:string xyz:string
+1:string 2:int
+abc:string 4:int
+5:string xyz:string
 
 1   2
 abc 4
 5   xyz
-1:string 2:int
-abc:string 4:int
-5:string xyz:string
 
 1   2
 abc 4
@@ -1242,6 +1242,13 @@ abc 4
 1:string 2:string
 abc:string 4:string
 5:string xyz:string
+1:string 2:string
+abc:string 4:string
+5:string xyz:string
+
+1   2
+abc 4
+5   xyz
 
 1   2
 abc 4
@@ -1284,18 +1291,11 @@ abc 4
 1:string 2:string
 abc:string 4:string
 5:string xyz:string
+1:string 2:string
 
 1   2
 abc 4
 5   xyz
-1:string 2:string
-abc:string 4:string
-5:string xyz:string
-
-1   2
-abc 4
-5   xyz
-1:string 2:string
 abc:string 4:string
 5:string xyz:string
 
