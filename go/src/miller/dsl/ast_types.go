@@ -24,8 +24,6 @@ type ASTNode struct {
 type TNodeType string
 
 const (
-	NodeTypeEmptyStatement TNodeType = "empty statement"
-
 	NodeTypeStringLiteral             = "string literal"
 	NodeTypeIntLiteral                = "int literal"
 	NodeTypeFloatLiteral              = "float literal"
@@ -60,8 +58,10 @@ const (
 	NodeTypeAssignment     = "assignment"
 	NodeTypeUnset          = "unset"
 
-	NodeTypeBareBoolean      = "bare boolean"
-	NodeTypeFilterStatement  = "filter statement"
+	NodeTypeBareBoolean     = "bare boolean"
+	NodeTypeFilterStatement = "filter statement"
+
+	NodeTypeTeeStatement     = "tee statement"
 	NodeTypeEmitStatement    = "emit statement"
 	NodeTypeEmitPStatement   = "emitp statement"
 	NodeTypeEmitFStatement   = "emitf statement"
@@ -81,6 +81,11 @@ const (
 	NodeTypeRedirectTargetStdout = "stdout redirect target"
 	NodeTypeRedirectTargetStderr = "stderr redirect target"
 	NodeTypeRedirectTarget       = "redirect target"
+
+	// This helps various emit-variant sub-ASTs have the same shape.  For
+	// example, in 'emit > "foo.txt", @v' and 'emit @v', the latter has a no-op
+	// for its redirect target.
+	NodeTypeNoOp TNodeType = "no-op"
 
 	NodeTypeOperator           = "operator"
 	NodeTypeFunctionCallsite   = "function callsite"

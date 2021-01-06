@@ -178,8 +178,6 @@ func (this *ASTNode) Text() string {
 
 	switch this.Type {
 
-	case NodeTypeEmptyStatement:
-		return "empty"
 	case NodeTypeStringLiteral:
 		return "\"" + strings.ReplaceAll(tokenText, "\"", "\\\"") + "\""
 	case NodeTypeIntLiteral:
@@ -253,6 +251,9 @@ func (this *ASTNode) Text() string {
 		return tokenText
 	case NodeTypeEprintnStatement:
 		return tokenText
+
+	case NodeTypeNoOp:
+		return "no-op"
 
 	case NodeTypeOperator:
 		return tokenText

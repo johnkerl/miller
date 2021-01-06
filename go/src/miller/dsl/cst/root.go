@@ -70,11 +70,6 @@ func Build(
 
 func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 
-	// They can do mlr put '': there are simply zero statements.
-	if ast.RootNode.Type == dsl.NodeTypeEmptyStatement {
-		return nil
-	}
-
 	if ast.RootNode.Type != dsl.NodeTypeStatementBlock {
 		return errors.New(
 			"CST root build: non-statement-block AST root node unhandled",

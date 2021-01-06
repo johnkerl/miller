@@ -196,9 +196,10 @@ eprint   : 'e' 'p' 'r' 'i' 'n' 't' ;
 eprintn  : 'e' 'p' 'r' 'i' 'n' 't' 'n' ;
 print    : 'p' 'r' 'i' 'n' 't' ;
 printn   : 'p' 'r' 'i' 'n' 't' 'n' ;
-//tee      : 't' 'e' 'e' ;
-stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
+tee      : 't' 'e' 'e' ;
+
 stdout   : 's' 't' 'd' 'o' 'u' 't' ;
+stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
 
 // ----------------------------------------------------------------
 // FIELD NAMES, OUT-OF-STREAM VARIABLES, LOCAL VARIABLES
@@ -395,6 +396,7 @@ BracelessStatement
   | Unset
   | BareBoolean
   | FilterStatement
+  | TeeStatement
   | EmitStatement
   | EmitPStatement
   | EmitFStatement
@@ -473,11 +475,20 @@ RedirectTarget
 ;
 
 // ----------------------------------------------------------------
-// Examples:
+TeeStatement
+  : tee Redirector "," full_srec
+    << dsl.NewASTNodeBinary($0, $3, $1, dsl.NodeTypeTeeStatement) >>
+;
+
+// ----------------------------------------------------------------
+// Examples for emit:
 //   emit @a
 //   emit (@a, @b)
 //   emit @a, "x", "y"
 //   emit (@a, @b), "x", "y"
+//
+// Examples for emitp: syntactically identical to emit.
+//
 // First argument (single or in parentheses) must be non-indexed
 // oosvar/localvar/fieldname, so we can use their names as keys in the emitted
 // record.
@@ -495,65 +506,207 @@ RedirectTarget
 
 EmitStatement
   : emit Emittable
-    << dsl.NewASTNodeTernary($0, $1, nil, nil, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $1, // Emittable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
+
   | emit Redirector "," Emittable
-    << dsl.NewASTNodeTernary($0, $3, nil, $1, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+      $0, // emit
+      $3, // Emittable
+      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+      $1, // redirect
+      dsl.NodeTypeEmitStatement,
+    )
+    >>
 
   | emit "(" EmittableList ")"
-    << dsl.NewASTNodeTernary($0, $2, nil, nil, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $2, // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
+
   | emit Redirector "," "(" EmittableList ")"
-    << dsl.NewASTNodeTernary($0, $4, nil, $1, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $4, // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        $1, // redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
 
   | emit Emittable "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $1, $3, nil, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $1, // emittable
+        $3, // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
+
   | emit Redirector "," Emittable "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $3, $5, $1, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $3, // emittable
+        $5, // keys
+        $1, // redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
 
   | emit "(" EmittableList ")" "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $2, $5, nil, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $2, // emittable
+        $5, // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
+
   | emit Redirector "," "(" EmittableList ")" "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $4, $7, $1, dsl.NodeTypeEmitStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emit
+        $4, // emittables
+        $7, // keys
+        $1, // redirect
+        dsl.NodeTypeEmitStatement,
+      )
+    >>
 ;
 
-// Examples: syntactically identical to emit.
+// ----------------------------------------------------------------
 EmitPStatement
   : emitp Emittable
-    << dsl.NewASTNodeTernary($0, $1, nil, nil, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $1, // emittable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
+
   | emitp Redirector "," Emittable
-    << dsl.NewASTNodeTernary($0, $3, nil, $1, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+      $0, // emitp
+      $3, // emittable
+      dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+      $1, // redirect
+      dsl.NodeTypeEmitPStatement,
+    )
+    >>
 
   | emitp "(" EmittableList ")"
-    << dsl.NewASTNodeTernary($0, $2, nil, nil, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $2, // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
+
   | emitp Redirector "," "(" EmittableList ")"
-    << dsl.NewASTNodeTernary($0, $4, nil, $1, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $4, // emittables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no keys
+        $1, // redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
 
   | emitp Emittable "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $1, $3, nil, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $1, // emittable
+        $3, // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
+
   | emitp Redirector "," Emittable "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $3, $5, $1, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $3, // emittable
+        $5, // keys
+        $1, // redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
 
   | emitp "(" EmittableList ")" "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $2, $5, nil, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $2, // emittable
+        $5, // keys
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
+
   | emitp Redirector "," "(" EmittableList ")" "," EmitKeys
-    << dsl.NewASTNodeTernary($0, $4, $7, $1, dsl.NodeTypeEmitPStatement) >>
+    <<
+      dsl.NewASTNodeTernary(
+        $0, // emitp
+        $4, // emittable
+        $7, // keys
+        $1, // redirect
+        dsl.NodeTypeEmitPStatement,
+      )
+    >>
 ;
 
+// ----------------------------------------------------------------
 // Examples:
 //   emitf @a
 //   emitf @a, b, $c
 // Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
 // their names as keys in the emitted record.
 EmitFStatement
+
   : emitf EmittableList
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
-        dsl.NodeTypeEmitFStatement,
-      ),
-      $1,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $0,
+          dsl.NodeTypeEmitFStatement,
+        ),
+        $1,
+      )
+     >>
+
   | emitf Redirector "," EmittableList
     // TODO
+
 ;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -601,96 +754,180 @@ EmitKeys
 // ----------------------------------------------------------------
 DumpStatement
   : dump
-    << dsl.NewASTNodeUnary($0, nil, dsl.NodeTypeDumpStatement) >>
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // dump
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeDumpStatement,
+      )
+    >>
+
   | dump Redirector
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeDumpStatement) >>
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // dump
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no dumpable
+        $1, // redirect
+        dsl.NodeTypeDumpStatement,
+      )
+    >>
 
   | dump FcnArgs
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
-        dsl.NodeTypeDumpStatement,
-      ),
-      $1,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $0,
+          dsl.NodeTypeDumpStatement,
+        ),
+        $1,
+      )
+     >>
+
   | dump Redirector "," FcnArgs
     // TODO
 
 ;
 
+// ----------------------------------------------------------------
 EdumpStatement
   : edump
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEdumpStatement) >>
+
   | edump FcnArgs
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
-        dsl.NodeTypeEdumpStatement,
-      ),
-      $1,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $0,
+          dsl.NodeTypeEdumpStatement,
+        ),
+        $1,
+      )
+     >>
 ;
 
+// ----------------------------------------------------------------
 PrintStatement
   : print
-    << dsl.NewASTNodeUnary($0, nil, dsl.NodeTypePrintStatement) >>
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // print
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypePrintStatement,
+      )
+    >>
+
   | print Redirector
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintStatement) >>
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // print
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+        $1, // redirect
+        dsl.NodeTypePrintStatement,
+      )
+    >>
 
   | print FcnArgs
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // print
+        $1, // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
         dsl.NodeTypePrintStatement,
-      ),
-      $1,
-    ) >>
+      )
+    >>
+
   | print Redirector "," FcnArgs
-    // TODO
-;
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // print
+        $3, // printables
+        $1, // redirect
+        dsl.NodeTypePrintStatement,
+      )
+    >>
 
-EprintStatement
-  : eprint
-    << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintStatement) >>
-  | eprint FcnArgs
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
-        dsl.NodeTypeEprintStatement,
-      ),
-      $1,
-    ) >>
-;
-
+// ----------------------------------------------------------------
 PrintnStatement
   : printn
-    << dsl.NewASTNodeUnary($0, nil, dsl.NodeTypePrintnStatement) >>
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // printn
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypePrintnStatement,
+      )
+    >>
+
   | printn Redirector
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypePrintnStatement) >>
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // printn
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printable
+        $1, // redirect
+        dsl.NodeTypePrintnStatement,
+      )
+    >>
 
   | printn FcnArgs
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // printn
+        $1, // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
         dsl.NodeTypePrintnStatement,
-      ),
-      $1,
-    ) >>
+      )
+    >>
+
   | printn Redirector "," FcnArgs
-    // TODO
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // printn
+        $3, // printables
+        $1, // redirect
+        dsl.NodeTypePrintnStatement,
+      )
+    >>
 ;
 
+// ----------------------------------------------------------------
+EprintStatement
+  : eprint
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // eprint
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEprintStatement,
+      )
+    >>
+
+  | eprint FcnArgs
+    <<
+      dsl.NewASTNodeBinary(
+        $0, // eprint
+        $1, // printables
+        dsl.NewASTNodeNestable(nil, dsl.NodeTypeNoOp), // no redirect
+        dsl.NodeTypeEprintStatement,
+      )
+    >>
+;
+
+// ----------------------------------------------------------------
 EprintnStatement
   : eprintn
     << dsl.NewASTNodeZary($0, dsl.NodeTypeEprintnStatement) >>
   | eprintn FcnArgs
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
-        dsl.NodeTypeEprintnStatement,
-      ),
-      $1,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $0,
+          dsl.NodeTypeEprintnStatement,
+        ),
+        $1,
+      )
+     >>
 ;
 
 // ----------------------------------------------------------------
@@ -1213,13 +1450,15 @@ ArrayLiteral
     // * ArrayLiteral "[]"
     //     * StringLiteral "a"
     //     * StringLiteral "b"
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        dsl.NewASTToken("[]", $0),
-        dsl.NodeTypeArrayLiteral,
-      ),
-      $1,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          dsl.NewASTToken("[]", $0),
+          dsl.NodeTypeArrayLiteral,
+        ),
+        $1,
+      )
+     >>
 ;
 
 // ----------------------------------------------------------------
@@ -1284,13 +1523,15 @@ MapLiteral
     //     * MapLiteralKeyValuePair ":"
     //         * StringLiteral "b"
     //         * IntLiteral "2"
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        dsl.NewASTToken("{}", $0),
-        dsl.NodeTypeMapLiteral,
-      ),
-      $1,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          dsl.NewASTToken("{}", $0),
+          dsl.NodeTypeMapLiteral,
+        ),
+        $1,
+      )
+     >>
 ;
 
 // ----------------------------------------------------------------
@@ -1489,13 +1730,15 @@ FunctionCallsite
     // * FunctionCallsite "[]"
     //     * StringLiteral "a"
     //     * StringLiteral "b"
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $0,
-        dsl.NodeTypeFunctionCallsite,
-      ),
-      $2,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $0,
+          dsl.NodeTypeFunctionCallsite,
+        ),
+        $2,
+      )
+     >>
 ;
 
 // For most functions it suffices to use the non_sigil_name pattern.
@@ -1558,13 +1801,15 @@ SubroutineCallsite
     // * SubroutineCallsite "[]"
     //     * StringLiteral "a"
     //     * StringLiteral "b"
-    << dsl.AdoptChildren(
-      dsl.NewASTNodeNestable(
-        $1,
-        dsl.NodeTypeSubroutineCallsite,
-      ),
-      $3,
-    ) >>
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $1,
+          dsl.NodeTypeSubroutineCallsite,
+        ),
+        $3,
+      )
+     >>
 ;
 
 SubroutineName : non_sigil_name;
