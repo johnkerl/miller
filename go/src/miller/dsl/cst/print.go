@@ -13,66 +13,11 @@ import (
 )
 
 // ================================================================
-type DumpStatementNode struct {
-	// TODO: redirect options
-	ostream     *os.File
-	expressions []IEvaluable
-}
-
-// ----------------------------------------------------------------
-func (this *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
-	return this.BuildDumpxStatementNode(astNode, os.Stdout)
-}
-
-func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
-	return this.BuildDumpxStatementNode(astNode, os.Stderr)
-}
-
-// Common code for building dump/edump nodes
-func (this *RootNode) BuildDumpxStatementNode(
-	astNode *dsl.ASTNode,
-	ostream *os.File,
-) (IExecutable, error) {
-	expressions := make([]IEvaluable, len(astNode.Children))
-	for i, childNode := range astNode.Children {
-		expression, err := this.BuildEvaluableNode(childNode)
-		if err != nil {
-			return nil, err
-		}
-		expressions[i] = expression
-	}
-
-	return &DumpStatementNode{
-		ostream,
-		expressions,
-	}, nil
-}
-
-// ----------------------------------------------------------------
-func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	if len(this.expressions) == 0 { // 'dump' without argument means 'dump @*'
-		// Not Fprintln since JSON output is LF-terminated already
-		fmt.Fprint(this.ostream, state.Oosvars.String())
-	} else {
-		for _, expression := range this.expressions {
-			evaluation := expression.Evaluate(state)
-			if !evaluation.IsAbsent() {
-				fmt.Fprintln(this.ostream, evaluation.String())
-			}
-		}
-	}
-
-	return nil, nil
-}
-
-// ================================================================
 type PrintStatementNode struct {
-	// TODO: redirect options
 	ostream     *os.File
 	terminator  string
 	expressions []IEvaluable
+	// xxx redirect ...
 }
 
 // ----------------------------------------------------------------
@@ -85,21 +30,21 @@ func (this *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable
 	)
 }
 
-func (this *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintStatement)
-	return this.BuildPrintxStatementNode(
-		astNode,
-		os.Stderr,
-		"\n",
-	)
-}
-
 func (this *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintnStatement)
 	return this.BuildPrintxStatementNode(
 		astNode,
 		os.Stdout,
 		"",
+	)
+}
+
+func (this *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintStatement)
+	return this.BuildPrintxStatementNode(
+		astNode,
+		os.Stderr,
+		"\n",
 	)
 }
 
@@ -118,8 +63,13 @@ func (this *RootNode) BuildPrintxStatementNode(
 	ostream *os.File,
 	terminator string,
 ) (IExecutable, error) {
-	expressions := make([]IEvaluable, len(astNode.Children))
-	for i, childNode := range astNode.Children {
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+
+	expressionsNode := astNode.Children[0]
+	_ /*redirectNode*/ = astNode.Children[1]
+
+	expressions := make([]IEvaluable, len(expressionsNode.Children))
+	for i, childNode := range expressionsNode.Children {
 		expression, err := this.BuildEvaluableNode(childNode)
 		if err != nil {
 			return nil, err

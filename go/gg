@@ -51,12 +51,62 @@ mention() {
 }
 
 # ================================================================
-run_mlr -n put -v 'print'
+# print  printn
+# eprint eprintn
+# dump   edump
 
-run_mlr -n put -v 'print > stderr'
+# emitf
+# emit
+# emitp
 
-run}mlr -n put -v 'print x'
+#path_to_mlr="../c/mlr"
+path_to_mlr="../go/mlr"
+#vflag="-v"
+vflag=""
 
-run_mlr -n put -v 'print > stderr, x'
+run_mlr -n put $vflag '@x=1; print'
+run_mlr -n put $vflag '@x=1; print > stdout'
+run_mlr -n put $vflag '@x=1; print @x'
+run_mlr -n put $vflag '@x=1; print > stdout, @x'
+
+run_mlr -n put $vflag '@x=1; printn'
+run_mlr -n put $vflag '@x=1; printn > stdout'
+run_mlr -n put $vflag '@x=1; printn @x'
+run_mlr -n put $vflag '@x=1; printn > stdout, @x'
+
+run_mlr -n put $vflag '@x=1; eprint'
+run_mlr -n put $vflag '@x=1; eprint @x'
+
+run_mlr -n put $vflag '@x=1; eprintn'
+run_mlr -n put $vflag '@x=1; eprintn @x'
+
+run_mlr -n put $vflag '@x=1; dump'
+run_mlr -n put $vflag '@x=1; dump > stdout'
+run_mlr -n put $vflag '@x=1; dump @x'
+run_mlr -n put $vflag '@x=1; dump > stdout, @x'
+#run_mlr -n put $vflag '@x=1; dump > stdout @x'
+
+run_mlr -n put $vflag '@x=1; edump'
+run_mlr -n put $vflag '@x=1; edump @x'
+
+run_mlr -n put $vflag '@x=1; tee > stdout, $*'
+
+run_mlr -n put $vflag '@x=1; emitf @x'
+run_mlr -n put $vflag '@x=1; emitf > stdout, @x'
+
+run_mlr -n put $vflag '@x=1; emit @x'
+run_mlr -n put $vflag '@x=1; emit > stdout, @x'
+run_mlr -n put $vflag '@x=1; @y=2; emit (@x, @y)'
+run_mlr -n put $vflag '@x=1; @y=2; emit > stdout, (@x, @y)'
+
+run_mlr -n put $vflag '@x={"a":1}; emit @x, "a"'
+run_mlr -n put $vflag '@x={"a":1}; emit > stdout, @x, "a"'
+run_mlr -n put $vflag '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
+run_mlr -n put $vflag '@x={"a":1}; @y={"b":2}; emit > stdout, (@x, @y), "a"'
+
+run_mlr -n put $vflag '@x={"a":1}; emitp @x, "a"'
+run_mlr -n put $vflag '@x={"a":1}; emitp > stdout, @x, "a"'
+run_mlr -n put $vflag '@x={"a":1}; @y={"b":2}; emitp (@x, @y), "a"'
+run_mlr -n put $vflag '@x={"a":1}; @y={"b":2}; emitp > stdout, (@x, @y), "a"'
 
 # ================================================================

@@ -27,6 +27,7 @@ import (
 type EmitFStatementNode struct {
 	emitfNames      []string
 	emitfEvaluables []IEvaluable
+	// xxx redirect
 }
 
 // ----------------------------------------------------------------
@@ -42,12 +43,15 @@ type EmitFStatementNode struct {
 
 func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitFStatement)
-	n := len(astNode.Children)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
+	expressionsNode := astNode.Children[0]
+
+	n := len(expressionsNode.Children)
 	lib.InternalCodingErrorIf(n < 1)
 
 	emitfNames := make([]string, n)
 	emitfEvaluables := make([]IEvaluable, n)
-	for i, childNode := range astNode.Children {
+	for i, childNode := range expressionsNode.Children {
 		emitfName, err := getNameFromNamedNode(childNode, "emitf")
 		if err != nil {
 			return nil, err

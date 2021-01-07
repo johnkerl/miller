@@ -82,42 +82,31 @@ func (this *RootNode) buildEmitXStatementNode(
 	astNode *dsl.ASTNode,
 	isEmitP bool,
 ) (IExecutable, error) {
-	nchild := len(astNode.Children)
-	lib.InternalCodingErrorIf(nchild != 1 && nchild != 2)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
+	emittablesNode := astNode.Children[0]
+	keysNode := astNode.Children[1]
 
 	var names []string = nil
 	var emitEvaluables []IEvaluable = nil
 	var indexEvaluables []IEvaluable = nil
 
-	emittablesNode := astNode.Children[0]
-	if emittablesNode.Type == dsl.NodeTypeEmittableList {
-		// Lashed: emit (@a, @b), "x"
-		numEmittables := len(emittablesNode.Children)
-		names = make([]string, numEmittables)
-		emitEvaluables = make([]IEvaluable, numEmittables)
-		for i, emittableNode := range emittablesNode.Children {
-			name, emitEvaluable, err := this.buildEmittableNode(emittableNode)
-			if err != nil {
-				return nil, err
-			}
-			names[i] = name
-			emitEvaluables[i] = emitEvaluable
-		}
-
-	} else {
-		// Non-lashed: emit @a, "x"
-		names = make([]string, 1)
-		emitEvaluables = make([]IEvaluable, 1)
-		name, emitEvaluable, err := this.buildEmittableNode(emittablesNode)
+	// Lashed: emit (@a, @b), "x"
+	numEmittables := len(emittablesNode.Children)
+	names = make([]string, numEmittables)
+	emitEvaluables = make([]IEvaluable, numEmittables)
+	for i, emittableNode := range emittablesNode.Children {
+		name, emitEvaluable, err := this.buildEmittableNode(emittableNode)
 		if err != nil {
 			return nil, err
 		}
-		names[0] = name
-		emitEvaluables[0] = emitEvaluable
+		names[i] = name
+		emitEvaluables[i] = emitEvaluable
 	}
 
-	if nchild == 2 { // There are "x","y" present
-		keysNode := astNode.Children[1]
+	// xxx temp
+	isIndexed := false
+	if keysNode.Type != dsl.NodeTypeNoOp { // There are "x","y" present
+		isIndexed = true
 		lib.InternalCodingErrorIf(keysNode.Type != dsl.NodeTypeEmitKeys)
 		numKeys := len(keysNode.Children)
 		indexEvaluables = make([]IEvaluable, numKeys)
@@ -137,7 +126,7 @@ func (this *RootNode) buildEmitXStatementNode(
 		isEmitP:         isEmitP,
 	}
 
-	if nchild == 1 {
+	if !isIndexed {
 		emitxStatementNode.executorFunc = emitxStatementNode.executeNonIndexed
 	} else {
 		emitxStatementNode.executorFunc = emitxStatementNode.executeIndexed

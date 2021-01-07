@@ -1009,10 +1009,13 @@ RAW AST:
         * full record "$*"
         * statement block
             * emit statement "emit"
-                * map literal "{}"
-                    * map-literal key-value pair ":"
-                        * local variable "k"
-                        * local variable "k"
+                * emittable list
+                    * map literal "{}"
+                        * map-literal key-value pair ":"
+                            * local variable "k"
+                            * local variable "k"
+                * no-op
+                * no-op
 
 
 mlr -n put -v begin {}
@@ -1733,10 +1736,18 @@ RAW AST:
                         * direct field value "5"
                 * int literal "2"
             * emit statement "emit"
-                * direct oosvar value "v"
+                * emittable list
+                    * direct oosvar value "v"
+                * no-op
+                * no-op
             * emit statement "emit"
-                * direct oosvar value "w"
+                * emittable list
+                    * direct oosvar value "w"
+                * no-op
+                * no-op
             * dump statement "dump"
+                * no-op
+                * no-op
     * assignment "="
         * direct field value "x"
         * int literal "6"

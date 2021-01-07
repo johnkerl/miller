@@ -101,11 +101,13 @@ RAW AST:
                 * parameter name "a"
         * statement block
             * print statement "print"
-                * operator "."
+                * function callsite
                     * operator "."
-                        * string literal "HELLO, "
-                        * local variable "a"
-                    * string literal "!"
+                        * operator "."
+                            * string literal "HELLO, "
+                            * local variable "a"
+                        * string literal "!"
+                * no-op
     * subroutine callsite "s"
         * string literal "WORLD"
 
@@ -160,14 +162,18 @@ RAW AST:
                 * parameter name "a"
         * statement block
             * print statement "print"
-                * operator "."
+                * function callsite
                     * operator "."
-                        * string literal "HELLO, "
-                        * local variable "a"
-                    * string literal "!"
+                        * operator "."
+                            * string literal "HELLO, "
+                            * local variable "a"
+                        * string literal "!"
+                * no-op
     * print statement "print"
-        * function callsite "s"
-            * context variable "NR"
+        * function callsite
+            * function callsite "s"
+                * context variable "NR"
+        * no-op
     * subroutine callsite "s"
         * string literal "WORLD"
 

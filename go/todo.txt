@@ -38,6 +38,9 @@ emitp/emitf:
 * regex ...
 ? doc shift/unshift as using [2:] and append
 
+? what if calling a function which references $* from begin/end context -- ?
+  won't fail static validate ...
+
 ! se-q reads
 
 small:
@@ -425,3 +428,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * cli-doc --no-auto-flatten and --no-auto-unflatten
 * note (fix? doc?) flatten of '$x={}' expands to nothing. not invertible.
 * doc: --jvquoteall --jknquoteint no-ops
+* back-incompat:
+  mlr -n put $vflag '@x=1; dump > stdout, @x'
+  mlr -n put $vflag '@x=1; dump > stdout @x'

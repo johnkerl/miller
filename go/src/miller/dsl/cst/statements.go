@@ -37,24 +37,28 @@ func (this *RootNode) BuildStatementNode(
 	case dsl.NodeTypeBareBoolean:
 		return this.BuildFilterStatementNode(astNode)
 
-	case dsl.NodeTypeEmitStatement:
-		return this.BuildEmitStatementNode(astNode)
-	case dsl.NodeTypeEmitPStatement:
-		return this.BuildEmitPStatementNode(astNode)
-	case dsl.NodeTypeEmitFStatement:
-		return this.BuildEmitFStatementNode(astNode)
+	case dsl.NodeTypePrintStatement:
+		return this.BuildPrintStatementNode(astNode)
+	case dsl.NodeTypePrintnStatement:
+		return this.BuildPrintnStatementNode(astNode)
+	case dsl.NodeTypeEprintStatement:
+		return this.BuildEprintStatementNode(astNode)
+	case dsl.NodeTypeEprintnStatement:
+		return this.BuildEprintnStatementNode(astNode)
+
 	case dsl.NodeTypeDumpStatement:
 		return this.BuildDumpStatementNode(astNode)
 	case dsl.NodeTypeEdumpStatement:
 		return this.BuildEdumpStatementNode(astNode)
-	case dsl.NodeTypePrintStatement:
-		return this.BuildPrintStatementNode(astNode)
-	case dsl.NodeTypeEprintStatement:
-		return this.BuildEprintStatementNode(astNode)
-	case dsl.NodeTypePrintnStatement:
-		return this.BuildPrintnStatementNode(astNode)
-	case dsl.NodeTypeEprintnStatement:
-		return this.BuildEprintnStatementNode(astNode)
+
+	case dsl.NodeTypeTeeStatement:
+		return this.BuildTeeStatementNode(astNode)
+	case dsl.NodeTypeEmitFStatement:
+		return this.BuildEmitFStatementNode(astNode)
+	case dsl.NodeTypeEmitStatement:
+		return this.BuildEmitStatementNode(astNode)
+	case dsl.NodeTypeEmitPStatement:
+		return this.BuildEmitPStatementNode(astNode)
 
 	case dsl.NodeTypeBeginBlock:
 		return nil, errors.New(
