@@ -251,6 +251,21 @@ GOCC UPSTREAMS:
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
 
 ----------------------------------------------------------------
+FLAME GRAPHS
+
+go get -u github.com/google/pprof
+ll ~/go/bin/pprof
+go get github.com/uber/go-torch
+
+cd ~/git
+git clone https://github.com/brendangregg/FlameGraph
+
+cd /path/to/mlr/go
+export PATH=${PATH}:~/git/FlameGraph/
+go-torch cpu.pprof
+mv torch.svg ~/Desktop/
+
+----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
 
 * "Miller: " prefixes on all errors.New
