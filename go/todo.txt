@@ -14,6 +14,9 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
+! ochan mod for all stdouts
+* bug
+  run_mlr $input put $vflag '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
 * new emitx punctuation-syntax -- decide x 4
 * to support (from C impl):
   x MD_TOKEN_ALL
@@ -26,6 +29,8 @@ emitp/emitf:
   k md_nonindexed_local_variable
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
+* mlr: tee statements are not valid within func blocks
+  restore?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ! fix var/any type-mask

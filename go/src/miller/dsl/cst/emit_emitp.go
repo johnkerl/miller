@@ -106,8 +106,8 @@ func (this *RootNode) buildEmitXStatementNode(
 	// xxx temp
 	isIndexed := false
 	if keysNode.Type != dsl.NodeTypeNoOp { // There are "x","y" present
-		isIndexed = true
 		lib.InternalCodingErrorIf(keysNode.Type != dsl.NodeTypeEmitKeys)
+		isIndexed = true
 		numKeys := len(keysNode.Children)
 		indexEvaluables = make([]IEvaluable, numKeys)
 		for i, keyNode := range keysNode.Children {
