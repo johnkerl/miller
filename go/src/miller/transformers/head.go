@@ -146,8 +146,7 @@ func (this *TransformerHead) mapUnkeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
 		this.unkeyedRecordCount++
 		if this.unkeyedRecordCount <= this.headCount {
 			outputChannel <- inrecAndContext
@@ -161,8 +160,8 @@ func (this *TransformerHead) mapKeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok {

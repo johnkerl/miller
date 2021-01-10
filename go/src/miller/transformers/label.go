@@ -127,9 +127,9 @@ func (this *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		inrec.Label(this.newNames)
 	}
-	outputChannel <- inrecAndContext // end-of-stream marker
+	outputChannel <- inrecAndContext // including end-of-stream marker
 }

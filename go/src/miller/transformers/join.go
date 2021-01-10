@@ -364,8 +364,8 @@ func (this *TransformerJoin) transformHalfStreaming(
 		this.ingested = true
 	}
 
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		groupingKey, hasAllJoinKeys := inrec.GetSelectedValuesJoined(
 			this.opts.rightJoinFieldNames,
 		)
@@ -406,9 +406,8 @@ func (this *TransformerJoin) transformDoublyStreaming(
 ) {
 	keeper := this.joinBucketKeeper // keystroke-saver
 
-	rightRec := rightRecAndContext.Record
-
-	if rightRec != nil { // not end of record stream
+	if !rightRecAndContext.EndOfStream {
+		rightRec := rightRecAndContext.Record
 		isPaired := false
 
 		rightFieldValues, hasAllJoinKeys := rightRec.ReferenceSelectedValues(
@@ -493,11 +492,11 @@ func (this *TransformerJoin) ingestLeftFile() {
 			os.Exit(1)
 
 		case leftrecAndContext := <-inputChannel:
-			leftrec := leftrecAndContext.Record
-			if leftrec == nil { // end-of-stream marker
+			if leftrecAndContext.EndOfStream {
 				done = true
 				break // breaks the switch, not the for, in Golang
 			}
+			leftrec := leftrecAndContext.Record
 
 			groupingKey, leftFieldValues, ok := leftrec.GetSelectedValuesAndJoined(
 				this.opts.leftJoinFieldNames,

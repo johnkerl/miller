@@ -141,8 +141,8 @@ func (this *TransformerSec2GMT) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // Not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
 			value := inrec.Get(&fieldName)
 			if value != nil {
@@ -153,7 +153,7 @@ func (this *TransformerSec2GMT) Transform(
 				}
 			}
 		}
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputChannel <- inrecAndContext
 
 	} else { // End of record stream
 		outputChannel <- inrecAndContext // end-of-stream marker

@@ -276,7 +276,7 @@ func (this *TransformerStats1) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if inrecAndContext.Record != nil {
+	if !inrecAndContext.EndOfStream {
 		this.handleInputRecord(inrecAndContext, outputChannel)
 	} else {
 		this.handleEndOfRecordStream(inrecAndContext, outputChannel)

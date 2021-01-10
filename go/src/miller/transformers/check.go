@@ -84,7 +84,7 @@ func (this *TransformerCheck) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if inrecAndContext.Record == nil { // end of stream
+	if inrecAndContext.EndOfStream {
 		outputChannel <- inrecAndContext
 	}
 }

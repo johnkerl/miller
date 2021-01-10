@@ -165,8 +165,8 @@ func (this *TransformerCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		this.counter++
 		key := this.counterFieldName
 		value := types.MlrvalFromInt64(this.counter)
@@ -180,8 +180,8 @@ func (this *TransformerCat) countersGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		var counter int64 = 0

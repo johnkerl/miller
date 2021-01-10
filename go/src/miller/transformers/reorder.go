@@ -144,8 +144,8 @@ func (this *TransformerReorder) reorderToStart(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
 			inrec.MoveToHead(&fieldName)
 		}
@@ -161,8 +161,8 @@ func (this *TransformerReorder) reorderToEnd(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
 			inrec.MoveToTail(&fieldName)
 		}

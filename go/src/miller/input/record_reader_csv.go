@@ -54,10 +54,7 @@ func (this *RecordReaderCSV) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewRecordAndContext(
-		nil, // signals end of input record stream
-		&context,
-	)
+	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 // ----------------------------------------------------------------
@@ -161,7 +158,7 @@ func (this *RecordReaderCSV) processHandle(
 			}
 		}
 
-		context.UpdateForInputRecord(record)
+		context.UpdateForInputRecord()
 
 		inputChannel <- types.NewRecordAndContext(
 			record,

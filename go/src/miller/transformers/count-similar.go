@@ -126,8 +126,8 @@ func (this *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok { // This particular record doesn't have the specified fields; ignore

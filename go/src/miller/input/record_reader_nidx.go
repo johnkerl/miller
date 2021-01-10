@@ -47,10 +47,7 @@ func (this *RecordReaderNIDX) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewRecordAndContext(
-		nil, // signals end of input record stream
-		&context,
-	)
+	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 func (this *RecordReaderNIDX) processHandle(
@@ -77,7 +74,7 @@ func (this *RecordReaderNIDX) processHandle(
 			line = strings.TrimRight(line, "\n")
 			record := recordFromNIDXLine(&line, &this.ifs)
 
-			context.UpdateForInputRecord(record)
+			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,

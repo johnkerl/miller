@@ -249,12 +249,12 @@ func (this *TransformerStep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-
-	if inrec == nil { // end of record stream
+	if inrecAndContext.EndOfStream {
 		outputChannel <- inrecAndContext
 		return
 	}
+
+	inrec := inrecAndContext.Record
 
 	// Group-by field names are ["a", "b"]
 	// Input data {"a": "s", "b": "t", "x": 3.4, "y": 5.6}

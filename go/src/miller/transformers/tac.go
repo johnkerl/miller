@@ -85,16 +85,13 @@ func (this *TransformerTac) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if inrecAndContext.Record != nil {
+	if !inrecAndContext.EndOfStream {
 		this.recordsAndContexts.PushFront(inrecAndContext)
 	} else {
 		// end of stream
 		for e := this.recordsAndContexts.Front(); e != nil; e = e.Next() {
 			outputChannel <- e.Value.(*types.RecordAndContext)
 		}
-		outputChannel <- types.NewRecordAndContext(
-			nil, // signals end of input record stream
-			&inrecAndContext.Context,
-		)
+		outputChannel <- types.NewEndOfStreamMarker(&inrecAndContext.Context)
 	}
 }

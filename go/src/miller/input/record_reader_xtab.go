@@ -62,10 +62,7 @@ func (this *RecordReaderXTAB) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewRecordAndContext(
-		nil, // signals end of input record stream
-		&context,
-	)
+	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 func (this *RecordReaderXTAB) processHandle(
@@ -94,7 +91,7 @@ func (this *RecordReaderXTAB) processHandle(
 					errorChannel <- err
 					return
 				}
-				context.UpdateForInputRecord(record)
+				context.UpdateForInputRecord()
 				inputChannel <- types.NewRecordAndContext(record, context)
 				linesForRecord = list.New()
 			}
@@ -111,7 +108,7 @@ func (this *RecordReaderXTAB) processHandle(
 						errorChannel <- err
 						return
 					}
-					context.UpdateForInputRecord(record)
+					context.UpdateForInputRecord()
 					inputChannel <- types.NewRecordAndContext(record, context)
 					linesForRecord = list.New()
 				}

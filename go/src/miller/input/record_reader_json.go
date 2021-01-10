@@ -40,10 +40,7 @@ func (this *RecordReaderJSON) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewRecordAndContext(
-		nil, // signals end of input record stream
-		&context,
-	)
+	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 func (this *RecordReaderJSON) processHandle(
@@ -78,7 +75,7 @@ func (this *RecordReaderJSON) processHandle(
 				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 				return
 			}
-			context.UpdateForInputRecord(record)
+			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,
@@ -105,7 +102,7 @@ func (this *RecordReaderJSON) processHandle(
 					errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 					return
 				}
-				context.UpdateForInputRecord(record)
+				context.UpdateForInputRecord()
 				inputChannel <- types.NewRecordAndContext(
 					record,
 					context,

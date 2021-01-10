@@ -119,8 +119,8 @@ func (this *TransformerRename) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if this.oldToNewNames.Has(*pe.Key) {
@@ -130,5 +130,5 @@ func (this *TransformerRename) Transform(
 
 		}
 	}
-	outputChannel <- inrecAndContext // end-of-stream marker
+	outputChannel <- inrecAndContext // including end-of-stream marker
 }

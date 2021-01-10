@@ -2,12 +2,8 @@
 TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! emitx/io-redirect/etc
 ! fix all typemasks; 'int x = 1; x = "abc"'
-
-! need to rethink concurrency of DSL-print and previous-record write ... :(
-
-* I/O redirects
-
 * merge-fields
 * do some profiling every so often
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,6 +11,13 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
 ! ochan mod for all stdouts
+  o try non-nil record @ EOS for test
+  o need output-handler object ...
+    - stdout -- ochan <- x
+    - stderr -- out immediately
+    - write-to-file -- out immediately
+    - append-to-file -- out immediately
+    - write-to-pipe -- out immediately
 * bug
   run_mlr $input put $vflag '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
 * new emitx punctuation-syntax -- decide x 4

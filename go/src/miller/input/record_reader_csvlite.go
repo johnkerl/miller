@@ -116,10 +116,7 @@ func (this *RecordReaderCSVLite) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewRecordAndContext(
-		nil, // signals end of input record stream
-		&context,
-	)
+	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 // ----------------------------------------------------------------
@@ -203,7 +200,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 					}
 				}
 
-				context.UpdateForInputRecord(record)
+				context.UpdateForInputRecord()
 				inputChannel <- types.NewRecordAndContext(
 					record,
 					context,
@@ -296,7 +293,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				}
 			}
 
-			context.UpdateForInputRecord(record)
+			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,

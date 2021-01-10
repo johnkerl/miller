@@ -7,9 +7,18 @@ import (
 // Since Go is concurrent, the context struct (AWK-like variables such as
 // FILENAME, NF, NR, FNR, etc.) needs to be duplicated and passed through the
 // channels along with each record.
+//
+// Strings to be printed from put/filter DSL print/dump/etc statements are
+// passed along to the output channel via this OutputString rather than
+// fmt.Println directly in the put/filter handlers since we want all print
+// statements and record-output to be in the same goroutine, for deterministic
+// output ordering.
+
 type RecordAndContext struct {
-	Record  *Mlrmap
-	Context Context
+	Record       *Mlrmap
+	Context      Context
+	OutputString string
+	EndOfStream  bool
 }
 
 func NewRecordAndContext(
@@ -21,7 +30,9 @@ func NewRecordAndContext(
 		// Since Go is concurrent, the context struct needs to be duplicated and
 		// passed through the channels along with each record. Here is where
 		// the copy happens, via the '*' in *context.
-		Context: *context,
+		Context:      *context,
+		OutputString: "",
+		EndOfStream:  false,
 	}
 }
 
@@ -30,8 +41,33 @@ func (this *RecordAndContext) Copy() *RecordAndContext {
 	recordCopy := this.Record.Copy()
 	contextCopy := this.Context
 	return &RecordAndContext{
-		recordCopy,
-		contextCopy,
+		Record:       recordCopy,
+		Context:      contextCopy,
+		OutputString: "",
+		EndOfStream:  false,
+	}
+}
+
+// For print/dump/etc to insert strings sequenced into the record-output stream.
+func NewOutputString(
+	outputString string,
+	context *Context,
+) *RecordAndContext {
+	return &RecordAndContext{
+		Record:       nil,
+		Context:      *context,
+		OutputString: outputString,
+		EndOfStream:  false,
+	}
+}
+
+// For the record-readers to update their initial context as each new record is read.
+func NewEndOfStreamMarker(context *Context) *RecordAndContext {
+	return &RecordAndContext{
+		Record:       nil,
+		Context:      *context,
+		OutputString: "",
+		EndOfStream:  true,
 	}
 }
 
@@ -106,11 +142,9 @@ func (this *Context) UpdateForStartOfFile(filename string) {
 }
 
 // For the record-readers to update their initial context as each new record is read.
-func (this *Context) UpdateForInputRecord(inrec *Mlrmap) {
-	if inrec != nil { // do not count the end-of-stream marker which is a nil record pointer
-		this.NR++
-		this.FNR++
-	}
+func (this *Context) UpdateForInputRecord() {
+	this.NR++
+	this.FNR++
 }
 
 func (this *Context) Copy() *Context {

@@ -380,7 +380,7 @@ func (this *TransformerPut) Transform(
 
 	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
-	if inrec != nil {
+	if !inrecAndContext.EndOfStream {
 
 		// Execute the begin { ... } before the first input record
 		this.callCount++
@@ -433,10 +433,6 @@ func (this *TransformerPut) Transform(
 			os.Exit(1)
 		}
 
-		outputChannel <- types.NewRecordAndContext(
-			nil, // signals end of input record stream
-			&context,
-		)
-
+		outputChannel <- types.NewEndOfStreamMarker(&context)
 	}
 }

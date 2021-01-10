@@ -48,8 +48,28 @@ func runSingleTransformer(
 ) {
 	for {
 		recordAndContext := <-inputChannel
-		recordTransformer.Transform(recordAndContext, outputChannel)
-		if recordAndContext.Record == nil { // end of stream
+
+		// Three things can come through:
+		//
+		// * End-of-stream marker
+		// * Non-nil records to be printed
+		// * Strings to be printed from put/filter DSL print/dump/etc
+		//   statements. They are handled here rather than fmt.Println directly
+		//   in the put/filter handlers since we want all print statements and
+		//   record-output to be in the same goroutine, for deterministic
+		//   output ordering.
+		//
+		// The first two are passed to the transformer. The third we send along
+		// the output channel without involving the record-transformer, since
+		// there is no record to be transformed.
+
+		if recordAndContext.EndOfStream == true || recordAndContext.Record != nil {
+			recordTransformer.Transform(recordAndContext, outputChannel)
+		} else {
+			outputChannel <- recordAndContext
+		}
+
+		if recordAndContext.EndOfStream {
 			break
 		}
 	}

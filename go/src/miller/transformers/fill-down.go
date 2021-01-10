@@ -125,8 +125,8 @@ func (this *TransformerFillDown) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		for _, fillDownFieldName := range this.fillDownFieldNames {
 			present := false

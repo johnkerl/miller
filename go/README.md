@@ -135,16 +135,16 @@ Through out the code, records are passed by reference (as are most things, for
 that matter, to reduce unnecessary data copies). In particular, records can be
 nil through the reader/transformer/writer sequence.
 
-* Record-readers produce a nil record-pointer to signify end of input stream.
+* Record-readers produce an end-of-stream marker (within the `RecordAndContext` struct) to signify end of input stream.
 * Each transformer takes a record-pointer as input and produces a sequence of zero or more record-pointers.
   * Many transformers, such as `cat`, `cut`, `rename`, etc. produce one output record per input record.
   * The `filter` transformer produces one or zero output records per input record depending on whether the record passed the filter.
   * The `nothing` transformer produces zero output records.
-  * The `sort` and `tac` transformers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the nil-record end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the nil-record end-of-stream marker.
+  * The `sort` and `tac` transformers are *non-streaming* -- they produce zero output records per input record, and instead retain each input record in a list. Then, when the end-of-stream marker is received, they sort/reverse the records and emit them, then they emit the end-of-stream marker.
   * Many transformers such as `stats1` and `count` also retain input records, then produce output once there is no more input to them.
-* A null record-pointer at end of stream is passed to record-writers so that they may produce final output.
+* An end-of-stream marker is passed to record-writers so that they may produce final output.
   * Most writers produce their output one record at a time.
-  * The pretty-print writer produces no output until end of stream, since it needs to compute the max width down each column.
+  * The pretty-print writer produces no output until end of stream (or schema change), since it needs to compute the max width down each column.
 
 ## Memory management
 

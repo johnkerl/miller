@@ -140,9 +140,7 @@ func (this *TransformerGap) mapUnkeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
-
+	if !inrecAndContext.EndOfStream {
 		if this.recordCount > 0 && this.recordCount%this.gapCount == 0 {
 			newrec := types.NewMlrmapAsRecord()
 			outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
@@ -160,8 +158,8 @@ func (this *TransformerGap) mapKeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if !ok {

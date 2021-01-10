@@ -148,8 +148,8 @@ func (this *TransformerJSONStringify) jsonStringifyAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			pe.JSONStringifyInPlace(this.jsonFormatting)
 		}
@@ -164,8 +164,8 @@ func (this *TransformerJSONStringify) jsonStringifySome(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if this.fieldNameSet[*pe.Key] {
 				pe.JSONStringifyInPlace(this.jsonFormatting)

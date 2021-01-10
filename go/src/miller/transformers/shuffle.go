@@ -96,7 +96,7 @@ func (this *TransformerShuffle) Transform(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
-	if inrecAndContext.Record != nil {
+	if !inrecAndContext.EndOfStream {
 		this.recordsAndContexts.PushBack(inrecAndContext)
 
 	} else { // end of record stream

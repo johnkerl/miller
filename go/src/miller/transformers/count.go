@@ -161,8 +161,7 @@ func (this *TransformerCount) countUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
 		this.ungroupedCount++
 	} else {
 		newrec := types.NewMlrmapAsRecord()
@@ -180,8 +179,8 @@ func (this *TransformerCount) countGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
 			this.groupByFieldNameList,

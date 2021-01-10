@@ -107,66 +107,67 @@ func (this *TransformerBootstrap) Transform(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
-	if inrecAndContext.Record != nil {
+	if !inrecAndContext.EndOfStream {
 		this.recordsAndContexts.PushBack(inrecAndContext)
+		return
+	}
 
-	} else { // end of record stream
+	// Else end of record stream
 
-		// Given nin input records, we produce nout output records, but
-		// sampling with replacement.
-		//
-		// About memory management:
-		//
-		// Normally in Miller transformers we pass through pointers to records.
-		// Here, though, since we do sampling with replacement, a record could
-		// be emitted twice or more. To avoid producing multiple records in the
-		// output stream pointing to the same memory, we would have to copy the
-		// second one. In the original C (single-threaded) version of this
-		// code, that was the case.
-		//
-		// However, in Go, there is concurrent processing.  It would be
-		// possible for us to emit a pointer to a particular record without
-		// copying, then when emitting that saem record a second time, copy it.
-		// But due to concurrency, the pointed-to record could have already
-		// been mutated downstream. We wouldn't be copying our input as we
-		// received it -- we'd be copying something potentially modified.
-		//
-		// For that reason, this transformer must copy all output.
+	// Given nin input records, we produce nout output records, but
+	// sampling with replacement.
+	//
+	// About memory management:
+	//
+	// Normally in Miller transformers we pass through pointers to records.
+	// Here, though, since we do sampling with replacement, a record could
+	// be emitted twice or more. To avoid producing multiple records in the
+	// output stream pointing to the same memory, we would have to copy the
+	// second one. In the original C (single-threaded) version of this
+	// code, that was the case.
+	//
+	// However, in Go, there is concurrent processing.  It would be
+	// possible for us to emit a pointer to a particular record without
+	// copying, then when emitting that saem record a second time, copy it.
+	// But due to concurrency, the pointed-to record could have already
+	// been mutated downstream. We wouldn't be copying our input as we
+	// received it -- we'd be copying something potentially modified.
+	//
+	// For that reason, this transformer must copy all output.
 
-		// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int64.
-		nin := this.recordsAndContexts.Len()
-		nout := this.nout
-		if nout == -1 {
-			nout = nin
-		}
+	// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int64.
+	nin := this.recordsAndContexts.Len()
+	nout := this.nout
+	if nout == -1 {
+		nout = nin
+	}
 
-		if nout == 0 {
-			// Emit the stream-terminating null record
-			outputChannel <- inrecAndContext
-			return
-		}
-
-		// Make an array of pointers into the input list.
-		recordArray := make([]*types.RecordAndContext, nin)
-		for i := 0; i < nin; i++ {
-			head := this.recordsAndContexts.Front()
-			if head == nil {
-				break
-			}
-			recordArray[i] = head.Value.(*types.RecordAndContext)
-			this.recordsAndContexts.Remove(head)
-		}
-
-		// Do the sample-with-replacment, reading from random indices in the input
-		// array and emitting output.
-		for i := 0; i < nout; i++ {
-			index := lib.RandRange(0, nin)
-			recordAndContext := recordArray[index]
-			// Already emitted once; copy
-			outputChannel <- recordAndContext.Copy()
-		}
-
+	if nout == 0 {
 		// Emit the stream-terminating null record
 		outputChannel <- inrecAndContext
+		return
 	}
+
+	// Make an array of pointers into the input list.
+	recordArray := make([]*types.RecordAndContext, nin)
+	for i := 0; i < nin; i++ {
+		head := this.recordsAndContexts.Front()
+		if head == nil {
+			break
+		}
+		recordArray[i] = head.Value.(*types.RecordAndContext)
+		this.recordsAndContexts.Remove(head)
+	}
+
+	// Do the sample-with-replacment, reading from random indices in the input
+	// array and emitting output.
+	for i := 0; i < nout; i++ {
+		index := lib.RandRange(0, nin)
+		recordAndContext := recordArray[index]
+		// Already emitted once; copy
+		outputChannel <- recordAndContext.Copy()
+	}
+
+	// Emit the stream-terminating null record
+	outputChannel <- inrecAndContext
 }

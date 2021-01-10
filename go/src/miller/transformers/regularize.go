@@ -92,8 +92,8 @@ func (this *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		currentFieldNames := inrec.GetKeys()
 		currentSortedFieldNames := lib.SortedStrings(currentFieldNames)
 		currentSortedFieldNamesJoined := strings.Join(currentSortedFieldNames, ",")

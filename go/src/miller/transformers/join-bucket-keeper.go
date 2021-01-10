@@ -575,7 +575,7 @@ func (this *tJoinBucketKeeper) readRecord() *types.RecordAndContext {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 		os.Exit(1)
 	case leftrecAndContext := <-this.inputChannel:
-		if leftrecAndContext.Record == nil { // end-of-stream marker
+		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			this.recordReaderDone = true
 			return nil
 		} else {

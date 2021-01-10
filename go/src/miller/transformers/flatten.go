@@ -137,8 +137,8 @@ func (this *TransformerFlatten) flattenAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		oFlatSep := this.oFlatSep
 		if oFlatSep == "" {
 			oFlatSep = inrecAndContext.Context.OFLATSEP
@@ -155,8 +155,8 @@ func (this *TransformerFlatten) flattenSome(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		oFlatSep := this.oFlatSep
 		if oFlatSep == "" {
 			oFlatSep = inrecAndContext.Context.OFLATSEP

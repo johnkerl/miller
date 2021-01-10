@@ -144,8 +144,8 @@ func (this *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		inrecAsString := inrec.ToDKVPString()
 		matches := this.regexp.Match([]byte(inrecAsString))
 		if this.invert {

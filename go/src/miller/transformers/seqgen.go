@@ -203,7 +203,7 @@ func (this *TransformerSeqgen) Transform(
 		outrec := types.NewMlrmapAsRecord()
 		outrec.PutCopy(&this.fieldName, &counter)
 
-		context.UpdateForInputRecord(outrec)
+		context.UpdateForInputRecord()
 
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
 		outputChannel <- outrecAndContext
@@ -211,6 +211,5 @@ func (this *TransformerSeqgen) Transform(
 		counter = types.MlrvalBinaryPlus(&counter, &this.step)
 	}
 
-	outrecAndContext := types.NewRecordAndContext(nil, context)
-	outputChannel <- outrecAndContext
+	outputChannel <- types.NewEndOfStreamMarker(context)
 }

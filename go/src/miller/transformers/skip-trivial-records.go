@@ -85,8 +85,8 @@ func (this *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		hasAny := false
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if pe.Value.String() != "" {

@@ -126,9 +126,9 @@ func (this *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
-	if inrec != nil {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
 		if ok {
 			sampleBucket := this.bucketsByGroup.Get(groupingKey)

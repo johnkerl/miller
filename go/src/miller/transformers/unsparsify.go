@@ -143,8 +143,8 @@ func (this *TransformerUnsparsify) mapNonStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			key := *pe.Key
 			if !this.fieldNamesSeen.Has(key) {
@@ -179,8 +179,8 @@ func (this *TransformerUnsparsify) mapStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 
 		for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 			if !inrec.Has(&pe.Key) {
@@ -188,7 +188,7 @@ func (this *TransformerUnsparsify) mapStreaming(
 			}
 		}
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputChannel <- inrecAndContext
 
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

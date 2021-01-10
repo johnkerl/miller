@@ -90,8 +90,8 @@ func (this *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	inrec := inrecAndContext.Record
-	if inrec != nil { // not end of record stream
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
 		this.recordsAndContexts.PushBack(inrecAndContext)
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {

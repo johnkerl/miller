@@ -47,10 +47,7 @@ func (this *RecordReaderDKVP) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewRecordAndContext(
-		nil, // signals end of input record stream
-		&context,
-	)
+	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 func (this *RecordReaderDKVP) processHandle(
@@ -75,7 +72,7 @@ func (this *RecordReaderDKVP) processHandle(
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
 			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
-			context.UpdateForInputRecord(record)
+			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
 				record,
 				context,
