@@ -20,11 +20,12 @@ import (
 //
 // * Record-transformers can read these from the context structs.
 //
-// * Record-writes don't need them (OPS et al. are already in the
-//   writer-options struct). However, we have chained transformers using the 'then'
-//   command-line syntax. This means a given transformer might be piping its output
-//   to a record-writer, or another transformer. So, the record-and-context pair goes
-//   to the record-writers even though they don't need the contexts.
+// * Record-writers don't need them (OPS et al. are already in the
+//   writer-options struct). However, we have chained transformers using the
+//   'then' command-line syntax. This means a given transformer might be piping
+//   its output to a record-writer, or another transformer. So, the
+//   record-and-context pair goes to the record-writers even though they don't
+//   need the contexts.
 
 func Stream(
 	options clitypes.TOptions,
