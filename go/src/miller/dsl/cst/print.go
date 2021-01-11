@@ -166,6 +166,8 @@ func (this *RootNode) buildPrintxStatementNode(
 }
 
 // ----------------------------------------------------------------
+// TODO: maybe get rid of the stdout/stderr managers ... just a
+// function-pointer here would suffice.
 func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 	outputFileName := "_miller_bug_if_you_see_this_"
 	if this.redirectorTarget != nil {
@@ -184,6 +186,7 @@ func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error)
 	if len(this.expressions) == 0 {
 		this.outputHandlerManager.Print(this.terminator, outputFileName)
 	} else {
+		// TODO: buffered bytes like record-writers do
 		for i, expression := range this.expressions {
 			if i > 0 {
 				this.outputHandlerManager.Print(" ", outputFileName)
