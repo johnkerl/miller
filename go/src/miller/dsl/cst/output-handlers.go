@@ -10,106 +10,242 @@
 //   ordering. (Main record-writer output is also to stdout.)
 //   ================================================================
 
+// TODO: many more comments
+// TODO: rename classes
+// TODO: pipe and write/append need different maps. else, '> "cat"' would be weird.
+
 package cst
 
 import (
+	"errors"
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 )
 
-// ----------------------------------------------------------------
+// ================================================================
+// TODO: comments
+
+type OutputHandlerManager interface {
+	Print(outputString string, filename string) error
+	Close() []error
+}
+
 type OutputHandler interface {
-	Print(outputString string)
+	Print(outputString string) error
 	Close() error
 }
 
+// ================================================================
+type SingleOutputHandlerManager struct {
+	outputHandler OutputHandler
+}
+
+func NewStdoutOutputHandlerManager() OutputHandlerManager {
+	return &SingleOutputHandlerManager{
+		outputHandler: NewStdoutOutputHandler(),
+	}
+}
+
+func NewStderrOutputHandlerManager() OutputHandlerManager {
+	return &SingleOutputHandlerManager{
+		outputHandler: NewStderrOutputHandler(),
+	}
+}
+
+func (this *SingleOutputHandlerManager) Print(
+	outputString string,
+	filename string,
+) error {
+	return this.outputHandler.Print(outputString)
+}
+
+func (this *SingleOutputHandlerManager) Close() []error {
+	err := this.outputHandler.Close()
+	errs := make([]error, 0)
+	if err != nil {
+		errs = append(errs, err)
+	}
+	return errs
+}
+
+// ================================================================
+type MultiOutputHandlerManager struct {
+	outputHandlers map[string]OutputHandler
+	// TOOD: make an enum
+	append bool
+	pipe   bool
+}
+
+func NewFileWritetHandlerManager() *MultiOutputHandlerManager {
+	return &MultiOutputHandlerManager{
+		outputHandlers: make(map[string]OutputHandler),
+		append:         false,
+		pipe:           false,
+	}
+}
+
+func NewFileAppendHandlerManager() *MultiOutputHandlerManager {
+	return &MultiOutputHandlerManager{
+		outputHandlers: make(map[string]OutputHandler),
+		append:         true,
+		pipe:           false,
+	}
+}
+
+func NewPipeWriteHandlerManager() *MultiOutputHandlerManager {
+	return &MultiOutputHandlerManager{
+		outputHandlers: make(map[string]OutputHandler),
+		append:         false,
+		pipe:           true,
+	}
+}
+
+func (this *MultiOutputHandlerManager) Print(
+	outputString string,
+	filename string,
+) error {
+	// TODO: LRU with close and re-open in case too many files are open
+	outputHandler := this.outputHandlers[filename]
+	if outputHandler == nil {
+		var err error = nil
+		if this.pipe {
+			outputHandler, err = NewPipeWriteOutputHandler(filename)
+			if err != nil {
+				return err
+			}
+			if outputHandler != nil {
+			}
+		} else if this.append {
+			outputHandler, err = NewFileAppendOutputHandler(filename)
+			if err != nil {
+				return err
+			}
+		} else {
+			outputHandler, err = NewFileWriteOutputHandler(filename)
+			if err != nil {
+				return err
+			}
+		}
+		this.outputHandlers[filename] = outputHandler
+	}
+	return outputHandler.Print(outputString)
+}
+
+func (this *MultiOutputHandlerManager) Close() []error {
+	errs := make([]error, 0)
+	for _, outputHandler := range this.outputHandlers {
+		err := outputHandler.Close()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return errs
+}
+
+// ================================================================
+type FileOutputHandler struct {
+	filename  string
+	handle    io.WriteCloser
+	closeable bool
+}
+
+func (this FileOutputHandler) Print(outputString string) error {
+	_, err := this.handle.Write([]byte(outputString))
+	return err
+}
+func (this *FileOutputHandler) Close() error {
+	if this.closeable {
+		return this.handle.Close()
+	} else {
+		return nil
+	}
+}
+
 // ----------------------------------------------------------------
-type StdoutOutputHandler struct {
+func NewStdoutOutputHandler() OutputHandler {
+	return &FileOutputHandler{
+		filename:  "(stdout)",
+		handle:    os.Stdout,
+		closeable: false,
+	}
 }
 
-func NewStdoutOutputHandler() (*StdoutOutputHandler, error) {
-	return &StdoutOutputHandler{}, nil
-}
-func (this *StdoutOutputHandler) Print(outputString string) {
-	fmt.Fprint(os.Stdout, outputString)
-}
-func (this *StdoutOutputHandler) Close() {
-	// No-op
-}
-
-// ----------------------------------------------------------------
-type StderrOutputHandler struct {
-}
-
-func NewStderrOutputHandler() (*StderrOutputHandler, error) {
-	return &StderrOutputHandler{}, nil
-}
-func (this *StderrOutputHandler) Print(outputString string) {
-	fmt.Fprint(os.Stderr, outputString)
-}
-func (this *StderrOutputHandler) Close() {
-	// No-op
-}
-
-// ----------------------------------------------------------------
-type FileWriteOutputHandler struct {
-	filename string
+func NewStderrOutputHandler() OutputHandler {
+	return &FileOutputHandler{
+		filename:  "(stderr)",
+		handle:    os.Stderr,
+		closeable: false,
+	}
 }
 
 func NewFileWriteOutputHandler(
 	filename string,
-) (*FileWriteOutputHandler, error) {
-	// TODO: stub
-	return &FileWriteOutputHandler{
-		filename: filename,
+) (*FileOutputHandler, error) {
+	handle, err := os.OpenFile(
+		filename,
+		os.O_CREATE|os.O_WRONLY,
+		0644,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &FileOutputHandler{
+		filename:  filename,
+		handle:    handle,
+		closeable: true,
 	}, nil
-}
-
-func (this *FileWriteOutputHandler) Print(outputString string) {
-	// TODO: stub
-}
-func (this *FileWriteOutputHandler) Close() {
-	// TODO: stub
-}
-
-// ----------------------------------------------------------------
-type FileAppendOutputHandler struct {
-	filename string
 }
 
 func NewFileAppendOutputHandler(
 	filename string,
-) (*FileAppendOutputHandler, error) {
-	// TODO: stub
-	return &FileAppendOutputHandler{
+) (*FileOutputHandler, error) {
+	handle, err := os.OpenFile(
+		filename,
+		os.O_CREATE|os.O_WRONLY|os.O_APPEND,
+		0644,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &FileOutputHandler{
 		filename: filename,
+		handle:   handle,
 	}, nil
 }
 
-func (this *FileAppendOutputHandler) Print(outputString string) {
-	// TODO: stub
-}
-func (this *FileAppendOutputHandler) Close() {
-	// TODO: stub
-}
+func NewPipeWriteOutputHandler(
+	commandString string,
+) (*FileOutputHandler, error) {
+	commandHandle := exec.Command(
+		"bash",
+		"-c",
+		commandString,
+	)
+	if commandHandle == nil {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"%s: could not launch command \"%s\" for pipe-to.",
+				os.Args[0],
+				commandString,
+			),
+		)
+	}
 
-// ----------------------------------------------------------------
-type PipeToCommandOutputHandler struct {
-	command string
-}
+	commandWriteHandle, err := commandHandle.StdinPipe()
+	if err != nil {
+		return nil, err
+	}
 
-func NewPipeToCommandOutputHandler(
-	command string,
-) (*PipeToCommandOutputHandler, error) {
-	// TODO: stub
-	return &PipeToCommandOutputHandler{
-		command: command,
+	err = commandHandle.Start()
+	if err != nil {
+		return nil, err
+	}
+
+	return &FileOutputHandler{
+		filename:  "| " + commandString,
+		handle:    commandWriteHandle,
+		closeable: true,
 	}, nil
-}
-
-func (this *PipeToCommandOutputHandler) Print(outputString string) {
-	// TODO: stub
-}
-func (this *PipeToCommandOutputHandler) Close() {
-	// TODO: stub
 }

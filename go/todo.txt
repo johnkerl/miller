@@ -11,13 +11,28 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
 ! ochan mod for all stdouts
+  o cst-build disallow | stdout,stderr
   o try non-nil record @ EOS for test
   o need output-handler object ...
-    - stdout -- ochan <- x
-    - stderr -- out immediately
-    - write-to-file -- out immediately
-    - append-to-file -- out immediately
-    - write-to-pipe -- out immediately
+    - producers:
+      * print/printn/eprint/eprintn
+      * dump/edump
+      * tee
+      * emitf
+      * emit/emitp
+    - types:
+      * > stdout|stderr|filename
+      * >> stdout|stderr|filename
+      * | command
+    - targets:
+      * stdout -- ochan <- x
+      * stderr -- out immediately
+      * write-to-file -- out immediately
+      * append-to-file -- out immediately
+      * write-to-pipe -- out immediately
+    - still needs pipe
+    - still needs ochan for stdout
+    - still needs to hook in a way to close at shutdown
 * bug
   run_mlr $input put $vflag '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
 * new emitx punctuation-syntax -- decide x 4
