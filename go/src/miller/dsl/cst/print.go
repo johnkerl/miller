@@ -1,10 +1,13 @@
-// ================================================================ This
-// handles print and dump statements.
 // ================================================================
+// This handles print and dump statements.
+// ================================================================
+
+// TODO: needs lots of comments
 
 package cst
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -14,11 +17,17 @@ import (
 )
 
 // ================================================================
+type printToRedirectFunc func(
+	outputString string,
+	state *State,
+) error
+
 type PrintStatementNode struct {
 	outputHandlerManager OutputHandlerManager // TODO: comments
 	terminator           string
 	expressions          []IEvaluable
 	redirectorTarget     IEvaluable
+	printToRedirect      printToRedirectFunc
 }
 
 // ----------------------------------------------------------------
@@ -121,13 +130,7 @@ func (this *RootNode) buildPrintxStatementNode(
 	// node from the parser.
 	var outputHandlerManager OutputHandlerManager = nil
 	if redirectNode.Type == dsl.NodeTypeNoOp {
-		if defaultOutputStream == os.Stdout {
-			outputHandlerManager = NewStdoutOutputHandlerManager()
-		} else if defaultOutputStream == os.Stderr {
-			outputHandlerManager = NewStderrOutputHandlerManager()
-		} else {
-			lib.InternalCodingErrorIf(true)
-		}
+		// leave it nil
 	} else if redirectNode.Type == dsl.NodeTypeRedirectWrite {
 		outputHandlerManager = NewFileWritetHandlerManager()
 	} else if redirectNode.Type == dsl.NodeTypeRedirectAppend {
@@ -144,6 +147,9 @@ func (this *RootNode) buildPrintxStatementNode(
 	}
 
 	var redirectorTarget IEvaluable = nil
+	foo := &PrintStatementNode{}
+	printToRedirect := foo.printToStdout
+
 	if redirectNode.Type != dsl.NodeTypeNoOp {
 		lib.InternalCodingErrorIf(redirectNode.Children == nil)
 		lib.InternalCodingErrorIf(len(redirectNode.Children) != 1)
@@ -153,50 +159,84 @@ func (this *RootNode) buildPrintxStatementNode(
 		if err != nil {
 			return nil, err
 		}
+		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+			printToRedirect = foo.printToStdout
+		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+			printToRedirect = foo.printToStderr
+		} else {
+			printToRedirect = foo.printToFileOrPipe
+		}
 	}
 
 	// TODO: root node register oututHandlerManager to add to close-handles list
 
-	return &PrintStatementNode{
+	retval := &PrintStatementNode{
 		outputHandlerManager: outputHandlerManager,
 		terminator:           terminator,
 		expressions:          expressions,
 		redirectorTarget:     redirectorTarget,
-	}, nil
+		printToRedirect:      printToRedirect,
+	}
+
+	return retval, nil
 }
 
 // ----------------------------------------------------------------
-// TODO: maybe get rid of the stdout/stderr managers ... just a
-// function-pointer here would suffice.
 func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	outputFileName := "_miller_bug_if_you_see_this_"
-	if this.redirectorTarget != nil {
-		redirectorEvaluation := this.redirectorTarget.Evaluate(state)
-		if !redirectorEvaluation.IsString() {
-			return nil, errors.New(
-				fmt.Sprintf(
-					"%s: output redirection yielded %s, not string.",
-					os.Args[0], redirectorEvaluation.GetTypeName(),
-				),
-			)
-		}
-		outputFileName = redirectorEvaluation.String()
-	}
-
 	if len(this.expressions) == 0 {
-		this.outputHandlerManager.Print(this.terminator, outputFileName)
+		this.printToRedirect(this.terminator, state)
 	} else {
-		// TODO: buffered bytes like record-writers do
+		var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+
 		for i, expression := range this.expressions {
 			if i > 0 {
-				this.outputHandlerManager.Print(" ", outputFileName)
+				buffer.WriteString(" ")
 			}
 			evaluation := expression.Evaluate(state)
 			if !evaluation.IsAbsent() {
-				this.outputHandlerManager.Print(evaluation.String(), outputFileName)
+				buffer.WriteString(evaluation.String())
 			}
 		}
-		this.outputHandlerManager.Print(this.terminator, outputFileName)
+		buffer.WriteString(this.terminator)
+		this.printToRedirect(buffer.String(), state)
 	}
 	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *PrintStatementNode) printToStdout(
+	outputString string,
+	state *State,
+) error {
+	fmt.Fprint(os.Stdout, outputString)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *PrintStatementNode) printToStderr(
+	outputString string,
+	state *State,
+) error {
+	fmt.Fprint(os.Stderr, outputString)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *PrintStatementNode) printToFileOrPipe(
+	outputString string,
+	state *State,
+) error {
+	redirectorEvaluation := this.redirectorTarget.Evaluate(state)
+	if !redirectorEvaluation.IsString() {
+		return errors.New(
+			fmt.Sprintf(
+				"%s: output redirection yielded %s, not string.",
+				os.Args[0], redirectorEvaluation.GetTypeName(),
+			),
+		)
+	}
+	outputFileName := redirectorEvaluation.String()
+
+	this.outputHandlerManager.Print(outputString, outputFileName)
+	return nil
 }

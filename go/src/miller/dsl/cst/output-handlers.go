@@ -25,8 +25,6 @@ import (
 )
 
 // ================================================================
-// TODO: comments
-
 type OutputHandlerManager interface {
 	Print(outputString string, filename string) error
 	Close() []error
@@ -35,39 +33,6 @@ type OutputHandlerManager interface {
 type OutputHandler interface {
 	Print(outputString string) error
 	Close() error
-}
-
-// ================================================================
-type SingleOutputHandlerManager struct {
-	outputHandler OutputHandler
-}
-
-func NewStdoutOutputHandlerManager() OutputHandlerManager {
-	return &SingleOutputHandlerManager{
-		outputHandler: NewStdoutOutputHandler(),
-	}
-}
-
-func NewStderrOutputHandlerManager() OutputHandlerManager {
-	return &SingleOutputHandlerManager{
-		outputHandler: NewStderrOutputHandler(),
-	}
-}
-
-func (this *SingleOutputHandlerManager) Print(
-	outputString string,
-	filename string,
-) error {
-	return this.outputHandler.Print(outputString)
-}
-
-func (this *SingleOutputHandlerManager) Close() []error {
-	err := this.outputHandler.Close()
-	errs := make([]error, 0)
-	if err != nil {
-		errs = append(errs, err)
-	}
-	return errs
 }
 
 // ================================================================
@@ -164,22 +129,6 @@ func (this *FileOutputHandler) Close() error {
 }
 
 // ----------------------------------------------------------------
-func NewStdoutOutputHandler() OutputHandler {
-	return &FileOutputHandler{
-		filename:  "(stdout)",
-		handle:    os.Stdout,
-		closeable: false,
-	}
-}
-
-func NewStderrOutputHandler() OutputHandler {
-	return &FileOutputHandler{
-		filename:  "(stderr)",
-		handle:    os.Stderr,
-		closeable: false,
-	}
-}
-
 func NewFileWriteOutputHandler(
 	filename string,
 ) (*FileOutputHandler, error) {
@@ -237,6 +186,8 @@ func NewPipeWriteOutputHandler(
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO: make the Stdout/Stderr pipes and spawn a goroutine to print them
 
 	err = commandHandle.Start()
 	if err != nil {
