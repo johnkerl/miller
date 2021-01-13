@@ -6,6 +6,9 @@ TOP OF LIST:
 ! fix all typemasks; 'int x = 1; x = "abc"'
 * merge-fields
 * do some profiling every so often
+* c/go both:
+  o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
+  o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
