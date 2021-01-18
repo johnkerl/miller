@@ -15,9 +15,8 @@ TOP OF LIST:
 emitp/emitf:
 ! panic
   run_mlr --from s put '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
-* implement tee
-* exhaustive redirector cases
-* exhaustive terminator cases
+* exhaustive redirector test-cases
+* exhaustive terminator test-cases
 * root-node register outputHandlerManager to add to close-handles list
 * try non-nil record @ EOS for test
 * new emitx punctuation-syntax -- decide x 4
@@ -32,8 +31,6 @@ emitp/emitf:
     k md_nonindexed_local_variable
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
-* mlr: tee statements are not valid within func blocks
-  restore?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ! fix var/any type-mask

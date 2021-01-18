@@ -177,17 +177,6 @@ func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 }
 
 // ----------------------------------------------------------------
-type FullOosvarDumpNode struct {
-}
-
-func (this *RootNode) BuildFullOosvarDumpNode() *FullOosvarDumpNode {
-	return &FullOosvarDumpNode{}
-}
-func (this *FullOosvarDumpNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromString(state.Oosvars.String())
-}
-
-// ----------------------------------------------------------------
 func (this *DumpStatementNode) dumpToStdout(
 	outputString string,
 	state *State,

@@ -31,6 +31,10 @@
 package cst
 
 import (
+	"errors"
+	"fmt"
+	"os"
+
 	"miller/dsl"
 	"miller/lib"
 	"miller/types"
@@ -38,6 +42,11 @@ import (
 
 // ================================================================
 // Shared by emit and emitp
+
+type tEmitToRedirectFunc func(
+	newrec *types.Mlrmap,
+	state *State,
+) error
 
 type EmitXStatementNode struct {
 	// These are "_" for maps like in 'emit {...}'; "x" for named variables like
@@ -53,9 +62,21 @@ type EmitXStatementNode struct {
 	// Appropriate function to evaluate statements, depending on indexed or not.
 	executorFunc Executor
 
+	// Appropriate function to send record(s) to stdout, stderr, write-to-file,
+	// append-to-file, pipe-to-command, or insert into the record stream.
+	emitToRedirectFunc tEmitToRedirectFunc
+	// For file/pipe targets: 'emit > $a . ".dat", @x' -- the
+	// redirectorTargetEvaluable is the evaluable for '$a . ".dat"'.
+	redirectorTargetEvaluable IEvaluable
+	// For file/pipe targets: keeps track of file handles for various values of
+	// the redirectorTargetEvaluable expression.
+	outputHandlerManager OutputHandlerManager
+
 	// For code-reuse between executors.
 	isEmitP bool
 }
+
+// TODO: port this
 
 func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
@@ -85,11 +106,16 @@ func (this *RootNode) buildEmitXStatementNode(
 	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 	emittablesNode := astNode.Children[0]
 	keysNode := astNode.Children[1]
+	redirectorNode := astNode.Children[2]
 
 	var names []string = nil
 	var emitEvaluables []IEvaluable = nil
 	var indexEvaluables []IEvaluable = nil
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Things to be emitted, e.g. $a and $b in 'emit > "foo.dat", $a, $b'.
+
+	// Non-lashed: emit @a, "x"
 	// Lashed: emit (@a, @b), "x"
 	numEmittables := len(emittablesNode.Children)
 	names = make([]string, numEmittables)
@@ -103,7 +129,9 @@ func (this *RootNode) buildEmitXStatementNode(
 		emitEvaluables[i] = emitEvaluable
 	}
 
-	// xxx temp
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Indices (if any) on the emittables
+
 	isIndexed := false
 	if keysNode.Type != dsl.NodeTypeNoOp { // There are "x","y" present
 		lib.InternalCodingErrorIf(keysNode.Type != dsl.NodeTypeEmitKeys)
@@ -119,7 +147,7 @@ func (this *RootNode) buildEmitXStatementNode(
 		}
 	}
 
-	emitxStatementNode := &EmitXStatementNode{
+	retval := &EmitXStatementNode{
 		names:           names,
 		emitEvaluables:  emitEvaluables,
 		indexEvaluables: indexEvaluables,
@@ -127,12 +155,56 @@ func (this *RootNode) buildEmitXStatementNode(
 	}
 
 	if !isIndexed {
-		emitxStatementNode.executorFunc = emitxStatementNode.executeNonIndexed
+		retval.executorFunc = retval.executeNonIndexed
 	} else {
-		emitxStatementNode.executorFunc = emitxStatementNode.executeIndexed
+		retval.executorFunc = retval.executeIndexed
 	}
 
-	return emitxStatementNode, nil
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Redirections and redirection targets (the thing after > >> |, if any).
+
+	if redirectorNode.Type == dsl.NodeTypeNoOp {
+		// No > >> or | was provided.
+		retval.emitToRedirectFunc = retval.emitToRecordStream
+	} else {
+		// There is > >> or | provided.
+		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
+		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
+		redirectorTargetNode := redirectorNode.Children[0]
+		var err error = nil
+
+		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+			retval.emitToRedirectFunc = retval.emitToStdout
+		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+			retval.emitToRedirectFunc = retval.emitToStderr
+		} else {
+			retval.emitToRedirectFunc = retval.emitToFileOrPipe
+
+			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			if err != nil {
+				return nil, err
+			}
+
+			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+				retval.outputHandlerManager = NewFileWritetHandlerManager()
+			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+				retval.outputHandlerManager = NewFileAppendHandlerManager()
+			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+				retval.outputHandlerManager = NewPipeWriteHandlerManager()
+			} else {
+				return nil, errors.New(
+					fmt.Sprintf(
+						"%s: unhandled redirector node type %s.",
+						os.Args[0], string(redirectorNode.Type),
+					),
+				)
+			}
+		}
+	}
+
+	// TODO: root node register outputHandlerManager to add to close-handles list
+
+	return retval, nil
 }
 
 // ----------------------------------------------------------------
@@ -188,10 +260,7 @@ func (this *EmitXStatementNode) executeNonIndexed(
 		}
 	}
 
-	state.OutputChannel <- types.NewRecordAndContext(
-		newrec,
-		state.Context.Copy(),
-	)
+	this.emitToRedirectFunc(newrec, state)
 
 	return nil, nil
 }
@@ -292,12 +361,61 @@ func (this *EmitXStatementNode) executeIndexedAux(
 				}
 			}
 
-			state.OutputChannel <- types.NewRecordAndContext(
-				newrec,
-				state.Context.Copy(),
-			)
+			this.emitToRedirectFunc(newrec, state)
 		}
 	}
 
 	return nil, nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) emitToRecordStream(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	state.OutputChannel <- types.NewRecordAndContext(newrec, state.Context)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) emitToStdout(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	outputString := newrec.String()
+	// Insert the string into the record-output stream, so that goroutine can
+	// print it, resulting in deterministic output-ordering.
+	state.OutputChannel <- types.NewOutputString(outputString, state.Context)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) emitToStderr(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	outputString := newrec.String()
+	fmt.Fprintf(os.Stderr, outputString)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitXStatementNode) emitToFileOrPipe(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	outputString := newrec.String()
+	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	if !redirectorTarget.IsString() {
+		return errors.New(
+			fmt.Sprintf(
+				"%s: output redirection yielded %s, not string.",
+				os.Args[0], redirectorTarget.GetTypeName(),
+			),
+		)
+	}
+	outputFileName := redirectorTarget.String()
+
+	this.outputHandlerManager.Print(outputString, outputFileName)
+	return nil
 }
