@@ -2,7 +2,7 @@ package output
 
 import (
 	"fmt"
-	"os"
+	"io"
 
 	"miller/types"
 )
@@ -11,7 +11,7 @@ func ChannelWriter(
 	outputChannel <-chan *types.RecordAndContext,
 	recordWriter IRecordWriter,
 	done chan<- bool,
-	ostream *os.File,
+	ostream io.WriteCloser,
 ) {
 	for {
 		recordAndContext := <-outputChannel
@@ -29,7 +29,7 @@ func ChannelWriter(
 
 			record := recordAndContext.Record
 			if record != nil {
-				recordWriter.Write(record)
+				recordWriter.Write(record, ostream)
 			}
 
 			outputString := recordAndContext.OutputString
@@ -42,7 +42,7 @@ func ChannelWriter(
 			// queued up. For example, PPRINT needs to see all same-schema
 			// records before printing any, since it needs to compute max width
 			// down columns.
-			recordWriter.Write(nil)
+			recordWriter.Write(nil, ostream)
 			done <- true
 			break
 		}

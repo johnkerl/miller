@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"container/list"
 	"fmt"
-	"os"
+	"io"
 	"strings"
 	"unicode/utf8"
 
@@ -12,7 +12,6 @@ import (
 	"miller/types"
 )
 
-// ostream *os.File in constructors/factory
 type RecordWriterPPRINT struct {
 	// Input:
 	records *list.List
@@ -37,6 +36,7 @@ func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriter
 // ----------------------------------------------------------------
 func (this *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	// Group records by have-same-schema or not. Pretty-print each
 	// homoegeneous sublist, or "batch".
@@ -58,9 +58,9 @@ func (this *RecordWriterPPRINT) Write(
 			joinedHeader := strings.Join(outrec.GetKeys(), ",")
 			if *this.lastJoinedHeader != joinedHeader {
 				// Print and free old batch
-				if this.writeHeterogenousList(this.batch, this.barred) {
+				if this.writeHeterogenousList(this.batch, this.barred, ostream) {
 					// Print a newline
-					os.Stdout.WriteString("\n")
+					ostream.Write([]byte("\n"))
 				}
 				// Start a new batch
 				this.batch = list.New()
@@ -75,7 +75,7 @@ func (this *RecordWriterPPRINT) Write(
 	} else { // End of record stream
 
 		if this.batch.Front() != nil {
-			this.writeHeterogenousList(this.batch, this.barred)
+			this.writeHeterogenousList(this.batch, this.barred, ostream)
 		}
 	}
 }
@@ -85,6 +85,7 @@ func (this *RecordWriterPPRINT) Write(
 func (this *RecordWriterPPRINT) writeHeterogenousList(
 	records *list.List,
 	barred bool,
+	ostream io.WriteCloser,
 ) bool {
 	maxWidths := make(map[string]int)
 	var maxNR int64 = 0
@@ -118,9 +119,9 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 			}
 		}
 		if barred {
-			this.writeHeterogenousListBarred(records, maxWidths)
+			this.writeHeterogenousListBarred(records, maxWidths, ostream)
 		} else {
-			this.writeHeterogenousListNonBarred(records, maxWidths)
+			this.writeHeterogenousListNonBarred(records, maxWidths, ostream)
 		}
 		return true
 	}
@@ -139,6 +140,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 	records *list.List,
 	maxWidths map[string]int,
+	ostream io.WriteCloser,
 ) {
 
 	onFirst := true
@@ -156,7 +158,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 					buffer.WriteString("\n") // TODO: ORS
 				}
 			}
-			os.Stdout.WriteString(buffer.String())
+			ostream.Write([]byte(buffer.String()))
 		}
 		onFirst = false
 
@@ -174,7 +176,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 				buffer.WriteString("\n") // TODO: ORS
 			}
 		}
-		os.Stdout.WriteString(buffer.String())
+		ostream.Write([]byte(buffer.String()))
 	}
 }
 
@@ -197,6 +199,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 	records *list.List,
 	maxWidths map[string]int,
+	ostream io.WriteCloser,
 ) {
 
 	horizontalBars := make(map[string]string)
@@ -251,7 +254,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 				}
 			}
 
-			os.Stdout.WriteString(buffer.String())
+			ostream.Write([]byte(buffer.String()))
 		}
 		onFirst = false
 
@@ -282,6 +285,6 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 			}
 		}
 
-		os.Stdout.WriteString(buffer.String())
+		ostream.Write([]byte(buffer.String()))
 	}
 }

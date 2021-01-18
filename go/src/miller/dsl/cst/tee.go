@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strings"
 
 	"miller/dsl"
 	"miller/lib"
@@ -58,7 +57,7 @@ import (
 
 // ================================================================
 type tTeeToRedirectFunc func(
-	outputString string,
+	outrec *types.Mlrmap,
 	state *State,
 ) error
 
@@ -99,9 +98,13 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	var err error = nil
 
 	if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
-		retval.teeToRedirectFunc = retval.teeToStdout
+		retval.teeToRedirectFunc = retval.teeToFileOrPipe
+		retval.outputHandlerManager = NewStdoutWriteHandlerManager(this.recordWriterOptions)
+		retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
 	} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
-		retval.teeToRedirectFunc = retval.teeToStderr
+		retval.teeToRedirectFunc = retval.teeToFileOrPipe
+		retval.outputHandlerManager = NewStderrWriteHandlerManager(this.recordWriterOptions)
+		retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
 	} else {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
 
@@ -111,11 +114,11 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 		}
 
 		if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-			retval.outputHandlerManager = NewFileWritetHandlerManager()
+			retval.outputHandlerManager = NewFileWritetHandlerManager(this.recordWriterOptions)
 		} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-			retval.outputHandlerManager = NewFileAppendHandlerManager()
+			retval.outputHandlerManager = NewFileAppendHandlerManager(this.recordWriterOptions)
 		} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-			retval.outputHandlerManager = NewPipeWriteHandlerManager()
+			retval.outputHandlerManager = NewPipeWriteHandlerManager(this.recordWriterOptions)
 		} else {
 			return nil, errors.New(
 				fmt.Sprintf(
@@ -138,37 +141,21 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 // ----------------------------------------------------------------
 func (this *TeeStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 	evaluation := this.expressionEvaluable.Evaluate(state)
-	outputString := evaluation.String()
-	if !strings.HasSuffix(outputString, "\n") {
-		outputString += "\n"
+	if !evaluation.IsMap() {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"%s: tee-evaluaiton yielded %s, not map.",
+				os.Args[0], evaluation.GetTypeName(),
+			),
+		)
 	}
-	this.teeToRedirectFunc(outputString, state)
+	this.teeToRedirectFunc(evaluation.GetMap(), state)
 	return nil, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TeeStatementNode) teeToStdout(
-	outputString string,
-	state *State,
-) error {
-	// Insert the string into the record-output stream, so that goroutine can
-	// print it, resulting in deterministic output-ordering.
-	state.OutputChannel <- types.NewOutputString(outputString, state.Context)
-	return nil
-}
-
-// ----------------------------------------------------------------
-func (this *TeeStatementNode) teeToStderr(
-	outputString string,
-	state *State,
-) error {
-	fmt.Fprintf(os.Stderr, outputString)
-	return nil
-}
-
-// ----------------------------------------------------------------
 func (this *TeeStatementNode) teeToFileOrPipe(
-	outputString string,
+	outrec *types.Mlrmap,
 	state *State,
 ) error {
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
@@ -182,6 +169,9 @@ func (this *TeeStatementNode) teeToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteString(outputString, outputFileName)
+	this.outputHandlerManager.WriteRecordAndContext(
+		types.NewRecordAndContext(outrec, state.Context),
+		outputFileName,
+	)
 	return nil
 }

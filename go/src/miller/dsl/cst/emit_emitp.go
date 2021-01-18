@@ -172,9 +172,13 @@ func (this *RootNode) buildEmitXStatementNode(
 		var err error = nil
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
-			retval.emitToRedirectFunc = retval.emitToStdout
+			retval.emitToRedirectFunc = retval.emitToFileOrPipe
+			retval.outputHandlerManager = NewStdoutWriteHandlerManager(this.recordWriterOptions)
+			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
-			retval.emitToRedirectFunc = retval.emitToStderr
+			retval.emitToRedirectFunc = retval.emitToFileOrPipe
+			retval.outputHandlerManager = NewStderrWriteHandlerManager(this.recordWriterOptions)
+			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
 
@@ -184,11 +188,11 @@ func (this *RootNode) buildEmitXStatementNode(
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = NewFileWritetHandlerManager()
+				retval.outputHandlerManager = NewFileWritetHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = NewFileAppendHandlerManager()
+				retval.outputHandlerManager = NewFileAppendHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = NewPipeWriteHandlerManager()
+				retval.outputHandlerManager = NewPipeWriteHandlerManager(this.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -378,41 +382,18 @@ func (this *EmitXStatementNode) executeIndexedAux(
 
 // ----------------------------------------------------------------
 func (this *EmitXStatementNode) emitToRecordStream(
-	newrec *types.Mlrmap,
+	outrec *types.Mlrmap,
 	state *State,
 ) error {
-	state.OutputChannel <- types.NewRecordAndContext(newrec, state.Context)
-	return nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) emitToStdout(
-	newrec *types.Mlrmap,
-	state *State,
-) error {
-	outputString := newrec.String()
-	// Insert the string into the record-output stream, so that goroutine can
-	// print it, resulting in deterministic output-ordering.
-	state.OutputChannel <- types.NewOutputString(outputString, state.Context)
-	return nil
-}
-
-// ----------------------------------------------------------------
-func (this *EmitXStatementNode) emitToStderr(
-	newrec *types.Mlrmap,
-	state *State,
-) error {
-	outputString := newrec.String()
-	fmt.Fprintf(os.Stderr, outputString)
+	state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
 	return nil
 }
 
 // ----------------------------------------------------------------
 func (this *EmitXStatementNode) emitToFileOrPipe(
-	newrec *types.Mlrmap,
+	outrec *types.Mlrmap,
 	state *State,
 ) error {
-	outputString := newrec.String()
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
@@ -424,6 +405,9 @@ func (this *EmitXStatementNode) emitToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteString(outputString, outputFileName)
+	this.outputHandlerManager.WriteRecordAndContext(
+		types.NewRecordAndContext(outrec, state.Context),
+		outputFileName,
+	)
 	return nil
 }

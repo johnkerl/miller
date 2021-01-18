@@ -2,7 +2,7 @@ package output
 
 import (
 	"bytes"
-	"os"
+	"io"
 
 	"miller/clitypes"
 	"miller/types"
@@ -24,6 +24,7 @@ func NewRecordWriterDKVP(writerOptions *clitypes.TWriterOptions) *RecordWriterDK
 
 func (this *RecordWriterDKVP) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -31,7 +32,7 @@ func (this *RecordWriterDKVP) Write(
 	}
 
 	if outrec.FieldCount == 0 {
-		os.Stdout.WriteString(this.ors)
+		ostream.Write([]byte(this.ors))
 		return
 	}
 
@@ -45,5 +46,5 @@ func (this *RecordWriterDKVP) Write(
 		}
 	}
 	buffer.WriteString(this.ors)
-	os.Stdout.WriteString(buffer.String())
+	ostream.Write([]byte(buffer.String()))
 }

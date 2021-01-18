@@ -17,10 +17,6 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
-! emits & tee need to respect output-format option !
-  o mlr put --opprint etc
-  o more reg-test
-* root-node register outputHandlerManager to add to close-handles list
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):
     x MD_TOKEN_ALL
@@ -35,8 +31,12 @@ emitp/emitf:
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+* more buffering in record-writers
+
 ! fix var/any type-mask
   o C/Go UT
+
+! sg/mktags more explicit comment.
 
 ! verb skeletons
 ! strptime/strftime experiments ...
@@ -435,3 +435,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   mlr -n put $vflag '@x=1; dump > stdout @x'
 * parex print regtest -- what about new ast-node types?
 * all case-files could use top-notes
+* doc-note: 'emit > stdout, @foo' and 'emit @foo' are not the same:
+  o the former allows put --oxxx
+  o the former is not necessarily in sync with the output record stream

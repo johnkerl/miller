@@ -206,7 +206,11 @@ run_cat $outdir/redirect-err.txt
 mention tee
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; tee > stdout, $*' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; tee > stdout, $*' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -234,7 +238,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitf > stdout, @x' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; emitf > stdout, @x' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -262,7 +270,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emit > stdout, @x' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; emit > stdout, @x' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -287,7 +299,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emit > stdout, (@x, @y)' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; @y=2; emit > stdout, (@x, @y)' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -312,7 +328,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emit > stdout, @x, "a"' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; emit > stdout, @x, "a"' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -337,7 +357,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit > stdout, (@x, @y), "a"' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; @y={"a":2}; emit > stdout, (@x, @y), "a"' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -365,7 +389,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitp > stdout, @x' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; emitp > stdout, @x' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -390,7 +418,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emitp > stdout, (@x, @y)' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; @y=2; emitp > stdout, (@x, @y)' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -415,7 +447,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emitp > stdout, @x, "a"' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; emitp > stdout, @x, "a"' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -440,7 +476,11 @@ run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 
 rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp > stdout, (@x, @y), "a"' \
+# Do either 'put -q' (no record-stream output) or use --opprint (record-stream
+# output is all at end of stream) since '> stdout' redirection decouples
+# record-stream output from print output, resulting in non-deterministic
+# output, which makes regtests fail.
+run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; @y={"a":2}; emitp > stdout, (@x, @y), "a"' \
   1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
@@ -457,3 +497,9 @@ run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; 
 run_cat $outdir/redirect-out.txt
 run_cat $outdir/redirect-err.txt
 run_cat $outdir/foo.dat
+
+# ----------------------------------------------------------------
+# Test separate output formats for mlr main and mlr put.
+run_mlr --from $indir/abixy --opprint put --ojson '@x=NR; emit > stdout, @x'
+run_mlr --from $indir/abixy --ojson put --opprint '@x=NR; emit > stdout, @x'
+

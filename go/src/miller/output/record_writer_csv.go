@@ -2,6 +2,7 @@ package output
 
 import (
 	"encoding/csv"
+	"io"
 	"os"
 	"strings"
 
@@ -9,7 +10,6 @@ import (
 	"miller/types"
 )
 
-// ostream *os.File in constructors/factory
 type RecordWriterCSV struct {
 	csvWriter          *csv.Writer
 	doHeaderlessOutput bool
@@ -17,32 +17,37 @@ type RecordWriterCSV struct {
 	lastJoinedHeader *string
 	// Only write one blank line for schema changes / blank input lines
 	justWroteEmptyLine bool
+
+	ofs string
 }
 
 func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
-	csvWriter := csv.NewWriter(os.Stdout)
-	// xxx temp
-	csvWriter.Comma = rune(writerOptions.OFS[0])
-
 	return &RecordWriterCSV{
-		csvWriter:          csvWriter,
+		csvWriter:          nil, // will be set on first Write() wherein we have the ostream
 		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
+		ofs:                writerOptions.OFS,
 	}
 }
 
 func (this *RecordWriterCSV) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
 		return
 	}
 
+	if this.csvWriter == nil {
+		this.csvWriter = csv.NewWriter(os.Stdout)
+		this.csvWriter.Comma = rune(this.ofs[0]) // xxx temp
+	}
+
 	if outrec.FieldCount == 0 {
 		if !this.justWroteEmptyLine {
-			os.Stdout.WriteString("\n")
+			ostream.Write([]byte("\n"))
 		}
 		joinedHeader := ""
 		this.lastJoinedHeader = &joinedHeader
@@ -55,7 +60,7 @@ func (this *RecordWriterCSV) Write(
 	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
 		if this.lastJoinedHeader != nil {
 			if !this.justWroteEmptyLine {
-				os.Stdout.WriteString("\n")
+				ostream.Write([]byte("\n"))
 			}
 			this.justWroteEmptyLine = true
 		}

@@ -2,6 +2,7 @@ package output
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"miller/clitypes"
@@ -34,21 +35,23 @@ func NewRecordWriterJSON(writerOptions *clitypes.TWriterOptions) *RecordWriterJS
 // ----------------------------------------------------------------
 func (this *RecordWriterJSON) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	if this.wrapJSONOutputInOuterList {
-		this.writeWithListWrap(outrec)
+		this.writeWithListWrap(outrec, ostream)
 	} else {
-		this.writeWithoutListWrap(outrec)
+		this.writeWithoutListWrap(outrec, ostream)
 	}
 }
 
 // ----------------------------------------------------------------
 func (this *RecordWriterJSON) writeWithListWrap(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	if outrec != nil { // Not end of record stream
 		if this.onFirst {
-			os.Stdout.WriteString("[\n")
+			ostream.Write([]byte("[\n"))
 		}
 
 		// The Mlrmap MarshalJSON doesn't include the final newline, so that we
@@ -60,24 +63,25 @@ func (this *RecordWriterJSON) writeWithListWrap(
 		}
 
 		if !this.onFirst {
-			os.Stdout.WriteString(",\n")
+			ostream.Write([]byte(",\n"))
 		}
 
-		os.Stdout.Write(bytes)
+		ostream.Write(bytes)
 
 		this.onFirst = false
 
 	} else { // End of record stream
 		if this.onFirst { // zero records in the entire output stream
-			os.Stdout.WriteString("[")
+			ostream.Write([]byte("["))
 		}
-		os.Stdout.WriteString("\n]\n")
+		ostream.Write([]byte("\n]\n"))
 	}
 }
 
 // ----------------------------------------------------------------
 func (this *RecordWriterJSON) writeWithoutListWrap(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	if outrec == nil {
 		// End of record stream
@@ -92,6 +96,6 @@ func (this *RecordWriterJSON) writeWithoutListWrap(
 		os.Exit(1)
 	}
 
-	os.Stdout.Write(bytes)
-	os.Stdout.WriteString("\n")
+	ostream.Write(bytes)
+	ostream.Write([]byte("\n"))
 }

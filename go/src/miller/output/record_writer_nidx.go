@@ -2,13 +2,12 @@ package output
 
 import (
 	"bytes"
-	"os"
+	"io"
 
 	"miller/clitypes"
 	"miller/types"
 )
 
-// ostream *os.File in constructors/factory
 type RecordWriterNIDX struct {
 	ofs string
 	ors string
@@ -23,6 +22,7 @@ func NewRecordWriterNIDX(writerOptions *clitypes.TWriterOptions) *RecordWriterNI
 
 func (this *RecordWriterNIDX) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -37,5 +37,5 @@ func (this *RecordWriterNIDX) Write(
 		}
 	}
 	buffer.WriteString(this.ors)
-	os.Stdout.WriteString(buffer.String())
+	ostream.Write([]byte(buffer.String()))
 }

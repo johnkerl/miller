@@ -473,7 +473,9 @@ for case_file in $case_file_names; do
   status=$?
   if [ $status -ne 0 ]; then
     if [ "$verbose" = "true" ]; then
-      echo "Case failed due to expected output != actual output"
+      echo "Case failed due to expected output != actual output:"
+      echo "$expfile"
+      echo "$outfile"
     fi
     case_passed=false
   fi

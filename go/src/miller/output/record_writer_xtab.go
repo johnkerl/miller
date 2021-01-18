@@ -2,14 +2,13 @@ package output
 
 import (
 	"bytes"
-	"os"
+	"io"
 	"unicode/utf8"
 
 	"miller/clitypes"
 	"miller/types"
 )
 
-// ostream *os.File in constructors/factory
 type RecordWriterXTAB struct {
 	onFirst bool
 }
@@ -22,6 +21,7 @@ func NewRecordWriterXTAB(writerOptions *clitypes.TWriterOptions) *RecordWriterXT
 
 func (this *RecordWriterXTAB) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -57,5 +57,5 @@ func (this *RecordWriterXTAB) Write(
 		buffer.WriteString(pe.Value.String())
 		buffer.WriteString("\n")
 	}
-	os.Stdout.WriteString(buffer.String())
+	ostream.Write([]byte(buffer.String()))
 }

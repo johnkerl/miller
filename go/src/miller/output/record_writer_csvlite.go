@@ -2,7 +2,7 @@ package output
 
 import (
 	"bytes"
-	"os"
+	"io"
 	"strings"
 
 	"miller/clitypes"
@@ -34,6 +34,7 @@ func NewRecordWriterCSVLite(writerOptions *clitypes.TWriterOptions) *RecordWrite
 
 func (this *RecordWriterCSVLite) Write(
 	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -42,7 +43,7 @@ func (this *RecordWriterCSVLite) Write(
 
 	if outrec.FieldCount == 0 {
 		if !this.justWroteEmptyLine {
-			os.Stdout.WriteString(this.ors)
+			ostream.Write([]byte(this.ors))
 		}
 		joinedHeader := ""
 		this.lastJoinedHeader = &joinedHeader
@@ -55,7 +56,7 @@ func (this *RecordWriterCSVLite) Write(
 	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
 		if this.lastJoinedHeader != nil {
 			if !this.justWroteEmptyLine {
-				os.Stdout.WriteString(this.ors)
+				ostream.Write([]byte(this.ors))
 			}
 			this.justWroteEmptyLine = true
 		}
@@ -74,7 +75,7 @@ func (this *RecordWriterCSVLite) Write(
 		}
 
 		buffer.WriteString(this.ors)
-		os.Stdout.WriteString(buffer.String())
+		ostream.Write([]byte(buffer.String()))
 	}
 
 	var buffer bytes.Buffer // faster than fmt.Print() separately
@@ -85,7 +86,7 @@ func (this *RecordWriterCSVLite) Write(
 		}
 	}
 	buffer.WriteString(this.ors)
-	os.Stdout.WriteString(buffer.String())
+	ostream.Write([]byte(buffer.String()))
 
 	this.justWroteEmptyLine = false
 }

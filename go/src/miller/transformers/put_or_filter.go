@@ -37,7 +37,7 @@ func transformerPutParseCLI(
 	args []string,
 	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	mainRecordWriterOptions *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Get the verb name from the current spot in the mlr command line
@@ -53,6 +53,13 @@ func transformerPutParseCLI(
 	suppressOutputRecord := false
 	needExpressionArg := true
 	presets := make([]string, 0)
+
+	// TODO: make sure this is a full nested-struct copy.
+	var recordWriterOptions *clitypes.TWriterOptions = nil
+	if mainRecordWriterOptions != nil {
+		copyThereof := *mainRecordWriterOptions
+		recordWriterOptions = &copyThereof
+	}
 
 	// Parse local flags.
 	//
@@ -139,15 +146,9 @@ func transformerPutParseCLI(
 			// Comment this in more detail.
 			argi++
 
-		} else if args[argi] == "--jquoteall" {
-			// No-op pass-through for backward compatibility with Miller 5
-			argi += 1
-		} else if args[argi] == "--jvquoteall" {
-			// No-op pass-through for backward compatibility with Miller 5
-			argi += 1
-		} else if args[argi] == "--jknquoteint" {
-			// No-op pass-through for backward compatibility with Miller 5
-			argi += 1
+		} else if clitypes.ParseWriterOptions(args, argc, &argi, recordWriterOptions) {
+			// This lets mlr main and mlr put have different output formats.
+			// Nothing else to handle here.
 
 		} else {
 			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
@@ -191,6 +192,7 @@ func transformerPutParseCLI(
 		verbose,
 		invertFilter,
 		suppressOutputRecord,
+		recordWriterOptions,
 	)
 	if err != nil {
 		// Error message already printed out
@@ -285,6 +287,7 @@ func NewTransformerPut(
 	verbose bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
+	recordWriterOptions *clitypes.TWriterOptions,
 ) (*TransformerPut, error) {
 
 	astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
@@ -300,7 +303,8 @@ func NewTransformerPut(
 		astRootNode.Print()
 		fmt.Println()
 	}
-	cstRootNode, err := cst.Build(astRootNode, isFilter)
+
+	cstRootNode, err := cst.Build(astRootNode, isFilter, recordWriterOptions)
 	cstState := cst.NewEmptyState()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
