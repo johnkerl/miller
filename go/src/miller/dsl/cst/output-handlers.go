@@ -21,7 +21,8 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
+
+	"miller/lib"
 )
 
 // ================================================================
@@ -167,12 +168,8 @@ func NewFileAppendOutputHandler(
 func NewPipeWriteOutputHandler(
 	commandString string,
 ) (*FileOutputHandler, error) {
-	commandHandle := exec.Command(
-		"bash",
-		"-c",
-		commandString,
-	)
-	if commandHandle == nil {
+	writePipe, err := lib.OpenOutboundHalfPipe(commandString)
+	if err != nil {
 		return nil, errors.New(
 			fmt.Sprintf(
 				"%s: could not launch command \"%s\" for pipe-to.",
@@ -182,21 +179,9 @@ func NewPipeWriteOutputHandler(
 		)
 	}
 
-	commandWriteHandle, err := commandHandle.StdinPipe()
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: make the Stdout/Stderr pipes and spawn a goroutine to print them
-
-	err = commandHandle.Start()
-	if err != nil {
-		return nil, err
-	}
-
 	return &FileOutputHandler{
 		filename:  "| " + commandString,
-		handle:    commandWriteHandle,
+		handle:    writePipe,
 		closeable: true,
 	}, nil
 }

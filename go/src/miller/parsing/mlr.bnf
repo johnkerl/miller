@@ -951,6 +951,8 @@ Emittable
   | DirectOosvarValue
   | DirectFieldValue
   | MapLiteral
+  | FullOosvar
+  | FullSrec
   ;
 
 // ----------------------------------------------------------------

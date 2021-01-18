@@ -24,17 +24,17 @@ type ASTNode struct {
 type TNodeType string
 
 const (
-	NodeTypeStringLiteral             = "string literal"
-	NodeTypeIntLiteral                = "int literal"
-	NodeTypeFloatLiteral              = "float literal"
-	NodeTypeBoolLiteral               = "bool literal"
-	NodeTypeArrayLiteral              = "array literal"
-	NodeTypeMapLiteral                = "map literal"
-	NodeTypeMapLiteralKeyValuePair    = "map-literal key-value pair"
-	NodeTypeArrayOrMapIndexAccess     = "array or map index access"
-	NodeTypeArraySliceAccess          = "array-slice access"
-	NodeTypeArraySliceEmptyLowerIndex = "array-slice empty lower index"
-	NodeTypeArraySliceEmptyUpperIndex = "array-slice empty upper index"
+	NodeTypeStringLiteral             TNodeType = "string literal"
+	NodeTypeIntLiteral                          = "int literal"
+	NodeTypeFloatLiteral                        = "float literal"
+	NodeTypeBoolLiteral                         = "bool literal"
+	NodeTypeArrayLiteral                        = "array literal"
+	NodeTypeMapLiteral                          = "map literal"
+	NodeTypeMapLiteralKeyValuePair              = "map-literal key-value pair"
+	NodeTypeArrayOrMapIndexAccess               = "array or map index access"
+	NodeTypeArraySliceAccess                    = "array-slice access"
+	NodeTypeArraySliceEmptyLowerIndex           = "array-slice empty lower index"
+	NodeTypeArraySliceEmptyUpperIndex           = "array-slice empty upper index"
 
 	NodeTypePositionalFieldName             = "positionally-indexed field name"
 	NodeTypePositionalFieldValue            = "positionally-indexed field value"
@@ -85,7 +85,7 @@ const (
 	// This helps various emit-variant sub-ASTs have the same shape.  For
 	// example, in 'emit > "foo.txt", @v' and 'emit @v', the latter has a no-op
 	// for its redirect target.
-	NodeTypeNoOp TNodeType = "no-op"
+	NodeTypeNoOp = "no-op"
 
 	NodeTypeOperator           = "operator"
 	NodeTypeFunctionCallsite   = "function callsite"

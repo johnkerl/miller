@@ -1,8 +1,6 @@
 // ================================================================
-// This handles print and dump statements.
+// This handles print, printn, eprint, and eprintn statements.
 // ================================================================
-
-// TODO: needs lots of comments
 
 package cst
 
@@ -14,20 +12,153 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/types"
 )
 
+// ----------------------------------------------------------------
+// Example ASTs:
+//
+// $ mlr -n put -v 'print $a, $b'
+// DSL EXPRESSION:
+// print $a, $b
+// RAW AST:
+// * statement block
+//     * print statement "print"
+//         * function callsite
+//             * direct field value "a"
+//             * direct field value "b"
+//         * no-op
+//
+// $ mlr -n put -v 'print > stdout, $a, $b'
+// DSL EXPRESSION:
+// print > stdout, $a, $b
+// RAW AST:
+// * statement block
+//     * print statement "print"
+//         * function callsite
+//             * direct field value "a"
+//             * direct field value "b"
+//         * redirect write ">"
+//             * stdout redirect target "stdout"
+//
+// $ mlr -n put -v 'print > stderr, $a, $b'
+// DSL EXPRESSION:
+// print > stderr, $a, $b
+// RAW AST:
+// * statement block
+//     * print statement "print"
+//         * function callsite
+//             * direct field value "a"
+//             * direct field value "b"
+//         * redirect write ">"
+//             * stderr redirect target "stderr"
+//
+// $ mlr -n put -v 'print > "foo.dat", $a, $b'
+// DSL EXPRESSION:
+// print > "foo.dat", $a, $b
+// RAW AST:
+// * statement block
+//     * print statement "print"
+//         * function callsite
+//             * direct field value "a"
+//             * direct field value "b"
+//         * redirect write ">"
+//             * string literal "foo.dat"
+//
+// $ mlr -n put -v 'print >> "foo.dat", $a, $b'
+// DSL EXPRESSION:
+// print >> "foo.dat", $a, $b
+// RAW AST:
+// * statement block
+//     * print statement "print"
+//         * function callsite
+//             * direct field value "a"
+//             * direct field value "b"
+//         * redirect append ">>"
+//             * string literal "foo.dat"
+//
+// $ mlr -n put -v 'print | "command", $a, $b'
+// DSL EXPRESSION:
+// print | "command", $a, $b
+// RAW AST:
+// * statement block
+//     * print statement "print"
+//         * function callsite
+//             * direct field value "a"
+//             * direct field value "b"
+//         * redirect pipe "|"
+//             * string literal "command"
+//
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Corresponding data structures for these cases:
+//
+// * printToRedirectFunc is either printToStdout, printToStderr, or
+//   printToFileOrPipe. Only the third of these takes a non-nil
+//   redirectorTargetEvaluable and a non-nil outputHandlerManager.
+//
+// * redirectorTargetEvaluable is nil for stdout or stderr.
+//
+// * The OutputHandlerManager is for file names or commands in >, >> or |.
+//   This is because the target for the redirect can vary from one record to
+//   the next, e.g. mlr put 'print > $a.txt, $b'. The OutputHandlerManager
+//   keeps file-handles for each distinct value of $a.
+//
+// So:
+//
+// * print $a, $b
+//   AST redirectorNode         = NodeTypeNoOp
+//     AST redirectorTargetNode = (none)
+//   printToRedirectFunc        = printToStdout
+//   redirectorTargetEvaluable  = nil
+//   outputHandlerManager       = nil
+//
+// * print > stdout, $a, $b
+//   AST redirectorNode         = NodeTypeRedirectWrite
+//     AST redirectorTargetNode = NodeTypeRedirectTargetStdout
+//   printToRedirectFunc        = printToStdout
+//   redirectorTargetEvaluable  = nil
+//   outputHandlerManager       = nil
+//
+// * print > stderr, $a, $b
+//   AST redirectorNode         = NodeTypeRedirectWrite
+//     AST redirectorTargetNode = NodeTypeRedirectTargetStderr
+//   printToRedirectFunc        = printToStderr
+//   redirectorTargetEvaluable  = nil
+//   outputHandlerManager       = nil
+//
+// * print > "foo.dat", $a, $b
+//   AST redirectorNode         = NodeTypeRedirectWrite
+//     AST redirectorTargetNode = any of various evaluables
+//   printToRedirectFunc        = printToFileOrPipe
+//   redirectorTargetEvaluable  = non-nil
+//   outputHandlerManager       = non-nil
+//
+// * print >> "foo.dat", $a, $b
+//   AST redirectorNode         = NodeTypeRedirectAppend
+//     AST redirectorTargetNode = any of various evaluables
+//   printToRedirectFunc        = printToFileOrPipe
+//   redirectorTargetEvaluable  = non-nil
+//   outputHandlerManager       = non-nil
+//
+// * print | "command", $a, $b
+//   AST redirectorNode         = NodeTypeRedirectPipe
+//     AST redirectorTargetNode = any of various evaluables
+//   printToRedirectFunc        = printToFileOrPipe
+//   redirectorTargetEvaluable  = non-nil
+//   outputHandlerManager       = non-nil
+
 // ================================================================
-type printToRedirectFunc func(
+type tPrintToRedirectFunc func(
 	outputString string,
 	state *State,
 ) error
 
 type PrintStatementNode struct {
-	outputHandlerManager OutputHandlerManager // TODO: comments
-	terminator           string
-	expressions          []IEvaluable
-	redirectorTarget     IEvaluable
-	printToRedirect      printToRedirectFunc
+	expressionEvaluables      []IEvaluable
+	terminator                string
+	printToRedirectFunc       tPrintToRedirectFunc
+	redirectorTargetEvaluable IEvaluable           // for file/pipe targets
+	outputHandlerManager      OutputHandlerManager // for file/pipe targets
 }
 
 // ----------------------------------------------------------------
@@ -69,43 +200,6 @@ func (this *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutab
 
 // ----------------------------------------------------------------
 // Common code for building print/eprint/printn/eprintn nodes
-//
-// Example ASTs:
-//
-// $ mlr -n put -v 'print 1, 2'
-// DSL EXPRESSION:
-// print 1, 2
-// RAW AST:
-// * statement block
-//     * print statement "print"
-//         * function callsite
-//             * int literal "1"
-//             * int literal "2"
-//         * no-op
-//
-// $ mlr -n put -v 'print > "foo", 1, 2'
-// DSL EXPRESSION:
-// print > "foo", 1, 2
-// RAW AST:
-// * statement block
-//     * print statement "print"
-//         * function callsite
-//             * int literal "1"
-//             * int literal "2"
-//         * redirect write ">"
-//             * string literal "foo"
-//
-// $ mlr -n put -v 'print >> "foo", 1, 2'
-// DSL EXPRESSION:
-// print >> "foo", 1, 2
-// RAW AST:
-// * statement block
-//     * print statement "print"
-//         * function callsite
-//             * int literal "1"
-//             * int literal "2"
-//         * redirect append ">>"
-//             * string literal "foo"
 
 func (this *RootNode) buildPrintxStatementNode(
 	astNode *dsl.ASTNode,
@@ -113,92 +207,117 @@ func (this *RootNode) buildPrintxStatementNode(
 	terminator string,
 ) (IExecutable, error) {
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
-
 	expressionsNode := astNode.Children[0]
-	redirectNode := astNode.Children[1]
+	redirectorNode := astNode.Children[1]
 
-	expressions := make([]IEvaluable, len(expressionsNode.Children))
-	for i, childNode := range expressionsNode.Children {
-		expression, err := this.BuildEvaluableNode(childNode)
-		if err != nil {
-			return nil, err
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Things to be printed, e.g. $a and $b in 'print > "foo.dat", $a, $b'.
+
+	var expressionEvaluables []IEvaluable = nil
+
+	if expressionsNode.Type == dsl.NodeTypeNoOp {
+		// Just 'print' without 'print $something'
+		expressionEvaluables = make([]IEvaluable, 1)
+		expressionEvaluable := this.BuildStringLiteralNode("")
+		expressionEvaluables[0] = expressionEvaluable
+	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
+		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
+		for i, childNode := range expressionsNode.Children {
+			expressionEvaluable, err := this.BuildEvaluableNode(childNode)
+			if err != nil {
+				return nil, err
+			}
+			expressionEvaluables[i] = expressionEvaluable
 		}
-		expressions[i] = expression
-	}
-
-	// Without explicit redirect, the redirect AST node comes in as a no-op
-	// node from the parser.
-	var outputHandlerManager OutputHandlerManager = nil
-	if redirectNode.Type == dsl.NodeTypeNoOp {
-		// leave it nil
-	} else if redirectNode.Type == dsl.NodeTypeRedirectWrite {
-		outputHandlerManager = NewFileWritetHandlerManager()
-	} else if redirectNode.Type == dsl.NodeTypeRedirectAppend {
-		outputHandlerManager = NewFileAppendHandlerManager()
-	} else if redirectNode.Type == dsl.NodeTypeRedirectPipe {
-		outputHandlerManager = NewPipeWriteHandlerManager()
 	} else {
-		return nil, errors.New(
-			fmt.Sprintf(
-				"%s: unhandled redirection node type %s.",
-				os.Args[0], string(redirectNode.Type),
-			),
-		)
+		lib.InternalCodingErrorIf(true)
 	}
 
-	var redirectorTarget IEvaluable = nil
-	foo := &PrintStatementNode{}
-	printToRedirect := foo.printToStdout
-
-	if redirectNode.Type != dsl.NodeTypeNoOp {
-		lib.InternalCodingErrorIf(redirectNode.Children == nil)
-		lib.InternalCodingErrorIf(len(redirectNode.Children) != 1)
-		redirectorTargetNode := redirectNode.Children[0]
-		var err error = nil
-		redirectorTarget, err = this.BuildEvaluableNode(redirectorTargetNode)
-		if err != nil {
-			return nil, err
-		}
-		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
-			printToRedirect = foo.printToStdout
-		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
-			printToRedirect = foo.printToStderr
-		} else {
-			printToRedirect = foo.printToFileOrPipe
-		}
-	}
-
-	// TODO: root node register oututHandlerManager to add to close-handles list
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Redirection targets (the thing after > >> |, if any).
 
 	retval := &PrintStatementNode{
-		outputHandlerManager: outputHandlerManager,
-		terminator:           terminator,
-		expressions:          expressions,
-		redirectorTarget:     redirectorTarget,
-		printToRedirect:      printToRedirect,
+		expressionEvaluables:      expressionEvaluables,
+		terminator:                terminator,
+		printToRedirectFunc:       nil,
+		redirectorTargetEvaluable: nil,
+		outputHandlerManager:      nil,
 	}
+
+	if redirectorNode.Type == dsl.NodeTypeNoOp {
+		// No > >> or | was provided.
+		if defaultOutputStream == os.Stdout {
+			retval.printToRedirectFunc = retval.printToStdout
+		} else if defaultOutputStream == os.Stderr {
+			retval.printToRedirectFunc = retval.printToStderr
+		} else {
+			lib.InternalCodingErrorIf(true)
+		}
+	} else {
+		// There is > >> or | provided.
+		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
+		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
+		redirectorTargetNode := redirectorNode.Children[0]
+		var err error = nil
+
+		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+			retval.printToRedirectFunc = retval.printToStdout
+		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+			retval.printToRedirectFunc = retval.printToStderr
+		} else {
+			retval.printToRedirectFunc = retval.printToFileOrPipe
+
+			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			if err != nil {
+				return nil, err
+			}
+
+			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+				retval.outputHandlerManager = NewFileWritetHandlerManager()
+			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+				retval.outputHandlerManager = NewFileAppendHandlerManager()
+			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+				retval.outputHandlerManager = NewPipeWriteHandlerManager()
+			} else {
+				return nil, errors.New(
+					fmt.Sprintf(
+						"%s: unhandled redirector node type %s.",
+						os.Args[0], string(redirectorNode.Type),
+					),
+				)
+			}
+		}
+	}
+
+	// TODO: root node register outputHandlerManager to add to close-handles list
 
 	return retval, nil
 }
 
 // ----------------------------------------------------------------
 func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error) {
-	if len(this.expressions) == 0 {
-		this.printToRedirect(this.terminator, state)
+	if len(this.expressionEvaluables) == 0 {
+		this.printToRedirectFunc(this.terminator, state)
 	} else {
-		var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+		// 5x faster than fmt.Print() separately: note that os.Stdout is
+		// non-buffered in Go whereas stdout is buffered in C.
+		//
+		// Minus: we need to do our own buffering for performance.
+		//
+		// Plus: we never have to worry about forgetting to do fflush(). :)
+		var buffer bytes.Buffer
 
-		for i, expression := range this.expressions {
+		for i, expressionEvaluable := range this.expressionEvaluables {
 			if i > 0 {
 				buffer.WriteString(" ")
 			}
-			evaluation := expression.Evaluate(state)
+			evaluation := expressionEvaluable.Evaluate(state)
 			if !evaluation.IsAbsent() {
 				buffer.WriteString(evaluation.String())
 			}
 		}
 		buffer.WriteString(this.terminator)
-		this.printToRedirect(buffer.String(), state)
+		this.printToRedirectFunc(buffer.String(), state)
 	}
 	return nil, nil
 }
@@ -208,7 +327,9 @@ func (this *PrintStatementNode) printToStdout(
 	outputString string,
 	state *State,
 ) error {
-	fmt.Fprint(os.Stdout, outputString)
+	// Insert the string into the record-output stream, so that goroutine can
+	// print it, resulting in deterministic output-ordering.
+	state.OutputChannel <- types.NewOutputString(outputString, state.Context)
 	return nil
 }
 
@@ -226,16 +347,16 @@ func (this *PrintStatementNode) printToFileOrPipe(
 	outputString string,
 	state *State,
 ) error {
-	redirectorEvaluation := this.redirectorTarget.Evaluate(state)
-	if !redirectorEvaluation.IsString() {
+	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				os.Args[0], redirectorEvaluation.GetTypeName(),
+				os.Args[0], redirectorTarget.GetTypeName(),
 			),
 		)
 	}
-	outputFileName := redirectorEvaluation.String()
+	outputFileName := redirectorTarget.String()
 
 	this.outputHandlerManager.Print(outputString, outputFileName)
 	return nil

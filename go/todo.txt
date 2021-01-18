@@ -13,41 +13,23 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
-! ochan mod for all stdouts
-  o cst-build disallow | stdout,stderr
-  o try non-nil record @ EOS for test
-  o need output-handler object ...
-    - producers:
-      * print/printn/eprint/eprintn
-      * dump/edump
-      * tee
-      * emitf
-      * emit/emitp
-    - types:
-      * > stdout|stderr|filename
-      * >> stdout|stderr|filename
-      * | command
-    - targets:
-      * stdout -- ochan <- x
-      * stderr -- out immediately
-      * write-to-file -- out immediately
-      * append-to-file -- out immediately
-      * write-to-pipe -- out immediately
-    - still needs pipe
-    - still needs ochan for stdout
-    - still needs to hook in a way to close at shutdown
-* bug
-  run_mlr $input put $vflag '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
+! panic
+  run_mlr --from s put '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
+* implement tee
+* exhaustive redirector cases
+* exhaustive terminator cases
+* root-node register outputHandlerManager to add to close-handles list
+* try non-nil record @ EOS for test
 * new emitx punctuation-syntax -- decide x 4
-* to support (from C impl):
-  x MD_TOKEN_ALL
-  x md_fcn_or_subr_call
-  x md_indexed_local_variable
-  x md_oosvar_keylist
-  k MD_TOKEN_FULL_OOSVAR
-  k MD_TOKEN_FULL_SREC
-  k md_map_literal
-  k md_nonindexed_local_variable
+  o to support (from C impl):
+    x MD_TOKEN_ALL
+    x md_fcn_or_subr_call
+    x md_indexed_local_variable
+    x md_oosvar_keylist
+    k MD_TOKEN_FULL_OOSVAR
+    k MD_TOKEN_FULL_SREC
+    k md_map_literal
+    k md_nonindexed_local_variable
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 * mlr: tee statements are not valid within func blocks

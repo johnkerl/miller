@@ -26,14 +26,14 @@ func (this *RootNode) BuildLeafNode(
 		return this.BuildDirectFieldRvalueNode(sval), nil
 		break
 	case dsl.NodeTypeFullSrec:
-		return this.BuildFullSrecRvalueNode(sval), nil
+		return this.BuildFullSrecRvalueNode(), nil
 		break
 
 	case dsl.NodeTypeDirectOosvarValue:
 		return this.BuildDirectOosvarRvalueNode(sval), nil
 		break
 	case dsl.NodeTypeFullOosvar:
-		return this.BuildFullOosvarRvalueNode(sval), nil
+		return this.BuildFullOosvarRvalueNode(), nil
 		break
 
 	case dsl.NodeTypeLocalVariable:
@@ -99,7 +99,7 @@ func (this *DirectFieldRvalueNode) Evaluate(state *State) types.Mlrval {
 type FullSrecRvalueNode struct {
 }
 
-func (this *RootNode) BuildFullSrecRvalueNode(fieldName string) *FullSrecRvalueNode {
+func (this *RootNode) BuildFullSrecRvalueNode() *FullSrecRvalueNode {
 	return &FullSrecRvalueNode{}
 }
 func (this *FullSrecRvalueNode) Evaluate(state *State) types.Mlrval {
@@ -129,7 +129,7 @@ func (this *DirectOosvarRvalueNode) Evaluate(state *State) types.Mlrval {
 type FullOosvarRvalueNode struct {
 }
 
-func (this *RootNode) BuildFullOosvarRvalueNode(fieldName string) *FullOosvarRvalueNode {
+func (this *RootNode) BuildFullOosvarRvalueNode() *FullOosvarRvalueNode {
 	return &FullOosvarRvalueNode{}
 }
 func (this *FullOosvarRvalueNode) Evaluate(state *State) types.Mlrval {
