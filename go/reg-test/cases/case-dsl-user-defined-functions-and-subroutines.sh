@@ -132,4 +132,6 @@ run_mlr --from $indir/abixy --opprint put 'subr log(text) { print "TEXT IS ".tex
 run_mlr --from $indir/abixy --opprint put 'func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)'
 run_mlr --from $indir/abixy --opprint put 'begin{@x=1} func f(x) { dump; print "hello" } $o=f($i)'
 run_mlr --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; tee  > "x", $* } $o=f($i)'
+run_cat x
 run_mlr --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)' 
+run_cat x

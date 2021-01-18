@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/dsl"
 	"miller/lib"
@@ -134,6 +135,9 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 func (this *TeeStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 	evaluation := this.expressionEvaluable.Evaluate(state)
 	outputString := evaluation.String()
+	if !strings.HasSuffix(outputString, "\n") {
+		outputString += "\n"
+	}
 	this.teeToRedirectFunc(outputString, state)
 	return nil, nil
 }

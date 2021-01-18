@@ -166,9 +166,6 @@ func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 		if !evaluation.IsAbsent() {
 			s := evaluation.String()
 			buffer.WriteString(s)
-			// Dump of 1 is "1", needs newline; similar for other atomics.
-			// Dump of JSON objects already ends in newline and doesn't need
-			// another.
 			if !strings.HasSuffix(s, "\n") {
 				buffer.WriteString("\n")
 			}
