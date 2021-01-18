@@ -289,7 +289,11 @@ func (this *RootNode) buildPrintxStatementNode(
 		}
 	}
 
-	// TODO: root node register outputHandlerManager to add to close-handles list
+	// Register this with the CST root node so that open file descriptrs can be
+	// closed, etc at end of stream.
+	if retval.outputHandlerManager != nil {
+		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+	}
 
 	return retval, nil
 }
@@ -358,6 +362,6 @@ func (this *PrintStatementNode) printToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.Print(outputString, outputFileName)
+	this.outputHandlerManager.WriteString(outputString, outputFileName)
 	return nil
 }

@@ -10,10 +10,6 @@
 //   ordering. (Main record-writer output is also to stdout.)
 //   ================================================================
 
-// TODO: many more comments
-// TODO: rename classes
-// TODO: pipe and write/append need different maps. else, '> "cat"' would be weird.
-
 package cst
 
 import (
@@ -27,12 +23,12 @@ import (
 
 // ================================================================
 type OutputHandlerManager interface {
-	Print(outputString string, filename string) error
+	WriteString(outputString string, filename string) error
 	Close() []error
 }
 
 type OutputHandler interface {
-	Print(outputString string) error
+	WriteString(outputString string) error
 	Close() error
 }
 
@@ -40,8 +36,8 @@ type OutputHandler interface {
 type MultiOutputHandlerManager struct {
 	outputHandlers map[string]OutputHandler
 	// TOOD: make an enum
-	append bool
-	pipe   bool
+	append bool // True for ">>", false for ">" and "|"
+	pipe   bool // True for "|", false for ">" and ">>"
 }
 
 func NewFileWritetHandlerManager() *MultiOutputHandlerManager {
@@ -68,7 +64,7 @@ func NewPipeWriteHandlerManager() *MultiOutputHandlerManager {
 	}
 }
 
-func (this *MultiOutputHandlerManager) Print(
+func (this *MultiOutputHandlerManager) WriteString(
 	outputString string,
 	filename string,
 ) error {
@@ -96,7 +92,7 @@ func (this *MultiOutputHandlerManager) Print(
 		}
 		this.outputHandlers[filename] = outputHandler
 	}
-	return outputHandler.Print(outputString)
+	return outputHandler.WriteString(outputString)
 }
 
 func (this *MultiOutputHandlerManager) Close() []error {
@@ -117,7 +113,7 @@ type FileOutputHandler struct {
 	closeable bool
 }
 
-func (this FileOutputHandler) Print(outputString string) error {
+func (this FileOutputHandler) WriteString(outputString string) error {
 	_, err := this.handle.Write([]byte(outputString))
 	return err
 }
@@ -136,7 +132,7 @@ func NewFileWriteOutputHandler(
 	handle, err := os.OpenFile(
 		filename,
 		os.O_CREATE|os.O_WRONLY,
-		0644,
+		0644, // TODO: let users parameterize this
 	)
 	if err != nil {
 		return nil, err
@@ -154,7 +150,7 @@ func NewFileAppendOutputHandler(
 	handle, err := os.OpenFile(
 		filename,
 		os.O_CREATE|os.O_WRONLY|os.O_APPEND,
-		0644,
+		0644, // TODO: let users parameterize this
 	)
 	if err != nil {
 		return nil, err

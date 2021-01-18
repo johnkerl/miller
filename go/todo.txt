@@ -11,10 +11,15 @@ TOP OF LIST:
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
   o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
+* in-place processing
+* prepipe
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
+! emits & tee need to respect output-format option !
+  o mlr put --opprint etc
+  o more reg-test
 * root-node register outputHandlerManager to add to close-handles list
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):

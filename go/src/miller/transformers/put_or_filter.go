@@ -433,6 +433,10 @@ func (this *TransformerPut) Transform(
 			os.Exit(1)
 		}
 
+		// Send all registered OutputHandlerManager instances the end-of-stream
+		// indicator.
+		this.cstRootNode.ProcessEndOfStream()
+
 		outputChannel <- types.NewEndOfStreamMarker(&context)
 	}
 }

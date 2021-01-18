@@ -8,6 +8,8 @@ package cst
 import (
 	"container/list"
 	"errors"
+	"fmt"
+	"os"
 
 	"miller/dsl"
 	"miller/types"
@@ -23,6 +25,7 @@ func NewEmptyRoot() *RootNode {
 		udsManager:                    NewUDSManager(),
 		unresolvedFunctionCallsites:   list.New(),
 		unresolvedSubroutineCallsites: list.New(),
+		outputHandlerManagers:         list.New(),
 	}
 }
 
@@ -201,6 +204,39 @@ func (this *RootNode) resolveSubroutineCallsites() error {
 		unresolvedSubroutineCallsite.uds = uds
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------
+// Various 'tee > $hostname . ".dat", $*' statements will have
+// OutputHandlerManager instances to track file-descriptors for all unique
+// values of $hostname in the input stream.
+//
+// At CST-build time, the builders are expected to call this so we can put
+// OutputHandlerManager instances on a list. Then, at end of stream, we
+// can close all the descriptors, flush the record-output streams, etc.
+
+func (this *RootNode) RegisterOutputHandlerManager(
+	outputHandlerManager OutputHandlerManager,
+) {
+	this.outputHandlerManagers.PushBack(outputHandlerManager)
+}
+
+func (this *RootNode) ProcessEndOfStream() {
+	for entry := this.outputHandlerManagers.Front(); entry != nil; entry = entry.Next() {
+		outputHandlerManager := entry.Value.(OutputHandlerManager)
+		errs := outputHandlerManager.Close()
+		if len(errs) != 0 {
+			for _, err := range errs {
+				fmt.Fprintf(
+					os.Stderr,
+					"%s: error on end-of-stream close: %v\n",
+					os.Args[0],
+					err,
+				)
+			}
+			os.Exit(1)
+		}
+	}
 }
 
 // ----------------------------------------------------------------

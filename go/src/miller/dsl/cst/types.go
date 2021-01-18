@@ -25,6 +25,7 @@ type State struct {
 }
 
 // ----------------------------------------------------------------
+// Please see root.go for context and comments.
 type RootNode struct {
 	beginBlocks                   []*StatementBlockNode
 	mainBlock                     *StatementBlockNode
@@ -33,6 +34,7 @@ type RootNode struct {
 	udsManager                    *UDSManager
 	unresolvedFunctionCallsites   *list.List
 	unresolvedSubroutineCallsites *list.List
+	outputHandlerManagers         *list.List
 }
 
 // ----------------------------------------------------------------

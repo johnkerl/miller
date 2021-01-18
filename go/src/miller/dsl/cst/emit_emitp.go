@@ -76,8 +76,6 @@ type EmitXStatementNode struct {
 	isEmitP bool
 }
 
-// TODO: port this
-
 func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
 	return this.buildEmitXStatementNode(astNode, false)
@@ -202,7 +200,11 @@ func (this *RootNode) buildEmitXStatementNode(
 		}
 	}
 
-	// TODO: root node register outputHandlerManager to add to close-handles list
+	// Register this with the CST root node so that open file descriptrs can be
+	// closed, etc at end of stream.
+	if retval.outputHandlerManager != nil {
+		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+	}
 
 	return retval, nil
 }
@@ -422,6 +424,6 @@ func (this *EmitXStatementNode) emitToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.Print(outputString, outputFileName)
+	this.outputHandlerManager.WriteString(outputString, outputFileName)
 	return nil
 }
