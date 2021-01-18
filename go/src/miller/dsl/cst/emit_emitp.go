@@ -329,7 +329,9 @@ func (this *EmitXStatementNode) executeIndexedAux(
 		for i, _ := range emittableMaps {
 			nextLevel := emittableMaps[i].Get(&indexValueString)
 			nextLevels[i] = nextLevel
-			if nextLevel.IsMap() {
+			// Can be nil for lashed indexing with heterogeneous data: e.g.
+			// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+			if nextLevel != nil && nextLevel.IsMap() {
 				nextLevelMaps[i] = nextLevel.GetMap()
 			} else {
 				nextLevelMaps[i] = nil
@@ -349,14 +351,18 @@ func (this *EmitXStatementNode) executeIndexedAux(
 			// end of recursion
 			if this.isEmitP {
 				for i, nextLevel := range nextLevels {
-					newrec.PutCopy(&mapNames[i], nextLevel)
+					if nextLevel != nil {
+						newrec.PutCopy(&mapNames[i], nextLevel)
+					}
 				}
 			} else {
 				for i, nextLevel := range nextLevels {
-					if nextLevel.IsMap() {
-						newrec.Merge(nextLevelMaps[i])
-					} else {
-						newrec.PutCopy(&mapNames[i], nextLevel)
+					if nextLevel != nil {
+						if nextLevel.IsMap() {
+							newrec.Merge(nextLevelMaps[i])
+						} else {
+							newrec.PutCopy(&mapNames[i], nextLevel)
+						}
 					}
 				}
 			}

@@ -1,0 +1,97 @@
+
+mlr --from ./reg-test/input/abixy put -q @x={"a":NR}; @y={"a":-NR}; emit (@x, @y), "k"
+k=a,x=1,y=-1
+k=a,x=2,y=-2
+k=a,x=3,y=-3
+k=a,x=4,y=-4
+k=a,x=5,y=-5
+k=a,x=6,y=-6
+k=a,x=7,y=-7
+k=a,x=8,y=-8
+k=a,x=9,y=-9
+k=a,x=10,y=-10
+
+mlr --from ./reg-test/input/abixy put -q @x={"a":NR}; @y={"b":-NR}; emit (@x, @y), "k"
+k=a,x=1
+k=a,x=2
+k=a,x=3
+k=a,x=4
+k=a,x=5
+k=a,x=6
+k=a,x=7
+k=a,x=8
+k=a,x=9
+k=a,x=10
+
+mlr --from ./reg-test/input/abixy put -q @x={"b":NR}; @y={"a":-NR}; emit (@x, @y), "k"
+k=b,x=1
+k=b,x=2
+k=b,x=3
+k=b,x=4
+k=b,x=5
+k=b,x=6
+k=b,x=7
+k=b,x=8
+k=b,x=9
+k=b,x=10
+
+mlr --from ./reg-test/input/abixy put -q @x={"b":NR}; @y={"b":-NR}; emit (@x, @y), "k"
+k=b,x=1,y=-1
+k=b,x=2,y=-2
+k=b,x=3,y=-3
+k=b,x=4,y=-4
+k=b,x=5,y=-5
+k=b,x=6,y=-6
+k=b,x=7,y=-7
+k=b,x=8,y=-8
+k=b,x=9,y=-9
+k=b,x=10,y=-10
+
+mlr --from ./reg-test/input/abixy-het put -q @x={"a":NR}; @y={"a":-NR}; emit (@x, @y), "k"
+k=a,x=1,y=-1
+k=a,x=2,y=-2
+k=a,x=3,y=-3
+k=a,x=4,y=-4
+k=a,x=5,y=-5
+k=a,x=6,y=-6
+k=a,x=7,y=-7
+k=a,x=8,y=-8
+k=a,x=9,y=-9
+k=a,x=10,y=-10
+
+mlr --from ./reg-test/input/abixy-het put -q @x={"a":NR}; @y={"b":-NR}; emit (@x, @y), "k"
+k=a,x=1
+k=a,x=2
+k=a,x=3
+k=a,x=4
+k=a,x=5
+k=a,x=6
+k=a,x=7
+k=a,x=8
+k=a,x=9
+k=a,x=10
+
+mlr --from ./reg-test/input/abixy-het put -q @x={"b":NR}; @y={"a":-NR}; emit (@x, @y), "k"
+k=b,x=1
+k=b,x=2
+k=b,x=3
+k=b,x=4
+k=b,x=5
+k=b,x=6
+k=b,x=7
+k=b,x=8
+k=b,x=9
+k=b,x=10
+
+mlr --from ./reg-test/input/abixy-het put -q @x={"b":NR}; @y={"b":-NR}; emit (@x, @y), "k"
+k=b,x=1,y=-1
+k=b,x=2,y=-2
+k=b,x=3,y=-3
+k=b,x=4,y=-4
+k=b,x=5,y=-5
+k=b,x=6,y=-6
+k=b,x=7,y=-7
+k=b,x=8,y=-8
+k=b,x=9,y=-9
+k=b,x=10,y=-10
+

@@ -145,6 +145,42 @@ mlr_expect_fail() {
 }
 
 # ----------------------------------------------------------------
+# Lets the callsite redirect stdout and stderr. This is nominally for testing
+# DSL-redirect statements and making sure '> stdout' goes to stdout, '> stderr'
+# goes to stdout, '> "foo.dat"' goes to foo.dat.
+run_mlr_externally_redirected() {
+  if [ "$only_show" = "true" ]; then
+    echo
+    echo "# expect pass"
+    echo $path_to_mlr "$@"
+    echo
+    $path_to_mlr "$@"
+
+  else
+    # Use just "mlr" for info messages, not full path to mlr
+    if [ "$verbose" = "true" ]; then
+      echo mlr "$@"
+    fi
+    echo mlr "$@" >> $outfile
+    num_invocations_attempted=`expr $num_invocations_attempted + 1`
+
+    $path_to_mlr "$@" # callsite is expected to redirect stdout and stderr
+    status=$?
+
+    if [ $status -eq 0 ]; then
+      num_invocations_passed=`expr $num_invocations_passed + 1`
+    else
+      if [ "$verbose" = "true" ]; then
+        echo "Exit status was $status; expected 0."
+      fi
+      echo "Exit status was $status; expected 0." >> $outfile
+      num_invocations_failed=`expr $num_invocations_failed + 1`
+    fi
+    echo >> $outfile
+  fi
+}
+
+# ----------------------------------------------------------------
 run_mlr_no_output() {
   if [ "$only_show" = "true" ]; then
     echo
@@ -318,8 +354,8 @@ if [ ! -x "$path_to_mlr" ]; then
 fi
 
 if [ "$only_show" = "true" ]; then
-  expdir="/nonesuch"
-  outdir="/nonesuch"
+  expdir="/tmp"
+  outdir="/tmp"
 fi
 
 # ----------------------------------------------------------------

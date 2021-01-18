@@ -19,15 +19,23 @@ import (
 // Examples:
 //   emitf @a
 //   emitf @a, @b
+//   emitf > "foo.dat", @a, @b
 //
 // Each argument must be a non-indexed oosvar/localvar/fieldname, so we can use
 // their names as keys in the emitted record.  These restrictions are enforced
 // in the CST logic, to keep this parser/AST logic simpler.
 
+type tEmitFToRedirectFunc func(
+	newrec *types.Mlrmap,
+	state *State,
+) error
+
 type EmitFStatementNode struct {
-	emitfNames      []string
-	emitfEvaluables []IEvaluable
-	// xxx redirect
+	emitfNames                []string
+	emitfEvaluables           []IEvaluable
+	emitfToRedirectFunc       tEmitFToRedirectFunc
+	redirectorTargetEvaluable IEvaluable           // for file/pipe targets
+	outputHandlerManager      OutputHandlerManager // for file/pipe targets
 }
 
 // ----------------------------------------------------------------
@@ -36,19 +44,24 @@ type EmitFStatementNode struct {
 // emitf a,$b,@c
 // RAW AST:
 // * statement block
-//     * dump statement "emitf"
-//         * local variable "a"
-//         * direct field value "b"
-//         * direct oosvar value "c"
+//     * emitf statement "emitf"
+//         * emittable list
+//             * local variable "a"
+//             * direct field value "b"
+//             * direct oosvar value "c"
+//         * no-op
 
 func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitFStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 	expressionsNode := astNode.Children[0]
+	redirectorNode := astNode.Children[1]
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Things to be emitted, e.g. @a and @b in 'emitf > "foo.dat", @a, @b'.
 
 	n := len(expressionsNode.Children)
 	lib.InternalCodingErrorIf(n < 1)
-
 	emitfNames := make([]string, n)
 	emitfEvaluables := make([]IEvaluable, n)
 	for i, childNode := range expressionsNode.Children {
@@ -63,10 +76,57 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 		emitfNames[i] = emitfName
 		emitfEvaluables[i] = emitfEvaluable
 	}
-	return &EmitFStatementNode{
+
+	retval := &EmitFStatementNode{
 		emitfNames:      emitfNames,
 		emitfEvaluables: emitfEvaluables,
-	}, nil
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Redirection targets (the thing after > >> |, if any).
+
+	if redirectorNode.Type == dsl.NodeTypeNoOp {
+		// No > >> or | was provided.
+		retval.emitfToRedirectFunc = retval.emitfToRecordStream
+	} else {
+		// There is > >> or | provided.
+		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
+		lib.InternalCodingErrorIf(len(redirectorNode.Children) != 1)
+		redirectorTargetNode := redirectorNode.Children[0]
+		var err error = nil
+
+		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
+			retval.emitfToRedirectFunc = retval.emitfToStdout
+		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
+			retval.emitfToRedirectFunc = retval.emitfToStderr
+		} else {
+			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
+
+			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			if err != nil {
+				return nil, err
+			}
+
+			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
+				retval.outputHandlerManager = NewFileWritetHandlerManager()
+			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
+				retval.outputHandlerManager = NewFileAppendHandlerManager()
+			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
+				retval.outputHandlerManager = NewPipeWriteHandlerManager()
+			} else {
+				return nil, errors.New(
+					fmt.Sprintf(
+						"%s: unhandled redirector node type %s.",
+						os.Args[0], string(redirectorNode.Type),
+					),
+				)
+			}
+		}
+	}
+
+	// TODO: root node register outputHandlerManager to add to close-handles list
+
+	return retval, nil
 }
 
 func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error) {
@@ -79,14 +139,13 @@ func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error)
 			newrec.PutCopy(&emitfName, &emitfValue)
 		}
 	}
-	state.OutputChannel <- types.NewRecordAndContext(
-		newrec,
-		state.Context.Copy(),
-	)
+
+	this.emitfToRedirectFunc(newrec, state)
 
 	return nil, nil
 }
 
+// ----------------------------------------------------------------
 // Gets the name of a non-indexed oosvar, localvar, or field name; otherwise,
 // returns error.
 //
@@ -106,4 +165,56 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 			os.Args[0], string(astNode.Type), description,
 		),
 	)
+}
+
+// ----------------------------------------------------------------
+func (this *EmitFStatementNode) emitfToRecordStream(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	state.OutputChannel <- types.NewRecordAndContext(newrec, state.Context)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitFStatementNode) emitfToStdout(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	outputString := newrec.String()
+	// Insert the string into the record-output stream, so that goroutine can
+	// print it, resulting in deterministic output-ordering.
+	state.OutputChannel <- types.NewOutputString(outputString, state.Context)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitFStatementNode) emitfToStderr(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	outputString := newrec.String()
+	fmt.Fprintf(os.Stderr, outputString)
+	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *EmitFStatementNode) emitfToFileOrPipe(
+	newrec *types.Mlrmap,
+	state *State,
+) error {
+	outputString := newrec.String()
+	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	if !redirectorTarget.IsString() {
+		return errors.New(
+			fmt.Sprintf(
+				"%s: output redirection yielded %s, not string.",
+				os.Args[0], redirectorTarget.GetTypeName(),
+			),
+		)
+	}
+	outputFileName := redirectorTarget.String()
+
+	this.outputHandlerManager.Print(outputString, outputFileName)
+	return nil
 }

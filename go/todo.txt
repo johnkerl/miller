@@ -1,6 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+? reddit, discord, ?
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! emitx/io-redirect/etc
 ! fix all typemasks; 'int x = 1; x = "abc"'
@@ -13,12 +15,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
-! panic
-  run_mlr --from s put '@x={"a":1}; @y={"b":2}; emit (@x, @y), "a"'
-* exhaustive redirector test-cases
-* exhaustive terminator test-cases
 * root-node register outputHandlerManager to add to close-handles list
-* try non-nil record @ EOS for test
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):
     x MD_TOKEN_ALL
@@ -36,15 +33,10 @@ emitp/emitf:
 ! fix var/any type-mask
   o C/Go UT
 
-? parex print regtest -- what about new ast-node types?
-
 ! verb skeletons
 ! strptime/strftime experiments ...
 * regex ...
 ? doc shift/unshift as using [2:] and append
-
-? what if calling a function which references $* from begin/end context -- ?
-  won't fail static validate ...
 
 ! se-q reads
 
@@ -436,3 +428,5 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * back-incompat:
   mlr -n put $vflag '@x=1; dump > stdout, @x'
   mlr -n put $vflag '@x=1; dump > stdout @x'
+* parex print regtest -- what about new ast-node types?
+* all case-files could use top-notes
