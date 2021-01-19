@@ -9,6 +9,7 @@ TOP OF LIST:
 * prepipe
 ! strptime/strftime experiments ...
 ! regex ...
+* tee verb
 
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)

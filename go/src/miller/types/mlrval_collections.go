@@ -305,7 +305,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		)
 	}
 
-	baseValue := baseMap.Get(baseIndex.printrep)
+	baseValue := baseMap.Get(baseIndex.String())
 	if baseValue == nil {
 		// Create a new level in order to recurse from
 		nextIndex := indices[1]
