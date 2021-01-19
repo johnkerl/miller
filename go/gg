@@ -52,4 +52,38 @@ mention() {
 
 # ================================================================
 
+path_to_mlr=../c/mlr
+run_mlr --opprint --from ./reg-test/input/2.dkvp put -q '
+  @logging[NR] = $*;
+  end {
+    dump;
+    for ((k1, k2), v in @logging) {
+        print "K1 ". k1. " K2 ". k2.  " TK1 ". typeof(k1). " TK2 ". typeof(k2);
+        @output[k1][k2] = v;
+        if (k2 == "i") {
+          print "BREAK";
+          break;
+        }
+        print "POST-BREAK";
+    }
+    emit @output, "NR", "name"
+  }'
+
+path_to_mlr=../go/mlr
+run_mlr --opprint --from ./reg-test/input/2.dkvp put -q '
+  @logging[NR] = $*;
+  end {
+    dump;
+    for ((k1, k2), v in @logging) {
+        print "K1 ". k1. " K2 ". k2.  " TK1 ". typeof(k1). " TK2 ". typeof(k2);
+        @output[k1][k2] = v;
+        if (k2 == "i") {
+          print "BREAK";
+          break;
+        }
+        print "POST-BREAK";
+    }
+    emit @output, "NR", "name"
+  }'
+
 # ================================================================

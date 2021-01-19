@@ -18,9 +18,28 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bugs:
+
+* case-c-dsl-redirects.sh
+  --no-fflush
+  tee verb
+  mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
+    mlr: cannot parse DSL expression.
+
+* ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+  bug w/ break
+
+* ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+  bug w/ non-unique for-loop names
+
+* ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
+  bug
+  mlr --opprint put -v '@s = NR; $t = @s; $u=@["s"]; $v = $t - $u' ./reg-test/input/abixy
+  CST BuildEvaluableNode: unhandled AST node type indirect oosvar value
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
-! all <-> @*
-  $cases/case-c-dsl-redirects.sh
 
 * validator enforce unique names in for-loops
 

@@ -13,26 +13,26 @@ hat wye 9  0.03144187646093577 0.7495507603507059  string string int    float  f
 pan wye 10 0.5026260055412137  0.9526183602969864  string string int    float  float
 
 mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_float(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
-NR=1,k=x,float=0.346790
-NR=1,k=y,float=0.726803
-NR=2,k=x,float=0.758680
-NR=2,k=y,float=0.522151
-NR=3,k=x,float=0.204603
-NR=3,k=y,float=0.338319
-NR=4,k=x,float=0.381399
-NR=4,k=y,float=0.134189
-NR=5,k=xxx,float=0.573289
-NR=5,k=y,float=0.863624
-NR=6,k=x,float=0.527126
-NR=6,k=y,float=0.493221
-NR=7,k=x,float=0.611784
-NR=7,k=y,float=0.187885
-NR=8,k=x,float=0.598554
-NR=8,k=yyy,float=0.976181
-NR=9,k=x,float=0.031442
-NR=9,k=y,float=0.749551
-NR=10,k=x,float=0.502626
-NR=10,k=y,float=0.952618
+NR=1,k=x,float=0.3467901443380824
+NR=1,k=y,float=0.7268028627434533
+NR=2,k=x,float=0.7586799647899636
+NR=2,k=y,float=0.5221511083334797
+NR=3,k=x,float=0.20460330576630303
+NR=3,k=y,float=0.33831852551664776
+NR=4,k=x,float=0.38139939387114097
+NR=4,k=y,float=0.13418874328430463
+NR=5,k=xxx,float=0.5732889198020006
+NR=5,k=y,float=0.8636244699032729
+NR=6,k=x,float=0.5271261600918548
+NR=6,k=y,float=0.49322128674835697
+NR=7,k=x,float=0.6117840605678454
+NR=7,k=y,float=0.1878849191181694
+NR=8,k=x,float=0.5985540091064224
+NR=8,k=yyy,float=0.976181385699006
+NR=9,k=x,float=0.03144187646093577
+NR=9,k=y,float=0.7495507603507059
+NR=10,k=x,float=0.5026260055412137
+NR=10,k=y,float=0.9526183602969864
 
 mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_int(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }
 NR=1,k=i,int=1
@@ -48,35 +48,35 @@ NR=10,k=i,int=10
 
 mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }
 NR=1,k=i,numeric=1
-NR=1,k=x,numeric=0.346790
-NR=1,k=y,numeric=0.726803
+NR=1,k=x,numeric=0.3467901443380824
+NR=1,k=y,numeric=0.7268028627434533
 NR=2,k=i,numeric=2
-NR=2,k=x,numeric=0.758680
-NR=2,k=y,numeric=0.522151
+NR=2,k=x,numeric=0.7586799647899636
+NR=2,k=y,numeric=0.5221511083334797
 NR=3,k=i,numeric=3
-NR=3,k=x,numeric=0.204603
-NR=3,k=y,numeric=0.338319
+NR=3,k=x,numeric=0.20460330576630303
+NR=3,k=y,numeric=0.33831852551664776
 NR=4,k=i,numeric=4
-NR=4,k=x,numeric=0.381399
-NR=4,k=y,numeric=0.134189
+NR=4,k=x,numeric=0.38139939387114097
+NR=4,k=y,numeric=0.13418874328430463
 NR=5,k=i,numeric=5
-NR=5,k=xxx,numeric=0.573289
-NR=5,k=y,numeric=0.863624
+NR=5,k=xxx,numeric=0.5732889198020006
+NR=5,k=y,numeric=0.8636244699032729
 NR=6,k=i,numeric=6
-NR=6,k=x,numeric=0.527126
-NR=6,k=y,numeric=0.493221
+NR=6,k=x,numeric=0.5271261600918548
+NR=6,k=y,numeric=0.49322128674835697
 NR=7,k=iii,numeric=7
-NR=7,k=x,numeric=0.611784
-NR=7,k=y,numeric=0.187885
+NR=7,k=x,numeric=0.6117840605678454
+NR=7,k=y,numeric=0.1878849191181694
 NR=8,k=i,numeric=8
-NR=8,k=x,numeric=0.598554
-NR=8,k=yyy,numeric=0.976181
+NR=8,k=x,numeric=0.5985540091064224
+NR=8,k=yyy,numeric=0.976181385699006
 NR=9,k=i,numeric=9
-NR=9,k=x,numeric=0.031442
-NR=9,k=y,numeric=0.749551
+NR=9,k=x,numeric=0.03144187646093577
+NR=9,k=y,numeric=0.7495507603507059
 NR=10,k=i,numeric=10
-NR=10,k=x,numeric=0.502626
-NR=10,k=y,numeric=0.952618
+NR=10,k=x,numeric=0.5026260055412137
+NR=10,k=y,numeric=0.9526183602969864
 
 mlr --from ./reg-test/input/abixy-het put -q for (k,v in $*) {if (is_string(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }
 NR=1,k=a,string=pan
