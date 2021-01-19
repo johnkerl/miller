@@ -53,6 +53,15 @@ mention() {
 # ================================================================
 
 path_to_mlr=../c/mlr
+run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
+path_to_mlr=../go/mlr
+run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
+path_to_mlr=../c/mlr
+run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
+path_to_mlr=../go/mlr
+run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
+
+path_to_mlr=../c/mlr
 run_mlr --opprint --from ./reg-test/input/2.dkvp put -q '
   @logging[NR] = $*;
   end {

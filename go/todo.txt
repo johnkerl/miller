@@ -3,12 +3,12 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix all typemasks; 'int x = 1; x = "abc"'
+! strptime/strftime experiments ...
+! regex ...
 
 * merge-fields
 * in-place processing
 * prepipe
-! strptime/strftime experiments ...
-! regex ...
 * tee verb
 
 * c/go both:
@@ -22,7 +22,7 @@ bugs:
 
 * case-c-dsl-redirects.sh
   --no-fflush
-  tee verb
+  tee verb missing
   mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
     mlr: cannot parse DSL expression.
 
@@ -30,12 +30,10 @@ bugs:
   bug w/ break
 
 * ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-  bug w/ non-unique for-loop names
+  bug w/ non-unique for-loop names: e.g. 'for(a,a in $*)'
 
 * ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
-  bug
-  mlr --opprint put -v '@s = NR; $t = @s; $u=@["s"]; $v = $t - $u' ./reg-test/input/abixy
-  CST BuildEvaluableNode: unhandled AST node type indirect oosvar value
+  _:t:u=1 vs t:u=1 on emitp @*
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,9 +90,6 @@ small:
 * 'string or int' -> 'string, int, or array thereof' throughout
 
 medium:
-? records as mlrmap -> mlrval?
-  o reduce $* copy ...
-  o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
 * commenting passes ...
 
 big:
@@ -456,6 +451,10 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   supporting it some places and not others.
 
 * maybe split Context into varying & non-varying -- separate structs entirely
+
+* idea: records as mlrmap -> mlrval?
+  o reduce $* copy ...
+  o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
 
 * join
   > clean up VERBOSE in joiner-files
