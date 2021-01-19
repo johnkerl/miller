@@ -9,6 +9,11 @@
 [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
 [![Docs](https://readthedocs.org/projects/miller/badge/?version=latest)](https://miller.readthedocs.io/en/latest/?badge=latest)
 
+# Community
+
+* Discussion forum: https://github.com/johnkerl/miller/discussions
+* Feature requests / bug reports: https://github.com/johnkerl/miller/issues
+
 # Distributions
 
 There's a good chance you can get Miller pre-built for your system:
