@@ -40,6 +40,15 @@
 * I think some DST/timezone issues such as [issue 359](https://github.com/johnkerl/miller/issues/359) will be easier to fix using the Go datetime library than using the C datetime library
 * The code will be easier to read and, I hope, easier for others to contribute to. What this means is it should be quicker and easier to add new features to Miller -- after the development-time cost of the port itself is paid, of course.
 
+# Why Go
+
+* As noted above, multiple Miller issues will benefit from stronger library support.
+* Channels/goroutines are an excellent for Miller's reader/mapper/mapper/mapper/writer record-stream architecture.
+* Since I did timing experiments in 2015, I found Go to be faster than it was then.
+* In terms of CPU-cycle-count, Go is a bit slower than C (it does more things, like bounds-checking arrays and so on) -- but by leveraging concurrency over a couple processors, I find that it's competitive in terms of wall-time.
+* Go is an up-and-coming language, with good reason -- it's mature, stable, with few of C's weaknesses and many of C's strengths.
+* The source code will be easier to read/maintain/write, by myself and others.
+
 # Things which may change
 
 Please see https://github.com/johnkerl/miller/issues/372.
