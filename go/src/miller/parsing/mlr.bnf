@@ -185,7 +185,6 @@ str   : 's' 't' 'r' ;
 var   : 'v' 'a' 'r' ;
 
 unset    : 'u' 'n' 's' 'e' 't' ;
-//all      : 'a' 'l' 'l' ;
 
 dump     : 'd' 'u' 'm' 'p' ;
 edump    : 'e' 'd' 'u' 'm' 'p' ;
@@ -235,6 +234,7 @@ oosvar_name : '@' _idchar { _idchar } ;
 braced_oosvar_name: '@' '{' _braced_char { _braced_char } '}' ;
 
 full_oosvar : '@' '*' ;
+all         : 'a' 'l' 'l' ;
 
 // ----------------------------------------------------------------
 // FUNCTIONS AND LOCAL VARIABLES
@@ -1051,6 +1051,8 @@ BracedOosvarValue
 
 FullOosvar
   : full_oosvar
+  << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
+  | all
   << dsl.NewASTNode($0, dsl.NodeTypeFullOosvar) >>
 ;
 
