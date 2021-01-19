@@ -1,18 +1,16 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-? reddit, discord, ?
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! emitx/io-redirect/etc
 ! fix all typemasks; 'int x = 1; x = "abc"'
 * merge-fields
-* do some profiling every so often
+* in-place processing
+* prepipe
+
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
   o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
-* in-place processing
-* prepipe
+* do some profiling every so often
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,7 +125,6 @@ no need to bootstrap a parser for the parser-generator language
 
 * UDF nexts:
   o more functions (see below)
-  o json_parse / json_stringify functions?
   !! strlen for UTF-8; wat
   ! regex captures
   o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
