@@ -146,7 +146,7 @@ func (this *TransformerJSONParse) jsonParseSome(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.fieldNameSet[*pe.Key] {
+			if this.fieldNameSet[pe.Key] {
 				pe.JSONParseInPlace()
 			}
 		}

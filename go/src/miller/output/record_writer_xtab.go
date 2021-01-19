@@ -30,7 +30,7 @@ func (this *RecordWriterXTAB) Write(
 
 	maxKeyLength := 1
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := utf8.RuneCountInString(*pe.Key)
+		keyLength := utf8.RuneCountInString(pe.Key)
 		if keyLength > maxKeyLength {
 			maxKeyLength = keyLength
 		}
@@ -46,10 +46,10 @@ func (this *RecordWriterXTAB) Write(
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		keyLength := utf8.RuneCountInString(*pe.Key)
+		keyLength := utf8.RuneCountInString(pe.Key)
 		padLength := maxKeyLength - keyLength
 
-		buffer.WriteString(*pe.Key)
+		buffer.WriteString(pe.Key)
 		buffer.WriteString(" ")
 		for i := 0; i < padLength; i++ {
 			buffer.WriteString(" ")

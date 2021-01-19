@@ -167,7 +167,7 @@ func (this *TransformerJSONStringify) jsonStringifySome(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.fieldNameSet[*pe.Key] {
+			if this.fieldNameSet[pe.Key] {
 				pe.JSONStringifyInPlace(this.jsonFormatting)
 			}
 		}

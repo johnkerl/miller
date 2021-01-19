@@ -170,7 +170,7 @@ func (this *TransformerCat) countersUngrouped(
 		this.counter++
 		key := this.counterFieldName
 		value := types.MlrvalFromInt64(this.counter)
-		inrec.PrependCopy(&key, &value)
+		inrec.PrependCopy(key, &value)
 	}
 	outputChannel <- inrecAndContext
 }
@@ -201,7 +201,7 @@ func (this *TransformerCat) countersGrouped(
 
 		key := this.counterFieldName
 		value := types.MlrvalFromInt64(counter)
-		inrec.PrependCopy(&key, &value)
+		inrec.PrependCopy(key, &value)
 	}
 	outputChannel <- inrecAndContext
 }

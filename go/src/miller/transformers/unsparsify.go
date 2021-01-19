@@ -146,7 +146,7 @@ func (this *TransformerUnsparsify) mapNonStreaming(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			key := *pe.Key
+			key := pe.Key
 			if !this.fieldNamesSeen.Has(key) {
 				this.fieldNamesSeen.Put(key, key)
 			}
@@ -160,10 +160,10 @@ func (this *TransformerUnsparsify) mapNonStreaming(
 			newrec := types.NewMlrmapAsRecord()
 			for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 				fieldName := pe.Key
-				if !outrec.Has(&fieldName) {
-					newrec.PutCopy(&fieldName, &this.fillerMlrval)
+				if !outrec.Has(fieldName) {
+					newrec.PutCopy(fieldName, &this.fillerMlrval)
 				} else {
-					newrec.PutReference(&fieldName, outrec.Get(&fieldName))
+					newrec.PutReference(fieldName, outrec.Get(fieldName))
 				}
 			}
 
@@ -183,8 +183,8 @@ func (this *TransformerUnsparsify) mapStreaming(
 		inrec := inrecAndContext.Record
 
 		for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
-			if !inrec.Has(&pe.Key) {
-				inrec.PutCopy(&pe.Key, &this.fillerMlrval)
+			if !inrec.Has(pe.Key) {
+				inrec.PutCopy(pe.Key, &this.fillerMlrval)
 			}
 		}
 

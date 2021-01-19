@@ -101,9 +101,9 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 			if width == 0 {
 				width = 1 // We'll rewrite "" to "-" below
 			}
-			oldMaxWidth := maxWidths[*pe.Key]
+			oldMaxWidth := maxWidths[pe.Key]
 			if width > oldMaxWidth {
-				maxWidths[*pe.Key] = width
+				maxWidths[pe.Key] = width
 			}
 		}
 	}
@@ -152,9 +152,9 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if pe.Next != nil {
-					buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[*pe.Key], *pe.Key))
+					buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], pe.Key))
 				} else {
-					buffer.WriteString(*pe.Key)
+					buffer.WriteString(pe.Key)
 					buffer.WriteString("\n") // TODO: ORS
 				}
 			}
@@ -170,7 +170,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 				s = "-"
 			}
 			if pe.Next != nil {
-				buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[*pe.Key], s))
+				buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], s))
 			} else {
 				buffer.WriteString(s)
 				buffer.WriteString("\n") // TODO: ORS
@@ -223,7 +223,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 			buffer.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(horizontalBars[*pe.Key])
+				buffer.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
 					buffer.WriteString(horizontalMiddle)
 				} else {
@@ -234,7 +234,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 			buffer.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[*pe.Key], *pe.Key))
+				buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], pe.Key))
 				if pe.Next != nil {
 					buffer.WriteString(verticalMiddle)
 				} else {
@@ -245,7 +245,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 			buffer.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(horizontalBars[*pe.Key])
+				buffer.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
 					buffer.WriteString(horizontalMiddle)
 				} else {
@@ -263,7 +263,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 		buffer.WriteString(verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
-			buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[*pe.Key], s))
+			buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], s))
 			if pe.Next != nil {
 				buffer.WriteString(fmt.Sprint(verticalMiddle))
 			} else {
@@ -275,7 +275,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 		if e.Next() == nil {
 			buffer.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(horizontalBars[*pe.Key])
+				buffer.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
 					buffer.WriteString(horizontalMiddle)
 				} else {

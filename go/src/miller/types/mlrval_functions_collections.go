@@ -155,8 +155,7 @@ func has_key_in_array(ma, mb *Mlrval) Mlrval {
 
 func has_key_in_map(ma, mb *Mlrval) Mlrval {
 	if mb.mvtype == MT_STRING || mb.mvtype == MT_INT {
-		s := mb.String()
-		return MlrvalFromBool(ma.mapval.Has(&s))
+		return MlrvalFromBool(ma.mapval.Has(mb.String()))
 	} else {
 		return MlrvalFromError()
 	}
@@ -201,10 +200,10 @@ func MlrvalMapSelect(mlrvals []*Mlrval) Mlrval {
 	}
 
 	for pe := oldmap.Head; pe != nil; pe = pe.Next {
-		oldKey := *pe.Key
+		oldKey := pe.Key
 		_, present := newKeys[oldKey]
 		if present {
-			newMap.PutCopy(&oldKey, oldmap.Get(&oldKey))
+			newMap.PutCopy(oldKey, oldmap.Get(oldKey))
 		}
 	}
 
@@ -223,11 +222,11 @@ func MlrvalMapExcept(mlrvals []*Mlrval) Mlrval {
 
 	for _, exceptArg := range mlrvals[1:] {
 		if exceptArg.mvtype == MT_STRING {
-			newMap.Remove(&exceptArg.printrep)
+			newMap.Remove(exceptArg.printrep)
 		} else if exceptArg.mvtype == MT_ARRAY {
 			for _, element := range exceptArg.arrayval {
 				if element.mvtype == MT_STRING {
-					newMap.Remove(&element.printrep)
+					newMap.Remove(element.printrep)
 				} else {
 					return MlrvalFromError()
 				}
@@ -304,7 +303,7 @@ func MlrvalJoinK(ma, mb *Mlrval) Mlrval {
 		var buffer bytes.Buffer
 
 		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(*pe.Key)
+			buffer.WriteString(pe.Key)
 			if pe.Next != nil {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -381,7 +380,7 @@ func MlrvalJoinKV(ma, mb, mc *Mlrval) Mlrval {
 		var buffer bytes.Buffer
 
 		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(*pe.Key)
+			buffer.WriteString(pe.Key)
 			buffer.WriteString(pairSeparator)
 			buffer.WriteString(pe.Value.String())
 			if pe.Next != nil {
@@ -432,11 +431,11 @@ func MlrvalSplitKV(ma, mb, mc *Mlrval) Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := MlrvalFromInferredType(pair[0])
-			retval.mapval.PutReference(&key, &value)
+			retval.mapval.PutReference(key, &value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := MlrvalFromInferredType(pair[1])
-			retval.mapval.PutReference(&key, &value)
+			retval.mapval.PutReference(key, &value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -468,11 +467,11 @@ func MlrvalSplitKVX(ma, mb, mc *Mlrval) Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := MlrvalFromString(pair[0])
-			retval.mapval.PutReference(&key, &value)
+			retval.mapval.PutReference(key, &value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := MlrvalFromString(pair[1])
-			retval.mapval.PutReference(&key, &value)
+			retval.mapval.PutReference(key, &value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -497,7 +496,7 @@ func MlrvalSplitNV(ma, mb *Mlrval) Mlrval {
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := MlrvalFromInferredType(field)
-		retval.mapval.PutReference(&key, &value)
+		retval.mapval.PutReference(key, &value)
 	}
 
 	return retval
@@ -519,7 +518,7 @@ func MlrvalSplitNVX(ma, mb *Mlrval) Mlrval {
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := MlrvalFromString(field)
-		retval.mapval.PutReference(&key, &value)
+		retval.mapval.PutReference(key, &value)
 	}
 
 	return retval
@@ -584,7 +583,7 @@ func MlrvalGetKeys(ma *Mlrval) Mlrval {
 		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
 		i := 0
 		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
-			retval.arrayval[i] = MlrvalFromString(*pe.Key)
+			retval.arrayval[i] = MlrvalFromString(pe.Key)
 			i++
 		}
 		return *retval
@@ -676,7 +675,7 @@ func MlrvalUnflatten(ma, mb *Mlrval) Mlrval {
 
 	for pe := oldmap.Head; pe != nil; pe = pe.Next {
 		// TODO: factor out a shared helper function bewteen here and MlrvalSplitAX.
-		arrayOfIndices := mlrvalSplitAXHelper(*pe.Key, separator)
+		arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 		newmap.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
 	}
 	return MlrvalFromMapReferenced(newmap)
@@ -691,7 +690,7 @@ func MlrvalArrayify(ma *Mlrval) Mlrval {
 		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
 			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			i++
-			if *pe.Key != sval {
+			if pe.Key != sval {
 				convertible = false
 			}
 			temp := MlrvalArrayify(pe.Value)

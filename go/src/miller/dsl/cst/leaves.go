@@ -87,7 +87,7 @@ func (this *RootNode) BuildDirectFieldRvalueNode(fieldName string) *DirectFieldR
 	}
 }
 func (this *DirectFieldRvalueNode) Evaluate(state *State) types.Mlrval {
-	value := state.Inrec.Get(&this.fieldName)
+	value := state.Inrec.Get(this.fieldName)
 	if value == nil {
 		return types.MlrvalFromAbsent()
 	} else {
@@ -117,7 +117,7 @@ func (this *RootNode) BuildDirectOosvarRvalueNode(variableName string) *DirectOo
 	}
 }
 func (this *DirectOosvarRvalueNode) Evaluate(state *State) types.Mlrval {
-	value := state.Oosvars.Get(&this.variableName)
+	value := state.Oosvars.Get(this.variableName)
 	if value == nil {
 		return types.MlrvalFromAbsent()
 	} else {

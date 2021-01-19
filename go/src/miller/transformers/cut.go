@@ -197,10 +197,10 @@ func (this *TransformerCut) includeWithInputOrder(
 		inrec := inrecAndContext.Record
 		outrec := types.NewMlrmap()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			fieldName := *pe.Key
+			fieldName := pe.Key
 			_, wanted := this.fieldNameSet[fieldName]
 			if wanted {
-				outrec.PutReference(&fieldName, pe.Value) // inrec will be GC'ed
+				outrec.PutReference(fieldName, pe.Value) // inrec will be GC'ed
 			}
 		}
 		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
@@ -220,9 +220,9 @@ func (this *TransformerCut) includeWithArgOrder(
 		inrec := inrecAndContext.Record
 		outrec := types.NewMlrmap()
 		for _, fieldName := range this.fieldNameList {
-			value := inrec.Get(&fieldName)
+			value := inrec.Get(fieldName)
 			if value != nil {
-				outrec.PutReference(&fieldName, value) // inrec will be GC'ed
+				outrec.PutReference(fieldName, value) // inrec will be GC'ed
 			}
 		}
 		outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
@@ -241,8 +241,8 @@ func (this *TransformerCut) exclude(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
-			if inrec.Has(&fieldName) {
-				inrec.Remove(&fieldName)
+			if inrec.Has(fieldName) {
+				inrec.Remove(fieldName)
 			}
 		}
 	}

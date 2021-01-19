@@ -233,12 +233,12 @@ func (this *PositionalFieldNameNode) Evaluate(state *State) types.Mlrval {
 		return types.MlrvalFromError()
 	}
 
-	name := state.Inrec.GetNameAtPositionalIndex(index)
-	if name == nil {
+	name, ok := state.Inrec.GetNameAtPositionalIndex(index)
+	if !ok {
 		return types.MlrvalFromAbsent()
 	}
 
-	return types.MlrvalFromString(*name)
+	return types.MlrvalFromString(name)
 }
 
 // ================================================================
@@ -340,11 +340,11 @@ func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(state *State) types.Mlr
 		}
 
 	} else if baseMlrval.IsMap() {
-		name := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
-		if name == nil {
+		name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
+		if !ok {
 			return types.MlrvalFromAbsent()
 		} else {
-			return types.MlrvalFromString(*name)
+			return types.MlrvalFromString(name)
 		}
 
 	} else if baseMlrval.IsAbsent() {

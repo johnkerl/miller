@@ -130,7 +130,7 @@ func (this *TransformerFillDown) Transform(
 
 		for _, fillDownFieldName := range this.fillDownFieldNames {
 			present := false
-			value := inrec.Get(&fillDownFieldName)
+			value := inrec.Get(fillDownFieldName)
 			if this.onlyIfAbsent {
 				present = value != nil
 			} else {
@@ -144,7 +144,7 @@ func (this *TransformerFillDown) Transform(
 				// Reuse previously seen value, if any
 				prev, ok := this.lastNonNullValues[fillDownFieldName]
 				if ok {
-					inrec.PutCopy(&fillDownFieldName, prev)
+					inrec.PutCopy(fillDownFieldName, prev)
 				}
 			}
 		}

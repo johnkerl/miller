@@ -67,7 +67,7 @@ func (this *RecordWriterCSVLite) Write(
 	if needToPrintHeader && !this.doHeaderlessOutput {
 		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(*pe.Key)
+			buffer.WriteString(pe.Key)
 
 			if pe.Next != nil {
 				buffer.WriteString(this.ofs)

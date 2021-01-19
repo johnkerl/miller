@@ -73,7 +73,7 @@ func (this *Mlrmap) marshalJSONAuxMultiline(
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
 		buffer.WriteString("\"")
-		buffer.WriteString(*pe.Key)
+		buffer.WriteString(pe.Key)
 		buffer.WriteString("\": ")
 
 		// Write the value which is a mlrval
@@ -115,7 +115,7 @@ func (this *Mlrmap) marshalJSONAuxSingleLine(
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
 		buffer.WriteString("\"")
-		buffer.WriteString(*pe.Key)
+		buffer.WriteString(pe.Key)
 		buffer.WriteString("\": ")
 
 		// Write the value which is a mlrval

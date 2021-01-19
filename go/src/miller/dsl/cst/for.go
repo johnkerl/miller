@@ -125,7 +125,7 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 		state.stack.PushStackFrame()
 		defer state.stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(*pe.Key)
+			mapkey := types.MlrvalFromString(pe.Key)
 
 			state.stack.BindVariable(this.variableName, &mapkey)
 			// The loop body will push its own frame
@@ -302,7 +302,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 		state.stack.PushStackFrame()
 		defer state.stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(*pe.Key)
+			mapkey := types.MlrvalFromString(pe.Key)
 
 			state.stack.BindVariable(this.keyVariableName, &mapkey)
 			state.stack.BindVariable(this.valueVariableName, pe.Value)
@@ -500,7 +500,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		mapval := mlrval.GetMap()
 
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(*pe.Key)
+			mapkey := types.MlrvalFromString(pe.Key)
 
 			state.stack.BindVariable(keyVariableNames[0], &mapkey)
 
@@ -581,7 +581,7 @@ func (this *ForLoopMultivariableNode) executeInner(
 		mapval := mlrval.GetMap()
 
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(*pe.Key)
+			mapkey := types.MlrvalFromString(pe.Key)
 
 			state.stack.BindVariable(keyVariableName, &mapkey)
 			state.stack.BindVariable(this.valueVariableName, pe.Value)

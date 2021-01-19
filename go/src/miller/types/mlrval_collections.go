@@ -201,10 +201,9 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 	}
 
 	if key.mvtype == MT_STRING {
-		this.mapval.PutCopy(&key.printrep, value)
+		this.mapval.PutCopy(key.printrep, value)
 	} else if key.mvtype == MT_INT {
-		s := key.String()
-		this.mapval.PutCopy(&s, value)
+		this.mapval.PutCopy(key.String(), value)
 	}
 	// TODO: need to be careful about semantics here.
 	// Silent no-ops are not good UX ...
@@ -306,7 +305,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		)
 	}
 
-	baseValue := baseMap.Get(&baseIndex.printrep)
+	baseValue := baseMap.Get(baseIndex.printrep)
 	if baseValue == nil {
 		// Create a new level in order to recurse from
 		nextIndex := indices[1]
@@ -316,8 +315,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		if err != nil {
 			return err
 		}
-		s := baseIndex.String()
-		baseMap.PutReference(&s, baseValue)
+		baseMap.PutReference(baseIndex.String(), baseValue)
 	}
 	return baseValue.PutIndexed(indices[1:], rvalue)
 }
@@ -425,8 +423,7 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	// If last index, then unset.
 	if numIndices == 1 {
 		if baseIndex.mvtype == MT_STRING || baseIndex.mvtype == MT_INT {
-			s := baseIndex.String()
-			baseMap.Remove(&s)
+			baseMap.Remove(baseIndex.String())
 			return nil
 		} else {
 			return errors.New(
@@ -439,8 +436,7 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	// If not last index, then recurse.
 	if baseIndex.mvtype == MT_STRING || baseIndex.mvtype == MT_INT {
 		// Base is map, index is string
-		s := baseIndex.String()
-		baseValue := baseMap.Get(&s)
+		baseValue := baseMap.Get(baseIndex.String())
 		if baseValue != nil {
 			return baseValue.UnsetIndexed(indices[1:])
 		}

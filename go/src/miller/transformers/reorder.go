@@ -147,7 +147,7 @@ func (this *TransformerReorder) reorderToStart(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
-			inrec.MoveToHead(&fieldName)
+			inrec.MoveToHead(fieldName)
 		}
 		outputChannel <- inrecAndContext
 
@@ -164,7 +164,7 @@ func (this *TransformerReorder) reorderToEnd(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
-			inrec.MoveToTail(&fieldName)
+			inrec.MoveToTail(fieldName)
 		}
 		outputChannel <- inrecAndContext
 	} else {

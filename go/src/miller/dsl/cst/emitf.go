@@ -144,7 +144,7 @@ func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error)
 		emitfValue := emitfEvaluable.Evaluate(state)
 
 		if !emitfValue.IsAbsent() {
-			newrec.PutCopy(&emitfName, &emitfValue)
+			newrec.PutCopy(emitfName, &emitfValue)
 		}
 	}
 

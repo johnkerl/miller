@@ -44,7 +44,7 @@ func (this *Mlrmap) Flatten(separator string) {
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		if pe.Value.IsArrayOrMap() {
-			pieces := pe.Value.FlattenToMap(*pe.Key, separator)
+			pieces := pe.Value.FlattenToMap(pe.Key, separator)
 			for pf := pieces.GetMap().Head; pf != nil; pf = pf.Next {
 				that.PutReference(pf.Key, pf.Value)
 			}
@@ -70,8 +70,8 @@ func (this *Mlrmap) FlattenFields(
 	that := NewMlrmapAsRecord()
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
-		if pe.Value.IsArrayOrMap() && fieldNameSet[*pe.Key] {
-			pieces := pe.Value.FlattenToMap(*pe.Key, separator)
+		if pe.Value.IsArrayOrMap() && fieldNameSet[pe.Key] {
+			pieces := pe.Value.FlattenToMap(pe.Key, separator)
 			for pf := pieces.GetMap().Head; pf != nil; pf = pf.Next {
 				that.PutReference(pf.Key, pf.Value)
 			}
@@ -101,8 +101,8 @@ func (this *Mlrmap) Unflatten(separator string) {
 	that := NewMlrmapAsRecord()
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
-		if strings.Contains(*pe.Key, separator) {
-			arrayOfIndices := mlrvalSplitAXHelper(*pe.Key, separator)
+		if strings.Contains(pe.Key, separator) {
+			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 			that.PutIndexed(
 				MakePointerArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
@@ -124,8 +124,8 @@ func (this *Mlrmap) UnflattenFields(
 	that := NewMlrmapAsRecord()
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
-		if strings.Contains(*pe.Key, separator) {
-			arrayOfIndices := mlrvalSplitAXHelper(*pe.Key, separator)
+		if strings.Contains(pe.Key, separator) {
+			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			baseIndex := arrayOfIndices.arrayval[0].String()
 			if fieldNameSet[baseIndex] {

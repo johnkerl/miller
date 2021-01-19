@@ -329,7 +329,7 @@ func NewTransformerPut(
 			key := pair[0]
 			svalue := pair[1]
 			mvalue := types.MlrvalFromInferredType(svalue)
-			cstState.Oosvars.PutCopy(&key, &mvalue)
+			cstState.Oosvars.PutCopy(key, &mvalue)
 		}
 	}
 

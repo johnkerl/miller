@@ -137,10 +137,10 @@ func (this *RecordReaderXTAB) recordFromXTABLines(
 		key := kv[0]
 		if len(kv) == 1 {
 			value := types.MlrvalFromVoid()
-			record.PutReference(&key, &value)
+			record.PutReference(key, &value)
 		} else {
 			value := types.MlrvalFromInferredType(kv[1])
-			record.PutReference(&key, &value)
+			record.PutReference(key, &value)
 		}
 	}
 

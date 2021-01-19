@@ -202,12 +202,12 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		// values would disappear entirely in a JSON-to-CSV conversion.
 		if this.mapval.FieldCount == 0 {
 			if prefix != "" {
-				retval.PutCopy(&prefix, MlrvalPointerFromString("{}"))
+				retval.PutCopy(prefix, MlrvalPointerFromString("{}"))
 			}
 		}
 
 		for pe := this.mapval.Head; pe != nil; pe = pe.Next {
-			nextPrefix := *pe.Key
+			nextPrefix := pe.Key
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
 			}
@@ -218,7 +218,7 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 					retval.PutCopy(pf.Key, pf.Value.Copy())
 				}
 			} else {
-				retval.PutCopy(&nextPrefix, pe.Value.Copy())
+				retval.PutCopy(nextPrefix, pe.Value.Copy())
 			}
 		}
 
@@ -227,7 +227,7 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		// values would disappear entirely in a JSON-to-CSV conversion.
 		if len(this.arrayval) == 0 {
 			if prefix != "" {
-				retval.PutCopy(&prefix, MlrvalPointerFromString("[]"))
+				retval.PutCopy(prefix, MlrvalPointerFromString("[]"))
 			}
 		}
 
@@ -243,12 +243,12 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 					retval.PutCopy(pf.Key, pf.Value.Copy())
 				}
 			} else {
-				retval.PutCopy(&nextPrefix, value.Copy())
+				retval.PutCopy(nextPrefix, value.Copy())
 			}
 		}
 
 	} else {
-		retval.PutCopy(&prefix, this.Copy())
+		retval.PutCopy(prefix, this.Copy())
 	}
 
 	return MlrvalFromMapReferenced(retval)

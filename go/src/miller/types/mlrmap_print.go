@@ -17,7 +17,7 @@ func (this *Mlrmap) Fprint(file *os.File) {
 func (this *Mlrmap) ToDKVPString() string {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := this.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(*pe.Key)
+		buffer.WriteString(pe.Key)
 		buffer.WriteString("=")
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {

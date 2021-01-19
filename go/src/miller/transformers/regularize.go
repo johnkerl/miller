@@ -104,7 +104,7 @@ func (this *TransformerRegularize) Transform(
 		} else {
 			outrec := types.NewMlrmapAsRecord()
 			for _, fieldName := range previousSortedFieldNames {
-				outrec.PutReference(&fieldName, inrec.Get(&fieldName)) // inrec will be GC'ed
+				outrec.PutReference(fieldName, inrec.Get(fieldName)) // inrec will be GC'ed
 			}
 			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			outputChannel <- outrecAndContext

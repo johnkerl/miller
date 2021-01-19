@@ -138,7 +138,7 @@ func (this *DirectFieldValueLvalueNode) UnsetIndexed(
 	if indices == nil {
 		lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
 		name := this.lhsFieldName.String()
-		state.Inrec.Remove(&name)
+		state.Inrec.Remove(name)
 	} else {
 		state.Inrec.UnsetIndexed(
 			append([]*types.Mlrval{this.lhsFieldName}, indices...),
@@ -218,7 +218,7 @@ func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
 	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 	if indices == nil {
 		name := lhsFieldName.String()
-		state.Inrec.Remove(&name)
+		state.Inrec.Remove(name)
 	} else {
 		state.Inrec.UnsetIndexed(
 			append([]*types.Mlrval{&lhsFieldName}, indices...),
@@ -537,7 +537,7 @@ func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
 ) {
 	if indices == nil {
 		name := this.lhsOosvarName.String()
-		state.Oosvars.Remove(&name)
+		state.Oosvars.Remove(name)
 	} else {
 		state.Oosvars.UnsetIndexed(
 			append([]*types.Mlrval{this.lhsOosvarName}, indices...),
@@ -619,7 +619,7 @@ func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
 
 	if indices == nil {
 		sname := name.String()
-		state.Oosvars.Remove(&sname)
+		state.Oosvars.Remove(sname)
 	} else {
 		state.Oosvars.UnsetIndexed(
 			append([]*types.Mlrval{&name}, indices...),

@@ -173,7 +173,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				if !this.allowRaggedCSVInput {
 					for i, field := range fields {
 						value := types.MlrvalFromInferredType(field)
-						record.PutCopy(&headerStrings[i], &value)
+						record.PutCopy(headerStrings[i], &value)
 					}
 				} else {
 					nh := len(headerStrings)
@@ -182,20 +182,20 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 					var i int
 					for i = 0; i < n; i++ {
 						value := types.MlrvalFromInferredType(fields[i])
-						record.PutCopy(&headerStrings[i], &value)
+						record.PutCopy(headerStrings[i], &value)
 					}
 					if nh < nd {
 						// if header shorter than data: use 1-up itoa keys
 						for i = nh; i < nd; i++ {
 							key := strconv.Itoa(i + 1)
 							value := types.MlrvalFromInferredType(fields[i])
-							record.PutCopy(&key, &value)
+							record.PutCopy(key, &value)
 						}
 					}
 					if nh > nd {
 						// if header longer than data: use "" values
 						for i = nd; i < nh; i++ {
-							record.PutCopy(&headerStrings[i], &this.emptyStringMlrval)
+							record.PutCopy(headerStrings[i], &this.emptyStringMlrval)
 						}
 					}
 				}
@@ -268,7 +268,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			if !this.allowRaggedCSVInput {
 				for i, field := range fields {
 					value := types.MlrvalFromInferredType(field)
-					record.PutCopy(&headerStrings[i], &value)
+					record.PutCopy(headerStrings[i], &value)
 				}
 			} else {
 				nh := len(headerStrings)
@@ -277,18 +277,18 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				var i int
 				for i = 0; i < n; i++ {
 					value := types.MlrvalFromInferredType(fields[i])
-					record.PutCopy(&headerStrings[i], &value)
+					record.PutCopy(headerStrings[i], &value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
 					value := types.MlrvalFromInferredType(fields[i])
-					record.PutCopy(&key, &value)
+					record.PutCopy(key, &value)
 				}
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(&headerStrings[i], &this.emptyStringMlrval)
+						record.PutCopy(headerStrings[i], &this.emptyStringMlrval)
 					}
 				}
 			}

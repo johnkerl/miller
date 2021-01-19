@@ -256,12 +256,12 @@ func (this *EmitXStatementNode) executeNonIndexed(
 		}
 
 		if this.isEmitP {
-			newrec.PutCopy(&this.names[i], &emittable)
+			newrec.PutCopy(this.names[i], &emittable)
 		} else {
 			if emittable.IsMap() {
 				newrec.Merge(emittable.GetMap())
 			} else {
-				newrec.PutCopy(&this.names[i], &emittable)
+				newrec.PutCopy(this.names[i], &emittable)
 			}
 		}
 	}
@@ -326,15 +326,15 @@ func (this *EmitXStatementNode) executeIndexedAux(
 	for pe := emittableMaps[0].Head; pe != nil; pe = pe.Next {
 		newrec := templateRecord.Copy()
 
-		indexValue := types.MlrvalFromString(*pe.Key)
-		newrec.PutCopy(&indexString, &indexValue)
+		indexValue := types.MlrvalFromString(pe.Key)
+		newrec.PutCopy(indexString, &indexValue)
 		indexValueString := indexValue.String()
 
 		nextLevels := make([]*types.Mlrval, len(emittableMaps))
 		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
 		for i, emittableMap := range emittableMaps {
 			if emittableMap != nil {
-				nextLevel := emittableMap.Get(&indexValueString)
+				nextLevel := emittableMap.Get(indexValueString)
 				nextLevels[i] = nextLevel
 				// Can be nil for lashed indexing with heterogeneous data: e.g.
 				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
@@ -362,7 +362,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 			if this.isEmitP {
 				for i, nextLevel := range nextLevels {
 					if nextLevel != nil {
-						newrec.PutCopy(&mapNames[i], nextLevel)
+						newrec.PutCopy(mapNames[i], nextLevel)
 					}
 				}
 			} else {
@@ -371,7 +371,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 						if nextLevel.IsMap() {
 							newrec.Merge(nextLevelMaps[i])
 						} else {
-							newrec.PutCopy(&mapNames[i], nextLevel)
+							newrec.PutCopy(mapNames[i], nextLevel)
 						}
 					}
 				}

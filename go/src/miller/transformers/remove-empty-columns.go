@@ -96,7 +96,7 @@ func (this *TransformerRemoveEmptyColumns) Transform(
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !pe.Value.IsEmpty() {
-				this.namesWithNonEmptyValues[*pe.Key] = true
+				this.namesWithNonEmptyValues[pe.Key] = true
 			}
 		}
 
@@ -109,7 +109,7 @@ func (this *TransformerRemoveEmptyColumns) Transform(
 			newrec := types.NewMlrmapAsRecord()
 
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				_, ok := this.namesWithNonEmptyValues[*pe.Key]
+				_, ok := this.namesWithNonEmptyValues[pe.Key]
 				if ok {
 					// Transferring ownership from old record to new record; no copy needed
 					newrec.PutReference(pe.Key, pe.Value)

@@ -123,9 +123,9 @@ func (this *TransformerRename) Transform(
 		inrec := inrecAndContext.Record
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.oldToNewNames.Has(*pe.Key) {
-				newName := this.oldToNewNames.Get(*pe.Key).(string)
-				inrec.Rename(pe.Key, &newName)
+			if this.oldToNewNames.Has(pe.Key) {
+				newName := this.oldToNewNames.Get(pe.Key).(string)
+				inrec.Rename(pe.Key, newName)
 			}
 
 		}

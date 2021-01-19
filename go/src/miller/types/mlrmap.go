@@ -66,7 +66,7 @@ type Mlrmap struct {
 }
 
 type mlrmapEntry struct {
-	Key   *string
+	Key   string
 	Value *Mlrval
 	Prev  *mlrmapEntry
 	Next  *mlrmapEntry
@@ -116,10 +116,9 @@ func (this *Mlrmap) isHashed() bool {
 // ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public Mlrmap API.
-func newMlrmapEntry(key *string, value *Mlrval) *mlrmapEntry {
-	kcopy := *key
+func newMlrmapEntry(key string, value *Mlrval) *mlrmapEntry {
 	return &mlrmapEntry{
-		&kcopy,
+		key,
 		value,
 		nil,
 		nil,

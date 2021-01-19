@@ -8,14 +8,14 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Has(key *string) bool {
+func (this *Mlrmap) Has(key string) bool {
 	return this.findEntry(key) != nil
 }
 
 // ----------------------------------------------------------------
 // Copies the key and value (deep-copying in case the value is array/map).
 // This is safe for DSL use. See also PutReference.
-func (this *Mlrmap) PutCopy(key *string, value *Mlrval) {
+func (this *Mlrmap) PutCopy(key string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value.Copy())
@@ -29,7 +29,7 @@ func (this *Mlrmap) PutCopy(key *string, value *Mlrval) {
 			this.Tail = pe
 		}
 		if this.keysToEntries != nil {
-			this.keysToEntries[*key] = pe
+			this.keysToEntries[key] = pe
 		}
 		this.FieldCount++
 	} else {
@@ -41,7 +41,7 @@ func (this *Mlrmap) PutCopy(key *string, value *Mlrval) {
 // could create undesired references between different objects.  Only intended
 // to be used at callsites which allocate a mlrval solely for the purpose of
 // putting into a map, e.g. input-record readers.
-func (this *Mlrmap) PutReference(key *string, value *Mlrval) {
+func (this *Mlrmap) PutReference(key string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -55,7 +55,7 @@ func (this *Mlrmap) PutReference(key *string, value *Mlrval) {
 			this.Tail = pe
 		}
 		if this.keysToEntries != nil {
-			this.keysToEntries[*key] = pe
+			this.keysToEntries[key] = pe
 		}
 		this.FieldCount++
 	} else {
@@ -65,11 +65,10 @@ func (this *Mlrmap) PutReference(key *string, value *Mlrval) {
 
 func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 	if key.mvtype == MT_STRING {
-		this.PutCopy(&key.printrep, value)
+		this.PutCopy(key.printrep, value)
 		return nil
 	} else if key.mvtype == MT_INT {
-		s := key.String()
-		this.PutCopy(&s, value)
+		this.PutCopy(key.String(), value)
 		return nil
 	} else {
 		return errors.New(
@@ -79,7 +78,7 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) PrependCopy(key *string, value *Mlrval) {
+func (this *Mlrmap) PrependCopy(key string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -93,7 +92,7 @@ func (this *Mlrmap) PrependCopy(key *string, value *Mlrval) {
 			this.Head = pe
 		}
 		if this.keysToEntries != nil {
-			this.keysToEntries[*key] = pe
+			this.keysToEntries[key] = pe
 		}
 		this.FieldCount++
 	} else {
@@ -110,7 +109,7 @@ func (this *Mlrmap) Merge(that *Mlrmap) {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Get(key *string) *Mlrval {
+func (this *Mlrmap) Get(key string) *Mlrval {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return nil
@@ -125,7 +124,7 @@ func (this *Mlrmap) GetKeys() []string {
 	keys := make([]string, this.FieldCount)
 	i := 0
 	for pe := this.Head; pe != nil; pe = pe.Next {
-		keys[i] = *pe.Key
+		keys[i] = pe.Key
 		i++
 	}
 	return keys
@@ -188,10 +187,9 @@ func (this *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 
 func (this *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 	if index.mvtype == MT_STRING {
-		return this.Get(&index.printrep), nil
+		return this.Get(index.printrep), nil
 	} else if index.mvtype == MT_INT {
-		s := index.String()
-		return this.Get(&s), nil
+		return this.Get(index.String()), nil
 	} else {
 		return nil, errors.New(
 			"Record/map indices must be string or int; got " + index.GetTypeName(),
@@ -209,12 +207,12 @@ func (this *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
 
-func (this *Mlrmap) GetNameAtPositionalIndex(position int64) *string {
+func (this *Mlrmap) GetNameAtPositionalIndex(position int64) (string, bool) {
 	mapEntry := this.findEntryByPositionalIndex(position)
 	if mapEntry == nil {
-		return nil
+		return "", false
 	}
-	return mapEntry.Key
+	return mapEntry.Key, true
 }
 
 // ----------------------------------------------------------------
@@ -240,13 +238,13 @@ func (this *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
 
 	// E.g. there are fields named 'a' and 'b', as positions 1 and 2,
 	// and the user does '$[[1]] = $[[2]]'. Then there would be two b's.
-	mapEntry := this.findEntry(&s)
+	mapEntry := this.findEntry(s)
 	if mapEntry != nil && mapEntry != positionalEntry {
 		this.unlink(mapEntry)
 	}
 
 	lib.InternalCodingErrorIf(s == "")
-	positionalEntry.Key = &s
+	positionalEntry.Key = s
 }
 
 // ----------------------------------------------------------------
@@ -324,7 +322,7 @@ func (this *Mlrmap) Copy() *Mlrmap {
 
 // ----------------------------------------------------------------
 // Returns true if it was found and removed
-func (this *Mlrmap) Remove(key *string) bool {
+func (this *Mlrmap) Remove(key string) bool {
 	pe := this.findEntry(key)
 	if pe == nil {
 		return false
@@ -335,7 +333,7 @@ func (this *Mlrmap) Remove(key *string) bool {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) MoveToHead(key *string) {
+func (this *Mlrmap) MoveToHead(key string) {
 	pe := this.findEntry(key)
 	if pe != nil {
 		this.unlink(pe)
@@ -344,7 +342,7 @@ func (this *Mlrmap) MoveToHead(key *string) {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) MoveToTail(key *string) {
+func (this *Mlrmap) MoveToTail(key string) {
 	pe := this.findEntry(key)
 	if pe != nil {
 		this.unlink(pe)
@@ -377,7 +375,7 @@ func (this *Mlrmap) GetKeysJoined() string {
 			buffer.WriteString(",")
 		}
 		i++
-		buffer.WriteString(*pe.Key)
+		buffer.WriteString(pe.Key)
 	}
 	return buffer.String()
 }
@@ -402,7 +400,7 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 
 	var buffer bytes.Buffer
 	for i, selectedFieldName := range selectedFieldNames {
-		entry := this.findEntry(&selectedFieldName)
+		entry := this.findEntry(selectedFieldName)
 		if entry == nil {
 			return "", false
 		}
@@ -434,7 +432,7 @@ func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 
 	var buffer bytes.Buffer
 	for i, selectedFieldName := range selectedFieldNames {
-		entry := this.findEntry(&selectedFieldName)
+		entry := this.findEntry(selectedFieldName)
 		if entry == nil {
 			return "", mlrvals, false
 		}
@@ -456,7 +454,7 @@ func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*Mlr
 	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 
 	for _, selectedFieldName := range selectedFieldNames {
-		entry := this.findEntry(&selectedFieldName)
+		entry := this.findEntry(selectedFieldName)
 		if entry != nil {
 			mlrvals = append(mlrvals, entry.Value)
 		} else {
@@ -473,7 +471,7 @@ func (this *Mlrmap) GetSelectedValues(selectedFieldNames []string) ([]*Mlrval, b
 	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 
 	for _, selectedFieldName := range selectedFieldNames {
-		entry := this.findEntry(&selectedFieldName)
+		entry := this.findEntry(selectedFieldName)
 		if entry != nil {
 			mlrvals = append(mlrvals, entry.Value.Copy())
 		} else {
@@ -487,7 +485,7 @@ func (this *Mlrmap) GetSelectedValues(selectedFieldNames []string) ([]*Mlrval, b
 // Similar to the above but only checks availability. For join.
 func (this *Mlrmap) HasSelectedKeys(selectedFieldNames []string) bool {
 	for _, selectedFieldName := range selectedFieldNames {
-		entry := this.findEntry(&selectedFieldName)
+		entry := this.findEntry(selectedFieldName)
 		if entry == nil {
 			return false
 		}
@@ -496,7 +494,7 @@ func (this *Mlrmap) HasSelectedKeys(selectedFieldNames []string) bool {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
+func (this *Mlrmap) Rename(oldKey string, newKey string) bool {
 	entry := this.findEntry(oldKey)
 	if entry == nil {
 		// Rename field from 'a' to 'b' where there is no 'a': no-op
@@ -506,18 +504,17 @@ func (this *Mlrmap) Rename(oldKey *string, newKey *string) bool {
 	existing := this.findEntry(newKey)
 	if existing == nil {
 		// Rename field from 'a' to 'b' where there is no 'b': simple update
-		copy := *newKey
-		entry.Key = &copy
+		entry.Key = newKey
 
 		if this.keysToEntries != nil {
-			delete(this.keysToEntries, *oldKey)
-			this.keysToEntries[*newKey] = entry
+			delete(this.keysToEntries, oldKey)
+			this.keysToEntries[newKey] = entry
 		}
 	} else {
 		// Rename field from 'a' to 'b' where there are both 'a' and 'b':
 		// remove old 'a' and put its value into the slot of 'b'.
 		existing.Value = entry.Value
-		delete(this.keysToEntries, *oldKey)
+		delete(this.keysToEntries, oldKey)
 		this.unlink(entry)
 	}
 
@@ -539,7 +536,7 @@ func (this *Mlrmap) Label(newNames []string) {
 			break
 		}
 		// Old record will be GC'ed: just move pointers
-		that.PutReference(&newNames[i], pe.Value)
+		that.PutReference(newNames[i], pe.Value)
 		i++
 	}
 
@@ -564,7 +561,7 @@ func (this *Mlrmap) SortByKey() {
 
 	for _, key := range keys {
 		// Old record will be GC'ed: just move pointers
-		that.PutReference(&key, this.Get(&key))
+		that.PutReference(key, this.Get(key))
 	}
 
 	*this = *that
@@ -574,12 +571,12 @@ func (this *Mlrmap) SortByKey() {
 // PRIVATE METHODS
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) findEntry(key *string) *mlrmapEntry {
+func (this *Mlrmap) findEntry(key string) *mlrmapEntry {
 	if this.keysToEntries != nil {
-		return this.keysToEntries[*key]
+		return this.keysToEntries[key]
 	} else {
 		for pe := this.Head; pe != nil; pe = pe.Next {
-			if *pe.Key == *key {
+			if pe.Key == key {
 				return pe
 			}
 		}
@@ -643,7 +640,7 @@ func (this *Mlrmap) unlink(pe *mlrmapEntry) {
 		}
 	}
 	if this.keysToEntries != nil {
-		delete(this.keysToEntries, *pe.Key)
+		delete(this.keysToEntries, pe.Key)
 	}
 	this.FieldCount--
 }

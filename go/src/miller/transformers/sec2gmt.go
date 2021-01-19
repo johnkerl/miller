@@ -144,12 +144,12 @@ func (this *TransformerSec2GMT) Transform(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for _, fieldName := range this.fieldNameList {
-			value := inrec.Get(&fieldName)
+			value := inrec.Get(fieldName)
 			if value != nil {
 				floatval, ok := value.GetNumericToFloatValue()
 				if ok {
 					newValue := types.MlrvalFromString(lib.Sec2GMT(floatval, this.numDecimalPlaces))
-					inrec.PutReference(&fieldName, &newValue)
+					inrec.PutReference(fieldName, &newValue)
 				}
 			}
 		}

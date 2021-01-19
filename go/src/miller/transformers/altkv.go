@@ -95,12 +95,12 @@ func (this *TransformerAltkv) Transform(
 				key := pe.Value.String()
 				value := pe.Next.Value
 				// Transferring ownership from old record to new record; no copy needed
-				newrec.PutReference(&key, value)
+				newrec.PutReference(key, value)
 			} else { // At end of record with odd-numbered field count
 				key := strconv.Itoa(outputFieldNumber)
 				value := pe.Value
 				// Transferring ownership from old record to new record; no copy needed
-				newrec.PutReference(&key, value)
+				newrec.PutReference(key, value)
 			}
 			outputFieldNumber++
 

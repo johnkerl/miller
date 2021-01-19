@@ -201,7 +201,7 @@ func (this *TransformerSeqgen) Transform(
 		}
 
 		outrec := types.NewMlrmapAsRecord()
-		outrec.PutCopy(&this.fieldName, &counter)
+		outrec.PutCopy(this.fieldName, &counter)
 
 		context.UpdateForInputRecord()
 

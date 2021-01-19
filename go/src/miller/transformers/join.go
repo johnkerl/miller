@@ -544,27 +544,27 @@ func (this *TransformerJoin) formAndEmitPairs(
 			// These arrays are already guaranteed same-length by CLI parser
 			leftJoinFieldName := this.opts.leftJoinFieldNames[i]
 			outputJoinFieldName := this.opts.outputJoinFieldNames[i]
-			value := leftrec.Get(&leftJoinFieldName)
+			value := leftrec.Get(leftJoinFieldName)
 			if value != nil {
-				outrec.PutCopy(&outputJoinFieldName, value)
+				outrec.PutCopy(outputJoinFieldName, value)
 			}
 		}
 
 		// Add the left-record fields not already added
 		for pl := leftrec.Head; pl != nil; pl = pl.Next {
-			_, ok := this.leftFieldNameSet[*pl.Key]
+			_, ok := this.leftFieldNameSet[pl.Key]
 			if !ok {
-				key := this.opts.leftPrefix + *pl.Key
-				outrec.PutCopy(&key, pl.Value)
+				key := this.opts.leftPrefix + pl.Key
+				outrec.PutCopy(key, pl.Value)
 			}
 		}
 
 		// Add the right-record fields not already added
 		for pr := rightrec.Head; pr != nil; pr = pr.Next {
-			_, ok := this.rightFieldNameSet[*pr.Key]
+			_, ok := this.rightFieldNameSet[pr.Key]
 			if !ok {
-				key := this.opts.rightPrefix + *pr.Key
-				outrec.PutCopy(&key, pr.Value)
+				key := this.opts.rightPrefix + pr.Key
+				outrec.PutCopy(key, pr.Value)
 			}
 		}
 		////fmt.Println("-- pairs outrec") // VERBOSE

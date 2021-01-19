@@ -98,11 +98,11 @@ func recordFromDKVPLine(
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
 			value := types.MlrvalFromInferredType(kv[0])
-			record.PutReference(&key, &value)
+			record.PutReference(key, &value)
 		} else {
 			key := kv[0]
 			value := types.MlrvalFromInferredType(kv[1])
-			record.PutReference(&key, &value)
+			record.PutReference(key, &value)
 		}
 	}
 	return record

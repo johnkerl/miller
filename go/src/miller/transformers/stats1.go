@@ -312,7 +312,7 @@ func (this *TransformerStats1) handleInputRecord(
 		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
 	}
 	for _, valueFieldName := range this.valueFieldNameList {
-		valueFieldValue := inrec.Get(&valueFieldName)
+		valueFieldValue := inrec.Get(valueFieldName)
 		if valueFieldValue == nil {
 			continue
 		}
@@ -386,7 +386,7 @@ func (this *TransformerStats1) emitIntoOutputRecord(
 	outrec *types.Mlrmap,
 ) {
 	for i, groupByFieldName := range this.groupByFieldNameList {
-		outrec.PutCopy(&groupByFieldName, groupByFieldValues[i])
+		outrec.PutCopy(groupByFieldName, groupByFieldValues[i])
 	}
 
 	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {
@@ -394,7 +394,7 @@ func (this *TransformerStats1) emitIntoOutputRecord(
 		for pc := level3.Head; pc != nil; pc = pc.Next {
 			namedAccumulator := pc.Value.(*Stats1NamedAccumulator)
 			key, value := namedAccumulator.Emit()
-			outrec.PutCopy(&key, &value)
+			outrec.PutCopy(key, &value)
 		}
 	}
 }
