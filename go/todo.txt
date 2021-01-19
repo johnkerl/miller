@@ -3,9 +3,12 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix all typemasks; 'int x = 1; x = "abc"'
+
 * merge-fields
 * in-place processing
 * prepipe
+! strptime/strftime experiments ...
+! regex ...
 
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
@@ -15,6 +18,23 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
+! all <-> @*
+  $cases/case-c-dsl-redirects.sh
+
+* validator enforce unique names in for-loops
+
+! check more
+  ./reg-test/cases/case-c-dsl-absent-empty.sh
+  ./reg-test/cases/case-c-dsl-break-continue.sh
+  ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
+  ./reg-test/cases/case-c-dsl-functional-tests.sh
+  ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
+  ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
+  ./reg-test/cases/case-c-dsl-mapvar-emit.sh
+  ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
+  ./reg-test/cases/case-c-dsl-oosvars.sh
+  ./reg-test/cases/case-c-dsl-type-predicates.sh
+
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):
     x MD_TOKEN_ALL
@@ -34,11 +54,9 @@ emitp/emitf:
 ! fix var/any type-mask
   o C/Go UT
 
-! sg/mktags more explicit comment.
+* sg/mktags more explicit comment.
 
 ! verb skeletons
-! strptime/strftime experiments ...
-* regex ...
 ? doc shift/unshift as using [2:] and append
 
 ! se-q reads

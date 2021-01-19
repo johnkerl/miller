@@ -349,7 +349,9 @@ RAW AST:
                     * direct oosvar value "sum"
                     * direct oosvar value "count"
             * emitf statement "emitf"
-                * direct oosvar value "mean"
+                * emittable list
+                    * direct oosvar value "mean"
+                * no-op
 
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
@@ -379,7 +381,9 @@ RAW AST:
                     * direct oosvar value "sum"
                     * direct oosvar value "count"
             * emitf statement "emitf"
-                * direct oosvar value "mean"
+                * emittable list
+                    * direct oosvar value "mean"
+                * no-op
     * begin block
         * statement block
             * assignment "="
@@ -415,7 +419,43 @@ mean
 0.45362938403357633
 
 mlr put -v begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6} /dev/null
-Exit status was 1; expected 0.
+DSL EXPRESSION:
+begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}
+RAW AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "a"
+                * array or map index access "[]"
+                    * direct oosvar value "b"
+                    * int literal "1"
+    * assignment "="
+        * direct field value "c"
+        * direct oosvar value "d"
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * direct oosvar value "e"
+                    * direct field value "i"
+                * operator "+"
+                    * int literal "2"
+                    * direct field value "j"
+            * int literal "3"
+        * direct field value "4"
+    * end block
+        * statement block
+            * assignment "="
+                * array or map index access "[]"
+                    * direct oosvar value "f"
+                    * array or map index access "[]"
+                        * array or map index access "[]"
+                            * direct oosvar value "g"
+                            * int literal "5"
+                        * direct oosvar value "h"
+                * int literal "6"
+
 
 mlr put @y[$a]=$y; end{dump} ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -439,7 +479,11 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 }
 
 mlr stats1 -a sum -f y -g a ./reg-test/input/abixy
-Exit status was 1; expected 0.
+a=pan,y_sum=1.6794212230404397
+a=eks,y_sum=0.8442247707359537
+a=wye,y_sum=1.2019429954199206
+a=zee,y_sum=1.469402672447363
+a=hat,y_sum=0.7495507603507059
 
 mlr put @y_sum[$a] = $y; end{dump} ./reg-test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -855,36 +899,37 @@ aaa=999
 mlr --from ./reg-test/input/abixy put x = 1; print "OX=".x; unset x; print "NX=".x
 OX=1
 NX=
-OX=1
-NX=
-OX=1
-NX=
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+OX=1
+NX=
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+OX=1
+NX=
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 OX=1
 NX=
-OX=1
-NX=
-OX=1
-NX=
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+OX=1
+NX=
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+OX=1
+NX=
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 OX=1
 NX=
-OX=1
-NX=
-OX=1
-NX=
 a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+OX=1
+NX=
 a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+OX=1
+NX=
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 OX=1
 NX=
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg-test/input/abixy
+Exit status was 1; expected 0.
 
 mlr put -q @{variable.name}[$a] += $x; end{emit @{variable.name},"a"} ./reg-test/input/abixy
 Exit status was 1; expected 0.
@@ -912,5 +957,41 @@ mlr --opprint --from ./reg-test/input/abixy put -q
     emitp @output, "NR", "k"
   }
 
-Exit status was 1; expected 0.
+NR k output
+1  a pan
+1  b pan
+1  x 0.3467901443380824
+1  y 0.7268028627434533
+2  a eks
+2  b pan
+2  x 0.7586799647899636
+2  y 0.5221511083334797
+3  a wye
+3  b wye
+3  x 0.20460330576630303
+3  y 0.33831852551664776
+5  a wye
+5  b pan
+5  x 0.5732889198020006
+5  y 0.8636244699032729
+6  a zee
+6  b pan
+6  x 0.5271261600918548
+6  y 0.49322128674835697
+7  a eks
+7  b zee
+7  x 0.6117840605678454
+7  y 0.1878849191181694
+8  a zee
+8  b wye
+8  x 0.5985540091064224
+8  y 0.976181385699006
+9  a hat
+9  b wye
+9  x 0.03144187646093577
+9  y 0.7495507603507059
+10 a pan
+10 b wye
+10 x 0.5026260055412137
+10 y 0.9526183602969864
 

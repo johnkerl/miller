@@ -10,131 +10,88 @@ mlr --opprint -n put -v
     emit @n, "a", "b", "c", "d"
   }
 
+DSL EXPRESSION:
+
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
+  @o[1][2][$a][$i*100] = $x;
+  for((k1,k2),v in @o[1][2]) {
+    @n[3][4][k2][k1] = v;
+  }
+  end {
+    emit @n, "a", "b", "c", "d"
+  }
+
 RAW AST:
-
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="text1", type=STRING_LITERAL.
-            text="NR", type=CONTEXT_VARIABLE.
-        text="a", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="text2", type=STRING_LITERAL.
-            text="NR", type=CONTEXT_VARIABLE.
-        text="b", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="a", type=FIELD_NAME.
-            text="*", type=OPERATOR:
-                text="i", type=FIELD_NAME.
-                text="100", type=NUMERIC_LITERAL.
-        text="x", type=FIELD_NAME.
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="k1", type=UNTYPED_LOCAL_DEFINITION.
-                text="k2", type=UNTYPED_LOCAL_DEFINITION.
-            text="v", type=UNTYPED_LOCAL_DEFINITION.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="n", type=STRING_LITERAL.
-                    text="3", type=NUMERIC_LITERAL.
-                    text="4", type=NUMERIC_LITERAL.
-                    text="k2", type=NONINDEXED_LOCAL_VARIABLE.
-                    text="k1", type=NONINDEXED_LOCAL_VARIABLE.
-                text="v", type=NONINDEXED_LOCAL_VARIABLE.
-    text="end", type=END:
-        text="end_block", type=STATEMENT_BLOCK:
-            text="emit", type=EMIT:
-                text="emit", type=EMIT:
-                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                        text="n", type=STRING_LITERAL.
-                    text="emit_namelist", type=EMIT:
-                        text="a", type=STRING_LITERAL.
-                        text="b", type=STRING_LITERAL.
-                        text="c", type=STRING_LITERAL.
-                        text="d", type=STRING_LITERAL.
-                text="stream", type=STREAM:
-
-BLOCKED AST:
-
-END-BLOCK:
-text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="end_block", type=STATEMENT_BLOCK:
-        text="emit", type=EMIT:
-            text="emit", type=EMIT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="n", type=STRING_LITERAL.
-                text="emit_namelist", type=EMIT:
-                    text="a", type=STRING_LITERAL.
-                    text="b", type=STRING_LITERAL.
-                    text="c", type=STRING_LITERAL.
-                    text="d", type=STRING_LITERAL.
-            text="stream", type=STREAM:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=2 max_var_depth=4
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="text1", type=STRING_LITERAL.
-            text="NR", type=CONTEXT_VARIABLE.
-        text="a", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="text2", type=STRING_LITERAL.
-            text="NR", type=CONTEXT_VARIABLE.
-        text="b", type=FIELD_NAME.
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-            text="a", type=FIELD_NAME.
-            text="*", type=OPERATOR:
-                text="i", type=FIELD_NAME.
-                text="100", type=NUMERIC_LITERAL.
-        text="x", type=FIELD_NAME.
-    text="for", type=FOR_OOSVAR: subframe_var_count=3
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="k1", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="k2", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-            text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="o", type=STRING_LITERAL.
-            text="1", type=NUMERIC_LITERAL.
-            text="2", type=NUMERIC_LITERAL.
-        text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
-            text="=", type=OOSVAR_ASSIGNMENT:
-                text="oosvar_keylist", type=OOSVAR_KEYLIST:
-                    text="n", type=STRING_LITERAL.
-                    text="3", type=NUMERIC_LITERAL.
-                    text="4", type=NUMERIC_LITERAL.
-                    text="k2", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                    text="k1", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="v", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+* statement block
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * direct oosvar value "o"
+                        * int literal "1"
+                    * int literal "1"
+                * string literal "text1"
+            * context variable "NR"
+        * direct field value "a"
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * direct oosvar value "o"
+                        * int literal "1"
+                    * int literal "2"
+                * string literal "text2"
+            * context variable "NR"
+        * direct field value "b"
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * direct oosvar value "o"
+                        * int literal "1"
+                    * int literal "2"
+                * direct field value "a"
+            * operator "*"
+                * direct field value "i"
+                * int literal "100"
+        * direct field value "x"
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "k1"
+            * local variable "k2"
+        * local variable "v"
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * direct oosvar value "o"
+                * int literal "1"
+            * int literal "2"
+        * statement block
+            * assignment "="
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * array or map index access "[]"
+                            * array or map index access "[]"
+                                * direct oosvar value "n"
+                                * int literal "3"
+                            * int literal "4"
+                        * local variable "k2"
+                    * local variable "k1"
+                * local variable "v"
+    * end block
+        * statement block
+            * emit statement "emit"
+                * emittable list
+                    * direct oosvar value "n"
+                * emit keys
+                    * string literal "a"
+                    * string literal "b"
+                    * string literal "c"
+                    * string literal "d"
+                * no-op
 
 
 mlr --opprint --from ./reg-test/input/abixy put -q 
@@ -150,25 +107,25 @@ mlr --opprint --from ./reg-test/input/abixy put -q
 
 a b c    d     n
 3 4 1    text2 pan
-3 4 100  pan   0.346790
+3 4 100  pan   0.3467901443380824
 3 4 2    text2 pan
-3 4 200  eks   0.758680
+3 4 200  eks   0.7586799647899636
 3 4 3    text2 wye
-3 4 300  wye   0.204603
+3 4 300  wye   0.20460330576630303
 3 4 4    text2 wye
-3 4 400  eks   0.381399
+3 4 400  eks   0.38139939387114097
 3 4 5    text2 pan
-3 4 500  wye   0.573289
+3 4 500  wye   0.5732889198020006
 3 4 6    text2 pan
-3 4 600  zee   0.527126
+3 4 600  zee   0.5271261600918548
 3 4 7    text2 zee
-3 4 700  eks   0.611784
+3 4 700  eks   0.6117840605678454
 3 4 8    text2 wye
-3 4 800  zee   0.598554
+3 4 800  zee   0.5985540091064224
 3 4 9    text2 wye
-3 4 900  hat   0.031442
+3 4 900  hat   0.03144187646093577
 3 4 10   text2 wye
-3 4 1000 pan   0.502626
+3 4 1000 pan   0.5026260055412137
 
 mlr --opprint --from ./reg-test/input/abixy put -q 
   @sum[$a][$b] += $x;
@@ -183,16 +140,16 @@ mlr --opprint --from ./reg-test/input/abixy put -q
   }
 
 a   b   sum
-pan pan 0.346790
-pan wye 0.502626
-eks pan 0.758680
-eks wye 0.381399
-eks zee 0.611784
-wye wye 0.204603
-wye pan 0.573289
-zee pan 0.527126
-zee wye 0.598554
-hat wye 0.031442
+pan pan 0.3467901443380824
+pan wye 0.5026260055412137
+eks pan 0.7586799647899636
+eks wye 0.38139939387114097
+eks zee 0.6117840605678454
+wye wye 0.20460330576630303
+wye pan 0.5732889198020006
+zee pan 0.5271261600918548
+zee wye 0.5985540091064224
+hat wye 0.03144187646093577
 
 a   b   count
 pan pan 1
@@ -207,16 +164,16 @@ zee wye 1
 hat wye 1
 
 a   b   mean
-pan pan 0.346790
-pan wye 0.502626
-eks pan 0.758680
-eks wye 0.381399
-eks zee 0.611784
-wye wye 0.204603
-wye pan 0.573289
-zee pan 0.527126
-zee wye 0.598554
-hat wye 0.031442
+pan pan 0.3467901443380824
+pan wye 0.5026260055412137
+eks pan 0.7586799647899636
+eks wye 0.38139939387114097
+eks zee 0.6117840605678454
+wye wye 0.20460330576630303
+wye pan 0.5732889198020006
+zee pan 0.5271261600918548
+zee wye 0.5985540091064224
+hat wye 0.03144187646093577
 
 mlr --opprint --from ./reg-test/input/abixy-wide put -q 
   @value["sum"][$a][$b] += $x;
@@ -229,31 +186,31 @@ mlr --opprint --from ./reg-test/input/abixy-wide put -q
   }
 
 stat  a   b   value
-sum   cat pan 42.327158
-sum   cat hat 43.184410
-sum   cat dog 39.241473
-sum   cat wye 45.196775
-sum   cat cat 37.894148
-sum   pan wye 40.135300
-sum   pan pan 36.226334
-sum   pan hat 35.115869
-sum   pan dog 37.817560
-sum   pan cat 42.235677
-sum   wye cat 40.805723
-sum   wye hat 41.166697
-sum   wye dog 40.619547
-sum   wye wye 32.490973
-sum   wye pan 33.027196
-sum   dog hat 43.515162
-sum   dog pan 45.614011
-sum   dog dog 43.545956
-sum   dog wye 37.223795
-sum   dog cat 45.642595
-sum   hat hat 48.058897
-sum   hat wye 34.054270
-sum   hat pan 42.538758
-sum   hat cat 44.325655
-sum   hat dog 37.114244
+sum   cat pan 42.327158262573356
+sum   cat hat 43.18440957220826
+sum   cat dog 39.2414728534826
+sum   cat wye 45.19677452417291
+sum   cat cat 37.89414847588904
+sum   pan wye 40.135299712550946
+sum   pan pan 36.2263342663248
+sum   pan hat 35.115869257879424
+sum   pan dog 37.81756018831723
+sum   pan cat 42.23567663351311
+sum   wye cat 40.80572298410698
+sum   wye hat 41.16669669994168
+sum   wye dog 40.61954681601182
+sum   wye wye 32.49097273832244
+sum   wye pan 33.027195515326675
+sum   dog hat 43.515162210434674
+sum   dog pan 45.61401108323896
+sum   dog dog 43.545955695964984
+sum   dog wye 37.223794671791296
+sum   dog cat 45.64259509789859
+sum   hat hat 48.05889741913474
+sum   hat wye 34.05426961857805
+sum   hat pan 42.53875750027864
+sum   hat cat 44.325654701613004
+sum   hat dog 37.11424443327952
 count cat pan 89
 count cat hat 90
 count cat dog 78
@@ -279,198 +236,198 @@ count hat wye 70
 count hat pan 85
 count hat cat 88
 count hat dog 78
-mean  cat pan 0.475586
-mean  cat hat 0.479827
-mean  cat dog 0.503096
-mean  cat wye 0.586971
-mean  cat cat 0.479673
-mean  pan wye 0.514555
-mean  pan pan 0.470472
-mean  pan hat 0.524117
-mean  pan dog 0.518049
-mean  pan cat 0.474558
-mean  wye cat 0.551429
-mean  wye hat 0.473180
-mean  wye dog 0.534468
-mean  wye wye 0.484940
-mean  wye pan 0.500412
-mean  dog hat 0.494490
-mean  dog pan 0.524299
-mean  dog dog 0.500528
-mean  dog wye 0.471187
-mean  dog cat 0.549911
-mean  hat hat 0.546124
-mean  hat wye 0.486490
-mean  hat pan 0.500456
-mean  hat cat 0.503701
-mean  hat dog 0.475824
+mean  cat pan 0.47558604789408265
+mean  cat hat 0.47982677302453625
+mean  cat dog 0.5030958058138795
+mean  cat wye 0.5869710977165313
+mean  cat cat 0.47967276551758276
+mean  pan wye 0.5145551245198839
+mean  pan pan 0.47047187358863374
+mean  pan hat 0.5241174516101407
+mean  pan dog 0.5180487697029758
+mean  pan cat 0.4745581644214956
+mean  wye cat 0.5514286889744187
+mean  wye hat 0.47318042183841014
+mean  wye dog 0.5344677212633134
+mean  wye wye 0.4849398916167528
+mean  wye pan 0.5004120532625254
+mean  dog hat 0.49449047966403037
+mean  dog pan 0.5242989779682639
+mean  dog dog 0.5005282263904022
+mean  dog wye 0.4711872743264721
+mean  dog cat 0.5499107843120312
+mean  hat hat 0.5461238343083493
+mean  hat wye 0.4864895659796864
+mean  hat pan 0.5004559705915135
+mean  hat cat 0.5037006216092387
+mean  hat dog 0.47582364658050663
 
 mlr -n put -v for (k, k in $*) {}
+DSL EXPRESSION:
+for (k, k in $*) {}
 RAW AST:
+* statement block
+    * double-variable for-loop "for"
+        * local variable "k"
+        * local variable "k"
+        * full record "$*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_SREC:
-        text="variables", type=FOR_VARIABLES:
-            text="k", type=UNTYPED_LOCAL_DEFINITION.
-            text="k", type=UNTYPED_LOCAL_DEFINITION.
-        text="for_full_srec_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable k in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for (k, k in @*) {}
+DSL EXPRESSION:
+for (k, k in @*) {}
 RAW AST:
+* statement block
+    * double-variable for-loop "for"
+        * local variable "k"
+        * local variable "k"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="k", type=UNTYPED_LOCAL_DEFINITION.
-            text="k", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable k in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,a), c in @*) {}
+DSL EXPRESSION:
+for ((a,a), c in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "a"
+        * local variable "c"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-            text="c", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable a in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b), a in @*) {}
+DSL EXPRESSION:
+for ((a,b), a in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+        * local variable "a"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-            text="a", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable a in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b), b in @*) {}
+DSL EXPRESSION:
+for ((a,b), b in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+        * local variable "b"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-            text="b", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable b in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,a,c), d in @*) {}
+DSL EXPRESSION:
+for ((a,a,c), d in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "a"
+            * local variable "c"
+        * local variable "d"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="c", type=UNTYPED_LOCAL_DEFINITION.
-            text="d", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable a in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,a), d in @*) {}
+DSL EXPRESSION:
+for ((a,b,a), d in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+            * local variable "a"
+        * local variable "d"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-            text="d", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable a in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,c), a in @*) {}
+DSL EXPRESSION:
+for ((a,b,c), a in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+            * local variable "c"
+        * local variable "a"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-                text="c", type=UNTYPED_LOCAL_DEFINITION.
-            text="a", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable a in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,b), d in @*) {}
+DSL EXPRESSION:
+for ((a,b,b), d in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+            * local variable "b"
+        * local variable "d"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-            text="d", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable b in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,c), b in @*) {}
+DSL EXPRESSION:
+for ((a,b,c), b in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+            * local variable "c"
+        * local variable "b"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-                text="c", type=UNTYPED_LOCAL_DEFINITION.
-            text="b", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable b in the same scope.
+Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,c), c in @*) {}
+DSL EXPRESSION:
+for ((a,b,c), c in @*) {}
 RAW AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+            * local variable "c"
+        * local variable "c"
+        * full oosvar "@*"
+        * statement block
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="for", type=FOR_OOSVAR:
-        text="key_and_value_variables", type=FOR_VARIABLES:
-            text="key_variables", type=FOR_VARIABLES:
-                text="a", type=UNTYPED_LOCAL_DEFINITION.
-                text="b", type=UNTYPED_LOCAL_DEFINITION.
-                text="c", type=UNTYPED_LOCAL_DEFINITION.
-            text="c", type=UNTYPED_LOCAL_DEFINITION.
-        text="empty_keylist", type=OOSVAR_KEYLIST:
-        text="for_full_oosvar_block", type=STATEMENT_BLOCK:
-mlr: redefinition of variable c in the same scope.
+Exit status was 0; expected 1.
 
 mlr --from ./reg-test/input/xyz2 put -q func f() { return {"a"."b":"c"."d",3:4}}; for (k,v in f()){print "k=".k.",v=".v}
 k=ab,v=cd

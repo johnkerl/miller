@@ -332,13 +332,17 @@ func (this *EmitXStatementNode) executeIndexedAux(
 
 		nextLevels := make([]*types.Mlrval, len(emittableMaps))
 		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
-		for i, _ := range emittableMaps {
-			nextLevel := emittableMaps[i].Get(&indexValueString)
-			nextLevels[i] = nextLevel
-			// Can be nil for lashed indexing with heterogeneous data: e.g.
-			// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
-			if nextLevel != nil && nextLevel.IsMap() {
-				nextLevelMaps[i] = nextLevel.GetMap()
+		for i, emittableMap := range emittableMaps {
+			if emittableMap != nil {
+				nextLevel := emittableMap.Get(&indexValueString)
+				nextLevels[i] = nextLevel
+				// Can be nil for lashed indexing with heterogeneous data: e.g.
+				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+				if nextLevel != nil && nextLevel.IsMap() {
+					nextLevelMaps[i] = nextLevel.GetMap()
+				} else {
+					nextLevelMaps[i] = nil
+				}
 			} else {
 				nextLevelMaps[i] = nil
 			}
