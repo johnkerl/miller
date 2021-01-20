@@ -361,12 +361,12 @@ pan wye 10 0.5026260055412137  0.9526183602969864
 
 mlr --icsv --ojson --rs lf cat
 {
-  "col": "abc \"def\" \ghi"
+  "col": "abc \"def\" \\ghi"
 }
 
 mlr --icsv --ojson --jvquoteall --rs lf cat
 {
-  "col": "abc \"def\" \ghi"
+  "col": "abc \"def\" \\ghi"
 }
 
 mlr --ijson --oxtab cat ./reg-test/input/arrays.json
@@ -471,9 +471,9 @@ b:1:1:1 11
 
 mlr --json cat ./reg-test/input/escapes.json
 {
-  "abcdefghi": "jkl\nmnopqr	stu\"vw\xyz"
+  "abcdefghi": "jkl\nmno\rpqr\tstu\"vw\\xyz"
 }
 {
-  "abcdefghi": "jkl\nmnopqr	stu\"vw\\xyz"
+  "abcdefghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz"
 }
 

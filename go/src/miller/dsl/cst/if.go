@@ -133,6 +133,8 @@ func (this *IfChainNode) Execute(state *State) (*BlockExitPayload, error) {
 			if err != nil {
 				return nil, err
 			}
+			// Pass break/continue out of the if-block since they apply to the
+			// containing for/while/etc.
 			if blockExitPayload != nil {
 				return blockExitPayload, nil
 			}
