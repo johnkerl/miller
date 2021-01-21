@@ -72,9 +72,8 @@ func (this *Mlrmap) marshalJSONAuxMultiline(
 		for i := 0; i < elementNestingDepth; i++ {
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
-		buffer.WriteString("\"")
-		buffer.WriteString(pe.Key)
-		buffer.WriteString("\": ")
+		buffer.WriteString(string(millerJSONEncodeString(pe.Key)))
+		buffer.WriteString(": ")
 
 		// Write the value which is a mlrval
 		valueBytes, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1)

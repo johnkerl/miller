@@ -471,10 +471,10 @@ b:1:1:1 11
 
 mlr --json cat ./reg-test/input/escapes.json
 {
-  "abcdefghi": "jkl\nmno\rpqr\tstu\"vw\\xyz"
+  "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\xyz"
 }
 {
-  "abcdefghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz"
+  "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz"
 }
 
 mlr --json cat ./reg-test/input/backslashes.json

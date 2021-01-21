@@ -13,7 +13,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"strings"
 
 	"miller/lib"
 )
@@ -342,21 +341,47 @@ func (this *Mlrval) marshalJSONVoid() ([]byte, error) {
 // ----------------------------------------------------------------
 func (this *Mlrval) marshalJSONString() ([]byte, error) {
 	lib.InternalCodingErrorIf(this.mvtype != MT_STRING)
+
+	return millerJSONEncodeString(this.printrep), nil
+}
+
+// Wraps with double-quotes and escape-encoded JSON-special characters.
+func millerJSONEncodeString(input string) []byte {
 	var buffer bytes.Buffer
-	buffer.WriteByte('"')
-
-	escaped := this.printrep
-	escaped = strings.Replace(escaped, "\\", "\\\\", -1)
-	escaped = strings.Replace(escaped, "\n", "\\n", -1)
-	escaped = strings.Replace(escaped, "\b", "\\b", -1)
-	escaped = strings.Replace(escaped, "\f", "\\f", -1)
-	escaped = strings.Replace(escaped, "\r", "\\r", -1)
-	escaped = strings.Replace(escaped, "\t", "\\t", -1)
-	escaped = strings.Replace(escaped, "\"", "\\\"", -1)
-	buffer.WriteString(escaped)
 
 	buffer.WriteByte('"')
-	return buffer.Bytes(), nil
+
+	for _, b := range []byte(input) {
+		switch b {
+		case '\\':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('\\')
+		case '\n':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('n')
+		case '\b':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('b')
+		case '\f':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('f')
+		case '\r':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('r')
+		case '\t':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('t')
+		case '"':
+			buffer.WriteByte('\\')
+			buffer.WriteByte('"')
+		default:
+			buffer.WriteByte(b)
+		}
+	}
+
+	buffer.WriteByte('"')
+
+	return buffer.Bytes()
 }
 
 // ----------------------------------------------------------------
