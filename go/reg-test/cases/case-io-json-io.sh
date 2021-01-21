@@ -42,3 +42,4 @@ run_mlr --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
 run_mlr --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
 
 run_mlr --json cat $indir/escapes.json
+run_mlr --json cat $indir/backslashes.json

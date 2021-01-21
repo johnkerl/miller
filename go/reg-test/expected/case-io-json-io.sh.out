@@ -477,3 +477,11 @@ mlr --json cat ./reg-test/input/escapes.json
   "abcdefghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz"
 }
 
+mlr --json cat ./reg-test/input/backslashes.json
+{
+  "m": "a\"b\"c"
+}
+{
+  "m": "a\\\"b\\\"c"
+}
+
