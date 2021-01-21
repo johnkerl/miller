@@ -846,23 +846,7 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset all;      dump} ./re
     }
   }
 }
-{
-  "s": 9,
-  "t": {
-    "1": 9,
-    "4": 9
-  },
-  "u": {
-    "1": {
-      "2": 9,
-      "3": 9
-    },
-    "4": {
-      "5": 9,
-      "6": 9
-    }
-  }
-}
+{}
 
 mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @*;       dump} ./reg-test/input/unset4.dkvp
 {
