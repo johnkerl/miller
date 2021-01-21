@@ -482,7 +482,21 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 	state.stack.PushStackFrame()
 	defer state.stack.PopStackFrame()
 
-	return this.executeOuter(&mlrval, this.keyVariableNames, state)
+	// Miller's multi-variable loops, in the Miller DSL, have a single {...}
+	// but are implemented in Go via multiple, recursive functions.  A break
+	// from any of the latter is a break from all.  However, at this point, the
+	// break has been "broken" and should not be returned to the caller.
+	// Return-statements should, though.
+	blockExitPayload, err := this.executeOuter(&mlrval, this.keyVariableNames, state)
+	if blockExitPayload == nil {
+		return nil, err
+	} else {
+		if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+			return nil, err
+		} else {
+			return blockExitPayload, err
+		}
+	}
 }
 
 // ----------------------------------------------------------------
@@ -510,7 +524,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 			}
 			if blockExitPayload != nil {
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
-					break
+					return blockExitPayload, nil
 				}
 				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
@@ -540,6 +554,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 			}
 			if blockExitPayload != nil {
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
+					return blockExitPayload, nil
 					break
 				}
 				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
@@ -593,7 +608,7 @@ func (this *ForLoopMultivariableNode) executeInner(
 			}
 			if blockExitPayload != nil {
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
-					break
+					return blockExitPayload, nil
 				}
 				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
@@ -625,7 +640,7 @@ func (this *ForLoopMultivariableNode) executeInner(
 			}
 			if blockExitPayload != nil {
 				if blockExitPayload.blockExitStatus == BLOCK_EXIT_BREAK {
-					break
+					return blockExitPayload, nil
 				}
 				// If BLOCK_EXIT_CONTINUE, keep going -- this means the body was exited
 				// early but we keep going at this level
