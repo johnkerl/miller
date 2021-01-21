@@ -9,8 +9,10 @@ package cst
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"miller/dsl"
+	"miller/lib"
 )
 
 // ----------------------------------------------------------------
@@ -121,6 +123,18 @@ func validateASTAux(
 			)
 		}
 		nextLevelInUDS = true
+	}
+	if astNode.Type == dsl.NodeTypeForLoopTwoVariable {
+		err := validateForLoopTwoVariableUniqueNames(astNode)
+		if err != nil {
+			return err
+		}
+	}
+	if astNode.Type == dsl.NodeTypeForLoopMultivariable {
+		err := validateForLoopMultivariableUniqueNames(astNode)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Check: $-anything cannot be in begin/end
@@ -241,6 +255,87 @@ func validateASTAux(
 	return nil
 }
 
+// Check against 'for (a, a in $*)' -- repeated 'a'.
+// AST:
+// * statement block
+//   * double-variable for-loop "for"
+//     * local variable "a"
+//     * local variable "a"
+//     * full record "$*"
+//     * statement block
+
+func validateForLoopTwoVariableUniqueNames(astNode *dsl.ASTNode) error {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopTwoVariable)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
+	keyVarNode := astNode.Children[0]
+	valVarNode := astNode.Children[1]
+	lib.InternalCodingErrorIf(keyVarNode.Type != dsl.NodeTypeLocalVariable)
+	lib.InternalCodingErrorIf(valVarNode.Type != dsl.NodeTypeLocalVariable)
+	keyVarName := string(keyVarNode.Token.Lit)
+	valVarName := string(valVarNode.Token.Lit)
+	if keyVarName == valVarName {
+		return errors.New(
+			fmt.Sprintf(
+				"%s: redefinition of variable %s in the same scope.",
+				os.Args[0],
+				keyVarName,
+			),
+		)
+	} else {
+		return nil
+	}
+}
+
+// Check against 'for ((a,a), b in $*)' or 'for ((a,b), a in $*)' -- repeated 'a'.
+// AST:
+// * statement block
+//   * multi-variable for-loop "for"
+//     * parameter list
+//       * local variable "a"
+//       * local variable "b"
+//     * local variable "a"
+//     * full record "$*"
+//     * statement block
+func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopMultivariable)
+	keyVarsNode := astNode.Children[0]
+	valVarNode := astNode.Children[1]
+	lib.InternalCodingErrorIf(keyVarsNode.Type != dsl.NodeTypeParameterList)
+	lib.InternalCodingErrorIf(valVarNode.Type != dsl.NodeTypeLocalVariable)
+
+	seen := make(map[string]bool)
+
+	for _, keyVarNode := range keyVarsNode.Children {
+		lib.InternalCodingErrorIf(keyVarNode.Type != dsl.NodeTypeLocalVariable)
+		name := string(keyVarNode.Token.Lit)
+		_, present := seen[name]
+		if present {
+			return errors.New(
+				fmt.Sprintf(
+					"%s: redefinition of variable %s in the same scope.",
+					os.Args[0],
+					name,
+				),
+			)
+		}
+		seen[name] = true
+	}
+
+	valVarName := string(valVarNode.Token.Lit)
+	if seen[valVarName] {
+		return errors.New(
+			fmt.Sprintf(
+				"%s: redefinition of variable %s in the same scope.",
+				os.Args[0],
+				valVarName,
+			),
+		)
+	}
+
+	return nil
+}
+
+// ================================================================
 var VALID_LHS_NODE_TYPES = map[dsl.TNodeType]bool{
 	dsl.NodeTypeArrayOrMapIndexAccess:           true,
 	dsl.NodeTypeArrayOrMapPositionalNameAccess:  true,

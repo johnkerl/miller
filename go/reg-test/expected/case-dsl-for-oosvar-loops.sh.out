@@ -273,7 +273,6 @@ RAW AST:
         * full record "$*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for (k, k in @*) {}
 DSL EXPRESSION:
@@ -286,7 +285,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,a), c in @*) {}
 DSL EXPRESSION:
@@ -301,7 +299,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b), a in @*) {}
 DSL EXPRESSION:
@@ -316,7 +313,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b), b in @*) {}
 DSL EXPRESSION:
@@ -331,7 +327,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,a,c), d in @*) {}
 DSL EXPRESSION:
@@ -347,7 +342,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,a), d in @*) {}
 DSL EXPRESSION:
@@ -363,7 +357,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,c), a in @*) {}
 DSL EXPRESSION:
@@ -379,7 +372,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,b), d in @*) {}
 DSL EXPRESSION:
@@ -395,7 +387,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,c), b in @*) {}
 DSL EXPRESSION:
@@ -411,7 +402,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr -n put -v for ((a,b,c), c in @*) {}
 DSL EXPRESSION:
@@ -427,7 +417,6 @@ RAW AST:
         * full oosvar "@*"
         * statement block
 
-Exit status was 0; expected 1.
 
 mlr --from ./reg-test/input/xyz2 put -q func f() { return {"a"."b":"c"."d",3:4}}; for (k,v in f()){print "k=".k.",v=".v}
 k=ab,v=cd

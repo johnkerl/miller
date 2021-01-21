@@ -26,9 +26,6 @@ bugs:
   mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
     mlr: cannot parse DSL expression.
 
-* ./reg-test/cases/case-c-dsl-break-continue.sh
-  bug w/ break
-
 * ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
   bug w/ non-unique for-loop names: e.g. 'for(a,a in $*)'
 
