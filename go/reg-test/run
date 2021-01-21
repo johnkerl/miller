@@ -293,6 +293,7 @@ usage() {
     echo "Options:" 1>&2
     echo "-h     Print this message" 1>&2
     echo "-v     More verbose output including each mlr-invocation line, and diff outputs" 1>&2
+    echo "-w     Like -v but use sdiff. Must be run interactively since it queries stty size." 1>&2
     echo "-s     Only run cases and show outputs; don't diff against expected" 1>&2
     echo "-m {path/to/mlr} Use a specified mlr executable" 1>&2
     echo "-c     Use ../c/mlr executable" 1>&2
@@ -321,15 +322,17 @@ outdir=$pwd/output-reg-test
 reloutdir=./output-reg-test # used by some case-files
 
 verbose="false"
+sdiff="false"
 only_show="false"
 case_file_names="" # None means all
 diff_context_flag=""
 
-while getopts hvscgnom:C: f
+while getopts hvwscgnom:C: f
 do
 	case $f in
 	h)      echo; usage;;
 	v)      verbose="true";                   continue;;
+	w)      verbose="true"; sdiff="true";     continue;;
 	s)      only_show="true";                 continue;;
 	c)      path_to_mlr=$ourdir/../../c/mlr;  continue;;
 	g)      path_to_mlr=$ourdir/../../go/mlr; continue;;
@@ -465,8 +468,15 @@ for case_file in $case_file_names; do
     echo "num_invocations_passed     $num_invocations_passed"
     echo "num_invocations_failed     $num_invocations_failed"
     echo ""
-    echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
-    diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
+    if [ "$sdiff" = "true" ]; then
+      # Assuming we're run interactively
+      width=$(stty size | awk '{print $2}')
+      echo sdiff -w $width $diff_context_flag $expfile $outfile
+      sdiff -w $width $diff_context_flag $expfile $outfile
+    else
+      echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
+      diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
+    fi
   else
     diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile > /dev/null
   fi
