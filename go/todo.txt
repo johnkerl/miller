@@ -23,6 +23,8 @@ bugs:
 * case-c-dsl-redirects.sh
   k --no-fflush
   o mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
+    mlr --from s put '$x="a[]b"'
+    mlr --from s put '$x="a\[\]b"'
     mlr: cannot parse DSL expression.
 
 * case-c-dsl-oosvars.sh
