@@ -37,6 +37,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/output"
 	"miller/types"
 )
 
@@ -70,7 +71,7 @@ type EmitXStatementNode struct {
 	redirectorTargetEvaluable IEvaluable
 	// For file/pipe targets: keeps track of file handles for various values of
 	// the redirectorTargetEvaluable expression.
-	outputHandlerManager OutputHandlerManager
+	outputHandlerManager output.OutputHandlerManager
 
 	// For code-reuse between executors.
 	isEmitP bool
@@ -173,11 +174,11 @@ func (this *RootNode) buildEmitXStatementNode(
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
-			retval.outputHandlerManager = NewStdoutWriteHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(this.recordWriterOptions)
 			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
-			retval.outputHandlerManager = NewStderrWriteHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(this.recordWriterOptions)
 			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
@@ -188,11 +189,11 @@ func (this *RootNode) buildEmitXStatementNode(
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(

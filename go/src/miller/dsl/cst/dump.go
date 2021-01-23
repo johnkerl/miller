@@ -24,6 +24,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/output"
 	"miller/types"
 )
 
@@ -36,8 +37,8 @@ type tDumpToRedirectFunc func(
 type DumpStatementNode struct {
 	expressionEvaluables      []IEvaluable
 	dumpToRedirectFunc        tDumpToRedirectFunc
-	redirectorTargetEvaluable IEvaluable           // for file/pipe targets
-	outputHandlerManager      OutputHandlerManager // for file/pipe targets
+	redirectorTargetEvaluable IEvaluable                  // for file/pipe targets
+	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
 // ----------------------------------------------------------------
@@ -130,11 +131,11 @@ func (this *RootNode) buildDumpxStatementNode(
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(

@@ -10,7 +10,6 @@ TOP OF LIST:
 * in-place processing
 * prepipe
   - gzin; bz2in ...
-* tee verb
 
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
@@ -22,9 +21,8 @@ TOP OF LIST:
 bugs:
 
 * case-c-dsl-redirects.sh
-  --no-fflush
-  tee verb missing
-  mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
+  k --no-fflush
+  o mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
     mlr: cannot parse DSL expression.
 
 * case-c-dsl-oosvars.sh
@@ -204,7 +202,6 @@ histogram
 least-frequent
 most-frequent
 sec2gmtdate
-tee
 top
 uniq
 
@@ -470,3 +467,5 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc-note: 'emit > stdout, @foo' and 'emit @foo' are not the same:
   o the former allows put --oxxx
   o the former is not necessarily in sync with the output record stream
+
+* tee -p {command} -- ?

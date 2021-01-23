@@ -10,7 +10,7 @@
 //   ordering. (Main record-writer output is also to stdout.)
 //   ================================================================
 
-package cst
+package output
 
 import (
 	"errors"
@@ -20,7 +20,6 @@ import (
 
 	"miller/clitypes"
 	"miller/lib"
-	"miller/output"
 	"miller/types"
 )
 
@@ -210,7 +209,7 @@ type FileOutputHandler struct {
 	// called only by WriteRecrod which is called by emit and tee variants;
 	// print and dump variants call WriteString.
 	recordWriterOptions *clitypes.TWriterOptions
-	recordWriter        output.IRecordWriter
+	recordWriter        IRecordWriter
 	recordOutputChannel chan *types.RecordAndContext
 	recordDoneChannel   chan bool
 }
@@ -240,7 +239,7 @@ func NewFileWriteOutputHandler(
 ) (*FileOutputHandler, error) {
 	handle, err := os.OpenFile(
 		filename,
-		os.O_CREATE|os.O_WRONLY,
+		os.O_CREATE|os.O_WRONLY|os.O_TRUNC,
 		0644, // TODO: let users parameterize this
 	)
 	if err != nil {
@@ -326,9 +325,6 @@ func (this *FileOutputHandler) WriteString(outputString string) error {
 }
 
 // ----------------------------------------------------------------
-// TODO: finish implementing this
-// TODO: needs context
-
 func (this *FileOutputHandler) WriteRecordAndContext(
 	outrecAndContext *types.RecordAndContext,
 ) error {
@@ -349,7 +345,7 @@ func (this *FileOutputHandler) setUpRecordWriter() error {
 		return nil
 	}
 
-	recordWriter := output.Create(this.recordWriterOptions)
+	recordWriter := Create(this.recordWriterOptions)
 	if recordWriter == nil {
 		return errors.New(
 			"Output format not found: " + this.recordWriterOptions.OutputFileFormat,
@@ -360,7 +356,7 @@ func (this *FileOutputHandler) setUpRecordWriter() error {
 	this.recordOutputChannel = make(chan *types.RecordAndContext, 1)
 	this.recordDoneChannel = make(chan bool, 1)
 
-	go output.ChannelWriter(
+	go ChannelWriter(
 		this.recordOutputChannel,
 		this.recordWriter,
 		this.recordDoneChannel,

@@ -13,6 +13,7 @@ import (
 
 	"miller/clitypes"
 	"miller/dsl"
+	"miller/output"
 	"miller/types"
 )
 
@@ -221,14 +222,14 @@ func (this *RootNode) resolveSubroutineCallsites() error {
 // can close all the descriptors, flush the record-output streams, etc.
 
 func (this *RootNode) RegisterOutputHandlerManager(
-	outputHandlerManager OutputHandlerManager,
+	outputHandlerManager output.OutputHandlerManager,
 ) {
 	this.outputHandlerManagers.PushBack(outputHandlerManager)
 }
 
 func (this *RootNode) ProcessEndOfStream() {
 	for entry := this.outputHandlerManagers.Front(); entry != nil; entry = entry.Next() {
-		outputHandlerManager := entry.Value.(OutputHandlerManager)
+		outputHandlerManager := entry.Value.(output.OutputHandlerManager)
 		errs := outputHandlerManager.Close()
 		if len(errs) != 0 {
 			for _, err := range errs {

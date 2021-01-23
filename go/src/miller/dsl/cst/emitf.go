@@ -12,6 +12,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/output"
 	"miller/types"
 )
 
@@ -34,8 +35,8 @@ type EmitFStatementNode struct {
 	emitfNames                []string
 	emitfEvaluables           []IEvaluable
 	emitfToRedirectFunc       tEmitFToRedirectFunc
-	redirectorTargetEvaluable IEvaluable           // for file/pipe targets
-	outputHandlerManager      OutputHandlerManager // for file/pipe targets
+	redirectorTargetEvaluable IEvaluable                  // for file/pipe targets
+	outputHandlerManager      output.OutputHandlerManager // for file/pipe targets
 }
 
 // ----------------------------------------------------------------
@@ -97,11 +98,11 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
-			retval.outputHandlerManager = NewStdoutWriteHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(this.recordWriterOptions)
 			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
-			retval.outputHandlerManager = NewStderrWriteHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(this.recordWriterOptions)
 			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
@@ -112,11 +113,11 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
