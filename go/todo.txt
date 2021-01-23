@@ -9,6 +9,7 @@ TOP OF LIST:
 * merge-fields
 * in-place processing
 * prepipe
+  - gzin; bz2in ...
 * tee verb
 
 * c/go both:

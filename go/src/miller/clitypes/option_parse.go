@@ -394,6 +394,11 @@ func ParseWriterOptions(
 		//		writerOptions.oquoting = QUOTE_ORIGINAL;
 		//		argi += 1;
 		//
+
+	} else if args[argi] == "--no-fflush" {
+		// No-op for Miller 6; accepted at the command line for backward compatibility.
+		argi += 1
+
 	}
 	*pargi = argi
 	return argi != oargi
