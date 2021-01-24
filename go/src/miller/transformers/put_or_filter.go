@@ -57,6 +57,7 @@ func transformerPutParseCLI(
 	// TODO: make sure this is a full nested-struct copy.
 	var recordWriterOptions *clitypes.TWriterOptions = nil
 	if mainRecordWriterOptions != nil {
+		// TODO: make a .Copy() method
 		copyThereof := *mainRecordWriterOptions
 		recordWriterOptions = &copyThereof
 	}

@@ -150,8 +150,8 @@ func (this *TeeStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 			),
 		)
 	}
-	this.teeToRedirectFunc(evaluation.GetMap(), state)
-	return nil, nil
+	err := this.teeToRedirectFunc(evaluation.GetMap(), state)
+	return nil, err
 }
 
 // ----------------------------------------------------------------
@@ -170,9 +170,8 @@ func (this *TeeStatementNode) teeToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteRecordAndContext(
+	return this.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)
-	return nil
 }

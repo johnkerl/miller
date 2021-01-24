@@ -1,6 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! issues !
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
@@ -21,11 +23,8 @@ TOP OF LIST:
 bugs:
 
 * case-c-dsl-redirects.sh
-  o mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
-    ! needs \0 and \x too .........
-    - mlr --from s put '$x="a[]b"'
-    - mlr --from s put '$x="a\[\]b"'
-    - mlr: cannot parse DSL expression.
+  o nesting level is wrong:
+    mlr head -n 2 then put -o csv -q 'emitp > stderr, $*' s
 
 * case-c-dsl-oosvars.sh
   emit @{variable.name}
@@ -36,8 +35,6 @@ bugs:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 emitp/emitf:
-
-* validator enforce unique names in for-loops
 
 ! check more
   ./reg-test/cases/case-c-dsl-absent-empty.sh
