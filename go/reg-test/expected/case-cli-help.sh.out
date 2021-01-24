@@ -429,6 +429,17 @@ Usage: ./reg-test/../../go/mlr tac
 Prints records in reverse order from the order in which they were encountered.
 
 ================================================================
+Usage: ./reg-test/../../go/mlr tee [options] {filename}
+-a    Append to existing file, if any, rather than overwriting.
+-p    Treat filename as a pipe-to command.
+Any of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
+
+-h|--help Show this message.
+
+================================================================
 Usage: ./reg-test/../../go/mlr tail [options]
 Passes through the last n records, optionally by category.
  -g (default ) Optional group-by-field names for tail counts, e.g. a,b,c

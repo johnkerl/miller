@@ -33,8 +33,9 @@ func transformerTeeParseCLI(
 	verb := args[argi]
 	argi++
 
-	filename := ""
+	filenameOrCommand := ""
 	appending := false
+	piping := false
 	// TODO: make sure this is a full nested-struct copy.
 	var recordWriterOptions *clitypes.TWriterOptions = nil
 	if mainRecordWriterOptions != nil {
@@ -54,6 +55,12 @@ func transformerTeeParseCLI(
 
 		} else if args[argi] == "-a" {
 			appending = true
+			piping = false
+			argi += 1
+
+		} else if args[argi] == "-p" {
+			appending = false
+			piping = true
 			argi += 1
 
 		} else if clitypes.ParseWriterOptions(args, argc, &argi, recordWriterOptions) {
@@ -66,17 +73,18 @@ func transformerTeeParseCLI(
 		}
 	}
 
-	// Get the filename from the command line, after the flags
+	// Get the filename/command from the command line, after the flags
 	if argi >= argc {
 		transformerTeeUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
 		os.Exit(1)
 	}
-	filename = args[argi]
+	filenameOrCommand = args[argi]
 	argi += 1
 
 	transformer, err := NewTransformerTee(
 		appending,
-		filename,
+		piping,
+		filenameOrCommand,
 		recordWriterOptions,
 	)
 	if err != nil {
@@ -97,7 +105,8 @@ func transformerTeeUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", argv0, verb)
 	fmt.Fprintf(o,
-		`-a    append to existing file, if any, rather than overwriting.
+		`-a    Append to existing file, if any, rather than overwriting.
+-p    Treat filename as a pipe-to command.
 Any of the output-format command-line flags (see mlr -h). Example: using
   mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
 the input is CSV, the output is pretty-print tabular, but the tee-file output
@@ -109,29 +118,36 @@ is written in JSON format.
 
 // ----------------------------------------------------------------
 type TransformerTee struct {
-	filename          string
-	fileOutputHandler *output.FileOutputHandler
+	filenameOrCommandForDisplay string
+	fileOutputHandler           *output.FileOutputHandler
 }
 
 func NewTransformerTee(
 	appending bool,
-	filename string,
+	piping bool,
+	filenameOrCommand string,
 	recordWriterOptions *clitypes.TWriterOptions,
 ) (*TransformerTee, error) {
 	var fileOutputHandler *output.FileOutputHandler = nil
 	var err error = nil
-	if appending {
-		fileOutputHandler, err = output.NewFileAppendOutputHandler(filename, recordWriterOptions)
+	filenameOrCommandForDisplay := filenameOrCommand
+	if piping {
+		fileOutputHandler, err = output.NewPipeWriteOutputHandler(filenameOrCommand, recordWriterOptions)
+		filenameOrCommandForDisplay = "| " + filenameOrCommand
+	} else if appending {
+		fileOutputHandler, err = output.NewFileAppendOutputHandler(filenameOrCommand, recordWriterOptions)
+		filenameOrCommandForDisplay = ">> " + filenameOrCommand
 	} else {
-		fileOutputHandler, err = output.NewFileWriteOutputHandler(filename, recordWriterOptions)
+		fileOutputHandler, err = output.NewFileWriteOutputHandler(filenameOrCommand, recordWriterOptions)
+		filenameOrCommandForDisplay = "> " + filenameOrCommand
 	}
 	if err != nil {
 		return nil, err
 	}
 
 	return &TransformerTee{
-		filename:          filename,
-		fileOutputHandler: fileOutputHandler,
+		filenameOrCommandForDisplay: filenameOrCommandForDisplay,
+		fileOutputHandler:           fileOutputHandler,
 	}, nil
 }
 
@@ -144,8 +160,8 @@ func (this *TransformerTee) Transform(
 		if err != nil {
 			fmt.Fprintf(
 				os.Stderr,
-				"%s: error writing to tee-file \"%s\":\n",
-				os.Args[0], this.filename,
+				"%s: error writing to tee \"%s\":\n",
+				os.Args[0], this.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -157,8 +173,8 @@ func (this *TransformerTee) Transform(
 		if err != nil {
 			fmt.Fprintf(
 				os.Stderr,
-				"%s: error closing tee-file \"%s\":\n",
-				os.Args[0], this.filename,
+				"%s: error closing tee \"%s\":\n",
+				os.Args[0], this.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

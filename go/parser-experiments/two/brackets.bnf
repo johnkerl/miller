@@ -16,6 +16,8 @@ _string_literal_element
   | ( '\\' 'r' )
   | ( '\\' 't' )
   | ( '\\' '\\' )
+  | ( '\\' '0' )
+  | ( '\\' 'x' )
   | '\u0100'-'\U0010FFFF'
 ;
 string_literal : '"' {_string_literal_element} '"' ;
