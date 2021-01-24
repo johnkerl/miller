@@ -149,9 +149,9 @@ func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error)
 		}
 	}
 
-	this.emitfToRedirectFunc(newrec, state)
+	err := this.emitfToRedirectFunc(newrec, state)
 
-	return nil, nil
+	return nil, err
 }
 
 // ----------------------------------------------------------------
@@ -201,9 +201,8 @@ func (this *EmitFStatementNode) emitfToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteRecordAndContext(
+	return this.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)
-	return nil
 }

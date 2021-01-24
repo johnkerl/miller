@@ -267,9 +267,9 @@ func (this *EmitXStatementNode) executeNonIndexed(
 		}
 	}
 
-	this.emitToRedirectFunc(newrec, state)
+	err := this.emitToRedirectFunc(newrec, state)
 
-	return nil, nil
+	return nil, err
 }
 
 // ----------------------------------------------------------------
@@ -378,7 +378,10 @@ func (this *EmitXStatementNode) executeIndexedAux(
 				}
 			}
 
-			this.emitToRedirectFunc(newrec, state)
+			err := this.emitToRedirectFunc(newrec, state)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -410,9 +413,8 @@ func (this *EmitXStatementNode) emitToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteRecordAndContext(
+	return this.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)
-	return nil
 }
