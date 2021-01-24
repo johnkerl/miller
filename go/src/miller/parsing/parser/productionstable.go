@@ -2679,19 +2679,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `MlrvalOrFunction : string_literal	<< dsl.NewASTNodeStripDoubleQuotePair(
-    X[0],
-    dsl.NodeTypeStringLiteral,
-  ) >>`,
+		String: `MlrvalOrFunction : string_literal	<< dsl.NewASTNodeStripDoubleQuotePair(X[0], dsl.NodeTypeStringLiteral) >>`,
 		Id:         "MlrvalOrFunction",
 		NTType:     60,
 		Index:      204,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeStripDoubleQuotePair(
-				X[0],
-				dsl.NodeTypeStringLiteral,
-			)
+			return dsl.NewASTNodeStripDoubleQuotePair(X[0], dsl.NodeTypeStringLiteral)
 		},
 	},
 	ProdTabEntry{

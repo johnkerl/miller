@@ -1134,6 +1134,22 @@ var TransTab = TransitionTable{
 		switch {
 		case r == 34: // ['"','"']
 			return 151
+		case r == 91: // ['[','[']
+			return 57
+		case r == 92: // ['\','\']
+			return 57
+		case r == 93: // [']',']']
+			return 57
+		case r == 98: // ['b','b']
+			return 57
+		case r == 102: // ['f','f']
+			return 57
+		case r == 110: // ['n','n']
+			return 57
+		case r == 114: // ['r','r']
+			return 57
+		case r == 116: // ['t','t']
+			return 57
 		}
 		return NoState
 	},

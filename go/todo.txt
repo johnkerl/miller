@@ -18,6 +18,8 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* tee -p, just do it :)
+
 bugs:
 
 * case-c-dsl-redirects.sh
