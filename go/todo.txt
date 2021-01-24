@@ -18,16 +18,14 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-* tee -p, just do it :)
-
 bugs:
 
 * case-c-dsl-redirects.sh
-  k --no-fflush
   o mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' s
-    mlr --from s put '$x="a[]b"'
-    mlr --from s put '$x="a\[\]b"'
-    mlr: cannot parse DSL expression.
+    ! needs \0 and \x too .........
+    - mlr --from s put '$x="a[]b"'
+    - mlr --from s put '$x="a\[\]b"'
+    - mlr: cannot parse DSL expression.
 
 * case-c-dsl-oosvars.sh
   emit @{variable.name}
@@ -472,4 +470,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o the former allows put --oxxx
   o the former is not necessarily in sync with the output record stream
 
-* tee -p {command} -- ?
+* document tee -p
