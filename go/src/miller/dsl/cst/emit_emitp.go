@@ -225,13 +225,30 @@ func (this *RootNode) buildEmittableNode(
 	emitEvaluable = nil
 	err = nil
 
-	if astNode.Type == dsl.NodeTypeDirectOosvarValue {
+	if astNode.Type == dsl.NodeTypeLocalVariable {
 		name = string(astNode.Token.Lit)
-	} else if astNode.Type == dsl.NodeTypeLocalVariable {
+	} else if astNode.Type == dsl.NodeTypeDirectOosvarValue {
 		name = string(astNode.Token.Lit)
 	} else if astNode.Type == dsl.NodeTypeDirectFieldValue {
 		name = string(astNode.Token.Lit)
 	}
+
+	// xxx temp
+	// ----------------------------------------------------------------
+	// Emittable
+	//   y LocalVariable
+	//
+	//   n FullOosvar
+	//   y DirectOosvarValue -- includes BracedOosvarValue
+	//  -> IndirectOosvarValue
+	//
+	//   n FullSrec
+	//   y DirectFieldValue -- includes BracedFieldValue
+	//  -> IndirectFieldValue
+	//
+	//   n MapLiteral
+	// ;
+	// ----------------------------------------------------------------
 
 	emitEvaluable, err = this.BuildEvaluableNode(astNode)
 

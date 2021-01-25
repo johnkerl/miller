@@ -913,10 +913,14 @@ NX=
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @{variable.name} += $x; end{emit @{variable.name}} ./reg-test/input/abixy
-Exit status was 1; expected 0.
+variable.name=4.536293840335763
 
 mlr put -q @{variable.name}[$a] += $x; end{emit @{variable.name},"a"} ./reg-test/input/abixy
-Exit status was 1; expected 0.
+a=pan,variable.name=0.8494161498792961
+a=eks,variable.name=1.75186341922895
+a=wye,variable.name=0.7778922255683036
+a=zee,variable.name=1.1256801691982772
+a=hat,variable.name=0.03144187646093577
 
 mlr put for (k,v in $*) { if (k == "i") {unset $[k]}} ./reg-test/input/abixy
 a=pan,b=pan,x=0.3467901443380824,y=0.7268028627434533

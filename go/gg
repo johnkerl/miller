@@ -52,13 +52,98 @@ mention() {
 
 # ================================================================
 
-path_to_mlr=../c/mlr
-run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
-path_to_mlr=../go/mlr
-run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
-path_to_mlr=../c/mlr
-run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
-path_to_mlr=../go/mlr
-run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
+echo ================================================================
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emit $*'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emit $*'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emit $a'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emit $a'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emit ${a}'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emit ${a}'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emit $["a"]'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emit $["a"]'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q '@a="foo"; emit @a'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q '@a="foo"; emit @a'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q '@a="foo"; emit @{a}'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q '@a="foo"; emit @{a}'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q '@a="foo"; emit @["a"]'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q '@a="foo"; emit @["a"]'
+
+echo ================================================================
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emitp $*'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emitp $*'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emitp $a'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emitp $a'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emitp ${a}'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emitp ${a}'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q 'emitp $["a"]'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q 'emitp $["a"]'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q '@a="foo"; emitp @a'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q '@a="foo"; emitp @a'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q '@a="foo"; emitp @{a}'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q '@a="foo"; emitp @{a}'
+
+echo ----------------------------------------------------------------
+path_to_mlr="../c/mlr"
+run_mlr --from r put -q '@a="foo"; emitp @["a"]'
+path_to_mlr="../go/mlr"
+run_mlr --from r put -q '@a="foo"; emitp @["a"]'
+
+
+#path_to_mlr=../c/mlr
+#run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
+#path_to_mlr=../go/mlr
+#run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
+#path_to_mlr=../c/mlr
+#run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
+#path_to_mlr=../go/mlr
+#run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
 
 # ================================================================
