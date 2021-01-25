@@ -4,6 +4,12 @@ TOP OF LIST:
 ! issues !
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* port verb having-fields
+* port verb merge-fields
+* port verb stats2
+
+* refactor flag-lib out of all verbs
+
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! regex ...
@@ -12,12 +18,6 @@ TOP OF LIST:
 * in-place processing
 * prepipe
   - gzin; bz2in ...
-
-* port verb having-fields
-* port verb merge-fields
-* port verb stats2
-
-* refactor flag-lib out of all verbs
 
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
