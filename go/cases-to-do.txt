@@ -63,7 +63,6 @@ rrv ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
 rrv ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
 rrv ./reg-test/cases/case-c-dsl-mapvar-emit.sh
 rrv ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
-rrv ./reg-test/cases/case-c-dsl-oosvars.sh
 rrv ./reg-test/cases/case-c-dsl-type-predicates.sh
 
 -> split up this big case-file: case-c-dsl-functional-tests.sh

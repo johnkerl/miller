@@ -2,19 +2,19 @@
 mlr --ijson --oxtab flatten ./reg-test/input/flatten-input-2.json
 hostname                    localhost
 pid                         12345
-req:id                      6789
-req:method                  GET
-req:path                    api/check
-req:host                    foo.bar
-req:headers:host            bar.baz
-req:headers:user-agent      browser
-res:status_code             200
-res:header:content-type     text
-res:header:content-encoding plain
+req.id                      6789
+req.method                  GET
+req.path                    api/check
+req.host                    foo.bar
+req.headers.host            bar.baz
+req.headers.user-agent      browser
+res.status_code             200
+res.header.content-type     text
+res.header.content-encoding plain
 empty1                      {}
 empty2                      []
-wrapper:empty3              {}
-wrapper:emtpy4              []
+wrapper.empty3              {}
+wrapper.emtpy4              []
 
 mlr --ijson --oxtab flatten -s : ./reg-test/input/flatten-input-2.json
 hostname                    localhost
@@ -54,12 +54,12 @@ mlr --json flatten -f req ./reg-test/input/flatten-input-2.json
 {
   "hostname": "localhost",
   "pid": 12345,
-  "req:id": 6789,
-  "req:method": "GET",
-  "req:path": "api/check",
-  "req:host": "foo.bar",
-  "req:headers:host": "bar.baz",
-  "req:headers:user-agent": "browser",
+  "req.id": 6789,
+  "req.method": "GET",
+  "req.path": "api/check",
+  "req.host": "foo.bar",
+  "req.headers.host": "bar.baz",
+  "req.headers.user-agent": "browser",
   "res": {
     "status_code": 200,
     "header": {
@@ -89,9 +89,9 @@ mlr --json flatten -f res ./reg-test/input/flatten-input-2.json
       "user-agent": "browser"
     }
   },
-  "res:status_code": 200,
-  "res:header:content-type": "text",
-  "res:header:content-encoding": "plain",
+  "res.status_code": 200,
+  "res.header.content-type": "text",
+  "res.header.content-encoding": "plain",
   "empty1": {},
   "empty2": [],
   "wrapper": {
@@ -138,38 +138,58 @@ mlr --ixtab --ojson unflatten ./reg-test/input/unflatten-input.xtab
 {
   "hostname": "localhost",
   "pid": 12345,
-  "req.id": 6789,
-  "req.method": "GET",
-  "req.path": "api/check",
-  "req.host": "foo.bar",
-  "req.headers.host": "bar.baz",
-  "req.headers.user-agent": "browser",
-  "res.status_code": 200,
-  "res.header.content-type": "text",
-  "res.header.content-encoding": "plain",
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
   "empty1": {},
   "empty2": [],
-  "wrapper.empty3": {},
-  "wrapper.emtpy4": []
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
 }
 
 mlr --ixtab --ojson unflatten -s : ./reg-test/input/unflatten-input.xtab
 {
   "hostname": "localhost",
   "pid": 12345,
-  "req.id": 6789,
-  "req.method": "GET",
-  "req.path": "api/check",
-  "req.host": "foo.bar",
-  "req.headers.host": "bar.baz",
-  "req.headers.user-agent": "browser",
-  "res.status_code": 200,
-  "res.header.content-type": "text",
-  "res.header.content-encoding": "plain",
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
   "empty1": {},
   "empty2": [],
-  "wrapper.empty3": {},
-  "wrapper.emtpy4": []
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
 }
 
 mlr --ixtab --ojson unflatten -s . ./reg-test/input/unflatten-input.xtab
@@ -261,25 +281,6 @@ mlr --ixtab --ojson unflatten -s . -f req ./reg-test/input/unflatten-input.xtab
       "user-agent": "browser"
     }
   },
-  "res.status_code": 200,
-  "res.header.content-type": "text",
-  "res.header.content-encoding": "plain",
-  "empty1": {},
-  "empty2": [],
-  "wrapper.empty3": {},
-  "wrapper.emtpy4": []
-}
-
-mlr --ixtab --ojson unflatten -s . -f res ./reg-test/input/unflatten-input.xtab
-{
-  "hostname": "localhost",
-  "pid": 12345,
-  "req.id": 6789,
-  "req.method": "GET",
-  "req.path": "api/check",
-  "req.host": "foo.bar",
-  "req.headers.host": "bar.baz",
-  "req.headers.user-agent": "browser",
   "res": {
     "status_code": 200,
     "header": {
@@ -289,8 +290,39 @@ mlr --ixtab --ojson unflatten -s . -f res ./reg-test/input/unflatten-input.xtab
   },
   "empty1": {},
   "empty2": [],
-  "wrapper.empty3": {},
-  "wrapper.emtpy4": []
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
+
+mlr --ixtab --ojson unflatten -s . -f res ./reg-test/input/unflatten-input.xtab
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
 }
 
 mlr --ixtab --ojson unflatten -s . -f req,res ./reg-test/input/unflatten-input.xtab
@@ -316,20 +348,26 @@ mlr --ixtab --ojson unflatten -s . -f req,res ./reg-test/input/unflatten-input.x
   },
   "empty1": {},
   "empty2": [],
-  "wrapper.empty3": {},
-  "wrapper.emtpy4": []
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
 }
 
 mlr --ixtab --ojson unflatten -s . -f nonesuch,res ./reg-test/input/unflatten-input.xtab
 {
   "hostname": "localhost",
   "pid": 12345,
-  "req.id": 6789,
-  "req.method": "GET",
-  "req.path": "api/check",
-  "req.host": "foo.bar",
-  "req.headers.host": "bar.baz",
-  "req.headers.user-agent": "browser",
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
   "res": {
     "status_code": 200,
     "header": {
@@ -339,26 +377,28 @@ mlr --ixtab --ojson unflatten -s . -f nonesuch,res ./reg-test/input/unflatten-in
   },
   "empty1": {},
   "empty2": [],
-  "wrapper.empty3": {},
-  "wrapper.emtpy4": []
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
 }
 
 mlr --j2x cat ./reg-test/input/flatten-input-2.json
 hostname                    localhost
 pid                         12345
-req:id                      6789
-req:method                  GET
-req:path                    api/check
-req:host                    foo.bar
-req:headers:host            bar.baz
-req:headers:user-agent      browser
-res:status_code             200
-res:header:content-type     text
-res:header:content-encoding plain
+req.id                      6789
+req.method                  GET
+req.path                    api/check
+req.host                    foo.bar
+req.headers.host            bar.baz
+req.headers.user-agent      browser
+res.status_code             200
+res.header.content-type     text
+res.header.content-encoding plain
 empty1                      {}
 empty2                      []
-wrapper:empty3              {}
-wrapper:emtpy4              []
+wrapper.empty3              {}
+wrapper.emtpy4              []
 
 mlr --x2j cat
 {

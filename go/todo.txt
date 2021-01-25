@@ -7,6 +7,7 @@ TOP OF LIST:
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! regex ...
+! --nojvstack; default --jvstack; code it up ...
 
 * merge-fields
 * in-place processing
@@ -26,9 +27,6 @@ bugs:
   o nesting level is wrong:
     mlr head -n 2 then put -o csv -q 'emitp > stderr, $*' s
 
-* case-c-dsl-oosvars.sh
-  emit @{variable.name}
-
 * ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
   _:t:u=1 vs t:u=1 on emitp @*
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,13 +38,12 @@ emitp/emitf:
   ./reg-test/cases/case-c-dsl-absent-empty.sh
   ./reg-test/cases/case-c-dsl-break-continue.sh
   ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-  ./reg-test/cases/case-c-dsl-functional-tests.sh
+  ./reg-test/cases/case-dsl-functional-tests.sh
   ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
   ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
   ./reg-test/cases/case-c-dsl-mapvar-emit.sh
   ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
-  ./reg-test/cases/case-c-dsl-oosvars.sh
-  ./reg-test/cases/case-c-dsl-type-predicates.sh
+  u/rr ./reg-test/cases/case-c-dsl-type-predicates.sh
 
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):
@@ -468,3 +465,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o the former is not necessarily in sync with the output record stream
 
 * document tee -p
+* doc6: default flatsep is now "." not ":" in keeping with JSON culture

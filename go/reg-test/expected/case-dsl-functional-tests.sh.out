@@ -471,19 +471,19 @@ mlr --icsvlite --oxtab put ${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * 
 name.x 1
 name.y 2
 z      3
-x+y    3
-x*y    2
 
 name.x 4
 name.y 6
 z      5
-x+y    10
-x*y    24
 
 mlr --icsvlite --oxtab filter ${name.y} < ${z} ./reg-test/input/braced.csv
 name.x 1
 name.y 2
 z      3
+
+name.x 4
+name.y 6
+z      5
 
 mlr --opprint put $z = $x < 0.5 ? 0 : 1 ./reg-test/input/abixy
 a   b   i  x                   y                   z

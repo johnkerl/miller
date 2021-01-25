@@ -9,18 +9,18 @@ sum 6
 sum 10
 
 mlr --from ./reg-test/input/s.dkvp --oxtab put -q @sum[$a] += $i; emit {"sum": @sum}
-sum:pan 1
+sum.pan 1
 
-sum:pan 1
-sum:eks 2
+sum.pan 1
+sum.eks 2
 
-sum:pan 1
-sum:eks 2
-sum:wye 3
+sum.pan 1
+sum.eks 2
+sum.wye 3
 
-sum:pan 1
-sum:eks 6
-sum:wye 3
+sum.pan 1
+sum.eks 6
+sum.wye 3
 
 
 ================================================================
@@ -50,16 +50,16 @@ mlr --oxtab --from ./reg-test/input/abixy put -q
     emitp @sums;
   }
 
-sums:pan:pan 0.3467901443380824
-sums:pan:wye 0.5026260055412137
-sums:eks:pan 0.7586799647899636
-sums:eks:wye 0.38139939387114097
-sums:eks:zee 0.6117840605678454
-sums:wye:wye 0.20460330576630303
-sums:wye:pan 0.5732889198020006
-sums:zee:pan 0.5271261600918548
-sums:zee:wye 0.5985540091064224
-sums:hat:wye 0.03144187646093577
+sums.pan.pan 0.3467901443380824
+sums.pan.wye 0.5026260055412137
+sums.eks.pan 0.7586799647899636
+sums.eks.wye 0.38139939387114097
+sums.eks.zee 0.6117840605678454
+sums.wye.wye 0.20460330576630303
+sums.wye.pan 0.5732889198020006
+sums.zee.pan 0.5271261600918548
+sums.zee.wye 0.5985540091064224
+sums.hat.wye 0.03144187646093577
 
 
 ================================================================
@@ -89,16 +89,16 @@ mlr --oxtab --from ./reg-test/input/abixy put -q
     emit  @sums;
   }
 
-pan:pan 0.3467901443380824
-pan:wye 0.5026260055412137
-eks:pan 0.7586799647899636
-eks:wye 0.38139939387114097
-eks:zee 0.6117840605678454
-wye:wye 0.20460330576630303
-wye:pan 0.5732889198020006
-zee:pan 0.5271261600918548
-zee:wye 0.5985540091064224
-hat:wye 0.03144187646093577
+pan.pan 0.3467901443380824
+pan.wye 0.5026260055412137
+eks.pan 0.7586799647899636
+eks.wye 0.38139939387114097
+eks.zee 0.6117840605678454
+wye.wye 0.20460330576630303
+wye.pan 0.5732889198020006
+zee.pan 0.5271261600918548
+zee.wye 0.5985540091064224
+hat.wye 0.03144187646093577
 
 
 ================================================================
@@ -129,26 +129,26 @@ mlr --oxtab --from ./reg-test/input/abixy put -q
     emitp (@sums, @counts);
   }
 
-sums:pan:pan   0.3467901443380824
-sums:pan:wye   0.5026260055412137
-sums:eks:pan   0.7586799647899636
-sums:eks:wye   0.38139939387114097
-sums:eks:zee   0.6117840605678454
-sums:wye:wye   0.20460330576630303
-sums:wye:pan   0.5732889198020006
-sums:zee:pan   0.5271261600918548
-sums:zee:wye   0.5985540091064224
-sums:hat:wye   0.03144187646093577
-counts:pan:pan 1
-counts:pan:wye 1
-counts:eks:pan 1
-counts:eks:wye 1
-counts:eks:zee 1
-counts:wye:wye 1
-counts:wye:pan 1
-counts:zee:pan 1
-counts:zee:wye 1
-counts:hat:wye 1
+sums.pan.pan   0.3467901443380824
+sums.pan.wye   0.5026260055412137
+sums.eks.pan   0.7586799647899636
+sums.eks.wye   0.38139939387114097
+sums.eks.zee   0.6117840605678454
+sums.wye.wye   0.20460330576630303
+sums.wye.pan   0.5732889198020006
+sums.zee.pan   0.5271261600918548
+sums.zee.wye   0.5985540091064224
+sums.hat.wye   0.03144187646093577
+counts.pan.pan 1
+counts.pan.wye 1
+counts.eks.pan 1
+counts.eks.wye 1
+counts.eks.zee 1
+counts.wye.wye 1
+counts.wye.pan 1
+counts.zee.pan 1
+counts.zee.wye 1
+counts.hat.wye 1
 
 
 ================================================================
@@ -179,16 +179,16 @@ mlr --oxtab --from ./reg-test/input/abixy put -q
     emit  (@sums, @counts);
   }
 
-pan:pan 1
-pan:wye 1
-eks:pan 1
-eks:wye 1
-eks:zee 1
-wye:wye 1
-wye:pan 1
-zee:pan 1
-zee:wye 1
-hat:wye 1
+pan.pan 1
+pan.wye 1
+eks.pan 1
+eks.wye 1
+eks.zee 1
+wye.wye 1
+wye.pan 1
+zee.pan 1
+zee.wye 1
+hat.wye 1
 
 
 ================================================================
@@ -244,24 +244,24 @@ mlr --oxtab --from ./reg-test/input/abixy put -q
   }
 
 a        pan
-sums:pan 0.3467901443380824
-sums:wye 0.5026260055412137
+sums.pan 0.3467901443380824
+sums.wye 0.5026260055412137
 
 a        eks
-sums:pan 0.7586799647899636
-sums:wye 0.38139939387114097
-sums:zee 0.6117840605678454
+sums.pan 0.7586799647899636
+sums.wye 0.38139939387114097
+sums.zee 0.6117840605678454
 
 a        wye
-sums:wye 0.20460330576630303
-sums:pan 0.5732889198020006
+sums.wye 0.20460330576630303
+sums.pan 0.5732889198020006
 
 a        zee
-sums:pan 0.5271261600918548
-sums:wye 0.5985540091064224
+sums.pan 0.5271261600918548
+sums.wye 0.5985540091064224
 
 a        hat
-sums:wye 0.03144187646093577
+sums.wye 0.03144187646093577
 
 
 ================================================================
@@ -450,34 +450,34 @@ mlr --oxtab --from ./reg-test/input/abixy put -q
   }
 
 a          pan
-sums:pan   0.3467901443380824
-sums:wye   0.5026260055412137
-counts:pan 1
-counts:wye 1
+sums.pan   0.3467901443380824
+sums.wye   0.5026260055412137
+counts.pan 1
+counts.wye 1
 
 a          eks
-sums:pan   0.7586799647899636
-sums:wye   0.38139939387114097
-sums:zee   0.6117840605678454
-counts:pan 1
-counts:wye 1
-counts:zee 1
+sums.pan   0.7586799647899636
+sums.wye   0.38139939387114097
+sums.zee   0.6117840605678454
+counts.pan 1
+counts.wye 1
+counts.zee 1
 
 a          wye
-sums:wye   0.20460330576630303
-sums:pan   0.5732889198020006
-counts:wye 1
-counts:pan 1
+sums.wye   0.20460330576630303
+sums.pan   0.5732889198020006
+counts.wye 1
+counts.pan 1
 
 a          zee
-sums:pan   0.5271261600918548
-sums:wye   0.5985540091064224
-counts:pan 1
-counts:wye 1
+sums.pan   0.5271261600918548
+sums.wye   0.5985540091064224
+counts.pan 1
+counts.wye 1
 
 a          hat
-sums:wye   0.03144187646093577
-counts:wye 1
+sums.wye   0.03144187646093577
+counts.wye 1
 
 
 ================================================================

@@ -135,7 +135,7 @@ func DefaultReaderOptions() TReaderOptions {
 		IRS:             "\n",
 		IFS:             ",",
 		IPS:             "=",
-		IFLATSEP:        ":",
+		IFLATSEP:        ".",
 		AutoUnflatten:   true,
 	}
 }
@@ -146,7 +146,7 @@ func DefaultWriterOptions() TWriterOptions {
 		ORS:              "\n",
 		OFS:              ",",
 		OPS:              "=",
-		OFLATSEP:         ":",
+		OFLATSEP:         ".",
 
 		HeaderlessCSVOutput:       false,
 		WrapJSONOutputInOuterList: false,
