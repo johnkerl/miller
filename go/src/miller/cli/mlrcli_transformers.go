@@ -33,6 +33,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.LabelSetup,
 	transformers.NothingSetup,
 	transformers.PutSetup,
+	transformers.RepeatSetup,
 	transformers.RegularizeSetup,
 	transformers.RemoveEmptyColumnsSetup,
 	transformers.RenameSetup,

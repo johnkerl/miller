@@ -9,10 +9,16 @@ TOP OF LIST:
 ! regex ...
 ! --nojvstack; default --jvstack; code it up ...
 
-* merge-fields
 * in-place processing
 * prepipe
   - gzin; bz2in ...
+
+* port verb having-fields
+* port verb repeat
+* port verb merge-fields
+* port verb stats2
+
+* refactor flag-lib out of all verbs
 
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
@@ -21,7 +27,7 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bugs:
+emitp/emitf:
 
 * case-c-dsl-redirects.sh
   o nesting level is wrong:
@@ -29,12 +35,8 @@ bugs:
 
 * ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
   _:t:u=1 vs t:u=1 on emitp @*
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-emitp/emitf:
-
-! check more
+* check more
   ./reg-test/cases/case-c-dsl-absent-empty.sh
   ./reg-test/cases/case-c-dsl-break-continue.sh
   ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
@@ -104,7 +106,6 @@ no need to bootstrap a parser for the parser-generator language
 * new columns-to-arrays and arrays-to-columns for stan format
 
 ? reg-test: diff the *.err files?
-? allow [[...]] / [[[...]]] at assignment LHS
 ? single-line JSON for DKVP/CSV/etc ...
 
 * stats1:
@@ -248,12 +249,8 @@ CATEGORIES:
   o make a pprint reader w/ width-detect
 
 * widen DSL coverage
-  ! print/dump/emit w/ redirect options
-  o c/reg_test/run reorgs
   o err-return for array/map get/put if incorrect types ... currently go-void ...
     ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
-  o typed localvars
-  o for-knv
   o profile mand.mlr & check for need for idx-assign
     -> most definitely needed
   o multiple-valued return/assign -- ?
@@ -466,3 +463,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
 * document tee -p
 * doc6: default flatsep is now "." not ":" in keeping with JSON culture
+? allow [[...]] / [[[...]]] at assignment LHS
