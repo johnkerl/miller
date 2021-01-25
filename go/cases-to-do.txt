@@ -30,7 +30,6 @@ rrv -C20 ./reg-test/cases/case-c-dsl-local-map-variable-write-read.sh
 ================================================================
 PARTIALLY IMPLEMENTED:
 
-rrv ./reg-test/cases/case-c-clean-whitespace.sh
 rrv ./reg-test/cases/case-c-cut.sh
 rrv ./reg-test/cases/case-c-dsl-scientific-notation.sh
 rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh

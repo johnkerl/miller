@@ -187,9 +187,9 @@ no need to bootstrap a parser for the parser-generator language
 REMAINING VERBS:
 
 having-fields
+-> regex dependency in order to complete it
 
 bar
-clean-whitespace
 count-distinct
 format-values
 fraction

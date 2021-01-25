@@ -31,7 +31,7 @@ mapper_setup_t mapper_clean_whitespace_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_clean_whitespace_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", argv0, verb);
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "For each record, for each field in the record, whitespace-cleans the keys and\n");
 	fprintf(o, "values. Whitespace-cleaning entails stripping leading and trailing whitespace,\n");
 	fprintf(o, "and replacing multiple whitespace with singles. For finer-grained control,\n");
@@ -41,7 +41,8 @@ static void mapper_clean_whitespace_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
 	fprintf(o, "-k|--keys-only    Do not touch values.\n");
 	fprintf(o, "-v|--values-only  Do not touch keys.\n");
-	fprintf(o, "It is an error to specify -k as well as -v.\n");
+	fprintf(o, "It is an error to specify -k as well as -v -- to clean keys and values,\n");
+	fprintf(o, "leave off -k as well as -v.\n");
 }
 
 static mapper_t* mapper_clean_whitespace_parse_cli(int* pargi, int argc, char** argv,

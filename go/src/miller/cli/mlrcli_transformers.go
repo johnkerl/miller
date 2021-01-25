@@ -15,6 +15,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.BootstrapSetup,
 	transformers.CatSetup,
 	transformers.CheckSetup,
+	transformers.CleanWhitespaceSetup,
 	transformers.CountSetup,
 	transformers.CountSimilarSetup,
 	transformers.CutSetup,
