@@ -14,7 +14,6 @@ TOP OF LIST:
   - gzin; bz2in ...
 
 * port verb having-fields
-* port verb repeat
 * port verb merge-fields
 * port verb stats2
 
@@ -188,7 +187,6 @@ no need to bootstrap a parser for the parser-generator language
 REMAINING VERBS:
 
 having-fields
-repeat
 
 bar
 clean-whitespace

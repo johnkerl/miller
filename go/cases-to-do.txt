@@ -112,7 +112,6 @@ rrv ./reg-test/cases/case-c-nest.sh
 rrv ./reg-test/cases/case-c-null-field-input.sh
 rrv ./reg-test/cases/case-c-number-formatting.sh
 rrv ./reg-test/cases/case-c-rename-regex.sh
-rrv ./reg-test/cases/case-c-repeat.sh
 rrv ./reg-test/cases/case-c-reshape.sh
 rrv ./reg-test/cases/case-c-skip-pass-comments.sh
 rrv ./reg-test/cases/case-c-stats1-percentile-interpolation.sh
