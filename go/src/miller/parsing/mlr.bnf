@@ -964,11 +964,18 @@ EmittableAsList
 
 Emittable
   : LocalVariable
-  | DirectOosvarValue
-  | DirectFieldValue
-  | MapLiteral
+
   | FullOosvar
+  | DirectOosvarValue
+  | BracedOosvarValue
+  | IndirectOosvarValue
+
   | FullSrec
+  | DirectFieldValue
+  | BracedFieldValue
+  | IndirectFieldValue
+
+  | MapLiteral
   ;
 
 // ----------------------------------------------------------------
