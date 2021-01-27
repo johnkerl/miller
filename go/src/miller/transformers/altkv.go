@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -12,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameAltkv = "altkv"
+
 var AltkvSetup = transforming.TransformerSetup{
-	Verb:         "altkv",
+	Verb:         verbNameAltkv,
 	ParseCLIFunc: transformerAltkvParseCLI,
 	IgnoresInput: false,
 }
@@ -27,29 +30,23 @@ func transformerAltkvParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerAltkvUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerAltkvUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerAltkvUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerAltkv()
 
@@ -59,16 +56,11 @@ func transformerAltkvParseCLI(
 
 func transformerAltkvUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {no options}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s {no options}\n", os.Args[0], verbNameAltkv)
 	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
-
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
 }
 
 // ----------------------------------------------------------------

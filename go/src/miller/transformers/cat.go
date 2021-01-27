@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -12,9 +13,12 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameCat = "cat"
+
 var CatSetup = transforming.TransformerSetup{
-	Verb:         "cat",
+	Verb:         verbNameCat,
 	ParseCLIFunc: transformerCatParseCLI,
+	UsageFunc:    transformerCatUsage,
 	IgnoresInput: false,
 }
 
@@ -27,55 +31,43 @@ func transformerCatParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
 
 	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	doCounters := false
+	counterFieldName := ""
+	groupByFieldNames := ""
 
-	pDoCounters := flagSet.Bool(
-		"n",
-		false,
-		"Prepend field \"n\" to each record with record-counter starting at 1",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pCounterFieldName := flagSet.String(
-		"N",
-		"",
-		"Prepend field {name} to each record with record-counter starting at 1",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerCatUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Optional group-by-field names for counters, e.g. a,b,c",
-	)
+		} else if args[argi] == "-n" {
+			counterFieldName = "n"
+			argi += 1
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-N" {
+			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerCatUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerCatUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// TODO:
-	//	fmt.Fprintf(o, "-v        Write a low-level record-structure dump to stderr.\n");
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
-
 	transformer, _ := NewTransformerCat(
-		*pDoCounters,
-		pCounterFieldName,
-		*pGroupByFieldNames,
+		doCounters,
+		counterFieldName,
+		groupByFieldNames,
 	)
 
 	*pargi = argi
@@ -84,16 +76,18 @@ func transformerCatParseCLI(
 
 func transformerCatUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCat)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "-n         Prepend field \"n\" to each record with record-counter starting at 1.\n")
+	fmt.Fprintf(o, "-N {name}  Prepend field {name} to each record with record-counter starting at 1.\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -111,15 +105,13 @@ type TransformerCat struct {
 // ----------------------------------------------------------------
 func NewTransformerCat(
 	doCounters bool,
-	pCounterFieldName *string,
+	counterFieldName string,
 	groupByFieldNames string,
 ) (*TransformerCat, error) {
 
 	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
-	counterFieldName := "n"
-	if *pCounterFieldName != "" {
-		counterFieldName = *pCounterFieldName
+	if counterFieldName != "" {
 		doCounters = true
 	}
 

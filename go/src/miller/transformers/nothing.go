@@ -11,8 +11,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameNothing = "nothing"
+
 var NothingSetup = transforming.TransformerSetup{
-	Verb:         "nothing",
+	Verb:         verbNameNothing,
 	ParseCLIFunc: transformerNothingParseCLI,
 	IgnoresInput: false,
 }
@@ -26,7 +28,7 @@ func transformerNothingParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

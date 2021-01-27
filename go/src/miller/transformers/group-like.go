@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameGroupLike = "group-like"
+
 var GroupLikeSetup = transforming.TransformerSetup{
-	Verb:         "group-like",
+	Verb:         verbNameGroupLike,
 	ParseCLIFunc: transformerGroupLikeParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerGroupLikeParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

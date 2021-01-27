@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -13,9 +14,12 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameBootstrap = "bootstrap"
+
 var BootstrapSetup = transforming.TransformerSetup{
-	Verb:         "bootstrap",
+	Verb:         verbNameBootstrap,
 	ParseCLIFunc: transformerBootstrapParseCLI,
+	UsageFunc:    transformerBootstrapUsage,
 	IgnoresInput: false,
 }
 
@@ -28,39 +32,31 @@ func transformerBootstrapParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
+	verb := args[argi] // xxx port more
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	nout := -1
 
-	// TODO: Needs to be 64-bit friendly
-	pNout := flagSet.Int(
-		"n",
-		-1,
-		`Number of samples to output. Defaults to number of input records.
-    Must be non-negative.`,
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerBootstrapUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else if args[argi] == "-n" {
+			nout = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerBootstrapUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerBootstrapUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
 	}
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
-
-	transformer, _ := NewTransformerBootstrap(*pNout)
+	transformer, _ := NewTransformerBootstrap(nout)
 
 	*pargi = argi
 	return transformer
@@ -68,23 +64,23 @@ func transformerBootstrapParseCLI(
 
 func transformerBootstrapUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameBootstrap)
 	fmt.Fprintf(o,
 		`Emits an n-sample, with replacement, of the input records.
 See also %s sample and %s shuffle.
-`, argv0, argv0)
+`, os.Args[0], os.Args[0])
 	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o,
+		` -n Number of samples to output. Defaults to number of input records.
+    Must be non-negative.
+`)
 
-	// We use -1 as an alias for n, but n isn't known until end of stream.
-	// Announcing "default -1" would be confusing for the reader, so we omit
-	// the default for this verb.
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage)
-	})
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

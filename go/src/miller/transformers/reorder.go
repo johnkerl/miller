@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameReorder = "reorder"
+
 var ReorderSetup = transforming.TransformerSetup{
-	Verb:         "reorder",
+	Verb:         verbNameReorder,
 	ParseCLIFunc: transformerReorderParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerReorderParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

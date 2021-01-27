@@ -157,17 +157,22 @@ func usageAllVerbs(argv0 string) {
 
 	for _, transformerSetup := range MAPPER_LOOKUP_TABLE {
 		fmt.Printf("%s\n", separator)
-		args := [3]string{os.Args[0], transformerSetup.Verb, "--help"}
-		argi := 1
-		transformerSetup.ParseCLIFunc(
-			&argi,
-			3,
-			args[:],
-			flag.ContinueOnError,
-			nil,
-			nil,
-		)
-		fmt.Printf("\n")
+		// TODO: make this the always case after refactor is complete
+		if transformerSetup.UsageFunc != nil {
+			transformerSetup.UsageFunc(os.Stdout, false, 0)
+		} else {
+			args := [3]string{os.Args[0], transformerSetup.Verb, "--help"}
+			argi := 1
+			transformerSetup.ParseCLIFunc(
+				&argi,
+				3,
+				args[:],
+				flag.ContinueOnError,
+				nil,
+				nil,
+			)
+			fmt.Println()
+		}
 	}
 	fmt.Printf("%s\n", separator)
 	os.Exit(0)

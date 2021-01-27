@@ -11,8 +11,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameSkipTrivialRecords = "skip-trivial-records"
+
 var SkipTrivialRecordsSetup = transforming.TransformerSetup{
-	Verb:         "skip-trivial-records",
+	Verb:         verbNameSkipTrivialRecords,
 	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
 	IgnoresInput: false,
 }
@@ -26,7 +28,7 @@ func transformerSkipTrivialRecordsParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

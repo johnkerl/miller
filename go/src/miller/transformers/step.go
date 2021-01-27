@@ -15,8 +15,10 @@ import (
 const DEFAULT_STRING_ALPHA = "0.5"
 
 // ----------------------------------------------------------------
+const verbNameStep = "step"
+
 var StepSetup = transforming.TransformerSetup{
-	Verb:         "step",
+	Verb:         verbNameStep,
 	ParseCLIFunc: transformerStepParseCLI,
 	IgnoresInput: false,
 }
@@ -30,7 +32,7 @@ func transformerStepParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

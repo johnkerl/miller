@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameRemoveEmptyColumns = "remove-empty-columns"
+
 var RemoveEmptyColumnsSetup = transforming.TransformerSetup{
-	Verb:         "remove-empty-columns",
+	Verb:         verbNameRemoveEmptyColumns,
 	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerRemoveEmptyColumnsParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

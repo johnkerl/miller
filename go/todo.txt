@@ -4,6 +4,17 @@ TOP OF LIST:
 ! issues !
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+help-refactor:
+* checkArgCount -> lib
+  o getInt etc libify -- including advancing argi
+  o scan for argi += 2
+* usage api func w/ *file/bool/int
+* make sure all verbs take -h/--help though
+* 'get the verb name' -> 'skip the verb name'
+* --help-all-verbs invoke the new API function
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * port verb having-fields
 * port verb merge-fields
 * port verb stats2

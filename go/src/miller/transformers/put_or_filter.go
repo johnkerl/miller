@@ -19,14 +19,18 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNamePut = "put"
+
 var PutSetup = transforming.TransformerSetup{
-	Verb:         "put",
+	Verb:         verbNamePut,
 	ParseCLIFunc: transformerPutParseCLI,
 	IgnoresInput: false,
 }
 
+const verbNameFilter = "filter"
+
 var FilterSetup = transforming.TransformerSetup{
-	Verb:         "filter",
+	Verb:         verbNameFilter,
 	ParseCLIFunc: transformerPutParseCLI,
 	IgnoresInput: false,
 }
@@ -40,7 +44,7 @@ func transformerPutParseCLI(
 	mainRecordWriterOptions *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -77,12 +81,12 @@ func transformerPutParseCLI(
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
-			checkArgCountPut(verb, args, argi, argc, 2)
-
 			// Get a DSL string from the user-specified filename
-			data, err := ioutil.ReadFile(args[argi+1])
+			filename := clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+			data, err := ioutil.ReadFile(filename)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression: ", args[0], verb)
+				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
+					args[0], verb, filename)
 				fmt.Println(err)
 				return nil
 			}
@@ -92,29 +96,21 @@ func transformerPutParseCLI(
 			dslString += string(data)
 
 			needExpressionArg = false
-			argi += 2
 
 		} else if args[argi] == "-e" {
-			checkArgCountPut(verb, args, argi, argc, 2)
-
-			// Get a DSL string from the user-specified filename
 			if dslString != "" {
 				dslString += ";\n"
 			}
-			dslString += args[argi+1]
-
+			dslString += clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 			needExpressionArg = false
-			argi += 2
 
 		} else if args[argi] == "-s" {
 			// E.g.
 			//   mlr put -s sum=0
 			// is like
 			//   mlr put -s 'begin {@sum = 0}'
-			checkArgCountPut(verb, args, argi, argc, 2)
-			presets = append(presets, args[argi+1])
-
-			argi += 2
+			preset := clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+			presets = append(presets, preset)
 
 		} else if args[argi] == "-x" {
 			invertFilter = true
@@ -202,17 +198,6 @@ func transformerPutParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-// For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
-// this let us see if the "10" slot exists.
-func checkArgCountPut(verb string, args []string, argi int, argc int, n int) {
-	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
-			args[0], verb, args[argi],
-		)
-		os.Exit(1)
-	}
 }
 
 func transformerPutUsage(

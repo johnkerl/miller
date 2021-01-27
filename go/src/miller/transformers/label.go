@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameLabel = "label"
+
 var LabelSetup = transforming.TransformerSetup{
-	Verb:         "label",
+	Verb:         verbNameLabel,
 	ParseCLIFunc: transformerLabelParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerLabelParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

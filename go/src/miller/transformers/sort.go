@@ -56,8 +56,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameSort = "sort"
+
 var SortSetup = transforming.TransformerSetup{
-	Verb:         "sort",
+	Verb:         verbNameSort,
 	ParseCLIFunc: transformerSortParseCLI,
 	IgnoresInput: false,
 }
@@ -71,7 +73,7 @@ func transformerSortParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -93,45 +95,39 @@ func transformerSortParseCLI(
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
-			checkArgCountSort(verb, args, argi, argc, 2)
-			subList := lib.SplitString(args[argi+1], ",")
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
 			}
-			argi += 2
+
 		} else if args[argi] == "-r" {
-			checkArgCountSort(verb, args, argi, argc, 2)
-			subList := lib.SplitString(args[argi+1], ",")
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparator)
 			}
-			argi += 2
+
 		} else if args[argi] == "-n" {
-			checkArgCountSort(verb, args, argi, argc, 2)
-			subList := lib.SplitString(args[argi+1], ",")
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
-			argi += 2
+
 		} else if args[argi] == "-nf" {
-			checkArgCountSort(verb, args, argi, argc, 2)
-			subList := lib.SplitString(args[argi+1], ",")
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
-			argi += 2
+
 		} else if args[argi] == "-nr" {
-			checkArgCountSort(verb, args, argi, argc, 2)
-			subList := lib.SplitString(args[argi+1], ",")
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNameList = append(groupByFieldNameList, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)
 			}
-			argi += 2
 
 		} else {
 			transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
@@ -151,16 +147,6 @@ func transformerSortParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-// For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
-// this let us see if the "10" slot exists.
-func checkArgCountSort(verb string, args []string, argi int, argc int, n int) {
-	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", args[0], args[argi])
-		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, os.Args[0], "sort")
-		os.Exit(1)
-	}
 }
 
 func transformerSortUsage(

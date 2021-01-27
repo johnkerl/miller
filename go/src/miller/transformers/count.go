@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameCount = "count"
+
 var CountSetup = transforming.TransformerSetup{
-	Verb:         "count",
+	Verb:         verbNameCount,
 	ParseCLIFunc: transformerCountParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerCountParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

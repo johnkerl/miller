@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameCountSimilar = "count-similar"
+
 var CountSimilarSetup = transforming.TransformerSetup{
-	Verb:         "count-similar",
+	Verb:         verbNameCountSimilar,
 	ParseCLIFunc: transformerCountSimilarParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerCountSimilarParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

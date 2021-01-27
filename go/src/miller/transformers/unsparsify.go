@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameUnsparsify = "unsparsify"
+
 var UnsparsifySetup = transforming.TransformerSetup{
-	Verb:         "unsparsify",
+	Verb:         verbNameUnsparsify,
 	ParseCLIFunc: transformerUnsparsifyParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerUnsparsifyParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

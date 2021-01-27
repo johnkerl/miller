@@ -14,8 +14,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameStats1 = "stats1"
+
 var Stats1Setup = transforming.TransformerSetup{
-	Verb:         "stats1",
+	Verb:         verbNameStats1,
 	ParseCLIFunc: transformerStats1ParseCLI,
 	IgnoresInput: false,
 }
@@ -29,7 +31,7 @@ func transformerStats1ParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -48,19 +50,13 @@ func transformerStats1ParseCLI(
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-a" {
-			checkArgCountStats1(verb, args, argi, argc, 2)
-			accumulatorNameList = lib.SplitString(args[argi+1], ",")
-			argi += 2
+			accumulatorNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-f" {
-			checkArgCountStats1(verb, args, argi, argc, 2)
-			valueFieldNameList = lib.SplitString(args[argi+1], ",")
-			argi += 2
+			valueFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-g" {
-			checkArgCountStats1(verb, args, argi, argc, 2)
-			groupByFieldNameList = lib.SplitString(args[argi+1], ",")
-			argi += 2
+			groupByFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-i" {
 			doInterpolatedPercentiles = true
@@ -106,18 +102,6 @@ func transformerStats1ParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-// For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
-// this let us see if the "10" slot exists.
-func checkArgCountStats1(verb string, args []string, argi int, argc int, n int) {
-	if (argc - argi) < n {
-		fmt.Fprintf(
-			os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
-			args[0], verb, args[argi],
-		)
-		os.Exit(1)
-	}
 }
 
 func transformerStats1Usage(

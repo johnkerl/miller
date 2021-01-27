@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameFillDown = "fill-down"
+
 var FillDownSetup = transforming.TransformerSetup{
-	Verb:         "fill-down",
+	Verb:         verbNameFillDown,
 	ParseCLIFunc: transformerFillDownParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerFillDownParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

@@ -11,8 +11,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameCheck = "check"
+
 var CheckSetup = transforming.TransformerSetup{
-	Verb:         "check",
+	Verb:         verbNameCheck,
 	ParseCLIFunc: transformerCheckParseCLI,
 	IgnoresInput: false,
 }
@@ -26,7 +28,7 @@ func transformerCheckParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

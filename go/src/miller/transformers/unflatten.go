@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameUnflatten = "unflatten"
+
 var UnflattenSetup = transforming.TransformerSetup{
-	Verb:         "unflatten",
+	Verb:         verbNameUnflatten,
 	ParseCLIFunc: transformerUnflattenParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerUnflattenParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

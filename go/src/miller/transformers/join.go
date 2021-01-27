@@ -16,8 +16,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameJoin = "join"
+
 var JoinSetup = transforming.TransformerSetup{
-	Verb:         "join",
+	Verb:         verbNameJoin,
 	ParseCLIFunc: transformerJoinParseCLI,
 	IgnoresInput: false,
 }
@@ -80,7 +82,7 @@ func transformerJoinParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -104,81 +106,45 @@ func transformerJoinParseCLI(
 			// handled
 
 		} else if args[argi] == "--prepipe" {
-			// TOOD: checkArgsCount pattern like put/sort
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.prepipe = args[argi+1]
-			argi += 2
+			opts.prepipe = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-f" {
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.leftFileName = args[argi+1]
-			argi += 2
+			opts.leftFileName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-j" {
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.outputJoinFieldNames = lib.SplitString(args[argi+1], ",")
-			argi += 2
+			opts.outputJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-l" {
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.leftJoinFieldNames = lib.SplitString(args[argi+1], ",")
-			argi += 2
+			opts.leftJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "-r" {
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.rightJoinFieldNames = lib.SplitString(args[argi+1], ",")
-			argi += 2
+			opts.rightJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "--lp" {
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.leftPrefix = args[argi+1]
-			argi += 2
+			opts.leftPrefix = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "--rp" {
-			if (argc - argi) < 2 {
-				transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
-				return nil
-			}
-			opts.rightPrefix = args[argi+1]
-			argi += 2
+			opts.rightPrefix = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
 		} else if args[argi] == "--np" {
 			opts.emitPairables = false
-			argi += 1
+			argi++
 
 		} else if args[argi] == "--ul" {
 			opts.emitLeftUnpairables = true
-			argi += 1
+			argi++
 
 		} else if args[argi] == "--ur" {
 			opts.emitRightUnpairables = true
-			argi += 1
+			argi++
 
 		} else if args[argi] == "-u" {
 			opts.allowUnsortedInput = true
-			argi += 1
+			argi++
 
 		} else if args[argi] == "--sorted-input" || args[argi] == "-s" {
 			opts.allowUnsortedInput = false
-			argi += 1
+			argi++
 
 		} else {
 			transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)

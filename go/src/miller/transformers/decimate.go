@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameDecimate = "decimate"
+
 var DecimateSetup = transforming.TransformerSetup{
-	Verb:         "decimate",
+	Verb:         verbNameDecimate,
 	ParseCLIFunc: transformerDecimateParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerDecimateParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

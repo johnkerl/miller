@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameSample = "sample"
+
 var SampleSetup = transforming.TransformerSetup{
-	Verb:         "sample",
+	Verb:         verbNameSample,
 	ParseCLIFunc: transformerSampleParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerSampleParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

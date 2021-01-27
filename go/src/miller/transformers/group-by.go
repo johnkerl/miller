@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameGroupBy = "group-by"
+
 var GroupBySetup = transforming.TransformerSetup{
-	Verb:         "group-by",
+	Verb:         verbNameGroupBy,
 	ParseCLIFunc: transformerGroupByParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerGroupByParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

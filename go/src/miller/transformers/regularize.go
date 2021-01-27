@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameRegularize = "regularize"
+
 var RegularizeSetup = transforming.TransformerSetup{
-	Verb:         "regularize",
+	Verb:         verbNameRegularize,
 	ParseCLIFunc: transformerRegularizeParseCLI,
 	IgnoresInput: false,
 }
@@ -28,7 +30,7 @@ func transformerRegularizeParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

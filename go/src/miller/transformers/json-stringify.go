@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameJSONStringify = "json-stringify"
+
 var JSONStringifySetup = transforming.TransformerSetup{
-	Verb:         "json-stringify",
+	Verb:         verbNameJSONStringify,
 	ParseCLIFunc: transformerJSONStringifyParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerJSONStringifyParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

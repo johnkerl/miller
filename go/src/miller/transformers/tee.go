@@ -13,8 +13,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameTee = "tee"
+
 var TeeSetup = transforming.TransformerSetup{
-	Verb:         "tee",
+	Verb:         verbNameTee,
 	ParseCLIFunc: transformerTeeParseCLI,
 	IgnoresInput: false,
 }
@@ -28,9 +30,8 @@ func transformerTeeParseCLI(
 	mainRecordWriterOptions *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
 	filenameOrCommand := ""
@@ -50,7 +51,7 @@ func transformerTeeParseCLI(
 			break // No more flag options to process
 
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerTeeUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerTeeUsage(os.Stdout, true, 0)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-a" {
@@ -68,14 +69,14 @@ func transformerTeeParseCLI(
 			// Nothing else to handle here.
 
 		} else {
-			transformerTeeUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerTeeUsage(os.Stderr, true, 1)
 			os.Exit(1)
 		}
 	}
 
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {
-		transformerTeeUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerTeeUsage(os.Stderr, true, 1)
 		os.Exit(1)
 	}
 	filenameOrCommand = args[argi]
@@ -98,12 +99,10 @@ func transformerTeeParseCLI(
 
 func transformerTeeUsage(
 	o *os.File,
+	doExit bool,
 	exitCode int,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
-	argv0 string,
-	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", os.Args[0], verbNameTee)
 	fmt.Fprintf(o,
 		`-a    Append to existing file, if any, rather than overwriting.
 -p    Treat filename as a pipe-to command.

@@ -11,8 +11,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameSortWithinRecords = "sort-within-records"
+
 var SortWithinRecordsSetup = transforming.TransformerSetup{
-	Verb:         "sort-within-records",
+	Verb:         verbNameSortWithinRecords,
 	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
 	IgnoresInput: false,
 }
@@ -26,7 +28,7 @@ func transformerSortWithinRecordsParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++

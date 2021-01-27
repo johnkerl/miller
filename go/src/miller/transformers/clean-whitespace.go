@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameCleanWhitespace = "clean-whitespace"
+
 var CleanWhitespaceSetup = transforming.TransformerSetup{
-	Verb:         "clean-whitespace",
+	Verb:         verbNameCleanWhitespace,
 	ParseCLIFunc: transformerCleanWhitespaceParseCLI,
 	IgnoresInput: false,
 }
@@ -30,7 +32,7 @@ func transformerCleanWhitespaceParseCLI(
 	doKeys := true
 	doValues := true
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
@@ -59,7 +61,7 @@ func transformerCleanWhitespaceParseCLI(
 	}
 
 	if !doKeys && !doValues {
-		transformerCleanWhitespaceUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerCleanWhitespaceUsage(os.Stderr, true, 1)
 		os.Exit(1)
 	}
 
@@ -74,12 +76,10 @@ func transformerCleanWhitespaceParseCLI(
 
 func transformerCleanWhitespaceUsage(
 	o *os.File,
+	doExit bool,
 	exitCode int,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
-	argv0 string,
-	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCleanWhitespace)
 	fmt.Fprintf(o, "For each record, for each field in the record, whitespace-cleans the keys and/or\n")
 	fmt.Fprintf(o, "values. Whitespace-cleaning entails stripping leading and trailing whitespace,\n")
 	fmt.Fprintf(o, "and replacing multiple whitespace with singles. For finer-grained control,\n")
@@ -91,6 +91,9 @@ func transformerCleanWhitespaceUsage(
 	fmt.Fprintf(o, "-v|--values-only  Do not touch keys.\n")
 	fmt.Fprintf(o, "It is an error to specify -k as well as -v -- to clean keys and values,\n")
 	fmt.Fprintf(o, "leave off -k as well as -v.\n")
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

@@ -12,8 +12,10 @@ import (
 )
 
 // ----------------------------------------------------------------
+const verbNameJSONParse = "json-parse"
+
 var JSONParseSetup = transforming.TransformerSetup{
-	Verb:         "json-parse",
+	Verb:         verbNameJSONParse,
 	ParseCLIFunc: transformerJSONParseParseCLI,
 	IgnoresInput: false,
 }
@@ -27,7 +29,7 @@ func transformerJSONParseParseCLI(
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
 
-	// Get the verb name from the current spot in the mlr command line
+	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	verb := args[argi]
 	argi++
