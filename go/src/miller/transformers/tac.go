@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -17,6 +18,7 @@ const verbNameTac = "tac"
 var TacSetup = transforming.TransformerSetup{
 	Verb:         verbNameTac,
 	ParseCLIFunc: transformerTacParseCLI,
+	UsageFunc:    transformerTacUsage,
 	IgnoresInput: false,
 }
 
@@ -31,26 +33,21 @@ func transformerTacParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
-		}
-		transformerTacUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerTacUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerTacUsage(os.Stderr, true, 1)
+			os.Exit(1)
+		}
+	}
 
 	transformer, _ := NewTransformerTac()
 
@@ -60,16 +57,17 @@ func transformerTacParseCLI(
 
 func transformerTacUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s\n", argv0, verb)
-	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameTac)
+	fmt.Fprintf(
+		o,
+		"Prints records in reverse order from the order in which they were encountered.\n",
+	)
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

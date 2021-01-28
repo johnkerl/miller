@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -17,6 +18,7 @@ const verbNameCount = "count"
 var CountSetup = transforming.TransformerSetup{
 	Verb:         verbNameCount,
 	ParseCLIFunc: transformerCountParseCLI,
+	UsageFunc:    transformerCountUsage,
 	IgnoresInput: false,
 }
 
@@ -34,47 +36,38 @@ func transformerCountParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	groupByFieldNames := ""
+	showCountsOnly := false
+	outputFieldName := "count"
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Optional group-by-field names for counts, e.g. a,b,c",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pShowCountsOnly := flagSet.Bool(
-		"n",
-		false,
-		"Show only the number of distinct values. Not interesting without -g.",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerCountUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pOutputFieldName := flagSet.String(
-		"o",
-		"count",
-		`Field name for output count`,
-	)
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-n" {
+			showCountsOnly = true
+			argi++
+
+		} else if args[argi] == "-o" {
+			outputFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerCountUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerCountUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerCount(
-		*pGroupByFieldNames,
-		*pShowCountsOnly,
-		*pOutputFieldName,
+		groupByFieldNames,
+		showCountsOnly,
+		outputFieldName,
 	)
 
 	*pargi = argi
@@ -83,23 +76,22 @@ func transformerCountParseCLI(
 
 func transformerCountUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCount)
 	fmt.Fprint(o,
 		`Prints number of records, optionally grouped by distinct values for specified field names.
 `)
-	fmt.Fprintf(o, "Options:\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		if f.Name == "g" {
-			fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage) // f.Name, f.Value
-		} else {
-			fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-		}
-	})
+	fmt.Fprintf(o, `Options:
+-g Optional group-by-field names for counts, e.g. a,b,c
+-n Show only the number of distinct values. Not interesting without -g.
+-o Field name for output-count. Default "count".
+`)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
