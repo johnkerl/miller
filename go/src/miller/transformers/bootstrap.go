@@ -131,7 +131,7 @@ func (this *TransformerBootstrap) Transform(
 	//
 	// For that reason, this transformer must copy all output.
 
-	// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int64.
+	// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int.
 	nin := this.recordsAndContexts.Len()
 	nout := this.nout
 	if nout == -1 {

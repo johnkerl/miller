@@ -13,7 +13,7 @@ func MlrvalSystime() Mlrval {
 	)
 }
 func MlrvalSystimeInt() Mlrval {
-	return MlrvalFromInt64(time.Now().Unix())
+	return MlrvalFromInt(int(time.Now().Unix()))
 }
 
 var startTime float64

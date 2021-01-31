@@ -8,6 +8,17 @@ help-refactor:
 * checkArgCount -> lib
   o getInt etc libify -- including advancing argi
   o scan for argi += 2
+  o argi++ audit -- argi+=1 converts, and check for missings
+  ! modify for-loops to argi++, and clitypes.VerbGetX to advance by one more
+  o audit len(xxxNames) == 0
+  o strconv.FormatInt -> Itoa
+  o audit for os.Exit after Usage
+  o audit for all flag/flagSet callsites
+  o audit for return nil // help intentionally requested
+  o os.Args[0] -> global ...
+  o audit for DEFAULT_FOOs @ 
+  o audit for "-h|--help Show this message."
+  o audit for '-z {zzz}'
 * usage api func w/ *file/bool/int
 * make sure all verbs take -h/--help though
 * 'get the verb name' -> 'skip the verb name'
@@ -473,3 +484,15 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * document tee -p
 * doc6: default flatsep is now "." not ":" in keeping with JSON culture
 ? allow [[...]] / [[[...]]] at assignment LHS
+
+* why no flagSet:
+
+	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
+	// sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
+	// first sort lexically on field a, then numerically on field b, then
+	// lexically on field c. The flagSet API would let the '-f c' clobber the
+	// '-f a', while we want both.
+
+	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
+	// and 'mlr filter' is they need to be able to take -f and/or -e more than
+	// once, and Go flags can't handle that.

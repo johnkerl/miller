@@ -14,23 +14,23 @@ func MlrvalTypeof(ma *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 func string_to_int(ma *Mlrval) Mlrval {
-	i, ok := lib.TryInt64FromString(ma.printrep)
+	i, ok := lib.TryIntFromString(ma.printrep)
 	if ok {
-		return MlrvalFromInt64(i)
+		return MlrvalFromInt(i)
 	} else {
 		return MlrvalFromError()
 	}
 }
 
 func float_to_int(ma *Mlrval) Mlrval {
-	return MlrvalFromInt64(int64(ma.floatval))
+	return MlrvalFromInt(int(ma.floatval))
 }
 
 func bool_to_int(ma *Mlrval) Mlrval {
 	if ma.boolval == true {
-		return MlrvalFromInt64(1)
+		return MlrvalFromInt(1)
 	} else {
-		return MlrvalFromInt64(0)
+		return MlrvalFromInt(0)
 	}
 }
 

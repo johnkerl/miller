@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -17,6 +18,7 @@ const verbNameSeqgen = "seqgen"
 var SeqgenSetup = transforming.TransformerSetup{
 	Verb:         verbNameSeqgen,
 	ParseCLIFunc: transformerSeqgenParseCLI,
+	UsageFunc:    transformerSeqgenUsage,
 	IgnoresInput: true,
 }
 
@@ -34,54 +36,42 @@ func transformerSeqgenParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	fieldName := "i"
+	startString := "1"
+	stopString := "100"
+	stepString := "1"
 
-	pFieldName := flagSet.String(
-		"f",
-		"i",
-		"Field name for counters.",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pStartString := flagSet.String(
-		"start",
-		"1",
-		"Inclusive start value.",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerSeqgenUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pStopString := flagSet.String(
-		"stop",
-		"100",
-		"Inclusive stop value.",
-	)
+		} else if args[argi] == "-f" {
+			fieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
-	pStepString := flagSet.String(
-		"step",
-		"1",
-		"Step value",
-	)
+		} else if args[argi] == "--start" {
+			startString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "--stop" {
+			stopString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "--step" {
+			stepString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerSeqgenUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerSeqgenUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, err := NewTransformerSeqgen(
-		*pFieldName,
-		*pStartString,
-		*pStopString,
-		*pStepString,
+		fieldName,
+		startString,
+		stopString,
+		stepString,
 	)
 	// TODO: put error return into this API
 	if err != nil {
@@ -95,21 +85,26 @@ func transformerSeqgenParseCLI(
 
 func transformerSeqgenUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameSeqgen)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
 	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
 	fmt.Fprintf(o, "output as specified by the following options:\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+
+	fmt.Fprintf(o, "-f {name} (default \"i\") Field name for counters.\n")
+	fmt.Fprintf(o, "-start {value} (default 1) Inclusive start value.\n")
+	fmt.Fprintf(o, "-step {value} (default 1) Step value.\n")
+	fmt.Fprintf(o, "-stop {value} (default 100) Inclusive stop value.\n")
+
 	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")
 	fmt.Fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n")
 	fmt.Fprintf(o, "unless start == stop.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

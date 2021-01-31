@@ -215,11 +215,11 @@ func (this *PercentileKeeper) Ingest(value *types.Mlrval) {
 // * (Note that Miller's interpolated percentiles match match R's quantile with type=7)
 // ----------------------------------------------------------------
 
-func computeIndexNoninterpolated(n int64, p float64) int64 {
-	index := int64(p * float64(n) / 100.0)
+func computeIndexNoninterpolated(n int, p float64) int {
+	index := int(p * float64(n) / 100.0)
 	//index := p * (float64(float64(n)) - 1) / 100.0
-	//index := int64(ceil(p * (float64(n) - 1) / 100.0))
-	//index := int64(ceil(-0.5 + p*(float64(n)-1)/100.0))
+	//index := int(ceil(p * (float64(n) - 1) / 100.0))
+	//index := int(ceil(-0.5 + p*(float64(n)-1)/100.0))
 	if index >= n {
 		index = n - 1
 	}
@@ -229,12 +229,12 @@ func computeIndexNoninterpolated(n int64, p float64) int64 {
 	return index
 }
 
-func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int64, p float64) types.Mlrval {
+func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) types.Mlrval {
 	findex := (p / 100.0) * (float64(n) - 1)
 	if findex < 0.0 {
 		findex = 0.0
 	}
-	iindex := int64(math.Floor(findex))
+	iindex := int(math.Floor(findex))
 	if iindex >= n-1 {
 		return *array[iindex].Copy()
 	} else {
@@ -271,7 +271,7 @@ func (this *PercentileKeeper) EmitNonInterpolated(percentile float64) types.Mlrv
 		return types.MlrvalFromAbsent()
 	}
 	this.sortIfNecessary()
-	return *this.data[computeIndexNoninterpolated(int64(len(this.data)), percentile)].Copy()
+	return *this.data[computeIndexNoninterpolated(int(len(this.data)), percentile)].Copy()
 }
 
 func (this *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) types.Mlrval {
@@ -279,7 +279,7 @@ func (this *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) types
 		return types.MlrvalFromAbsent()
 	}
 	this.sortIfNecessary()
-	output := getPercentileLinearlyInterpolated(this.data, int64(len(this.data)), percentile)
+	output := getPercentileLinearlyInterpolated(this.data, int(len(this.data)), percentile)
 	return *output.Copy()
 }
 

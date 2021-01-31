@@ -337,7 +337,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 		state.stack.PushStackFrame()
 		defer state.stack.PopStackFrame()
 		for zindex, element := range arrayval {
-			mindex := types.MlrvalFromInt64(int64(zindex + 1))
+			mindex := types.MlrvalFromInt(int(zindex + 1))
 
 			state.stack.BindVariable(this.keyVariableName, &mindex)
 			state.stack.BindVariable(this.valueVariableName, &element)
@@ -544,7 +544,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		// Go storage ("zindex") is 0-up.
 
 		for zindex, element := range arrayval {
-			mindex := types.MlrvalFromInt64(int64(zindex + 1))
+			mindex := types.MlrvalFromInt(int(zindex + 1))
 
 			state.stack.BindVariable(keyVariableNames[0], &mindex)
 
@@ -628,7 +628,7 @@ func (this *ForLoopMultivariableNode) executeInner(
 		// Go storage ("zindex") is 0-up.
 
 		for zindex, element := range arrayval {
-			mindex := types.MlrvalFromInt64(int64(zindex + 1))
+			mindex := types.MlrvalFromInt(int(zindex + 1))
 
 			state.stack.BindVariable(keyVariableName, &mindex)
 			state.stack.BindVariable(this.valueVariableName, &element)

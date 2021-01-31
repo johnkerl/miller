@@ -13,19 +13,19 @@ import (
 func MlrvalLength(ma *Mlrval) Mlrval {
 	switch ma.mvtype {
 	case MT_ERROR:
-		return MlrvalFromInt64(0)
+		return MlrvalFromInt(0)
 		break
 	case MT_ABSENT:
-		return MlrvalFromInt64(0)
+		return MlrvalFromInt(0)
 		break
 	case MT_ARRAY:
-		return MlrvalFromInt64(int64(len(ma.arrayval)))
+		return MlrvalFromInt(int(len(ma.arrayval)))
 		break
 	case MT_MAP:
-		return MlrvalFromInt64(int64(ma.mapval.FieldCount))
+		return MlrvalFromInt(int(ma.mapval.FieldCount))
 		break
 	}
-	return MlrvalFromInt64(1)
+	return MlrvalFromInt(1)
 }
 
 // ================================================================
@@ -38,7 +38,7 @@ func depth_from_array(ma *Mlrval) Mlrval {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return MlrvalFromInt64(int64(1 + maxChildDepth))
+	return MlrvalFromInt(int(1 + maxChildDepth))
 }
 
 func depth_from_map(ma *Mlrval) Mlrval {
@@ -51,11 +51,11 @@ func depth_from_map(ma *Mlrval) Mlrval {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return MlrvalFromInt64(int64(1 + maxChildDepth))
+	return MlrvalFromInt(int(1 + maxChildDepth))
 }
 
 func depth_from_scalar(ma *Mlrval) Mlrval {
-	return MlrvalFromInt64(0)
+	return MlrvalFromInt(0)
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
@@ -87,7 +87,7 @@ func leafcount_from_array(ma *Mlrval) Mlrval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := MlrvalLeafCount(&child)
 
-		childLeafCount := MlrvalFromInt64(1)
+		childLeafCount := MlrvalFromInt(1)
 		if child.mvtype == MT_ARRAY {
 			childLeafCount = leafcount_from_array(&child)
 		} else if child.mvtype == MT_MAP {
@@ -97,7 +97,7 @@ func leafcount_from_array(ma *Mlrval) Mlrval {
 		iChildLeafCount := int(childLeafCount.intval)
 		sumChildLeafCount += iChildLeafCount
 	}
-	return MlrvalFromInt64(int64(sumChildLeafCount))
+	return MlrvalFromInt(int(sumChildLeafCount))
 }
 
 func leafcount_from_map(ma *Mlrval) Mlrval {
@@ -108,7 +108,7 @@ func leafcount_from_map(ma *Mlrval) Mlrval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := MlrvalLeafCount(child)
 
-		childLeafCount := MlrvalFromInt64(1)
+		childLeafCount := MlrvalFromInt(1)
 		if child.mvtype == MT_ARRAY {
 			childLeafCount = leafcount_from_array(child)
 		} else if child.mvtype == MT_MAP {
@@ -118,11 +118,11 @@ func leafcount_from_map(ma *Mlrval) Mlrval {
 		iChildLeafCount := int(childLeafCount.intval)
 		sumChildLeafCount += iChildLeafCount
 	}
-	return MlrvalFromInt64(int64(sumChildLeafCount))
+	return MlrvalFromInt(int(sumChildLeafCount))
 }
 
 func leafcount_from_scalar(ma *Mlrval) Mlrval {
-	return MlrvalFromInt64(1)
+	return MlrvalFromInt(1)
 }
 
 var leafcount_dispositions = [MT_DIM]UnaryFunc{
@@ -537,7 +537,7 @@ func MlrvalSplitA(ma, mb *Mlrval) Mlrval {
 
 	fields := lib.SplitString(ma.printrep, fieldSeparator)
 
-	retval := NewSizedMlrvalArray(int64(len(fields)))
+	retval := NewSizedMlrvalArray(int(len(fields)))
 
 	for i, field := range fields {
 		value := MlrvalFromInferredType(field)
@@ -567,7 +567,7 @@ func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
 func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 	fields := lib.SplitString(input, separator)
 
-	retval := NewSizedMlrvalArray(int64(len(fields)))
+	retval := NewSizedMlrvalArray(int(len(fields)))
 
 	for i, field := range fields {
 		value := MlrvalFromString(field)
@@ -589,9 +589,9 @@ func MlrvalGetKeys(ma *Mlrval) Mlrval {
 		return *retval
 
 	} else if ma.mvtype == MT_ARRAY {
-		retval := NewSizedMlrvalArray(int64(len(ma.arrayval)))
+		retval := NewSizedMlrvalArray(int(len(ma.arrayval)))
 		for i, _ := range ma.arrayval {
-			retval.arrayval[i] = MlrvalFromInt64(int64(i + 1)) // Miller user-space indices are 1-up
+			retval.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
 		return *retval
 
@@ -612,7 +612,7 @@ func MlrvalGetValues(ma *Mlrval) Mlrval {
 		return *retval
 
 	} else if ma.mvtype == MT_ARRAY {
-		retval := NewSizedMlrvalArray(int64(len(ma.arrayval)))
+		retval := NewSizedMlrvalArray(int(len(ma.arrayval)))
 		for i, value := range ma.arrayval {
 			retval.arrayval[i] = *value.Copy()
 		}

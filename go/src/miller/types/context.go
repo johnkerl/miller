@@ -74,12 +74,12 @@ func NewEndOfStreamMarker(context *Context) *RecordAndContext {
 // ----------------------------------------------------------------
 type Context struct {
 	FILENAME string
-	FILENUM  int64
+	FILENUM  int
 
 	// This is computed dynammically from the current record's field-count
-	// NF int64
-	NR  int64
-	FNR int64
+	// NF int
+	NR  int
+	FNR int
 
 	IPS      string
 	IFS      string

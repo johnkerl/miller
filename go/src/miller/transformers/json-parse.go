@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -17,6 +18,7 @@ const verbNameJSONParse = "json-parse"
 var JSONParseSetup = transforming.TransformerSetup{
 	Verb:         verbNameJSONParse,
 	ParseCLIFunc: transformerJSONParseParseCLI,
+	UsageFunc:    transformerJSONParseUsage,
 	IgnoresInput: false,
 }
 
@@ -34,34 +36,26 @@ func transformerJSONParseParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	var fieldNames []string = nil
 
-	pFieldNames := flagSet.String(
-		"f",
-		"",
-		"Comma-separated list of field names to json-parse (default all).",
-	)
-	// TODO: single-line / multiline
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerJSONParseUsage(os.Stdout, true, 0)
+
+		} else if args[argi] == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerJSONParseUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerJSONParseUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerJSONParse(
-		*pFieldNames,
+		fieldNames,
 	)
 
 	*pargi = argi
@@ -70,19 +64,20 @@ func transformerJSONParseParseCLI(
 
 func transformerJSONParseUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprint(o,
-		`Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
-`)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameJSONParse)
+	fmt.Fprintln(
+		o,
+		`Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].`,
+	)
 	fmt.Fprintf(o, "Options:\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -95,13 +90,11 @@ type TransformerJSONParse struct {
 }
 
 func NewTransformerJSONParse(
-	fieldNames string,
+	fieldNames []string,
 ) (*TransformerJSONParse, error) {
 	var fieldNameSet map[string]bool = nil
-	if fieldNames != "" {
-		fieldNameSet = lib.StringListToSet(
-			lib.SplitString(fieldNames, ","),
-		)
+	if fieldNames != nil {
+		fieldNameSet = lib.StringListToSet(fieldNames)
 	}
 
 	retval := &TransformerJSONParse{

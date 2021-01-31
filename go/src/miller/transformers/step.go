@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -20,6 +21,7 @@ const verbNameStep = "step"
 var StepSetup = transforming.TransformerSetup{
 	Verb:         verbNameStep,
 	ParseCLIFunc: transformerStepParseCLI,
+	UsageFunc:    transformerStepUsage,
 	IgnoresInput: false,
 }
 
@@ -37,71 +39,52 @@ func transformerStepParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	var stepperNames []string = nil
+	var valueFieldNames []string = nil
+	var groupByFieldNames []string = nil
+	var stringAlphas []string = nil
+	var ewmaSuffixes []string = nil
 
-	pStepperNamesString := flagSet.String(
-		"a",
-		"",
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pValueFieldNamesString := flagSet.String(
-		"f",
-		"",
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerStepUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pGroupByFieldNamesString := flagSet.String(
-		"g",
-		"",
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
+		} else if args[argi] == "-a" {
+			stepperNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
-	// As of Miller 6 this happens automatically, but the flag is accepted
-	// as a no-op for backward compatibility with Miller 5 and below.
-	_ = flagSet.Bool(
-		"F",
-		false,
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
+		} else if args[argi] == "-f" {
+			valueFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
-	pAlphasString := flagSet.String(
-		"d",
-		DEFAULT_STRING_ALPHA,
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
-	pEWMASuffixesString := flagSet.String(
-		"o",
-		"",
-		`It's a coding error if you see this.`, // Handled in transformerStepUsage() below
-	)
+		} else if args[argi] == "-d" {
+			stringAlphas = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-o" {
+			ewmaSuffixes = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-F" {
+			// As of Miller 6 this happens automatically, but the flag is accepted
+			// as a no-op for backward compatibility with Miller 5 and below.
+			argi++
+
+		} else {
+			transformerStepUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerStepUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	stepperNames := lib.SplitString(*pStepperNamesString, ",")
-	valueFieldNames := lib.SplitString(*pValueFieldNamesString, ",")
-	groupByFieldNames := lib.SplitString(*pGroupByFieldNamesString, ",")
-	stringAlphas := lib.SplitString(*pAlphasString, ",")
-	EWMASuffixes := lib.SplitString(*pEWMASuffixesString, ",")
 
 	transformer, err := NewTransformerStep(
 		stepperNames,
 		valueFieldNames,
 		groupByFieldNames,
 		stringAlphas,
-		EWMASuffixes,
+		ewmaSuffixes,
 	)
 	// TODO: put error return into this API
 	if err != nil {
@@ -109,23 +92,17 @@ func transformerStepParseCLI(
 		os.Exit(1)
 	}
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
-
 	*pargi = argi
 	return transformer
 }
 
 func transformerStepUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameStep)
 	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
-	// For this transformer, we do NOT use flagSet.VisitAll -- we use our own print statements.
 
 	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
@@ -144,7 +121,7 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
 	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
 	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
-	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", argv0, verb)
+	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", os.Args[0], verbNameStep)
 	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
 
 	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
@@ -153,16 +130,20 @@ func transformerStepUsage(
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", argv0, verb)
-	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", argv0, verb)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", argv0, verb)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", argv0, verb)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", os.Args[0], verbNameStep)
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
 	fmt.Fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n")
 	fmt.Fprintf(o, "for more information on EWMA.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -172,7 +153,7 @@ type TransformerStep struct {
 	valueFieldNames   []string
 	groupByFieldNames []string
 	stringAlphas      []string
-	EWMASuffixes      []string
+	ewmaSuffixes      []string
 
 	// STATE
 	// Scratch space used per-record
@@ -187,7 +168,7 @@ func NewTransformerStep(
 	valueFieldNames []string,
 	groupByFieldNames []string,
 	stringAlphas []string,
-	EWMASuffixes []string,
+	ewmaSuffixes []string,
 ) (*TransformerStep, error) {
 
 	if len(stepperNames) == 0 || len(valueFieldNames) == 0 {
@@ -196,8 +177,8 @@ func NewTransformerStep(
 			"mlr step: -a and -f are both required arguments.",
 		)
 	}
-	if len(stringAlphas) != 0 && len(EWMASuffixes) != 0 {
-		if len(EWMASuffixes) != len(stringAlphas) {
+	if len(stringAlphas) != 0 && len(ewmaSuffixes) != 0 {
+		if len(ewmaSuffixes) != len(stringAlphas) {
 			return nil, errors.New(
 				// TODO: parameterize verb here somehow
 				"mlr step: If -d and -o are provided, their values must have the same length.",
@@ -210,7 +191,7 @@ func NewTransformerStep(
 		valueFieldNames:   valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
 		stringAlphas:      stringAlphas,
-		EWMASuffixes:      EWMASuffixes,
+		ewmaSuffixes:      ewmaSuffixes,
 		groups:            make(map[string]map[string]map[string]tStepper),
 	}
 
@@ -299,7 +280,7 @@ func (this *TransformerStep) Transform(
 					stepperName,
 					valueFieldName,
 					this.stringAlphas,
-					this.EWMASuffixes,
+					this.ewmaSuffixes,
 				)
 				if stepper == nil {
 					// TODO: parameterize verb name
@@ -322,7 +303,7 @@ func (this *TransformerStep) Transform(
 type tStepperAllocator func(
 	inputFieldName string,
 	stringAlphas []string,
-	EWMASuffixes []string,
+	ewmaSuffixes []string,
 ) tStepper
 
 type tStepper interface {
@@ -349,14 +330,14 @@ func allocateStepper(
 	stepperName string,
 	inputFieldName string,
 	stringAlphas []string,
-	EWMASuffixes []string,
+	ewmaSuffixes []string,
 ) tStepper {
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
 		if stepperLookup.name == stepperName {
 			return stepperLookup.stepperAllocator(
 				inputFieldName,
 				stringAlphas,
-				EWMASuffixes,
+				ewmaSuffixes,
 			)
 		}
 	}
@@ -389,7 +370,7 @@ func (this *tStepperDelta) process(
 ) {
 	var delta types.Mlrval
 	if this.previous == nil {
-		delta = types.MlrvalFromInt64(0)
+		delta = types.MlrvalFromInt(0)
 	} else {
 		delta = types.MlrvalBinaryMinus(valueFieldValue, this.previous)
 	}
@@ -455,7 +436,7 @@ func (this *tStepperFromFirst) process(
 ) {
 	var from_first types.Mlrval
 	if this.first == nil {
-		from_first = types.MlrvalFromInt64(0)
+		from_first = types.MlrvalFromInt(0)
 		this.first = valueFieldValue.Copy()
 	} else {
 		from_first = types.MlrvalBinaryMinus(valueFieldValue, this.first)
@@ -486,7 +467,7 @@ func (this *tStepperRatio) process(
 ) {
 	var ratio types.Mlrval
 	if this.previous == nil {
-		ratio = types.MlrvalFromInt64(1)
+		ratio = types.MlrvalFromInt(1)
 	} else {
 		ratio = types.MlrvalDivide(valueFieldValue, this.previous)
 	}
@@ -507,7 +488,7 @@ func stepperRsumAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRsum{
-		rsum:            types.MlrvalFromInt64(0),
+		rsum:            types.MlrvalFromInt(0),
 		outputFieldName: inputFieldName + "_rsum",
 	}
 }
@@ -533,8 +514,8 @@ func stepperCounterAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperCounter{
-		counter:         types.MlrvalFromInt64(0),
-		one:             types.MlrvalFromInt64(1),
+		counter:         types.MlrvalFromInt(0),
+		one:             types.MlrvalFromInt(1),
 		outputFieldName: inputFieldName + "_counter",
 	}
 }
@@ -562,11 +543,11 @@ type tStepperEWMA struct {
 func stepperEWMAAlloc(
 	inputFieldName string,
 	stringAlphas []string,
-	EWMASuffixes []string,
+	ewmaSuffixes []string,
 ) tStepper {
 
 	// We trust our caller has already checked len(stringAlphas) ==
-	// len(EWMASuffixes) in the CLI parser.
+	// len(ewmaSuffixes) in the CLI parser.
 	n := len(stringAlphas)
 
 	alphas := make([]types.Mlrval, n)
@@ -575,8 +556,8 @@ func stepperEWMAAlloc(
 	outputFieldNames := make([]string, n)
 
 	suffixes := stringAlphas
-	if len(EWMASuffixes) != 0 {
-		suffixes = EWMASuffixes
+	if len(ewmaSuffixes) != 0 {
+		suffixes = ewmaSuffixes
 	}
 
 	for i, stringAlpha := range stringAlphas {

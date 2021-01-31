@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -17,6 +18,7 @@ const verbNameRemoveEmptyColumns = "remove-empty-columns"
 var RemoveEmptyColumnsSetup = transforming.TransformerSetup{
 	Verb:         verbNameRemoveEmptyColumns,
 	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
+	UsageFunc:    transformerRemoveEmptyColumnsUsage,
 	IgnoresInput: false,
 }
 
@@ -31,27 +33,21 @@ func transformerRemoveEmptyColumnsParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerRemoveEmptyColumnsUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerRemoveEmptyColumnsUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerRemoveEmptyColumnsUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerRemoveEmptyColumns()
 
@@ -61,16 +57,15 @@ func transformerRemoveEmptyColumnsParseCLI(
 
 func transformerRemoveEmptyColumnsUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {no options}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameRemoveEmptyColumns)
 	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
 
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

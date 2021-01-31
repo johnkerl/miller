@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -17,6 +17,7 @@ const verbNameGap = "gap"
 var GapSetup = transforming.TransformerSetup{
 	Verb:         verbNameGap,
 	ParseCLIFunc: transformerGapParseCLI,
+	UsageFunc:    transformerGapUsage,
 	IgnoresInput: false,
 }
 
@@ -34,44 +35,35 @@ func transformerGapParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	gapCount := -1
+	var groupByFieldNames []string = nil
 
-	pGapCount := flagSet.Int64(
-		"n",
-		-1,
-		`Print a gap every n records.`,
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Print a gap whenever values of these fields (e.g. a,b,c) changes",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerGapUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-n" {
+			gapCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerGapUsage(os.Stderr, true, 1)
 		}
-		transformerGapUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-	if *pGapCount == -1 && *pGroupByFieldNames == "" {
-		transformerGapUsage(os.Stderr, args[0], verb, flagSet)
-		os.Exit(1)
 	}
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
+	if gapCount == -1 && groupByFieldNames == nil {
+		transformerGapUsage(os.Stderr, true, 1)
+	}
 
 	transformer, _ := NewTransformerGap(
-		*pGapCount,
-		*pGroupByFieldNames,
+		gapCount,
+		groupByFieldNames,
 	)
 
 	*pargi = argi
@@ -80,48 +72,50 @@ func transformerGapParseCLI(
 
 func transformerGapUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameGap)
 	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
-	fmt.Fprint(o, "One of -f or -g is required.\n")
-	fmt.Fprint(o, "-n is ignored if -g is present.\n")
+	fmt.Fprintf(o, "Options:\n")
+
+	fmt.Fprintf(o, "Emits an empty record every n records, or when certain values change.\n")
+	fmt.Fprintf(o, "-g {comma-separated field names} Print a gap whenever values of these fields (e.g. a,b,c) changes.\n")
+	fmt.Fprintf(o, "-n {n} Print a gap every n records.\n")
+	fmt.Fprintf(o, "One of -f or -g is required.\n")
+	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type TransformerGap struct {
 	// input
-	gapCount             int64
-	groupByFieldNameList []string
+	gapCount          int
+	groupByFieldNames []string
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
-	recordCount           int64
+	recordCount           int
 	previousGroupingKey   string
 }
 
 func NewTransformerGap(
-	gapCount int64,
-	groupByFieldNames string,
+	gapCount int,
+	groupByFieldNames []string,
 ) (*TransformerGap, error) {
 
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-
 	this := &TransformerGap{
-		gapCount:             gapCount,
-		groupByFieldNameList: groupByFieldNameList,
+		gapCount:          gapCount,
+		groupByFieldNames: groupByFieldNames,
 
 		recordCount:         0,
 		previousGroupingKey: "",
 	}
 
-	if len(groupByFieldNameList) == 0 {
+	if groupByFieldNames == nil {
 		this.recordTransformerFunc = this.mapUnkeyed
 	} else {
 		this.recordTransformerFunc = this.mapKeyed
@@ -163,7 +157,7 @@ func (this *TransformerGap) mapKeyed(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if !ok {
 			groupingKey = ""
 		}

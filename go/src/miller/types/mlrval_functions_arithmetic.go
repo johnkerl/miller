@@ -27,7 +27,7 @@ func MlrvalUnaryPlus(ma *Mlrval) Mlrval {
 // Unary minus operator
 
 func uneg_i_i(ma *Mlrval) Mlrval {
-	return MlrvalFromInt64(-ma.intval)
+	return MlrvalFromInt(-ma.intval)
 }
 
 func uneg_f_f(ma *Mlrval) Mlrval {
@@ -86,7 +86,7 @@ func plus_n_ii(ma, mb *Mlrval) Mlrval {
 	if overflowed {
 		return MlrvalFromFloat64(float64(a) + float64(b))
 	} else {
-		return MlrvalFromInt64(c)
+		return MlrvalFromInt(c)
 	}
 }
 
@@ -142,7 +142,7 @@ func minus_n_ii(ma, mb *Mlrval) Mlrval {
 	if overflowed {
 		return MlrvalFromFloat64(float64(a) - float64(b))
 	} else {
-		return MlrvalFromInt64(c)
+		return MlrvalFromInt(c)
 	}
 }
 
@@ -214,7 +214,7 @@ func times_n_ii(ma, mb *Mlrval) Mlrval {
 	if math.Abs(c) > 9223372036854774784.0 {
 		return MlrvalFromFloat64(c)
 	} else {
-		return MlrvalFromInt64(a * b)
+		return MlrvalFromInt(a * b)
 	}
 }
 
@@ -273,7 +273,7 @@ func divide_n_ii(ma, mb *Mlrval) Mlrval {
 
 	// Pythonic division, not C division.
 	if a%b == 0 {
-		return MlrvalFromInt64(a / b)
+		return MlrvalFromInt(a / b)
 	} else {
 		return MlrvalFromFloat64(float64(a) / float64(b))
 	}
@@ -283,7 +283,7 @@ func divide_n_ii(ma, mb *Mlrval) Mlrval {
 	if math.Abs(c) > 9223372036854774784.0 {
 		return MlrvalFromFloat64(c)
 	} else {
-		return MlrvalFromInt64(a * b)
+		return MlrvalFromInt(a * b)
 	}
 }
 
@@ -343,7 +343,7 @@ func int_divide_n_ii(ma, mb *Mlrval) Mlrval {
 			}
 		}
 	}
-	return MlrvalFromInt64(q)
+	return MlrvalFromInt(q)
 }
 
 func int_divide_f_if(ma, mb *Mlrval) Mlrval {
@@ -378,7 +378,7 @@ func MlrvalIntDivide(ma, mb *Mlrval) Mlrval {
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
 func dotplus_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval + mb.intval)
+	return MlrvalFromInt(ma.intval + mb.intval)
 }
 func dotplus_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) + mb.floatval)
@@ -412,7 +412,7 @@ func MlrvalDotPlus(ma, mb *Mlrval) Mlrval {
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
 func dotminus_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval - mb.intval)
+	return MlrvalFromInt(ma.intval - mb.intval)
 }
 func dotminus_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) - mb.floatval)
@@ -446,7 +446,7 @@ func MlrvalDotMinus(ma, mb *Mlrval) Mlrval {
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
 func dottimes_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval * mb.intval)
+	return MlrvalFromInt(ma.intval * mb.intval)
 }
 func dottimes_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) * mb.floatval)
@@ -480,7 +480,7 @@ func MlrvalDotTimes(ma, mb *Mlrval) Mlrval {
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
 func dotdivide_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval / mb.intval)
+	return MlrvalFromInt(ma.intval / mb.intval)
 }
 func dotdivide_f_if(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromFloat64(float64(ma.intval) / mb.floatval)
@@ -538,7 +538,7 @@ func dotidivide_i_ii(ma, mb *Mlrval) Mlrval {
 			}
 		}
 	}
-	return MlrvalFromInt64(q)
+	return MlrvalFromInt(q)
 }
 
 func dotidivide_f_if(ma, mb *Mlrval) Mlrval {
@@ -592,7 +592,7 @@ func modulus_i_ii(ma, mb *Mlrval) Mlrval {
 		}
 	}
 
-	return MlrvalFromInt64(m)
+	return MlrvalFromInt(m)
 }
 
 func modulus_f_fi(ma, mb *Mlrval) Mlrval {
@@ -632,7 +632,7 @@ func MlrvalModulus(ma, mb *Mlrval) Mlrval {
 
 // ================================================================
 // Pythonic
-func mlrmod(a, m int64) int64 {
+func mlrmod(a, m int) int {
 	retval := a % m
 	if retval < 0 {
 		retval += m
@@ -640,18 +640,18 @@ func mlrmod(a, m int64) int64 {
 	return retval
 }
 
-type i_iii_func func(a, b, m int64) int64
+type i_iii_func func(a, b, m int) int
 
-func imodadd(a, b, m int64) int64 {
+func imodadd(a, b, m int) int {
 	return mlrmod(a+b, m)
 }
-func imodsub(a, b, m int64) int64 {
+func imodsub(a, b, m int) int {
 	return mlrmod(a-b, m)
 }
-func imodmul(a, b, m int64) int64 {
+func imodmul(a, b, m int) int {
 	return mlrmod(a*b, m)
 }
-func imodexp(a, e, m int64) int64 {
+func imodexp(a, e, m int) int {
 	if e == 0 {
 		return 1
 	}
@@ -662,7 +662,7 @@ func imodexp(a, e, m int64) int64 {
 	// Repeated-squaring algorithm.
 	// We assume our caller has verified the exponent is not negative.
 	apower := a
-	c := int64(1)
+	c := int(1)
 	u := uint64(e)
 
 	for u != 0 {
@@ -695,7 +695,7 @@ func imodop(ma, mb, mc *Mlrval, iop i_iii_func) Mlrval {
 		return MlrvalFromError()
 	}
 
-	return MlrvalFromInt64(iop(ma.intval, mb.intval, mc.intval))
+	return MlrvalFromInt(iop(ma.intval, mb.intval, mc.intval))
 }
 
 func MlrvalModAdd(ma, mb, mc *Mlrval) Mlrval {
@@ -752,8 +752,8 @@ func min_f_if(ma, mb *Mlrval) Mlrval {
 }
 
 func min_i_ii(ma, mb *Mlrval) Mlrval {
-	var a int64 = ma.intval
-	var b int64 = mb.intval
+	var a int = ma.intval
+	var b int = mb.intval
 	if a < b {
 		return *ma
 	} else {
@@ -832,8 +832,8 @@ func max_f_if(ma, mb *Mlrval) Mlrval {
 }
 
 func max_i_ii(ma, mb *Mlrval) Mlrval {
-	var a int64 = ma.intval
-	var b int64 = mb.intval
+	var a int = ma.intval
+	var b int = mb.intval
 	if a > b {
 		return *ma
 	} else {

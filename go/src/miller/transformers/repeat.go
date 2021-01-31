@@ -53,7 +53,7 @@ func transformerRepeatParseCLI(
 			break // No more flag options to process
 
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerPutUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerRepeatUsage(os.Stdout, true, 0)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-n" {
@@ -65,14 +65,12 @@ func transformerRepeatParseCLI(
 			repeatCountSource = repeatCountFromFieldName
 
 		} else {
-			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-			os.Exit(1)
+			transformerRepeatUsage(os.Stderr, true, 1)
 		}
 	}
 
 	if repeatCountSource == repeatCountSourceUnspecified {
 		transformerRepeatUsage(os.Stderr, true, 1)
-		os.Exit(1)
 	}
 
 	transformer, _ := NewTransformerRepeat(

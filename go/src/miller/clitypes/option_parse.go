@@ -900,7 +900,7 @@ func ParseMiscOptions(
 		//
 	} else if args[argi] == "--seed" {
 		CheckArgCount(args, argi, argc, 2)
-		randSeed, ok := lib.TryInt64FromString(args[argi+1])
+		randSeed, ok := lib.TryIntFromString(args[argi+1])
 		if ok {
 			options.RandSeed = randSeed
 			options.HaveRandSeed = true

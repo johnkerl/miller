@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -17,6 +18,7 @@ const verbNameCut = "cut"
 var CutSetup = transforming.TransformerSetup{
 	Verb:         verbNameCut,
 	ParseCLIFunc: transformerCutParseCLI,
+	UsageFunc:    transformerCutUsage,
 	IgnoresInput: false,
 }
 
@@ -34,67 +36,53 @@ func transformerCutParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	var fieldNames []string = nil
+	doArgOrder := false
+	doComplement := false
 
-	pFieldNames := flagSet.String(
-		"f",
-		"",
-		"Comma-separated field names for cut, e.g. a,b,c",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pDoArgOrder := flagSet.Bool(
-		"o",
-		false,
-		`Retain fields in the order specified here in the argument list.
-Default is to retain them in the order found in the input data.`,
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerCutUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pDoComplement := flagSet.Bool(
-		"x",
-		false,
-		"Exclude, rather than include, field names specified by -f.\n",
-	)
+		} else if args[argi] == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
-	pDoComplementLong := flagSet.Bool(
-		"complement",
-		false,
-		"Synonymous with -x",
-	)
+		} else if args[argi] == "-o" {
+			doArgOrder = true
+			argi++
+
+		} else if args[argi] == "-x" {
+			doComplement = true
+			argi++
+
+		} else if args[argi] == "--complement" {
+			doComplement = true
+			argi++
+
+		} else {
+			transformerCutUsage(os.Stderr, true, 1)
+			os.Exit(1)
+		}
+	}
 
 	//	ap_define_true_flag(pstate, "-r",           &do_regexes);
-	//	fmt.Fprintf(o, "-r               Treat field names as regular expressions. \"ab\", \"a.*b\" will\n");
-	//	fmt.Fprintf(o, "                 match any field name containing the substring \"ab\" or matching\n");
-	//	fmt.Fprintf(o, "                 \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n");
-	//	fmt.Fprintf(o, "                 be used. The -o flag is ignored when -r is present.\n");
+	//	fmt.Fprintf(o, "-r Treat field names as regular expressions. \"ab\", \"a.*b\" will\n");
+	//	fmt.Fprintf(o, "   match any field name containing the substring \"ab\" or matching\n");
+	//	fmt.Fprintf(o, "   \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n");
+	//	fmt.Fprintf(o, "   be used. The -o flag is ignored when -r is present.\n");
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
-		}
-		transformerCutUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
+	if fieldNames == nil {
+		transformerCutUsage(os.Stderr, true, 1)
 	}
 
-	if *pFieldNames == "" {
-		flagSet.Usage()
-		os.Exit(1)
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
-
-	fieldNameList := lib.SplitString(*pFieldNames, ",")
 	transformer, _ := NewTransformerCut(
-		fieldNameList,
-		*pDoArgOrder,
-		*pDoComplement,
-		*pDoComplementLong,
+		fieldNames,
+		doArgOrder,
+		doComplement,
 	)
 
 	*pargi = argi
@@ -103,24 +91,28 @@ Default is to retain them in the order found in the input data.`,
 
 func transformerCutUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCut)
 	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.\n")
+	fmt.Fprintf(o, " -o Retain fields in the order specified here in the argument list.\n")
+	fmt.Fprintf(o, "    Default is to retain them in the order found in the input data.\n")
+	fmt.Fprintf(o, " -x|--complement  Exclude, rather than include, field names specified by -f.\n")
+	fmt.Fprintf(o, "\n")
 
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -f hostname,status\n", argv0, verb)
-	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", argv0, verb)
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", argv0, verb);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", argv0, verb);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", argv0, verb);
+	fmt.Fprintf(o, "  %s %s -f hostname,status\n", os.Args[0], verbNameCut)
+	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", os.Args[0], verbNameCut)
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", os.Args[0], verbNameCut);
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", os.Args[0], verbNameCut);
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", os.Args[0], verbNameCut);
 
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -132,16 +124,15 @@ type TransformerCut struct {
 }
 
 func NewTransformerCut(
-	fieldNameList []string,
+	fieldNames []string,
 	doArgOrder bool,
 	doComplement bool,
-	doComplementLong bool,
 ) (*TransformerCut, error) {
 
-	fieldNameSet := lib.StringListToSet(fieldNameList)
+	fieldNameSet := lib.StringListToSet(fieldNames)
 
 	this := &TransformerCut{
-		fieldNameList: fieldNameList,
+		fieldNameList: fieldNames,
 		fieldNameSet:  fieldNameSet,
 	}
 

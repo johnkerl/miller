@@ -21,6 +21,7 @@ const verbNameJoin = "join"
 var JoinSetup = transforming.TransformerSetup{
 	Verb:         verbNameJoin,
 	ParseCLIFunc: transformerJoinParseCLI,
+	UsageFunc:    transformerJoinUsage,
 	IgnoresInput: false,
 }
 
@@ -99,7 +100,7 @@ func transformerJoinParseCLI(
 		if !strings.HasPrefix(args[argi], "-") {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerSortUsage(os.Stdout, true, 0)
 			return nil // help intentionally requested
 
 		} else if clitypes.ParseReaderOptions(args, argc, &argi, &opts.joinReaderOptions) {
@@ -147,27 +148,27 @@ func transformerJoinParseCLI(
 			argi++
 
 		} else {
-			transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerSortUsage(os.Stderr, true, 1)
 			os.Exit(1)
 		}
 	}
 
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", os.Args[0], verb)
-		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
 			os.Args[0], verb)
-		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
 		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", os.Args[0], verb)
-		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
@@ -196,11 +197,10 @@ func transformerJoinParseCLI(
 
 func transformerJoinUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameJoin)
 	fmt.Fprintf(o, "Joins records from specified left file name with records from all file names\n")
 	fmt.Fprintf(o, "at the end of the Miller argument list.\n")
 	fmt.Fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n")
@@ -231,7 +231,7 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
 	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")
 	fmt.Fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n")
-	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", argv0)
+	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", os.Args[0])
 	fmt.Fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n")
 	fmt.Fprintf(o, "  --irs {record-separator character}\n")
 	fmt.Fprintf(o, "  --ifs {field-separator character}\n")
@@ -239,9 +239,13 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  --repifs\n")
 	fmt.Fprintf(o, "  --repips\n")
 	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
-		argv0)
+		os.Args[0])
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
 	fmt.Fprintf(o, "including examples.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

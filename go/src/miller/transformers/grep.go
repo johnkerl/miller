@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -17,6 +18,7 @@ const verbNameGrep = "grep"
 var GrepSetup = transforming.TransformerSetup{
 	Verb:         verbNameGrep,
 	ParseCLIFunc: transformerGrepParseCLI,
+	UsageFunc:    transformerGrepUsage,
 	IgnoresInput: false,
 }
 
@@ -34,46 +36,39 @@ func transformerGrepParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	ignoreCase := false
+	invert := false
 
-	pIgnoreCase := flagSet.Bool(
-		"i",
-		false,
-		`Use case-insensitive search`,
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pInvert := flagSet.Bool(
-		"v",
-		false,
-		`Invert: pass through records which do not match the regex.`,
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerGrepUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-i" {
+			ignoreCase = true
+			argi++
+
+		} else if args[argi] == "-v" {
+			invert = true
+			argi++
+
+		} else {
+			transformerGrepUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerGrepUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	// Get the regex from the command line
 	if argi >= argc {
-		flagSet.Usage()
-		os.Exit(1)
+		transformerGrepUsage(os.Stderr, true, 1)
 	}
 	pattern := args[argi]
 	argi += 1
 
-	if *pIgnoreCase {
+	if ignoreCase {
 		pattern = "(?i)" + pattern
 	}
 
@@ -87,7 +82,7 @@ func transformerGrepParseCLI(
 
 	transformer, _ := NewTransformerGrep(
 		regexp,
-		*pInvert,
+		invert,
 	)
 
 	*pargi = argi
@@ -96,21 +91,18 @@ func transformerGrepParseCLI(
 
 func transformerGrepUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", os.Args[0], verbNameGrep)
 	fmt.Fprintf(o, "Passes through records which match the regular expression.\n")
 
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
 	fmt.Fprint(o, "Options:\n")
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprint(o, "-i  Use case-insensitive search.\n")
+	fmt.Fprint(o, "-v  Invert: pass through records which do not match the regex.\n")
 
-	fmt.Fprint(o, `Note that "mlr filter" is more powerful, but requires you to know field names.
-By contrast, "mlr grep" allows you to regex-match the entire record. It does
+	fmt.Fprintf(o, `Note that "%s filter" is more powerful, but requires you to know field names.
+By contrast, "%s grep" allows you to regex-match the entire record. It does
 this by formatting each record in memory as DKVP, using command-line-specified
 ORS/OFS/OPS, and matching the resulting line against the regex specified
 here. In particular, the regex is not applied to the input stream: if you
@@ -119,9 +111,12 @@ be matched, not against either of these lines, but against the DKVP line
 "x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
 and this command is intended to be merely a keystroke-saver. To get all the
 features of system grep, you can do
-  "mlr --odkvp ... | grep ... | mlr --idkvp ..."
-`)
+  "%s --odkvp ... | grep ... | %s --idkvp ..."
+`, os.Args[0], os.Args[0], os.Args[0], os.Args[0])
 
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

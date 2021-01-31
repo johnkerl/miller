@@ -86,10 +86,10 @@ func IntMin2(a, b int) int {
 }
 
 // Tries decimal, hex, octal, and binary.
-func TryInt64FromString(input string) (int64, bool) {
+func TryIntFromString(input string) (int, bool) {
 	ival, err := strconv.ParseInt(input, 0 /* check all*/, 64)
 	if err == nil {
-		return ival, true
+		return int(ival), true
 	} else {
 		return 0, false
 	}

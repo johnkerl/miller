@@ -91,8 +91,8 @@ func MlrvalPointerFromString(input string) *Mlrval {
 }
 
 // xxx comment why two -- one for from parsed user data; other for from math ops
-func MlrvalFromInt64String(input string) Mlrval {
-	ival, ok := lib.TryInt64FromString(input)
+func MlrvalFromIntString(input string) Mlrval {
+	ival, ok := lib.TryIntFromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	lib.InternalCodingErrorIf(!ok)
 	return Mlrval{
@@ -107,7 +107,7 @@ func MlrvalFromInt64String(input string) Mlrval {
 	}
 }
 
-func MlrvalFromInt64(input int64) Mlrval {
+func MlrvalFromInt(input int) Mlrval {
 	return Mlrval{
 		mvtype:        MT_INT,
 		printrep:      "(bug-if-you-see-this-int-type)",
@@ -202,9 +202,9 @@ func MlrvalFromInferredType(input string) Mlrval {
 		return MlrvalFromVoid()
 	}
 
-	_, iok := lib.TryInt64FromString(input)
+	_, iok := lib.TryIntFromString(input)
 	if iok {
-		return MlrvalFromInt64String(input)
+		return MlrvalFromIntString(input)
 	}
 
 	_, fok := lib.TryFloat64FromString(input)
@@ -251,7 +251,7 @@ func MlrvalEmptyArray() Mlrval {
 
 // Users can do things like '$new[1][2][3] = 4' even if '$new' isn't already
 // allocated. This function supports that.
-func NewSizedMlrvalArray(length int64) *Mlrval {
+func NewSizedMlrvalArray(length int) *Mlrval {
 	arrayval := make([]Mlrval, length, 2*length)
 
 	for i := 0; i < int(length); i++ {
@@ -270,7 +270,7 @@ func NewSizedMlrvalArray(length int64) *Mlrval {
 	}
 }
 
-func LengthenMlrvalArray(array *[]Mlrval, newLength64 int64) {
+func LengthenMlrvalArray(array *[]Mlrval, newLength64 int) {
 	newLength := int(newLength64)
 	lib.InternalCodingErrorIf(newLength <= len(*array))
 

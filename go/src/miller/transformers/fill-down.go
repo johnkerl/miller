@@ -5,9 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -18,6 +18,7 @@ const verbNameFillDown = "fill-down"
 var FillDownSetup = transforming.TransformerSetup{
 	Verb:         verbNameFillDown,
 	ParseCLIFunc: transformerFillDownParseCLI,
+	UsageFunc:    transformerFillDownUsage,
 	IgnoresInput: false,
 }
 
@@ -35,49 +36,37 @@ func transformerFillDownParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	var fillDownFieldNames []string = nil
+	onlyIfAbsent := false
 
-	pFillDownFieldNames := flagSet.String(
-		"f",
-		"",
-		`Field names for fill-down`,
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pOnlyIfAbsentShort := flagSet.Bool(
-		"a",
-		false,
-		`If a given record has a missing value for a given field, fill that from
-the corresponding value from a previous record, if any.
-By default, a 'missing' field either is absent, or has the empty-string value.
-With -a, a field is 'missing' only if it is absent.`,
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerFillDownUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pOnlyIfAbsentLong := flagSet.Bool(
-		"only-if-absent",
-		false,
-		`Synonym for -a`,
-	)
+		} else if args[argi] == "-f" {
+			fillDownFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-a" {
+			onlyIfAbsent = true
+			argi++
+
+		} else if args[argi] == "--only-if-absent" {
+			onlyIfAbsent = true
+			argi++
+
+		} else {
+			transformerFillDownUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerFillDownUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerFillDown(
-		*pFillDownFieldNames,
-		*pOnlyIfAbsentShort || *pOnlyIfAbsentLong,
+		fillDownFieldNames,
+		onlyIfAbsent,
 	)
 
 	*pargi = argi
@@ -86,18 +75,25 @@ With -a, a field is 'missing' only if it is absent.`,
 
 func transformerFillDownUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprint(o,
-		`Passes through the last n records, optionally by category.
-`)
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameFillDown)
+	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from\n")
+	fmt.Fprintln(o, "the corresponding value from a previous record, if any.")
+	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")
+	fmt.Fprintln(o, "With -a, a field is 'missing' only if it is absent.")
+	fmt.Fprintln(o, "")
+	fmt.Fprintln(o, "Options:")
+	fmt.Fprintln(o, " -a|--only-if-absent If a given record has a missing value for a given field,")
+	fmt.Fprintln(o, "     fill that from the corresponding value from a previous record, if any.")
+	fmt.Fprintln(o, "     By default, a 'missing' field either is absent, or has the empty-string value.")
+	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
+	fmt.Fprintln(o, " -f  Field names for fill-down.")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -111,11 +107,11 @@ type TransformerFillDown struct {
 }
 
 func NewTransformerFillDown(
-	fillDownFieldNames string,
+	fillDownFieldNames []string,
 	onlyIfAbsent bool,
 ) (*TransformerFillDown, error) {
 	this := &TransformerFillDown{
-		fillDownFieldNames: lib.SplitString(fillDownFieldNames, ","),
+		fillDownFieldNames: fillDownFieldNames,
 		onlyIfAbsent:       onlyIfAbsent,
 		lastNonNullValues:  make(map[string]*types.Mlrval),
 	}

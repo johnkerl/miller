@@ -61,6 +61,7 @@ const verbNameSort = "sort"
 var SortSetup = transforming.TransformerSetup{
 	Verb:         verbNameSort,
 	ParseCLIFunc: transformerSortParseCLI,
+	UsageFunc:    transformerSortUsage,
 	IgnoresInput: false,
 }
 
@@ -78,70 +79,62 @@ func transformerSortParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
-	// sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
-	// first sort lexically on field a, then numerically on field b, then
-	// lexically on field c. The flagSet API would let the '-f c' clobber the
-	// '-f a', while we want both.
-
-	groupByFieldNameList := make([]string, 0)
+	groupByFieldNames := make([]string, 0)
 	comparatorFuncs := make([]types.ComparatorFunc, 0)
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if !strings.HasPrefix(args[argi], "-") {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerSortUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerSortUsage(os.Stdout, true, 0)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
 			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
-				groupByFieldNameList = append(groupByFieldNameList, item)
+				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
 			}
 
 		} else if args[argi] == "-r" {
 			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
-				groupByFieldNameList = append(groupByFieldNameList, item)
+				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparator)
 			}
 
 		} else if args[argi] == "-n" {
 			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
-				groupByFieldNameList = append(groupByFieldNameList, item)
+				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
 		} else if args[argi] == "-nf" {
 			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
-				groupByFieldNameList = append(groupByFieldNameList, item)
+				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
 		} else if args[argi] == "-nr" {
 			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
 			for _, item := range subList {
-				groupByFieldNameList = append(groupByFieldNameList, item)
+				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)
 			}
 
 		} else {
-			transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-			os.Exit(1)
+			transformerSortUsage(os.Stderr, true, 1)
 		}
 	}
 
-	if len(groupByFieldNameList) == 0 {
-		transformerSortUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-		os.Exit(1)
+	if len(groupByFieldNames) == 0 {
+		transformerSortUsage(os.Stderr, true, 1)
 	}
 
 	transformer, _ := NewTransformerSort(
-		groupByFieldNameList,
+		groupByFieldNames,
 		comparatorFuncs,
 	)
 
@@ -151,12 +144,10 @@ func transformerSortParseCLI(
 
 func transformerSortUsage(
 	o *os.File,
+	doExit bool,
 	exitCode int,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
-	argv0 string,
-	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {flags}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s {flags}\n", os.Args[0], verbNameSort)
 	fmt.Fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n")
 	fmt.Fprintf(o, "field, and so on.  (Any records not having all specified sort keys will appear\n")
 	fmt.Fprintf(o, "at the end of the output, in the order they were encountered, regardless of the\n")
@@ -171,10 +162,11 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", os.Args[0], verbNameSort)
 	fmt.Fprintf(o, "which is the same as:\n")
-	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", argv0, verb)
-	if errorHandling == flag.ExitOnError {
+	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", os.Args[0], verbNameSort)
+
+	if doExit {
 		os.Exit(exitCode)
 	}
 }
@@ -198,8 +190,8 @@ func transformerSortUsage(
 
 type TransformerSort struct {
 	// -- Input
-	groupByFieldNameList []string
-	comparatorFuncs      []types.ComparatorFunc
+	groupByFieldNames []string
+	comparatorFuncs   []types.ComparatorFunc
 
 	// -- State
 	// Map from string to *list.List:
@@ -210,13 +202,13 @@ type TransformerSort struct {
 }
 
 func NewTransformerSort(
-	groupByFieldNameList []string,
+	groupByFieldNames []string,
 	comparatorFuncs []types.ComparatorFunc,
 ) (*TransformerSort, error) {
 
 	this := &TransformerSort{
-		groupByFieldNameList: groupByFieldNameList,
-		comparatorFuncs:      comparatorFuncs,
+		groupByFieldNames: groupByFieldNames,
+		comparatorFuncs:   comparatorFuncs,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 		groupHeads:         lib.NewOrderedMap(),
@@ -240,7 +232,7 @@ func (this *TransformerSort) Transform(
 		inrec := inrecAndContext.Record
 
 		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
-			this.groupByFieldNameList,
+			this.groupByFieldNames,
 		)
 		if !ok {
 			this.spillGroup.PushBack(inrecAndContext)

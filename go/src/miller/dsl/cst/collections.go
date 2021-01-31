@@ -165,7 +165,7 @@ func (this *ArraySliceAccessNode) Evaluate(state *State) types.Mlrval {
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
 	if !ok {
 		if upperIndexMlrval.IsEmpty() {
-			upperIndex = int64(len(array))
+			upperIndex = int(len(array))
 		} else {
 			return types.MlrvalFromError()
 		}
@@ -182,7 +182,7 @@ func (this *ArraySliceAccessNode) Evaluate(state *State) types.Mlrval {
 
 	// Go     slices have inclusive lower bound, exclusive upper bound.
 	// Miller slices have inclusive lower bound, inclusive upper bound.
-	var n int64 = 0
+	var n int = 0
 	if lowerZindex <= upperZindex {
 		n = upperZindex - lowerZindex + 1
 	}
@@ -332,9 +332,9 @@ func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(state *State) types.Mlr
 
 	if baseMlrval.IsArray() {
 		n, _ := baseMlrval.GetArrayLength()
-		zindex, ok := types.UnaliasArrayLengthIndex(int64(n), index)
+		zindex, ok := types.UnaliasArrayLengthIndex(int(n), index)
 		if ok {
-			return types.MlrvalFromInt64(zindex + 1) // Miller user-space indices are 1-up
+			return types.MlrvalFromInt(zindex + 1) // Miller user-space indices are 1-up
 		} else {
 			return types.MlrvalFromAbsent()
 		}

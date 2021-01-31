@@ -23,7 +23,8 @@ const verbNamePut = "put"
 
 var PutSetup = transforming.TransformerSetup{
 	Verb:         verbNamePut,
-	ParseCLIFunc: transformerPutParseCLI,
+	ParseCLIFunc: transformerPutOrFilterParseCLI,
+	UsageFunc:    transformerPutUsage,
 	IgnoresInput: false,
 }
 
@@ -31,11 +32,12 @@ const verbNameFilter = "filter"
 
 var FilterSetup = transforming.TransformerSetup{
 	Verb:         verbNameFilter,
-	ParseCLIFunc: transformerPutParseCLI,
+	ParseCLIFunc: transformerPutOrFilterParseCLI,
+	UsageFunc:    transformerFilterUsage,
 	IgnoresInput: false,
 }
 
-func transformerPutParseCLI(
+func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
@@ -67,17 +69,13 @@ func transformerPutParseCLI(
 	}
 
 	// Parse local flags.
-	//
-	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
-	// and 'mlr filter' is they need to be able to take -f and/or -e more than
-	// once, and Go flags can't handle that.
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if !strings.HasPrefix(args[argi], "-") {
 			break // No more flag options to process
 
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerPutUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerPutUsage(os.Stdout, true, 0)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-f" {
@@ -119,12 +117,13 @@ func transformerPutParseCLI(
 			suppressOutputRecord = true
 			argi++
 
-			// TODO: move these to mlr auxents?
 		} else if args[argi] == "-d" {
+			// TODO: move these to mlr auxents?
 			printASTOnly = true
 			printASTSingleLine = false
 			argi++
 		} else if args[argi] == "-D" {
+			// TODO: move these to mlr auxents?
 			printASTOnly = true
 			printASTSingleLine = true
 			argi++
@@ -148,8 +147,7 @@ func transformerPutParseCLI(
 			// Nothing else to handle here.
 
 		} else {
-			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-			os.Exit(1)
+			transformerPutUsage(os.Stderr, true, 1)
 		}
 	}
 
@@ -159,8 +157,7 @@ func transformerPutParseCLI(
 	if needExpressionArg {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
-			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-			os.Exit(1)
+			transformerPutUsage(os.Stderr, true, 1)
 		}
 		dslString = args[argi]
 		argi += 1
@@ -202,13 +199,27 @@ func transformerPutParseCLI(
 
 func transformerPutUsage(
 	o *os.File,
+	doExit bool,
 	exitCode int,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
-	argv0 string,
+) {
+	transformerPutOrFilterUsage(o, doExit, exitCode, "put")
+}
+
+func transformerFilterUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	transformerPutOrFilterUsage(o, doExit, exitCode, "filter")
+}
+
+func transformerPutOrFilterUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
 	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", argv0, verb)
-	fmt.Fprintf(o, "TODO: put detailed on-line help here.\n")
+	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", os.Args[0], verb)
 	fmt.Fprintf(o,
 		`-f {file name} File containing a DSL expression.
 
@@ -248,6 +259,10 @@ semicolons to separate expressions.)
 
 -h|--help Show this message.
 `)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 //		} else if args[argi] == "-d" {
@@ -260,7 +275,7 @@ type TransformerPut struct {
 	astRootNode          *dsl.AST
 	cstRootNode          *cst.RootNode
 	cstState             *cst.State
-	callCount            int64
+	callCount            int
 	invertFilter         bool
 	suppressOutputRecord bool
 	executedBeginBlocks  bool

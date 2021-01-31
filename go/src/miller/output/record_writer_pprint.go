@@ -88,7 +88,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 	ostream io.WriteCloser,
 ) bool {
 	maxWidths := make(map[string]int)
-	var maxNR int64 = 0
+	var maxNR int = 0
 
 	for e := records.Front(); e != nil; e = e.Next() {
 		outrec := e.Value.(*types.Mlrmap)

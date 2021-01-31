@@ -115,7 +115,7 @@ type TOptions struct {
 	NoInput bool // mlr -n
 
 	HaveRandSeed bool
-	RandSeed     int64
+	RandSeed     int
 }
 
 // ----------------------------------------------------------------

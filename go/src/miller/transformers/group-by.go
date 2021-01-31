@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -18,6 +19,7 @@ const verbNameGroupBy = "group-by"
 var GroupBySetup = transforming.TransformerSetup{
 	Verb:         verbNameGroupBy,
 	ParseCLIFunc: transformerGroupByParseCLI,
+	UsageFunc:    transformerGroupByUsage,
 	IgnoresInput: false,
 }
 
@@ -32,34 +34,27 @@ func transformerGroupByParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerGroupByUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerGroupByUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerGroupByUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	// Get the group-by field names from the command line
 	if argi >= argc {
-		flagSet.Usage()
-		os.Exit(1)
+		transformerGroupByUsage(os.Stderr, true, 1)
 	}
-	groupByFieldNames := args[argi]
+	groupByFieldNames := lib.SplitString(args[argi], ",")
 	argi += 1
 
 	transformer, _ := NewTransformerGroupBy(
@@ -72,24 +67,23 @@ func transformerGroupByParseCLI(
 
 func transformerGroupByUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s {comma-separated field names}]\n", os.Args[0], verbNameGroupBy)
 	fmt.Fprint(o,
 		`Outputs records in batches having identical values at specified field names.
 `)
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type TransformerGroupBy struct {
 	// input
-	groupByFieldNameList []string
+	groupByFieldNames []string
 
 	// state
 	// map from string to *list.List
@@ -97,13 +91,11 @@ type TransformerGroupBy struct {
 }
 
 func NewTransformerGroupBy(
-	groupByFieldNames string,
+	groupByFieldNames []string,
 ) (*TransformerGroupBy, error) {
 
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-
 	this := &TransformerGroupBy{
-		groupByFieldNameList: groupByFieldNameList,
+		groupByFieldNames: groupByFieldNames,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
@@ -119,7 +111,7 @@ func (this *TransformerGroupBy) Transform(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if !ok {
 			return
 		}

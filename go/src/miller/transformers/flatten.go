@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -17,6 +18,7 @@ const verbNameFlatten = "flatten"
 var FlattenSetup = transforming.TransformerSetup{
 	Verb:         verbNameFlatten,
 	ParseCLIFunc: transformerFlattenParseCLI,
+	UsageFunc:    transformerFlattenUsage,
 	IgnoresInput: false,
 }
 
@@ -34,40 +36,30 @@ func transformerFlattenParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	oFlatSep := "" // means take it from the record context
+	var fieldNames []string = nil
 
-	pOFlatSep := flagSet.String(
-		"s",
-		"",
-		"Separator, defaulting to mlr --jflatsep value",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pFieldNames := flagSet.String(
-		"f",
-		"",
-		"Comma-separated list of field names to flatten (default all).",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerFlattenUsage(os.Stdout, true, 0)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-s" {
+			oFlatSep = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerFlattenUsage(os.Stderr, true, 1)
 		}
-		transformerFlattenUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerFlatten(
-		*pOFlatSep,
-		*pFieldNames,
+		oFlatSep,
+		fieldNames,
 	)
 
 	*pargi = argi
@@ -76,20 +68,21 @@ func transformerFlattenParseCLI(
 
 func transformerFlattenUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameFlatten)
 	fmt.Fprint(o,
 		`Flattens multi-level maps to single-level ones. Example: field with name 'a'
 and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 `)
-	fmt.Fprintf(o, "Options:\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprint(o, "Options:\n")
+	fmt.Fprint(o, "-f Comma-separated list of field names to flatten (default all).\n")
+	fmt.Fprintf(o, "-s Separator, defaulting to %s --jflatsep value.\n", os.Args[0])
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -104,13 +97,11 @@ type TransformerFlatten struct {
 
 func NewTransformerFlatten(
 	oFlatSep string,
-	fieldNames string,
+	fieldNames []string,
 ) (*TransformerFlatten, error) {
 	var fieldNameSet map[string]bool = nil
-	if fieldNames != "" {
-		fieldNameSet = lib.StringListToSet(
-			lib.SplitString(fieldNames, ","),
-		)
+	if fieldNames != nil {
+		fieldNameSet = lib.StringListToSet(fieldNames)
 	}
 
 	retval := &TransformerFlatten{

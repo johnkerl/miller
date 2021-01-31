@@ -35,7 +35,7 @@
 //
 // * Type names:
 //   's' for string
-//   'i' for int64
+//   'i' for int
 //   'f' for float64
 //   'n' for number return types -- e.g. the auto-overflow from
 //       int to float plus_n_ii returns MT_INT if integer-additio overflow
@@ -139,7 +139,7 @@ func _s2__(ma, mb *Mlrval) Mlrval {
 
 // Return integer zero (binary)
 func _i0__(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(0)
+	return MlrvalFromInt(0)
 }
 
 // Return float zero (binary)

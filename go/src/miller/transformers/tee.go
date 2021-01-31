@@ -18,6 +18,7 @@ const verbNameTee = "tee"
 var TeeSetup = transforming.TransformerSetup{
 	Verb:         verbNameTee,
 	ParseCLIFunc: transformerTeeParseCLI,
+	UsageFunc:    transformerTeeUsage,
 	IgnoresInput: false,
 }
 

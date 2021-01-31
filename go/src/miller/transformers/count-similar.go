@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -18,6 +19,7 @@ const verbNameCountSimilar = "count-similar"
 var CountSimilarSetup = transforming.TransformerSetup{
 	Verb:         verbNameCountSimilar,
 	ParseCLIFunc: transformerCountSimilarParseCLI,
+	UsageFunc:    transformerCountSimilarUsage,
 	IgnoresInput: false,
 }
 
@@ -35,45 +37,36 @@ func transformerCountSimilarParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	var groupByFieldNames []string = nil
+	counterFieldName := "count"
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Group-by-field names for counts, e.g. a,b,c",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pCounterFieldName := flagSet.String(
-		"o",
-		"count",
-		"Field name for output count.",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerCountSimilarUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-o" {
+			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerCountSimilarUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerCountSimilarUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
 	}
 
-	if *pGroupByFieldNames == "" {
-		transformerCountSimilarUsage(os.Stderr, args[0], verb, flagSet)
-		os.Exit(1)
+	if groupByFieldNames == nil {
+		transformerCountSimilarUsage(os.Stderr, true, 1)
 	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerCountSimilar(
-		*pGroupByFieldNames,
-		*pCounterFieldName,
+		groupByFieldNames,
+		counterFieldName,
 	)
 
 	*pargi = argi
@@ -82,28 +75,26 @@ func transformerCountSimilarParseCLI(
 
 func transformerCountSimilarUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCountSimilar)
 	fmt.Fprintf(o, "Ingests all records, then emits each record augmented by a count of\n")
 	fmt.Fprintf(o, "the number of other records having the same group-by field values.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		if f.Name == "g" {
-			fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage)
-		} else {
-			fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage)
-		}
-	})
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Group-by-field names for counts, e.g. a,b,c\n")
+	fmt.Fprintf(o, "-o {name} Field name for output-counts. Defaults to \"count\".\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type TransformerCountSimilar struct {
 	// Input:
-	groupByFieldNameList []string
-	counterFieldName     string
+	groupByFieldNames []string
+	counterFieldName  string
 
 	// State:
 	recordListsByGroup *lib.OrderedMap // map from string to *list.List
@@ -111,14 +102,13 @@ type TransformerCountSimilar struct {
 
 // ----------------------------------------------------------------
 func NewTransformerCountSimilar(
-	groupByFieldNames string,
+	groupByFieldNames []string,
 	counterFieldName string,
 ) (*TransformerCountSimilar, error) {
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 	this := &TransformerCountSimilar{
-		groupByFieldNameList: groupByFieldNameList,
-		counterFieldName:     counterFieldName,
-		recordListsByGroup:   lib.NewOrderedMap(),
+		groupByFieldNames:  groupByFieldNames,
+		counterFieldName:   counterFieldName,
+		recordListsByGroup: lib.NewOrderedMap(),
 	}
 	return this, nil
 }
@@ -131,7 +121,7 @@ func (this *TransformerCountSimilar) Transform(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if !ok { // This particular record doesn't have the specified fields; ignore
 			return
 		}
@@ -150,7 +140,7 @@ func (this *TransformerCountSimilar) Transform(
 			recordListForGroup := outer.Value.(*list.List)
 			// TODO: make 64-bit friendly
 			groupSize := recordListForGroup.Len()
-			mgroupSize := types.MlrvalFromInt64(int64(groupSize))
+			mgroupSize := types.MlrvalFromInt(int(groupSize))
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				recordAndContext := inner.Value.(*types.RecordAndContext)
 				recordAndContext.Record.PutCopy(this.counterFieldName, &mgroupSize)

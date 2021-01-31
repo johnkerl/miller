@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -18,6 +19,7 @@ const verbNameUnsparsify = "unsparsify"
 var UnsparsifySetup = transforming.TransformerSetup{
 	Verb:         verbNameUnsparsify,
 	ParseCLIFunc: transformerUnsparsifyParseCLI,
+	UsageFunc:    transformerUnsparsifyUsage,
 	IgnoresInput: false,
 }
 
@@ -35,41 +37,32 @@ func transformerUnsparsifyParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	fillerString := ""
+	var specifiedFieldNames []string = nil
 
-	pFillerString := flagSet.String(
-		"fill-with",
-		"",
-		"Prepend field {name} to each record with record-counter starting at 1",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pSpecifiedFieldNames := flagSet.String(
-		"f",
-		"",
-		`Specify field names to be operated on. Any other fields won't be
-modified, and operation will be streaming.`,
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerUnsparsifyUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "--fill-with" {
+			fillerString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-f" {
+			specifiedFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerUnsparsifyUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerUnsparsifyUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerUnsparsify(
-		*pFillerString,
-		*pSpecifiedFieldNames,
+		fillerString,
+		specifiedFieldNames,
 	)
 
 	*pargi = argi
@@ -78,24 +71,31 @@ modified, and operation will be streaming.`,
 
 func transformerUnsparsifyUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameUnsparsify)
 	fmt.Fprint(o,
 		`Prints records with the union of field names over all input records.
 For field names absent in a given record but present in others, fills in
 a value. This verb retains all input before producing any output.
+`)
 
-Example: if the input is two records, one being 'a=1,b=2' and the other
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to\n")
+	fmt.Fprintf(o, "                             the empty string.\n")
+	fmt.Fprintf(o, "-f {a,b,c} Specify field names to be operated on. Any other fields won't be\n")
+	fmt.Fprintf(o, "           modified, and operation will be streaming.\n")
+
+	fmt.Fprint(o,
+		`Example: if the input is two records, one being 'a=1,b=2' and the other
 being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 'a=,b=3,c=4'.
 `)
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -108,12 +108,11 @@ type TransformerUnsparsify struct {
 
 func NewTransformerUnsparsify(
 	fillerString string,
-	specifiedFieldNames string,
+	specifiedFieldNames []string,
 ) (*TransformerUnsparsify, error) {
 
-	specifiedFieldNameList := lib.SplitString(specifiedFieldNames, ",")
 	fieldNamesSeen := lib.NewOrderedMap()
-	for _, specifiedFieldName := range specifiedFieldNameList {
+	for _, specifiedFieldName := range specifiedFieldNames {
 		fieldNamesSeen.Put(specifiedFieldName, specifiedFieldName)
 	}
 
@@ -123,7 +122,7 @@ func NewTransformerUnsparsify(
 		fieldNamesSeen:     fieldNamesSeen,
 	}
 
-	if len(specifiedFieldNameList) == 0 {
+	if specifiedFieldNames == nil {
 		this.recordTransformerFunc = this.mapNonStreaming
 	} else {
 		this.recordTransformerFunc = this.mapStreaming

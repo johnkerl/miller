@@ -126,7 +126,7 @@ func (this *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func arrayGetAliased(array *[]Mlrval, mindex int64) *Mlrval {
+func arrayGetAliased(array *[]Mlrval, mindex int) *Mlrval {
 	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
 		return &(*array)[zindex]
@@ -135,7 +135,7 @@ func arrayGetAliased(array *[]Mlrval, mindex int64) *Mlrval {
 	}
 }
 
-func arrayPutAliased(array *[]Mlrval, mindex int64, value *Mlrval) bool {
+func arrayPutAliased(array *[]Mlrval, mindex int, value *Mlrval) bool {
 	zindex, ok := UnaliasArrayIndex(array, mindex)
 	if ok {
 		clone := value.Copy()
@@ -146,12 +146,12 @@ func arrayPutAliased(array *[]Mlrval, mindex int64, value *Mlrval) bool {
 	}
 }
 
-func UnaliasArrayIndex(array *[]Mlrval, mindex int64) (int64, bool) {
-	n := int64(len(*array))
+func UnaliasArrayIndex(array *[]Mlrval, mindex int) (int, bool) {
+	n := int(len(*array))
 	return UnaliasArrayLengthIndex(n, mindex)
 }
 
-func UnaliasArrayLengthIndex(n int64, mindex int64) (int64, bool) {
+func UnaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 	if 1 <= mindex && mindex <= n {
 		zindex := mindex - 1
 		return zindex, true

@@ -17,6 +17,7 @@ const verbNameCleanWhitespace = "clean-whitespace"
 var CleanWhitespaceSetup = transforming.TransformerSetup{
 	Verb:         verbNameCleanWhitespace,
 	ParseCLIFunc: transformerCleanWhitespaceParseCLI,
+	UsageFunc:    transformerCleanWhitespaceUsage,
 	IgnoresInput: false,
 }
 
@@ -34,7 +35,6 @@ func transformerCleanWhitespaceParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -42,7 +42,7 @@ func transformerCleanWhitespaceParseCLI(
 			break // No more flag options to process
 
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerPutUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerCleanWhitespaceUsage(os.Stdout, true, 0)
 			return nil // help intentionally requested
 
 		} else if args[argi] == "-k" || args[argi] == "--keys-only" {
@@ -55,7 +55,7 @@ func transformerCleanWhitespaceParseCLI(
 			argi++
 
 		} else {
-			transformerPutUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
+			transformerCleanWhitespaceUsage(os.Stderr, true, 1)
 			os.Exit(1)
 		}
 	}

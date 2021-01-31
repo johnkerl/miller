@@ -90,10 +90,10 @@ func recordFromNIDXLine(
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
 	values := lib.SplitString(*line, *ifs) // TODO: repifs ...
-	var i int64 = 0
+	var i int = 0
 	for _, value := range values {
 		i++
-		key := strconv.FormatInt(i, 10)
+		key := strconv.Itoa(i)
 		mval := types.MlrvalFromInferredType(value)
 		record.PutReference(key, &mval)
 	}

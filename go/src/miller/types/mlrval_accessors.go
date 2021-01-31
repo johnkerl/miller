@@ -106,7 +106,7 @@ func (this *Mlrval) IsArrayOrMap() bool {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) GetIntValue() (intValue int64, isInt bool) {
+func (this *Mlrval) GetIntValue() (intValue int, isInt bool) {
 	if this.mvtype == MT_INT {
 		return this.intval, true
 	} else {

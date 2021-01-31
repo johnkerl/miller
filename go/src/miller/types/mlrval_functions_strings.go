@@ -15,7 +15,7 @@ func MlrvalStrlen(ma *Mlrval) Mlrval {
 	if !ma.IsStringOrVoid() {
 		return MlrvalFromError()
 	}
-	return MlrvalFromInt64(int64(utf8.RuneCountInString(ma.printrep)))
+	return MlrvalFromInt(int(utf8.RuneCountInString(ma.printrep)))
 }
 
 // ================================================================
@@ -73,7 +73,7 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 		}
 	}
 	// TODO: fix this with regard to UTF-8 and runes.
-	strlen := int64(len(ma.printrep))
+	strlen := int(len(ma.printrep))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
 	// empty in the DSL expression it comes in here as a 1. But when the upper
@@ -126,7 +126,7 @@ func MlrvalTruncate(ma, mb *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 
-	oldLength := int64(len(ma.printrep))
+	oldLength := int(len(ma.printrep))
 	maxLength := mb.intval
 	if oldLength <= maxLength {
 		return *ma

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -16,6 +17,7 @@ const verbNameNothing = "nothing"
 var NothingSetup = transforming.TransformerSetup{
 	Verb:         verbNameNothing,
 	ParseCLIFunc: transformerNothingParseCLI,
+	UsageFunc:    transformerNothingUsage,
 	IgnoresInput: false,
 }
 
@@ -30,26 +32,21 @@ func transformerNothingParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
-		}
-		transformerNothingUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerNothingUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerNothingUsage(os.Stderr, true, 1)
+			os.Exit(1)
+		}
+	}
 
 	transformer, _ := NewTransformerNothing()
 
@@ -59,17 +56,16 @@ func transformerNothingParseCLI(
 
 func transformerNothingUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameNothing)
 	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
 	fmt.Fprintf(o, "produced other output.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

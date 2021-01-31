@@ -13,8 +13,8 @@ func MlrvalUrand() Mlrval {
 }
 
 func MlrvalUrand32() Mlrval {
-	return MlrvalFromInt64(
-		int64(
+	return MlrvalFromInt(
+		int(
 			lib.RandUint32(),
 		),
 	)
@@ -38,8 +38,8 @@ func MlrvalUrandInt(ma, mb *Mlrval) Mlrval {
 	a := ma.intval
 	b := mb.intval
 
-	var lo int64 = 0
-	var hi int64 = 0
+	var lo int = 0
+	var hi int = 0
 	if a <= b {
 		lo = a
 		hi = b + 1
@@ -47,8 +47,8 @@ func MlrvalUrandInt(ma, mb *Mlrval) Mlrval {
 		lo = b
 		hi = a + 1
 	}
-	u := int64(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
-	return MlrvalFromInt64(u)
+	u := int(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
+	return MlrvalFromInt(u)
 }
 
 func MlrvalUrandRange(ma, mb *Mlrval) Mlrval {

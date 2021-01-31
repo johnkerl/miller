@@ -55,7 +55,7 @@ package types
 
 // ----------------------------------------------------------------
 type Mlrmap struct {
-	FieldCount int64
+	FieldCount int
 	Head       *mlrmapEntry
 	Tail       *mlrmapEntry
 

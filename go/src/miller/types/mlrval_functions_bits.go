@@ -4,7 +4,7 @@ package types
 // Bitwise NOT
 
 func bitwise_not_i_i(ma *Mlrval) Mlrval {
-	return MlrvalFromInt64(^ma.intval)
+	return MlrvalFromInt(^ma.intval)
 }
 
 var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
@@ -42,7 +42,7 @@ func bitcount_i_i(ma *Mlrval) Mlrval {
 	a = (a & _m08) + ((a >> 8) & _m08)
 	a = (a & _m16) + ((a >> 16) & _m16)
 	a = (a & _m32) + ((a >> 32) & _m32)
-	return MlrvalFromInt64(int64(a))
+	return MlrvalFromInt(int(a))
 }
 
 var bitcount_dispositions = [MT_DIM]UnaryFunc{
@@ -65,7 +65,7 @@ func MlrvalBitCount(ma *Mlrval) Mlrval {
 // Bitwise AND
 
 func bitwise_and_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval & mb.intval)
+	return MlrvalFromInt(ma.intval & mb.intval)
 }
 
 var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -89,7 +89,7 @@ func MlrvalBitwiseAND(ma, mb *Mlrval) Mlrval {
 // Bitwise OR
 
 func bitwise_or_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval | mb.intval)
+	return MlrvalFromInt(ma.intval | mb.intval)
 }
 
 var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -113,7 +113,7 @@ func MlrvalBitwiseOR(ma, mb *Mlrval) Mlrval {
 // Bitwise XOR
 
 func bitwise_xor_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval ^ mb.intval)
+	return MlrvalFromInt(ma.intval ^ mb.intval)
 }
 
 var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -137,7 +137,7 @@ func MlrvalBitwiseXOR(ma, mb *Mlrval) Mlrval {
 // Left shift
 
 func lsh_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval << uint64(mb.intval))
+	return MlrvalFromInt(ma.intval << uint64(mb.intval))
 }
 
 var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -161,7 +161,7 @@ func MlrvalLeftShift(ma, mb *Mlrval) Mlrval {
 // Signed right shift
 
 func srsh_i_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromInt64(ma.intval >> uint64(mb.intval))
+	return MlrvalFromInt(ma.intval >> uint64(mb.intval))
 }
 
 var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -188,7 +188,7 @@ func ursh_i_ii(ma, mb *Mlrval) Mlrval {
 	var ua uint64 = uint64(ma.intval)
 	var ub uint64 = uint64(mb.intval)
 	var uc = ua >> ub
-	return MlrvalFromInt64(int64(uc))
+	return MlrvalFromInt(int(uc))
 }
 
 var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{

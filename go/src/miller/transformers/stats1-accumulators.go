@@ -270,7 +270,7 @@ func (this *Stats1AccumulatorFactory) MakeAccumulator(
 
 // ================================================================
 type Stats1CountAccumulator struct {
-	count int64
+	count int
 }
 
 func NewStats1CountAccumulator() IStats1Accumulator {
@@ -282,7 +282,7 @@ func (this *Stats1CountAccumulator) Ingest(value *types.Mlrval) {
 	this.count++
 }
 func (this *Stats1CountAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt64(this.count)
+	return types.MlrvalFromInt(this.count)
 }
 
 // ----------------------------------------------------------------
@@ -301,9 +301,9 @@ func (this *Stats1ModeAccumulator) Ingest(value *types.Mlrval) {
 	key := value.String() // 1, 1.0, and 1.000 are distinct
 	iPrevious, ok := this.countsByValue.GetWithCheck(key)
 	if !ok {
-		this.countsByValue.Put(key, int64(1))
+		this.countsByValue.Put(key, int(1))
 	} else {
-		this.countsByValue.Put(key, iPrevious.(int64)+1)
+		this.countsByValue.Put(key, iPrevious.(int)+1)
 	}
 }
 func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
@@ -311,10 +311,10 @@ func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
 		return types.MlrvalFromError()
 	}
 	maxValue := ""
-	var maxCount = int64(0)
+	var maxCount = int(0)
 	for pe := this.countsByValue.Head; pe != nil; pe = pe.Next {
 		value := pe.Key
-		count := pe.Value.(int64)
+		count := pe.Value.(int)
 		if maxValue == "" || count > maxCount {
 			maxValue = value
 			maxCount = count
@@ -339,9 +339,9 @@ func (this *Stats1AntimodeAccumulator) Ingest(value *types.Mlrval) {
 	key := value.String() // 1, 1.0, and 1.000 are distinct
 	iPrevious, ok := this.countsByValue.GetWithCheck(key)
 	if !ok {
-		this.countsByValue.Put(key, int64(1))
+		this.countsByValue.Put(key, int(1))
 	} else {
-		this.countsByValue.Put(key, iPrevious.(int64)+1)
+		this.countsByValue.Put(key, iPrevious.(int)+1)
 	}
 }
 func (this *Stats1AntimodeAccumulator) Emit() types.Mlrval {
@@ -349,10 +349,10 @@ func (this *Stats1AntimodeAccumulator) Emit() types.Mlrval {
 		return types.MlrvalFromError()
 	}
 	minValue := ""
-	var minCount = int64(0)
+	var minCount = int(0)
 	for pe := this.countsByValue.Head; pe != nil; pe = pe.Next {
 		value := pe.Key
-		count := pe.Value.(int64)
+		count := pe.Value.(int)
 		if minValue == "" || count < minCount {
 			minValue = value
 			minCount = count
@@ -368,7 +368,7 @@ type Stats1SumAccumulator struct {
 
 func NewStats1SumAccumulator() IStats1Accumulator {
 	return &Stats1SumAccumulator{
-		sum: types.MlrvalFromInt64(0),
+		sum: types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1SumAccumulator) Ingest(value *types.Mlrval) {
@@ -381,12 +381,12 @@ func (this *Stats1SumAccumulator) Emit() types.Mlrval {
 // ----------------------------------------------------------------
 type Stats1MeanAccumulator struct {
 	sum   types.Mlrval
-	count int64
+	count int
 }
 
 func NewStats1MeanAccumulator() IStats1Accumulator {
 	return &Stats1MeanAccumulator{
-		sum:   types.MlrvalFromInt64(0),
+		sum:   types.MlrvalFromInt(0),
 		count: 0,
 	}
 }
@@ -398,7 +398,7 @@ func (this *Stats1MeanAccumulator) Emit() types.Mlrval {
 	if this.count == 0 {
 		return types.MlrvalFromVoid()
 	} else {
-		mcount := types.MlrvalFromInt64(this.count)
+		mcount := types.MlrvalFromInt(this.count)
 		return types.MlrvalDivide(&this.sum, &mcount)
 	}
 }
@@ -439,7 +439,7 @@ func (this *Stats1MaxAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1VarAccumulator struct {
-	count int64
+	count int
 	sum   types.Mlrval
 	sum2  types.Mlrval
 }
@@ -447,8 +447,8 @@ type Stats1VarAccumulator struct {
 func NewStats1VarAccumulator() IStats1Accumulator {
 	return &Stats1VarAccumulator{
 		count: 0,
-		sum:   types.MlrvalFromInt64(0),
-		sum2:  types.MlrvalFromInt64(0),
+		sum:   types.MlrvalFromInt(0),
+		sum2:  types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1VarAccumulator) Ingest(value *types.Mlrval) {
@@ -458,13 +458,13 @@ func (this *Stats1VarAccumulator) Ingest(value *types.Mlrval) {
 	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
 }
 func (this *Stats1VarAccumulator) Emit() types.Mlrval {
-	mcount := types.MlrvalFromInt64(this.count)
+	mcount := types.MlrvalFromInt(this.count)
 	return types.MlrvalGetVar(&mcount, &this.sum, &this.sum2)
 }
 
 // ----------------------------------------------------------------
 type Stats1StddevAccumulator struct {
-	count int64
+	count int
 	sum   types.Mlrval
 	sum2  types.Mlrval
 }
@@ -472,8 +472,8 @@ type Stats1StddevAccumulator struct {
 func NewStats1StddevAccumulator() IStats1Accumulator {
 	return &Stats1StddevAccumulator{
 		count: 0,
-		sum:   types.MlrvalFromInt64(0),
-		sum2:  types.MlrvalFromInt64(0),
+		sum:   types.MlrvalFromInt(0),
+		sum2:  types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1StddevAccumulator) Ingest(value *types.Mlrval) {
@@ -483,13 +483,13 @@ func (this *Stats1StddevAccumulator) Ingest(value *types.Mlrval) {
 	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
 }
 func (this *Stats1StddevAccumulator) Emit() types.Mlrval {
-	mcount := types.MlrvalFromInt64(this.count)
+	mcount := types.MlrvalFromInt(this.count)
 	return types.MlrvalGetStddev(&mcount, &this.sum, &this.sum2)
 }
 
 // ----------------------------------------------------------------
 type Stats1MeanEBAccumulator struct {
-	count int64
+	count int
 	sum   types.Mlrval
 	sum2  types.Mlrval
 }
@@ -497,8 +497,8 @@ type Stats1MeanEBAccumulator struct {
 func NewStats1MeanEBAccumulator() IStats1Accumulator {
 	return &Stats1MeanEBAccumulator{
 		count: 0,
-		sum:   types.MlrvalFromInt64(0),
-		sum2:  types.MlrvalFromInt64(0),
+		sum:   types.MlrvalFromInt(0),
+		sum2:  types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1MeanEBAccumulator) Ingest(value *types.Mlrval) {
@@ -508,13 +508,13 @@ func (this *Stats1MeanEBAccumulator) Ingest(value *types.Mlrval) {
 	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
 }
 func (this *Stats1MeanEBAccumulator) Emit() types.Mlrval {
-	mcount := types.MlrvalFromInt64(this.count)
+	mcount := types.MlrvalFromInt(this.count)
 	return types.MlrvalGetMeanEB(&mcount, &this.sum, &this.sum2)
 }
 
 // ----------------------------------------------------------------
 type Stats1SkewnessAccumulator struct {
-	count int64
+	count int
 	sum   types.Mlrval
 	sum2  types.Mlrval
 	sum3  types.Mlrval
@@ -523,9 +523,9 @@ type Stats1SkewnessAccumulator struct {
 func NewStats1SkewnessAccumulator() IStats1Accumulator {
 	return &Stats1SkewnessAccumulator{
 		count: 0,
-		sum:   types.MlrvalFromInt64(0),
-		sum2:  types.MlrvalFromInt64(0),
-		sum3:  types.MlrvalFromInt64(0),
+		sum:   types.MlrvalFromInt(0),
+		sum2:  types.MlrvalFromInt(0),
+		sum3:  types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1SkewnessAccumulator) Ingest(value *types.Mlrval) {
@@ -537,13 +537,13 @@ func (this *Stats1SkewnessAccumulator) Ingest(value *types.Mlrval) {
 	this.sum3 = types.MlrvalBinaryPlus(&this.sum3, &value3)
 }
 func (this *Stats1SkewnessAccumulator) Emit() types.Mlrval {
-	mcount := types.MlrvalFromInt64(this.count)
+	mcount := types.MlrvalFromInt(this.count)
 	return types.MlrvalGetSkewness(&mcount, &this.sum, &this.sum2, &this.sum3)
 }
 
 // ----------------------------------------------------------------
 type Stats1KurtosisAccumulator struct {
-	count int64
+	count int
 	sum   types.Mlrval
 	sum2  types.Mlrval
 	sum3  types.Mlrval
@@ -553,10 +553,10 @@ type Stats1KurtosisAccumulator struct {
 func NewStats1KurtosisAccumulator() IStats1Accumulator {
 	return &Stats1KurtosisAccumulator{
 		count: 0,
-		sum:   types.MlrvalFromInt64(0),
-		sum2:  types.MlrvalFromInt64(0),
-		sum3:  types.MlrvalFromInt64(0),
-		sum4:  types.MlrvalFromInt64(0),
+		sum:   types.MlrvalFromInt(0),
+		sum2:  types.MlrvalFromInt(0),
+		sum3:  types.MlrvalFromInt(0),
+		sum4:  types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1KurtosisAccumulator) Ingest(value *types.Mlrval) {
@@ -570,7 +570,7 @@ func (this *Stats1KurtosisAccumulator) Ingest(value *types.Mlrval) {
 	this.sum4 = types.MlrvalBinaryPlus(&this.sum4, &value4)
 }
 func (this *Stats1KurtosisAccumulator) Emit() types.Mlrval {
-	mcount := types.MlrvalFromInt64(this.count)
+	mcount := types.MlrvalFromInt(this.count)
 	return types.MlrvalGetKurtosis(&mcount, &this.sum, &this.sum2, &this.sum3, &this.sum4)
 }
 

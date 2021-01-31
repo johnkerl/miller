@@ -17,6 +17,7 @@ const verbNameSec2GMT = "sec2gmt"
 var Sec2GMTSetup = transforming.TransformerSetup{
 	Verb:         verbNameSec2GMT,
 	ParseCLIFunc: transformerSec2GMTParseCLI,
+	UsageFunc:    transformerSec2GMTUsage,
 	IgnoresInput: false,
 }
 
@@ -31,11 +32,7 @@ func transformerSec2GMTParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
-
-	// We don't use flagSet here since we want -1..-9 to all point to the same
-	// numDecimalPlaces. That's super-easy if we roll our own.
 
 	numDecimalPlaces := 0
 
@@ -43,7 +40,7 @@ func transformerSec2GMTParseCLI(
 		if args[argi][0] != '-' {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerSec2GMTUsage(os.Stdout, 0, errorHandling, args[0], verb)
+			transformerSec2GMTUsage(os.Stdout, true, 0)
 			argi += 1
 
 		} else if args[argi] == "-1" {
@@ -75,8 +72,7 @@ func transformerSec2GMTParseCLI(
 			argi++
 
 		} else {
-			transformerSec2GMTUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-			os.Exit(1)
+			transformerSec2GMTUsage(os.Stderr, true, 1)
 		}
 	}
 
@@ -85,8 +81,7 @@ func transformerSec2GMTParseCLI(
 	}
 
 	if argi >= argc {
-		transformerSec2GMTUsage(os.Stderr, 1, flag.ExitOnError, args[0], verb)
-		os.Exit(1)
+		transformerSec2GMTUsage(os.Stderr, true, 1)
 	}
 	fieldNames := args[argi]
 	argi++
@@ -102,21 +97,20 @@ func transformerSec2GMTParseCLI(
 
 func transformerSec2GMTUsage(
 	o *os.File,
+	doExit bool,
 	exitCode int,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
-	argv0 string,
-	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", os.Args[0], verbNameSec2GMT)
 	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
 	fmt.Fprintf(o, "corresponding GMT timestamp; leaves non-numbers as-is. This is nothing\n")
 	fmt.Fprintf(o, "more than a keystroke-saver for the sec2gmt function:\n")
-	fmt.Fprintf(o, "  %s %s time1,time2\n", argv0, verb)
+	fmt.Fprintf(o, "  %s %s time1,time2\n", os.Args[0], verbNameSec2GMT)
 	fmt.Fprintf(o, "is the same as\n")
-	fmt.Fprintf(o, "  %s put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'\n", argv0)
+	fmt.Fprintf(o, "  %s put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'\n", os.Args[0])
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-1 through -9: format the seconds using 1..9 decimal places, respectively.\n")
-	if errorHandling == flag.ExitOnError {
+
+	if doExit {
 		os.Exit(exitCode)
 	}
 }

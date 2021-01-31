@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -17,6 +18,7 @@ const verbNameJSONStringify = "json-stringify"
 var JSONStringifySetup = transforming.TransformerSetup{
 	Verb:         verbNameJSONStringify,
 	ParseCLIFunc: transformerJSONStringifyParseCLI,
+	UsageFunc:    transformerJSONStringifyUsage,
 	IgnoresInput: false,
 }
 
@@ -34,52 +36,44 @@ func transformerJSONStringifyParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	var fieldNames []string = nil
+	jvStack := false // TODO: ??
 
-	pFieldNames := flagSet.String(
-		"f",
-		"",
-		"Comma-separated list of field names to json-stringify (default all).",
-	)
-	pJVStack := flagSet.Bool(
-		"jvstack",
-		false,
-		"Produce multi-line output",
-	)
-	pNoJVStack := flagSet.Bool(
-		"no-jvstack",
-		false,
-		"Produce single-line output",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerJSONStringifyUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else if args[argi] == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "--jvstack" {
+			jvStack = true
+			argi++
+
+		} else if args[argi] == "--no-jvstack" {
+			jvStack = false
+			argi++
+
+		} else {
+			transformerJSONStringifyUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerJSONStringifyUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
-	if *pJVStack {
+	if jvStack {
 		jsonFormatting = types.JSON_MULTILINE
-	}
-	if *pNoJVStack {
+	} else {
 		jsonFormatting = types.JSON_SINGLE_LINE
 	}
 
 	transformer, _ := NewTransformerJSONStringify(
 		jsonFormatting,
-		*pFieldNames,
+		fieldNames,
 	)
 
 	*pargi = argi
@@ -88,19 +82,21 @@ func transformerJSONStringifyParseCLI(
 
 func transformerJSONStringifyUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameJSONStringify)
 	fmt.Fprint(o,
 		`Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
 `)
 	fmt.Fprintf(o, "Options:\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
+	fmt.Fprintf(o, "--jvstack Produce multi-line JSON output.\n")
+	fmt.Fprintf(o, "--no-jvstack Produce single-line JSON output per record (default).\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -115,13 +111,11 @@ type TransformerJSONStringify struct {
 
 func NewTransformerJSONStringify(
 	jsonFormatting types.TJSONFormatting,
-	fieldNames string,
+	fieldNames []string,
 ) (*TransformerJSONStringify, error) {
 	var fieldNameSet map[string]bool = nil
-	if fieldNames != "" {
-		fieldNameSet = lib.StringListToSet(
-			lib.SplitString(fieldNames, ","),
-		)
+	if fieldNames != nil {
+		fieldNameSet = lib.StringListToSet(fieldNames)
 	}
 
 	retval := &TransformerJSONStringify{

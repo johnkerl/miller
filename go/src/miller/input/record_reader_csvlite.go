@@ -127,7 +127,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
-	var inputLineNumber int64 = 0
+	var inputLineNumber int = 0
 	var headerStrings []string = nil
 
 	context.UpdateForStartOfFile(filename)
@@ -218,7 +218,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 ) {
-	var inputLineNumber int64 = 0
+	var inputLineNumber int = 0
 	var headerStrings []string = nil
 
 	context.UpdateForStartOfFile(filename)

@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -17,6 +17,7 @@ const verbNameHead = "head"
 var HeadSetup = transforming.TransformerSetup{
 	Verb:         verbNameHead,
 	ParseCLIFunc: transformerHeadParseCLI,
+	UsageFunc:    transformerHeadUsage,
 	IgnoresInput: false,
 }
 
@@ -34,44 +35,32 @@ func transformerHeadParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	headCount := 10
+	var groupByFieldNames []string = nil
 
-	//Usage: mlr head [options]
-	//-n {count}    Head count to print; default 10
-	//-g {a,b,c}    Optional group-by-field names for head counts
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pHeadCount := flagSet.Uint64(
-		"n",
-		10,
-		`Head count to print`,
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerHeadUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Optional group-by-field names for head counts, e.g. a,b,c",
-	)
+		} else if args[argi] == "-n" {
+			headCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerHeadUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerHeadUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerHead(
-		*pHeadCount,
-		*pGroupByFieldNames,
+		headCount,
+		groupByFieldNames,
 	)
 
 	*pargi = argi
@@ -80,54 +69,53 @@ func transformerHeadParseCLI(
 
 func transformerHeadUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprint(o,
-		`Passes through the first n records, optionally by category.
-`)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameHead)
+	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
+
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+
 	// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
 	//	fmt.Fprint(o,
 	//		`Without -g, ceases consuming more input (i.e. is fast) when n records
 	//have been read.
 	//`)
 
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type TransformerHead struct {
 	// input
-	headCount            uint64
-	groupByFieldNameList []string
+	headCount         int
+	groupByFieldNames []string
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
-	unkeyedRecordCount    uint64
-	keyedRecordCounts     map[string]uint64
+	unkeyedRecordCount    int
+	keyedRecordCounts     map[string]int
 }
 
 func NewTransformerHead(
-	headCount uint64,
-	groupByFieldNames string,
+	headCount int,
+	groupByFieldNames []string,
 ) (*TransformerHead, error) {
 
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-
 	this := &TransformerHead{
-		headCount:            headCount,
-		groupByFieldNameList: groupByFieldNameList,
+		headCount:         headCount,
+		groupByFieldNames: groupByFieldNames,
 
 		unkeyedRecordCount: 0,
-		keyedRecordCounts:  make(map[string]uint64),
+		keyedRecordCounts:  make(map[string]int),
 	}
 
-	if len(groupByFieldNameList) == 0 {
+	if groupByFieldNames == nil {
 		this.recordTransformerFunc = this.mapUnkeyed
 	} else {
 		this.recordTransformerFunc = this.mapKeyed
@@ -165,7 +153,7 @@ func (this *TransformerHead) mapKeyed(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if !ok {
 			return
 		}

@@ -118,7 +118,7 @@ func ParseCommandLine(args []string) (
 		if options.ReaderOptions.InputFileFormat != "json" {
 			transformer, err := transformers.NewTransformerUnflatten(
 				options.ReaderOptions.IFLATSEP,
-				"",
+				nil,
 			)
 			lib.InternalCodingErrorIf(err != nil)
 			lib.InternalCodingErrorIf(transformer == nil)
@@ -132,7 +132,7 @@ func ParseCommandLine(args []string) (
 		if options.WriterOptions.OutputFileFormat != "json" {
 			transformer, err := transformers.NewTransformerFlatten(
 				options.WriterOptions.OFLATSEP,
-				"",
+				nil,
 			)
 			lib.InternalCodingErrorIf(err != nil)
 			lib.InternalCodingErrorIf(transformer == nil)
@@ -157,7 +157,7 @@ func ParseCommandLine(args []string) (
 	//	}
 
 	if options.HaveRandSeed {
-		lib.SeedRandom(options.RandSeed)
+		lib.SeedRandom(int64(options.RandSeed))
 	}
 
 	return options, recordTransformers, nil

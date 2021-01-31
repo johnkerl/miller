@@ -34,7 +34,7 @@ func (this *Mlrval) setPrintRep() {
 			// panic i suppose
 			break
 		case MT_INT:
-			this.printrep = strconv.FormatInt(this.intval, 10)
+			this.printrep = strconv.Itoa(this.intval)
 			break
 		case MT_FLOAT:
 			// xxx temp -- OFMT etc ...

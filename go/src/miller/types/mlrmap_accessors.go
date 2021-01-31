@@ -141,7 +141,7 @@ func (this *Mlrmap) GetKeys() []string {
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
 
-func (this *Mlrmap) GetWithPositionalIndex(position int64) *Mlrval {
+func (this *Mlrmap) GetWithPositionalIndex(position int) *Mlrval {
 	mapEntry := this.findEntryByPositionalIndex(position)
 	if mapEntry == nil {
 		return nil
@@ -207,7 +207,7 @@ func (this *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
 
-func (this *Mlrmap) GetNameAtPositionalIndex(position int64) (string, bool) {
+func (this *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 	mapEntry := this.findEntryByPositionalIndex(position)
 	if mapEntry == nil {
 		return "", false
@@ -217,7 +217,7 @@ func (this *Mlrmap) GetNameAtPositionalIndex(position int64) (string, bool) {
 
 // ----------------------------------------------------------------
 // TODO: put error-return into this API
-func (this *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
+func (this *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
 	positionalEntry := this.findEntryByPositionalIndex(position)
 
 	if positionalEntry == nil {
@@ -252,7 +252,7 @@ func (this *Mlrmap) PutNameWithPositionalIndex(position int64, name *Mlrval) {
 // This is safe for DSL use. See also PutReference.
 
 // TODO: put error-return into this API
-func (this *Mlrmap) PutCopyWithPositionalIndex(position int64, value *Mlrval) {
+func (this *Mlrmap) PutCopyWithPositionalIndex(position int, value *Mlrval) {
 	mapEntry := this.findEntryByPositionalIndex(position)
 
 	if mapEntry != nil {
@@ -262,7 +262,7 @@ func (this *Mlrmap) PutCopyWithPositionalIndex(position int64, value *Mlrval) {
 	}
 }
 
-func (this *Mlrmap) RemoveWithPositionalIndex(position int64) {
+func (this *Mlrmap) RemoveWithPositionalIndex(position int) {
 	mapEntry := this.findEntryByPositionalIndex(position)
 	if mapEntry != nil {
 		this.unlink(mapEntry)
@@ -594,12 +594,12 @@ func (this *Mlrmap) findEntry(key string) *mlrmapEntry {
 //   get the -1st field than the nth.
 // * Returns 0 on invalid index: 0, or < -n, or > n where n is the number of
 //   fields.
-func (this *Mlrmap) findEntryByPositionalIndex(position int64) *mlrmapEntry {
+func (this *Mlrmap) findEntryByPositionalIndex(position int) *mlrmapEntry {
 	if position > this.FieldCount || position < -this.FieldCount || position == 0 {
 		return nil
 	}
 	if position > 0 {
-		var i int64 = 1
+		var i int = 1
 		for pe := this.Head; pe != nil; pe = pe.Next {
 			if i == position {
 				return pe
@@ -608,7 +608,7 @@ func (this *Mlrmap) findEntryByPositionalIndex(position int64) *mlrmapEntry {
 		}
 		lib.InternalCodingErrorIf(true)
 	} else {
-		var i int64 = -1
+		var i int = -1
 		for pe := this.Tail; pe != nil; pe = pe.Prev {
 			if i == position {
 				return pe

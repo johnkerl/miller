@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -17,6 +18,7 @@ const verbNameSample = "sample"
 var SampleSetup = transforming.TransformerSetup{
 	Verb:         verbNameSample,
 	ParseCLIFunc: transformerSampleParseCLI,
+	UsageFunc:    transformerSampleUsage,
 	IgnoresInput: false,
 }
 
@@ -34,46 +36,36 @@ func transformerSampleParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	sampleCount := -1
+	var groupByFieldNames []string = nil
 
-	// TODO: Needs to be 64-bit friendly
-	pSampleCount := flagSet.Int64(
-		"k",
-		-1,
-		`Required: number of records to output in total, or by group if using -g.`,
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Optional: group-by-field names for samples, e.g. a,b,c",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerSampleUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-k" {
+			sampleCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerSampleUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerSampleUsage(ostream, args[0], verb, flagSet)
-	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
 	}
 
-	if *pSampleCount < 0 {
-		transformerSampleUsage(os.Stderr, args[0], verb, flagSet)
-		os.Exit(1)
+	if sampleCount < 0 {
+		transformerSampleUsage(os.Stderr, true, 1)
 	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerSample(
-		*pSampleCount,
-		*pGroupByFieldNames,
+		sampleCount,
+		groupByFieldNames,
 	)
 
 	*pargi = argi
@@ -82,43 +74,44 @@ func transformerSampleParseCLI(
 
 func transformerSampleUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameSample)
 	fmt.Fprintf(o,
 		`Reservoir sampling (subsampling without replacement), optionally by category.
 See also %s bootstrap and %s shuffle.
-`, argv0, argv0)
+`, os.Args[0], os.Args[0])
 	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-k {k} Required: number of records to output in total, or by group if using -g.\n")
 
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage)
-	})
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type sampleBucketType struct {
-	nalloc             int64
-	nused              int64
+	nalloc             int
+	nused              int
 	recordsAndContexts []*types.RecordAndContext
 }
 
 type TransformerSample struct {
-	groupByFieldNameList []string
-	sampleCount          int64
-	bucketsByGroup       *lib.OrderedMap
+	groupByFieldNames []string
+	sampleCount       int
+	bucketsByGroup    *lib.OrderedMap
 }
 
 func NewTransformerSample(
-	sampleCount int64,
-	groupByFieldNames string,
+	sampleCount int,
+	groupByFieldNames []string,
 ) (*TransformerSample, error) {
 	this := &TransformerSample{
-		sampleCount:          sampleCount,
-		groupByFieldNameList: lib.SplitString(groupByFieldNames, ","),
-		bucketsByGroup:       lib.NewOrderedMap(),
+		sampleCount:       sampleCount,
+		groupByFieldNames: groupByFieldNames,
+		bucketsByGroup:    lib.NewOrderedMap(),
 	}
 	return this, nil
 }
@@ -131,7 +124,7 @@ func (this *TransformerSample) Transform(
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if ok {
 			sampleBucket := this.bucketsByGroup.Get(groupingKey)
 			if sampleBucket == nil {
@@ -145,8 +138,7 @@ func (this *TransformerSample) Transform(
 
 		for pe := this.bucketsByGroup.Head; pe != nil; pe = pe.Next {
 			sampleBucket := pe.Value.(*sampleBucketType)
-			var i int64 = 0
-			for i = 0; i < sampleBucket.nused; i++ {
+			for i := 0; i < sampleBucket.nused; i++ {
 				outputChannel <- sampleBucket.recordsAndContexts[i]
 
 			}
@@ -158,7 +150,7 @@ func (this *TransformerSample) Transform(
 }
 
 // ----------------------------------------------------------------
-func newSampleBucket(sampleCount int64) *sampleBucketType {
+func newSampleBucket(sampleCount int) *sampleBucketType {
 	return &sampleBucketType{
 		nalloc:             sampleCount,
 		nused:              0,
@@ -172,7 +164,7 @@ func newSampleBucket(sampleCount int64) *sampleBucketType {
 // sample).
 func (this *sampleBucketType) handleRecord(
 	inrecAndContext *types.RecordAndContext,
-	recordNumber int64,
+	recordNumber int,
 ) {
 	if this.nused < this.nalloc {
 		// Always accept new entries until the bucket is full.
@@ -184,7 +176,7 @@ func (this *sampleBucketType) handleRecord(
 		this.recordsAndContexts[this.nused] = inrecAndContext.Copy()
 		this.nused++
 	} else {
-		r := lib.RandInt63() % recordNumber
+		r := int(lib.RandInt63()) % recordNumber
 		if r < this.nalloc {
 			this.recordsAndContexts[r] = inrecAndContext.Copy()
 		}

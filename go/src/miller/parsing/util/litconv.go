@@ -26,9 +26,9 @@ func RuneValue(lit []byte) rune {
 }
 
 /*
-Convert the literal value of a scanned token to int64
+Convert the literal value of a scanned token to int
 */
-func IntValue(lit []byte) (int64, error) {
+func IntValue(lit []byte) (int, error) {
 	return strconv.ParseInt(string(lit), 10, 64)
 }
 

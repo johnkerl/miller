@@ -177,7 +177,7 @@ type IntLiteralNode struct {
 
 func (this *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 	return &IntLiteralNode{
-		literal: types.MlrvalFromInt64String(literal),
+		literal: types.MlrvalFromIntString(literal),
 	}
 }
 func (this *IntLiteralNode) Evaluate(state *State) types.Mlrval {
@@ -288,7 +288,7 @@ func (this *RootNode) BuildFILENUMNode() *FILENUMNode {
 	return &FILENUMNode{}
 }
 func (this *FILENUMNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromInt64(state.Context.FILENUM)
+	return types.MlrvalFromInt(state.Context.FILENUM)
 }
 
 // ----------------------------------------------------------------
@@ -299,7 +299,7 @@ func (this *RootNode) BuildNFNode() *NFNode {
 	return &NFNode{}
 }
 func (this *NFNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromInt64(state.Inrec.FieldCount)
+	return types.MlrvalFromInt(state.Inrec.FieldCount)
 }
 
 // ----------------------------------------------------------------
@@ -310,7 +310,7 @@ func (this *RootNode) BuildNRNode() *NRNode {
 	return &NRNode{}
 }
 func (this *NRNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromInt64(state.Context.NR)
+	return types.MlrvalFromInt(state.Context.NR)
 }
 
 // ----------------------------------------------------------------
@@ -321,7 +321,7 @@ func (this *RootNode) BuildFNRNode() *FNRNode {
 	return &FNRNode{}
 }
 func (this *FNRNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromInt64(state.Context.FNR)
+	return types.MlrvalFromInt(state.Context.FNR)
 }
 
 // ----------------------------------------------------------------
@@ -468,7 +468,7 @@ func (this *RootNode) BuildArraySliceEmptyLowerIndexNode(
 	return &LiteralOneNode{}, nil
 }
 func (this *LiteralOneNode) Evaluate(state *State) types.Mlrval {
-	return types.MlrvalFromInt64(1)
+	return types.MlrvalFromInt(1)
 }
 
 // ================================================================

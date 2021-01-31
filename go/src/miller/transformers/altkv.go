@@ -18,6 +18,7 @@ const verbNameAltkv = "altkv"
 var AltkvSetup = transforming.TransformerSetup{
 	Verb:         verbNameAltkv,
 	ParseCLIFunc: transformerAltkvParseCLI,
+	UsageFunc:    transformerAltkvUsage,
 	IgnoresInput: false,
 }
 

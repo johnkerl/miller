@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
-	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -17,6 +17,7 @@ const verbNameDecimate = "decimate"
 var DecimateSetup = transforming.TransformerSetup{
 	Verb:         verbNameDecimate,
 	ParseCLIFunc: transformerDecimateParseCLI,
+	UsageFunc:    transformerDecimateUsage,
 	IgnoresInput: false,
 }
 
@@ -34,54 +35,47 @@ func transformerDecimateParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	decimateCount := 10
+	atStart := false
+	atEnd := false
+	var groupByFieldNames []string = nil
 
-	pDecimateCount := flagSet.Int64(
-		"n",
-		10,
-		"Decimation factor.",
-	)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pAtStart := flagSet.Bool(
-		"b",
-		false,
-		"Decimate by printing first of every n.",
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerDecimateUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pAtEnd := flagSet.Bool(
-		"e",
-		false,
-		"Decimate by printing last of every n (default).",
-	)
+		} else if args[argi] == "-n" {
+			decimateCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+			if decimateCount <= 0 {
+				transformerDecimateUsage(os.Stderr, true, 1)
+			}
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Optional group-by-field names for decimate counts, e.g. a,b,c",
-	)
+		} else if args[argi] == "-b" {
+			atStart = true
+			argi++
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-e" {
+			atEnd = true
+			argi++
+
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerDecimateUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerDecimateUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerDecimate(
-		*pDecimateCount,
-		*pAtStart,
-		*pAtEnd,
-		*pGroupByFieldNames,
+		decimateCount,
+		atStart,
+		atEnd,
+		groupByFieldNames,
 	)
 
 	*pargi = argi
@@ -90,40 +84,38 @@ func transformerDecimateParseCLI(
 
 func transformerDecimateUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameDecimate)
 	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		if f.Name == "g" {
-			fmt.Fprintf(o, " -%v %v\n", f.Name, f.Usage) // f.Name, f.Value
-		} else {
-			fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-		}
-	})
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, " -b Decimate by printing first of every n.\n")
+	fmt.Fprintf(o, " -e Decimate by printing last of every n (default).\n")
+	fmt.Fprintf(o, " -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, " -n {n} Decimation factor (default 10).\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type TransformerDecimate struct {
-	decimateCount        int64
-	remainderToKeep      int64
-	groupByFieldNameList []string
+	decimateCount     int
+	remainderToKeep   int
+	groupByFieldNames []string
 
-	countsByGroup map[string]int64
+	countsByGroup map[string]int
 }
 
 // ----------------------------------------------------------------
 func NewTransformerDecimate(
-	decimateCount int64,
+	decimateCount int,
 	atStart bool,
 	atEnd bool,
-	groupByFieldNames string,
+	groupByFieldNames []string,
 ) (*TransformerDecimate, error) {
-
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
 	remainderToKeep := decimateCount - 1
 	if atStart && !atEnd {
@@ -131,10 +123,10 @@ func NewTransformerDecimate(
 	}
 
 	this := &TransformerDecimate{
-		decimateCount:        decimateCount,
-		remainderToKeep:      remainderToKeep,
-		groupByFieldNameList: groupByFieldNameList,
-		countsByGroup:        make(map[string]int64),
+		decimateCount:     decimateCount,
+		remainderToKeep:   remainderToKeep,
+		groupByFieldNames: groupByFieldNames,
+		countsByGroup:     make(map[string]int),
 	}
 
 	return this, nil
@@ -148,7 +140,7 @@ func (this *TransformerDecimate) Transform(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if !ok {
 			return // This particular record doesn't have the specified fields; ignore
 		}

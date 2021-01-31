@@ -25,8 +25,8 @@ import (
 
 func TestComparactors(t *testing.T) {
 
-	i10 := MlrvalFromInt64(10)
-	i2 := MlrvalFromInt64(2)
+	i10 := MlrvalFromInt(10)
+	i2 := MlrvalFromInt(2)
 
 	bfalse := MlrvalFromBool(false)
 	btrue := MlrvalFromBool(true)

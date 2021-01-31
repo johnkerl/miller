@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -18,6 +19,7 @@ const verbNameRename = "rename"
 var RenameSetup = transforming.TransformerSetup{
 	Verb:         verbNameRename,
 	ParseCLIFunc: transformerRenameParseCLI,
+	UsageFunc:    transformerRenameUsage,
 	IgnoresInput: false,
 }
 
@@ -32,37 +34,29 @@ func transformerRenameParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerRenameUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerRenameUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerRenameUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	// Get the rename field names from the command line
 	if argi >= argc {
-		flagSet.Usage()
-		os.Exit(1)
+		transformerRenameUsage(os.Stderr, true, 1)
 	}
 	names := lib.SplitString(args[argi], ",")
 	if len(names)%2 != 0 {
-		flagSet.Usage()
-		os.Exit(1)
+		transformerRenameUsage(os.Stderr, true, 1)
 	}
 
 	argi += 1
@@ -77,16 +71,15 @@ func transformerRenameParseCLI(
 
 func transformerRenameUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s {old1,new1,old2,new2,...}\n", os.Args[0], verbNameRename)
 	fmt.Fprintf(o, "Renames specified fields.\n")
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

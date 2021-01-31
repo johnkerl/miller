@@ -84,9 +84,9 @@ func transformerCountUsage(
 		`Prints number of records, optionally grouped by distinct values for specified field names.
 `)
 	fmt.Fprintf(o, `Options:
--g Optional group-by-field names for counts, e.g. a,b,c
--n Show only the number of distinct values. Not interesting without -g.
--o Field name for output-count. Default "count".
+-g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c
+-n {n} Show only the number of distinct values. Not interesting without -g.
+-o {name} Field name for output-count. Default "count".
 `)
 
 	if doExit {
@@ -103,7 +103,7 @@ type TransformerCount struct {
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
-	ungroupedCount        int64
+	ungroupedCount        int
 	// Example:
 	// * Suppose group-by fields are a,b.
 	// * One record has a=foo,b=bar
@@ -159,7 +159,7 @@ func (this *TransformerCount) countUngrouped(
 		this.ungroupedCount++
 	} else {
 		newrec := types.NewMlrmapAsRecord()
-		mcount := types.MlrvalFromInt64(this.ungroupedCount)
+		mcount := types.MlrvalFromInt(this.ungroupedCount)
 		newrec.PutCopy(this.outputFieldName, &mcount)
 
 		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
@@ -184,20 +184,20 @@ func (this *TransformerCount) countGrouped(
 		}
 
 		if !this.groupedCounts.Has(groupingKey) {
-			var count int64 = 1
+			var count int = 1
 			this.groupedCounts.Put(groupingKey, count)
 			this.groupingValues.Put(groupingKey, selectedValues)
 		} else {
 			this.groupedCounts.Put(
 				groupingKey,
-				this.groupedCounts.Get(groupingKey).(int64)+1,
+				this.groupedCounts.Get(groupingKey).(int)+1,
 			)
 		}
 
 	} else {
 		if this.showCountsOnly {
 			newrec := types.NewMlrmapAsRecord()
-			mcount := types.MlrvalFromInt64(this.groupedCounts.FieldCount)
+			mcount := types.MlrvalFromInt(this.groupedCounts.FieldCount)
 			newrec.PutCopy(this.outputFieldName, &mcount)
 
 			outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
@@ -222,8 +222,8 @@ func (this *TransformerCount) countGrouped(
 					i++
 				}
 
-				countForGroup := outer.Value.(int64)
-				mcount := types.MlrvalFromInt64(countForGroup)
+				countForGroup := outer.Value.(int)
+				mcount := types.MlrvalFromInt(countForGroup)
 				newrec.PutCopy(this.outputFieldName, &mcount)
 
 				outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)

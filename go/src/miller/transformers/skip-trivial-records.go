@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/transforming"
@@ -16,6 +17,7 @@ const verbNameSkipTrivialRecords = "skip-trivial-records"
 var SkipTrivialRecordsSetup = transforming.TransformerSetup{
 	Verb:         verbNameSkipTrivialRecords,
 	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
+	UsageFunc:    transformerSkipTrivialRecordsUsage,
 	IgnoresInput: false,
 }
 
@@ -30,27 +32,21 @@ func transformerSkipTrivialRecordsParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerSkipTrivialRecordsUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerSkipTrivialRecordsUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerSkipTrivialRecordsUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerSkipTrivialRecords()
 
@@ -60,17 +56,16 @@ func transformerSkipTrivialRecordsParseCLI(
 
 func transformerSkipTrivialRecordsUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {no options}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameSkipTrivialRecords)
 	fmt.Fprintf(o, "Passes through all records except those with zero fields,\n")
 	fmt.Fprintf(o, "or those for which all fields have empty value.\n")
 
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

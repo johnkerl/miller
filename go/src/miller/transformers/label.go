@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -18,6 +19,7 @@ const verbNameLabel = "label"
 var LabelSetup = transforming.TransformerSetup{
 	Verb:         verbNameLabel,
 	ParseCLIFunc: transformerLabelParseCLI,
+	UsageFunc:    transformerLabelUsage,
 	IgnoresInput: false,
 }
 
@@ -32,32 +34,25 @@ func transformerLabelParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerLabelUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
+
+		} else {
+			transformerLabelUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerLabelUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	// Get the label field names from the command line
 	if argi >= argc {
-		flagSet.Usage()
-		os.Exit(1)
+		transformerLabelUsage(os.Stderr, true, 1)
 	}
 	newNames := lib.SplitString(args[argi], ",")
 
@@ -77,21 +72,20 @@ func transformerLabelParseCLI(
 
 func transformerLabelUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s {new1,new2,new3,...}\n", os.Args[0], verbNameLabel)
 	fmt.Fprintf(o,
 		`Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original
 names.) Particularly useful with --inidx or --implicit-csv-header, to give
 useful names to otherwise integer-indexed fields.
 `)
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

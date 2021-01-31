@@ -19,6 +19,7 @@ const verbNameStats1 = "stats1"
 var Stats1Setup = transforming.TransformerSetup{
 	Verb:         verbNameStats1,
 	ParseCLIFunc: transformerStats1ParseCLI,
+	UsageFunc:    transformerStats1Usage,
 	IgnoresInput: false,
 }
 
@@ -46,8 +47,7 @@ func transformerStats1ParseCLI(
 		if !strings.HasPrefix(args[argi], "-") {
 			break // No more flag options to process
 		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerStats1Usage(os.Stdout, args[0], verb, nil)
-			return nil // help intentionally requested
+			transformerStats1Usage(os.Stdout, true, 0)
 
 		} else if args[argi] == "-a" {
 			accumulatorNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
@@ -75,20 +75,19 @@ func transformerStats1ParseCLI(
 			argi += 1
 
 		} else {
-			transformerStats1Usage(os.Stderr, args[0], verb, nil)
-			os.Exit(1)
+			transformerStats1Usage(os.Stderr, true, 1)
 		}
 	}
 
 	// TODO: libify for use across verbs.
 	if len(accumulatorNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", args[0], verb)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", args[0], verb)
+		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", args[0], verbNameStats1)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", args[0], verbNameStats1)
 		os.Exit(1)
 	}
 	if len(valueFieldNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", args[0], verb)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", args[0], verb)
+		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", args[0], verbNameStats1)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", args[0], verbNameStats1)
 		os.Exit(1)
 	}
 
@@ -106,11 +105,10 @@ func transformerStats1ParseCLI(
 
 func transformerStats1Usage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameStats1)
 	fmt.Fprint(o,
 		`Computes univariate statistics for one or more given fields, accumulated across
 the input record stream.
@@ -134,13 +132,13 @@ Options:
 `)
 
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", argv0, verb)
+		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", os.Args[0], verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size\n", argv0, verb)
+		"Example: mlr stats1 -a count,mode -f size\n", os.Args[0], verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size -g shape\n", argv0, verb)
+		"Example: mlr stats1 -a count,mode -f size -g shape\n", os.Args[0], verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", argv0, verb)
+		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", os.Args[0], verbNameStats1)
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.
@@ -157,6 +155,10 @@ Options:
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
 `)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

@@ -68,7 +68,7 @@ func (this *RecordReaderCSV) processHandle(
 	context.UpdateForStartOfFile(filename)
 	needHeader := !this.useImplicitHeader
 	var header []string = nil
-	var rowNumber int64 = 0
+	var rowNumber int = 0
 
 	csvReader := csv.NewReader(handle)
 	csvReader.Comma = rune(this.ifs[0]) // xxx temp

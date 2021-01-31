@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"miller/clitypes"
 	"miller/lib"
@@ -18,6 +19,7 @@ const verbNameTail = "tail"
 var TailSetup = transforming.TransformerSetup{
 	Verb:         verbNameTail,
 	ParseCLIFunc: transformerTailParseCLI,
+	UsageFunc:    transformerTailUsage,
 	IgnoresInput: false,
 }
 
@@ -35,44 +37,32 @@ func transformerTailParseCLI(
 	verb := args[argi]
 	argi++
 
-	// Parse local flags
-	flagSet := flag.NewFlagSet(verb, errorHandling)
+	tailCount := 10
+	var groupByFieldNames []string = nil
 
-	//Usage: mlr tail [options]
-	//-n {count}    Tail count to print; default 10
-	//-g {a,b,c}    Optional group-by-field names for tail counts
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
 
-	pTailCount := flagSet.Uint64(
-		"n",
-		10,
-		`Tail count to print`,
-	)
+		} else if args[argi] == "-h" || args[argi] == "--help" {
+			transformerTailUsage(os.Stdout, true, 0)
+			return nil // help intentionally requested
 
-	pGroupByFieldNames := flagSet.String(
-		"g",
-		"",
-		"Optional group-by-field names for tail counts, e.g. a,b,c",
-	)
+		} else if args[argi] == "-n" {
+			tailCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
 
-	flagSet.Usage = func() {
-		ostream := os.Stderr
-		if errorHandling == flag.ContinueOnError { // help intentionally requested
-			ostream = os.Stdout
+		} else if args[argi] == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+
+		} else {
+			transformerTailUsage(os.Stderr, true, 1)
+			os.Exit(1)
 		}
-		transformerTailUsage(ostream, args[0], verb, flagSet)
 	}
-	flagSet.Parse(args[argi:])
-	if errorHandling == flag.ContinueOnError { // help intentionally requested
-		return nil
-	}
-
-	// Find out how many flags were consumed by this verb and advance for the
-	// next verb
-	argi = len(args) - len(flagSet.Args())
 
 	transformer, _ := NewTransformerTail(
-		*pTailCount,
-		*pGroupByFieldNames,
+		tailCount,
+		groupByFieldNames,
 	)
 
 	*pargi = argi
@@ -81,25 +71,26 @@ func transformerTailParseCLI(
 
 func transformerTailUsage(
 	o *os.File,
-	argv0 string,
-	verb string,
-	flagSet *flag.FlagSet,
+	doExit bool,
+	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
-	fmt.Fprint(o,
-		`Passes through the last n records, optionally by category.
-`)
-	// flagSet.PrintDefaults() doesn't let us control stdout vs stderr
-	flagSet.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(o, " -%v (default %v) %v\n", f.Name, f.Value, f.Usage) // f.Name, f.Value
-	})
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameTail)
+	fmt.Fprintln(o, "Passes through the last n records, optionally by category.")
+
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
 type TransformerTail struct {
 	// input
-	tailCount            uint64
-	groupByFieldNameList []string
+	tailCount         int
+	groupByFieldNames []string
 
 	// state
 	// map from string to *list.List
@@ -107,15 +98,13 @@ type TransformerTail struct {
 }
 
 func NewTransformerTail(
-	tailCount uint64,
-	groupByFieldNames string,
+	tailCount int,
+	groupByFieldNames []string,
 ) (*TransformerTail, error) {
 
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-
 	this := &TransformerTail{
-		tailCount:            tailCount,
-		groupByFieldNameList: groupByFieldNameList,
+		tailCount:         tailCount,
+		groupByFieldNames: groupByFieldNames,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
@@ -131,7 +120,7 @@ func (this *TransformerTail) Transform(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		if !ok {
 			return
 		}
@@ -144,7 +133,7 @@ func (this *TransformerTail) Transform(
 		recordListForGroup := irecordListForGroup.(*list.List)
 
 		recordListForGroup.PushBack(inrecAndContext)
-		for uint64(recordListForGroup.Len()) > this.tailCount {
+		for recordListForGroup.Len() > this.tailCount {
 			recordListForGroup.Remove(recordListForGroup.Front())
 		}
 
