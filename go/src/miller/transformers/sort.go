@@ -48,7 +48,7 @@ import (
 	"sort"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -68,8 +68,8 @@ func transformerSortParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -91,35 +91,35 @@ func transformerSortParseCLI(
 			transformerSortUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
 			}
 
 		} else if opt == "-r" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparator)
 			}
 
 		} else if opt == "-n" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
 		} else if opt == "-nf" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
 		} else if opt == "-nr" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/output"
 	"miller/transforming"
@@ -26,8 +26,8 @@ func transformerTeeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	mainRecordWriterOptions *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	mainRecordWriterOptions *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -38,7 +38,7 @@ func transformerTeeParseCLI(
 	appending := false
 	piping := false
 	// TODO: make sure this is a full nested-struct copy.
-	var recordWriterOptions *clitypes.TWriterOptions = nil
+	var recordWriterOptions *cliutil.TWriterOptions = nil
 	if mainRecordWriterOptions != nil {
 		copyThereof := *mainRecordWriterOptions
 		recordWriterOptions = &copyThereof
@@ -69,7 +69,7 @@ func transformerTeeParseCLI(
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
 			wargi := argi - 1
-			if clitypes.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
+			if cliutil.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
 				// This lets mlr main and mlr tee have different output formats.
 				// Nothing else to handle here.
 				argi = wargi
@@ -132,7 +132,7 @@ func NewTransformerTee(
 	appending bool,
 	piping bool,
 	filenameOrCommand string,
-	recordWriterOptions *clitypes.TWriterOptions,
+	recordWriterOptions *cliutil.TWriterOptions,
 ) (*TransformerTee, error) {
 	var fileOutputHandler *output.FileOutputHandler = nil
 	var err error = nil

@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/dsl/cst"
 	"miller/lib"
 	"miller/transformers"
@@ -18,11 +18,11 @@ import (
 
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
-	options clitypes.TOptions,
+	options cliutil.TOptions,
 	recordTransformers []transforming.IRecordTransformer,
 	err error,
 ) {
-	options = clitypes.DefaultOptions()
+	options = cliutil.DefaultOptions()
 	argc := len(args)
 	argi := 1
 
@@ -40,18 +40,18 @@ func ParseCommandLine(args []string) (
 			break // No more flag options to process
 		} else if args[argi] == "--cpuprofile" {
 			// Already handled in main(); ignore here.
-			clitypes.CheckArgCount(args, argi, argc, 1)
+			cliutil.CheckArgCount(args, argi, argc, 1)
 			argi += 2
 		} else if parseTerminalUsage(args, argc, argi) {
 			os.Exit(0)
-		} else if clitypes.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+		} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 			// handled
-		} else if clitypes.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
 			// handled
-		} else if clitypes.ParseReaderWriterOptions(args, argc, &argi,
+		} else if cliutil.ParseReaderWriterOptions(args, argc, &argi,
 			&options.ReaderOptions, &options.WriterOptions) {
 			// handled
-		} else if clitypes.ParseMiscOptions(args, argc, &argi, &options) {
+		} else if cliutil.ParseMiscOptions(args, argc, &argi, &options) {
 			// handled
 		} else {
 			// unhandled
@@ -170,7 +170,7 @@ func parseTransformers(
 	args []string,
 	pargi *int,
 	argc int,
-	options *clitypes.TOptions,
+	options *cliutil.TOptions,
 ) (
 	transformerList []transforming.IRecordTransformer,
 	ignoresInput bool,
@@ -197,7 +197,7 @@ func parseTransformers(
 	onFirst := true
 
 	for {
-		clitypes.CheckArgCount(args, argi, argc, 1)
+		cliutil.CheckArgCount(args, argi, argc, 1)
 		verb := args[argi]
 
 		transformerSetup := lookUpTransformerSetup(verb)
@@ -274,7 +274,7 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 		return true
 		//	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
-		//		clitypes.CheckArgCount(args, argi, argc, 2);
+		//		cliutil.CheckArgCount(args, argi, argc, 2);
 		//		fmgr_t* pfmgr = fmgr_alloc();
 		//		fmgr_function_usage(pfmgr, os.Stdout, args[argi+1]);
 		//		fmgr_free(pfmgr, nil);
@@ -287,7 +287,7 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//		mlr_dsl_keyword_usage(os.Stdout, nil);
 		//		return true;
 		//	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
-		//		clitypes.CheckArgCount(args, argi, argc, 2);
+		//		cliutil.CheckArgCount(args, argi, argc, 2);
 		//		mlr_dsl_keyword_usage(os.Stdout, args[argi+1]);
 		//		return true;
 		//
@@ -362,7 +362,7 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 
 // TODO: move to separate file?
 func loadMlrrcOrDie(
-	options *clitypes.TOptions,
+	options *cliutil.TOptions,
 ) {
 	env_mlrrc := os.Getenv("MLRRC")
 
@@ -385,7 +385,7 @@ func loadMlrrcOrDie(
 }
 
 func tryLoadMlrrc(
-	options *clitypes.TOptions,
+	options *cliutil.TOptions,
 	path string,
 ) bool {
 	handle, err := os.Open(path)
@@ -429,7 +429,7 @@ func tryLoadMlrrc(
 }
 
 func handleMlrrcLine(
-	options *clitypes.TOptions,
+	options *cliutil.TOptions,
 	line string,
 ) bool {
 
@@ -454,14 +454,14 @@ func handleMlrrcLine(
 	argi := 0
 	argc := len(args)
 
-	if clitypes.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+	if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 		// handled
-	} else if clitypes.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+	} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
 		// handled
-	} else if clitypes.ParseReaderWriterOptions(args, argc, &argi,
+	} else if cliutil.ParseReaderWriterOptions(args, argc, &argi,
 		&options.ReaderOptions, &options.WriterOptions) {
 		// handled
-	} else if clitypes.ParseMiscOptions(args, argc, &argi, options) {
+	} else if cliutil.ParseMiscOptions(args, argc, &argi, options) {
 		// handled
 	} else {
 		return false

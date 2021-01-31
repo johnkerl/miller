@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -29,7 +29,7 @@ type RecordReaderXTAB struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderXTAB(readerOptions *clitypes.TReaderOptions) *RecordReaderXTAB {
+func NewRecordReaderXTAB(readerOptions *cliutil.TReaderOptions) *RecordReaderXTAB {
 	return &RecordReaderXTAB{
 		// TODO: incorporate IFS
 		ifsRegex: regexp.MustCompile("\\s+"),

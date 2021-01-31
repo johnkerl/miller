@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -26,8 +26,8 @@ func transformerStats1ParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -52,13 +52,13 @@ func transformerStats1ParseCLI(
 			transformerStats1Usage(os.Stdout, true, 0)
 
 		} else if opt == "-a" {
-			accumulatorNameList = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			accumulatorNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-f" {
-			valueFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
-			groupByFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-i" {
 			doInterpolatedPercentiles = true

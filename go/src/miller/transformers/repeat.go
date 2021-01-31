@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -34,8 +34,8 @@ func transformerRepeatParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	repeatCountSource := repeatCountSourceUnspecified
@@ -58,11 +58,11 @@ func transformerRepeatParseCLI(
 			transformerRepeatUsage(os.Stdout, true, 0)
 
 		} else if opt == "-n" {
-			repeatCount = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			repeatCount = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 			repeatCountSource = repeatCountFromInt
 
 		} else if opt == "-f" {
-			repeatCountFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			repeatCountFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			repeatCountSource = repeatCountFromFieldName
 
 		} else {

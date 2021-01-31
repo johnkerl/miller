@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/input"
 	"miller/lib"
 	"miller/output"
@@ -29,7 +29,7 @@ import (
 //   need the contexts.
 
 func Stream(
-	options clitypes.TOptions,
+	options cliutil.TOptions,
 	recordTransformers []transforming.IRecordTransformer,
 ) error {
 

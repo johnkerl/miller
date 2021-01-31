@@ -1,4 +1,4 @@
-package clitypes
+package cliutil
 
 import (
 	"fmt"

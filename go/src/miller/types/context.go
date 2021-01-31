@@ -1,7 +1,7 @@
 package types
 
 import (
-	"miller/clitypes"
+	"miller/cliutil"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
@@ -92,7 +92,7 @@ type Context struct {
 	OFLATSEP string
 }
 
-func NewContext(options *clitypes.TOptions) *Context {
+func NewContext(options *cliutil.TOptions) *Context {
 	context := &Context{
 		FILENAME: "(stdin)",
 		FILENUM:  0,

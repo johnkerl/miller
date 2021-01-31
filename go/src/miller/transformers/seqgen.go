@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -26,8 +26,8 @@ func transformerSeqgenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -51,16 +51,16 @@ func transformerSeqgenParseCLI(
 			transformerSeqgenUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			fieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--start" {
-			startString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			startString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--stop" {
-			stopString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			stopString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--step" {
-			stepString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			stepString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerSeqgenUsage(os.Stderr, true, 1)

@@ -8,7 +8,7 @@ import (
 	"os"
 	"strconv"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/types"
 )
@@ -22,7 +22,7 @@ type RecordReaderCSV struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSV(readerOptions *clitypes.TReaderOptions) *RecordReaderCSV {
+func NewRecordReaderCSV(readerOptions *cliutil.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
 		ifs:                 readerOptions.IFS,
 		useImplicitHeader:   readerOptions.UseImplicitCSVHeader,

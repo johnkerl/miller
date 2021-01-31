@@ -2,7 +2,7 @@
 // Utilities for Miller verbs to share for command-line parsing.
 // ================================================================
 
-package clitypes
+package cliutil
 
 import (
 	"fmt"

@@ -7,14 +7,14 @@ import (
 
 	"encoding/json"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
 type RecordReaderJSON struct {
 }
 
-func NewRecordReaderJSON(readerOptions *clitypes.TReaderOptions) *RecordReaderJSON {
+func NewRecordReaderJSON(readerOptions *cliutil.TReaderOptions) *RecordReaderJSON {
 	return &RecordReaderJSON{}
 }
 

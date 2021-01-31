@@ -206,7 +206,7 @@ package cli
 //}
 
 // ----------------------------------------------------------------
-//void cli_reader_opts_init(clitypes.TReaderOptions* readerOptions) {
+//void cli_reader_opts_init(cliutil.TReaderOptions* readerOptions) {
 //	readerOptions.InputFileFormat                      = nil;
 //	readerOptions.IRS                            = nil;
 //	readerOptions.IFS                            = nil;
@@ -229,7 +229,7 @@ package cli
 //	readerOptions.generator_opts.step           = 1LL;
 //}
 
-//void cli_writer_opts_init(clitypes.TWriterOptions* writerOptions) {
+//void cli_writer_opts_init(cliutil.TWriterOptions* writerOptions) {
 //	writerOptions.OutputFileFormat                      = nil;
 //	writerOptions.ORS                            = nil;
 //	writerOptions.OFS                            = nil;
@@ -260,7 +260,7 @@ package cli
 //		options.ofmt = DEFAULT_OFMT;
 //}
 
-//void cli_apply_reader_defaults(clitypes.TReaderOptions* readerOptions) {
+//void cli_apply_reader_defaults(cliutil.TReaderOptions* readerOptions) {
 //	if (readerOptions.InputFileFormat == nil)
 //		readerOptions.InputFileFormat = "dkvp";
 //
@@ -277,7 +277,7 @@ package cli
 //		readerOptions.input_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
 //}
 
-//void cli_apply_writer_defaults(clitypes.TWriterOptions* writerOptions) {
+//void cli_apply_writer_defaults(cliutil.TWriterOptions* writerOptions) {
 //	if (writerOptions.OutputFileFormat == nil)
 //		writerOptions.OutputFileFormat = "dkvp";
 //
@@ -336,7 +336,7 @@ package cli
 // * If the join input format was specified and is not the same as main input
 //   format, take unspecified values from defaults for the join input format.
 
-//void cli_merge_reader_opts(clitypes.TReaderOptions* pfunc_opts, TReaderOptions* pmain_opts) {
+//void cli_merge_reader_opts(cliutil.TReaderOptions* pfunc_opts, TReaderOptions* pmain_opts) {
 //
 //	if (pfunc_opts.InputFileFormat == nil) {
 //		pfunc_opts.InputFileFormat = pmain_opts.InputFileFormat;
@@ -386,7 +386,7 @@ package cli
 // Similar to cli_merge_reader_opts but for transformer tee & transformer put which have their
 // own output-format overrides.
 
-//void cli_merge_writer_opts(clitypes.TWriterOptions* pfunc_opts, TWriterOptions* pmain_opts) {
+//void cli_merge_writer_opts(cliutil.TWriterOptions* pfunc_opts, TWriterOptions* pmain_opts) {
 //
 //	if (pfunc_opts.OutputFileFormat == nil) {
 //		pfunc_opts.OutputFileFormat = pmain_opts.OutputFileFormat;

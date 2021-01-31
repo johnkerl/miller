@@ -3,7 +3,7 @@ package transforming
 import (
 	"os"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -23,8 +23,8 @@ type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
-	readerOptions *clitypes.TReaderOptions,
-	writerOptions *clitypes.TWriterOptions,
+	readerOptions *cliutil.TReaderOptions,
+	writerOptions *cliutil.TWriterOptions,
 ) IRecordTransformer
 
 type TransformerUsageFunc func(

@@ -113,7 +113,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/input"
 	"miller/lib"
 	"miller/types"
@@ -160,7 +160,7 @@ type tJoinBucketKeeper struct {
 func newJoinBucketKeeper(
 	// TODO prepipe string,
 	leftFileName string,
-	joinReaderOptions *clitypes.TReaderOptions,
+	joinReaderOptions *cliutil.TReaderOptions,
 	leftJoinFieldNames []string,
 ) *tJoinBucketKeeper {
 

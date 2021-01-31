@@ -4,7 +4,7 @@
 // miller/transforming.
 // ================================================================
 
-package clitypes
+package cliutil
 
 // ----------------------------------------------------------------
 //typedef struct _generator_opts_t {

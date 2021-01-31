@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -26,8 +26,8 @@ func transformerCountSimilarParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -49,10 +49,10 @@ func transformerCountSimilarParseCLI(
 			transformerCountSimilarUsage(os.Stdout, true, 0)
 
 		} else if opt == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-o" {
-			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			counterFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCountSimilarUsage(os.Stderr, true, 1)

@@ -8,7 +8,6 @@ TOP OF LIST:
   o audit for DEFAULT_FOOs @ 
   o audit for '-z {zzz}'
   o audit for consistent usage style
-* rename clt
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

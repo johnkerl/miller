@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"os"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
@@ -20,7 +20,7 @@ import (
 
 // ----------------------------------------------------------------
 func NewEmptyRoot(
-	recordWriterOptions *clitypes.TWriterOptions,
+	recordWriterOptions *cliutil.TWriterOptions,
 ) *RootNode {
 	return &RootNode{
 		beginBlocks:                   make([]*StatementBlockNode, 0),
@@ -39,7 +39,7 @@ func NewEmptyRoot(
 func Build(
 	ast *dsl.AST,
 	isFilter bool, // false for 'mlr put', true for 'mlr filter'
-	recordWriterOptions *clitypes.TWriterOptions,
+	recordWriterOptions *cliutil.TWriterOptions,
 ) (*RootNode, error) {
 	if ast.RootNode == nil {
 		return nil, errors.New("Cannot build CST from nil AST root")

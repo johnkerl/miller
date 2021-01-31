@@ -128,7 +128,7 @@ So, in broad overview, the key packages are:
   * [`Mlrmap`](./src/miller/types/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./src/miller/types/mlrmap.go) for more details.
   * [`context`](./src/miller/types/context.go) supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * [src/miller/cli](./src/miller/cli) is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
-* [src/miller/clitypes](./src/miller/clitypes) contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
+* [src/miller/cliutil](./src/miller/cliutil) contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
 * [src/miller/stream](./src/miller/stream) is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
 * [src/miller/input](./src/miller/input) is as above -- one record-reader type per supported input file format, and a factory method.
 * [src/miller/output](./src/miller/output) is as above -- one record-writer type per supported output file format, and a factory method.

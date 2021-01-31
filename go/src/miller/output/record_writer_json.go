@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -20,7 +20,7 @@ type RecordWriterJSON struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordWriterJSON(writerOptions *clitypes.TWriterOptions) *RecordWriterJSON {
+func NewRecordWriterJSON(writerOptions *cliutil.TWriterOptions) *RecordWriterJSON {
 	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
 	if writerOptions.JSONOutputMultiline {
 		jsonFormatting = types.JSON_MULTILINE

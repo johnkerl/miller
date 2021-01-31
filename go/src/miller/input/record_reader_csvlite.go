@@ -27,7 +27,7 @@ import (
 	"strconv"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/types"
 )
@@ -47,7 +47,7 @@ type RecordReaderCSVLite struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSVLite(readerOptions *clitypes.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		ifs:                  readerOptions.IFS,
 		irs:                  readerOptions.IRS,

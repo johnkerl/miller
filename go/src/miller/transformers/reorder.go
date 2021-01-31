@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -25,8 +25,8 @@ func transformerReorderParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -48,7 +48,7 @@ func transformerReorderParseCLI(
 			transformerReorderUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-e" {
 			putAtEnd = true

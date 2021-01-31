@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -23,7 +23,7 @@ type RecordWriterPPRINT struct {
 	batch            *list.List
 }
 
-func NewRecordWriterPPRINT(writerOptions *clitypes.TWriterOptions) *RecordWriterPPRINT {
+func NewRecordWriterPPRINT(writerOptions *cliutil.TWriterOptions) *RecordWriterPPRINT {
 	return &RecordWriterPPRINT{
 		records: list.New(),
 		barred:  writerOptions.BarredPprintOutput,

@@ -1,10 +1,10 @@
 package output
 
 import (
-	"miller/clitypes"
+	"miller/cliutil"
 )
 
-func Create(writerOptions *clitypes.TWriterOptions) IRecordWriter {
+func Create(writerOptions *cliutil.TWriterOptions) IRecordWriter {
 	switch writerOptions.OutputFileFormat {
 	case "csv":
 		return NewRecordWriterCSV(writerOptions)

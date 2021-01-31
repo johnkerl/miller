@@ -5,7 +5,7 @@ import (
 	"io"
 	"unicode/utf8"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -13,7 +13,7 @@ type RecordWriterXTAB struct {
 	onFirst bool
 }
 
-func NewRecordWriterXTAB(writerOptions *clitypes.TWriterOptions) *RecordWriterXTAB {
+func NewRecordWriterXTAB(writerOptions *cliutil.TWriterOptions) *RecordWriterXTAB {
 	return &RecordWriterXTAB{
 		onFirst: true,
 	}

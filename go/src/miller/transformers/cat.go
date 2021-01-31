@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -25,8 +25,8 @@ func transformerCatParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -53,10 +53,10 @@ func transformerCatParseCLI(
 			counterFieldName = "n"
 
 		} else if opt == "-N" {
-			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			counterFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCatUsage(os.Stderr, true, 1)

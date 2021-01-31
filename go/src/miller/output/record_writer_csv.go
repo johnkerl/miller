@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -21,7 +21,7 @@ type RecordWriterCSV struct {
 	ofs string
 }
 
-func NewRecordWriterCSV(writerOptions *clitypes.TWriterOptions) *RecordWriterCSV {
+func NewRecordWriterCSV(writerOptions *cliutil.TWriterOptions) *RecordWriterCSV {
 	return &RecordWriterCSV{
 		csvWriter:          nil, // will be set on first Write() wherein we have the ostream
 		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,

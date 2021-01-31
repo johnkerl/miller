@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/dsl"
 	"miller/dsl/cst"
 	"miller/lib"
@@ -40,8 +40,8 @@ func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	mainRecordWriterOptions *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	mainRecordWriterOptions *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -59,7 +59,7 @@ func transformerPutOrFilterParseCLI(
 	presets := make([]string, 0)
 
 	// TODO: make sure this is a full nested-struct copy.
-	var recordWriterOptions *clitypes.TWriterOptions = nil
+	var recordWriterOptions *cliutil.TWriterOptions = nil
 	if mainRecordWriterOptions != nil {
 		// TODO: make a .Copy() method
 		copyThereof := *mainRecordWriterOptions
@@ -80,7 +80,7 @@ func transformerPutOrFilterParseCLI(
 
 		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
-			filename := clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			filename := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			data, err := ioutil.ReadFile(filename)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
@@ -99,7 +99,7 @@ func transformerPutOrFilterParseCLI(
 			if dslString != "" {
 				dslString += ";\n"
 			}
-			dslString += clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			dslString += cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			needExpressionArg = false
 
 		} else if opt == "-s" {
@@ -107,7 +107,7 @@ func transformerPutOrFilterParseCLI(
 			//   mlr put -s sum=0
 			// is like
 			//   mlr put -s 'begin {@sum = 0}'
-			preset := clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			preset := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			presets = append(presets, preset)
 
 		} else if opt == "-x" {
@@ -141,7 +141,7 @@ func transformerPutOrFilterParseCLI(
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
 			wargi := argi - 1
-			if clitypes.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
+			if cliutil.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
 				// This lets mlr main and mlr put have different output formats.
 				// Nothing else to handle here.
 				argi = wargi
@@ -288,7 +288,7 @@ func NewTransformerPut(
 	verbose bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
-	recordWriterOptions *clitypes.TWriterOptions,
+	recordWriterOptions *cliutil.TWriterOptions,
 ) (*TransformerPut, error) {
 
 	astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)

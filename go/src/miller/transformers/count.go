@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -25,8 +25,8 @@ func transformerCountParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -49,13 +49,13 @@ func transformerCountParseCLI(
 			transformerCountUsage(os.Stdout, true, 0)
 
 		} else if opt == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-n" {
 			showCountsOnly = true
 
 		} else if opt == "-o" {
-			outputFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCountUsage(os.Stderr, true, 1)

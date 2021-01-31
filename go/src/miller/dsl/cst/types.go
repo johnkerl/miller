@@ -7,7 +7,7 @@ package cst
 import (
 	"container/list"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/dsl"
 	"miller/types"
 )
@@ -36,7 +36,7 @@ type RootNode struct {
 	unresolvedFunctionCallsites   *list.List
 	unresolvedSubroutineCallsites *list.List
 	outputHandlerManagers         *list.List
-	recordWriterOptions           *clitypes.TWriterOptions
+	recordWriterOptions           *cliutil.TWriterOptions
 }
 
 // ----------------------------------------------------------------

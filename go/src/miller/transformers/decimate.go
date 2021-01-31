@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/transforming"
 	"miller/types"
@@ -25,8 +25,8 @@ func transformerDecimateParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *clitypes.TReaderOptions,
-	__ *clitypes.TWriterOptions,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -50,7 +50,7 @@ func transformerDecimateParseCLI(
 			transformerDecimateUsage(os.Stdout, true, 0)
 
 		} else if opt == "-n" {
-			decimateCount = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			decimateCount = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 			if decimateCount <= 0 {
 				transformerDecimateUsage(os.Stderr, true, 1)
 			}
@@ -62,7 +62,7 @@ func transformerDecimateParseCLI(
 			atEnd = true
 
 		} else if opt == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerDecimateUsage(os.Stderr, true, 1)

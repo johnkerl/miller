@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/types"
 )
@@ -18,7 +18,7 @@ type RecordReaderNIDX struct {
 	ips string
 }
 
-func NewRecordReaderNIDX(readerOptions *clitypes.TReaderOptions) *RecordReaderNIDX {
+func NewRecordReaderNIDX(readerOptions *cliutil.TReaderOptions) *RecordReaderNIDX {
 	return &RecordReaderNIDX{
 		ifs: readerOptions.IFS,
 		ips: readerOptions.IPS,

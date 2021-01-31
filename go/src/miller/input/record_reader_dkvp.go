@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/lib"
 	"miller/types"
 )
@@ -18,7 +18,7 @@ type RecordReaderDKVP struct {
 	// TODO: parameterize IRS
 }
 
-func NewRecordReaderDKVP(readerOptions *clitypes.TReaderOptions) *RecordReaderDKVP {
+func NewRecordReaderDKVP(readerOptions *cliutil.TReaderOptions) *RecordReaderDKVP {
 	return &RecordReaderDKVP{
 		ifs: readerOptions.IFS,
 		ips: readerOptions.IPS,

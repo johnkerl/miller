@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"miller/clitypes"
+	"miller/cliutil"
 	"miller/types"
 )
 
@@ -20,7 +20,7 @@ type RecordWriterCSVLite struct {
 	justWroteEmptyLine bool
 }
 
-func NewRecordWriterCSVLite(writerOptions *clitypes.TWriterOptions) *RecordWriterCSVLite {
+func NewRecordWriterCSVLite(writerOptions *cliutil.TWriterOptions) *RecordWriterCSVLite {
 
 	return &RecordWriterCSVLite{
 		ofs: writerOptions.OFS,
