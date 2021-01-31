@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerGroupByParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -37,16 +35,17 @@ func transformerGroupByParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerGroupByUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerGroupByUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -55,7 +54,7 @@ func transformerGroupByParseCLI(
 		transformerGroupByUsage(os.Stderr, true, 1)
 	}
 	groupByFieldNames := lib.SplitString(args[argi], ",")
-	argi += 1
+	argi++
 
 	transformer, _ := NewTransformerGroupBy(
 		groupByFieldNames,
@@ -70,10 +69,10 @@ func transformerGroupByUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {comma-separated field names}]\n", os.Args[0], verbNameGroupBy)
-	fmt.Fprint(o,
-		`Outputs records in batches having identical values at specified field names.
-`)
+	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", lib.MlrExeName(), verbNameGroupBy)
+	fmt.Fprint(o, "Outputs records in batches having identical values at specified field names.")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

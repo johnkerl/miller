@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerCatParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -42,26 +40,26 @@ func transformerCatParseCLI(
 	groupByFieldNames := ""
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerCatUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-n" {
+		} else if opt == "-n" {
 			counterFieldName = "n"
-			argi += 1
 
-		} else if args[argi] == "-N" {
-			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-N" {
+			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCatUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 	transformer, _ := NewTransformerCat(
@@ -79,11 +77,12 @@ func transformerCatUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCat)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCat)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
 	fmt.Fprintf(o, "-n         Prepend field \"n\" to each record with record-counter starting at 1.\n")
 	fmt.Fprintf(o, "-N {name}  Prepend field {name} to each record with record-counter starting at 1.\n")
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

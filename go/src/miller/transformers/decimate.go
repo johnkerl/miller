@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -25,7 +25,6 @@ func transformerDecimateParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -41,33 +40,32 @@ func transformerDecimateParseCLI(
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerDecimateUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-n" {
-			decimateCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-n" {
+			decimateCount = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 			if decimateCount <= 0 {
 				transformerDecimateUsage(os.Stderr, true, 1)
 			}
 
-		} else if args[argi] == "-b" {
+		} else if opt == "-b" {
 			atStart = true
-			argi++
 
-		} else if args[argi] == "-e" {
+		} else if opt == "-e" {
 			atEnd = true
-			argi++
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerDecimateUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -87,13 +85,14 @@ func transformerDecimateUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameDecimate)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameDecimate)
 	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, " -b Decimate by printing first of every n.\n")
 	fmt.Fprintf(o, " -e Decimate by printing last of every n (default).\n")
 	fmt.Fprintf(o, " -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, " -n {n} Decimation factor (default 10).\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

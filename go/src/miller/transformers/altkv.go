@@ -1,13 +1,13 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -26,7 +26,6 @@ func transformerAltkvParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -36,16 +35,17 @@ func transformerAltkvParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerAltkvUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerAltkvUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -60,8 +60,13 @@ func transformerAltkvUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {no options}\n", os.Args[0], verbNameAltkv)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameAltkv)
 	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------

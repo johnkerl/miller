@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerLabelParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -37,16 +35,17 @@ func transformerLabelParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerLabelUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerLabelUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -55,8 +54,7 @@ func transformerLabelParseCLI(
 		transformerLabelUsage(os.Stderr, true, 1)
 	}
 	newNames := lib.SplitString(args[argi], ",")
-
-	argi += 1
+	argi++
 
 	transformer, err := NewTransformerLabel(
 		newNames,
@@ -75,13 +73,14 @@ func transformerLabelUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {new1,new2,new3,...}\n", os.Args[0], verbNameLabel)
-	fmt.Fprintf(o,
-		`Given n comma-separated names, renames the first n fields of each record to
-have the respective name. (Fields past the nth are left with their original
-names.) Particularly useful with --inidx or --implicit-csv-header, to give
-useful names to otherwise integer-indexed fields.
-`)
+	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", lib.MlrExeName(), verbNameLabel)
+	fmt.Fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n")
+	fmt.Fprintf(o, "have the respective name. (Fields past the nth are left with their original\n")
+	fmt.Fprintf(o, "names.) Particularly useful with --inidx or --implicit-csv-header, to give\n")
+	fmt.Fprintf(o, "useful names to otherwise integer-indexed fields.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

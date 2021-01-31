@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -25,7 +25,6 @@ func transformerHeadParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -39,22 +38,23 @@ func transformerHeadParseCLI(
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerHeadUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-n" {
-			headCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-n" {
+			headCount = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerHeadUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -72,12 +72,13 @@ func transformerHeadUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameHead)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHead)
 	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
 
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
 	//	fmt.Fprint(o,

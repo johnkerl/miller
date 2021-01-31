@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/output"
 	"miller/transforming"
 	"miller/types"
@@ -26,7 +26,6 @@ func transformerTeeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	mainRecordWriterOptions *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -48,40 +47,44 @@ func transformerTeeParseCLI(
 	// Parse local flags.
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerTeeUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-a" {
+		} else if opt == "-a" {
 			appending = true
 			piping = false
-			argi += 1
 
-		} else if args[argi] == "-p" {
+		} else if opt == "-p" {
 			appending = false
 			piping = true
-			argi += 1
-
-		} else if clitypes.ParseWriterOptions(args, argc, &argi, recordWriterOptions) {
-			// This lets mlr main and mlr tee have different output formats.
-			// Nothing else to handle here.
 
 		} else {
-			transformerTeeUsage(os.Stderr, true, 1)
-			os.Exit(1)
+			// This is inelegant. For error-proofing we advance argi already in our
+			// loop (so individual if-statements don't need to). However,
+			// ParseWriterOptions expects it unadvanced.
+			wargi := argi - 1
+			if clitypes.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
+				// This lets mlr main and mlr tee have different output formats.
+				// Nothing else to handle here.
+				argi = wargi
+			} else {
+				transformerTeeUsage(os.Stderr, true, 1)
+			}
 		}
 	}
 
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {
 		transformerTeeUsage(os.Stderr, true, 1)
-		os.Exit(1)
 	}
 	filenameOrCommand = args[argi]
-	argi += 1
+	argi++
 
 	transformer, err := NewTransformerTee(
 		appending,
@@ -103,7 +106,7 @@ func transformerTeeUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", os.Args[0], verbNameTee)
+	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", lib.MlrExeName(), verbNameTee)
 	fmt.Fprintf(o,
 		`-a    Append to existing file, if any, rather than overwriting.
 -p    Treat filename as a pipe-to command.
@@ -114,6 +117,9 @@ is written in JSON format.
 
 -h|--help Show this message.
 `)
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -161,7 +167,7 @@ func (this *TransformerTee) Transform(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: error writing to tee \"%s\":\n",
-				os.Args[0], this.filenameOrCommandForDisplay,
+				lib.MlrExeName(), this.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -174,7 +180,7 @@ func (this *TransformerTee) Transform(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: error closing tee \"%s\":\n",
-				os.Args[0], this.filenameOrCommandForDisplay,
+				lib.MlrExeName(), this.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

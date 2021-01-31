@@ -2,12 +2,12 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -26,7 +26,6 @@ func transformerRemoveEmptyColumnsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -36,16 +35,17 @@ func transformerRemoveEmptyColumnsParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerRemoveEmptyColumnsUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerRemoveEmptyColumnsUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -60,8 +60,10 @@ func transformerRemoveEmptyColumnsUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameRemoveEmptyColumns)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRemoveEmptyColumns)
 	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

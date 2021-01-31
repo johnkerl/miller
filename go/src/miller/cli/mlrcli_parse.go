@@ -2,7 +2,6 @@ package cli
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -56,7 +55,7 @@ func ParseCommandLine(args []string) (
 			// handled
 		} else {
 			// unhandled
-			usageUnrecognizedVerb(args[0], args[argi])
+			usageUnrecognizedVerb(lib.MlrExeName(), args[argi])
 		}
 	}
 
@@ -90,7 +89,7 @@ func ParseCommandLine(args []string) (
 	//
 	//	if options.WriterOptions.OutputFileFormat == "pprint") && len(options.WriterOptions.OFS) != 1) {
 	//		fmt.Fprintf(os.Stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
-	//			os.Args[0], options.WriterOptions.OFS);
+	//			lib.MlrExeName(), options.WriterOptions.OFS);
 	//		return nil;
 	//	}
 
@@ -152,7 +151,7 @@ func ParseCommandLine(args []string) (
 	}
 
 	//	if (options.do_in_place && (options.FileNames == nil || options.FileNames.length == 0)) {
-	//		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", os.Args[0]);
+	//		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", lib.MlrExeName());
 	//		os.Exit(1);
 	//	}
 
@@ -190,7 +189,7 @@ func parseTransformers(
 	}
 
 	if (argc - argi) < 1 {
-		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", lib.MlrExeName())
 		mainUsageShort()
 		os.Exit(1)
 	}
@@ -205,7 +204,7 @@ func parseTransformers(
 		if transformerSetup == nil {
 			fmt.Fprintf(os.Stderr,
 				"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-				os.Args[0], verb, os.Args[0])
+				lib.MlrExeName(), verb, lib.MlrExeName())
 			os.Exit(1)
 		}
 
@@ -215,22 +214,17 @@ func parseTransformers(
 		}
 		onFirst = false
 
-		// It's up to the parse func to print its usage on CLI-parse failure.
-		// Also note: this assumes main reader/writer opts are all parsed
-		// *before* transformer parse-CLI methods are invoked.
+		// It's up to the parse func to print its usage, and exit 1, on
+		// CLI-parse failure.  Also note: this assumes main reader/writer opts
+		// are all parsed *before* transformer parse-CLI methods are invoked.
 		transformer := transformerSetup.ParseCLIFunc(
 			&argi,
 			argc,
 			args,
-			flag.ExitOnError,
 			&options.ReaderOptions,
 			&options.WriterOptions,
 		)
-
-		if transformer == nil {
-			// Error message already printed out
-			os.Exit(1)
-		}
+		lib.InternalCodingErrorIf(transformer == nil)
 
 		transformerList = append(transformerList, transformer)
 
@@ -250,17 +244,17 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		fmt.Printf("Miller %s\n", version.STRING)
 		return true
 	} else if args[argi] == "-h" {
-		mainUsageLong(os.Stdout, os.Args[0])
+		mainUsageLong(os.Stdout, lib.MlrExeName())
 		return true
 	} else if args[argi] == "--help" {
-		mainUsageLong(os.Stdout, os.Args[0])
+		mainUsageLong(os.Stdout, lib.MlrExeName())
 		return true
 		//	} else if args[argi] == "--print-type-arithmetic-info" {
-		//		printTypeArithmeticInfo(os.Stdout, os.Args[0]);
+		//		printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//
 	} else if args[argi] == "--help-all-verbs" || args[argi] == "--usage-all-verbs" {
-		usageAllVerbs(os.Args[0])
+		usageAllVerbs(lib.MlrExeName())
 	} else if args[argi] == "--list-all-verbs" || args[argi] == "-l" {
 		listAllVerbs(os.Stdout, " ")
 		return true
@@ -300,61 +294,61 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//	// main-usage subsections, individually accessible for the benefit of
 		//	// the manpage-autogenerator
 	} else if args[argi] == "--usage-synopsis" {
-		mainUsageSynopsis(os.Stdout, os.Args[0])
+		mainUsageSynopsis(os.Stdout, lib.MlrExeName())
 		return true
 	} else if args[argi] == "--usage-examples" {
-		mainUsageExamples(os.Stdout, os.Args[0], "")
+		mainUsageExamples(os.Stdout, lib.MlrExeName(), "")
 		return true
 	} else if args[argi] == "--usage-list-all-verbs" {
 		listAllVerbs(os.Stdout, "")
 		return true
 	} else if args[argi] == "--usage-help-options" {
-		mainUsageHelpOptions(os.Stdout, os.Args[0])
+		mainUsageHelpOptions(os.Stdout, lib.MlrExeName())
 		return true
 		//	} else if args[argi] == "--usage-mlrrc" {
-		//		mainUsageMlrrc(os.Stdout, os.Args[0]);
+		//		mainUsageMlrrc(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//	} else if args[argi] == "--usage-functions" {
-		//		mainUsageFunctions(os.Stdout, os.Args[0], "");
+		//		mainUsageFunctions(os.Stdout, lib.MlrExeName(), "");
 		//		return true;
 		//	} else if args[argi] == "--usage-data-format-examples" {
-		mainUsageDataFormatExamples(os.Stdout, os.Args[0])
+		mainUsageDataFormatExamples(os.Stdout, lib.MlrExeName())
 		//		return true;
 	} else if args[argi] == "--usage-data-format-options" {
-		mainUsageDataFormatOptions(os.Stdout, os.Args[0])
+		mainUsageDataFormatOptions(os.Stdout, lib.MlrExeName())
 		return true
 		//	} else if args[argi] == "--usage-comments-in-data" {
-		//		mainUsageCommentsInData(os.Stdout, os.Args[0]);
+		//		mainUsageCommentsInData(os.Stdout, lib.MlrExeName());
 		//		return true;
 	} else if args[argi] == "--usage-format-conversion-keystroke-saver-options" {
-		mainUsageFormatConversionKeystrokeSaverOptions(os.Stdout, os.Args[0])
+		mainUsageFormatConversionKeystrokeSaverOptions(os.Stdout, lib.MlrExeName())
 		return true
 		//	} else if args[argi] == "--usage-compressed-data-options" {
-		//		mainUsageCompressedDataOptions(os.Stdout, os.Args[0]);
+		//		mainUsageCompressedDataOptions(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//	} else if args[argi] == "--usage-separator-options" {
-		//		mainUsageSeparatorOptions(os.Stdout, os.Args[0]);
+		//		mainUsageSeparatorOptions(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//	} else if args[argi] == "--usage-csv-options" {
-		//		mainUsageCsvOptions(os.Stdout, os.Args[0]);
+		//		mainUsageCsvOptions(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//	} else if args[argi] == "--usage-double-quoting" {
-		//		mainUsageDoubleQuoting(os.Stdout, os.Args[0]);
+		//		mainUsageDoubleQuoting(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//	} else if args[argi] == "--usage-numerical-formatting" {
-		//		mainUsageNumericalFormatting(os.Stdout, os.Args[0]);
+		//		mainUsageNumericalFormatting(os.Stdout, lib.MlrExeName());
 		//		return true;
 		//	} else if args[argi] == "--usage-other-options" {
-		//		mainUsageOtherOptions(os.Stdout, os.Args[0]);
+		//		mainUsageOtherOptions(os.Stdout, lib.MlrExeName());
 		//		return true;
 	} else if args[argi] == "--usage-then-chaining" {
-		mainUsageThenChaining(os.Stdout, os.Args[0])
+		mainUsageThenChaining(os.Stdout, lib.MlrExeName())
 		return true
 		//	} else if args[argi] == "--usage-auxents" {
-		//		mainUsageAuxents(os.Stdout, os.Args[0]);
+		//		mainUsageAuxents(os.Stdout, lib.MlrExeName());
 		//		return true;
 	} else if args[argi] == "--usage-see-also" {
-		mainUsageSeeAlso(os.Stdout, os.Args[0])
+		mainUsageSeeAlso(os.Stdout, lib.MlrExeName())
 		return true
 	}
 	return false
@@ -414,7 +408,7 @@ func tryLoadMlrrc(
 		lineno++
 
 		if err != nil {
-			fmt.Fprintln(os.Stderr, os.Args[0], err)
+			fmt.Fprintln(os.Stderr, lib.MlrExeName(), err)
 			os.Exit(1)
 			return false
 		}
@@ -425,7 +419,7 @@ func tryLoadMlrrc(
 
 		if !handleMlrrcLine(options, line) {
 			fmt.Fprintf(os.Stderr, "%s: parse error at file \"%s\" line %d: %s\n",
-				os.Args[0], path, lineno, line,
+				lib.MlrExeName(), path, lineno, line,
 			)
 			os.Exit(1)
 		}

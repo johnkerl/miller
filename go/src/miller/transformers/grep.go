@@ -1,13 +1,13 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -26,7 +26,6 @@ func transformerGrepParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,24 +39,23 @@ func transformerGrepParseCLI(
 	invert := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerGrepUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-i" {
+		} else if opt == "-i" {
 			ignoreCase = true
-			argi++
 
-		} else if args[argi] == "-v" {
+		} else if opt == "-v" {
 			invert = true
-			argi++
 
 		} else {
 			transformerGrepUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -66,7 +64,7 @@ func transformerGrepParseCLI(
 		transformerGrepUsage(os.Stderr, true, 1)
 	}
 	pattern := args[argi]
-	argi += 1
+	argi++
 
 	if ignoreCase {
 		pattern = "(?i)" + pattern
@@ -76,7 +74,7 @@ func transformerGrepParseCLI(
 	regexp, err := regexp.Compile(pattern)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s %s: couldn't compile regex \"%s\"\n",
-			args[0], verb, pattern)
+			lib.MlrExeName(), verb, pattern)
 		os.Exit(1)
 	}
 
@@ -94,12 +92,13 @@ func transformerGrepUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", os.Args[0], verbNameGrep)
+	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", lib.MlrExeName(), verbNameGrep)
 	fmt.Fprintf(o, "Passes through records which match the regular expression.\n")
 
 	fmt.Fprint(o, "Options:\n")
 	fmt.Fprint(o, "-i  Use case-insensitive search.\n")
 	fmt.Fprint(o, "-v  Invert: pass through records which do not match the regex.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	fmt.Fprintf(o, `Note that "%s filter" is more powerful, but requires you to know field names.
 By contrast, "%s grep" allows you to regex-match the entire record. It does
@@ -112,7 +111,7 @@ be matched, not against either of these lines, but against the DKVP line
 and this command is intended to be merely a keystroke-saver. To get all the
 features of system grep, you can do
   "%s --odkvp ... | grep ... | %s --idkvp ..."
-`, os.Args[0], os.Args[0], os.Args[0], os.Args[0])
+`, lib.MlrExeName(), lib.MlrExeName(), lib.MlrExeName(), lib.MlrExeName())
 
 	if doExit {
 		os.Exit(exitCode)

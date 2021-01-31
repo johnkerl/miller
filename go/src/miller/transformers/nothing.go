@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -25,7 +25,6 @@ func transformerNothingParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -35,16 +34,17 @@ func transformerNothingParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerNothingUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerNothingUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -59,9 +59,11 @@ func transformerNothingUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameNothing)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameNothing)
 	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
 	fmt.Fprintf(o, "produced other output.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

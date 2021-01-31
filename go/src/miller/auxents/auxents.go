@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -38,6 +39,11 @@ func init() {
 	}
 }
 
+// ----------------------------------------------------------------
+func mlrExeName() string {
+	return path.Base(os.Args[0])
+}
+
 // ================================================================
 func Dispatch(args []string) {
 	if len(args) < 2 {
@@ -56,7 +62,7 @@ func Dispatch(args []string) {
 
 // ================================================================
 func auxListUsage(verbName string, ostream *os.File, exitCode int) {
-	fmt.Fprintf(ostream, "Usage: %s %s [options]\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Usage: %s %s [options]\n", mlrExeName(), verbName)
 	fmt.Fprintf(ostream, "Options:\n")
 	fmt.Fprintf(ostream, "-h or --help: print this message\n")
 	os.Exit(exitCode)
@@ -77,13 +83,13 @@ func ShowAuxEntries(ostream *os.File) {
 	fmt.Fprintf(
 		ostream,
 		"For more information, please invoke %s {subcommand} --help.\n",
-		os.Args[0],
+		mlrExeName(),
 	)
 }
 
 // ================================================================
 func lecatUsage(verbName string, ostream *os.File, exitCode int) {
-	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", mlrExeName(), verbName)
 	fmt.Fprintf(ostream, "Simply echoes input, but flags CR characters in red and LF characters in green.\n")
 	fmt.Fprintf(ostream, "If zero file names are supplied, standard input is read.\n")
 	fmt.Fprintf(ostream, "Options:\n")
@@ -109,7 +115,7 @@ func lecatMain(args []string) int {
 				args = args[1:]
 			} else {
 				fmt.Fprintf(os.Stderr, "%s %s: unrecognized option \"%s\".\n",
-					os.Args[0], verb, args[0],
+					mlrExeName(), verb, args[0],
 				)
 				os.Exit(1)
 			}
@@ -123,7 +129,7 @@ func lecatMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: os.Args[0]
+				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr lecat:", err)
 				os.Exit(1)
 			}
@@ -167,7 +173,7 @@ func lecatFile(istream *os.File, doColor bool) {
 
 // ================================================================
 func termcvtUsage(verbName string, ostream *os.File, exitCode int) {
-	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", mlrExeName(), verbName)
 	fmt.Fprintf(ostream, "Option (exactly one is required):\n")
 	fmt.Fprintf(ostream, "--cr2crlf\n")
 	fmt.Fprintf(ostream, "--lf2crlf\n")
@@ -239,14 +245,14 @@ func termcvtMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: os.Args[0]
+				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
 
 			ostream, err := os.Open(tempname)
 			if err != nil {
-				// TODO: os.Args[0]
+				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
@@ -259,7 +265,7 @@ func termcvtMain(args []string) int {
 
 			err = os.Rename(tempname, filename)
 			if err != nil {
-				// TODO: os.Args[0]
+				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
@@ -270,7 +276,7 @@ func termcvtMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: os.Args[0]
+				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
@@ -294,7 +300,7 @@ func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm stri
 		}
 
 		if err != nil {
-			// TODO: os.Args[0]
+			// TODO: lib.MlrExeName()
 			fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 			os.Exit(1)
 		}
@@ -327,7 +333,7 @@ func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm stri
 
 // ----------------------------------------------------------------
 func hexUsage(verbName string, ostream *os.File, exitCode int) {
-	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Usage: %s %s [options] {zero or more file names}\n", mlrExeName(), verbName)
 	fmt.Fprintf(ostream, "Simple hex-dump.\n")
 	fmt.Fprintf(ostream, "If zero file names are supplied, standard input is read.\n")
 	fmt.Fprintf(ostream, "Options:\n")
@@ -363,7 +369,7 @@ func hexMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: os.Args[0]
+				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr hex:", err)
 				os.Exit(1)
 			}
@@ -447,7 +453,7 @@ func hexDumpFile(istream *os.File, ostream *os.File, doRaw bool) {
 
 // ================================================================
 func unhexUsage(verbName string, ostream *os.File, exitCode int) {
-	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", os.Args[0], verbName)
+	fmt.Fprintf(ostream, "Usage: %s %s [option] {zero or more file names}\n", mlrExeName(), verbName)
 	fmt.Fprintf(ostream, "Options:\n")
 	fmt.Fprintf(ostream, "-h or --help: print this message\n")
 	fmt.Fprintf(ostream, "Zero file names means read from standard input.\n")

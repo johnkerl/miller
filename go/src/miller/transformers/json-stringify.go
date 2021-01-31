@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerJSONStringifyParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,27 +38,26 @@ func transformerJSONStringifyParseCLI(
 	jvStack := false // TODO: ??
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerJSONStringifyUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-f" {
-			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--jvstack" {
+		} else if opt == "--jvstack" {
 			jvStack = true
-			argi++
 
-		} else if args[argi] == "--no-jvstack" {
+		} else if opt == "--no-jvstack" {
 			jvStack = false
-			argi++
 
 		} else {
 			transformerJSONStringifyUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -85,7 +82,7 @@ func transformerJSONStringifyUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameJSONStringify)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONStringify)
 	fmt.Fprint(o,
 		`Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
 `)
@@ -93,6 +90,7 @@ func transformerJSONStringifyUsage(
 	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
 	fmt.Fprintf(o, "--jvstack Produce multi-line JSON output.\n")
 	fmt.Fprintf(o, "--no-jvstack Produce single-line JSON output per record (default).\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

@@ -1,7 +1,6 @@
 package transforming
 
 import (
-	"flag"
 	"os"
 
 	"miller/clitypes"
@@ -24,7 +23,6 @@ type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError // TODO: remove
 	readerOptions *clitypes.TReaderOptions,
 	writerOptions *clitypes.TWriterOptions,
 ) IRecordTransformer

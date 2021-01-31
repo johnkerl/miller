@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -29,7 +28,6 @@ func transformerStepParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -46,36 +44,36 @@ func transformerStepParseCLI(
 	var ewmaSuffixes []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerStepUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-a" {
-			stepperNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-a" {
+			stepperNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-f" {
-			valueFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			valueFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-d" {
-			stringAlphas = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-d" {
+			stringAlphas = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-o" {
-			ewmaSuffixes = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-o" {
+			ewmaSuffixes = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-F" {
+		} else if opt == "-F" {
 			// As of Miller 6 this happens automatically, but the flag is accepted
 			// as a no-op for backward compatibility with Miller 5 and below.
-			argi++
 
 		} else {
 			transformerStepUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -101,7 +99,7 @@ func transformerStepUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStep)
 	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
 
 	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
@@ -121,20 +119,21 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
 	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
 	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
-	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", lib.MlrExeName(), verbNameStep)
 	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
 
 	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
 	fmt.Fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n")
 	fmt.Fprintf(o, "           as the number of -d values.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", os.Args[0], verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", os.Args[0], verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", os.Args[0], verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", os.Args[0], verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", os.Args[0], verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", lib.MlrExeName(), verbNameStep)
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")

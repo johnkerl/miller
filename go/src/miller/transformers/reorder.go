@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerReorderParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,23 +38,23 @@ func transformerReorderParseCLI(
 	putAtEnd := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerReorderUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-f" {
-			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-e" {
+		} else if opt == "-e" {
 			putAtEnd = true
-			argi++
 
 		} else {
 			transformerReorderUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -78,23 +76,25 @@ func transformerReorderUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameReorder)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameReorder)
 	fmt.Fprint(o,
 		`Moves specified names to start of record, or end of record.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-e Put specified field names at record end: default is to put them at record start.\n")
 	fmt.Fprintf(o, "-f {a,b,c} Field names to reorder.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(
 		o,
 		"%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
-		os.Args[0], verbNameReorder,
+		lib.MlrExeName(), verbNameReorder,
 	)
 	fmt.Fprintf(
 		o,
 		"%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
-		os.Args[0], verbNameReorder,
+		lib.MlrExeName(), verbNameReorder,
 	)
 
 	if doExit {

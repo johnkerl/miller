@@ -4,25 +4,11 @@ TOP OF LIST:
 ! issues !
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-help-refactor:
-* checkArgCount -> lib
-  o getInt etc libify -- including advancing argi
-  o scan for argi += 2
-  o argi++ audit -- argi+=1 converts, and check for missings
-  ! modify for-loops to argi++, and clitypes.VerbGetX to advance by one more
-  o audit len(xxxNames) == 0
-  o strconv.FormatInt -> Itoa
-  o audit for os.Exit after Usage
-  o audit for all flag/flagSet callsites
-  o audit for return nil // help intentionally requested
-  o os.Args[0] -> global ...
+* help-refactor:
   o audit for DEFAULT_FOOs @ 
-  o audit for "-h|--help Show this message."
   o audit for '-z {zzz}'
-* usage api func w/ *file/bool/int
-* make sure all verbs take -h/--help though
-* 'get the verb name' -> 'skip the verb name'
-* --help-all-verbs invoke the new API function
+  o audit for consistent usage style
+* rename clt
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -480,7 +466,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc-note: 'emit > stdout, @foo' and 'emit @foo' are not the same:
   o the former allows put --oxxx
   o the former is not necessarily in sync with the output record stream
-
+* dev-note on why `int` not `int64` -- processor-arch & those who most need it get it
 * document tee -p
 * doc6: default flatsep is now "." not ":" in keeping with JSON culture
 ? allow [[...]] / [[[...]]] at assignment LHS

@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -25,7 +25,6 @@ func transformerGapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -39,18 +38,20 @@ func transformerGapParseCLI(
 	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerGapUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-n" {
-			gapCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-n" {
+			gapCount = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerGapUsage(os.Stderr, true, 1)
@@ -75,7 +76,7 @@ func transformerGapUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameGap)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGap)
 	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
 	fmt.Fprintf(o, "Options:\n")
 
@@ -84,6 +85,7 @@ func transformerGapUsage(
 	fmt.Fprintf(o, "-n {n} Print a gap every n records.\n")
 	fmt.Fprintf(o, "One of -f or -g is required.\n")
 	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

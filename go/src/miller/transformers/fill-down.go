@@ -1,13 +1,12 @@
 package transformers
 
 import (
-	//"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -26,7 +25,6 @@ func transformerFillDownParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,27 +38,26 @@ func transformerFillDownParseCLI(
 	onlyIfAbsent := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerFillDownUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-f" {
-			fillDownFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fillDownFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-a" {
+		} else if opt == "-a" {
 			onlyIfAbsent = true
-			argi++
 
-		} else if args[argi] == "--only-if-absent" {
+		} else if opt == "--only-if-absent" {
 			onlyIfAbsent = true
-			argi++
 
 		} else {
 			transformerFillDownUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -78,7 +75,7 @@ func transformerFillDownUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameFillDown)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFillDown)
 	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from\n")
 	fmt.Fprintln(o, "the corresponding value from a previous record, if any.")
 	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")
@@ -90,6 +87,7 @@ func transformerFillDownUsage(
 	fmt.Fprintln(o, "     By default, a 'missing' field either is absent, or has the empty-string value.")
 	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
 	fmt.Fprintln(o, " -f  Field names for fill-down.")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

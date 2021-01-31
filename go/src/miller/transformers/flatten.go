@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerFlattenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,17 +38,20 @@ func transformerFlattenParseCLI(
 	var fieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerFlattenUsage(os.Stdout, true, 0)
 
-		} else if args[argi] == "-s" {
-			oFlatSep = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-s" {
+			oFlatSep = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-f" {
-			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerFlattenUsage(os.Stderr, true, 1)
@@ -71,14 +72,15 @@ func transformerFlattenUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameFlatten)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFlatten)
 	fmt.Fprint(o,
 		`Flattens multi-level maps to single-level ones. Example: field with name 'a'
 and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 `)
 	fmt.Fprint(o, "Options:\n")
 	fmt.Fprint(o, "-f Comma-separated list of field names to flatten (default all).\n")
-	fmt.Fprintf(o, "-s Separator, defaulting to %s --jflatsep value.\n", os.Args[0])
+	fmt.Fprintf(o, "-s Separator, defaulting to %s --jflatsep value.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

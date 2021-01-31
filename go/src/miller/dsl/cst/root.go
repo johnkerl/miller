@@ -13,6 +13,7 @@ import (
 
 	"miller/clitypes"
 	"miller/dsl"
+	"miller/lib"
 	"miller/output"
 	"miller/types"
 )
@@ -236,7 +237,7 @@ func (this *RootNode) ProcessEndOfStream() {
 				fmt.Fprintf(
 					os.Stderr,
 					"%s: error on end-of-stream close: %v\n",
-					os.Args[0],
+					lib.MlrExeName(),
 					err,
 				)
 			}

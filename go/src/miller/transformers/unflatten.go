@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerUnflattenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,21 +38,23 @@ func transformerUnflattenParseCLI(
 	var fieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerUnflattenUsage(os.Stdout, true, 0)
 
-		} else if args[argi] == "-s" {
-			iFlatSep = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-s" {
+			iFlatSep = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-f" {
-			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerUnflattenUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -72,14 +72,15 @@ func transformerUnflattenUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameUnflatten)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnflatten)
 	fmt.Fprint(o,
 		`Reverses flatten. Example: field with name 'a:b:c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
-	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --jflatsep value.\n", os.Args[0])
+	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --jflatsep value.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

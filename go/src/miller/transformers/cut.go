@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerCutParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -41,31 +39,29 @@ func transformerCutParseCLI(
 	doComplement := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerCutUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-f" {
-			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-o" {
+		} else if opt == "-o" {
 			doArgOrder = true
-			argi++
 
-		} else if args[argi] == "-x" {
+		} else if opt == "-x" {
 			doComplement = true
-			argi++
 
-		} else if args[argi] == "--complement" {
+		} else if opt == "--complement" {
 			doComplement = true
-			argi++
 
 		} else {
 			transformerCutUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -94,7 +90,7 @@ func transformerCutUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCut)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCut)
 	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.\n")
@@ -104,11 +100,12 @@ func transformerCutUsage(
 	fmt.Fprintf(o, "\n")
 
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -f hostname,status\n", os.Args[0], verbNameCut)
-	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", os.Args[0], verbNameCut)
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", os.Args[0], verbNameCut);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", os.Args[0], verbNameCut);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", os.Args[0], verbNameCut);
+	fmt.Fprintf(o, "  %s %s -f hostname,status\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", lib.MlrExeName(), verbNameCut)
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", lib.MlrExeName(), verbNameCut);
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", lib.MlrExeName(), verbNameCut);
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", lib.MlrExeName(), verbNameCut);
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

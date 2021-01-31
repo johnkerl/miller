@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerStats1ParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -44,35 +42,35 @@ func transformerStats1ParseCLI(
 	doIterativeStats := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		}
+		argi++
+
+		if opt == "-h" || opt == "--help" {
 			transformerStats1Usage(os.Stdout, true, 0)
 
-		} else if args[argi] == "-a" {
-			accumulatorNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-a" {
+			accumulatorNameList = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-f" {
-			valueFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			valueFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-g" {
-			groupByFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNameList = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-i" {
+		} else if opt == "-i" {
 			doInterpolatedPercentiles = true
-			argi += 1
 
-		} else if args[argi] == "-s" {
+		} else if opt == "-s" {
 			doIterativeStats = true
-			argi += 1
 
-		} else if args[argi] == "-S" {
+		} else if opt == "-S" {
 			// No-op pass-through for backward compatibility with Miller 5
-			argi += 1
 
-		} else if args[argi] == "-F" {
+		} else if opt == "-F" {
 			// No-op pass-through for backward compatibility with Miller 5
-			argi += 1
 
 		} else {
 			transformerStats1Usage(os.Stderr, true, 1)
@@ -81,13 +79,13 @@ func transformerStats1ParseCLI(
 
 	// TODO: libify for use across verbs.
 	if len(accumulatorNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", args[0], verbNameStats1)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", args[0], verbNameStats1)
+		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", lib.MlrExeName(), verbNameStats1)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameStats1)
 		os.Exit(1)
 	}
 	if len(valueFieldNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", args[0], verbNameStats1)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", args[0], verbNameStats1)
+		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", lib.MlrExeName(), verbNameStats1)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameStats1)
 		os.Exit(1)
 	}
 
@@ -108,7 +106,7 @@ func transformerStats1Usage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameStats1)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStats1)
 	fmt.Fprint(o,
 		`Computes univariate statistics for one or more given fields, accumulated across
 the input record stream.
@@ -128,17 +126,18 @@ Options:
 -s           Print iterative stats. Useful in tail -f contexts (in which
              case please avoid pprint-format output since end of input
              stream will never be seen).
+-h|--help    Show this message.
 [TODO: more]
 `)
 
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", os.Args[0], verbNameStats1)
+		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", lib.MlrExeName(), verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size\n", os.Args[0], verbNameStats1)
+		"Example: mlr stats1 -a count,mode -f size\n", lib.MlrExeName(), verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size -g shape\n", os.Args[0], verbNameStats1)
+		"Example: mlr stats1 -a count,mode -f size -g shape\n", lib.MlrExeName(), verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", os.Args[0], verbNameStats1)
+		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", lib.MlrExeName(), verbNameStats1)
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.
@@ -238,7 +237,7 @@ func NewTransformerStats1(
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s stats1: accumulator \"%s\" not found.\n",
-					os.Args[0], name,
+					lib.MlrExeName(), name,
 				),
 			)
 		}

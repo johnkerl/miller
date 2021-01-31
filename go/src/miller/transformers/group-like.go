@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerGroupLikeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -37,16 +35,17 @@ func transformerGroupLikeParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerGroupLikeUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerGroupLikeUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -61,10 +60,10 @@ func transformerGroupLikeUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameGroupLike)
-	fmt.Fprint(o,
-		`Outputs records in batches having identical field names.
-`)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGroupLike)
+	fmt.Fprint(o, "Outputs records in batches having identical field names.")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

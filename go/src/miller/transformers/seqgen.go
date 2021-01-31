@@ -2,12 +2,12 @@ package transformers
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -26,7 +26,6 @@ func transformerSeqgenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -42,28 +41,29 @@ func transformerSeqgenParseCLI(
 	stepString := "1"
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerSeqgenUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-f" {
-			fieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			fieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--start" {
-			startString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "--start" {
+			startString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--stop" {
-			stopString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "--stop" {
+			stopString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--step" {
-			stepString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "--step" {
+			stepString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerSeqgenUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -88,15 +88,17 @@ func transformerSeqgenUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameSeqgen)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSeqgen)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
 	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
-	fmt.Fprintf(o, "output as specified by the following options:\n")
-
+	fmt.Fprintf(o, "output as specified by the options\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {name} (default \"i\") Field name for counters.\n")
 	fmt.Fprintf(o, "-start {value} (default 1) Inclusive start value.\n")
 	fmt.Fprintf(o, "-step {value} (default 1) Step value.\n")
 	fmt.Fprintf(o, "-stop {value} (default 100) Inclusive stop value.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")
 	fmt.Fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n")

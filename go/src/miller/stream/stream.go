@@ -7,6 +7,7 @@ import (
 
 	"miller/clitypes"
 	"miller/input"
+	"miller/lib"
 	"miller/output"
 	"miller/transforming"
 	"miller/types"
@@ -69,7 +70,7 @@ func Stream(
 	for !done {
 		select {
 		case err := <-errorChannel:
-			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+			fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
 			os.Exit(1)
 		case _ = <-doneChannel:
 			done = true

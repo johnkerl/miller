@@ -1,7 +1,6 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +25,6 @@ func transformerCountParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -36,31 +34,31 @@ func transformerCountParseCLI(
 	verb := args[argi]
 	argi++
 
-	groupByFieldNames := ""
+	var groupByFieldNames []string = nil
 	showCountsOnly := false
 	outputFieldName := "count"
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerCountUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-n" {
+		} else if opt == "-n" {
 			showCountsOnly = true
-			argi++
 
-		} else if args[argi] == "-o" {
-			outputFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-o" {
+			outputFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCountUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -79,15 +77,15 @@ func transformerCountUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCount)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCount)
 	fmt.Fprint(o,
 		`Prints number of records, optionally grouped by distinct values for specified field names.
 `)
-	fmt.Fprintf(o, `Options:
--g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c
--n {n} Show only the number of distinct values. Not interesting without -g.
--o {name} Field name for output-count. Default "count".
-`)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c\n")
+	fmt.Fprintf(o, "-n {n} Show only the number of distinct values. Not interesting without -g.\n")
+	fmt.Fprintf(o, "-o {name} Field name for output-count. Default \"count\".\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)
@@ -97,9 +95,9 @@ func transformerCountUsage(
 // ----------------------------------------------------------------
 type TransformerCount struct {
 	// input
-	groupByFieldNameList []string
-	showCountsOnly       bool
-	outputFieldName      string
+	groupByFieldNames []string
+	showCountsOnly    bool
+	outputFieldName   string
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
@@ -116,24 +114,22 @@ type TransformerCount struct {
 }
 
 func NewTransformerCount(
-	groupByFieldNames string,
+	groupByFieldNames []string,
 	showCountsOnly bool,
 	outputFieldName string,
 ) (*TransformerCount, error) {
 
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
-
 	this := &TransformerCount{
-		groupByFieldNameList: groupByFieldNameList,
-		showCountsOnly:       showCountsOnly,
-		outputFieldName:      outputFieldName,
+		groupByFieldNames: groupByFieldNames,
+		showCountsOnly:    showCountsOnly,
+		outputFieldName:   outputFieldName,
 
 		ungroupedCount: 0,
 		groupedCounts:  lib.NewOrderedMap(),
 		groupingValues: lib.NewOrderedMap(),
 	}
 
-	if len(groupByFieldNameList) == 0 {
+	if groupByFieldNames == nil {
 		this.recordTransformerFunc = this.countUngrouped
 	} else {
 		this.recordTransformerFunc = this.countGrouped
@@ -177,7 +173,7 @@ func (this *TransformerCount) countGrouped(
 		inrec := inrecAndContext.Record
 
 		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
-			this.groupByFieldNameList,
+			this.groupByFieldNames,
 		)
 		if !ok { // Current record does not have specified fields; ignore
 			return
@@ -218,7 +214,7 @@ func (this *TransformerCount) countGrouped(
 				groupingValuesForKey := this.groupingValues.Get(groupingKey).([]*types.Mlrval)
 				i := 0
 				for _, groupingValueForKey := range groupingValuesForKey {
-					newrec.PutCopy(this.groupByFieldNameList[i], groupingValueForKey)
+					newrec.PutCopy(this.groupByFieldNames[i], groupingValueForKey)
 					i++
 				}
 

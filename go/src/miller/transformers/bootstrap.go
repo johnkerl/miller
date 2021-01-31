@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerBootstrapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -40,19 +38,20 @@ func transformerBootstrapParseCLI(
 	nout := -1
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerBootstrapUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-n" {
-			nout = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-n" {
+			nout = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerBootstrapUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -67,16 +66,17 @@ func transformerBootstrapUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameBootstrap)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameBootstrap)
 	fmt.Fprintf(o,
 		`Emits an n-sample, with replacement, of the input records.
 See also %s sample and %s shuffle.
-`, os.Args[0], os.Args[0])
+`, lib.MlrExeName(), lib.MlrExeName())
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		` -n Number of samples to output. Defaults to number of input records.
     Must be non-negative.
 `)
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -41,7 +40,6 @@ func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	mainRecordWriterOptions *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -71,20 +69,22 @@ func transformerPutOrFilterParseCLI(
 	// Parse local flags.
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerPutUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-f" {
+		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
-			filename := clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+			filename := clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			data, err := ioutil.ReadFile(filename)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
-					args[0], verb, filename)
+					lib.MlrExeName(), verb, filename)
 				fmt.Println(err)
 				return nil
 			}
@@ -95,59 +95,59 @@ func transformerPutOrFilterParseCLI(
 
 			needExpressionArg = false
 
-		} else if args[argi] == "-e" {
+		} else if opt == "-e" {
 			if dslString != "" {
 				dslString += ";\n"
 			}
-			dslString += clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+			dslString += clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			needExpressionArg = false
 
-		} else if args[argi] == "-s" {
+		} else if opt == "-s" {
 			// E.g.
 			//   mlr put -s sum=0
 			// is like
 			//   mlr put -s 'begin {@sum = 0}'
-			preset := clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+			preset := clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			presets = append(presets, preset)
 
-		} else if args[argi] == "-x" {
+		} else if opt == "-x" {
 			invertFilter = true
-			argi++
-		} else if args[argi] == "-q" {
+		} else if opt == "-q" {
 			suppressOutputRecord = true
-			argi++
 
-		} else if args[argi] == "-d" {
+		} else if opt == "-d" {
 			// TODO: move these to mlr auxents?
 			printASTOnly = true
 			printASTSingleLine = false
-			argi++
-		} else if args[argi] == "-D" {
+
+		} else if opt == "-D" {
 			// TODO: move these to mlr auxents?
 			printASTOnly = true
 			printASTSingleLine = true
-			argi++
 
-		} else if args[argi] == "-v" {
+		} else if opt == "-v" {
 			verbose = true
-			argi++
 
-		} else if args[argi] == "-S" {
+		} else if opt == "-S" {
 			// TODO: this is a no-op in Miller 6 and above.
 			// Comment this in more detail.
-			argi++
 
-		} else if args[argi] == "-F" {
+		} else if opt == "-F" {
 			// TODO: this is a no-op in Miller 6 and above.
 			// Comment this in more detail.
-			argi++
-
-		} else if clitypes.ParseWriterOptions(args, argc, &argi, recordWriterOptions) {
-			// This lets mlr main and mlr put have different output formats.
-			// Nothing else to handle here.
 
 		} else {
-			transformerPutUsage(os.Stderr, true, 1)
+			// This is inelegant. For error-proofing we advance argi already in our
+			// loop (so individual if-statements don't need to). However,
+			// ParseWriterOptions expects it unadvanced.
+			wargi := argi - 1
+			if clitypes.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
+				// This lets mlr main and mlr put have different output formats.
+				// Nothing else to handle here.
+				argi = wargi
+			} else {
+				transformerPutUsage(os.Stderr, true, 1)
+			}
 		}
 	}
 
@@ -160,7 +160,7 @@ func transformerPutOrFilterParseCLI(
 			transformerPutUsage(os.Stderr, true, 1)
 		}
 		dslString = args[argi]
-		argi += 1
+		argi++
 	}
 
 	if printASTOnly {
@@ -219,7 +219,7 @@ func transformerPutOrFilterUsage(
 	exitCode int,
 	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", os.Args[0], verb)
+	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", lib.MlrExeName(), verb)
 	fmt.Fprintf(o,
 		`-f {file name} File containing a DSL expression.
 
@@ -352,7 +352,7 @@ func BuildASTFromStringWithMessage(dslString string, verbose bool) (*dsl.AST, er
 		// At present it's overly parser-internal, and confusing. :(
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-			os.Args[0])
+			lib.MlrExeName())
 		if verbose {
 			fmt.Fprintln(os.Stderr, dslString)
 		}

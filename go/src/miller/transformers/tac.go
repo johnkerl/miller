@@ -2,12 +2,12 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -26,7 +26,6 @@ func transformerTacParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -36,16 +35,17 @@ func transformerTacParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerTacUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerTacUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -60,11 +60,11 @@ func transformerTacUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s, with no options.\n", os.Args[0], verbNameTac)
-	fmt.Fprintf(
-		o,
-		"Prints records in reverse order from the order in which they were encountered.\n",
-	)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameTac)
+	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
 	if doExit {
 		os.Exit(exitCode)
 	}

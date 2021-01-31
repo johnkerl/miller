@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerCountSimilarParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -41,22 +39,23 @@ func transformerCountSimilarParseCLI(
 	counterFieldName := "count"
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerCountSimilarUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-g" {
-			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-g" {
+			groupByFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-o" {
-			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-o" {
+			counterFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCountSimilarUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -78,12 +77,13 @@ func transformerCountSimilarUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCountSimilar)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCountSimilar)
 	fmt.Fprintf(o, "Ingests all records, then emits each record augmented by a count of\n")
 	fmt.Fprintf(o, "the number of other records having the same group-by field values.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-g {a,b,c} Group-by-field names for counts, e.g. a,b,c\n")
 	fmt.Fprintf(o, "-o {name} Field name for output-counts. Defaults to \"count\".\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

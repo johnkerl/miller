@@ -7,7 +7,6 @@ package cst
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -124,7 +123,7 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s: unhandled redirector node type %s.",
-					os.Args[0], string(redirectorNode.Type),
+					lib.MlrExeName(), string(redirectorNode.Type),
 				),
 			)
 		}
@@ -146,7 +145,7 @@ func (this *TeeStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 		return nil, errors.New(
 			fmt.Sprintf(
 				"%s: tee-evaluaiton yielded %s, not map.",
-				os.Args[0], evaluation.GetTypeName(),
+				lib.MlrExeName(), evaluation.GetTypeName(),
 			),
 		)
 	}
@@ -164,7 +163,7 @@ func (this *TeeStatementNode) teeToFileOrPipe(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				os.Args[0], redirectorTarget.GetTypeName(),
+				lib.MlrExeName(), redirectorTarget.GetTypeName(),
 			),
 		)
 	}

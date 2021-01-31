@@ -43,7 +43,6 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"sort"
@@ -69,7 +68,6 @@ func transformerSortParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -83,42 +81,45 @@ func transformerSortParseCLI(
 	comparatorFuncs := make([]types.ComparatorFunc, 0)
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
-		} else if args[argi] == "-h" || args[argi] == "--help" {
-			transformerSortUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
+		}
+		argi++
 
-		} else if args[argi] == "-f" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		if opt == "-h" || opt == "--help" {
+			transformerSortUsage(os.Stdout, true, 0)
+
+		} else if opt == "-f" {
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
 			}
 
-		} else if args[argi] == "-r" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-r" {
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparator)
 			}
 
-		} else if args[argi] == "-n" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-n" {
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
-		} else if args[argi] == "-nf" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-nf" {
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
-		} else if args[argi] == "-nr" {
-			subList := clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-nr" {
+			subList := clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)
@@ -147,7 +148,7 @@ func transformerSortUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {flags}\n", os.Args[0], verbNameSort)
+	fmt.Fprintf(o, "Usage: %s %s {flags}\n", lib.MlrExeName(), verbNameSort)
 	fmt.Fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n")
 	fmt.Fprintf(o, "field, and so on.  (Any records not having all specified sort keys will appear\n")
 	fmt.Fprintf(o, "at the end of the output, in the order they were encountered, regardless of the\n")
@@ -155,16 +156,17 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "in the order they were encountered in the input record stream.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Flags:\n")
-	fmt.Fprintf(o, "  -f  {comma-separated field names}  Lexical ascending\n")
-	fmt.Fprintf(o, "  -n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
-	fmt.Fprintf(o, "  -nf {comma-separated field names}  Same as -n\n")
-	fmt.Fprintf(o, "  -r  {comma-separated field names}  Lexical descending\n")
-	fmt.Fprintf(o, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n")
+	fmt.Fprintf(o, "-f  {comma-separated field names}  Lexical ascending\n")
+	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
+	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
+	fmt.Fprintf(o, "-r  {comma-separated field names}  Lexical descending\n")
+	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", os.Args[0], verbNameSort)
+	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", lib.MlrExeName(), verbNameSort)
 	fmt.Fprintf(o, "which is the same as:\n")
-	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", os.Args[0], verbNameSort)
+	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", lib.MlrExeName(), verbNameSort)
 
 	if doExit {
 		os.Exit(exitCode)

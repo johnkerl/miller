@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -25,7 +25,6 @@ func transformerCleanWhitespaceParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -38,31 +37,29 @@ func transformerCleanWhitespaceParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerCleanWhitespaceUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-k" || args[argi] == "--keys-only" {
+		} else if opt == "-k" || opt == "--keys-only" {
 			doKeys = true
 			doValues = false
-			argi++
-		} else if args[argi] == "-v" || args[argi] == "--values-only" {
+		} else if opt == "-v" || opt == "--values-only" {
 			doKeys = false
 			doValues = true
-			argi++
 
 		} else {
 			transformerCleanWhitespaceUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
 	if !doKeys && !doValues {
 		transformerCleanWhitespaceUsage(os.Stderr, true, 1)
-		os.Exit(1)
 	}
 
 	transformer, _ := NewTransformerCleanWhitespace(
@@ -79,7 +76,7 @@ func transformerCleanWhitespaceUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameCleanWhitespace)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCleanWhitespace)
 	fmt.Fprintf(o, "For each record, for each field in the record, whitespace-cleans the keys and/or\n")
 	fmt.Fprintf(o, "values. Whitespace-cleaning entails stripping leading and trailing whitespace,\n")
 	fmt.Fprintf(o, "and replacing multiple whitespace with singles. For finer-grained control,\n")
@@ -91,6 +88,8 @@ func transformerCleanWhitespaceUsage(
 	fmt.Fprintf(o, "-v|--values-only  Do not touch keys.\n")
 	fmt.Fprintf(o, "It is an error to specify -k as well as -v -- to clean keys and values,\n")
 	fmt.Fprintf(o, "leave off -k as well as -v.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
 	if doExit {
 		os.Exit(exitCode)
 	}

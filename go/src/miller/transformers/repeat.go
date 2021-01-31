@@ -1,12 +1,12 @@
 package transformers
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"miller/clitypes"
+	"miller/lib"
 	"miller/transforming"
 	"miller/types"
 )
@@ -34,7 +34,6 @@ func transformerRepeatParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -49,19 +48,21 @@ func transformerRepeatParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerRepeatUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "-n" {
-			repeatCount = clitypes.VerbGetIntArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-n" {
+			repeatCount = clitypes.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 			repeatCountSource = repeatCountFromInt
 
-		} else if args[argi] == "-f" {
-			repeatCountFieldName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			repeatCountFieldName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			repeatCountSource = repeatCountFromFieldName
 
 		} else {
@@ -88,26 +89,27 @@ func transformerRepeatUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameRepeat)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRepeat)
 	fmt.Fprintf(o, "Copies input records to output records multiple times.\n")
 	fmt.Fprintf(o, "Options must be exactly one of the following:\n")
-	fmt.Fprintf(o, "  -n {repeat count}  Repeat each input record this many times.\n")
-	fmt.Fprintf(o, "  -f {field name}    Same, but take the repeat count from the specified\n")
-	fmt.Fprintf(o, "                     field name of each input record.\n")
+	fmt.Fprintf(o, "-n {repeat count}  Repeat each input record this many times.\n")
+	fmt.Fprintf(o, "-f {field name}    Same, but take the repeat count from the specified\n")
+	fmt.Fprintf(o, "                   field name of each input record.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", os.Args[0], verbNameRepeat)
+	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", lib.MlrExeName(), verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")
 	fmt.Fprintf(o, " x=0.488189\n")
 	fmt.Fprintf(o, " x=0.484973\n")
 	fmt.Fprintf(o, " x=0.704983\n")
 	fmt.Fprintf(o, " x=0.147311\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", os.Args[0], verbNameRepeat)
+	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", lib.MlrExeName(), verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", os.Args[0], verbNameRepeat)
+	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", lib.MlrExeName(), verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")

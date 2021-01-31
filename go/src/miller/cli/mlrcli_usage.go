@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"os"
 
+	"miller/lib"
 	"miller/version"
 )
 
 // ----------------------------------------------------------------
 func mainUsageShort() {
-	fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", lib.MlrExeName())
 	os.Exit(1)
 }
 

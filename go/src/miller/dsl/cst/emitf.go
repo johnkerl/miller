@@ -8,7 +8,6 @@ package cst
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -122,7 +121,7 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 				return nil, errors.New(
 					fmt.Sprintf(
 						"%s: unhandled redirector node type %s.",
-						os.Args[0], string(redirectorNode.Type),
+						lib.MlrExeName(), string(redirectorNode.Type),
 					),
 				)
 			}
@@ -171,7 +170,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 	return "", errors.New(
 		fmt.Sprintf(
 			"%s: can't get name of node type \"%s\" for %s.",
-			os.Args[0], string(astNode.Type), description,
+			lib.MlrExeName(), string(astNode.Type), description,
 		),
 	)
 }
@@ -195,7 +194,7 @@ func (this *EmitFStatementNode) emitfToFileOrPipe(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				os.Args[0], redirectorTarget.GetTypeName(),
+				lib.MlrExeName(), redirectorTarget.GetTypeName(),
 			),
 		)
 	}

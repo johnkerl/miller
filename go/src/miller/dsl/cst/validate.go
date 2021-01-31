@@ -9,7 +9,6 @@ package cst
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"miller/dsl"
 	"miller/lib"
@@ -277,7 +276,7 @@ func validateForLoopTwoVariableUniqueNames(astNode *dsl.ASTNode) error {
 		return errors.New(
 			fmt.Sprintf(
 				"%s: redefinition of variable %s in the same scope.",
-				os.Args[0],
+				lib.MlrExeName(),
 				keyVarName,
 			),
 		)
@@ -313,7 +312,7 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 			return errors.New(
 				fmt.Sprintf(
 					"%s: redefinition of variable %s in the same scope.",
-					os.Args[0],
+					lib.MlrExeName(),
 					name,
 				),
 			)
@@ -326,7 +325,7 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 		return errors.New(
 			fmt.Sprintf(
 				"%s: redefinition of variable %s in the same scope.",
-				os.Args[0],
+				lib.MlrExeName(),
 				valVarName,
 			),
 		)

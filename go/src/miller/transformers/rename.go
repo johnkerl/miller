@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerRenameParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -37,16 +35,17 @@ func transformerRenameParseCLI(
 	argi++
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerRenameUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
 		} else {
 			transformerRenameUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -58,8 +57,7 @@ func transformerRenameParseCLI(
 	if len(names)%2 != 0 {
 		transformerRenameUsage(os.Stderr, true, 1)
 	}
-
-	argi += 1
+	argi++
 
 	transformer, _ := NewTransformerRename(
 		names,
@@ -74,8 +72,10 @@ func transformerRenameUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {old1,new1,old2,new2,...}\n", os.Args[0], verbNameRename)
+	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", lib.MlrExeName(), verbNameRename)
 	fmt.Fprintf(o, "Renames specified fields.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
 		os.Exit(exitCode)

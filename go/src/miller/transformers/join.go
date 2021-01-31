@@ -3,7 +3,6 @@ package transformers
 import (
 	"container/list"
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -78,7 +77,6 @@ func transformerJoinParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	mainReaderOptions *clitypes.TReaderOptions, // Options for the right-files
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -97,77 +95,81 @@ func transformerJoinParseCLI(
 	}
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		}
+		argi++
+
+		if opt == "-h" || opt == "--help" {
 			transformerSortUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if clitypes.ParseReaderOptions(args, argc, &argi, &opts.joinReaderOptions) {
-			// handled
+		} else if opt == "--prepipe" {
+			opts.prepipe = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--prepipe" {
-			opts.prepipe = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			opts.leftFileName = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-f" {
-			opts.leftFileName = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-j" {
+			opts.outputJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-j" {
-			opts.outputJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-l" {
+			opts.leftJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-l" {
-			opts.leftJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-r" {
+			opts.rightJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-r" {
-			opts.rightJoinFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "--lp" {
+			opts.leftPrefix = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--lp" {
-			opts.leftPrefix = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "--rp" {
+			opts.rightPrefix = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "--rp" {
-			opts.rightPrefix = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
-
-		} else if args[argi] == "--np" {
+		} else if opt == "--np" {
 			opts.emitPairables = false
-			argi++
 
-		} else if args[argi] == "--ul" {
+		} else if opt == "--ul" {
 			opts.emitLeftUnpairables = true
-			argi++
 
-		} else if args[argi] == "--ur" {
+		} else if opt == "--ur" {
 			opts.emitRightUnpairables = true
-			argi++
 
-		} else if args[argi] == "-u" {
+		} else if opt == "-u" {
 			opts.allowUnsortedInput = true
-			argi++
 
-		} else if args[argi] == "--sorted-input" || args[argi] == "-s" {
+		} else if opt == "--sorted-input" || opt == "-s" {
 			opts.allowUnsortedInput = false
-			argi++
 
 		} else {
-			transformerSortUsage(os.Stderr, true, 1)
-			os.Exit(1)
+			// This is inelegant. For error-proofing we advance argi already in our
+			// loop (so individual if-statements don't need to). However,
+			// ParseReaderOptions expects it unadvanced.
+			rargi := argi - 1
+			if clitypes.ParseReaderOptions(args, argc, &rargi, &opts.joinReaderOptions) {
+				// This lets mlr main and mlr join have different input formats.
+				// Nothing else to handle here.
+				argi = rargi
+			} else {
+				transformerJoinUsage(os.Stderr, true, 1)
+			}
 		}
 	}
 
 	if opts.leftFileName == "" {
-		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", os.Args[0], verb)
+		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", lib.MlrExeName(), verb)
 		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
-			os.Args[0], verb)
+			lib.MlrExeName(), verb)
 		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
-		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", os.Args[0], verb)
+		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", lib.MlrExeName(), verb)
 		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
@@ -185,7 +187,7 @@ func transformerJoinParseCLI(
 	if llen != rlen || llen != olen {
 		fmt.Fprintf(os.Stderr,
 			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
-			os.Args[0], verb, llen, rlen, olen)
+			lib.MlrExeName(), verb, llen, rlen, olen)
 		os.Exit(1)
 	}
 
@@ -200,7 +202,7 @@ func transformerJoinUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameJoin)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJoin)
 	fmt.Fprintf(o, "Joins records from specified left file name with records from all file names\n")
 	fmt.Fprintf(o, "at the end of the Miller argument list.\n")
 	fmt.Fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n")
@@ -226,12 +228,14 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n")
 	fmt.Fprintf(o, "               In this case, the entire left file will be loaded into memory.\n")
 	fmt.Fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
-		os.Args[0])
+		lib.MlrExeName())
 	fmt.Fprintf(o, "               If you wish to use a prepipe command for the main input as well\n")
 	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")
 	fmt.Fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n")
-	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", os.Args[0])
+	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", lib.MlrExeName())
 	fmt.Fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n")
 	fmt.Fprintf(o, "  --irs {record-separator character}\n")
 	fmt.Fprintf(o, "  --ifs {field-separator character}\n")
@@ -239,7 +243,7 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  --repifs\n")
 	fmt.Fprintf(o, "  --repips\n")
 	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
-		os.Args[0])
+		lib.MlrExeName())
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
 	fmt.Fprintf(o, "including examples.\n")
 
@@ -458,7 +462,7 @@ func (this *TransformerJoin) ingestLeftFile() {
 		select {
 
 		case err := <-errorChannel:
-			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+			fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
 			os.Exit(1)
 
 		case leftrecAndContext := <-inputChannel:

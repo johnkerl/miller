@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -27,7 +26,6 @@ func transformerUnsparsifyParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	errorHandling flag.ErrorHandling, // ContinueOnError or ExitOnError
 	_ *clitypes.TReaderOptions,
 	__ *clitypes.TWriterOptions,
 ) transforming.IRecordTransformer {
@@ -41,22 +39,23 @@ func transformerUnsparsifyParseCLI(
 	var specifiedFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		argi++
 
-		} else if args[argi] == "-h" || args[argi] == "--help" {
+		if opt == "-h" || opt == "--help" {
 			transformerUnsparsifyUsage(os.Stdout, true, 0)
-			return nil // help intentionally requested
 
-		} else if args[argi] == "--fill-with" {
-			fillerString = clitypes.VerbGetStringArgOrDie(verb, args, &argi, argc)
+		} else if opt == "--fill-with" {
+			fillerString = clitypes.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if args[argi] == "-f" {
-			specifiedFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, args, &argi, argc)
+		} else if opt == "-f" {
+			specifiedFieldNames = clitypes.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerUnsparsifyUsage(os.Stderr, true, 1)
-			os.Exit(1)
 		}
 	}
 
@@ -74,7 +73,7 @@ func transformerUnsparsifyUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", os.Args[0], verbNameUnsparsify)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnsparsify)
 	fmt.Fprint(o,
 		`Prints records with the union of field names over all input records.
 For field names absent in a given record but present in others, fills in
@@ -86,6 +85,7 @@ a value. This verb retains all input before producing any output.
 	fmt.Fprintf(o, "                             the empty string.\n")
 	fmt.Fprintf(o, "-f {a,b,c} Specify field names to be operated on. Any other fields won't be\n")
 	fmt.Fprintf(o, "           modified, and operation will be streaming.\n")
+	fmt.Fprintf(o, "-h|--help  Show this message.\n")
 
 	fmt.Fprint(o,
 		`Example: if the input is two records, one being 'a=1,b=2' and the other
