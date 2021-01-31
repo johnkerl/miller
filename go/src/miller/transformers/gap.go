@@ -81,7 +81,7 @@ func transformerGapUsage(
 	fmt.Fprintf(o, "Options:\n")
 
 	fmt.Fprintf(o, "Emits an empty record every n records, or when certain values change.\n")
-	fmt.Fprintf(o, "-g {comma-separated field names} Print a gap whenever values of these fields (e.g. a,b,c) changes.\n")
+	fmt.Fprintf(o, "-g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.\n")
 	fmt.Fprintf(o, "-n {n} Print a gap every n records.\n")
 	fmt.Fprintf(o, "One of -f or -g is required.\n")
 	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
