@@ -14,9 +14,9 @@ TOP OF LIST:
 * port verb having-fields
 * port verb merge-fields
 * port verb stats2
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-* refactor flag-lib out of all verbs
-
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! regex ...
