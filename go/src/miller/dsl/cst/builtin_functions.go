@@ -10,6 +10,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -100,7 +101,7 @@ func (this *RootNode) BuildZaryFunctionCallsiteNode(
 	return &ZaryFunctionCallsiteNode{zaryFunc: builtinFunctionInfo.zaryFunc}, nil
 }
 
-func (this *ZaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+func (this *ZaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	return this.zaryFunc()
 }
 
@@ -139,7 +140,7 @@ func (this *RootNode) BuildUnaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *UnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+func (this *UnaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	return this.unaryFunc(&arg1)
 }
@@ -179,7 +180,7 @@ func (this *RootNode) BuildContextualUnaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *ContextualUnaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+func (this *ContextualUnaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	return this.contextualUnaryFunc(&arg1, state.Context)
 }
@@ -251,7 +252,7 @@ func (this *RootNode) BuildBinaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *BinaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+func (this *BinaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	arg2 := this.evaluable2.Evaluate(state)
 	return this.binaryFunc(&arg1, &arg2)
@@ -307,7 +308,7 @@ func (this *RootNode) BuildTernaryFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *TernaryFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+func (this *TernaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
 	arg2 := this.evaluable2.Evaluate(state)
 	arg3 := this.evaluable3.Evaluate(state)
@@ -351,7 +352,7 @@ func (this *RootNode) BuildVariadicFunctionCallsiteNode(
 	}, nil
 }
 
-func (this *VariadicFunctionCallsiteNode) Evaluate(state *State) types.Mlrval {
+func (this *VariadicFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	args := make([]*types.Mlrval, len(this.evaluables))
 	for i, evaluable := range this.evaluables {
 		arg := evaluable.Evaluate(state)
@@ -403,7 +404,7 @@ func (this *RootNode) BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOp
 // * If b is absent: return absent
 // * Return a && b
 
-func (this *LogicalANDOperatorNode) Evaluate(state *State) types.Mlrval {
+func (this *LogicalANDOperatorNode) Evaluate(state *runtime.State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
@@ -443,7 +444,7 @@ func (this *RootNode) BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROper
 // if the first argument is false.
 //
 // See the disposition-matrix discussion for LogicalANDOperator.
-func (this *LogicalOROperatorNode) Evaluate(state *State) types.Mlrval {
+func (this *LogicalOROperatorNode) Evaluate(state *runtime.State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
@@ -483,7 +484,7 @@ func (this *RootNode) BuildAbsentCoalesceOperatorNode(a, b IEvaluable) *AbsentCo
 // This is different from most of the evaluator functions in that it does
 // short-circuiting: the second argument is not evaluated if the first
 // argument is not absent.
-func (this *AbsentCoalesceOperatorNode) Evaluate(state *State) types.Mlrval {
+func (this *AbsentCoalesceOperatorNode) Evaluate(state *runtime.State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if atype != types.MT_ABSENT {
@@ -506,7 +507,7 @@ func (this *RootNode) BuildEmptyCoalesceOperatorNode(a, b IEvaluable) *EmptyCoal
 // This is different from most of the evaluator functions in that it does
 // short-circuiting: the second argument is not evaluated if the first
 // argument is not absent.
-func (this *EmptyCoalesceOperatorNode) Evaluate(state *State) types.Mlrval {
+func (this *EmptyCoalesceOperatorNode) Evaluate(state *runtime.State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 	atype := aout.GetType()
 	if atype == types.MT_ABSENT || atype == types.MT_VOID || (atype == types.MT_STRING && aout.String() == "") {
@@ -523,7 +524,7 @@ type StandardTernaryOperatorNode struct{ a, b, c IEvaluable }
 func (this *RootNode) BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *StandardTernaryOperatorNode {
 	return &StandardTernaryOperatorNode{a: a, b: b, c: c}
 }
-func (this *StandardTernaryOperatorNode) Evaluate(state *State) types.Mlrval {
+func (this *StandardTernaryOperatorNode) Evaluate(state *runtime.State) types.Mlrval {
 	aout := this.a.Evaluate(state)
 
 	boolValue, isBool := aout.GetBoolValue()

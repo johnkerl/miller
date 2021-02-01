@@ -11,6 +11,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -57,7 +58,7 @@ func NewUDFCallsite(
 	}
 }
 
-func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
+func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	lib.InternalCodingErrorIf(this.argumentNodes == nil)
 	lib.InternalCodingErrorIf(this.udf == nil)
 	lib.InternalCodingErrorIf(this.udf.functionBody == nil)
@@ -126,11 +127,11 @@ func (this *UDFCallsite) Evaluate(state *State) types.Mlrval {
 	}
 
 	// Bind the arguments to the parameters
-	state.stack.PushStackFrameSet()
-	defer state.stack.PopStackFrameSet()
+	state.Stack.PushStackFrameSet()
+	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.stack.BindVariable(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
+		state.Stack.BindVariable(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
 	}
 
 	// Execute the function body.

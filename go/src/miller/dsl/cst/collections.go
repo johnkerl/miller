@@ -8,6 +8,7 @@ package cst
 import (
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -37,7 +38,7 @@ func (this *RootNode) BuildArrayLiteralNode(
 	return &ArrayLiteralNode{evaluables: evaluables}, nil
 }
 
-func (this *ArrayLiteralNode) Evaluate(state *State) types.Mlrval {
+func (this *ArrayLiteralNode) Evaluate(state *runtime.State) types.Mlrval {
 	mlrvals := make([]types.Mlrval, 0)
 	for _, evaluable := range this.evaluables {
 		mlrval := evaluable.Evaluate(state)
@@ -76,7 +77,7 @@ func (this *RootNode) BuildArrayOrMapIndexAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapIndexAccessNode) Evaluate(state *State) types.Mlrval {
+func (this *ArrayOrMapIndexAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 
@@ -131,7 +132,7 @@ func (this *RootNode) BuildArraySliceAccessNode(
 	}, nil
 }
 
-func (this *ArraySliceAccessNode) Evaluate(state *State) types.Mlrval {
+func (this *ArraySliceAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	lowerIndexMlrval := this.lowerIndexEvaluable.Evaluate(state)
 	upperIndexMlrval := this.upperIndexEvaluable.Evaluate(state)
@@ -222,7 +223,7 @@ func (this *RootNode) BuildPositionalFieldNameNode(
 }
 
 // TODO: code-dedupe these next four Evaluate methods
-func (this *PositionalFieldNameNode) Evaluate(state *State) types.Mlrval {
+func (this *PositionalFieldNameNode) Evaluate(state *runtime.State) types.Mlrval {
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
 		return types.MlrvalFromAbsent()
@@ -266,7 +267,7 @@ func (this *RootNode) BuildPositionalFieldValueNode(
 	}, nil
 }
 
-func (this *PositionalFieldValueNode) Evaluate(state *State) types.Mlrval {
+func (this *PositionalFieldValueNode) Evaluate(state *runtime.State) types.Mlrval {
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
 		return types.MlrvalFromAbsent()
@@ -317,7 +318,7 @@ func (this *RootNode) BuildArrayOrMapPositionalNameAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(state *State) types.Mlrval {
+func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 
@@ -387,7 +388,7 @@ func (this *RootNode) BuildArrayOrMapPositionalValueAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapPositionalValueAccessNode) Evaluate(state *State) types.Mlrval {
+func (this *ArrayOrMapPositionalValueAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 	baseMlrval := this.baseEvaluable.Evaluate(state)
 	indexMlrval := this.indexEvaluable.Evaluate(state)
 
@@ -476,7 +477,7 @@ func (this *RootNode) BuildMapLiteralNode(
 	return &MapLiteralNode{evaluablePairs: evaluablePairs}, nil
 }
 
-func (this *MapLiteralNode) Evaluate(state *State) types.Mlrval {
+func (this *MapLiteralNode) Evaluate(state *runtime.State) types.Mlrval {
 	mlrval := types.MlrvalEmptyMap()
 
 	for _, evaluablePair := range this.evaluablePairs {

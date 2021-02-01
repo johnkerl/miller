@@ -7,6 +7,7 @@ package cst
 import (
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 )
 
 // ================================================================
@@ -55,7 +56,7 @@ func NewAssignmentNode(
 	}
 }
 
-func (this *AssignmentNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *AssignmentNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	rvalue := this.rvalueNode.Evaluate(state)
 	if !rvalue.IsAbsent() {
 		err := this.lvalueNode.Assign(&rvalue, state)
@@ -102,7 +103,7 @@ func NewUnsetNode(
 	}
 }
 
-func (this *UnsetNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *UnsetNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	this.lvalueNode.Unset(state)
 	return nil, nil
 }

@@ -9,21 +9,9 @@ import (
 
 	"miller/cliutil"
 	"miller/dsl"
+	"miller/runtime"
 	"miller/types"
 )
-
-// ----------------------------------------------------------------
-// When we do mlr put '...DSL expression here...', this state is what is needed
-// to execute the expression. That includes the current record, AWK-like variables
-// such as FILENAME and NR, and out-of-stream variables.
-type State struct {
-	Inrec         *types.Mlrmap
-	Context       *types.Context
-	Oosvars       *types.Mlrmap
-	FilterResult  bool
-	OutputChannel chan<- *types.RecordAndContext
-	stack         *Stack
-}
 
 // ----------------------------------------------------------------
 // Please see root.go for context and comments.
@@ -47,24 +35,24 @@ type NodeBuilder func(astNode *dsl.ASTNode) (IEvaluable, error)
 // ----------------------------------------------------------------
 // This is for all statements and statemnt blocks within the CST.
 type IExecutable interface {
-	Execute(state *State) (*BlockExitPayload, error)
+	Execute(state *runtime.State) (*BlockExitPayload, error)
 }
 
-type Executor func(state *State) (*BlockExitPayload, error)
+type Executor func(state *runtime.State) (*BlockExitPayload, error)
 
 // ================================================================
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
-	Assign(rvalue *types.Mlrval, state *State) error
+	Assign(rvalue *types.Mlrval, state *runtime.State) error
 
 	// 'foo = "bar"' or 'foo[3]["abc"] = "bar"'
 	// For non-indexed assignment, which is the normal case, indices can be
 	// zero-length or nil.
-	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *State) error
+	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *runtime.State) error
 
-	Unset(state *State)
+	Unset(state *runtime.State)
 
-	UnsetIndexed(indices []*types.Mlrval, state *State)
+	UnsetIndexed(indices []*types.Mlrval, state *runtime.State)
 }
 
 // ================================================================
@@ -72,7 +60,7 @@ type IAssignable interface {
 // Also, for computed field names on the left-hand side, like '$a . $b' in mlr
 // put '$[$a . $b]' = $x + $y'.
 type IEvaluable interface {
-	Evaluate(state *State) types.Mlrval
+	Evaluate(state *runtime.State) types.Mlrval
 }
 
 // ================================================================

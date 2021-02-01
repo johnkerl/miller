@@ -12,6 +12,7 @@ import (
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -27,7 +28,7 @@ import (
 
 type tEmitFToRedirectFunc func(
 	newrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error
 
 type EmitFStatementNode struct {
@@ -137,7 +138,7 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 	return retval, nil
 }
 
-func (this *EmitFStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	newrec := types.NewMlrmapAsRecord()
 	for i, emitfEvaluable := range this.emitfEvaluables {
 		emitfName := this.emitfNames[i]
@@ -178,7 +179,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 // ----------------------------------------------------------------
 func (this *EmitFStatementNode) emitfToRecordStream(
 	outrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error {
 	state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
 	return nil
@@ -187,7 +188,7 @@ func (this *EmitFStatementNode) emitfToRecordStream(
 // ----------------------------------------------------------------
 func (this *EmitFStatementNode) emitfToFileOrPipe(
 	outrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error {
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {

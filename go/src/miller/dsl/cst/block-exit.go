@@ -10,6 +10,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 )
 
 // ----------------------------------------------------------------
@@ -24,7 +25,7 @@ func (this *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
 	return &BreakNode{}, nil
 }
 
-func (this *BreakNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	return &BlockExitPayload{
 		BLOCK_EXIT_BREAK,
 		nil,
@@ -43,7 +44,7 @@ func (this *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, er
 	return &ContinueNode{}, nil
 }
 
-func (this *ContinueNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *ContinueNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	return &BlockExitPayload{
 		BLOCK_EXIT_CONTINUE,
 		nil,
@@ -72,7 +73,7 @@ func (this *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error)
 	return nil, errors.New("Internal coding error: Statement should not be reached.")
 }
 
-func (this *ReturnNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *ReturnNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	if this.returnValueExpression == nil {
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VOID,

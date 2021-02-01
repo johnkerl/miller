@@ -15,6 +15,7 @@ import (
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -247,7 +248,7 @@ func (this *RootNode) ProcessEndOfStream() {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) ExecuteBeginBlocks(state *State) error {
+func (this *RootNode) ExecuteBeginBlocks(state *runtime.State) error {
 	for _, beginBlock := range this.beginBlocks {
 		_, err := beginBlock.Execute(state)
 		if err != nil {
@@ -258,13 +259,13 @@ func (this *RootNode) ExecuteBeginBlocks(state *State) error {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) ExecuteMainBlock(state *State) (outrec *types.Mlrmap, err error) {
+func (this *RootNode) ExecuteMainBlock(state *runtime.State) (outrec *types.Mlrmap, err error) {
 	_, err = this.mainBlock.Execute(state)
 	return state.Inrec, err
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) ExecuteEndBlocks(state *State) error {
+func (this *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 	for _, endBlock := range this.endBlocks {
 		_, err := endBlock.Execute(state)
 		if err != nil {

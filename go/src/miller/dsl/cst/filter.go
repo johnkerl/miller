@@ -9,6 +9,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 )
 
 // ----------------------------------------------------------------
@@ -32,7 +33,7 @@ func (this *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutabl
 	}, nil
 }
 
-func (this *FilterStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *FilterStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 
 	filterResult := this.filterEvaluable.Evaluate(state)
 

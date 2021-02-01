@@ -12,6 +12,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -32,7 +33,7 @@ func (this *RootNode) BuildEnvironmentVariableNode(astNode *dsl.ASTNode) (*Envir
 	}, nil
 }
 
-func (this *EnvironmentVariableNode) Evaluate(state *State) types.Mlrval {
+func (this *EnvironmentVariableNode) Evaluate(state *runtime.State) types.Mlrval {
 	name := this.nameEvaluable.Evaluate(state)
 	if name.IsAbsent() {
 		return types.MlrvalFromAbsent()

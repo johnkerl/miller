@@ -9,6 +9,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -117,7 +118,7 @@ func (this *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 }
 
 // ----------------------------------------------------------------
-func (this *IfChainNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for _, ifItem := range this.ifItems {
 		condition := types.MlrvalFromTrue()
 		if ifItem.conditionNode != nil {

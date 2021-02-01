@@ -5,7 +5,7 @@ See [go/src/miller/dsl/README.md](https://github.com/johnkerl/miller/blob/master
 * [`types.go`](./types.go) is a starting point for seeing datatypes involved in the concrete syntax tree.
   * `IExecutable` is the interface for executable nodes, such as assignment statements, or statement blocks (if-bodies, etc.).
   * `IEvaluable` is the interface for evaluable expressions (e.g. right-hand sides of assignment statements).
-* [`root.go`](./root.go) contains the top-level logic for building a CST from an AST at parse time (`cstRoot, err := cst.Build(astRoot)`), as well as executing the CST on a per-record basis (`cstRoot.Execute(cstState)`). See also the [`put` transformer](../../transformers/put_or_filter.go).
+* [`root.go`](./root.go) contains the top-level logic for building a CST from an AST at parse time (`cstRoot, err := cst.Build(astRoot)`), as well as executing the CST on a per-record basis (`cstRoot.Execute(runtimeState)`). See also the [`put` transformer](../../transformers/put_or_filter.go).
 
 ## Notes
 

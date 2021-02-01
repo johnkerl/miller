@@ -10,6 +10,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -42,7 +43,7 @@ func (this *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, 
 }
 
 // ----------------------------------------------------------------
-func (this *CondBlockNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *CondBlockNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	condition := types.MlrvalFromTrue()
 	if this.conditionNode != nil {
 		condition = this.conditionNode.Evaluate(state)

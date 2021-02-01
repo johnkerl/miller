@@ -13,6 +13,7 @@ import (
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -151,7 +152,7 @@ import (
 // ================================================================
 type tPrintToRedirectFunc func(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error
 
 type PrintStatementNode struct {
@@ -300,7 +301,7 @@ func (this *RootNode) buildPrintxStatementNode(
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	if len(this.expressionEvaluables) == 0 {
 		this.printToRedirectFunc(this.terminator, state)
 	} else {
@@ -330,7 +331,7 @@ func (this *PrintStatementNode) Execute(state *State) (*BlockExitPayload, error)
 // ----------------------------------------------------------------
 func (this *PrintStatementNode) printToStdout(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error {
 	// Insert the string into the record-output stream, so that goroutine can
 	// print it, resulting in deterministic output-ordering.
@@ -341,7 +342,7 @@ func (this *PrintStatementNode) printToStdout(
 // ----------------------------------------------------------------
 func (this *PrintStatementNode) printToStderr(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error {
 	fmt.Fprint(os.Stderr, outputString)
 	return nil
@@ -350,7 +351,7 @@ func (this *PrintStatementNode) printToStderr(
 // ----------------------------------------------------------------
 func (this *PrintStatementNode) printToFileOrPipe(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error {
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {

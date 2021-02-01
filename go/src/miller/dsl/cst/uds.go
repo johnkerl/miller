@@ -10,6 +10,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -56,7 +57,7 @@ func NewUDSCallsite(
 	}
 }
 
-func (this *UDSCallsite) Execute(state *State) (*BlockExitPayload, error) {
+func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	lib.InternalCodingErrorIf(this.argumentNodes == nil)
 	lib.InternalCodingErrorIf(this.uds == nil)
 	lib.InternalCodingErrorIf(this.uds.subroutineBody == nil)
@@ -120,11 +121,11 @@ func (this *UDSCallsite) Execute(state *State) (*BlockExitPayload, error) {
 	}
 
 	// Bind the arguments to the parameters
-	state.stack.PushStackFrameSet()
-	defer state.stack.PopStackFrameSet()
+	state.Stack.PushStackFrameSet()
+	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.stack.BindVariable(this.uds.signature.typeGatedParameterNames[i].Name, &argument)
+		state.Stack.BindVariable(this.uds.signature.typeGatedParameterNames[i].Name, &argument)
 	}
 
 	// Execute the subroutine body.

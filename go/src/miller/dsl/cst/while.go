@@ -9,6 +9,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 )
 
 // ================================================================
@@ -47,7 +48,7 @@ func (this *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, 
 }
 
 // ----------------------------------------------------------------
-func (this *WhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for {
 		condition := this.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
@@ -117,7 +118,7 @@ func (this *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNo
 }
 
 // ----------------------------------------------------------------
-func (this *DoWhileLoopNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for {
 		blockExitPayload, err := this.statementBlockNode.Execute(state)
 		if err != nil {

@@ -13,6 +13,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -92,7 +93,7 @@ func (this *RootNode) BuildIndirectFieldValueNode(
 		fieldNameEvaluable: fieldNameEvaluable,
 	}, nil
 }
-func (this *IndirectFieldValueNode) Evaluate(state *State) types.Mlrval { // xxx err
+func (this *IndirectFieldValueNode) Evaluate(state *runtime.State) types.Mlrval { // xxx err
 	fieldName := this.fieldNameEvaluable.Evaluate(state)
 	if fieldName.IsAbsent() {
 		return types.MlrvalFromAbsent()
@@ -131,7 +132,7 @@ func (this *RootNode) BuildIndirectOosvarValueNode(
 	}, nil
 }
 
-func (this *IndirectOosvarValueNode) Evaluate(state *State) types.Mlrval { // xxx err
+func (this *IndirectOosvarValueNode) Evaluate(state *runtime.State) types.Mlrval { // xxx err
 	oosvarName := this.oosvarNameEvaluable.Evaluate(state)
 	if oosvarName.IsAbsent() {
 		return types.MlrvalFromAbsent()

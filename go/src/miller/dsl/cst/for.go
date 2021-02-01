@@ -9,6 +9,7 @@ import (
 
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -114,7 +115,7 @@ func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //   '
 //
 
-func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	mlrval := this.indexableNode.Evaluate(state)
 
 	if mlrval.IsMap() {
@@ -122,12 +123,12 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 		mapval := mlrval.GetMap()
 
 		// Make a frame for the loop variable(s)
-		state.stack.PushStackFrame()
-		defer state.stack.PopStackFrame()
+		state.Stack.PushStackFrame()
+		defer state.Stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.stack.BindVariable(this.variableName, &mapkey)
+			state.Stack.BindVariable(this.variableName, &mapkey)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -156,10 +157,10 @@ func (this *ForLoopOneVariableNode) Execute(state *State) (*BlockExitPayload, er
 		// Go storage ("zindex") is 0-up.
 
 		// Make a frame for the loop variable(s)
-		state.stack.PushStackFrame()
-		defer state.stack.PopStackFrame()
+		state.Stack.PushStackFrame()
+		defer state.Stack.PopStackFrame()
 		for _, element := range arrayval {
-			state.stack.BindVariable(this.variableName, &element)
+			state.Stack.BindVariable(this.variableName, &element)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -291,7 +292,7 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //   '
 //
 
-func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	mlrval := this.indexableNode.Evaluate(state)
 
 	if mlrval.IsMap() {
@@ -299,13 +300,13 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 		mapval := mlrval.GetMap()
 
 		// Make a frame for the loop variable(s)
-		state.stack.PushStackFrame()
-		defer state.stack.PopStackFrame()
+		state.Stack.PushStackFrame()
+		defer state.Stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.stack.BindVariable(this.keyVariableName, &mapkey)
-			state.stack.BindVariable(this.valueVariableName, pe.Value)
+			state.Stack.BindVariable(this.keyVariableName, &mapkey)
+			state.Stack.BindVariable(this.valueVariableName, pe.Value)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -334,13 +335,13 @@ func (this *ForLoopTwoVariableNode) Execute(state *State) (*BlockExitPayload, er
 		// Go storage ("zindex") is 0-up.
 
 		// Make a frame for the loop variable(s)
-		state.stack.PushStackFrame()
-		defer state.stack.PopStackFrame()
+		state.Stack.PushStackFrame()
+		defer state.Stack.PopStackFrame()
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.stack.BindVariable(this.keyVariableName, &mindex)
-			state.stack.BindVariable(this.valueVariableName, &element)
+			state.Stack.BindVariable(this.keyVariableName, &mindex)
+			state.Stack.BindVariable(this.valueVariableName, &element)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -475,12 +476,12 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 //   '
 //
 
-func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	mlrval := this.indexableNode.Evaluate(state)
 
 	// Make a frame for the loop variables
-	state.stack.PushStackFrame()
-	defer state.stack.PopStackFrame()
+	state.Stack.PushStackFrame()
+	defer state.Stack.PopStackFrame()
 
 	// Miller's multi-variable loops, in the Miller DSL, have a single {...}
 	// but are implemented in Go via multiple, recursive functions.  A break
@@ -503,7 +504,7 @@ func (this *ForLoopMultivariableNode) Execute(state *State) (*BlockExitPayload, 
 func (this *ForLoopMultivariableNode) executeOuter(
 	mlrval *types.Mlrval,
 	keyVariableNames []string,
-	state *State,
+	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	if len(keyVariableNames) == 1 {
 		return this.executeInner(mlrval, keyVariableNames[0], state)
@@ -516,7 +517,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.stack.BindVariable(keyVariableNames[0], &mapkey)
+			state.Stack.BindVariable(keyVariableNames[0], &mapkey)
 
 			blockExitPayload, err := this.executeOuter(pe.Value, keyVariableNames[1:], state)
 			if err != nil {
@@ -546,7 +547,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.stack.BindVariable(keyVariableNames[0], &mindex)
+			state.Stack.BindVariable(keyVariableNames[0], &mindex)
 
 			blockExitPayload, err := this.executeOuter(&element, keyVariableNames[1:], state)
 			if err != nil {
@@ -590,7 +591,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 func (this *ForLoopMultivariableNode) executeInner(
 	mlrval *types.Mlrval,
 	keyVariableName string,
-	state *State,
+	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	if mlrval.IsMap() {
 		mapval := mlrval.GetMap()
@@ -598,8 +599,8 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.stack.BindVariable(keyVariableName, &mapkey)
-			state.stack.BindVariable(this.valueVariableName, pe.Value)
+			state.Stack.BindVariable(keyVariableName, &mapkey)
+			state.Stack.BindVariable(this.valueVariableName, pe.Value)
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
@@ -630,8 +631,8 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.stack.BindVariable(keyVariableName, &mindex)
-			state.stack.BindVariable(this.valueVariableName, &element)
+			state.Stack.BindVariable(keyVariableName, &mindex)
+			state.Stack.BindVariable(this.valueVariableName, &element)
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
@@ -804,10 +805,10 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 //   '
 //
 
-func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// Make a frame for the loop variables.
-	state.stack.PushStackFrame()
-	defer state.stack.PopStackFrame()
+	state.Stack.PushStackFrame()
+	defer state.Stack.PopStackFrame()
 
 	// Use ExecuteFrameless here, otherwise the start-statements would be
 	// within an ephemeral, isolated frame and not accessible to the remaining
@@ -818,7 +819,7 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 	}
 
 	for {
-		// state.stack.Dump()
+		// state.Stack.Dump()
 		// empty is true
 		if this.continuationExpressionNode != nil {
 			continuationValue := this.continuationExpressionNode.Evaluate(state)
@@ -852,13 +853,13 @@ func (this *TripleForLoopNode) Execute(state *State) (*BlockExitPayload, error) 
 		}
 
 		// The loop body will push its own frame.
-		state.stack.PushStackFrame()
+		state.Stack.PushStackFrame()
 		_, err = this.updateBlockNode.ExecuteFrameless(state)
 		if err != nil {
-			state.stack.PopStackFrame()
+			state.Stack.PopStackFrame()
 			return nil, err
 		}
-		state.stack.PopStackFrame()
+		state.Stack.PopStackFrame()
 	}
 
 	return nil, nil

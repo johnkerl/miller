@@ -13,6 +13,7 @@ import (
 	"miller/lib"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
+	"miller/runtime"
 	"miller/transforming"
 	"miller/types"
 )
@@ -274,7 +275,7 @@ semicolons to separate expressions.)
 type TransformerPut struct {
 	astRootNode          *dsl.AST
 	cstRootNode          *cst.RootNode
-	cstState             *cst.State
+	runtimeState         *runtime.State
 	callCount            int
 	invertFilter         bool
 	suppressOutputRecord bool
@@ -306,7 +307,7 @@ func NewTransformerPut(
 	}
 
 	cstRootNode, err := cst.Build(astRootNode, isFilter, recordWriterOptions)
-	cstState := cst.NewEmptyState()
+	runtimeState := runtime.NewEmptyState()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
@@ -330,14 +331,14 @@ func NewTransformerPut(
 			key := pair[0]
 			svalue := pair[1]
 			mvalue := types.MlrvalFromInferredType(svalue)
-			cstState.Oosvars.PutCopy(key, &mvalue)
+			runtimeState.Oosvars.PutCopy(key, &mvalue)
 		}
 	}
 
 	return &TransformerPut{
 		astRootNode:          astRootNode,
 		cstRootNode:          cstRootNode,
-		cstState:             cstState,
+		runtimeState:         runtimeState,
 		callCount:            0,
 		invertFilter:         invertFilter,
 		suppressOutputRecord: suppressOutputRecord,
@@ -381,7 +382,7 @@ func (this *TransformerPut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.cstState.OutputChannel = outputChannel
+	this.runtimeState.OutputChannel = outputChannel
 
 	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
@@ -390,8 +391,8 @@ func (this *TransformerPut) Transform(
 		// Execute the begin { ... } before the first input record
 		this.callCount++
 		if this.callCount == 1 {
-			this.cstState.Update(nil, &context)
-			err := this.cstRootNode.ExecuteBeginBlocks(this.cstState)
+			this.runtimeState.Update(nil, &context)
+			err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
@@ -399,17 +400,17 @@ func (this *TransformerPut) Transform(
 			this.executedBeginBlocks = true
 		}
 
-		this.cstState.Update(inrec, &context)
+		this.runtimeState.Update(inrec, &context)
 
 		// Execute the main block on the current input record
-		outrec, err := this.cstRootNode.ExecuteMainBlock(this.cstState)
+		outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
 		if !this.suppressOutputRecord {
-			wantToEmit := lib.BooleanXOR(this.cstState.FilterResult, this.invertFilter)
+			wantToEmit := lib.BooleanXOR(this.runtimeState.FilterResult, this.invertFilter)
 			if wantToEmit {
 				outputChannel <- types.NewRecordAndContext(
 					outrec,
@@ -419,12 +420,12 @@ func (this *TransformerPut) Transform(
 		}
 
 	} else {
-		this.cstState.Update(nil, &context)
+		this.runtimeState.Update(nil, &context)
 
 		// If there were no input records then we never executed the
 		// begin-blocks. Do so now.
 		if this.executedBeginBlocks == false {
-			err := this.cstRootNode.ExecuteBeginBlocks(this.cstState)
+			err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
@@ -432,7 +433,7 @@ func (this *TransformerPut) Transform(
 		}
 
 		// Execute the end { ... } after the last input record
-		err := this.cstRootNode.ExecuteEndBlocks(this.cstState)
+		err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

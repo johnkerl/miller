@@ -25,13 +25,14 @@ import (
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
+	"miller/runtime"
 	"miller/types"
 )
 
 // ================================================================
 type tDumpToRedirectFunc func(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error
 
 type DumpStatementNode struct {
@@ -157,7 +158,7 @@ func (this *RootNode) buildDumpxStatementNode(
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// 5x faster than fmt.Dump() separately: note that os.Stdout is
 	// non-buffered in Go whereas stdout is buffered in C.
 	//
@@ -184,7 +185,7 @@ func (this *DumpStatementNode) Execute(state *State) (*BlockExitPayload, error) 
 // ----------------------------------------------------------------
 func (this *DumpStatementNode) dumpToStdout(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error {
 	// Insert the string into the record-output stream, so that goroutine can
 	// print it, resulting in deterministic output-ordering.
@@ -195,7 +196,7 @@ func (this *DumpStatementNode) dumpToStdout(
 // ----------------------------------------------------------------
 func (this *DumpStatementNode) dumpToStderr(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error {
 	fmt.Fprintf(os.Stderr, outputString)
 	return nil
@@ -204,7 +205,7 @@ func (this *DumpStatementNode) dumpToStderr(
 // ----------------------------------------------------------------
 func (this *DumpStatementNode) dumpToFileOrPipe(
 	outputString string,
-	state *State,
+	state *runtime.State,
 ) error {
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {

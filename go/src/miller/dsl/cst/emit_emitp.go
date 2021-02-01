@@ -37,6 +37,7 @@ import (
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -45,7 +46,7 @@ import (
 
 type tEmitToRedirectFunc func(
 	newrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error
 
 type EmitXStatementNode struct {
@@ -255,13 +256,13 @@ func (this *RootNode) buildEmittableNode(
 }
 
 // ================================================================
-func (this *EmitXStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	return this.executorFunc(state)
 }
 
 // ----------------------------------------------------------------
 func (this *EmitXStatementNode) executeNonIndexed(
-	state *State,
+	state *runtime.State,
 ) (*BlockExitPayload, error) {
 
 	newrec := types.NewMlrmapAsRecord()
@@ -290,7 +291,7 @@ func (this *EmitXStatementNode) executeNonIndexed(
 
 // ----------------------------------------------------------------
 func (this *EmitXStatementNode) executeIndexed(
-	state *State,
+	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	emittableMaps := make([]*types.Mlrmap, len(this.emitEvaluables))
 	for i, emitEvaluable := range this.emitEvaluables {
@@ -334,7 +335,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 	templateRecord *types.Mlrmap,
 	emittableMaps []*types.Mlrmap,
 	indices []types.Mlrval,
-	state *State,
+	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 	index := indices[0]
@@ -407,7 +408,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 // ----------------------------------------------------------------
 func (this *EmitXStatementNode) emitToRecordStream(
 	outrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error {
 	state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
 	return nil
@@ -416,7 +417,7 @@ func (this *EmitXStatementNode) emitToRecordStream(
 // ----------------------------------------------------------------
 func (this *EmitXStatementNode) emitToFileOrPipe(
 	outrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error {
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {

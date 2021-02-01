@@ -8,6 +8,7 @@ package cst
 import (
 	"miller/dsl"
 	"miller/lib"
+	"miller/runtime"
 )
 
 // ----------------------------------------------------------------
@@ -93,9 +94,9 @@ func (this *RootNode) BuildStatementBlockNode(
 }
 
 // ----------------------------------------------------------------
-func (this *StatementBlockNode) Execute(state *State) (*BlockExitPayload, error) {
-	state.stack.PushStackFrame()
-	defer state.stack.PopStackFrame()
+func (this *StatementBlockNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	state.Stack.PushStackFrame()
+	defer state.Stack.PopStackFrame()
 	for _, statement := range this.executables {
 		blockExitPayload, err := statement.Execute(state)
 		if err != nil {
@@ -119,7 +120,7 @@ func (this *StatementBlockNode) Execute(state *State) (*BlockExitPayload, error)
 // the 'i = 0' and 'i += 1' are StatementBlocks and if they pushed their
 // own stack frame then the 'i=0' would be in an evanescent, isolated frame.
 
-func (this *StatementBlockNode) ExecuteFrameless(state *State) (*BlockExitPayload, error) {
+func (this *StatementBlockNode) ExecuteFrameless(state *runtime.State) (*BlockExitPayload, error) {
 	for _, statement := range this.executables {
 		blockExitPayload, err := statement.Execute(state)
 		if err != nil {

@@ -11,6 +11,7 @@ import (
 	"miller/dsl"
 	"miller/lib"
 	"miller/output"
+	"miller/runtime"
 	"miller/types"
 )
 
@@ -58,7 +59,7 @@ import (
 // ================================================================
 type tTeeToRedirectFunc func(
 	outrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error
 
 type TeeStatementNode struct {
@@ -139,7 +140,7 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 }
 
 // ----------------------------------------------------------------
-func (this *TeeStatementNode) Execute(state *State) (*BlockExitPayload, error) {
+func (this *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	evaluation := this.expressionEvaluable.Evaluate(state)
 	if !evaluation.IsMap() {
 		return nil, errors.New(
@@ -156,7 +157,7 @@ func (this *TeeStatementNode) Execute(state *State) (*BlockExitPayload, error) {
 // ----------------------------------------------------------------
 func (this *TeeStatementNode) teeToFileOrPipe(
 	outrec *types.Mlrmap,
-	state *State,
+	state *runtime.State,
 ) error {
 	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
