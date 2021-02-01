@@ -115,24 +115,25 @@ func (this *Repl) HandleSession(istream *os.File) {
 			os.Exit(1)
 		}
 
-		chompedLine := strings.TrimRight(line, "\n")
+		// This trims the trailing newline, as well as leading/trailing
+		// whitespace:
+		trimmedLine := strings.TrimSpace(line)
 
 		if !this.doingMultilineInput {
-
-			if chompedLine == "<" {
+			if trimmedLine == "<" {
 				this.doingMultilineInput = true
 				dslString = ""
 				continue
-			} else if chompedLine == ":quit" {
+			} else if trimmedLine == ":quit" {
 				break
-			} else if this.HandleNonDSLLine(chompedLine) {
+			} else if this.handleNonDSLLine(trimmedLine) {
 				continue
 			} else {
 				dslString = line
 			}
 
 		} else {
-			if chompedLine == ">" {
+			if trimmedLine == ">" {
 				this.doingMultilineInput = false
 			} else {
 				dslString += line
@@ -163,15 +164,34 @@ func (this *Repl) HandleSession(istream *os.File) {
 }
 
 // ----------------------------------------------------------------
-func (this *Repl) HandleNonDSLLine(chompedLine string) bool {
-	if chompedLine == ":help" || chompedLine == "?" {
-		fmt.Println("On-line help is TBD! :)")
+func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
+	args := strings.Fields(trimmedLine)
+	if len(args) == 0 {
+		return false
+	}
+	verb := args[0]
+	// Make a lookup-table maybe
+	if verb == ":help" || verb == "?" {
+		this.handleHelp(args)
 		return true
 	}
 
 	// TODO: :help/? {funcname/keyword}
 
 	return false
+}
+
+// ----------------------------------------------------------------
+func (this *Repl) handleHelp(args []string) {
+	args = args[1:] // strip off verb
+	if len(args) == 0 {
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+	} else {
+		for _, arg := range args {
+			cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(arg, os.Stdout)
+		}
+	}
+	//verb := args[0]
 }
 
 // ----------------------------------------------------------------

@@ -1574,13 +1574,28 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 		fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
 			builtinFunctionInfo.name,
 			builtinFunctionInfo.class,
-			describeNargs(builtinFunctionInfo),
+			describeNargs(&builtinFunctionInfo),
 			builtinFunctionInfo.help,
 		)
 	}
 }
 
-func describeNargs(info BuiltinFunctionInfo) string {
+func (this *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string, o *os.File) {
+	builtinFunctionInfo := this.LookUp(functionName)
+	if builtinFunctionInfo == nil {
+		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
+		return
+	}
+	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
+	fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
+		builtinFunctionInfo.name,
+		builtinFunctionInfo.class,
+		describeNargs(builtinFunctionInfo),
+		builtinFunctionInfo.help,
+	)
+}
+
+func describeNargs(info *BuiltinFunctionInfo) string {
 	if info.hasMultipleArities {
 		pieces := make([]string, 0)
 		if info.zaryFunc != nil {
