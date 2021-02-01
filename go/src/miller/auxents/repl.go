@@ -201,6 +201,7 @@ func (this *Repl) HandleDSLString(dslString string) error {
 	// xxx temp
 	if !this.runtimeState.LastFilterResultDefined {
 		fmt.Println("undefined")
+		this.runtimeState.LastFilterResultDefined = true
 	}
 
 	return nil
