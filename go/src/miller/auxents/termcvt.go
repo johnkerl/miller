@@ -87,18 +87,18 @@ func termcvtMain(args []string) int {
 				os.Exit(1)
 			}
 
-			o, err := os.Open(tempname)
+			ostream, err := os.Open(tempname)
 			if err != nil {
 				// TODO: lib.MlrExeName()
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
 
-			termcvtFile(istream, o, inTerm, outTerm)
+			termcvtFile(istream, ostream, inTerm, outTerm)
 
 			istream.Close()
 			// TODO: check return status
-			o.Close()
+			ostream.Close()
 
 			err = os.Rename(tempname, filename)
 			if err != nil {
@@ -126,7 +126,7 @@ func termcvtMain(args []string) int {
 	return 0
 }
 
-func termcvtFile(istream *os.File, o *os.File, inTerm string, outTerm string) {
+func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm string) {
 	lineReader := bufio.NewReader(istream)
 	inTermFinal := []byte(inTerm[len(inTerm)-1:])[0] // bufio.Reader.ReadString takes char not string delimiter :(
 
@@ -144,6 +144,6 @@ func termcvtFile(istream *os.File, o *os.File, inTerm string, outTerm string) {
 
 		// This is how to do a chomp:
 		line = strings.TrimRight(line, inTerm)
-		o.Write([]byte(line + outTerm))
+		ostream.Write([]byte(line + outTerm))
 	}
 }

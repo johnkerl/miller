@@ -53,7 +53,7 @@ func hexMain(args []string) int {
 	}
 
 	if len(args) == 0 {
-		hexDumpFile(os.Stdin, os.Stdout, doRaw)
+		hexDumpFile(os.Stdin, doRaw)
 	} else {
 		for _, filename := range args {
 			// Print filename if there is more than one file, unless raw output
@@ -69,7 +69,7 @@ func hexMain(args []string) int {
 				os.Exit(1)
 			}
 
-			hexDumpFile(istream, os.Stdout, doRaw)
+			hexDumpFile(istream, doRaw)
 
 			istream.Close()
 			if !doRaw && len(args) > 1 {
@@ -81,7 +81,7 @@ func hexMain(args []string) int {
 	return 0
 }
 
-func hexDumpFile(istream *os.File, o *os.File, doRaw bool) {
+func hexDumpFile(istream *os.File, doRaw bool) {
 	const bytesPerClump = 4
 	const clumpsPerLine = 4
 	const bufferSize = bytesPerClump * clumpsPerLine

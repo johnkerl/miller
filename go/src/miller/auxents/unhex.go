@@ -47,7 +47,7 @@ func unhexMain(args []string) int {
 	return 0
 }
 
-func unhexFile(istream *os.File, o *os.File) {
+func unhexFile(istream *os.File, ostream *os.File) {
 	// Key insight is os.File implements io.Reader
 	lineReader := bufio.NewReader(istream)
 
@@ -88,7 +88,7 @@ func unhexFile(istream *os.File, o *os.File) {
 					os.Exit(1)
 				}
 				byteArray[0] = byte(scanValue)
-				o.Write(byteArray)
+				ostream.Write(byteArray)
 			}
 		}
 	}

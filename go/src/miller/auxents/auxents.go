@@ -32,6 +32,7 @@ func init() {
 		{"termcvt", termcvtMain, termcvtUsage},
 		{"hex", hexMain, hexUsage},
 		{"unhex", unhexMain, unhexUsage},
+		{"repl", replMain, replUsage},
 	}
 }
 
