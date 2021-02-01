@@ -73,8 +73,6 @@ func NewRepl() (*Repl, error) {
 	runtimeState := runtime.NewEmptyState()
 	runtimeState.Update(inrec, context)
 
-	// TODO: empty record
-
 	return &Repl{
 		prompt1:             prompt1,
 		prompt2:             prompt2,
@@ -145,21 +143,6 @@ func (this *Repl) HandleSession(istream *os.File) {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
-
-		// TODO:
-		// UTs
-		// take filenames & reader/writer options from CLI -- ?
-		// ?/:help -- w/o and w/ function name
-		// :some flag settings ... ? :--o json -- ?
-		// :open file (or stdin?)
-		// :next ....
-		// :close
-		// :continue
-		// :break conditions -- ?
-		// ^C -- ?!?
-		// auto-start/auto-end multiline mode w/ func/subr defs?
-		// [DONE] < start multiline
-		// [DONE] > end multiline
 	}
 }
 
@@ -176,8 +159,6 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 		return true
 	}
 
-	// TODO: :help/? {funcname/keyword}
-
 	return false
 }
 
@@ -191,7 +172,6 @@ func (this *Repl) handleHelp(args []string) {
 			cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(arg, os.Stdout)
 		}
 	}
-	//verb := args[0]
 }
 
 // ----------------------------------------------------------------

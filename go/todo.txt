@@ -14,16 +14,26 @@ TOP OF LIST:
 * port verb having-fields
 * port verb merge-fields
 * port verb stats2
+* note hexfmt for non-ints -- especially floats -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * repl foo:
   o isatty -- ?
-  o note hexfmt for non-ints -- especially floats -- ?!?
-  o multi-line inputs ...
-  o retain UDFs across dsl-strings ...
-  o :cmds to toggle things ... I/O formats; multi-line mode; AST-print mode; ...
   o no-op processing of absents is disconcerting
+
+  o UTs
+  o take filenames & reader/writer options from CLI -- ?
+  o :some flag settings ... ? :--o json -- ?
+    - especially toggle parex/etc
+
+  o :open file (or stdin?)
+  o :next ....
+  o :close
+  o :continue
+  o :break conditions -- ?
+  o ^C -- ?!?
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
