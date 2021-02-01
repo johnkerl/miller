@@ -264,6 +264,12 @@ func (this *RootNode) ExecuteMainBlock(state *runtime.State) (outrec *types.Mlrm
 	return state.Inrec, err
 }
 
+// src/miller/auxents/repl
+func (this *RootNode) ExecuteREPLExperimental(state *runtime.State) (outrec *types.Mlrmap, err error) {
+	_, err = this.mainBlock.ExecuteFrameless(state)
+	return state.Inrec, err
+}
+
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 	for _, endBlock := range this.endBlocks {

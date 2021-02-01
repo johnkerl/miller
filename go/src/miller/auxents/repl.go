@@ -6,26 +6,22 @@ package auxents
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"strings"
-)
 
-//	"errors"
-//	"fmt"
-//	"io/ioutil"
-//	"os"
-//	"strings"
-//
-//	"miller/cliutil"
-//	"miller/dsl"
-//	"miller/dsl/cst"
-//	"miller/lib"
-//	"miller/parsing/lexer"
-//	"miller/parsing/parser"
-//	"miller/transforming"
-//	"miller/types"
+	"miller/cliutil"
+	"miller/dsl"
+	"miller/dsl/cst"
+	"miller/lib"
+	"miller/output"
+	"miller/parsing/lexer"
+	"miller/parsing/parser"
+	"miller/runtime"
+	"miller/types"
+)
 
 func replUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: %s %s with no arguments\n", mlrExeName(), verbName)
@@ -33,32 +29,63 @@ func replUsage(verbName string, o *os.File, exitCode int) {
 }
 
 func replMain(args []string) int {
-	repl := NewRepl()
+	repl, err := NewRepl()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 	repl.HandleSession(os.Stdin)
 	return 0
 }
 
 // ================================================================
 type Repl struct {
-	// Idea: astPrint (parex or trindent)
+	prompt string
 
-	// recordReaderOptions *cliutil.TReaderOptions
-	// recordWriterOptions *cliutil.TWriterOptions
-	// astRootNode         *dsl.AST
-	// cstRootNode         *cst.RootNode
-	// cstState            *cst.State
-	// outputChannel       chan<-*types.RecordAndContext
+	verboseASTParse bool
 
+	options      cliutil.TOptions
+	context      *types.Context
+	recordWriter output.IRecordWriter
+
+	runtimeState *runtime.State
 }
 
-func NewRepl() *Repl {
-	return &Repl{}
+// ----------------------------------------------------------------
+func NewRepl() (*Repl, error) {
+	// https://pkg.go.dev/golang.org/x/term#IsTerminal
+	prompt := "[mlr] "
+
+	options := cliutil.DefaultOptions()
+	inrec := types.NewMlrmapAsRecord()
+	context := types.NewContext(&options)
+	recordWriter := output.Create(&options.WriterOptions)
+	if recordWriter == nil {
+		return nil, errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
+	}
+
+	runtimeState := runtime.NewEmptyState()
+	runtimeState.Update(inrec, context)
+
+	// TODO: empty record
+
+	return &Repl{
+		prompt:          prompt,
+		verboseASTParse: false,
+		options:         options,
+		context:         context,
+		recordWriter: recordWriter,
+		runtimeState:    runtimeState,
+	}, nil
 }
 
+// ----------------------------------------------------------------
 func (this *Repl) HandleSession(istream *os.File) {
 	lineReader := bufio.NewReader(istream)
 
 	for {
+		fmt.Print(this.prompt)
+
 		line, err := lineReader.ReadString('\n')
 		if err == io.EOF {
 			break
@@ -73,105 +100,79 @@ func (this *Repl) HandleSession(istream *os.File) {
 		// This is how to do a chomp:
 		line = strings.TrimRight(line, "\n")
 
-		this.HandleLine(line)
+		err = this.HandleDSLString(line)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
 	}
 }
 
-func (this *Repl) HandleLine(line string) {
+// ----------------------------------------------------------------
+func (this *Repl) HandleDSLString(dslString string) error {
 
-	//	if printASTOnly {
-	//		astRootNode, err := BuildASTFromStringWithMessage(dslString, false)
-	//		if err == nil {
-	//			if printASTSingleLine {
-	//				astRootNode.PrintParexOneLine()
-	//			} else {
-	//				astRootNode.PrintParex()
-	//			}
-	//		// xxx astRootNode.Print()
-	//			os.Exit(0)
-	//		} else {
-	//			// error message already printed out
-	//			os.Exit(1)
-	//		}
-	//	}
+	astRootNode, err := this.BuildASTFromStringWithMessage(dslString, this.verboseASTParse)
+	if err != nil {
+		// Error message already printed out
+		return err
+	}
 
+	cstRootNode, err := cst.Build(astRootNode, false /*isFilter*/, &this.options.WriterOptions)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return err
+	}
+
+	outrec, err := cstRootNode.ExecuteREPLExperimental(this.runtimeState)
+	if err != nil {
+		return err
+	}
+
+	if false { // not interesting ... maybe with a CLI flag ...
+		this.recordWriter.Write(outrec, os.Stdout)
+	}
+
+	return nil
 }
 
-//	astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
-//	if err != nil {
-//		// Error message already printed out
-//		return nil, err
-//	}
+// ----------------------------------------------------------------
+func (this *Repl) BuildASTFromStringWithMessage(
+	dslString string,
+	verbose bool,
+) (*dsl.AST, error) {
+	astRootNode, err := this.BuildASTFromString(dslString)
+	if err != nil {
+		// Leave this out until we get better control over the error-messaging.
+		// At present it's overly parser-internal, and confusing. :(
+		// fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
+			lib.MlrExeName())
+		if verbose {
+			fmt.Fprintln(os.Stderr, dslString)
+		}
+		fmt.Fprintln(os.Stderr, err)
+		return nil, err
+	} else {
 
-//
-//	cstRootNode, err := cst.Build(astRootNode, isFilter, recordWriterOptions)
-//	cstState := cst.NewEmptyState()
-//	if err != nil {
-//		fmt.Fprintln(os.Stderr, err)
-//		return nil, err
-//	}
+		//	if printASTSingleLine {
+		//		astRootNode.PrintParexOneLine()
+		//	} else if xxx {
+		//		astRootNode.PrintParex()
+		//	} else {
+		//		astRootNode.Print()
+		//	}
 
-//func BuildASTFromStringWithMessage(dslString string, verbose bool) (*dsl.AST, error) {
-//	astRootNode, err := BuildASTFromString(dslString)
-//	if err != nil {
-//		// Leave this out until we get better control over the error-messaging.
-//		// At present it's overly parser-internal, and confusing. :(
-//		// fmt.Fprintln(os.Stderr, err)
-//		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-//			lib.MlrExeName())
-//		if verbose {
-//			fmt.Fprintln(os.Stderr, dslString)
-//		}
-//		fmt.Fprintln(os.Stderr, err)
-//		return nil, err
-//	} else {
-//		return astRootNode, nil
-//	}
-//}
+		return astRootNode, nil
+	}
+}
 
-//func BuildASTFromString(dslString string) (*dsl.AST, error) {
-//	theLexer := lexer.NewLexer([]byte(dslString))
-//	theParser := parser.NewParser()
-//	interfaceAST, err := theParser.Parse(theLexer)
-//	if err != nil {
-//		return nil, err
-//	}
-//	astRootNode := interfaceAST.(*dsl.AST)
-//	return astRootNode, nil
-//}
-
-//	this.cstState.OutputChannel = outputChannel
-//
-//	inrec := inrecAndContext.Record
-//	context := inrecAndContext.Context
-//	if !inrecAndContext.EndOfStream {
-//
-//		if this.callCount == 1 {
-//			this.cstState.Update(nil, &context)
-//			err := this.cstRootNode.ExecuteBeginBlocks(this.cstState)
-//			if err != nil {
-//				fmt.Fprintln(os.Stderr, err)
-//				os.Exit(1)
-//			}
-//			this.executedBeginBlocks = true
-//		}
-//
-//		this.cstState.Update(inrec, &context)
-
-//		// Execute the main block on the current input record
-//		outrec, err := this.cstRootNode.ExecuteMainBlock(this.cstState)
-//		if err != nil {
-//			fmt.Fprintln(os.Stderr, err)
-//			os.Exit(1)
-//		}
-
-//			outputChannel <- types.NewRecordAndContext(
-//				outrec,
-//				&context,
-//			)
-//
-//		// Send all registered OutputHandlerManager instances the end-of-stream
-//		// indicator.
-//		this.cstRootNode.ProcessEndOfStream()
-//
-//		outputChannel <- types.NewEndOfStreamMarker(&context)
+// ----------------------------------------------------------------
+func (this *Repl) BuildASTFromString(dslString string) (*dsl.AST, error) {
+	theLexer := lexer.NewLexer([]byte(dslString))
+	theParser := parser.NewParser()
+	interfaceAST, err := theParser.Parse(theLexer)
+	if err != nil {
+		return nil, err
+	}
+	astRootNode := interfaceAST.(*dsl.AST)
+	return astRootNode, nil
+}

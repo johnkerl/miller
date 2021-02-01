@@ -410,7 +410,13 @@ func (this *EmitXStatementNode) emitToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
+	// The output channel is always non-nil, except for the (very experimental)
+	// REPL in src/miller/auxents.
+	if state.OutputChannel != nil {
+		state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
+	} else {
+		fmt.Println(outrec.String())
+	}
 	return nil
 }
 

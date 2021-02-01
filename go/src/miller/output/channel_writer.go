@@ -10,7 +10,7 @@ import (
 func ChannelWriter(
 	outputChannel <-chan *types.RecordAndContext,
 	recordWriter IRecordWriter,
-	done chan<- bool,
+	doneChannel chan<- bool,
 	ostream io.WriteCloser,
 ) {
 	for {
@@ -43,7 +43,7 @@ func ChannelWriter(
 			// records before printing any, since it needs to compute max width
 			// down columns.
 			recordWriter.Write(nil, ostream)
-			done <- true
+			doneChannel <- true
 			break
 		}
 	}
