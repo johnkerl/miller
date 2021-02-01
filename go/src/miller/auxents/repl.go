@@ -123,17 +123,10 @@ func (this *Repl) HandleSession(istream *os.File) {
 				this.doingMultilineInput = true
 				dslString = ""
 				continue
-			// TODO: split out a helper function for non-DSL lines
-			// else if :quit
-			// else if :help
-			// else if :help foo
-			// else if ?
-			// else if ? foo
-			} else if chompedLine == ":help" || chompedLine == "?"{
-				fmt.Println("On-line help is TBD! :)")
-				continue
 			} else if chompedLine == ":quit" {
 				break
+			} else if this.HandleNonDSLLine(chompedLine) {
+				continue
 			} else {
 				dslString = line
 			}
@@ -167,6 +160,18 @@ func (this *Repl) HandleSession(istream *os.File) {
 		// [DONE] < start multiline
 		// [DONE] > end multiline
 	}
+}
+
+// ----------------------------------------------------------------
+func (this *Repl) HandleNonDSLLine(chompedLine string) bool {
+	if chompedLine == ":help" || chompedLine == "?" {
+		fmt.Println("On-line help is TBD! :)")
+		return true
+	}
+
+	// TODO: :help/? {funcname/keyword}
+
+	return false
 }
 
 // ----------------------------------------------------------------
