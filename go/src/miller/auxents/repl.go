@@ -117,17 +117,34 @@ func (this *Repl) HandleSession(istream *os.File) {
 
 		chompedLine := strings.TrimRight(line, "\n")
 
-		if chompedLine == "<" && !this.doingMultilineInput {
-			this.doingMultilineInput = true
-			dslString = ""
-			continue
-		} else if chompedLine == ">" && this.doingMultilineInput {
-			this.doingMultilineInput = false
-		} else if this.doingMultilineInput {
-			dslString += line
-			continue
+		if !this.doingMultilineInput {
+
+			if chompedLine == "<" {
+				this.doingMultilineInput = true
+				dslString = ""
+				continue
+			// TODO: split out a helper function for non-DSL lines
+			// else if :quit
+			// else if :help
+			// else if :help foo
+			// else if ?
+			// else if ? foo
+			} else if chompedLine == ":help" || chompedLine == "?"{
+				fmt.Println("On-line help is TBD! :)")
+				continue
+			} else if chompedLine == ":quit" {
+				break
+			} else {
+				dslString = line
+			}
+
 		} else {
-			dslString = line
+			if chompedLine == ">" {
+				this.doingMultilineInput = false
+			} else {
+				dslString += line
+				continue
+			}
 		}
 
 		err = this.HandleDSLString(dslString)
@@ -136,6 +153,7 @@ func (this *Repl) HandleSession(istream *os.File) {
 		}
 
 		// TODO:
+		// UTs
 		// take filenames & reader/writer options from CLI -- ?
 		// ?/:help -- w/o and w/ function name
 		// :some flag settings ... ? :--o json -- ?
