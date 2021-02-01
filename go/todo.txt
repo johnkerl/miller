@@ -17,6 +17,15 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* repl foo:
+  o isatty -- ?
+  o note hexfmt for non-ints -- especially floats -- ?!?
+  o multi-line inputs ...
+  o retain UDFs across dsl-strings ...
+  o :cmds to toggle things -- ?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! regex ...
