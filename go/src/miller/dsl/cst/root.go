@@ -37,13 +37,12 @@ func NewEmptyRoot(
 }
 
 // ----------------------------------------------------------------
-func Build(
+func (this *RootNode) Build(
 	ast *dsl.AST,
 	isFilter bool, // false for 'mlr put', true for 'mlr filter'
-	recordWriterOptions *cliutil.TWriterOptions,
-) (*RootNode, error) {
+) error {
 	if ast.RootNode == nil {
-		return nil, errors.New("Cannot build CST from nil AST root")
+		return errors.New("Cannot build CST from nil AST root")
 	}
 
 	// Check for things that are syntax errors but not done in the AST for
@@ -51,27 +50,25 @@ func Build(
 	// begin/end/func not at top level; etc.
 	err := ValidateAST(ast, isFilter)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cstRoot := NewEmptyRoot(recordWriterOptions)
-
-	err = cstRoot.buildMainPass(ast)
+	err = this.buildMainPass(ast)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = cstRoot.resolveFunctionCallsites()
+	err = this.resolveFunctionCallsites()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = cstRoot.resolveSubroutineCallsites()
+	err = this.resolveSubroutineCallsites()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return cstRoot, nil
+	return nil
 }
 
 // ----------------------------------------------------------------
@@ -264,12 +261,6 @@ func (this *RootNode) ExecuteMainBlock(state *runtime.State) (outrec *types.Mlrm
 	return state.Inrec, err
 }
 
-// src/miller/auxents/repl
-func (this *RootNode) ExecuteREPLExperimental(state *runtime.State) (outrec *types.Mlrmap, err error) {
-	_, err = this.mainBlock.ExecuteFrameless(state)
-	return state.Inrec, err
-}
-
 // ----------------------------------------------------------------
 func (this *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 	for _, endBlock := range this.endBlocks {
@@ -279,4 +270,20 @@ func (this *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 		}
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------
+// src/miller/auxents/repl
+// TODO: more comments
+func (this *RootNode) ExecuteREPLExperimental(state *runtime.State) (outrec *types.Mlrmap, err error) {
+	_, err = this.mainBlock.ExecuteFrameless(state)
+	return state.Inrec, err
+}
+
+func (this *RootNode) ResetForREPL() {
+	this.beginBlocks = make([]*StatementBlockNode, 0)
+	this.mainBlock = NewStatementBlockNode()
+	this.endBlocks = make([]*StatementBlockNode, 0)
+	this.unresolvedFunctionCallsites = list.New()
+	this.unresolvedSubroutineCallsites = list.New()
 }

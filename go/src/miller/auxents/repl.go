@@ -40,9 +40,13 @@ func replMain(args []string) int {
 
 // ================================================================
 type Repl struct {
-	prompt string
+	prompt1             string
+	prompt2             string
+	doingMultilineInput bool
 
 	verboseASTParse bool
+	isFilter        bool
+	cstRootNode     *cst.RootNode
 
 	options      cliutil.TOptions
 	context      *types.Context
@@ -54,7 +58,9 @@ type Repl struct {
 // ----------------------------------------------------------------
 func NewRepl() (*Repl, error) {
 	// https://pkg.go.dev/golang.org/x/term#IsTerminal
-	prompt := "[mlr] "
+	prompt1 := "[mlr] "
+	prompt2 := ""
+	doingMultilineInput := false
 
 	options := cliutil.DefaultOptions()
 	inrec := types.NewMlrmapAsRecord()
@@ -70,21 +76,33 @@ func NewRepl() (*Repl, error) {
 	// TODO: empty record
 
 	return &Repl{
-		prompt:          prompt,
+		prompt1:             prompt1,
+		prompt2:             prompt2,
+		doingMultilineInput: doingMultilineInput,
+
 		verboseASTParse: false,
-		options:         options,
-		context:         context,
+		isFilter:        false,
+		cstRootNode:     cst.NewEmptyRoot(&options.WriterOptions),
+
+		options:      options,
+		context:      context,
 		recordWriter: recordWriter,
-		runtimeState:    runtimeState,
+
+		runtimeState: runtimeState,
 	}, nil
 }
 
 // ----------------------------------------------------------------
 func (this *Repl) HandleSession(istream *os.File) {
 	lineReader := bufio.NewReader(istream)
+	dslString := ""
 
 	for {
-		fmt.Print(this.prompt)
+		if !this.doingMultilineInput {
+			fmt.Print(this.prompt1)
+		} else {
+			fmt.Print(this.prompt2)
+		}
 
 		line, err := lineReader.ReadString('\n')
 		if err == io.EOF {
@@ -97,13 +115,39 @@ func (this *Repl) HandleSession(istream *os.File) {
 			os.Exit(1)
 		}
 
-		// This is how to do a chomp:
-		line = strings.TrimRight(line, "\n")
+		chompedLine := strings.TrimRight(line, "\n")
 
-		err = this.HandleDSLString(line)
+		if chompedLine == "<" && !this.doingMultilineInput {
+			this.doingMultilineInput = true
+			dslString = ""
+			continue
+		} else if chompedLine == ">" && this.doingMultilineInput {
+			this.doingMultilineInput = false
+		} else if this.doingMultilineInput {
+			dslString += line
+			continue
+		} else {
+			dslString = line
+		}
+
+		err = this.HandleDSLString(dslString)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
+
+		// TODO:
+		// take filenames & reader/writer options from CLI -- ?
+		// ?/:help -- w/o and w/ function name
+		// :some flag settings ... ? :--o json -- ?
+		// :open file (or stdin?)
+		// :next ....
+		// :close
+		// :continue
+		// :break conditions -- ?
+		// ^C -- ?!?
+		// auto-start/auto-end multiline mode w/ func/subr defs?
+		// [DONE] < start multiline
+		// [DONE] > end multiline
 	}
 }
 
@@ -116,13 +160,13 @@ func (this *Repl) HandleDSLString(dslString string) error {
 		return err
 	}
 
-	cstRootNode, err := cst.Build(astRootNode, false /*isFilter*/, &this.options.WriterOptions)
+	this.cstRootNode.ResetForREPL()
+	err = this.cstRootNode.Build(astRootNode, this.isFilter)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 
-	outrec, err := cstRootNode.ExecuteREPLExperimental(this.runtimeState)
+	outrec, err := this.cstRootNode.ExecuteREPLExperimental(this.runtimeState)
 	if err != nil {
 		return err
 	}
@@ -149,7 +193,6 @@ func (this *Repl) BuildASTFromStringWithMessage(
 		if verbose {
 			fmt.Fprintln(os.Stderr, dslString)
 		}
-		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	} else {
 

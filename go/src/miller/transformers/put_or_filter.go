@@ -306,12 +306,13 @@ func NewTransformerPut(
 		fmt.Println()
 	}
 
-	cstRootNode, err := cst.Build(astRootNode, isFilter, recordWriterOptions)
-	runtimeState := runtime.NewEmptyState()
+	cstRootNode := cst.NewEmptyRoot(recordWriterOptions)
+	err = cstRootNode.Build(astRootNode, isFilter)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
+	runtimeState := runtime.NewEmptyState()
 
 	// E.g.
 	//   mlr put -s sum=0
