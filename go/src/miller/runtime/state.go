@@ -10,23 +10,25 @@ import (
 )
 
 type State struct {
-	Inrec         *types.Mlrmap
-	Context       *types.Context
-	Oosvars       *types.Mlrmap
-	FilterResult  bool
-	OutputChannel chan<- *types.RecordAndContext
-	Stack         *Stack
+	Inrec                   *types.Mlrmap
+	Context                 *types.Context
+	Oosvars                 *types.Mlrmap
+	FilterResult            bool
+	LastFilterResultDefined bool
+	Stack                   *Stack
+	OutputChannel           chan<- *types.RecordAndContext
 }
 
 func NewEmptyState() *State {
 	oosvars := types.NewMlrmap()
 	return &State{
-		Inrec:        nil,
-		Context:      nil,
-		Oosvars:      oosvars,
-		FilterResult: true,
+		Inrec:                   nil,
+		Context:                 nil,
+		Oosvars:                 oosvars,
+		FilterResult:            true,
+		LastFilterResultDefined: true,
+		Stack:                   NewStack(),
 		// OutputChannel is assigned after construction
-		Stack: NewStack(),
 	}
 }
 

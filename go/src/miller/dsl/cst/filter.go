@@ -38,6 +38,7 @@ func (this *FilterStatementNode) Execute(state *runtime.State) (*BlockExitPayloa
 	filterResult := this.filterEvaluable.Evaluate(state)
 
 	if filterResult.IsAbsent() {
+		state.LastFilterResultDefined = false
 		return nil, nil
 	}
 
@@ -50,6 +51,7 @@ func (this *FilterStatementNode) Execute(state *runtime.State) (*BlockExitPayloa
 	}
 
 	state.FilterResult = boolValue
+	state.LastFilterResultDefined = true
 
 	return nil, nil
 }

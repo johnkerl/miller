@@ -19,6 +19,8 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * repl foo:
+  o last-filter-result-defined -- royal hack :^/
+
   o isatty -- ?
   o no-op processing of absents is disconcerting
 

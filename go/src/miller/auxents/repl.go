@@ -198,6 +198,11 @@ func (this *Repl) HandleDSLString(dslString string) error {
 		this.recordWriter.Write(outrec, os.Stdout)
 	}
 
+	// xxx temp
+	if !this.runtimeState.LastFilterResultDefined {
+		fmt.Println("undefined")
+	}
+
 	return nil
 }
 
