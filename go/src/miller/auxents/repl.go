@@ -31,6 +31,7 @@ import (
 	"miller/parsing/parser"
 	"miller/runtime"
 	"miller/types"
+	"miller/version"
 )
 
 // ================================================================
@@ -185,6 +186,7 @@ func NewRepl(
 
 // ----------------------------------------------------------------
 func (this *Repl) HandleSession(istream *os.File) {
+	fmt.Printf("Miller %s\n", version.STRING) // TODO: inhibit if mlr repl -q
 	lineReader := bufio.NewReader(istream)
 	dslString := ""
 
