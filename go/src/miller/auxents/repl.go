@@ -18,7 +18,9 @@ import (
 	"miller/cliutil"
 	"miller/dsl"
 	"miller/dsl/cst"
+	"miller/input"
 	"miller/lib"
+	//"miller/input2"
 	"miller/output"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
@@ -184,20 +186,28 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 	// Make a lookup-table maybe
 	if verb == ":help" || verb == "?" || verb == "help" {
 		this.handleHelp(args)
+
 	} else if verb == ":astprint" {
 		this.handleASTPrint(args)
+
 	} else if verb == ":load" {
 		this.handleLoad(args)
+
 	} else if verb == ":begin" {
 		err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
+
 	} else if verb == ":end" {
 		err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
+
+	} else if verb == ":foo" {
+		this.handleFoo(args)
+
 	} else {
 		fmt.Printf("Unrecognized command:%s\n", verb)
 	}
@@ -300,6 +310,62 @@ func (this *Repl) handleLoad(args []string) {
 		err = this.HandleDSLString(dslString)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
+		}
+	}
+}
+
+func (this *Repl) handleFoo(args []string) {
+	filenames := args[1:] // strip off verb
+	if len(filenames) < 1 {
+		fmt.Println("Need filenames: see ':help :foo'.")
+		return
+	}
+
+	recordReader := input.Create(&this.options.ReaderOptions)
+	if recordReader == nil {
+		fmt.Fprintln(
+			os.Stderr,
+			errors.New("Input format not found: "+this.options.ReaderOptions.InputFileFormat),
+		)
+		return
+	}
+
+	inputChannel := make(chan *types.RecordAndContext, 10)
+	errorChannel := make(chan error, 1)
+	go recordReader.Read(
+		filenames,
+		*this.runtimeState.Context,
+		inputChannel,
+		errorChannel,
+	)
+
+	for {
+		recordAndContext := <-inputChannel
+
+		// Three things can come through:
+		//
+		// * End-of-stream marker
+		// * Non-nil records to be printed
+		// * Strings to be printed from put/filter DSL print/dump/etc
+		//   statements. They are handled here rather than fmt.Println directly
+		//   in the put/filter handlers since we want all print statements and
+		//   record-output to be in the same goroutine, for deterministic
+		//   output ordering.
+		//
+		// The first two are passed to the transformer. The third we send along
+		// the output channel without involving the record-transformer, since
+		// there is no record to be transformed.
+
+		this.runtimeState.Update(recordAndContext.Record, this.runtimeState.Context)
+
+		if recordAndContext.EndOfStream == true {
+			// xxx put to recordwriter
+			break
+		} else if recordAndContext.Record != nil {
+			fmt.Println(recordAndContext.Record.String())
+			fmt.Printf("%#v\n", recordAndContext.Context)
+		} else {
+			//outputChannel <- recordAndContext
 		}
 	}
 }
