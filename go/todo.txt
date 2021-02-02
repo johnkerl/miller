@@ -24,24 +24,16 @@ TOP OF LIST:
   d :begin and :end ...
 
   ? auto-unflatten / auto-flatten ? oy.
-
   o func-handle lookup tables as usual ...
+  ? two-arg flatten/unflatten?
 
   o UTs
 
-  o :read data file
-    - handle parse errors; need channel-select
-  o :open file (or stdin?)
-  o :next
-  o :next {n}
-  o :close
-  o :continue
+  o handle data-file parse errors; need channel-select
+  o :read {n}
+
   o :break conditions -- ?
-  o ^C -- ?!?
-
-  o take filenames & reader/writer options from CLI -- ?
-  o :some flag settings ... ? :--o json -- ?
-
+  ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
