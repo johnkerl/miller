@@ -341,7 +341,7 @@ func (this *PrintStatementNode) printToStdout(
 	if state.OutputChannel != nil {
 		state.OutputChannel <- types.NewOutputString(outputString, state.Context)
 	} else {
-		fmt.Println(outputString)
+		fmt.Print(outputString)
 	}
 
 	return nil

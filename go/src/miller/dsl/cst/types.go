@@ -21,6 +21,7 @@ type RootNode struct {
 	endBlocks                     []*StatementBlockNode
 	udfManager                    *UDFManager
 	udsManager                    *UDSManager
+	allowUDFSRedefinitions        bool
 	unresolvedFunctionCallsites   *list.List
 	unresolvedSubroutineCallsites *list.List
 	outputHandlerManagers         *list.List

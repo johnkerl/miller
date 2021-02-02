@@ -9,7 +9,6 @@ begin {
 	@maxits    =  100;
 	@levelstep =    5;
 	@chars     = "@X*o-.";
-
 }
 
 # Override defaults

@@ -19,26 +19,24 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * repl foo:
-  o MLR_REPL_PS1/MLR_REPL_PS2 env vars
+  d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
+  d :load {source files}
+  d :begin and :end ...
+
+  o func-handle lookup tables as usual ...
 
   o UTs
-  o take filenames & reader/writer options from CLI -- ?
-  o :some flag settings ... ? :--o json -- ?
-    - especially toggle parex/etc
-
-  o :help -> :help shortlist
-    - :help functions
-    - :help repl
-
-  o :load source file
 
   o :read data file
   o :open file (or stdin?)
-  o :next ....
+  o :next
   o :close
   o :continue
   o :break conditions -- ?
   o ^C -- ?!?
+
+  o take filenames & reader/writer options from CLI -- ?
+  o :some flag settings ... ? :--o json -- ?
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

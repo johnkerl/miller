@@ -237,13 +237,15 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 
 	subroutineName := string(astNode.Token.Lit)
 
-	if this.udsManager.ExistsByName(subroutineName) {
-		return errors.New(
-			fmt.Sprintf(
-				"Miller: subroutine named \"%s\" has already been defined.",
-				subroutineName,
-			),
-		)
+	if !this.allowUDFSRedefinitions {
+		if this.udsManager.ExistsByName(subroutineName) {
+			return errors.New(
+				fmt.Sprintf(
+					"Miller: subroutine named \"%s\" has already been defined.",
+					subroutineName,
+				),
+			)
+		}
 	}
 
 	parameterListASTNode := astNode.Children[0]

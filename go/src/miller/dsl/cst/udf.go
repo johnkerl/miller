@@ -267,13 +267,15 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		)
 	}
 
-	if this.udfManager.ExistsByName(functionName) {
-		return errors.New(
-			fmt.Sprintf(
-				"Miller: function named \"%s\" has already been defined.",
-				functionName,
-			),
-		)
+	if !this.allowUDFSRedefinitions {
+		if this.udfManager.ExistsByName(functionName) {
+			return errors.New(
+				fmt.Sprintf(
+					"Miller: function named \"%s\" has already been defined.",
+					functionName,
+				),
+			)
+		}
 	}
 
 	parameterListASTNode := astNode.Children[0]

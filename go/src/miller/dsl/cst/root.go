@@ -29,11 +29,20 @@ func NewEmptyRoot(
 		endBlocks:                     make([]*StatementBlockNode, 0),
 		udfManager:                    NewUDFManager(),
 		udsManager:                    NewUDSManager(),
+		allowUDFSRedefinitions:        false,
 		unresolvedFunctionCallsites:   list.New(),
 		unresolvedSubroutineCallsites: list.New(),
 		outputHandlerManagers:         list.New(),
 		recordWriterOptions:           recordWriterOptions,
 	}
+}
+
+// Nominally for mlr put/filter we want to flag overwritten UDFs/UDSs as an
+// error.  But in the REPL, which is interactive, people should be able to
+// redefine.  This method allows the latter use-case.
+func (this *RootNode) WithRedefinableUDFS() *RootNode {
+	this.allowUDFSRedefinitions = true
+	return this
 }
 
 // ----------------------------------------------------------------

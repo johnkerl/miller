@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -25,6 +26,7 @@ import (
 	"miller/types"
 )
 
+// ================================================================
 func replUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "Usage: %s %s with no arguments\n", mlrExeName(), verbName)
 	os.Exit(exitCode)
@@ -41,15 +43,25 @@ func replMain(args []string) int {
 }
 
 // ================================================================
+type ASTPrintMode int
+
+const (
+	ASTPrintNone ASTPrintMode = iota
+	ASTPrintParex
+	ASTPrintParexOneLine
+	ASTPrintIndent
+)
+
+// ================================================================
 type Repl struct {
 	inputIsTerminal     bool
 	prompt1             string
 	prompt2             string
 	doingMultilineInput bool
 
-	verboseASTParse bool
-	isFilter        bool
-	cstRootNode     *cst.RootNode
+	astPrintMode ASTPrintMode
+	isFilter     bool
+	cstRootNode  *cst.RootNode
 
 	options      cliutil.TOptions
 	context      *types.Context
@@ -89,9 +101,9 @@ func NewRepl() (*Repl, error) {
 		prompt2:             prompt2,
 		doingMultilineInput: doingMultilineInput,
 
-		verboseASTParse: false,
-		isFilter:        false,
-		cstRootNode:     cst.NewEmptyRoot(&options.WriterOptions),
+		astPrintMode: ASTPrintNone,
+		isFilter:     false,
+		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFS(),
 
 		options:      options,
 		context:      context,
@@ -172,21 +184,122 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 	// Make a lookup-table maybe
 	if verb == ":help" || verb == "?" || verb == "help" {
 		this.handleHelp(args)
-		return true
+	} else if verb == ":astprint" {
+		this.handleASTPrint(args)
+	} else if verb == ":load" {
+		this.handleLoad(args)
+	} else if verb == ":begin" {
+		err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+	} else if verb == ":end" {
+		err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+	} else {
+		fmt.Printf("Unrecognized command:%s\n", verb)
 	}
-
-	fmt.Printf("Unrecognized command:%s\n", verb)
 	return true
 }
 
-// ----------------------------------------------------------------
 func (this *Repl) handleHelp(args []string) {
 	args = args[1:] // strip off verb
 	if len(args) == 0 {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+		fmt.Println("Options:")
+		fmt.Println(":help repl")
+		fmt.Println(":help functions")
+		fmt.Println(":help {function name}, e.g. :help sec2gmt")
 	} else {
 		for _, arg := range args {
-			cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(arg, os.Stdout)
+			if arg == "repl" {
+				this.showREPLHelp()
+			} else if arg == "functions" {
+				cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+			} else {
+				cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(arg, os.Stdout)
+			}
+		}
+	}
+}
+
+// TODO: make this more like ':help repl explain' or somesuch
+func (this *Repl) showREPLHelp() {
+	fmt.Println(
+		`Enter any Miller DSL expression.
+Non-DSL commands (REPL-only statements) start with ':', such as ':help' or ':quit'.
+Type ':help functions' for help with DSL functions; type ':help repl' for help with non-DSL expressions.
+
+The input "record" by default is the empty map but you can do things like '$x=3',
+or 'unset $y', or '$* = {"x": 3, "y": 4}' to populate it.
+
+Enter '<' on a line by itself to enter multi-line mode, e.g. to enter a function definition;
+enter '>' on a line by itself to exit multi-line mode.
+
+In multi-line mode, semicolons are required between statements; otherwise they are not needed.
+Non-assignment expressions, such as '7' or 'true', in mlr put are filter statements; here, they
+are simply printed to the terminal, e.g. if you type '1+2', you will see '3'.
+
+Examples, assuming the prompt is 'mlr: '
+
+mlr: 1+2
+3
+mlr: x=3
+mlr: y=4
+mlr: x+y
+7
+mlr: <
+func f(a,b) {
+  return a**b
+}
+>
+mlr: f(7,5)
+16807
+`)
+}
+
+func (this *Repl) handleASTPrint(args []string) {
+	args = args[1:] // strip off verb
+	if len(args) != 1 {
+		fmt.Println("Need argument: see ':help :astprint'.")
+		return
+	}
+	style := args[0]
+	if style == "parex" {
+		this.astPrintMode = ASTPrintParex
+	} else if style == "parex1" {
+		this.astPrintMode = ASTPrintParexOneLine
+	} else if style == "indent" {
+		this.astPrintMode = ASTPrintIndent
+	} else if style == "none" {
+		this.astPrintMode = ASTPrintNone
+	} else {
+		fmt.Printf("Unrecognized style %s: see ':help :astprint'.\n", style)
+		return
+	}
+}
+
+func (this *Repl) handleLoad(args []string) {
+	args = args[1:] // strip off verb
+	if len(args) < 1 {
+		fmt.Println("Need filenames: see ':help :load'.")
+		return
+	}
+	for _, filename := range args {
+
+		dslBytes, err := ioutil.ReadFile(filename)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Cannot load DSL expression from file \"%s\": ",
+				filename)
+			fmt.Println(err)
+			return
+		}
+		dslString := string(dslBytes)
+
+		err = this.HandleDSLString(dslString)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
 		}
 	}
 }
@@ -194,7 +307,7 @@ func (this *Repl) handleHelp(args []string) {
 // ----------------------------------------------------------------
 func (this *Repl) HandleDSLString(dslString string) error {
 
-	astRootNode, err := this.BuildASTFromStringWithMessage(dslString, this.verboseASTParse)
+	astRootNode, err := this.BuildASTFromStringWithMessage(dslString)
 	if err != nil {
 		// Error message already printed out
 		return err
@@ -230,7 +343,6 @@ func (this *Repl) HandleDSLString(dslString string) error {
 // ----------------------------------------------------------------
 func (this *Repl) BuildASTFromStringWithMessage(
 	dslString string,
-	verbose bool,
 ) (*dsl.AST, error) {
 	astRootNode, err := this.BuildASTFromString(dslString)
 	if err != nil {
@@ -239,19 +351,18 @@ func (this *Repl) BuildASTFromStringWithMessage(
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
 			lib.MlrExeName())
-		if verbose {
+		if this.astPrintMode != ASTPrintNone {
 			fmt.Fprintln(os.Stderr, dslString)
 		}
 		return nil, err
 	} else {
-
-		//	if printASTSingleLine {
-		//		astRootNode.PrintParexOneLine()
-		//	} else if xxx {
-		//		astRootNode.PrintParex()
-		//	} else {
-		//		astRootNode.Print()
-		//	}
+		if this.astPrintMode == ASTPrintParex {
+			astRootNode.PrintParex()
+		} else if this.astPrintMode == ASTPrintParexOneLine {
+			astRootNode.PrintParexOneLine()
+		} else if this.astPrintMode == ASTPrintIndent {
+			astRootNode.Print()
+		}
 
 		return astRootNode, nil
 	}
