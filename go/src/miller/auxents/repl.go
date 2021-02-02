@@ -207,9 +207,7 @@ func (this *Repl) HandleDSLString(dslString string) error {
 
 	// xxx temp
 	filterExpression := this.runtimeState.FilterExpression
-	if filterExpression.IsAbsent() {
-		fmt.Println("undefined")
-	} else if filterExpression.IsVoid() {
+	if filterExpression.IsVoid() {
 		// nothing
 	} else {
 		fmt.Println(filterExpression.String())
