@@ -252,7 +252,7 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 		return false
 	}
 	// Make a lookup-table maybe
-	if verb == ":help" || verb == "?" || verb == "help" {
+	if verb == ":help" || verb == "?" || verb == "help" || verb == ":h" {
 		this.handleHelp(args)
 
 	} else if verb == ":astprint" {
