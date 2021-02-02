@@ -166,13 +166,17 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 		return false
 	}
 	verb := args[0]
+	if verb != "?" && verb != "help" && !strings.HasPrefix(verb, ":") {
+		return false
+	}
 	// Make a lookup-table maybe
-	if verb == ":help" || verb == "?" {
+	if verb == ":help" || verb == "?" || verb == "help" {
 		this.handleHelp(args)
 		return true
 	}
 
-	return false
+	fmt.Printf("Unrecognized command:%s\n", verb)
+	return true
 }
 
 // ----------------------------------------------------------------

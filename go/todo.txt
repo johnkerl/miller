@@ -26,7 +26,12 @@ TOP OF LIST:
   o :some flag settings ... ? :--o json -- ?
     - especially toggle parex/etc
 
+  o :help -> :help shortlist
+    - :help functions
+    - :help repl
+
   o :load source file
+
   o :read data file
   o :open file (or stdin?)
   o :next ....
