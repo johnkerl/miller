@@ -12,6 +12,8 @@ import (
 	"os"
 	"strings"
 
+	"golang.org/x/term"
+
 	"miller/cliutil"
 	"miller/dsl"
 	"miller/dsl/cst"
@@ -40,6 +42,7 @@ func replMain(args []string) int {
 
 // ================================================================
 type Repl struct {
+	inputIsTerminal     bool
 	prompt1             string
 	prompt2             string
 	doingMultilineInput bool
@@ -57,7 +60,7 @@ type Repl struct {
 
 // ----------------------------------------------------------------
 func NewRepl() (*Repl, error) {
-	// https://pkg.go.dev/golang.org/x/term#IsTerminal
+	inputIsTerminal := term.IsTerminal(int(os.Stdin.Fd()))
 	prompt1 := "[mlr] "
 	prompt2 := ""
 	doingMultilineInput := false
@@ -72,8 +75,10 @@ func NewRepl() (*Repl, error) {
 
 	runtimeState := runtime.NewEmptyState()
 	runtimeState.Update(inrec, context)
+	runtimeState.FilterExpression = types.MlrvalFromVoid() // xxx comment
 
 	return &Repl{
+		inputIsTerminal:     inputIsTerminal,
 		prompt1:             prompt1,
 		prompt2:             prompt2,
 		doingMultilineInput: doingMultilineInput,
@@ -96,10 +101,12 @@ func (this *Repl) HandleSession(istream *os.File) {
 	dslString := ""
 
 	for {
-		if !this.doingMultilineInput {
-			fmt.Print(this.prompt1)
-		} else {
-			fmt.Print(this.prompt2)
+		if this.inputIsTerminal {
+			if !this.doingMultilineInput {
+				fmt.Print(this.prompt1)
+			} else {
+				fmt.Print(this.prompt2)
+			}
 		}
 
 		line, err := lineReader.ReadString('\n')
@@ -199,10 +206,15 @@ func (this *Repl) HandleDSLString(dslString string) error {
 	}
 
 	// xxx temp
-	if !this.runtimeState.LastFilterResultDefined {
+	filterExpression := this.runtimeState.FilterExpression
+	if filterExpression.IsAbsent() {
 		fmt.Println("undefined")
-		this.runtimeState.LastFilterResultDefined = true
+	} else if filterExpression.IsVoid() {
+		// nothing
+	} else {
+		fmt.Println(filterExpression.String())
 	}
+	this.runtimeState.FilterExpression = types.MlrvalFromVoid()
 
 	return nil
 }

@@ -5,8 +5,6 @@
 package cst
 
 import (
-	"errors"
-
 	"miller/dsl"
 	"miller/lib"
 	"miller/runtime"
@@ -34,24 +32,6 @@ func (this *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutabl
 }
 
 func (this *FilterStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-
-	filterResult := this.filterEvaluable.Evaluate(state)
-
-	if filterResult.IsAbsent() {
-		state.LastFilterResultDefined = false
-		return nil, nil
-	}
-
-	boolValue, isBool := filterResult.GetBoolValue()
-	if !isBool {
-		return nil, errors.New(
-			"Miller: expression does not evaluate to boolean: got " +
-				filterResult.GetTypeName() + ".",
-		)
-	}
-
-	state.FilterResult = boolValue
-	state.LastFilterResultDefined = true
-
+	state.FilterExpression = this.filterEvaluable.Evaluate(state)
 	return nil, nil
 }

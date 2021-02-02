@@ -411,7 +411,11 @@ func (this *TransformerPut) Transform(
 		}
 
 		if !this.suppressOutputRecord {
-			wantToEmit := lib.BooleanXOR(this.runtimeState.FilterResult, this.invertFilter)
+			filterBool, isBool := this.runtimeState.FilterExpression.GetBoolValue()
+			if !isBool {
+				filterBool = false
+			}
+			wantToEmit := lib.BooleanXOR(filterBool, this.invertFilter)
 			if wantToEmit {
 				outputChannel <- types.NewRecordAndContext(
 					outrec,
