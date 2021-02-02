@@ -35,9 +35,8 @@ TOP OF LIST:
   o :next
   o :next {n}
   o :close
-  o :continue
   o :break conditions -- ?
-  o ^C -- ?!?
+  o :continue / ^C -- ?!?
 
   o take filenames & reader/writer options from CLI -- ?
   o :some flag settings ... ? :--o json -- ?
