@@ -1,6 +1,9 @@
 package types
 
 import (
+	"bytes"
+	"strconv"
+
 	"miller/cliutil"
 )
 
@@ -150,4 +153,22 @@ func (this *Context) UpdateForInputRecord() {
 func (this *Context) Copy() *Context {
 	that := *this
 	return &that
+}
+
+func (this *Context) GetStatusString() string {
+
+	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+	buffer.WriteString("FILENAME=")
+	buffer.WriteString(this.FILENAME)
+
+	buffer.WriteString(",FILENUM=")
+	buffer.WriteString(strconv.Itoa(this.FILENUM))
+
+	buffer.WriteString(",NR=")
+	buffer.WriteString(strconv.Itoa(this.NR))
+
+	buffer.WriteString(",FNR=")
+	buffer.WriteString(strconv.Itoa(this.FNR))
+
+	return buffer.String()
 }

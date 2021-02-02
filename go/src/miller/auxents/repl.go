@@ -66,7 +66,11 @@ type Repl struct {
 	cstRootNode  *cst.RootNode
 
 	options      cliutil.TOptions
-	context      *types.Context
+
+	// xxx nil at ctor
+	inputChannel chan *types.RecordAndContext
+	errorChannel chan error
+	recordReader input.IRecordReader
 	recordWriter output.IRecordWriter
 
 	runtimeState *runtime.State
@@ -86,13 +90,19 @@ func NewRepl() (*Repl, error) {
 	doingMultilineInput := false
 
 	options := cliutil.DefaultOptions()
-	inrec := types.NewMlrmapAsRecord()
-	context := types.NewContext(&options)
+
+	recordReader := input.Create(&options.ReaderOptions)
+	if recordReader == nil {
+		return nil, errors.New("Input format not found: " + options.ReaderOptions.InputFileFormat)
+	}
+
 	recordWriter := output.Create(&options.WriterOptions)
 	if recordWriter == nil {
 		return nil, errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
 	}
 
+	inrec := types.NewMlrmapAsRecord()
+	context := types.NewContext(&options)
 	runtimeState := runtime.NewEmptyState()
 	runtimeState.Update(inrec, context)
 	runtimeState.FilterExpression = types.MlrvalFromVoid() // xxx comment
@@ -108,7 +118,9 @@ func NewRepl() (*Repl, error) {
 		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFS(),
 
 		options:      options,
-		context:      context,
+		inputChannel: nil,
+		errorChannel: nil,
+		recordReader: recordReader,
 		recordWriter: recordWriter,
 
 		runtimeState: runtimeState,
@@ -205,8 +217,16 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 			fmt.Fprintln(os.Stderr, err)
 		}
 
-	} else if verb == ":foo" {
-		this.handleFoo(args)
+	} else if verb == ":open" {
+		this.handleOpen(args)
+
+	} else if verb == ":read" {
+		this.handleRead(args)
+
+	} else if verb == ":write" {
+		this.handleWrite(args)
+
+	// xxx :write
 
 	} else {
 		fmt.Printf("Unrecognized command:%s\n", verb)
@@ -314,60 +334,64 @@ func (this *Repl) handleLoad(args []string) {
 	}
 }
 
-func (this *Repl) handleFoo(args []string) {
+func (this *Repl) handleOpen(args []string) {
 	filenames := args[1:] // strip off verb
 	if len(filenames) < 1 {
-		fmt.Println("Need filenames: see ':help :foo'.")
+		fmt.Println("Need filenames: see ':help :open'.")
 		return
 	}
 
-	recordReader := input.Create(&this.options.ReaderOptions)
-	if recordReader == nil {
-		fmt.Fprintln(
-			os.Stderr,
-			errors.New("Input format not found: "+this.options.ReaderOptions.InputFileFormat),
-		)
-		return
-	}
+	this.inputChannel = make(chan *types.RecordAndContext, 10)
+	// TODO: check for use
+	this.errorChannel = make(chan error, 1)
 
-	inputChannel := make(chan *types.RecordAndContext, 10)
-	errorChannel := make(chan error, 1)
-	go recordReader.Read(
+	go this.recordReader.Read(
 		filenames,
 		*this.runtimeState.Context,
-		inputChannel,
-		errorChannel,
+		this.inputChannel,
+		this.errorChannel,
 	)
+}
 
-	for {
-		recordAndContext := <-inputChannel
-
-		// Three things can come through:
-		//
-		// * End-of-stream marker
-		// * Non-nil records to be printed
-		// * Strings to be printed from put/filter DSL print/dump/etc
-		//   statements. They are handled here rather than fmt.Println directly
-		//   in the put/filter handlers since we want all print statements and
-		//   record-output to be in the same goroutine, for deterministic
-		//   output ordering.
-		//
-		// The first two are passed to the transformer. The third we send along
-		// the output channel without involving the record-transformer, since
-		// there is no record to be transformed.
-
-		this.runtimeState.Update(recordAndContext.Record, this.runtimeState.Context)
-
-		if recordAndContext.EndOfStream == true {
-			// xxx put to recordwriter
-			break
-		} else if recordAndContext.Record != nil {
-			fmt.Println(recordAndContext.Record.String())
-			fmt.Printf("%#v\n", recordAndContext.Context)
-		} else {
-			//outputChannel <- recordAndContext
-		}
+func (this *Repl) handleRead(args []string) {
+	if this.inputChannel == nil {
+		fmt.Println("No open files")
+		return
 	}
+
+	recordAndContext := <-this.inputChannel
+
+	// Three things can come through:
+	//
+	// * End-of-stream marker
+	// * Non-nil records to be printed
+	// * Strings to be printed from put/filter DSL print/dump/etc
+	//   statements. They are handled here rather than fmt.Println directly
+	//   in the put/filter handlers since we want all print statements and
+	//   record-output to be in the same goroutine, for deterministic
+	//   output ordering.
+	//
+	// The first two are passed to the transformer. The third we send along
+	// the output channel without involving the record-transformer, since
+	// there is no record to be transformed.
+
+	this.runtimeState.Update(recordAndContext.Record, this.runtimeState.Context)
+
+	if recordAndContext.EndOfStream == true {
+		// xxx put to recordwriter
+		// xxx temp
+		fmt.Println("End of record stream")
+		this.inputChannel = nil
+		this.errorChannel = nil
+	} else if recordAndContext.Record == nil {
+		fmt.Print(recordAndContext.OutputString)
+	} else {
+		fmt.Println(recordAndContext.Context.GetStatusString())
+	}
+}
+
+func (this *Repl) handleWrite(args []string) {
+	this.recordWriter.Write(this.runtimeState.Inrec, os.Stdout)
 }
 
 // ----------------------------------------------------------------
@@ -389,10 +413,7 @@ func (this *Repl) HandleDSLString(dslString string) error {
 	if err != nil {
 		return err
 	}
-
-	if false { // not interesting ... maybe with a CLI flag ...
-		this.recordWriter.Write(outrec, os.Stdout)
-	}
+	this.runtimeState.Inrec = outrec
 
 	// xxx temp
 	filterExpression := this.runtimeState.FilterExpression
