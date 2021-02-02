@@ -61,8 +61,14 @@ type Repl struct {
 // ----------------------------------------------------------------
 func NewRepl() (*Repl, error) {
 	inputIsTerminal := term.IsTerminal(int(os.Stdin.Fd()))
-	prompt1 := "[mlr] "
-	prompt2 := ""
+	prompt1 := os.Getenv("MLR_REPL_PS1")
+	if prompt1 == "" {
+		prompt1 = "[mlr] "
+	}
+	prompt2 := os.Getenv("MLR_REPL_PS2")
+	if prompt2 == "" {
+		prompt2 = ""
+	}
 	doingMultilineInput := false
 
 	options := cliutil.DefaultOptions()
