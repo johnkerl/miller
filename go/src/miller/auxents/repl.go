@@ -2,6 +2,12 @@
 // Just playing around -- nothing serious here.
 // ================================================================
 
+// TODO:
+// oFlatSep = inrecAndContext.Context.OFLATSEP
+// inrec.Flatten(oFlatSep)
+// iFlatSep = inrecAndContext.Context.IFLATSEP
+// inrec.Unflatten(iFlatSep)
+
 package auxents
 
 import (
@@ -20,7 +26,6 @@ import (
 	"miller/dsl/cst"
 	"miller/input"
 	"miller/lib"
-	//"miller/input2"
 	"miller/output"
 	"miller/parsing/lexer"
 	"miller/parsing/parser"
@@ -34,12 +39,63 @@ func replUsage(verbName string, o *os.File, exitCode int) {
 	os.Exit(exitCode)
 }
 
+// args are the full Miller command line: "mlr repl foo bar".
 func replMain(args []string) int {
-	repl, err := NewRepl()
+	//exeName := args[0]
+	//replName := args[1]
+	argc := len(args)
+	argi := 2
+
+	astPrintMode := ASTPrintNone
+	options := cliutil.DefaultOptions()
+
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		if !strings.HasPrefix(args[argi], "-") {
+			break // No more flag options to process
+		}
+
+		if args[argi] == "-h" || args[argi] == "--help" {
+			fmt.Println("help stub")
+			os.Exit(0)
+			// transformerPutUsage(os.Stdout, true, 0)
+
+		} else if args[argi] == "-v" {
+			astPrintMode = ASTPrintIndent
+			argi++
+		} else if args[argi] == "-d" {
+			astPrintMode = ASTPrintParex
+			argi++
+		} else if args[argi] == "-D" {
+			astPrintMode = ASTPrintParexOneLine
+			argi++
+
+		} else if cliutil.ParseReaderWriterOptions(args, argc, &argi, &options.ReaderOptions, &options.WriterOptions) {
+
+		} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+
+		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+
+		} else {
+			fmt.Println("help stub")
+			os.Exit(1)
+			// transformerPutUsage(os.Stderr, true, 1)
+		}
+	}
+
+	repl, err := NewRepl(
+		astPrintMode,
+		&options,
+	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+
+	filenames := args[argi:]
+	if len(filenames) > 0 {
+		repl.openFiles(filenames)
+	}
+
 	repl.HandleSession(os.Stdin)
 	return 0
 }
@@ -65,9 +121,8 @@ type Repl struct {
 	isFilter     bool
 	cstRootNode  *cst.RootNode
 
-	options      cliutil.TOptions
+	options *cliutil.TOptions
 
-	// xxx nil at ctor
 	inputChannel chan *types.RecordAndContext
 	errorChannel chan error
 	recordReader input.IRecordReader
@@ -77,7 +132,10 @@ type Repl struct {
 }
 
 // ----------------------------------------------------------------
-func NewRepl() (*Repl, error) {
+func NewRepl(
+	astPrintMode ASTPrintMode,
+	options *cliutil.TOptions,
+) (*Repl, error) {
 	inputIsTerminal := term.IsTerminal(int(os.Stdin.Fd()))
 	prompt1 := os.Getenv("MLR_REPL_PS1")
 	if prompt1 == "" {
@@ -88,8 +146,6 @@ func NewRepl() (*Repl, error) {
 		prompt2 = ""
 	}
 	doingMultilineInput := false
-
-	options := cliutil.DefaultOptions()
 
 	recordReader := input.Create(&options.ReaderOptions)
 	if recordReader == nil {
@@ -102,7 +158,7 @@ func NewRepl() (*Repl, error) {
 	}
 
 	inrec := types.NewMlrmapAsRecord()
-	context := types.NewContext(&options)
+	context := types.NewContext(options)
 	runtimeState := runtime.NewEmptyState()
 	runtimeState.Update(inrec, context)
 	runtimeState.FilterExpression = types.MlrvalFromVoid() // xxx comment
@@ -217,16 +273,16 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 			fmt.Fprintln(os.Stderr, err)
 		}
 
-	} else if verb == ":open" {
+	} else if verb == ":open" || verb == ":o" {
 		this.handleOpen(args)
 
-	} else if verb == ":read" {
+	} else if verb == ":read" || verb == ":r" {
 		this.handleRead(args)
 
-	} else if verb == ":write" {
+	} else if verb == ":write" || verb == ":w" {
 		this.handleWrite(args)
 
-	// xxx :write
+		// xxx :write
 
 	} else {
 		fmt.Printf("Unrecognized command:%s\n", verb)
@@ -335,12 +391,10 @@ func (this *Repl) handleLoad(args []string) {
 }
 
 func (this *Repl) handleOpen(args []string) {
-	filenames := args[1:] // strip off verb
-	if len(filenames) < 1 {
-		fmt.Println("Need filenames: see ':help :open'.")
-		return
-	}
+	this.openFiles(args[1:]) // strip off verb
+}
 
+func (this *Repl) openFiles(filenames []string) {
 	this.inputChannel = make(chan *types.RecordAndContext, 10)
 	// TODO: check for use
 	this.errorChannel = make(chan error, 1)
