@@ -19,6 +19,8 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * repl foo:
+  * mutual recursion fg.mlr / gf.mlr -- needs a single resolver at the end ...
+    - maybe separate ingest-ASTs and resolver passes
   d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
   d :load {source files}
   d :begin and :main and :end ...
@@ -514,3 +516,5 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
 	// and 'mlr filter' is they need to be able to take -f and/or -e more than
 	// once, and Go flags can't handle that.
+
+* doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.

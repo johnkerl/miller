@@ -46,7 +46,11 @@ func (this *RootNode) WithRedefinableUDFS() *RootNode {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) Build(
+// If the user has multiple put -f / put -e pieces, we can AST-parse each
+// separately and build them. However we cannot resolve UDF/UDS references
+// until after they're all ingested -- e.g. first piece calls a function which
+// the second defines, or mutual recursion across pieces, etc.
+func (this *RootNode) IngestAST(
 	ast *dsl.AST,
 	isFilter bool, // false for 'mlr put', true for 'mlr filter'
 ) error {
@@ -67,7 +71,12 @@ func (this *RootNode) Build(
 		return err
 	}
 
-	err = this.resolveFunctionCallsites()
+	return nil
+}
+
+func (this *RootNode) Resolve() error {
+
+	err := this.resolveFunctionCallsites()
 	if err != nil {
 		return err
 	}
