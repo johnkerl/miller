@@ -46,13 +46,6 @@ func (this *RootNode) WithRedefinableUDFS() *RootNode {
 	return this
 }
 
-// TODO
-//func (this *RootNode) FooReport() {
-//	fmt.Printf("#begin %d\n", len(this.beginBlocks))
-//	fmt.Printf("#main  %d\n", len(this.mainBlock.executables))
-//	fmt.Printf("#end   %d\n", len(this.beginBlocks))
-//}
-
 // ----------------------------------------------------------------
 // If the user has multiple put -f / put -e pieces, we can AST-parse each
 // separately and build them. However we cannot resolve UDF/UDS references
@@ -318,4 +311,10 @@ func (this *RootNode) ResetForREPL() {
 	this.replImmediateBlock = NewStatementBlockNode()
 	this.unresolvedFunctionCallsites = list.New()
 	this.unresolvedSubroutineCallsites = list.New()
+}
+
+func (this *RootNode) ShowBlockReport() {
+	fmt.Printf("#begin %d\n", len(this.beginBlocks))
+	fmt.Printf("#main  %d\n", len(this.mainBlock.executables))
+	fmt.Printf("#end   %d\n", len(this.endBlocks))
 }

@@ -192,8 +192,6 @@ func (this *Repl) HandleSession(istream *os.File) {
 
 	for {
 		if this.inputIsTerminal {
-			// TODO
-			// this.cstRootNode.FooReport()
 			if !this.doingMultilineInput {
 				fmt.Print(this.prompt1)
 			} else {
@@ -239,7 +237,7 @@ func (this *Repl) HandleSession(istream *os.File) {
 			}
 		}
 
-		err = this.HandleDSLString(dslString)
+		err = this.HandleDSLString(dslString, true) // xxx temp
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -272,11 +270,20 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 			fmt.Fprintln(os.Stderr, err)
 		}
 
+	} else if verb == ":main" {
+		_, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+
 	} else if verb == ":end" {
 		err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
+
+	} else if verb == ":blocks" {
+		this.cstRootNode.ShowBlockReport()
 
 	} else if verb == ":open" || verb == ":o" {
 		this.handleOpen(args)
@@ -388,7 +395,7 @@ func (this *Repl) handleLoad(args []string) {
 		}
 		dslString := string(dslBytes)
 
-		err = this.HandleDSLString(dslString)
+		err = this.HandleDSLString(dslString, false)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -454,7 +461,7 @@ func (this *Repl) handleWrite(args []string) {
 }
 
 // ----------------------------------------------------------------
-func (this *Repl) HandleDSLString(dslString string) error {
+func (this *Repl) HandleDSLString(dslString string, isReplImmediate bool) error {
 	if strings.TrimSpace(dslString) == "" {
 		return nil
 	}
@@ -466,7 +473,7 @@ func (this *Repl) HandleDSLString(dslString string) error {
 	}
 
 	this.cstRootNode.ResetForREPL()
-	err = this.cstRootNode.IngestAST(astRootNode, this.isFilter, true) // TODO
+	err = this.cstRootNode.IngestAST(astRootNode, this.isFilter, isReplImmediate) // TODO
 	if err != nil {
 		return err
 	}
