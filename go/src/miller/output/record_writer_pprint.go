@@ -158,7 +158,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 					buffer.WriteString("\n") // TODO: ORS
 				}
 			}
-			ostream.Write([]byte(buffer.String()))
+			ostream.Write(buffer.Bytes())
 		}
 		onFirst = false
 
@@ -176,7 +176,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 				buffer.WriteString("\n") // TODO: ORS
 			}
 		}
-		ostream.Write([]byte(buffer.String()))
+		ostream.Write(buffer.Bytes())
 	}
 }
 
@@ -254,7 +254,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 				}
 			}
 
-			ostream.Write([]byte(buffer.String()))
+			ostream.Write(buffer.Bytes())
 		}
 		onFirst = false
 
@@ -285,6 +285,6 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 			}
 		}
 
-		ostream.Write([]byte(buffer.String()))
+		ostream.Write(buffer.Bytes())
 	}
 }

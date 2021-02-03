@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"os"
 	"path"
+
+	"miller/auxents/repl"
 )
 
 // ----------------------------------------------------------------
@@ -32,7 +34,7 @@ func init() {
 		{"termcvt", termcvtMain, termcvtUsage},
 		{"hex", hexMain, hexUsage},
 		{"unhex", unhexMain, unhexUsage},
-		{"repl", replMain, replUsage},
+		{"repl", repl.ReplMain, repl.ReplUsage},
 	}
 }
 

@@ -19,6 +19,7 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! throughout: string(buffer.Bytes()) -> buffer.String()
 * repl foo:
   d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
   d :load {source files}

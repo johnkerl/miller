@@ -2,16 +2,11 @@
 // Just playing around -- nothing serious here.
 // ================================================================
 
-// TODO:
-// oFlatSep = inrecAndContext.Context.OFLATSEP
-// inrec.Flatten(oFlatSep)
-// iFlatSep = inrecAndContext.Context.IFLATSEP
-// inrec.Unflatten(iFlatSep)
-
-package auxents
+package repl
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -22,115 +17,13 @@ import (
 	"golang.org/x/term"
 
 	"miller/cliutil"
-	"miller/dsl"
 	"miller/dsl/cst"
 	"miller/input"
-	"miller/lib"
 	"miller/output"
-	"miller/parsing/lexer"
-	"miller/parsing/parser"
 	"miller/runtime"
 	"miller/types"
 	"miller/version"
 )
-
-// ================================================================
-func replUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: %s %s with no arguments\n", mlrExeName(), verbName)
-	os.Exit(exitCode)
-}
-
-// args are the full Miller command line: "mlr repl foo bar".
-func replMain(args []string) int {
-	//exeName := args[0]
-	//replName := args[1]
-	argc := len(args)
-	argi := 2
-
-	astPrintMode := ASTPrintNone
-	options := cliutil.DefaultOptions()
-
-	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
-		if !strings.HasPrefix(args[argi], "-") {
-			break // No more flag options to process
-		}
-
-		if args[argi] == "-h" || args[argi] == "--help" {
-			fmt.Println("help stub")
-			os.Exit(0)
-			// transformerPutUsage(os.Stdout, true, 0)
-
-		} else if args[argi] == "-v" {
-			astPrintMode = ASTPrintIndent
-			argi++
-		} else if args[argi] == "-d" {
-			astPrintMode = ASTPrintParex
-			argi++
-		} else if args[argi] == "-D" {
-			astPrintMode = ASTPrintParexOneLine
-			argi++
-
-		} else if cliutil.ParseReaderWriterOptions(args, argc, &argi, &options.ReaderOptions, &options.WriterOptions) {
-
-		} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
-
-		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
-
-		} else {
-			fmt.Println("help stub")
-			os.Exit(1)
-			// transformerPutUsage(os.Stderr, true, 1)
-		}
-	}
-
-	repl, err := NewRepl(
-		astPrintMode,
-		&options,
-	)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	filenames := args[argi:]
-	if len(filenames) > 0 {
-		repl.openFiles(filenames)
-	}
-
-	repl.HandleSession(os.Stdin)
-	return 0
-}
-
-// ================================================================
-type ASTPrintMode int
-
-const (
-	ASTPrintNone ASTPrintMode = iota
-	ASTPrintParex
-	ASTPrintParexOneLine
-	ASTPrintIndent
-)
-
-// ================================================================
-type Repl struct {
-	inputIsTerminal     bool
-	prompt1             string
-	prompt2             string
-	doingMultilineInput bool
-
-	astPrintMode ASTPrintMode
-	isFilter     bool
-	cstRootNode  *cst.RootNode
-
-	options *cliutil.TOptions
-
-	inputChannel chan *types.RecordAndContext
-	errorChannel chan error
-	recordReader input.IRecordReader
-	recordWriter output.IRecordWriter
-
-	runtimeState *runtime.State
-}
 
 // ----------------------------------------------------------------
 func NewRepl(
@@ -146,7 +39,6 @@ func NewRepl(
 	if prompt2 == "" {
 		prompt2 = ""
 	}
-	doingMultilineInput := false
 
 	recordReader := input.Create(&options.ReaderOptions)
 	if recordReader == nil {
@@ -165,10 +57,9 @@ func NewRepl(
 	runtimeState.FilterExpression = types.MlrvalFromVoid() // xxx comment
 
 	return &Repl{
-		inputIsTerminal:     inputIsTerminal,
-		prompt1:             prompt1,
-		prompt2:             prompt2,
-		doingMultilineInput: doingMultilineInput,
+		inputIsTerminal: inputIsTerminal,
+		prompt1:         prompt1,
+		prompt2:         prompt2,
 
 		astPrintMode: ASTPrintNone,
 		isFilter:     false,
@@ -184,20 +75,25 @@ func NewRepl(
 	}, nil
 }
 
+func (this *Repl) printPrompt1() {
+	if this.inputIsTerminal {
+		fmt.Print(this.prompt1)
+	}
+}
+
+func (this *Repl) printPrompt2() {
+	if this.inputIsTerminal {
+		fmt.Print(this.prompt2)
+	}
+}
+
 // ----------------------------------------------------------------
 func (this *Repl) HandleSession(istream *os.File) {
 	fmt.Printf("Miller %s\n", version.STRING) // TODO: inhibit if mlr repl -q
 	lineReader := bufio.NewReader(istream)
-	dslString := ""
 
 	for {
-		if this.inputIsTerminal {
-			if !this.doingMultilineInput {
-				fmt.Print(this.prompt1)
-			} else {
-				fmt.Print(this.prompt2)
-			}
-		}
+		this.printPrompt1()
 
 		line, err := lineReader.ReadString('\n')
 		if err == io.EOF {
@@ -205,42 +101,58 @@ func (this *Repl) HandleSession(istream *os.File) {
 		}
 
 		if err != nil {
-			// TODO: lib.MlrExeName()
+			// TODO: lib.MlrExeName() and maybe %w and also remember verb name in ctor
 			fmt.Fprintln(os.Stderr, "mlr repl:", err)
 			os.Exit(1)
 		}
 
-		// This trims the trailing newline, as well as leading/trailing
-		// whitespace:
+		// This trims the trailing newline, as well as leading/trailing whitespace:
 		trimmedLine := strings.TrimSpace(line)
 
-		// xxx enter/exit a multiline ingestor here ...
-		if !this.doingMultilineInput {
-			if trimmedLine == "<" {
-				this.doingMultilineInput = true
-				dslString = ""
-				continue
-			} else if trimmedLine == ":quit" {
-				break
-			} else if this.handleNonDSLLine(trimmedLine) {
-				continue
-			} else {
-				dslString = line
-			}
-
+		if trimmedLine == "<" {
+			this.handleMultiline(lineReader)
+		} else if trimmedLine == ":quit" {
+			break
+		} else if this.handleNonDSLLine(trimmedLine) {
+			// handled
 		} else {
-			if trimmedLine == ">" {
-				this.doingMultilineInput = false
-			} else {
-				dslString += line
-				continue
+			// We need the non-trimmed line here since the DSL syntax for comments is '#.*\n'.
+			err = this.handleDSLString(line, true) // xxx temp
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
 			}
 		}
+	}
+}
 
-		err = this.HandleDSLString(dslString, true) // xxx temp
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+// ----------------------------------------------------------------
+// xxx comment "<" has already been seen. we read until ">". xxx "<"
+func (this *Repl) handleMultiline(lineReader *bufio.Reader) {
+	var buffer bytes.Buffer
+	for {
+		this.printPrompt2()
+
+		line, err := lineReader.ReadString('\n')
+		if err == io.EOF {
+			break
 		}
+
+		if err != nil {
+			// TODO: lib.MlrExeName() and maybe %w
+			fmt.Fprintln(os.Stderr, "mlr repl:", err)
+			os.Exit(1)
+		}
+
+		if strings.TrimSpace(line) == ">" {
+			break
+		}
+		buffer.WriteString(line)
+	}
+	dslString := buffer.String()
+
+	err := this.handleDSLString(dslString, false) // xxx temp
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 	}
 }
 
@@ -395,7 +307,7 @@ func (this *Repl) handleLoad(args []string) {
 		}
 		dslString := string(dslBytes)
 
-		err = this.HandleDSLString(dslString, false)
+		err = this.handleDSLString(dslString, false)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -461,7 +373,7 @@ func (this *Repl) handleWrite(args []string) {
 }
 
 // ----------------------------------------------------------------
-func (this *Repl) HandleDSLString(dslString string, isReplImmediate bool) error {
+func (this *Repl) handleDSLString(dslString string, isReplImmediate bool) error {
 	if strings.TrimSpace(dslString) == "" {
 		return nil
 	}
@@ -498,44 +410,4 @@ func (this *Repl) HandleDSLString(dslString string, isReplImmediate bool) error 
 	this.runtimeState.FilterExpression = types.MlrvalFromVoid()
 
 	return nil
-}
-
-// ----------------------------------------------------------------
-func (this *Repl) BuildASTFromStringWithMessage(
-	dslString string,
-) (*dsl.AST, error) {
-	astRootNode, err := this.BuildASTFromString(dslString)
-	if err != nil {
-		// Leave this out until we get better control over the error-messaging.
-		// At present it's overly parser-internal, and confusing. :(
-		// fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-			lib.MlrExeName())
-		if this.astPrintMode != ASTPrintNone {
-			fmt.Fprintln(os.Stderr, dslString)
-		}
-		return nil, err
-	} else {
-		if this.astPrintMode == ASTPrintParex {
-			astRootNode.PrintParex()
-		} else if this.astPrintMode == ASTPrintParexOneLine {
-			astRootNode.PrintParexOneLine()
-		} else if this.astPrintMode == ASTPrintIndent {
-			astRootNode.Print()
-		}
-
-		return astRootNode, nil
-	}
-}
-
-// ----------------------------------------------------------------
-func (this *Repl) BuildASTFromString(dslString string) (*dsl.AST, error) {
-	theLexer := lexer.NewLexer([]byte(dslString))
-	theParser := parser.NewParser()
-	interfaceAST, err := theParser.Parse(theLexer)
-	if err != nil {
-		return nil, err
-	}
-	astRootNode := interfaceAST.(*dsl.AST)
-	return astRootNode, nil
 }

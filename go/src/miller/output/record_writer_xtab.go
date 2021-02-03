@@ -57,5 +57,5 @@ func (this *RecordWriterXTAB) Write(
 		buffer.WriteString(pe.Value.String())
 		buffer.WriteString("\n")
 	}
-	ostream.Write([]byte(buffer.String()))
+	ostream.Write(buffer.Bytes())
 }

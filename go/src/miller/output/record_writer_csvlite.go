@@ -75,7 +75,7 @@ func (this *RecordWriterCSVLite) Write(
 		}
 
 		buffer.WriteString(this.ors)
-		ostream.Write([]byte(buffer.String()))
+		ostream.Write(buffer.Bytes())
 	}
 
 	var buffer bytes.Buffer // faster than fmt.Print() separately
@@ -86,7 +86,7 @@ func (this *RecordWriterCSVLite) Write(
 		}
 	}
 	buffer.WriteString(this.ors)
-	ostream.Write([]byte(buffer.String()))
+	ostream.Write(buffer.Bytes())
 
 	this.justWroteEmptyLine = false
 }

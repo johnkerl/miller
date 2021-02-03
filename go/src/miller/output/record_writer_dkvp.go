@@ -46,5 +46,5 @@ func (this *RecordWriterDKVP) Write(
 		}
 	}
 	buffer.WriteString(this.ors)
-	ostream.Write([]byte(buffer.String()))
+	ostream.Write(buffer.Bytes())
 }
