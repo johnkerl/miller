@@ -45,6 +45,13 @@ func (this *RootNode) WithRedefinableUDFS() *RootNode {
 	return this
 }
 
+// TODO
+//func (this *RootNode) FooReport() {
+//	fmt.Printf("#begin %d\n", len(this.beginBlocks))
+//	fmt.Printf("#main  %d\n", len(this.mainBlock.executables))
+//	fmt.Printf("#end   %d\n", len(this.beginBlocks))
+//}
+
 // ----------------------------------------------------------------
 func (this *RootNode) Build(
 	ast *dsl.AST,

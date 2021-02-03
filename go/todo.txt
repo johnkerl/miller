@@ -2,6 +2,7 @@
 TOP OF LIST:
 
 ! issues !
+* do go.mod correctly w/ regard to gocc and golang.org/x/term/
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
@@ -23,16 +24,28 @@ TOP OF LIST:
   d :load {source files}
   d :begin and :end ...
 
+  o echo-dsl-string flag
   ? auto-unflatten / auto-flatten ? oy.
   o func-handle lookup tables as usual ...
   ? two-arg flatten/unflatten?
 
+  * :open fixes:
+    o fix no-open-files on read failure
+    o tilde-expand ...
+
+  * toggles for context display, b/m/e display, what else
+  * make a :main
+    o think through what load of multiple mains does
+    o especially with CLI input immediately after
+    o document it ...
+
   o UTs
 
   o handle data-file parse errors; need channel-select
-  o :read {n}
+  o :readto {n}
 
   o :break conditions -- ?
+
   ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

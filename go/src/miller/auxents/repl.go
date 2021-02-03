@@ -192,6 +192,8 @@ func (this *Repl) HandleSession(istream *os.File) {
 
 	for {
 		if this.inputIsTerminal {
+			// TODO
+			// this.cstRootNode.FooReport()
 			if !this.doingMultilineInput {
 				fmt.Print(this.prompt1)
 			} else {
@@ -452,6 +454,9 @@ func (this *Repl) handleWrite(args []string) {
 
 // ----------------------------------------------------------------
 func (this *Repl) HandleDSLString(dslString string) error {
+	if strings.TrimSpace(dslString) == "" {
+		return nil
+	}
 
 	astRootNode, err := this.BuildASTFromStringWithMessage(dslString)
 	if err != nil {
