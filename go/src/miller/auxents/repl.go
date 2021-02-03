@@ -465,7 +465,11 @@ func (this *Repl) HandleDSLString(dslString string) error {
 	}
 
 	this.cstRootNode.ResetForREPL()
-	err = this.cstRootNode.Build(astRootNode, this.isFilter)
+	err = this.cstRootNode.IngestAST(astRootNode, this.isFilter)
+	if err != nil {
+		return err
+	}
+	err = this.cstRootNode.Resolve()
 	if err != nil {
 		return err
 	}

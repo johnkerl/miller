@@ -50,13 +50,12 @@ func transformerPutOrFilterParseCLI(
 	verb := args[argi]
 	argi++
 
-	dslString := ""
+	var dslStrings []string = make([]string, 0)
 	verbose := false
 	printASTOnly := false
 	printASTSingleLine := false
 	invertFilter := false
 	suppressOutputRecord := false
-	needExpressionArg := true
 	presets := make([]string, 0)
 
 	// TODO: make sure this is a full nested-struct copy.
@@ -89,19 +88,12 @@ func transformerPutOrFilterParseCLI(
 				fmt.Println(err)
 				return nil
 			}
-			if dslString != "" {
-				dslString += "\n"
-			}
-			dslString += string(data)
-
-			needExpressionArg = false
+			dslString := string(data)
+			dslStrings = append(dslStrings, dslString)
 
 		} else if opt == "-e" {
-			if dslString != "" {
-				dslString += ";\n"
-			}
-			dslString += cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
-			needExpressionArg = false
+			dslString := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			dslStrings = append(dslStrings, dslString)
 
 		} else if opt == "-s" {
 			// E.g.
@@ -155,33 +147,36 @@ func transformerPutOrFilterParseCLI(
 	// If they've used either of 'mlr put -f {filename}' or 'mlr put -e
 	// {expression}' then that specifies their DSL expression. But if they've
 	// done neither then we expect 'mlr put {expression}'.
-	if needExpressionArg {
+	if len(dslStrings) == 0 {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
 			transformerPutUsage(os.Stderr, true, 1)
 		}
-		dslString = args[argi]
+		dslString := args[argi]
+		dslStrings = append(dslStrings, dslString)
 		argi++
 	}
 
 	if printASTOnly {
-		astRootNode, err := BuildASTFromStringWithMessage(dslString, false)
-		if err == nil {
-			if printASTSingleLine {
-				astRootNode.PrintParexOneLine()
+		for _, dslString := range dslStrings {
+			astRootNode, err := BuildASTFromStringWithMessage(dslString, false)
+			if err == nil {
+				if printASTSingleLine {
+					astRootNode.PrintParexOneLine()
+				} else {
+					astRootNode.PrintParex()
+				}
+				os.Exit(0)
 			} else {
-				astRootNode.PrintParex()
+				// error message already printed out
+				os.Exit(1)
 			}
-			os.Exit(0)
-		} else {
-			// error message already printed out
-			os.Exit(1)
 		}
 	}
 
 	isFilter := verb == "filter"
 	transformer, err := NewTransformerPut(
-		dslString,
+		dslStrings,
 		isFilter,
 		presets,
 		verbose,
@@ -273,7 +268,6 @@ semicolons to separate expressions.)
 
 // ----------------------------------------------------------------
 type TransformerPut struct {
-	astRootNode          *dsl.AST
 	cstRootNode          *cst.RootNode
 	runtimeState         *runtime.State
 	callCount            int
@@ -283,7 +277,7 @@ type TransformerPut struct {
 }
 
 func NewTransformerPut(
-	dslString string,
+	dslStrings []string,
 	isFilter bool,
 	presets []string,
 	verbose bool,
@@ -292,26 +286,36 @@ func NewTransformerPut(
 	recordWriterOptions *cliutil.TWriterOptions,
 ) (*TransformerPut, error) {
 
-	astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
-	if err != nil {
-		// Error message already printed out
-		return nil, err
-	}
-
-	if verbose {
-		fmt.Println("DSL EXPRESSION:")
-		fmt.Println(dslString)
-		fmt.Println("RAW AST:")
-		astRootNode.Print()
-		fmt.Println()
-	}
-
 	cstRootNode := cst.NewEmptyRoot(recordWriterOptions)
-	err = cstRootNode.Build(astRootNode, isFilter)
+
+	for _, dslString := range dslStrings {
+		astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
+		if err != nil {
+			// Error message already printed out
+			return nil, err
+		}
+
+		if verbose {
+			fmt.Println("DSL EXPRESSION:")
+			fmt.Println(dslString)
+			fmt.Println("RAW AST:")
+			astRootNode.Print()
+			fmt.Println()
+		}
+
+		err = cstRootNode.IngestAST(astRootNode, isFilter)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return nil, err
+		}
+	}
+
+	err := cstRootNode.Resolve()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
+
 	runtimeState := runtime.NewEmptyState()
 
 	// E.g.
@@ -337,7 +341,6 @@ func NewTransformerPut(
 	}
 
 	return &TransformerPut{
-		astRootNode:          astRootNode,
 		cstRootNode:          cstRootNode,
 		runtimeState:         runtimeState,
 		callCount:            0,

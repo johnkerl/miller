@@ -20,9 +20,24 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * repl foo:
+  * mutual recursion fg.mlr / gf.mlr -- needs a single resolver at the end ...
+    - maybe separate ingest-ASTs and resolver passes
   d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
   d :load {source files}
-  d :begin and :end ...
+  d :begin and :main and :end ...
+  ? want?
+    > on :load, append to begin/main/end
+    > always accumulate UDF/UDS
+    > be able to execute :begin :main :end at will
+    < treat one-line statements as one-offs (separate CST? or just separate adhocStatement?)
+    ? but what about <...> and/or complex one-liners?
+  ? add-to-main flag
+    - true for load ...
+    - false (by default) for manually entered
+    - :record?
+  ? have a 'list' for DSL strings &/or their ASTs for each block ... ?
+  ? have :clear {udf,uds,begin,main,end,?}
+  * refactor put/filter -f/-e to match: 'dslStrings []string'
 
   o echo-dsl-string flag
   ? auto-unflatten / auto-flatten ? oy.
@@ -514,3 +529,5 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
 	// and 'mlr filter' is they need to be able to take -f and/or -e more than
 	// once, and Go flags can't handle that.
+
+* doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
