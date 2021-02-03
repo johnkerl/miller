@@ -216,6 +216,7 @@ func (this *Repl) HandleSession(istream *os.File) {
 		// whitespace:
 		trimmedLine := strings.TrimSpace(line)
 
+		// xxx enter/exit a multiline ingestor here ...
 		if !this.doingMultilineInput {
 			if trimmedLine == "<" {
 				this.doingMultilineInput = true
@@ -465,7 +466,7 @@ func (this *Repl) HandleDSLString(dslString string) error {
 	}
 
 	this.cstRootNode.ResetForREPL()
-	err = this.cstRootNode.IngestAST(astRootNode, this.isFilter)
+	err = this.cstRootNode.IngestAST(astRootNode, this.isFilter, true) // TODO
 	if err != nil {
 		return err
 	}
@@ -474,7 +475,7 @@ func (this *Repl) HandleDSLString(dslString string) error {
 		return err
 	}
 
-	outrec, err := this.cstRootNode.ExecuteREPLExperimental(this.runtimeState)
+	outrec, err := this.cstRootNode.ExecuteREPLImmediate(this.runtimeState)
 	if err != nil {
 		return err
 	}

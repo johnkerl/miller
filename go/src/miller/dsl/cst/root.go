@@ -26,6 +26,7 @@ func NewEmptyRoot(
 	return &RootNode{
 		beginBlocks:                   make([]*StatementBlockNode, 0),
 		mainBlock:                     NewStatementBlockNode(),
+		replImmediateBlock:            NewStatementBlockNode(),
 		endBlocks:                     make([]*StatementBlockNode, 0),
 		udfManager:                    NewUDFManager(),
 		udsManager:                    NewUDSManager(),
@@ -60,6 +61,7 @@ func (this *RootNode) WithRedefinableUDFS() *RootNode {
 func (this *RootNode) IngestAST(
 	ast *dsl.AST,
 	isFilter bool, // false for 'mlr put', true for 'mlr filter'
+	isReplImmediate bool, // TODO: more comments
 ) error {
 	if ast.RootNode == nil {
 		return errors.New("Cannot build CST from nil AST root")
@@ -73,7 +75,7 @@ func (this *RootNode) IngestAST(
 		return err
 	}
 
-	err = this.buildMainPass(ast)
+	err = this.buildMainPass(ast, isReplImmediate)
 	if err != nil {
 		return err
 	}
@@ -101,7 +103,7 @@ func (this *RootNode) Resolve() error {
 // functions may be called before they are defined, so a follow-up pass will
 // need to resolve those callsites.
 
-func (this *RootNode) buildMainPass(ast *dsl.AST) error {
+func (this *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
 
 	if ast.RootNode.Type != dsl.NodeTypeStatementBlock {
 		return errors.New(
@@ -157,6 +159,12 @@ func (this *RootNode) buildMainPass(ast *dsl.AST) error {
 			} else {
 				this.endBlocks = append(this.endBlocks, statementBlockNode)
 			}
+		} else if isReplImmediate {
+			statementNode, err := this.BuildStatementNode(astChild)
+			if err != nil {
+				return err
+			}
+			this.replImmediateBlock.AppendStatementNode(statementNode)
 		} else {
 			statementNode, err := this.BuildStatementNode(astChild)
 			if err != nil {
@@ -300,15 +308,14 @@ func (this *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 // ----------------------------------------------------------------
 // src/miller/auxents/repl
 // TODO: more comments
-func (this *RootNode) ExecuteREPLExperimental(state *runtime.State) (outrec *types.Mlrmap, err error) {
-	_, err = this.mainBlock.ExecuteFrameless(state)
+func (this *RootNode) ExecuteREPLImmediate(state *runtime.State) (outrec *types.Mlrmap, err error) {
+	_, err = this.replImmediateBlock.ExecuteFrameless(state)
 	return state.Inrec, err
 }
 
+// TODO: more comments
 func (this *RootNode) ResetForREPL() {
-	this.beginBlocks = make([]*StatementBlockNode, 0)
-	this.mainBlock = NewStatementBlockNode()
-	this.endBlocks = make([]*StatementBlockNode, 0)
+	this.replImmediateBlock = NewStatementBlockNode()
 	this.unresolvedFunctionCallsites = list.New()
 	this.unresolvedSubroutineCallsites = list.New()
 }

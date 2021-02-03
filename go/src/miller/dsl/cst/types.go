@@ -18,6 +18,7 @@ import (
 type RootNode struct {
 	beginBlocks                   []*StatementBlockNode
 	mainBlock                     *StatementBlockNode
+	replImmediateBlock            *StatementBlockNode
 	endBlocks                     []*StatementBlockNode
 	udfManager                    *UDFManager
 	udsManager                    *UDSManager

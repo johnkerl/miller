@@ -303,7 +303,7 @@ func NewTransformerPut(
 			fmt.Println()
 		}
 
-		err = cstRootNode.IngestAST(astRootNode, isFilter)
+		err = cstRootNode.IngestAST(astRootNode, isFilter, false) // TODO: split out methods ...
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return nil, err
