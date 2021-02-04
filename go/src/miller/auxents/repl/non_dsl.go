@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"miller/dsl/cst"
+	"miller/lib"
 	"miller/types"
 )
 
@@ -30,6 +31,7 @@ func init() {
 		{verbNames: []string{":l", ":load"}, handlerFunc: handleLoad, usageFunc: usageLoad},
 		{verbNames: []string{":o", ":open"}, handlerFunc: handleOpen, usageFunc: usageOpen},
 		{verbNames: []string{":r", ":read"}, handlerFunc: handleRead, usageFunc: usageRead},
+		{verbNames: []string{":rto", ":readto"}, handlerFunc: handleReadTo, usageFunc: usageReadTo},
 		{verbNames: []string{":w", ":write"}, handlerFunc: handleWrite, usageFunc: usageWrite},
 		{verbNames: []string{":b", ":begin"}, handlerFunc: handleBegin, usageFunc: usageBegin},
 		{verbNames: []string{":m", ":main"}, handlerFunc: handleMain, usageFunc: usageMain},
@@ -204,6 +206,92 @@ func handleRead(this *Repl, args []string) bool {
 			fmt.Print(recordAndContext.OutputString)
 		} else {
 			fmt.Println(recordAndContext.Context.GetStatusString())
+		}
+	}
+
+	if err != nil {
+		fmt.Println(err)
+		this.inputChannel = nil
+		this.errorChannel = nil
+	}
+
+	return true
+}
+
+// ----------------------------------------------------------------
+func usageReadTo(this *Repl) {
+	fmt.Println(":readto {n} to read n records.")
+	// TODO: decide whether :main will be invoked on them or not ...
+	fmt.Printf(
+		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
+		this.exeName, this.replName,
+	)
+	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
+	fmt.Println("write it out using :write.")
+}
+
+func handleReadTo(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) != 1 {
+		return false
+	}
+	n, ok := lib.TryIntFromString(args[0])
+	if !ok {
+		fmt.Printf("Could not parse \"%s\" as integer.\n", args[0])
+		return true
+	}
+
+	if this.inputChannel == nil {
+		fmt.Println("No open files")
+		return true
+	}
+
+	// TODO: code-dedupe with :read
+	var recordAndContext *types.RecordAndContext = nil
+	var err error = nil
+
+	for i := 1; i <= n; i++ {
+		select {
+		case recordAndContext = <-this.inputChannel:
+			break
+		case err = <-this.errorChannel:
+			break
+		}
+
+		if recordAndContext != nil {
+			// Three things can come through:
+			//
+			// * End-of-stream marker
+			// * Non-nil records to be printed
+			// * Strings to be printed from put/filter DSL print/dump/etc
+			//   statements. They are handled here rather than fmt.Println directly
+			//   in the put/filter handlers since we want all print statements and
+			//   record-output to be in the same goroutine, for deterministic
+			//   output ordering.
+			//
+			// The first two are passed to the transformer. The third we send along
+			// the output channel without involving the record-transformer, since
+			// there is no record to be transformed.
+
+			this.runtimeState.Update(recordAndContext.Record, this.runtimeState.Context)
+			if recordAndContext.EndOfStream == true {
+				fmt.Println("End of record stream")
+				this.inputChannel = nil
+				this.errorChannel = nil
+				break
+			} else if recordAndContext.Record == nil {
+				fmt.Print(recordAndContext.OutputString)
+			} else {
+				_, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+				if err != nil {
+					fmt.Println(err)
+					break
+				}
+				if i == n {
+					fmt.Println(recordAndContext.Context.GetStatusString())
+					// TODO: :main
+				}
+			}
 		}
 	}
 

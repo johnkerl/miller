@@ -22,6 +22,9 @@ TOP OF LIST:
 ! throughout: string(buffer.Bytes()) -> buffer.String()
 * repl foo:
   o make a README.md
+  o rlwrap note
+  o audit len-0 usages
+  o top-down narrative in :help intro
   o improve usage messages
   o make per-file at-top comments
   d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
@@ -38,8 +41,10 @@ TOP OF LIST:
 
   o extend UTs
 
-  o handle data-file parse errors; need channel-select
-  o :readto {n}
+  o :readto {n} -- need this to be truly powerful
+    - :main on and :main off -- ?
+    - simpler: 2nd arg for :readto
+    - maybe 2nd verb name: :skip or :process ?
 
   o :break conditions -- ?
 
