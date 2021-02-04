@@ -169,35 +169,50 @@ func handleRead(this *Repl, args []string) bool {
 		return true
 	}
 
-	recordAndContext := <-this.inputChannel
+	var recordAndContext *types.RecordAndContext = nil
+	var err error = nil
 
-	// Three things can come through:
-	//
-	// * End-of-stream marker
-	// * Non-nil records to be printed
-	// * Strings to be printed from put/filter DSL print/dump/etc
-	//   statements. They are handled here rather than fmt.Println directly
-	//   in the put/filter handlers since we want all print statements and
-	//   record-output to be in the same goroutine, for deterministic
-	//   output ordering.
-	//
-	// The first two are passed to the transformer. The third we send along
-	// the output channel without involving the record-transformer, since
-	// there is no record to be transformed.
+	select {
+	case recordAndContext = <-this.inputChannel:
+		break
+	case err = <-this.errorChannel:
+		break
+	}
 
-	this.runtimeState.Update(recordAndContext.Record, this.runtimeState.Context)
+	if recordAndContext != nil {
+		// Three things can come through:
+		//
+		// * End-of-stream marker
+		// * Non-nil records to be printed
+		// * Strings to be printed from put/filter DSL print/dump/etc
+		//   statements. They are handled here rather than fmt.Println directly
+		//   in the put/filter handlers since we want all print statements and
+		//   record-output to be in the same goroutine, for deterministic
+		//   output ordering.
+		//
+		// The first two are passed to the transformer. The third we send along
+		// the output channel without involving the record-transformer, since
+		// there is no record to be transformed.
 
-	if recordAndContext.EndOfStream == true {
-		// xxx put to recordwriter
-		// xxx temp
-		fmt.Println("End of record stream")
+		this.runtimeState.Update(recordAndContext.Record, this.runtimeState.Context)
+
+		if recordAndContext.EndOfStream == true {
+			fmt.Println("End of record stream")
+			this.inputChannel = nil
+			this.errorChannel = nil
+		} else if recordAndContext.Record == nil {
+			fmt.Print(recordAndContext.OutputString)
+		} else {
+			fmt.Println(recordAndContext.Context.GetStatusString())
+		}
+	}
+
+	if err != nil {
+		fmt.Println(err)
 		this.inputChannel = nil
 		this.errorChannel = nil
-	} else if recordAndContext.Record == nil {
-		fmt.Print(recordAndContext.OutputString)
-	} else {
-		fmt.Println(recordAndContext.Context.GetStatusString())
 	}
+
 	return true
 }
 
