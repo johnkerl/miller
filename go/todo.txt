@@ -39,14 +39,19 @@ TOP OF LIST:
     o fix no-open-files on read failure
     o tilde-expand ...
 
+  o non-dsl -> repl in the user interface
+
   o extend UTs
 
-  o :readto {n} -- need this to be truly powerful
-    - :main on and :main off -- ?
-    - simpler: 2nd arg for :readto
-    - maybe 2nd verb name: :skip or :process ?
-
-  o :break conditions -- ?
+  o :skip/process {n} / until {expression}
+    - toggle write-enable ... e.g. if the :main has a print ...
+    - :skip until {expression}
+      :skip {n}
+      > no mains, no write
+    - :process until {expression}
+      :process {n}
+      > mains and write
+      > mains and no write
 
   ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
