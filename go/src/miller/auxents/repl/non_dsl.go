@@ -262,6 +262,17 @@ func usageHelp(this *Repl) {
 	fmt.Println("TODO: metahelp is TBD.")
 }
 
+// PLAN:
+// * :help
+// * :help dsl functions
+// * :help dsl function x
+// * :help dsl keywords
+// * :help dsl keywords x
+// * :help repl
+// * :help repl commands
+// * :help repl intro
+// * :help repl :foo
+
 func handleHelp(this *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) == 0 {
