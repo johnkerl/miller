@@ -158,10 +158,10 @@ func (this *Context) Copy() *Context {
 func (this *Context) GetStatusString() string {
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
-	buffer.WriteString("FILENAME=")
+	buffer.WriteString("FILENAME=\"")
 	buffer.WriteString(this.FILENAME)
 
-	buffer.WriteString(",FILENUM=")
+	buffer.WriteString("\",FILENUM=")
 	buffer.WriteString(strconv.Itoa(this.FILENUM))
 
 	buffer.WriteString(",NR=")

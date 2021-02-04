@@ -25,13 +25,18 @@ const (
 
 // ================================================================
 type Repl struct {
+	// From os.Args[] as we were invoked. These are for printing error messages.
+	exeName  string
+	replName string
+
+	// Prompt1 is the main prompt, like $PS1. Prompt2 is for "<" ... ">"
+	// multi-line-input mode.
 	inputIsTerminal     bool
 	prompt1             string
 	prompt2             string
 	doingMultilineInput bool
 
 	astPrintMode ASTPrintMode
-	isFilter     bool
 	cstRootNode  *cst.RootNode
 
 	options *cliutil.TOptions

@@ -21,6 +21,12 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! throughout: string(buffer.Bytes()) -> buffer.String()
 * repl foo:
+  o make a README.md
+  o non-dsl:
+    - tabularize argc ranges
+    - audit no os.Stderr
+    - improve usage messages
+  o make per-file at-top comments
   d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
   d :load {source files}
   d :begin and :main and :end ...

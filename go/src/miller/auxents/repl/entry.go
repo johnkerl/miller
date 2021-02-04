@@ -25,8 +25,8 @@ func mlrExeName() string {
 
 // args are the full Miller command line: "mlr repl foo bar".
 func ReplMain(args []string) int {
-	//exeName := args[0]
-	//replName := args[1]
+	exeName := args[0]
+	replName := args[1]
 	argc := len(args)
 	argi := 2
 
@@ -67,6 +67,8 @@ func ReplMain(args []string) int {
 	}
 
 	repl, err := NewRepl(
+		exeName,
+		replName,
 		astPrintMode,
 		&options,
 	)
@@ -80,6 +82,6 @@ func ReplMain(args []string) int {
 		repl.openFiles(filenames)
 	}
 
-	repl.HandleSession(os.Stdin)
+	repl.handleSession(os.Stdin)
 	return 0
 }

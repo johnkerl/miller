@@ -1116,84 +1116,6 @@ else returns its argument.`,
 		unaryFunc: types.MlrvalTypeof,
 	},
 
-	// is_absent (class=typing #args=1): False if field is present in input, true otherwise
-	//
-	// is_bool (class=typing #args=1): True if field is present with boolean value. Synonymous with is_boolean.
-	//
-	// is_boolean (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
-	//
-	// is_empty (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
-	//
-	// is_empty_map (class=typing #args=1): True if argument is a map which is empty.
-	//
-	// is_float (class=typing #args=1): True if field is present with value inferred to be float
-	//
-	// is_int (class=typing #args=1): True if field is present with value inferred to be int
-	//
-	// is_map (class=typing #args=1): True if argument is a map.
-	//
-	// is_nonempty_map (class=typing #args=1): True if argument is a map which is non-empty.
-	//
-	// is_not_empty (class=typing #args=1): False if field is present in input with empty value, true otherwise
-	//
-	// is_not_map (class=typing #args=1): True if argument is not a map.
-	//
-	// is_not_null (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
-	//
-	// is_null (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
-	//
-	// is_numeric (class=typing #args=1): True if field is present with value inferred to be int or float
-	//
-	// is_present (class=typing #args=1): True if field is present in input, false otherwise.
-	//
-	// is_string (class=typing #args=1): True if field is present with string (including empty-string) value
-	//
-	// asserting_absent (class=typing #args=1): Returns argument if it is absent in the input data, else
-	// throws an error.
-	//
-	// asserting_bool (class=typing #args=1): Returns argument if it is present with boolean value, else
-	// throws an error.
-	//
-	// asserting_boolean (class=typing #args=1): Returns argument if it is present with boolean value, else
-	// throws an error.
-	//
-	// asserting_empty (class=typing #args=1): Returns argument if it is present in input with empty value,
-	// else throws an error.
-	//
-	// asserting_empty_map (class=typing #args=1): Returns argument if it is a map with empty value, else
-	// throws an error.
-	//
-	// asserting_float (class=typing #args=1): Returns argument if it is present with float value, else
-	// throws an error.
-	//
-	// asserting_int (class=typing #args=1): Returns argument if it is present with int value, else
-	// throws an error.
-	//
-	// asserting_map (class=typing #args=1): Returns argument if it is a map, else throws an error.
-	//
-	// asserting_nonempty_map (class=typing #args=1): Returns argument if it is a non-empty map, else throws
-	// an error.
-	//
-	// asserting_not_empty (class=typing #args=1): Returns argument if it is present in input with non-empty
-	// value, else throws an error.
-	//
-	// asserting_not_map (class=typing #args=1): Returns argument if it is not a map, else throws an error.
-	//
-	// asserting_not_null (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
-	// else throws an error.
-	//
-	// asserting_null (class=typing #args=1): Returns argument if it is null (empty or absent), else throws
-	// an error.
-	//
-	// asserting_numeric (class=typing #args=1): Returns argument if it is present with int or float value,
-	// else throws an error.
-	//
-	// asserting_present (class=typing #args=1): Returns argument if it is present in input, else throws
-	// an error.
-	//
-	// asserting_string (class=typing #args=1): Returns argument if it is present with string (including
-	// empty-string) value, else throws an error.
-
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_CONVERSION
 
@@ -1316,23 +1238,6 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 		help:      "Convert int/float/bool/string/array/map to string.",
 		unaryFunc: types.MlrvalToString,
 	},
-
-	// boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
-	//
-	// float (class=conversion #args=1): Convert int/float/bool/string to float.
-	//
-	// fmtnum (class=conversion #args=2): Convert int/float/bool to string using
-	// printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'. WARNING: Miller numbers
-	// are all long long or double. If you use formats like %d or %f, behavior is undefined.
-	//
-	// hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
-	//
-	// int (class=conversion #args=1): Convert int/float/bool/string to int.
-	//
-	// string (class=conversion #args=1): Convert int/float/bool/string to string.
-	//
-	// typeof (class=conversion #args=1): Convert argument to type of argument (e.g.
-	// MT_STRING). For debug.
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_COLLECTIONS
@@ -1473,47 +1378,6 @@ See also arrayify.`,
 		binaryFunc: types.MlrvalUnflatten,
 	},
 }
-
-// depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
-//
-// haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-// 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
-//
-// joink (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
-//
-// joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
-//
-// joinv (class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
-//
-// leafcount (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
-// same as length.
-//
-// length (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
-//
-// mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
-// With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
-//
-// mapexcept (class=maps variadic): Returns a map with keys from remaining arguments, if any, unset.
-// E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
-//
-// mapselect (class=maps variadic): Returns a map with only keys from remaining arguments set.
-// E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
-//
-// mapsum (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-// key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
-//
-// splitkv (class=maps #args=3): Splits string by separators into map with type inference.
-// E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
-//
-// splitkvx (class=maps #args=3): Splits string by separators into map without type inference (keys and
-// values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
-// '{"a" : "1", "b" : "2", "c" : "3"}'.
-//
-// splitnv (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
-// E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
-//
-// splitnvx (class=maps #args=2): Splits string by separator into integer-indexed map without type
-// inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
 
 // ================================================================
 type BuiltinFunctionManager struct {
