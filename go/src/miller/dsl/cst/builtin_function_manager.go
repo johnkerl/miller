@@ -1445,10 +1445,15 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 }
 
 func (this *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string, o *os.File) {
+	if !this.TryListBuiltinFunctionUsage(functionName, o) {
+		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
+	}
+}
+
+func (this *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string, o *os.File) bool {
 	builtinFunctionInfo := this.LookUp(functionName)
 	if builtinFunctionInfo == nil {
-		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
-		return
+		return false
 	}
 	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
 	fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
@@ -1457,6 +1462,7 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string
 		describeNargs(builtinFunctionInfo),
 		builtinFunctionInfo.help,
 	)
+	return true
 }
 
 func describeNargs(info *BuiltinFunctionInfo) string {

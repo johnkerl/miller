@@ -1,6 +1,4 @@
 // ================================================================
-// Just playing around -- nothing serious here.
-// ================================================================
 
 package repl
 
@@ -18,24 +16,28 @@ import (
 type tHandlerFunc func(repl *Repl, args []string) bool
 type tUsageFunc func(repl *Repl)
 type handlerInfo struct {
+	verbNames   []string
 	handlerFunc tHandlerFunc
 	usageFunc   tUsageFunc
-	verbNames   []string
 }
 
-// TODO: tabularize arg-count expected and common usage if not.
+// We get a Golang "initialization loop" if this is defined statically. So, we
+// use a "package init" function.
+var handlerLookupTable = []handlerInfo{}
 
-var handlerLookupTable = []handlerInfo{
-	{handlerFunc: handleLoad, usageFunc: usageLoad, verbNames: []string{":l", ":load"}},
-	{handlerFunc: handleOpen, usageFunc: usageOpen, verbNames: []string{":o", ":open"}},
-	{handlerFunc: handleRead, usageFunc: usageRead, verbNames: []string{":r", ":read"}},
-	{handlerFunc: handleWrite, usageFunc: usageWrite, verbNames: []string{":w", ":write"}},
-	{handlerFunc: handleBegin, usageFunc: usageBegin, verbNames: []string{":b", ":begin"}},
-	{handlerFunc: handleMain, usageFunc: usageMain, verbNames: []string{":m", ":main"}},
-	{handlerFunc: handleEnd, usageFunc: usageEnd, verbNames: []string{":e", ":end"}},
-	{handlerFunc: handleASTPrint, usageFunc: usageASTPrint, verbNames: []string{":astprint"}},
-	{handlerFunc: handleBlocks, usageFunc: usageBlocks, verbNames: []string{":blocks"}},
-	{handlerFunc: handleHelp, usageFunc: usageHelp, verbNames: []string{":h", ":help"}},
+func init() {
+	handlerLookupTable = []handlerInfo{
+		{verbNames: []string{":l", ":load"}, handlerFunc: handleLoad, usageFunc: usageLoad},
+		{verbNames: []string{":o", ":open"}, handlerFunc: handleOpen, usageFunc: usageOpen},
+		{verbNames: []string{":r", ":read"}, handlerFunc: handleRead, usageFunc: usageRead},
+		{verbNames: []string{":w", ":write"}, handlerFunc: handleWrite, usageFunc: usageWrite},
+		{verbNames: []string{":b", ":begin"}, handlerFunc: handleBegin, usageFunc: usageBegin},
+		{verbNames: []string{":m", ":main"}, handlerFunc: handleMain, usageFunc: usageMain},
+		{verbNames: []string{":e", ":end"}, handlerFunc: handleEnd, usageFunc: usageEnd},
+		{verbNames: []string{":astprint"}, handlerFunc: handleASTPrint, usageFunc: usageASTPrint},
+		{verbNames: []string{":blocks"}, handlerFunc: handleBlocks, usageFunc: usageBlocks},
+		{verbNames: []string{":h", ":help"}, handlerFunc: handleHelp, usageFunc: usageHelp},
+	}
 }
 
 // ----------------------------------------------------------------
@@ -52,17 +54,21 @@ func (this *Repl) findHandler(verbName string) *handlerInfo {
 }
 
 // ----------------------------------------------------------------
+// TODO: comment
 func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 	args := strings.Fields(trimmedLine)
 	if len(args) == 0 {
 		return false
 	}
 	verbName := args[0]
-	// We handle all single lines starting with a colon.
+
+	// We handle all single lines starting with a colon.  Anything that starts
+	// with a semicolon but which we don't recognize, we should say so here --
+	// rather than deferring to the DSL parser which will say "cannot parse DSL
+	// expression".
 	if !strings.HasPrefix(verbName, ":") {
 		return false
 	}
-
 	handler := this.findHandler(verbName)
 	if handler == nil {
 		fmt.Printf("Non-DSL verb %s not found.\n", verbName)
@@ -77,7 +83,14 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 
 // ----------------------------------------------------------------
 func usageLoad(this *Repl) {
-	fmt.Println("Usage: :load {one or more filenames containing Miller DSL statements}")
+	fmt.Println(":load {one or more filenames containing Miller DSL statements}")
+	fmt.Print(
+		`'begin {...}' / 'end{...}' blocks are parsed and saved. Type ':begin' or
+':end', respectively, to execute them. User-defined functions and subroutines
+('func' and 'subr') are parsed and saved. Other statements are saved in a
+'main' block.  Type ':main' to execute them on a given record. (See :open and
+:read for more on how to do this.)
+`)
 }
 
 func handleLoad(this *Repl, args []string) bool {
@@ -88,7 +101,7 @@ func handleLoad(this *Repl, args []string) bool {
 	for _, filename := range args {
 		dslBytes, err := ioutil.ReadFile(filename)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Cannot load DSL expression from file \"%s\": ",
+			fmt.Printf("Cannot load DSL expression from file \"%s\": ",
 				filename)
 			fmt.Println(err)
 			return true
@@ -97,7 +110,7 @@ func handleLoad(this *Repl, args []string) bool {
 
 		err = this.handleDSLStringBulk(dslString)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			fmt.Println(err)
 		}
 	}
 	return true
@@ -106,9 +119,18 @@ func handleLoad(this *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageOpen(this *Repl) {
 	fmt.Printf(
-		"Usage: :load {one or more data-file names, in the format specifed by %s %s\n",
+		":open {one or more data-file names, in the format specifed by %s %s\n",
 		this.exeName, this.replName,
 	)
+	fmt.Print(
+		`Then you can type :read to load the next record. Then any interactive
+DSL commands will use that record. Also you can type ':main' to invoke any
+main-block statements from multiline input or :load.
+
+If zero data-file names are supplied, then standard input will be read when
+you type :read.
+`)
+
 }
 
 func handleOpen(this *Repl, args []string) bool {
@@ -132,7 +154,13 @@ func (this *Repl) openFiles(filenames []string) {
 
 // ----------------------------------------------------------------
 func usageRead(this *Repl) {
-	fmt.Println("Usage: :read with no arguments.")
+	fmt.Println(":read with no arguments.")
+	fmt.Printf(
+		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
+		this.exeName, this.replName,
+	)
+	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
+	fmt.Println("write it out using :write.")
 }
 
 func handleRead(this *Repl, args []string) bool {
@@ -175,7 +203,10 @@ func handleRead(this *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageWrite(this *Repl) {
-	fmt.Println("Usage: :write with no arguments.")
+	fmt.Println(":write with no arguments.")
+	fmt.Println("Sends the current record (maybe modifed by statements you enter)")
+	fmt.Printf("to the output with format as specified by %s %s.\n",
+		this.exeName, this.replName)
 }
 func handleWrite(repl *Repl, args []string) bool {
 	if len(args) != 1 {
@@ -187,7 +218,8 @@ func handleWrite(repl *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageBegin(this *Repl) {
-	fmt.Println("Usage: :begin with no arguments.")
+	fmt.Println(":begin with no arguments.")
+	fmt.Println("Executes any begin {...} which have been entered.")
 }
 func handleBegin(this *Repl, args []string) bool {
 	if len(args) != 1 {
@@ -202,19 +234,22 @@ func handleBegin(this *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageMain(this *Repl) {
-	fmt.Println("Usage: :main with no arguments.")
+	fmt.Println(":main with no arguments.")
+	fmt.Println("Executes any statements outside of begin/end/func/subr which have been.")
+	fmt.Println("with :load or multi-line input.")
 }
 func handleMain(this *Repl, args []string) bool {
 	_, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Println(err)
 	}
 	return true
 }
 
 // ----------------------------------------------------------------
 func usageEnd(this *Repl) {
-	fmt.Println("Usage: :end with no arguments.")
+	fmt.Println(":end with no arguments.")
+	fmt.Println("Executes any end {...} which have been entered.")
 }
 func handleEnd(this *Repl, args []string) bool {
 	err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
@@ -226,7 +261,13 @@ func handleEnd(this *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageASTPrint(this *Repl) {
-	fmt.Println("Need argument: see ':help :astprint'.")
+	fmt.Println(":astprint {format option}")
+	fmt.Println("Shows the AST (abstract syntax tree) associated with DSL statements entered in.")
+	fmt.Println("Format options:")
+	fmt.Println("parex  Prints AST as a parenthesized multi-line expression.")
+	fmt.Println("parex1 Prints AST as a parenthesized single-line expression.")
+	fmt.Println("indent Prints AST as an indented tree expression.")
+	fmt.Println("none   Disables AST printing.")
 }
 func handleASTPrint(this *Repl, args []string) bool {
 	args = args[1:] // strip off verb
@@ -250,7 +291,11 @@ func handleASTPrint(this *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageBlocks(this *Repl) {
-	fmt.Println("Usage: :blocks with no arguments.")
+	fmt.Println(":blocks with no arguments.")
+	fmt.Println("Shows the number of begin{...} blocks that have been loaded, the number")
+	fmt.Println("of main-block statements that have been loaded with :load or multi-line input,")
+	fmt.Println("and the number of end{...} blocks that have been loaded.")
+
 }
 func handleBlocks(this *Repl, args []string) bool {
 	this.cstRootNode.ShowBlockReport()
@@ -264,39 +309,84 @@ func usageHelp(this *Repl) {
 
 // PLAN:
 // * :help
-// * :help dsl functions
-// * :help dsl function x
-// * :help dsl keywords
-// * :help dsl keywords x
+// * :help invocation (CLI flags ...)
+//   mlr repl -h ...
+//   -f/-e/-s ...
+// * :help functions
+// * :help keywords
+//   --> sort them ...
+// * :help {function}
+// * :help {keyword}
 // * :help repl
 // * :help repl commands
 // * :help repl intro
-// * :help repl :foo
+// * :help :foo
 
 func handleHelp(this *Repl, args []string) bool {
-	args = args[1:] // strip off verb
+	args = args[1:] // Strip off verb ':help'
 	if len(args) == 0 {
 		fmt.Println("Options:")
+		fmt.Println(":help intro")
 		fmt.Println(":help repl")
+		fmt.Println(":help repl-details")
 		fmt.Println(":help functions")
 		fmt.Println(":help {function name}, e.g. :help sec2gmt")
-	} else {
-		for _, arg := range args {
-			if arg == "repl" {
-				showREPLHelp()
-			} else if arg == "functions" {
-				cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
-			} else {
-				cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(arg, os.Stdout)
-			}
-		}
+		fmt.Println(":help {function name}, e.g. :help sec2gmt")
+		return true
 	}
+
+	for _, arg := range args {
+		handleHelpSingle(this, arg)
+	}
+
 	return true
 }
 
-// TODO: make this more like ':help repl explain' or somesuch
-func showREPLHelp() {
-	fmt.Println(
+func handleHelpSingle(this *Repl, arg string) {
+	if arg == "intro" {
+		showREPLIntro()
+		return
+	}
+
+	if arg == "repl" {
+		for _, entry := range handlerLookupTable {
+			names := strings.Join(entry.verbNames, " or ")
+			fmt.Println(names)
+		}
+		return
+	}
+
+	if arg == "repl-details" {
+		for i, entry := range handlerLookupTable {
+			if i > 0 {
+				fmt.Println()
+			}
+			fmt.Printf("%s: \n", strings.Join(entry.verbNames, " or "))
+			entry.usageFunc(this)
+		}
+		return
+	}
+
+	if arg == "functions" {
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+		return
+	}
+
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout) {
+		return
+	}
+
+	nonDSLHandler := this.findHandler(arg)
+	if nonDSLHandler != nil {
+		nonDSLHandler.usageFunc(this)
+		return
+	}
+
+	fmt.Printf("No help available for %s\n", arg)
+}
+
+func showREPLIntro() {
+	fmt.Print(
 		`Enter any Miller DSL expression.
 Non-DSL commands (REPL-only statements) start with ':', such as ':help' or ':quit'.
 Type ':help functions' for help with DSL functions; type ':help repl' for help with non-DSL expressions.
