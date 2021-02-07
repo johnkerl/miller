@@ -37,7 +37,6 @@ TOP OF LIST:
   o improve usage messages
 
   ? have :clear {udf,uds,begin,main,end,?}
-  o echo-dsl-string flag
 
   o either ':process quietly', or ':output something'
 

@@ -193,29 +193,12 @@ func handleRead(this *Repl, args []string) bool {
 	}
 
 	if recordAndContext != nil {
-		// Three things can come through:
-		//
-		// * End-of-stream marker
-		// * Non-nil records to be printed
-		// * Strings to be printed from put/filter DSL print/dump/etc
-		//   statements. They are handled here rather than fmt.Println directly
-		//   in the put/filter handlers since we want all print statements and
-		//   record-output to be in the same goroutine, for deterministic
-		//   output ordering.
-		//
-		// The first two are passed to the transformer. The third we send along
-		// the output channel without involving the record-transformer, since
-		// there is no record to be transformed.
-
-		this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
-
-		if recordAndContext.EndOfStream == true {
-			fmt.Println("End of record stream")
-			this.inputChannel = nil
-			this.errorChannel = nil
-		} else if recordAndContext.Record == nil {
-			fmt.Print(recordAndContext.OutputString)
-		}
+		skipOrProcessRecord(
+			this,
+			recordAndContext,
+			false, // processingNotSkipping -- since we will let the user interact with this record
+			false, // testingByFilterExpression -- since we're just stepping by 1
+		)
 	}
 
 	return true
@@ -223,7 +206,7 @@ func handleRead(this *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func usageContext(this *Repl) {
-	fmt.Println(":Context with no arguments.")
+	fmt.Println(":context with no arguments.")
 	fmt.Println("Displays the current context variables: NR, FNR, FILENUM, FILENAME.")
 }
 
@@ -337,41 +320,14 @@ func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
 		}
 
 		if recordAndContext != nil {
-			// Three things can come through:
-			//
-			// * End-of-stream marker
-			// * Non-nil records to be printed
-			// * Strings to be printed from put/filter DSL print/dump/etc
-			//   statements. They are handled here rather than fmt.Println directly
-			//   in the put/filter handlers since we want all print statements and
-			//   record-output to be in the same goroutine, for deterministic
-			//   output ordering.
-			//
-			// The first two are passed to the transformer. The third we send along
-			// the output channel without involving the record-transformer, since
-			// there is no record to be transformed.
-
-			// Acquire incremented NR/FNR/FILENAME/etc
-			this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
-
-			if recordAndContext.EndOfStream == true {
-				fmt.Println("End of record stream")
-				this.inputChannel = nil
-				this.errorChannel = nil
+			shouldBreak := skipOrProcessRecord(
+				this,
+				recordAndContext,
+				processingNotSkipping,
+				false, // testingByFilterExpression -- since we're counting to N
+			)
+			if shouldBreak {
 				break
-			} else if recordAndContext.Record == nil {
-				if processingNotSkipping {
-					fmt.Print(recordAndContext.OutputString)
-				}
-			} else {
-				if processingNotSkipping {
-					outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
-					if err != nil {
-						fmt.Println(err)
-						break
-					}
-					this.recordWriter.Write(outrec, os.Stdout)
-				}
 			}
 		}
 	}
@@ -417,48 +373,86 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 		}
 
 		if recordAndContext != nil {
-			// Three things can come through:
-			//
-			// * End-of-stream marker
-			// * Non-nil records to be printed
-			// * Strings to be printed from put/filter DSL print/dump/etc
-			//   statements. They are handled here rather than fmt.Println directly
-			//   in the put/filter handlers since we want all print statements and
-			//   record-output to be in the same goroutine, for deterministic
-			//   output ordering.
-			//
-			// The first two are passed to the transformer. The third we send along
-			// the output channel without involving the record-transformer, since
-			// there is no record to be transformed.
-
-			this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
-			if recordAndContext.EndOfStream == true {
-				fmt.Println("End of record stream")
-				this.inputChannel = nil
-				this.errorChannel = nil
+			shouldBreak := skipOrProcessRecord(
+				this,
+				recordAndContext,
+				processingNotSkipping,
+				true, // testingByFilterExpression -- since we're continuing until the filter expresssion is true
+			)
+			if shouldBreak {
 				break
-			} else if recordAndContext.Record == nil {
-				if processingNotSkipping {
-					fmt.Print(recordAndContext.OutputString)
-				}
-			} else {
-				outrec, err := this.cstRootNode.ExecuteREPLImmediate(this.runtimeState)
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-				this.runtimeState.Inrec = outrec
-
-				filterBool, isBool := this.runtimeState.FilterExpression.GetBoolValue()
-				if !isBool {
-					filterBool = false
-				}
-				if filterBool {
-					break
-				}
 			}
 		}
 	}
+}
+
+// Three things can come through:
+//
+// * End-of-stream marker
+// * Non-nil record to be printed
+// * Strings to be printed from put/filter DSL print/dump/etc statements. They
+//   are handled here rather than fmt.Println directly in the put/filter
+//   handlers since we want all print statements and record-output to be in the
+//   same goroutine, for deterministic output ordering.
+//
+// The first two are passed to the transformer. The third we send along the
+// output channel without involving the record-transformer, since there is no
+// record to be transformed.
+
+// Return value is true if an end-of-loop condition has been detected.
+func skipOrProcessRecord(
+	this *Repl,
+	recordAndContext *types.RecordAndContext,
+	processingNotSkipping bool, // TODO: make this an enum
+	testingByFilterExpression bool, // TODO: make this an enum
+) bool { // TODO: make this an enum
+
+	// Acquire incremented NR/FNR/FILENAME/etc
+	this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
+
+	// End-of-stream marker
+	if recordAndContext.EndOfStream == true {
+		fmt.Println("End of record stream")
+		this.inputChannel = nil
+		this.errorChannel = nil
+		return true
+	}
+
+	// Strings to be printed from put/filter DSL print/dump/etc statements.
+	if recordAndContext.Record == nil {
+		if processingNotSkipping {
+			fmt.Print(recordAndContext.OutputString)
+		}
+		return false
+	}
+
+	// Non-nil record to be printed
+	if processingNotSkipping {
+		outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+		if err != nil {
+			fmt.Println(err)
+			return true
+		}
+		this.runtimeState.Inrec = outrec
+		this.recordWriter.Write(outrec, os.Stdout)
+	}
+
+	if testingByFilterExpression {
+		_, err := this.cstRootNode.ExecuteREPLImmediate(this.runtimeState)
+		if err != nil {
+			fmt.Println(err)
+			return true
+		}
+
+		filterBool, isBool := this.runtimeState.FilterExpression.GetBoolValue()
+		if !isBool {
+			filterBool = false
+		}
+		if filterBool {
+			return true
+		}
+	}
+	return false
 }
 
 // ----------------------------------------------------------------
