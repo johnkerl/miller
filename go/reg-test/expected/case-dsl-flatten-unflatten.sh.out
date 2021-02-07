@@ -89,6 +89,27 @@ b.1.y 3
 b.2.x 4
 b.2.y 5
 
+mlr --ijson --oxtab --from ./reg-test/input/flatten-input-1.json put $* = flatten($*, ".")
+a   1
+b.c 2
+b.d 3
+
+a     1
+b.c.x 2
+b.c.y 3
+b.d.x 4
+b.d.y 5
+
+a     1
+b.c.1 2
+b.c.2 3
+
+a     1
+b.1.x 2
+b.1.y 3
+b.2.x 4
+b.2.y 5
+
 mlr --ijson --ojson --no-auto-unflatten --from ./reg-test/input/flatten-input-1.json put $a = flatten("a", ".", $a)
 {
   "a": 1,

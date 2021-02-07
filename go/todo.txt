@@ -19,43 +19,35 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! throughout: string(buffer.Bytes()) -> buffer.String()
 * repl foo:
-  ! merge :skip and :process
   o make a README.md
-  o rlwrap note
-  o audit len-0 usages
-  o top-down narrative in :help intro
-  o improve usage messages
+    - rlwrap note
   o make per-file at-top comments
-  d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
-  ? have :clear {udf,uds,begin,main,end,?}
-  o :context -- autoplay or manual
-  o echo-dsl-string flag
-  ? auto-unflatten / auto-flatten ? oy.
-  ? two-arg flatten/unflatten?
 
-  * :open fixes:
+  o better :help intro
+    - rlwrap note
+    - top-down narrative
+    - include :context
+    - doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
+
+  ! auto-unflatten / auto-flatten ? oy.
+    - make repl helper-methods for read/write record ...
+
+  o audit len-0 usages
+  o improve usage messages
+
+  ? have :clear {udf,uds,begin,main,end,?}
+  o echo-dsl-string flag
+
+  o either ':process quietly', or ':output something'
+
+  o :open fixes:
     o fix no-open-files on read failure
     o tilde-expand ...
 
   o non-dsl -> repl in the user interface
 
   o extend UTs
-
-  o :skip/process {n} / until {expression}
-    - toggle write-enable ... e.g. if the :main has a print ...
-    - :skip until {expression}
-      :skip {n}
-      > no mains, no write
-    - :process until {expression}
-      :process {n}
-      > mains and write
-      > mains and no write
-    ? maybe:
-      ? :process >  filename until {expression}
-      ? :process >> filename until {expression}
-      ? :open {in} {out}
 
   ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -527,3 +519,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 	// once, and Go flags can't handle that.
 
 * doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
+* doc re two-arg flatten

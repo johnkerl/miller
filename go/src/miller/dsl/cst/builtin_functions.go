@@ -66,6 +66,9 @@ func (this *RootNode) BuildMultipleArityFunctionCallsiteNode(
 	if callsiteArity == 2 && builtinFunctionInfo.binaryFunc != nil {
 		return this.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 	}
+	if callsiteArity == 3 && builtinFunctionInfo.ternaryFunc != nil {
+		return this.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+	}
 
 	return nil, errors.New(
 		fmt.Sprintf(

@@ -31,6 +31,7 @@ func init() {
 		{verbNames: []string{":l", ":load"}, handlerFunc: handleLoad, usageFunc: usageLoad},
 		{verbNames: []string{":o", ":open"}, handlerFunc: handleOpen, usageFunc: usageOpen},
 		{verbNames: []string{":r", ":read"}, handlerFunc: handleRead, usageFunc: usageRead},
+		{verbNames: []string{":c", ":context"}, handlerFunc: handleContext, usageFunc: usageContext},
 		{verbNames: []string{":s", ":skip"}, handlerFunc: handleSkip, usageFunc: usageSkip},
 		{verbNames: []string{":p", ":process"}, handlerFunc: handleProcess, usageFunc: usageProcess},
 		{verbNames: []string{":w", ":write"}, handlerFunc: handleWrite, usageFunc: usageWrite},
@@ -214,11 +215,23 @@ func handleRead(this *Repl, args []string) bool {
 			this.errorChannel = nil
 		} else if recordAndContext.Record == nil {
 			fmt.Print(recordAndContext.OutputString)
-		} else {
-			fmt.Println(recordAndContext.Context.GetStatusString())
 		}
 	}
 
+	return true
+}
+
+// ----------------------------------------------------------------
+func usageContext(this *Repl) {
+	fmt.Println(":Context with no arguments.")
+	fmt.Println("Displays the current context variables: NR, FNR, FILENUM, FILENAME.")
+}
+
+func handleContext(this *Repl, args []string) bool {
+	if len(args) != 1 {
+		return false
+	}
+	fmt.Println(this.runtimeState.Context.GetStatusString())
 	return true
 }
 
@@ -359,9 +372,6 @@ func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
 					}
 					this.recordWriter.Write(outrec, os.Stdout)
 				}
-				if i == n {
-					fmt.Println(recordAndContext.Context.GetStatusString())
-				}
 			}
 		}
 	}
@@ -444,7 +454,6 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 					filterBool = false
 				}
 				if filterBool {
-					fmt.Println(recordAndContext.Context.GetStatusString())
 					break
 				}
 			}

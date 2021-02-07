@@ -55,6 +55,11 @@ func MlrvalPointerFromAbsent() *Mlrval {
 	return &retval
 }
 
+func MlrvalPointerFromVoid() *Mlrval {
+	retval := MlrvalFromVoid()
+	return &retval
+}
+
 func MlrvalFromVoid() Mlrval {
 	return Mlrval{
 		mvtype:        MT_VOID,

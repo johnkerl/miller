@@ -1270,8 +1270,11 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 		help: `Flattens multi-level maps to single-level ones. Examples:
 flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
 flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
 Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
-		ternaryFunc: types.MlrvalFlatten,
+		binaryFunc:         types.MlrvalFlattenBinary,
+		ternaryFunc:        types.MlrvalFlatten,
+		hasMultipleArities: true,
 	},
 
 	{
@@ -1487,7 +1490,6 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 		return strings.Join(pieces, ",")
 
 	} else {
-
 		if info.zaryFunc != nil {
 			return "0"
 		}

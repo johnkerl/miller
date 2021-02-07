@@ -658,6 +658,11 @@ func MlrvalFlatten(ma, mb, mc *Mlrval) Mlrval {
 	}
 }
 
+// flatten($*, ".") is the same as flatten("", ".", $*)
+func MlrvalFlattenBinary(ma, mb *Mlrval) Mlrval {
+	return MlrvalFlatten(MlrvalPointerFromVoid(), mb, ma)
+}
+
 // ----------------------------------------------------------------
 // First argument is a map.
 // Second argument is a delimiter string.

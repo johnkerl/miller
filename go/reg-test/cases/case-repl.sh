@@ -43,16 +43,21 @@ EOF
 run_mlr repl <<EOF
 
 :open $indir/medium.dkvp
+:context
 
 :skip 10
+:context
 \$*
 
 :process 10
+:context
 \$*
 
 :skip until NR == 30
+:context
 \$*
 
 :process until NR == 40
+:context
 \$*
 EOF

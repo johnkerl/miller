@@ -24,6 +24,7 @@ GOODBYE
 WORLD
 
 mlr repl
+FILENAME="(stdin)",FILENUM=0,NR=0,FNR=0
 FILENAME="./reg-test/input/medium.dkvp",FILENUM=1,NR=10,FNR=10
 {
   "a": "pan",
