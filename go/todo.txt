@@ -21,6 +21,7 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! throughout: string(buffer.Bytes()) -> buffer.String()
 * repl foo:
+  ! merge :skip and :process
   o make a README.md
   o rlwrap note
   o audit len-0 usages
@@ -29,7 +30,6 @@ TOP OF LIST:
   o make per-file at-top comments
   d doc MLR_REPL_PS1/MLR_REPL_PS2 env vars
   ? have :clear {udf,uds,begin,main,end,?}
-  * need to work:
   o :context -- autoplay or manual
   o echo-dsl-string flag
   ? auto-unflatten / auto-flatten ? oy.
@@ -52,6 +52,10 @@ TOP OF LIST:
       :process {n}
       > mains and write
       > mains and no write
+    ? maybe:
+      ? :process >  filename until {expression}
+      ? :process >> filename until {expression}
+      ? :open {in} {out}
 
   ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

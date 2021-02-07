@@ -52,140 +52,39 @@ mention() {
 
 # ================================================================
 
-echo ================================================================
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = 1; emit  @x } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = 1; emit  @x } '
-echo ----------------------------------------------------------------
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = 1; emitp @x } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = 1; emitp @x } '
-echo ----------------------------------------------------------------
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emit  @x } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emit  @x } '
-echo ----------------------------------------------------------------
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emitp @x } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emitp @x } '
+# $ mrpl ../data/medium
+# Miller v6.0.0-dev
+# Type ':help' for on-line help.
 
-echo ================================================================
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = 1; emit  @* } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = 1; emit  @* } '
-echo ----------------------------------------------------------------
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = 1; emitp @* } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = 1; emitp @* } '
-echo ----------------------------------------------------------------
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emit  @* } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emit  @* } '
-echo ----------------------------------------------------------------
-path_to_mlr="../c/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emitp @* } '
-path_to_mlr="../go/mlr"
-run_mlr -n put 'end { @x = {"a":1, "b":2}; emitp @* } '
+# μεταμόρφωσις: :skip 10
+# FILENAME="../data/medium",FILENUM=1,NR=10,FNR=10
 
-#echo ================================================================
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emit $*'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emit $*'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emit $a'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emit $a'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emit ${a}'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emit ${a}'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emit $["a"]'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emit $["a"]'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q '@a="foo"; emit @a'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q '@a="foo"; emit @a'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q '@a="foo"; emit @{a}'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q '@a="foo"; emit @{a}'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q '@a="foo"; emit @["a"]'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q '@a="foo"; emit @["a"]'
-#
-#echo ================================================================
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emitp $*'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emitp $*'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emitp $a'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emitp $a'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emitp ${a}'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emitp ${a}'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q 'emitp $["a"]'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q 'emitp $["a"]'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q '@a="foo"; emitp @a'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q '@a="foo"; emitp @a'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q '@a="foo"; emitp @{a}'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q '@a="foo"; emitp @{a}'
-#
-#echo ----------------------------------------------------------------
-#path_to_mlr="../c/mlr"
-#run_mlr --from r put -q '@a="foo"; emitp @["a"]'
-#path_to_mlr="../go/mlr"
-#run_mlr --from r put -q '@a="foo"; emitp @["a"]'
+# μεταμόρφωσις: :process 10
+# a=pan,b=pan,i=11,x=0.7930488423451967,y=0.6505816637259333
+# a=zee,b=pan,i=12,x=0.3676141320555616,y=0.23614420670296965
+# a=eks,b=pan,i=13,x=0.4915175580479536,y=0.7709126592971468
+# a=eks,b=zee,i=14,x=0.5207382318405251,y=0.34141681118811673
+# a=eks,b=pan,i=15,x=0.07155556372719507,y=0.3596137145616235
+# a=pan,b=pan,i=16,x=0.5736853980681922,y=0.7554169353781729
+# a=zee,b=eks,i=17,x=0.29081949506712723,y=0.054478717073354166
+# a=hat,b=zee,i=18,x=0.05727869223575699,y=0.13343527626645157
+# a=zee,b=pan,i=19,x=0.43144132839222604,y=0.8442204830496998
+# a=eks,b=wye,i=20,x=0.38245149780530685,y=0.4730652428100751
+# FILENAME="../data/medium",FILENUM=1,NR=20,FNR=20
 
+# μεταμόρφωσις: :skip until NR == 30
+# FILENAME="../data/medium",FILENUM=1,NR=30,FNR=30
 
-#path_to_mlr=../c/mlr
-#run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
-#path_to_mlr=../go/mlr
-#run_mlr put -q '@t["u"] = $y; emit @*' ./reg-test/input/2.dkvp
-#path_to_mlr=../c/mlr
-#run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
-#path_to_mlr=../go/mlr
-#run_mlr put -q '@t["u"] = $y; emitp @*' ./reg-test/input/2.dkvp
+# μεταμόρφωσις: :process until NR == 40
+# FILENAME="../data/medium",FILENUM=1,NR=40,FNR=40
+
+# μεταμόρφωσις: $*
+# {
+#   "a": "pan",
+#   "b": "hat",
+#   "i": 40,
+#   "x": 0.30302850095892986,
+#   "y": 0.2884018711352886
+# }
 
 # ================================================================

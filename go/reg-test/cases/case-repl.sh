@@ -39,3 +39,20 @@ print "HOW ARE THINGS?"
 :main
 :end
 EOF
+
+run_mlr repl <<EOF
+
+:open $indir/medium.dkvp
+
+:skip 10
+\$*
+
+:process 10
+\$*
+
+:skip until NR == 30
+\$*
+
+:process until NR == 40
+\$*
+EOF

@@ -137,6 +137,8 @@ you type :read.
 }
 
 func handleOpen(this *Repl, args []string) bool {
+	// xxx function to stat & nonesuch ... if not, the user won't see the 'no such file'
+	// error until the first record-read
 	this.openFiles(args[1:]) // strip off verb
 	return true
 }
@@ -248,20 +250,60 @@ func handleSkip(this *Repl, args []string) bool {
 		if !ok {
 			fmt.Printf("Could not parse \"%s\" as integer.\n", args[0])
 		} else {
-			handleSkipN(this, n)
+			handleSkipOrProcessN(this, n, false)
 		}
+		return true
+	} else if args[0] != "until" {
+		return false
+	} else {
+		dslString := strings.Join(args[1:], " ")
+		handleSkipOrProcessUntil(this, dslString, false)
+		return true
+	}
+}
+
+// ----------------------------------------------------------------
+func usageProcess(this *Repl) {
+	fmt.Println(":process {n} to read n records, invoking :main statements on them, and printing the records.")
+	// TODO: ':process n' vs ':process until {...}'
+	fmt.Printf(
+		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
+		this.exeName, this.replName,
+	)
+	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
+	fmt.Println("write it out using :write.")
+}
+
+func handleProcess(this *Repl, args []string) bool {
+	if this.inputChannel == nil {
+		fmt.Println("No open files")
 		return true
 	}
 
-	if args[0] != "until" {
+	args = args[1:] // strip off verb
+	if len(args) < 1 {
 		return false
 	}
-	dslString := strings.Join(args[1:], " ")
-	handleSkipUntil(this, dslString)
-	return true
+
+	if len(args) == 1 {
+		n, ok := lib.TryIntFromString(args[0])
+		if !ok {
+			fmt.Printf("Could not parse \"%s\" as integer.\n", args[0])
+		} else {
+			handleSkipOrProcessN(this, n, true)
+		}
+		return true
+	} else if args[0] != "until" {
+		return false
+	} else {
+		dslString := strings.Join(args[1:], " ")
+		handleSkipOrProcessUntil(this, dslString, true)
+		return true
+	}
 }
 
-func handleSkipN(this *Repl, n int) {
+// ----------------------------------------------------------------
+func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
 	// TODO: code-dedupe
 	var recordAndContext *types.RecordAndContext = nil
 	var err error = nil
@@ -296,15 +338,27 @@ func handleSkipN(this *Repl, n int) {
 			// the output channel without involving the record-transformer, since
 			// there is no record to be transformed.
 
+			// Acquire incremented NR/FNR/FILENAME/etc
 			this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
+
 			if recordAndContext.EndOfStream == true {
 				fmt.Println("End of record stream")
 				this.inputChannel = nil
 				this.errorChannel = nil
 				break
 			} else if recordAndContext.Record == nil {
-				fmt.Print(recordAndContext.OutputString)
+				if processingNotSkipping {
+					fmt.Print(recordAndContext.OutputString)
+				}
 			} else {
+				if processingNotSkipping {
+					outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+					if err != nil {
+						fmt.Println(err)
+						break
+					}
+					this.recordWriter.Write(outrec, os.Stdout)
+				}
 				if i == n {
 					fmt.Println(recordAndContext.Context.GetStatusString())
 				}
@@ -313,9 +367,7 @@ func handleSkipN(this *Repl, n int) {
 	}
 }
 
-func handleSkipUntil(this *Repl, dslString string) {
-	// TODO: code-dedupe
-
+func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkipping bool) {
 	astRootNode, err := this.BuildASTFromStringWithMessage(dslString)
 	if err != nil {
 		// Error message already printed out
@@ -376,11 +428,10 @@ func handleSkipUntil(this *Repl, dslString string) {
 				this.errorChannel = nil
 				break
 			} else if recordAndContext.Record == nil {
-				fmt.Print(recordAndContext.OutputString)
+				if processingNotSkipping {
+					fmt.Print(recordAndContext.OutputString)
+				}
 			} else {
-
-				///// xxx temp fmt.Println(recordAndContext.Context.GetStatusString()) // xxx temp
-
 				outrec, err := this.cstRootNode.ExecuteREPLImmediate(this.runtimeState)
 				if err != nil {
 					fmt.Println(err)
@@ -399,93 +450,6 @@ func handleSkipUntil(this *Repl, dslString string) {
 			}
 		}
 	}
-}
-
-// ----------------------------------------------------------------
-func usageProcess(this *Repl) {
-	fmt.Println(":process {n} to read n records, invoking :main statements on them, and printing the records.")
-	// TODO: ':process n' vs ':process until {...}'
-	fmt.Printf(
-		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		this.exeName, this.replName,
-	)
-	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
-	fmt.Println("write it out using :write.")
-}
-
-func handleProcess(this *Repl, args []string) bool {
-	args = args[1:] // strip off verb
-	if len(args) != 1 {
-		return false
-	}
-	n, ok := lib.TryIntFromString(args[0])
-	if !ok {
-		fmt.Printf("Could not parse \"%s\" as integer.\n", args[0])
-		return true
-	}
-
-	if this.inputChannel == nil {
-		fmt.Println("No open files")
-		return true
-	}
-
-	// TODO: code-dedupe with :read
-	var recordAndContext *types.RecordAndContext = nil
-	var err error = nil
-
-	for i := 1; i <= n; i++ {
-		select {
-		case recordAndContext = <-this.inputChannel:
-			break
-		case err = <-this.errorChannel:
-			break
-		}
-
-		if recordAndContext != nil {
-			// Three things can come through:
-			//
-			// * End-of-stream marker
-			// * Non-nil records to be printed
-			// * Strings to be printed from put/filter DSL print/dump/etc
-			//   statements. They are handled here rather than fmt.Println directly
-			//   in the put/filter handlers since we want all print statements and
-			//   record-output to be in the same goroutine, for deterministic
-			//   output ordering.
-			//
-			// The first two are passed to the transformer. The third we send along
-			// the output channel without involving the record-transformer, since
-			// there is no record to be transformed.
-
-			this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
-			if recordAndContext.EndOfStream == true {
-				fmt.Println("End of record stream")
-				this.inputChannel = nil
-				this.errorChannel = nil
-				break
-			} else if recordAndContext.Record == nil {
-				fmt.Print(recordAndContext.OutputString)
-			} else {
-				outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
-				if err != nil {
-					fmt.Println(err)
-					break
-				}
-				this.recordWriter.Write(outrec, os.Stdout)
-				if i == n {
-					fmt.Println(recordAndContext.Context.GetStatusString())
-					// TODO: :main
-				}
-			}
-		}
-	}
-
-	if err != nil {
-		fmt.Println(err)
-		this.inputChannel = nil
-		this.errorChannel = nil
-	}
-
-	return true
 }
 
 // ----------------------------------------------------------------
