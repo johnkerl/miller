@@ -18,12 +18,16 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! md5/sha1/sha256/sha512
+  - need UT
+
 * repl foo:
   o make a README.md
     - rlwrap note
     - PS1 note
 
   ! for ^C -- need a :skip xxx / :process xxx -- also online help
+    - ^C multiples -- what's going on
   ! output-specifier: write or append.
     - applies to all record-writer stuff incl strings
     - update ':help intro'

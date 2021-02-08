@@ -635,7 +635,7 @@ func usageHelp(this *Repl) {
 	fmt.Println(":help repl-details")
 	fmt.Println(":help prompt")
 	fmt.Println(":help function-names")
-	fmt.Println(":help function-detailss")
+	fmt.Println(":help function-details")
 	fmt.Println(":help {function name}, e.g. :help sec2gmt")
 	fmt.Println(":help {function name}, e.g. :help sec2gmt")
 }

@@ -22,6 +22,7 @@ const (
 	FUNC_CLASS_MATH                       = "math"
 	FUNC_CLASS_BOOLEAN                    = "boolean"
 	FUNC_CLASS_STRING                     = "string"
+	FUNC_CLASS_HASHING                    = "hashing"
 	FUNC_CLASS_CONVERSION                 = "conversion"
 	FUNC_CLASS_TYPING                     = "typing"
 	FUNC_CLASS_COLLECTIONS                = "maps/arrays"
@@ -442,6 +443,34 @@ inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
 		class:      FUNC_CLASS_STRING,
 		help:       `Truncates string first argument to max length of int second argument.`,
 		binaryFunc: types.MlrvalTruncate,
+	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_HASHING
+
+	{
+		name:       "md5",
+		class:      FUNC_CLASS_HASHING,
+		help:       `MD5 hash.`,
+		unaryFunc: types.MlrvalMD5,
+	},
+	{
+		name:       "sha1",
+		class:      FUNC_CLASS_HASHING,
+		help:       `SHA1 hash.`,
+		unaryFunc: types.MlrvalSHA1,
+	},
+	{
+		name:       "sha256",
+		class:      FUNC_CLASS_HASHING,
+		help:       `SHA256 hash.`,
+		unaryFunc: types.MlrvalSHA256,
+	},
+	{
+		name:       "sha512",
+		class:      FUNC_CLASS_HASHING,
+		help:       `SHA512 hash.`,
+		unaryFunc: types.MlrvalSHA512,
 	},
 
 	// ----------------------------------------------------------------
