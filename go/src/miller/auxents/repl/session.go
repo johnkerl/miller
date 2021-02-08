@@ -99,8 +99,8 @@ func NewRepl(
 // :process can check it.
 func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotificationChannel chan bool) {
 	for {
-		<-sysToSignalHandlerChannel // Block until control-C notification is sent by system
-		fmt.Println("^C") // Acknowledge for user reassurance
+		<-sysToSignalHandlerChannel          // Block until control-C notification is sent by system
+		fmt.Println("^C")                    // Acknowledge for user reassurance
 		appSignalNotificationChannel <- true // Let our app poll this
 	}
 }

@@ -52,5 +52,5 @@ type Repl struct {
 
 	// For control-C handling
 	sysToSignalHandlerChannel    chan os.Signal // Our signal handler reads system notification here
-	appSignalNotificationChannel chan bool // Our signal handler writes this for our app to poll
+	appSignalNotificationChannel chan bool      // Our signal handler writes this for our app to poll
 }

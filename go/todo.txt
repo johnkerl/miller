@@ -21,6 +21,7 @@
 * repl foo:
   o make a README.md
     - rlwrap note
+    - PS1 note
 
   ! for ^C -- need a :skip xxx / :process xxx -- also online help
   ! output-specifier: write or append.

@@ -38,12 +38,16 @@ Examples:
 ```
 [mlr] 1+2
 3
+```
 
+```
 [mlr] x=3  # These are local variables
 [mlr] y=4
 [mlr] x+y
 7
+```
 
+```
 [mlr] <
 func f(a,b) {
   return a**b
@@ -51,7 +55,9 @@ func f(a,b) {
 >
 [mlr] f(7,5)
 16807
+```
 
+```
 [mlr] :open foo.dat
 [mlr] :read
 [mlr] :context
@@ -66,3 +72,14 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
 }
 [mlr] f($x,$i)
 0.021160211005187134
+[mlr] $z = f($x, $i)
+[mlr] $*
+{
+  "a": "eks",
+  "b": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463,
+  "z": 0.021160211005187134
+}
+```
