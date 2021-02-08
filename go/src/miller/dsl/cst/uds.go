@@ -237,7 +237,7 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 
 	subroutineName := string(astNode.Token.Lit)
 
-	if !this.allowUDFSRedefinitions {
+	if !this.allowUDFUDSRedefinitions {
 		if this.udsManager.ExistsByName(subroutineName) {
 			return errors.New(
 				fmt.Sprintf(

@@ -267,7 +267,7 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		)
 	}
 
-	if !this.allowUDFSRedefinitions {
+	if !this.allowUDFUDSRedefinitions {
 		if this.udfManager.ExistsByName(functionName) {
 			return errors.New(
 				fmt.Sprintf(

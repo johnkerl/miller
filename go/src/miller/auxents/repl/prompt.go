@@ -1,5 +1,5 @@
 // ================================================================
-// Just playing around -- nothing serious here.
+// Handling for default and customized banners/prompts for the Miller REPL.
 // ================================================================
 
 package repl
@@ -13,22 +13,28 @@ import (
 	"miller/version"
 )
 
+const ENV_PRIMARY_PROMPT = "MLR_REPL_PS1"
+const ENV_SECONDARY_PROMPT = "MLR_REPL_PS2"
+const DEFAULT_PRIMARY_PROMPT = "[mlr] "
+const DEFAULT_SECONDARY_PROMPT = ""
+
+
 func getInputIsTerminal() bool {
 	return term.IsTerminal(int(os.Stdin.Fd()))
 }
 
 func getPrompt1() string {
-	prompt1 := os.Getenv("MLR_REPL_PS1")
+	prompt1 := os.Getenv(ENV_PRIMARY_PROMPT)
 	if prompt1 == "" {
-		prompt1 = "[mlr] "
+		prompt1 = DEFAULT_PRIMARY_PROMPT
 	}
 	return prompt1
 }
 
 func getPrompt2() string {
-	prompt2 := os.Getenv("MLR_REPL_PS2")
+	prompt2 := os.Getenv(ENV_SECONDARY_PROMPT)
 	if prompt2 == "" {
-		prompt2 = "[mlr] "
+		prompt2 = DEFAULT_SECONDARY_PROMPT
 	}
 	return prompt2
 }

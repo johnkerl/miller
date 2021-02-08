@@ -190,8 +190,7 @@ func (this *DumpStatementNode) dumpToStdout(
 	// Insert the string into the record-output stream, so that goroutine can
 	// print it, resulting in deterministic output-ordering.
 	//
-	// The output channel is always non-nil, except for the (very experimental)
-	// REPL in src/miller/auxents.
+	// The output channel is always non-nil, except for the Miller REPL.
 	if state.OutputChannel != nil {
 		state.OutputChannel <- types.NewOutputString(outputString, state.Context)
 	} else {

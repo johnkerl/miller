@@ -1,5 +1,16 @@
 // ================================================================
-// Just playing around -- nothing serious here.
+// Top-level handler for a REPL session, including setup/construction, and
+// ingesting command-lines. Command-line strings are triaged and send off to
+// the appropriate handlers: DSL parse/execute if the comand is a DSL statement
+// (like '$z = $x + $y'); REPL-command-line parse/execute otherwise (like
+// ':open foo.dat' or ':help').
+//
+// No command-line-history-editing feature is built in but
+//
+//   rlwrap mlr repl
+//
+// is a delight. :)
+//
 // ================================================================
 
 package repl
@@ -61,7 +72,7 @@ func NewRepl(
 		prompt2:         getPrompt2(),
 
 		astPrintMode: ASTPrintNone,
-		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFS(),
+		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFUDS(),
 
 		options:      options,
 		inputChannel: nil,

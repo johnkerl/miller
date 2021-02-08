@@ -1,4 +1,6 @@
 // ================================================================
+// Handlers for non-DSL statements like ':open foo.dat' or ':help'.
+// ================================================================
 
 package repl
 
@@ -14,6 +16,7 @@ import (
 )
 
 // ----------------------------------------------------------------
+// Types for the lookup table
 type tHandlerFunc func(repl *Repl, args []string) bool
 type tUsageFunc func(repl *Repl)
 type handlerInfo struct {
@@ -40,6 +43,7 @@ func init() {
 		{verbNames: []string{":e", ":end"}, handlerFunc: handleEnd, usageFunc: usageEnd},
 		{verbNames: []string{":astprint"}, handlerFunc: handleASTPrint, usageFunc: usageASTPrint},
 		{verbNames: []string{":blocks"}, handlerFunc: handleBlocks, usageFunc: usageBlocks},
+		{verbNames: []string{":q", ":quit"}, handlerFunc: nil, usageFunc: usageQuit},
 		{verbNames: []string{":h", ":help"}, handlerFunc: handleHelp, usageFunc: usageHelp},
 	}
 }
@@ -58,7 +62,7 @@ func (this *Repl) findHandler(verbName string) *handlerInfo {
 }
 
 // ----------------------------------------------------------------
-// TODO: comment
+// Handles a single non-DSL statement like ':open foo.dat' or ':help'.
 func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 	args := strings.Fields(trimmedLine)
 	if len(args) == 0 {
@@ -68,8 +72,8 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 
 	// We handle all single lines starting with a colon.  Anything that starts
 	// with a semicolon but which we don't recognize, we should say so here --
-	// rather than deferring to the DSL parser which will say "cannot parse DSL
-	// expression".
+	// rather than deferring to the DSL parser which would only say "cannot
+	// parse DSL expression", which would only be more confusing.
 	if !strings.HasPrefix(verbName, ":") {
 		return false
 	}
@@ -89,11 +93,11 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 func usageLoad(this *Repl) {
 	fmt.Println(":load {one or more filenames containing Miller DSL statements}")
 	fmt.Print(
-		`'begin {...}' / 'end{...}' blocks are parsed and saved. Type ':begin' or
-':end', respectively, to execute them. User-defined functions and subroutines
-('func' and 'subr') are parsed and saved. Other statements are saved in a
-'main' block.  Type ':main' to execute them on a given record. (See :open and
-:read for more on how to do this.)
+		`Any 'begin {...}' / 'end{...}' blocks are parsed and saved. (You can then type
+':begin' or ':end', respectively, to execute them.) User-defined functions and
+subroutines ('func' and 'subr') are parsed and saved. Other statements are
+saved in a 'main' block.  (You can then type ':main' to execute them on any
+given record. See :open and :read for more on how to do this.)
 `)
 }
 
@@ -123,7 +127,7 @@ func handleLoad(this *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageOpen(this *Repl) {
 	fmt.Printf(
-		":open {one or more data-file names, in the format specifed by %s %s\n",
+		":open {one or more data-file names in the format specifed by %s %s}.\n",
 		this.exeName, this.replName,
 	)
 	fmt.Print(
@@ -131,24 +135,51 @@ func usageOpen(this *Repl) {
 DSL commands will use that record. Also you can type ':main' to invoke any
 main-block statements from multiline input or :load.
 
-If zero data-file names are supplied, then standard input will be read when
-you type :read.
+If zero data-file names are supplied (i.e. ':open' with no file names), then
+each record will be taken from standard input when you type :read.
 `)
 
 }
 
 func handleOpen(this *Repl, args []string) bool {
-	// xxx function to stat & nonesuch ... if not, the user won't see the 'no such file'
-	// error until the first record-read
 	args = args[1:] // strip off verb
-	this.openFiles(args)
+	if openFilesPreCheck(this, args) {
+		this.openFiles(args)
+	}
+	return true
+}
+
+// Using the record-reader API, if filenames are presented one or more of which
+// are not accessible, then the 'no such file' error isn't encountered until
+// the first record-read is attempted. For non-REPL uxe, this is fine. For REPL
+// use, if the user types ':open nonesuch' then we want to proactively say
+// something instead of waiting to show them an error only when they type
+// ':read'.
+func openFilesPreCheck(this *Repl, args []string) bool {
+	if len(args) == 0 {
+		// Zero file names is stdin, which is readable
+	}
+	for _, arg := range args {
+		fileInfo, err := os.Stat(arg)
+		if err != nil {
+			fmt.Printf("%s %s: could not open \"%s\"\n",
+				this.exeName, this.replName, arg,
+			)
+			return false
+		}
+		if fileInfo.IsDir() {
+			fmt.Printf("%s %s: \"%s\" is a directory.\n",
+				this.exeName, this.replName, arg,
+			)
+			return false
+		}
+	}
 	return true
 }
 
 // Also invoked from the main entry-point, hence split out as a separate method.
 func (this *Repl) openFiles(filenames []string) {
 	this.inputChannel = make(chan *types.RecordAndContext, 10)
-	// TODO: check for use
 	this.errorChannel = make(chan error, 1)
 
 	go this.recordReader.Read(
@@ -227,13 +258,15 @@ func handleContext(this *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageSkip(this *Repl) {
 	fmt.Println(":skip {n} to read n records without invoking :main statements or printing the records.")
-	// TODO: ':skip n' vs ':skip until {...}'
 	fmt.Printf(
 		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
 		this.exeName, this.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
+	fmt.Println("Or: :skip until {some DSL expression}. You can use 'u' as shorthand for 'until'.")
+	fmt.Println("Example: :skip until NR == 30")
+	fmt.Println("Example: :skip until $status_code != 200")
 }
 
 func handleSkip(this *Repl, args []string) bool {
@@ -267,13 +300,15 @@ func handleSkip(this *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageProcess(this *Repl) {
 	fmt.Println(":process {n} to read n records, invoking :main statements on them, and printing the records.")
-	// TODO: ':process n' vs ':process until {...}'
 	fmt.Printf(
 		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
 		this.exeName, this.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
+	fmt.Println("Or: :process until {some DSL expression}. You can use 'u' as shorthand for 'until'.")
+	fmt.Println("Example: :process until NR == 30")
+	fmt.Println("Example: :process until $status_code != 200")
 }
 
 func handleProcess(this *Repl, args []string) bool {
@@ -306,7 +341,6 @@ func handleProcess(this *Repl, args []string) bool {
 
 // ----------------------------------------------------------------
 func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
-	// TODO: code-dedupe
 	var recordAndContext *types.RecordAndContext = nil
 	var err error = nil
 
@@ -465,7 +499,7 @@ func skipOrProcessRecord(
 func usageWrite(this *Repl) {
 	fmt.Println(":write with no arguments.")
 	fmt.Println("Sends the current record (maybe modifed by statements you enter)")
-	fmt.Printf("to the output with format as specified by %s %s.\n",
+	fmt.Printf("to standard output, with format as specified by %s %s.\n",
 		this.exeName, this.replName)
 }
 func handleWrite(repl *Repl, args []string) bool {
@@ -479,7 +513,7 @@ func handleWrite(repl *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageBegin(this *Repl) {
 	fmt.Println(":begin with no arguments.")
-	fmt.Println("Executes any begin {...} which have been entered.")
+	fmt.Println("Executes any begin {...} blocks which have been entered.")
 }
 func handleBegin(this *Repl, args []string) bool {
 	args = args[1:] // strip off verb
@@ -496,7 +530,7 @@ func handleBegin(this *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageMain(this *Repl) {
 	fmt.Println(":main with no arguments.")
-	fmt.Println("Executes any statements outside of begin/end/func/subr which have been.")
+	fmt.Println("Executes any statements outside of begin/end/func/subr which have been entered")
 	fmt.Println("with :load or multi-line input.")
 }
 func handleMain(this *Repl, args []string) bool {
@@ -514,7 +548,7 @@ func handleMain(this *Repl, args []string) bool {
 // ----------------------------------------------------------------
 func usageEnd(this *Repl) {
 	fmt.Println(":end with no arguments.")
-	fmt.Println("Executes any end {...} which have been entered.")
+	fmt.Println("Executes any end {...} blocks which have been entered.")
 }
 func handleEnd(this *Repl, args []string) bool {
 	args = args[1:] // strip off verb
@@ -536,7 +570,7 @@ func usageASTPrint(this *Repl) {
 	fmt.Println("parex  Prints AST as a parenthesized multi-line expression.")
 	fmt.Println("parex1 Prints AST as a parenthesized single-line expression.")
 	fmt.Println("indent Prints AST as an indented tree expression.")
-	fmt.Println("none   Disables AST printing.")
+	fmt.Println("none   Disables AST printing. (This is the default.)")
 }
 func handleASTPrint(this *Repl, args []string) bool {
 	args = args[1:] // strip off verb
@@ -576,35 +610,31 @@ func handleBlocks(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageHelp(this *Repl) {
-	fmt.Println("TODO: metahelp is TBD.")
+func usageQuit(this *Repl) {
+	fmt.Println(":quit with no arguments.")
+	fmt.Println("Ends the Miller REPL session.")
 }
 
-// PLAN:
-// * :help
-// * :help invocation (CLI flags ...)
-//   mlr repl -h ...
-//   -f/-e/-s ...
-// * :help functions
-// * :help keywords
-//   --> sort them ...
-// * :help {function}
-// * :help {keyword}
-// * :help repl
-// * :help repl commands
-// * :help repl intro
-// * :help :foo
+// The :quit command is handled outside this file; we have a help function,
+// though, to expose it for on-line help.
+
+// ----------------------------------------------------------------
+func usageHelp(this *Repl) {
+	fmt.Println("Options:")
+	fmt.Println(":help intro")
+	fmt.Println(":help repl-list")
+	fmt.Println(":help repl-details")
+	fmt.Println(":help prompt")
+	fmt.Println(":help function-names")
+	fmt.Println(":help function-detailss")
+	fmt.Println(":help {function name}, e.g. :help sec2gmt")
+	fmt.Println(":help {function name}, e.g. :help sec2gmt")
+}
 
 func handleHelp(this *Repl, args []string) bool {
 	args = args[1:] // Strip off verb ':help'
 	if len(args) == 0 {
-		fmt.Println("Options:")
-		fmt.Println(":help intro")
-		fmt.Println(":help repl")
-		fmt.Println(":help repl-details")
-		fmt.Println(":help functions")
-		fmt.Println(":help {function name}, e.g. :help sec2gmt")
-		fmt.Println(":help {function name}, e.g. :help sec2gmt")
+		usageHelp(this)
 		return true
 	}
 
@@ -617,11 +647,11 @@ func handleHelp(this *Repl, args []string) bool {
 
 func handleHelpSingle(this *Repl, arg string) {
 	if arg == "intro" {
-		showREPLIntro()
+		showREPLIntro(this)
 		return
 	}
 
-	if arg == "repl" {
+	if arg == "repl-commands" {
 		for _, entry := range handlerLookupTable {
 			names := strings.Join(entry.verbNames, " or ")
 			fmt.Println(names)
@@ -640,7 +670,32 @@ func handleHelpSingle(this *Repl, arg string) {
 		return
 	}
 
-	if arg == "functions" {
+	if arg == "prompt" {
+		fmt.Printf(
+			"You can export the environment variable %s to customize the Miller REPL prompt.\n",
+			ENV_PRIMARY_PROMPT,
+		)
+		fmt.Printf(
+			"Otherwise, it defaults to \"%s\".\n",
+			DEFAULT_PRIMARY_PROMPT,
+		)
+		fmt.Printf(
+			"Likewise you can export the environment variable %s to customize the secondary prompt,\n",
+			ENV_SECONDARY_PROMPT,
+		)
+		fmt.Printf(
+			"which defaults to \"%s\". This is used for multiline input.\n",
+			DEFAULT_SECONDARY_PROMPT,
+		)
+		return
+	}
+
+	if arg == "function-names" {
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
+		return
+	}
+
+	if arg == "function-details" {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 		return
 	}
@@ -658,36 +713,94 @@ func handleHelpSingle(this *Repl, arg string) {
 	fmt.Printf("No help available for %s\n", arg)
 }
 
-func showREPLIntro() {
-	fmt.Print(
-		`Enter any Miller DSL expression.
-REPL-only statements (non-DSL statements) start with ':', such as ':help' or ':quit'.
-Type ':help functions' for help with DSL functions; type ':help repl' for help with non-DSL expressions.
+func showREPLIntro(this *Repl) {
+	fmt.Printf(
+`The Miller REPL is an interactive counterpart to record-processing using the
+put/filter DSL.
 
-The input "record" by default is the empty map but you can do things like '$x=3',
-or 'unset $y', or '$* = {"x": 3, "y": 4}' to populate it.
+Using put and filter, you can do the following:
+* Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
+  command-line flags.
+* Specify filenames on the command line.
+* Define begin {...} blocks which are executed before the first record is read.
+* Define end {...} blocks which are executed after the last record is read.
+* Define user-defined functions/subroutines using func/subr.
+* Specify statements to be executed on each record.
+* Example:
+  %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}
 
-Enter '<' on a line by itself to enter multi-line mode, e.g. to enter a function definition;
-enter '>' on a line by itself to exit multi-line mode.
+Using the REPL, by contrast, you get interactive control over those steps:
+* Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
+  command-line flags.
+* Specify filenames either on the command line or via ':open' at the Miller
+  REPL.
+* Read records one at a time using ':read'.
+* Skip ahead using statements ':skip 10' or ':skip until NR == 100' or ':skip
+  until $status_code != 200'.
+* Similarly, but processing records rather than skipping past them, using
+  ':process' rather than ':skip'.
+* Skip ahead using statements ':skip 10' or ':skip until NR == 100' or ':skip
+  until $status_code != 200'.
+* Define begin {...} blocks; invoke them at will using ':begin'.
+* Define end {...} blocks; invoke them at will using ':end'.
+* Define user-defined functions/subroutines using func/subr; call them from other statements.
+* Interactively specify statements to be executed on the current record.
+* Load any of the above from Miller-script files using ':load'.
+* Furthermore, any DSL statements other than begin/end/func/subr loaded using
+  ':load' -- or from "multiline input mode" where you type '<' on a line by
+  itself, enter the code, then type '>' on a line by itself -- will be
+  remembered and can be invoked on a given record using ':main'.  In multi-line
+  mode, semicolons are required between statements; otherwise they are not
+  needed.
 
-In multi-line mode, semicolons are required between statements; otherwise they are not needed.
-Non-assignment expressions, such as '7' or 'true', in mlr put are filter statements; here, they
-are simply printed to the terminal, e.g. if you type '1+2', you will see '3'.
+At this REPL prompt you can enter any Miller DSL expression.  REPL-only
+statements (non-DSL statements) start with ':', such as ':help' or ':quit'.
+Type ':help' to see more about your options.
 
-Examples, assuming the prompt is 'mlr: '
+No command-line-history-editing feature is built in but 'rlwrap mlr repl' is a
+delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
+etc. depending on your platform.
 
-mlr: 1+2
+The input "record" by default is the empty map but you can do things like
+'$x=3', or 'unset $y', or '$* = {"x": 3, "y": 4}' to populate it. Or, ':open
+foo.dat' and ':read' to populat it from a data file.
+
+Non-assignment expressions, such as '7' or 'true', operate as filter conditions
+in the put DSL: they can be used to specify whether a record will or won't be
+included in the output-record stream.  But here in the REPL, they are simply
+printed to the terminal, e.g. if you type '1+2', you will see '3'.
+
+Examples:
+
+[mlr] 1+2
 3
-mlr: x=3
-mlr: y=4
-mlr: x+y
+
+[mlr] x=3  # These are local variables
+[mlr] y=4
+[mlr] x+y
 7
-mlr: <
+
+[mlr] <
 func f(a,b) {
   return a**b
 }
 >
-mlr: f(7,5)
+[mlr] f(7,5)
 16807
-`)
+
+[mlr] :open foo.dat
+[mlr] :read
+[mlr] :context
+FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
+[mlr] $*
+{
+  "a": "eks",
+  "b": "wye",
+  "i": 4,
+  "x": 0.38139939387114097,
+  "y": 0.13418874328430463
+}
+[mlr] f($x,$i)
+0.021160211005187134
+`, this.exeName)
 }

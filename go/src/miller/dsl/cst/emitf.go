@@ -181,8 +181,7 @@ func (this *EmitFStatementNode) emitfToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	// The output channel is always non-nil, except for the (very experimental)
-	// REPL in src/miller/auxents.
+	// The output channel is always non-nil, except for the Miller REPL.
 	if state.OutputChannel != nil {
 		state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
 	} else {

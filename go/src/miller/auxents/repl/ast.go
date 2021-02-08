@@ -1,5 +1,5 @@
 // ================================================================
-// Just playing around -- nothing serious here.
+// This is the interface between the REPL and the DSL-to-AST parser.
 // ================================================================
 
 package repl

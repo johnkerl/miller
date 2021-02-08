@@ -1,5 +1,5 @@
 // ================================================================
-// Just playing around -- nothing serious here.
+// Data types for the Miller REPL.
 // ================================================================
 
 package repl

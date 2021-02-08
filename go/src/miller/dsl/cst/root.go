@@ -30,7 +30,7 @@ func NewEmptyRoot(
 		endBlocks:                     make([]*StatementBlockNode, 0),
 		udfManager:                    NewUDFManager(),
 		udsManager:                    NewUDSManager(),
-		allowUDFSRedefinitions:        false,
+		allowUDFUDSRedefinitions:      false,
 		unresolvedFunctionCallsites:   list.New(),
 		unresolvedSubroutineCallsites: list.New(),
 		outputHandlerManagers:         list.New(),
@@ -41,8 +41,8 @@ func NewEmptyRoot(
 // Nominally for mlr put/filter we want to flag overwritten UDFs/UDSs as an
 // error.  But in the REPL, which is interactive, people should be able to
 // redefine.  This method allows the latter use-case.
-func (this *RootNode) WithRedefinableUDFS() *RootNode {
-	this.allowUDFSRedefinitions = true
+func (this *RootNode) WithRedefinableUDFUDS() *RootNode {
+	this.allowUDFUDSRedefinitions = true
 	return this
 }
 
@@ -53,8 +53,12 @@ func (this *RootNode) WithRedefinableUDFS() *RootNode {
 // the second defines, or mutual recursion across pieces, etc.
 func (this *RootNode) IngestAST(
 	ast *dsl.AST,
-	isFilter bool, // false for 'mlr put', true for 'mlr filter'
-	isReplImmediate bool, // TODO: more comments
+	// False for 'mlr put', true for 'mlr filter':
+	isFilter bool,
+	// False for non-REPL use. Also false for bulk-load REPL use.  True for
+	// interactive REPL statements which are intended to be executed once
+	// (immediately) but not retained.
+	isReplImmediate bool,
 ) error {
 	if ast.RootNode == nil {
 		return errors.New("Cannot build CST from nil AST root")
@@ -299,20 +303,27 @@ func (this *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 }
 
 // ----------------------------------------------------------------
-// src/miller/auxents/repl
-// TODO: more comments
+// These are for the Miller REPL.
+
+// If a DSL string was parsed into an AST and ingested in 'immediate' mode and
+// build into the CST, it's not populated into the main-statements block for
+// remembered execution on every record. Rather, it's just stored once, to be
+// executed once, and then discarded.
+
+// This is the 'execute once' part of that.
 func (this *RootNode) ExecuteREPLImmediate(state *runtime.State) (outrec *types.Mlrmap, err error) {
 	_, err = this.replImmediateBlock.ExecuteFrameless(state)
 	return state.Inrec, err
 }
 
-// TODO: more comments
+// This is the 'and then discarded' part of that.
 func (this *RootNode) ResetForREPL() {
 	this.replImmediateBlock = NewStatementBlockNode()
 	this.unresolvedFunctionCallsites = list.New()
 	this.unresolvedSubroutineCallsites = list.New()
 }
 
+// This is for the REPL's context-printer command.
 func (this *RootNode) ShowBlockReport() {
 	fmt.Printf("#begin %d\n", len(this.beginBlocks))
 	fmt.Printf("#main  %d\n", len(this.mainBlock.executables))

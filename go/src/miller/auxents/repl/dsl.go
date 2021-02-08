@@ -1,5 +1,20 @@
 // ================================================================
-// Just playing around -- nothing serious here.
+// This is the handler for taking DSL statements typed in interactively by the
+// user, parsing them to an AST, building a CST from the AST, and executing the
+// CST. It also handles DSL statements invoked using ':load' or multiline '<'
+// ... '>' wherein statements are built into the AST without being executed
+// right away.
+//
+// Specifically:
+//
+// * begin/end statements are parsed and stored into the AST regardless.
+//
+// * func/subr definitions are parsed and stored into the AST regardless.
+//
+// * For anything else in an interactive command besides begin/end/func/subr
+//   blocks, the statement(s) is/are executed immediately for interactive mode,
+//   else populated into the CST's main-statements block for load-from-file
+//   multiline mode.
 // ================================================================
 
 package repl
@@ -19,7 +34,10 @@ func (this *Repl) handleDSLStringBulk(dslString string) error {
 	return this.handleDSLStringAux(dslString, false)
 }
 
-func (this *Repl) handleDSLStringAux(dslString string, isReplImmediate bool) error {
+func (this *Repl) handleDSLStringAux(
+	dslString string,
+	isReplImmediate bool, // False for load-from-file or multiline; true otherwise
+) error {
 	if strings.TrimSpace(dslString) == "" {
 		return nil
 	}
