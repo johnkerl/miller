@@ -35,18 +35,14 @@ TOP OF LIST:
 
   o audit len-0 usages
   o improve usage messages
-
-  ? have :clear {udf,uds,begin,main,end,?}
+  o doc u==until
+  o :q|:quit -> OLH
 
   o either ':process quietly', or ':output something'
 
   o :open fixes:
     o fix no-open-files on read failure
     o tilde-expand ...
-
-  o non-dsl -> repl in the user interface
-
-  o extend UTs
 
   ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

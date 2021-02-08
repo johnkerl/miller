@@ -97,7 +97,7 @@ func (this *Repl) handleSession(istream *os.File) {
 
 		if trimmedLine == "<" {
 			this.handleMultiline(lineReader)
-		} else if trimmedLine == ":quit" {
+		} else if trimmedLine == ":quit" || trimmedLine == ":q" {
 			break
 		} else if this.handleNonDSLLine(trimmedLine) {
 			// Handled in that method.

@@ -75,7 +75,7 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 	}
 	handler := this.findHandler(verbName)
 	if handler == nil {
-		fmt.Printf("Non-DSL verb %s not found.\n", verbName)
+		fmt.Printf("REPL verb %s not found.\n", verbName)
 		return true
 	}
 
@@ -249,7 +249,7 @@ func handleSkip(this *Repl, args []string) bool {
 			handleSkipOrProcessN(this, n, false)
 		}
 		return true
-	} else if args[0] != "until" {
+	} else if args[0] != "until" && args[0] != "u" {
 		return false
 	} else {
 		dslString := strings.Join(args[1:], " ")
@@ -289,7 +289,7 @@ func handleProcess(this *Repl, args []string) bool {
 			handleSkipOrProcessN(this, n, true)
 		}
 		return true
-	} else if args[0] != "until" {
+	} else if args[0] != "until" && args[0] != "u" {
 		return false
 	} else {
 		dslString := strings.Join(args[1:], " ")
@@ -642,7 +642,7 @@ func handleHelpSingle(this *Repl, arg string) {
 func showREPLIntro() {
 	fmt.Print(
 		`Enter any Miller DSL expression.
-Non-DSL commands (REPL-only statements) start with ':', such as ':help' or ':quit'.
+REPL-only statements (non-DSL statements) start with ':', such as ':help' or ':quit'.
 Type ':help functions' for help with DSL functions; type ':help repl' for help with non-DSL expressions.
 
 The input "record" by default is the empty map but you can do things like '$x=3',
