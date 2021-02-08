@@ -22,7 +22,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"miller/cliutil"
 	"miller/dsl/cst"
@@ -63,6 +65,12 @@ func NewRepl(
 	// types.MlrvalFromVoid().
 	runtimeState.FilterExpression = types.MlrvalFromVoid()
 
+	// For control-C handling
+	sysToSignalHandlerChannel := make(chan os.Signal, 1) // Our signal handler reads system notification here
+	appSignalNotificationChannel := make(chan bool, 1)   // Our signal handler writes this for our app to poll
+	signal.Notify(sysToSignalHandlerChannel, os.Interrupt, syscall.SIGTERM)
+	go controlCHandler(sysToSignalHandlerChannel, appSignalNotificationChannel)
+
 	return &Repl{
 		exeName:  exeName,
 		replName: replName,
@@ -80,8 +88,21 @@ func NewRepl(
 		recordReader: recordReader,
 		recordWriter: recordWriter,
 
-		runtimeState: runtimeState,
+		runtimeState:                 runtimeState,
+		sysToSignalHandlerChannel:    sysToSignalHandlerChannel,
+		appSignalNotificationChannel: appSignalNotificationChannel,
 	}, nil
+}
+
+// When the user types control-C, immediately print something to the screen,
+// then also write to a channel while long-running things like :skip and
+// :process can check it.
+func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotificationChannel chan bool) {
+	for {
+		<-sysToSignalHandlerChannel // Block until control-C notification is sent by system
+		fmt.Println("^C") // Acknowledge for user reassurance
+		appSignalNotificationChannel <- true // Let our app poll this
+	}
 }
 
 // ----------------------------------------------------------------
@@ -101,6 +122,14 @@ func (this *Repl) handleSession(istream *os.File) {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "%s %s: %w\n", this.exeName, this.replName, err)
 			os.Exit(1)
+		}
+
+		// Acknowledge any control-C's, even if typed at a ready prompt
+		select {
+		case _ = <-this.appSignalNotificationChannel:
+			continue
+		default:
+			break
 		}
 
 		// This trims the trailing newline, as well as leading/trailing whitespace:

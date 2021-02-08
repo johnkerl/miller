@@ -22,6 +22,7 @@
   o make a README.md
     - rlwrap note
 
+  ! for ^C -- need a :skip xxx / :process xxx -- also online help
   ! output-specifier: write or append.
     - applies to all record-writer stuff incl strings
     - update ':help intro'
@@ -35,7 +36,6 @@
   o tilde-expand for load/open ...
     - if '~' is in the string, run it though sh -c echo ...
 
-  ? :continue / ^C -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -18,7 +18,6 @@ const ENV_SECONDARY_PROMPT = "MLR_REPL_PS2"
 const DEFAULT_PRIMARY_PROMPT = "[mlr] "
 const DEFAULT_SECONDARY_PROMPT = ""
 
-
 func getInputIsTerminal() bool {
 	return term.IsTerminal(int(os.Stdin.Fd()))
 }

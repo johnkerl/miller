@@ -350,6 +350,8 @@ func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
 			break
 		case err = <-this.errorChannel:
 			break
+		case _ = <-this.appSignalNotificationChannel: // user typed control-C
+			break
 		}
 
 		if err != nil {
@@ -398,10 +400,17 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 	var recordAndContext *types.RecordAndContext = nil
 
 	for {
+		doubleBreak := false
 		select {
 		case recordAndContext = <-this.inputChannel:
 			break
 		case err = <-this.errorChannel:
+			break
+		case _ = <-this.appSignalNotificationChannel: // user typed control-C
+			doubleBreak = true
+			break
+		}
+		if doubleBreak {
 			break
 		}
 
@@ -715,7 +724,7 @@ func handleHelpSingle(this *Repl, arg string) {
 
 func showREPLIntro(this *Repl) {
 	fmt.Printf(
-`The Miller REPL is an interactive counterpart to record-processing using the
+		`The Miller REPL is an interactive counterpart to record-processing using the
 put/filter DSL.
 
 Using put and filter, you can do the following:

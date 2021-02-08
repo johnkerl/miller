@@ -5,6 +5,8 @@
 package repl
 
 import (
+	"os"
+
 	"miller/cliutil"
 	"miller/dsl/cst"
 	"miller/input"
@@ -47,4 +49,8 @@ type Repl struct {
 	recordWriter output.IRecordWriter
 
 	runtimeState *runtime.State
+
+	// For control-C handling
+	sysToSignalHandlerChannel    chan os.Signal // Our signal handler reads system notification here
+	appSignalNotificationChannel chan bool // Our signal handler writes this for our app to poll
 }
