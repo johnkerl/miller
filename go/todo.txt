@@ -1,5 +1,4 @@
-----------------------------------------------------------------
-TOP OF LIST:
+---------------------------------------------------------------- TOP OF LIST:
 
 ! issues !
 * do go.mod correctly w/ regard to gocc and golang.org/x/term/

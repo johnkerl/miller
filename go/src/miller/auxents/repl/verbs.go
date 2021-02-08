@@ -140,7 +140,8 @@ you type :read.
 func handleOpen(this *Repl, args []string) bool {
 	// xxx function to stat & nonesuch ... if not, the user won't see the 'no such file'
 	// error until the first record-read
-	this.openFiles(args[1:]) // strip off verb
+	args = args[1:] // strip off verb
+	this.openFiles(args)
 	return true
 }
 
@@ -170,6 +171,10 @@ func usageRead(this *Repl) {
 }
 
 func handleRead(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) != 0 {
+		return false
+	}
 	if this.inputChannel == nil {
 		fmt.Println("No open files")
 		return true
@@ -211,7 +216,8 @@ func usageContext(this *Repl) {
 }
 
 func handleContext(this *Repl, args []string) bool {
-	if len(args) != 1 {
+	args = args[1:] // strip off verb
+	if len(args) != 0 {
 		return false
 	}
 	fmt.Println(this.runtimeState.Context.GetStatusString())
@@ -476,7 +482,8 @@ func usageBegin(this *Repl) {
 	fmt.Println("Executes any begin {...} which have been entered.")
 }
 func handleBegin(this *Repl, args []string) bool {
-	if len(args) != 1 {
+	args = args[1:] // strip off verb
+	if len(args) != 0 {
 		return false
 	}
 	err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
@@ -493,6 +500,10 @@ func usageMain(this *Repl) {
 	fmt.Println("with :load or multi-line input.")
 }
 func handleMain(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) != 0 {
+		return false
+	}
 	_, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
 	if err != nil {
 		fmt.Println(err)
@@ -506,6 +517,10 @@ func usageEnd(this *Repl) {
 	fmt.Println("Executes any end {...} which have been entered.")
 }
 func handleEnd(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) != 0 {
+		return false
+	}
 	err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
 	if err != nil {
 		fmt.Println(err)
@@ -552,6 +567,10 @@ func usageBlocks(this *Repl) {
 
 }
 func handleBlocks(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) != 0 {
+		return false
+	}
 	this.cstRootNode.ShowBlockReport()
 	return true
 }
