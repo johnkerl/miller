@@ -36,6 +36,14 @@ Non-assignment expressions, such as `7` or `true`, operate as filter conditions 
 Examples:
 
 ```
+$ mlr repl
+Miller v6.0.0-dev
+Type ':help' for on-line help; ':quit' to quit.
+[mlr] 
+
+```
+
+```
 [mlr] 1+2
 3
 ```
