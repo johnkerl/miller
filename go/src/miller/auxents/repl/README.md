@@ -1,3 +1,5 @@
+# Purpose of the REPL
+
 The Miller REPL is an interactive counterpart to record-processing using the put/filter DSL.
 
 Using put and filter, you can do the following:
@@ -91,3 +93,9 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
   "z": 0.021160211005187134
 }
 ```
+
+# Implementation of the REPL
+
+This is a small modification around the [CST](../../dsl/cst/) and the [`put` verb](../../transformers/put_or_filter.go).. Most of the keystroking here is for online help and command-line parsing.
+
+One subtlety is that non-assignment expressions like `NR < 10` are filter statements within `put` -- they can be used to control whether or not a given record is included in the outut stream. Here, in the REPL, these expressions are simply printed to the terminal. And for `:skip until ...` or `:process until ...`, they're used as the exit condition to break out of reading input records.

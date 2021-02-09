@@ -124,12 +124,20 @@ func (this *Repl) handleSession(istream *os.File) {
 			os.Exit(1)
 		}
 
-		// Acknowledge any control-C's, even if typed at a ready prompt
-		select {
-		case _ = <-this.appSignalNotificationChannel:
-			continue
-		default:
-			break
+		// Acknowledge any control-C's, even if typed at a ready prompt. We
+		// need to drain them all out since they're in a channel from the
+		// signal-handler goroutine.
+		doneDraining := false
+		for {
+			select {
+			case _ = <-this.appSignalNotificationChannel:
+				line = "" // Ignore any partially-entered line -- a ^C should do that
+			default:
+				doneDraining = true
+			}
+			if doneDraining {
+				break
+			}
 		}
 
 		// This trims the trailing newline, as well as leading/trailing whitespace:
