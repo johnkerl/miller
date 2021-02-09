@@ -1,6 +1,6 @@
 # Purpose of the REPL
 
-The Miller REPL is an interactive counterpart to record-processing using the put/filter DSL.
+The Miller read-evaluate-print loop is an interactive counterpart to record-processing using the put/filter domain-specific language.
 
 Using put and filter, you can do the following:
 
