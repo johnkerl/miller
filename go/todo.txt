@@ -23,9 +23,6 @@
   ! auto-unflatten / auto-flatten ? oy.
     - make repl helper-methods for read/write record ...
 
-  o readeropts/writeropts/readerwriteropts -> cliutil funcs
-    - then put into join.go, put.go, & repl
-
   o tilde-expand for load/open ...
     - if '~' is in the string, run it though sh -c echo ...
 
@@ -502,3 +499,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
 * doc re two-arg flatten
 * doc md5/sha1/sha256/sha512
+
+* readeropts/writeropts/readerwriteropts -> cliutil funcs
+  o then put into join.go, put.go, & repl

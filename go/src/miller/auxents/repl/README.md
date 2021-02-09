@@ -99,3 +99,13 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
 This is a small modification around the [CST](../../dsl/cst/) and the [`put` verb](../../transformers/put_or_filter.go).. Most of the keystroking here is for online help and command-line parsing.
 
 One subtlety is that non-assignment expressions like `NR < 10` are filter statements within `put` -- they can be used to control whether or not a given record is included in the outut stream. Here, in the REPL, these expressions are simply printed to the terminal. And for `:skip until ...` or `:process until ...`, they're used as the exit condition to break out of reading input records.
+
+# File structure
+
+* [types.go](./types.go) -- data types including the `Repl` class
+* [entry.go](./entry.go) -- shell command-line entry point to the Miller repl command line. E.g. handles `mlr repl --json` which is typed at the shell prompt, and starts a command-line session at the Miller REPL prompt.
+* [session.go](./session.go) -- constructs a `Repl` object and ingests command lines, dispatching them either to the DSL (e.g. `$z = $x + $y`) or to the non-DSL verb handler (e.g. `:open foo.dat` or `help`).
+* [prompt.go](./prompt.go) -- Handling for default and customized banners/prompts for the Miller REPL.
+* [dsl.go](./dsl.go) -- Handler for taking DSL statements typed in interactively by the user, parsing them to an AST, building a CST from the AST, and executing the CST.
+* [ast.go](./ast.go) -- Interface between the REPL and the DSL-to-AST parser.
+* [verbs.go](./verbs.go) -- Handlers for non-DSL statements like `:open foo.dat` or `:help`.
