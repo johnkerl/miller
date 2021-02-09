@@ -20,10 +20,6 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * repl fu:
 
-  ! output-specifier: write or append.
-    - applies to all record-writer stuff incl strings
-    - update ':help intro'
-
   ! auto-unflatten / auto-flatten ? oy.
     - make repl helper-methods for read/write record ...
 

@@ -47,6 +47,7 @@ type Repl struct {
 	errorChannel chan error
 	recordReader input.IRecordReader
 	recordWriter output.IRecordWriter
+	outputStream *os.File
 
 	runtimeState *runtime.State
 

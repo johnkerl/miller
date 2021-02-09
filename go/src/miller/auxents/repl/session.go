@@ -51,6 +51,7 @@ func NewRepl(
 	if recordWriter == nil {
 		return nil, errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
 	}
+	outputStream := os.Stdout
 
 	// $* is the empty map {} until/unless the user opens a file and reads records from it.
 	inrec := types.NewMlrmapAsRecord()
@@ -87,6 +88,7 @@ func NewRepl(
 		errorChannel: nil,
 		recordReader: recordReader,
 		recordWriter: recordWriter,
+		outputStream: outputStream,
 
 		runtimeState:                 runtimeState,
 		sysToSignalHandlerChannel:    sysToSignalHandlerChannel,

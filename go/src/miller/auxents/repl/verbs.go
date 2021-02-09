@@ -38,6 +38,8 @@ func init() {
 		{verbNames: []string{":s", ":skip"}, handlerFunc: handleSkip, usageFunc: usageSkip},
 		{verbNames: []string{":p", ":process"}, handlerFunc: handleProcess, usageFunc: usageProcess},
 		{verbNames: []string{":w", ":write"}, handlerFunc: handleWrite, usageFunc: usageWrite},
+		{verbNames: []string{":w", ":>"}, handlerFunc: handleRedirectWrite, usageFunc: usageRedirectWrite},
+		{verbNames: []string{":w", ":>>"}, handlerFunc: handleRedirectAppend, usageFunc: usageRedirectAppend},
 		{verbNames: []string{":b", ":begin"}, handlerFunc: handleBegin, usageFunc: usageBegin},
 		{verbNames: []string{":m", ":main"}, handlerFunc: handleMain, usageFunc: usageMain},
 		{verbNames: []string{":e", ":end"}, handlerFunc: handleEnd, usageFunc: usageEnd},
@@ -484,7 +486,7 @@ func skipOrProcessRecord(
 	// Strings to be printed from put/filter DSL print/dump/etc statements.
 	if recordAndContext.Record == nil {
 		if processingNotSkipping {
-			fmt.Print(recordAndContext.OutputString)
+			fmt.Fprint(this.outputStream, recordAndContext.OutputString)
 		}
 		return false
 	}
@@ -497,7 +499,7 @@ func skipOrProcessRecord(
 			return true
 		}
 		this.runtimeState.Inrec = outrec
-		this.recordWriter.Write(outrec, os.Stdout)
+		this.recordWriter.Write(outrec, this.outputStream)
 	}
 
 	if testingByFilterExpression {
@@ -525,11 +527,79 @@ func usageWrite(this *Repl) {
 	fmt.Printf("to standard output, with format as specified by %s %s.\n",
 		this.exeName, this.replName)
 }
-func handleWrite(repl *Repl, args []string) bool {
+func handleWrite(this *Repl, args []string) bool {
 	if len(args) != 1 {
 		return false
 	}
-	repl.recordWriter.Write(repl.runtimeState.Inrec, os.Stdout)
+	this.recordWriter.Write(this.runtimeState.Inrec, this.outputStream)
+	return true
+}
+
+// ----------------------------------------------------------------
+func usageRedirectWrite(this *Repl) {
+	fmt.Println(":> {filename} sends record-write output to the specified file.")
+	fmt.Println(":> with no arguments sends record-write output to stdout.")
+}
+func handleRedirectWrite(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) == 0 {
+		// TODO: fclose old if not already os.Stdout
+		this.outputStream = os.Stdout
+		return true
+	}
+
+	if len(args) != 1 {
+		return false
+	}
+
+	filename := args[0]
+	handle, err := os.OpenFile(
+		filename,
+		os.O_CREATE|os.O_WRONLY|os.O_TRUNC,
+		0644, // TODO: let users parameterize this
+	)
+	if err != nil {
+		fmt.Printf(
+			"%s %s: couldn't open \"%s\" for write.\n",
+			this.exeName, this.replName,
+		)
+	}
+	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
+
+	// TODO: fclose old if not already os.Stdout
+	this.outputStream = handle
+
+	return true
+}
+
+// ----------------------------------------------------------------
+func usageRedirectAppend(this *Repl) {
+	fmt.Println(":>> {filename}")
+	fmt.Println("Appends record-write output to the specified file.")
+}
+func handleRedirectAppend(this *Repl, args []string) bool {
+	args = args[1:] // strip off verb
+	if len(args) != 1 {
+		return false
+	}
+
+	filename := args[0]
+	handle, err := os.OpenFile(
+		filename,
+		os.O_CREATE|os.O_WRONLY|os.O_APPEND,
+		0644, // TODO: let users parameterize this
+	)
+	if err != nil {
+		fmt.Printf(
+			"%s %s: couldn't open \"%s\" for write.\n",
+			this.exeName, this.replName,
+		)
+	}
+	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
+
+	// TODO: fclose old if not already os.Stdout
+	this.outputStream = handle
+
 	return true
 }
 
@@ -758,10 +828,14 @@ Using the REPL, by contrast, you get interactive control over those same steps:
 * Specify filenames either on the command line or via ':open' at the Miller
   REPL.
 * Read records one at a time using ':read'.
+* Write the current record (maybe after you've modified it with things like '$z = $x + $y')
+  using ':write'. This goes to the terminal; you can use ':> {filename}' to make writes
+  go to a file, or ':>> {filename}' to append.
 * Skip ahead using statements ':skip 10' or ':skip until NR == 100' or ':skip
   until $status_code != 200'.
 * Similarly, but processing records rather than skipping past them, using
-  ':process' rather than ':skip'.
+  ':process' rather than ':skip'. Like ':write', these go to the screen;
+  use ':> {filename}' or ':>> {filename}' to log to a file instead.
 * Define begin {...} blocks; invoke them at will using ':begin'.
 * Define end {...} blocks; invoke them at will using ':end'.
 * Define user-defined functions/subroutines using func/subr; call them from other statements.
