@@ -11,7 +11,7 @@ Using put and filter, you can do the following:
 * Define user-defined functions/subroutines using `func` and `subr`.
 * Specify statements to be executed on each record -- which are anything outside of `begin`/`end`/`func`/`subr`.
 * Example:
-  `mlr --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}`
+  `mlr --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}`
 
 Using the REPL, by contrast, you get interactive control over those same steps:
 
