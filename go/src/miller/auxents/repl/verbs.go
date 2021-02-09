@@ -674,7 +674,7 @@ func handleHelpSingle(this *Repl, arg string) {
 		return
 	}
 
-	if arg == "repl-commands" {
+	if arg == "repl-list" {
 		for _, entry := range handlerLookupTable {
 			names := strings.Join(entry.verbNames, " or ")
 			fmt.Println(names)
