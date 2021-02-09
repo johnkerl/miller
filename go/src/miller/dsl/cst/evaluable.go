@@ -99,6 +99,15 @@ func (this *IndirectFieldValueNode) Evaluate(state *runtime.State) types.Mlrval 
 		return types.MlrvalFromAbsent()
 	}
 
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return types.MlrvalFromAbsent()
+	}
+
 	value, err := state.Inrec.GetWithMlrvalIndex(&fieldName)
 	if err != nil {
 		// Key isn't int or string.

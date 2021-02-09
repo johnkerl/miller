@@ -110,6 +110,16 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
+
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return errors.New("There is no current record to assign to.")
+	}
+
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	if indices == nil {
@@ -136,6 +146,16 @@ func (this *DirectFieldValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
+
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return
+	}
+
 	if indices == nil {
 		lib.InternalCodingErrorIf(!this.lhsFieldName.IsString())
 		name := this.lhsFieldName.String()
@@ -190,6 +210,15 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return errors.New("There is no current record to assign to.")
+	}
+
 	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 
 	if indices == nil {
@@ -216,6 +245,15 @@ func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return
+	}
+
 	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 	if indices == nil {
 		name := lhsFieldName.String()
@@ -265,6 +303,15 @@ func (this *PositionalFieldNameLvalueNode) Assign(
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return errors.New("There is no current record to assign to.")
+	}
+
 	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 
 	index, ok := lhsFieldIndex.GetIntValue()
@@ -305,6 +352,16 @@ func (this *PositionalFieldNameLvalueNode) UnsetIndexed(
 	state *runtime.State,
 ) {
 	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
+
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return
+	}
+
 	if indices == nil {
 		index, ok := lhsFieldIndex.GetIntValue()
 		if ok {
@@ -366,6 +423,15 @@ func (this *PositionalFieldValueLvalueNode) AssignIndexed(
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return errors.New("There is no current record to assign to.")
+	}
+
 	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 
 	if indices == nil {
@@ -408,6 +474,15 @@ func (this *PositionalFieldValueLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return
+	}
+
 	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 	if indices == nil {
 		index, ok := lhsFieldIndex.GetIntValue()
@@ -451,6 +526,15 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return errors.New("There is no current record to assign to.")
+	}
+
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
@@ -473,6 +557,15 @@ func (this *FullSrecLvalueNode) UnsetIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return
+	}
+
 	if indices == nil {
 		state.Inrec.Clear()
 	} else {

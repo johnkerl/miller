@@ -267,6 +267,7 @@ func usageSkip(this *Repl) {
 	fmt.Println("Or: :skip until {some DSL expression}. You can use 'u' as shorthand for 'until'.")
 	fmt.Println("Example: :skip until NR == 30")
 	fmt.Println("Example: :skip until $status_code != 200")
+	fmt.Println("Or: ':skip until intr' which means keep skipping until you type control-C to interrupt.")
 }
 
 func handleSkip(this *Repl, args []string) bool {
@@ -291,7 +292,13 @@ func handleSkip(this *Repl, args []string) bool {
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
 	} else {
-		dslString := strings.Join(args[1:], " ")
+		args := args[1:]
+		dslString := strings.Join(args, " ")
+		// If they say ':skip until intr' then we use a DSL string of 'false',
+		// i.e. skip until they type control-C.
+		if len(args) == 1 && args[0] == "intr" {
+			dslString = "false"
+		}
 		handleSkipOrProcessUntil(this, dslString, false)
 		return true
 	}
@@ -309,6 +316,7 @@ func usageProcess(this *Repl) {
 	fmt.Println("Or: :process until {some DSL expression}. You can use 'u' as shorthand for 'until'.")
 	fmt.Println("Example: :process until NR == 30")
 	fmt.Println("Example: :process until $status_code != 200")
+	fmt.Println("Or: ':process until intr' which means keep processing until you type control-C to interrupt.")
 }
 
 func handleProcess(this *Repl, args []string) bool {
@@ -333,7 +341,13 @@ func handleProcess(this *Repl, args []string) bool {
 	} else if args[0] != "until" && args[0] != "u" {
 		return false
 	} else {
-		dslString := strings.Join(args[1:], " ")
+		args := args[1:]
+		dslString := strings.Join(args, " ")
+		// If they say ':process until intr' then we use a DSL string of 'false',
+		// i.e. skip until they type control-C.
+		if len(args) == 1 && args[0] == "intr" {
+			dslString = "false"
+		}
 		handleSkipOrProcessUntil(this, dslString, true)
 		return true
 	}

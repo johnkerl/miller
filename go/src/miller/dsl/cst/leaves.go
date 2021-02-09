@@ -88,6 +88,14 @@ func (this *RootNode) BuildDirectFieldRvalueNode(fieldName string) *DirectFieldR
 	}
 }
 func (this *DirectFieldRvalueNode) Evaluate(state *runtime.State) types.Mlrval {
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return types.MlrvalFromAbsent()
+	}
 	value := state.Inrec.Get(this.fieldName)
 	if value == nil {
 		return types.MlrvalFromAbsent()
@@ -104,6 +112,14 @@ func (this *RootNode) BuildFullSrecRvalueNode() *FullSrecRvalueNode {
 	return &FullSrecRvalueNode{}
 }
 func (this *FullSrecRvalueNode) Evaluate(state *runtime.State) types.Mlrval {
+	// For normal DSL use the CST validator will prohibit this from being
+	// called in places the current record is undefined (begin and end blocks).
+	// However in the REPL people can read past end of stream and still try to
+	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
+	// to access the inrec, and that would get past the validator.
+	if state.Inrec == nil {
+		return types.MlrvalFromAbsent()
+	}
 	return types.MlrvalFromMap(state.Inrec)
 }
 
