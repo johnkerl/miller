@@ -1,7 +1,18 @@
 ---------------------------------------------------------------- TOP OF LIST:
 
 ! issues !
+! rmd ex1 even simpler -- commarect
 * do go.mod correctly w/ regard to gocc and golang.org/x/term/
+* mgrepr/mrpl -> gh
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+mlrtut links:
+  bmk mlr --csv gsearch
+  https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
+  https://www.togaware.com/linux/survivor/CSV_Files.html
+  https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
@@ -18,10 +29,19 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* revisit flatten/flatten:
+  - centralize POLS comment/method from $repl/entry.go
+  - put into the go/README.md
+  - schedule for doc6
+  - refactor/rename args in mlrmain
+
 * repl fu:
 
-  ! auto-unflatten / auto-flatten ? oy.
-    - make repl helper-methods for read/write record ...
+  * :rw -- doc & UT
+
+  * :reopen verb
+
+  * auto-unflatten / auto-flatten UT
 
   o tilde-expand for load/open ...
     - if '~' is in the string, run it though sh -c echo ...
@@ -502,3 +522,10 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
 * readeropts/writeropts/readerwriteropts -> cliutil funcs
   o then put into join.go, put.go, & repl
+* surface the REPL at:
+  o go/README.md
+  o man mlr
+  o readthedocs (once mlr6 is there ...)
+* mlr inp parse error failstring retback?
+* https://blog.golang.org/go1.13-errors
+* split REPL lines on ';' -- ?
