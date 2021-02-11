@@ -1,4 +1,5 @@
----------------------------------------------------------------- TOP OF LIST:
+----------------------------------------------------------------
+TOP OF LIST:
 
 ! issues !
 ! rmd ex1 even simpler -- commarect
@@ -13,7 +14,6 @@ mlrtut links:
   https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
   o audit for DEFAULT_FOOs @ 
@@ -26,31 +26,6 @@ mlrtut links:
 * port verb merge-fields
 * port verb stats2
 * note hexfmt for non-ints -- especially floats -- ?!?
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-* revisit flatten/flatten:
-  ! mlr --csv --from x.csv put -q '@a["b"]=1;@a["c"]=2; emitp @a'`
-    mlr --opprint put '$f=asserting_map($*)' ./reg-test/input/nullvals.dkvp
-    mlr --opprint put '$f=asserting_map($*)' then flatten ./reg-test/input/nullvals.dkvp
-
-  - centralize POLS comment/method from $repl/entry.go
-  - put into the go/README.md
-  - schedule for doc6
-  - refactor/rename args in mlrmain
-  - avoid if flatten/unflatten verbs are anywhere in the chain?
-
-* repl fu:
-
-  * :rw -- doc & UT
-
-  * :reopen verb
-
-  * auto-unflatten / auto-flatten UT
-
-  o tilde-expand for load/open ...
-    - if '~' is in the string, run it though sh -c echo ...
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -510,6 +485,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o the former is not necessarily in sync with the output record stream
 * dev-note on why `int` not `int64` -- processor-arch & those who most need it get it
 * document tee -p
+* doc auto-flatten/auto-unflatten -- incl narrative from mlrcli_parse.go
 * doc6: default flatsep is now "." not ":" in keeping with JSON culture
 ? allow [[...]] / [[[...]]] at assignment LHS
 
@@ -538,3 +514,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * mlr inp parse error failstring retback?
 * https://blog.golang.org/go1.13-errors
 * split REPL lines on ';' -- ?
+* tilde-expand for REPL load/open: if '~' is at the start of the string, run it though 'sh -c echo'
