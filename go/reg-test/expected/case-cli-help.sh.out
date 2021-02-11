@@ -138,7 +138,7 @@ Flattens multi-level maps to single-level ones. Example: field with name 'a'
 and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 Options:
 -f Comma-separated list of field names to flatten (default all).
--s Separator, defaulting to mlr --jflatsep value.
+-s Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
 ================================================================
 Usage: mlr gap [options]
@@ -534,7 +534,7 @@ Reverses flatten. Example: field with name 'a:b:c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.
 Options:
 -f {a,b,c} Comma-separated list of field names to unflatten (default all).
--s {string} Separator, defaulting to mlr --jflatsep value.
+-s {string} Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
 ================================================================
 Usage: mlr unsparsify [options]

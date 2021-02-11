@@ -578,7 +578,7 @@ func handleWrite(this *Repl, args []string) bool {
 // * If input is JSON and output is non-JSON:
 //   o Records can be nested from record-read
 //   o They remain that way through the Miller record-processing stream
-//   o On record-write, nested structres will be converted to string (carriage
+//   o On record-write, nested structures will be converted to string (carriage
 //     returns and all) using json_stringify. People *might* want this but
 //     (using POLS) we will (by default) AUTO-FLATTEN for them. There is a
 //     --no-auto-unflatten CLI flag for those who want it.
@@ -600,18 +600,14 @@ func writeRecord(this *Repl, outrec *types.Mlrmap) {
 	ofmt := wopt.OutputFileFormat
 
 	if wopt.AutoFlatten {
-		if ifmt == "json" { // TODO: make enum
-			if ofmt != "json" {
-				outrec.Flatten(wopt.OFLATSEP)
-			}
+		if ifmt == "json" && ofmt != "json" {
+			outrec.Flatten(wopt.OFLATSEP)
 		}
 	}
 
-	if ropt.AutoUnflatten { // TODO: refactor/rename from ropt to wopt as part of bigger non-repl refactor
-		if ifmt != "json" {
-			if ofmt == "json" {
-				outrec.Unflatten(wopt.OFLATSEP)
-			}
+	if wopt.AutoUnflatten {
+		if ifmt != "json" && ofmt == "json" {
+			outrec.Unflatten(wopt.OFLATSEP)
 		}
 	}
 	this.recordWriter.Write(outrec, this.outputStream)

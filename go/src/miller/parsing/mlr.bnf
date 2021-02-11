@@ -148,7 +148,6 @@ boolean_literal : ( _literal_true | _literal_false );
 ctx_IPS : 'I' 'P' 'S' ;
 ctx_IFS : 'I' 'F' 'S' ;
 ctx_IRS : 'I' 'R' 'S' ;
-ctx_IFLATSEP : 'I' 'F' 'L' 'A' 'T' 'S' 'E' 'P';
 
 ctx_OPS : 'O' 'P' 'S' ;
 ctx_OFS : 'O' 'F' 'S' ;
@@ -1642,7 +1641,6 @@ ContextVariable
   : ctx_IPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
   | ctx_IFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
   | ctx_IRS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_IFLATSEP << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
   | ctx_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
   | ctx_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>

@@ -79,7 +79,7 @@ and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
 `)
 	fmt.Fprint(o, "Options:\n")
 	fmt.Fprint(o, "-f Comma-separated list of field names to flatten (default all).\n")
-	fmt.Fprintf(o, "-s Separator, defaulting to %s --jflatsep value.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "-s Separator, defaulting to %s --oflatsep value.\n", lib.MlrExeName())
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {

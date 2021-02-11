@@ -262,9 +262,6 @@ func (this *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 	case "IPS":
 		return this.BuildIPSNode(), nil
 		break
-	case "IFLATSEP":
-		return this.BuildIFLATSEPNode(), nil
-		break
 
 	case "ORS":
 		return this.BuildORSNode(), nil
@@ -372,17 +369,6 @@ func (this *RootNode) BuildIPSNode() *IPSNode {
 }
 func (this *IPSNode) Evaluate(state *runtime.State) types.Mlrval {
 	return types.MlrvalFromString(state.Context.IPS)
-}
-
-// ----------------------------------------------------------------
-type IFLATSEPNode struct {
-}
-
-func (this *RootNode) BuildIFLATSEPNode() *IFLATSEPNode {
-	return &IFLATSEPNode{}
-}
-func (this *IFLATSEPNode) Evaluate(state *runtime.State) types.Mlrval {
-	return types.MlrvalFromString(state.Context.IFLATSEP)
 }
 
 // ----------------------------------------------------------------

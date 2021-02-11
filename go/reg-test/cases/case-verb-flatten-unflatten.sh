@@ -12,9 +12,9 @@ run_mlr --ixtab --ojson unflatten      $indir/unflatten-input.xtab
 run_mlr --ixtab --ojson unflatten -s : $indir/unflatten-input.xtab
 run_mlr --ixtab --ojson unflatten -s . $indir/unflatten-input.xtab
 
-run_mlr --ixtab --ojson --iflatsep @ unflatten $indir/unflatten-input-2.xtab
+run_mlr --ixtab --ojson --oflatsep @ unflatten $indir/unflatten-input-2.xtab
 
-run_mlr --xtab --iflatsep . --oflatsep @ unflatten then flatten $indir/unflatten-input.xtab
+run_mlr --xtab unflatten -s . then flatten -s @ $indir/unflatten-input.xtab
 
 run_mlr --ixtab --ojson unflatten -s . -f req $indir/unflatten-input.xtab
 run_mlr --ixtab --ojson unflatten -s . -f res $indir/unflatten-input.xtab

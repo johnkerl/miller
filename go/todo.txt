@@ -30,10 +30,15 @@ mlrtut links:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * revisit flatten/flatten:
+  ! mlr --csv --from x.csv put -q '@a["b"]=1;@a["c"]=2; emitp @a'`
+    mlr --opprint put '$f=asserting_map($*)' ./reg-test/input/nullvals.dkvp
+    mlr --opprint put '$f=asserting_map($*)' then flatten ./reg-test/input/nullvals.dkvp
+
   - centralize POLS comment/method from $repl/entry.go
   - put into the go/README.md
   - schedule for doc6
   - refactor/rename args in mlrmain
+  - avoid if flatten/unflatten verbs are anywhere in the chain?
 
 * repl fu:
 
@@ -482,6 +487,10 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * idea: records as mlrmap -> mlrval?
   o reduce $* copy ...
   o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
+
+* mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ./reg-test/input/abixy
+  o squint at pointer-handling
+  o output varied after flatten-mods
 
 * join
   > clean up VERBOSE in joiner-files

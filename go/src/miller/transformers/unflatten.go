@@ -34,7 +34,7 @@ func transformerUnflattenParseCLI(
 	verb := args[argi]
 	argi++
 
-	iFlatSep := "" // means take it from the record context
+	oFlatSep := "" // means take it from the record context
 	var fieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -48,7 +48,7 @@ func transformerUnflattenParseCLI(
 			transformerUnflattenUsage(os.Stdout, true, 0)
 
 		} else if opt == "-s" {
-			iFlatSep = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			oFlatSep = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-f" {
 			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
@@ -59,7 +59,7 @@ func transformerUnflattenParseCLI(
 	}
 
 	transformer, _ := NewTransformerUnflatten(
-		iFlatSep,
+		oFlatSep,
 		fieldNames,
 	)
 
@@ -79,7 +79,7 @@ becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
-	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --jflatsep value.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --oflatsep value.\n", lib.MlrExeName())
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
@@ -90,7 +90,7 @@ becomes name 'a' and value '{"b": { "c": 4 }}'.
 // ----------------------------------------------------------------
 type TransformerUnflatten struct {
 	// input
-	iFlatSep     string
+	oFlatSep     string
 	fieldNameSet map[string]bool
 
 	// state
@@ -98,7 +98,7 @@ type TransformerUnflatten struct {
 }
 
 func NewTransformerUnflatten(
-	iFlatSep string,
+	oFlatSep string,
 	fieldNames []string,
 ) (*TransformerUnflatten, error) {
 	var fieldNameSet map[string]bool = nil
@@ -107,7 +107,7 @@ func NewTransformerUnflatten(
 	}
 
 	retval := &TransformerUnflatten{
-		iFlatSep:     iFlatSep,
+		oFlatSep:     oFlatSep,
 		fieldNameSet: fieldNameSet,
 	}
 	retval.recordTransformerFunc = retval.unflattenAll
@@ -133,11 +133,11 @@ func (this *TransformerUnflatten) unflattenAll(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		iFlatSep := this.iFlatSep
-		if iFlatSep == "" {
-			iFlatSep = inrecAndContext.Context.IFLATSEP
+		oFlatSep := this.oFlatSep
+		if oFlatSep == "" {
+			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
-		inrec.Unflatten(iFlatSep)
+		inrec.Unflatten(oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker
@@ -151,11 +151,11 @@ func (this *TransformerUnflatten) unflattenSome(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		iFlatSep := this.iFlatSep
-		if iFlatSep == "" {
-			iFlatSep = inrecAndContext.Context.IFLATSEP
+		oFlatSep := this.oFlatSep
+		if oFlatSep == "" {
+			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
-		inrec.UnflattenFields(this.fieldNameSet, iFlatSep)
+		inrec.UnflattenFields(this.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

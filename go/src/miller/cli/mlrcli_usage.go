@@ -307,7 +307,7 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	                    --jknquoteint Do not quote non-string map keys in JSON output.
 	                     --jvquoteall Quote map values in JSON output, even if they're
 	                                  numeric.
-	              --jflatsep {string} Separator for flattening multi-level JSON keys,
+	              --oflatsep {string} Separator for flattening multi-level JSON keys,
 	                                  e.g. '{"a":{"b":3}}' becomes a:b => 3 for
 	                                  non-JSON formats. Defaults to %s.\n",
 		DEFAULT_JSON_FLATTEN_SEPARATOR);

@@ -21,7 +21,6 @@ type TReaderOptions struct {
 	IRS             string
 	IFS             string
 	IPS             string
-	IFLATSEP        string
 
 	//	char* input_json_flatten_separator;
 	//	json_array_ingest_t  json_array_ingest;
@@ -40,18 +39,6 @@ type TReaderOptions struct {
 	//
 	//	// Fake internal-data-generator 'reader'
 	//	generator_opts_t generator_opts;
-
-	// When we read things like
-	//
-	//   x:a=1,x:b=2
-	//
-	// which is how we write out nested data structures for non-nested formats
-	// (all but JSON), the default behavior is to unflatten them back to
-	//
-	//   {"x": {"a": 1}, {"b": 2}}
-	//
-	// unless the user explicitly asks to suppress that.
-	AutoUnflatten bool
 }
 
 // ----------------------------------------------------------------
@@ -75,6 +62,19 @@ type TWriterOptions struct {
 	//	oosvar_flatten_separator string;
 	//
 	//	quoting_t oquoting;
+
+	// TODO: centralize comments here & mlrcli_parse.go & repl/verbs.go; maybe to a README.md
+	// When we read things like
+	//
+	//   x:a=1,x:b=2
+	//
+	// which is how we write out nested data structures for non-nested formats
+	// (all but JSON), the default behavior is to unflatten them back to
+	//
+	//   {"x": {"a": 1}, {"b": 2}}
+	//
+	// unless the user explicitly asks to suppress that.
+	AutoUnflatten bool
 
 	// The default behavior is to flatten nested data structures like
 	//
@@ -135,8 +135,6 @@ func DefaultReaderOptions() TReaderOptions {
 		IRS:             "\n",
 		IFS:             ",",
 		IPS:             "=",
-		IFLATSEP:        ".",
-		AutoUnflatten:   true,
 	}
 }
 
@@ -151,6 +149,7 @@ func DefaultWriterOptions() TWriterOptions {
 		HeaderlessCSVOutput:       false,
 		WrapJSONOutputInOuterList: false,
 		JSONOutputMultiline:       true,
+		AutoUnflatten:             true,
 		AutoFlatten:               true,
 	}
 }
