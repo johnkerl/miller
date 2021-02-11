@@ -7,14 +7,6 @@ TOP OF LIST:
 * mgrepr/mrpl -> gh
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-mlrtut links:
-  bmk mlr --csv gsearch
-  https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
-  https://www.togaware.com/linux/survivor/CSV_Files.html
-  https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
   o audit for DEFAULT_FOOs @ 
   o audit for '-z {zzz}'

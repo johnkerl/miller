@@ -165,3 +165,7 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+* Some tutorials:
+  * https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
+  * https://www.togaware.com/linux/survivor/CSV_Files.html
+  * https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html
