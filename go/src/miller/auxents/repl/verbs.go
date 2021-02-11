@@ -540,74 +540,17 @@ func handleWrite(this *Repl, args []string) bool {
 	return true
 }
 
-// ================================================================
-// Takes care of flattening nested JSON data structures to multiple fields for
-// JSON -> non-JSON.
-//
-// TODO: centralize a function/data between here & mlrcli_parse.go & refer to it.
-// TODO: centralize the narrative comments as well.
-//
-// ----------------------------------------------------------------
-// PROBLEM TO BE SOLVED:
-//
-// JSON has nested structures and CSV et al. do not. For example:
-// {
-//   "req" : {
-//     "method": "GET",
-//     "path":   "api/check",
-//   }
-// }
-//
-// For CSV we flatten this down to
-//
-// {
-//   "req.method": "GET",
-//   "req.path":   "api/check"
-// }
-//
-// ----------------------------------------------------------------
-// APPROACH:
-//
-// Use the Principle of Least Surprise (POLS).
-//
-// * If input is JSON and output is JSON:
-//   o Records can be nested from record-read
-//   o They remain that way through the Miller record-processing stream
-//   o They are nested on record-write
-//   o No action needs to be taken
-// * If input is JSON and output is non-JSON:
-//   o Records can be nested from record-read
-//   o They remain that way through the Miller record-processing stream
-//   o On record-write, nested structures will be converted to string (carriage
-//     returns and all) using json_stringify. People *might* want this but
-//     (using POLS) we will (by default) AUTO-FLATTEN for them. There is a
-//     --no-auto-unflatten CLI flag for those who want it.
-// * If input is non-JSON and output is non-JSON:
-//   o Leave records as-is.
-//   o Example, if there is a "req.method" field, people should be able to do
-//     'mlr sort -f req.method' with no surprises. (Again, POLS.)
-//   o People can insert an unflatten verb into their verb chain if they really
-//     want unflatten for non-JSON files.
-// * If input is non-JSON and output is JSON:
-//   o Default is to auto-unflatten at output.
-//   o There is a --no-auto-unflatten for those who want it.
-// ================================================================
-
 func writeRecord(this *Repl, outrec *types.Mlrmap) {
-	ropt := &this.options.ReaderOptions
-	wopt := &this.options.WriterOptions
-	ifmt := ropt.InputFileFormat
-	ofmt := wopt.OutputFileFormat
-
-	if wopt.AutoFlatten {
-		if ifmt == "json" && ofmt != "json" {
-			outrec.Flatten(wopt.OFLATSEP)
+	if outrec != nil {
+		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
+		// req.method=GET,req.path=/api/check.
+		if this.options.WriterOptions.AutoFlatten {
+			outrec.Flatten(this.options.WriterOptions.OFLATSEP)
 		}
-	}
-
-	if wopt.AutoUnflatten {
-		if ifmt != "json" && ofmt == "json" {
-			outrec.Unflatten(wopt.OFLATSEP)
+		// E.g.  req.method=GET,req.path=/api/check becomes
+		// '{"req": {"method": "GET", "path": "/api/check"}}'
+		if this.options.WriterOptions.AutoUnflatten {
+			outrec.Unflatten(this.options.WriterOptions.OFLATSEP)
 		}
 	}
 	this.recordWriter.Write(outrec, this.outputStream)

@@ -66,3 +66,24 @@ run_mlr repl <<EOF
 :context
 \$*
 EOF
+
+# ----------------------------------------------------------------
+run_mlr repl --j2x $indir/flatten-input-2.json <<EOF
+:rw
+:rw
+EOF
+
+run_mlr repl --x2j $indir/unflatten-input.xtab <<EOF
+:rw
+:rw
+EOF
+
+run_mlr repl --xtab $indir/unflatten-input.xtab <<EOF
+:rw
+:rw
+EOF
+
+run_mlr repl --json $indir/flatten-input-2.json <<EOF
+:rw
+:rw
+EOF
