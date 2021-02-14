@@ -6,8 +6,8 @@ import (
 
 	"miller/src/dsl"
 
-	"experimental/lexer"
-	"experimental/parser"
+	"miller/src/parsing/lexer"
+	"miller/src/parsing/parser"
 )
 
 const GREEN = "\033[32;01m"
