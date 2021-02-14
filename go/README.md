@@ -113,12 +113,16 @@ So, in broad overview, the key packages are:
 
 ### Dependencies
 
-* Miller dependencies are all in the Go standard library, except a local one:
-  * `src/github.com/goccmack`
-    * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
+* Miller dependencies are all in the Go standard library, except two:
+  * GOCC lexer/parser code-generator from [github.com/goccmack/gocc](https://github.com/goccmack/gocc):
     * This package defines the grammar for Miller's domain-specific language (DSL) for the Miller `put` and `filter` verbs. And, GOCC is a joy to use. :)
-    * Note on the path: `go get github.com/goccmack/gocc` uses this directory path, and is nice enough to also create `bin/gocc` for me -- so I thought I would just let it continue to do that by using that local path. :)
-* I kept this locally so I could source-control it along with Miller and guarantee its stability. It is used on the terms of its open-source license.
+    * It is used on the terms of its open-source license.
+  * [golang.org/x/term](https://pkg.go.dev/golang.org/x/term):
+    * Just a one-line Miller callsite for is-a-terminal checking for the [Miller REPL](https://github.com/johnkerl/miller/blob/go-mod/go/src/auxents/repl/README.md).
+    * It is used on the terms of its open-source license.
+* See also [./go.mod](go.mod). Setup:
+  * `go get github.com/goccmack/gocc`
+  * `go get golang.org/x/term`
 
 ### Miller per se
 

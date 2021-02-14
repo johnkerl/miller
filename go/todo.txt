@@ -7,7 +7,6 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! do go.mod correctly w/ regard to gocc and golang.org/x/term/
-  o u/tester neaten?
   o parser-experiments neaten
   i go get github.com/johnkerl/gocc@gocc2x.3
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

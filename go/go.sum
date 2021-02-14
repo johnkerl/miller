@@ -1,3 +1,5 @@
+github.com/goccmack/gocc v0.0.0-20210201103733-1bd198f09019 h1:frVuW4LszXD/AjX9dC1y4I+GwTjZMl6153O2mk/lmHo=
+github.com/goccmack/gocc v0.0.0-20210201103733-1bd198f09019/go.mod h1:ZjwYs2UwOh6NiluQ1XCoKNLVECdeFf33rrGEZ+IpNq4=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/johnkerl/gocc v0.0.0-20210214145651-3650cede3074 h1:8+mZMwac/qKah1hHAuw1U5I7mqN+uRF+oVZ4ismxcJU=
 github.com/johnkerl/gocc v0.0.0-20210214145651-3650cede3074/go.mod h1:6oAcMpl/qp57NgiufLc2bISrDa4q12XciKeOCUqdeoU=
