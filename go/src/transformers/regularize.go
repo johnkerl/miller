@@ -16,9 +16,24 @@ const verbNameRegularize = "regularize"
 
 var RegularizeSetup = transforming.TransformerSetup{
 	Verb:         verbNameRegularize,
-	ParseCLIFunc: transformerRegularizeParseCLI,
 	UsageFunc:    transformerRegularizeUsage,
+	ParseCLIFunc: transformerRegularizeParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerRegularizeUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRegularize)
+	fmt.Fprint(o, "Outputs records sorted lexically ascending by keys.")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerRegularizeParseCLI(
@@ -52,21 +67,6 @@ func transformerRegularizeParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerRegularizeUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRegularize)
-	fmt.Fprint(o, "Outputs records sorted lexically ascending by keys.")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

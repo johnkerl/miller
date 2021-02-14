@@ -16,9 +16,24 @@ const verbNameSortWithinRecords = "sort-within-records"
 
 var SortWithinRecordsSetup = transforming.TransformerSetup{
 	Verb:         verbNameSortWithinRecords,
-	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
 	UsageFunc:    transformerSortWithinRecordsUsage,
+	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerSortWithinRecordsUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSortWithinRecords)
+	fmt.Fprintln(o, "Outputs records sorted lexically ascending by keys.")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerSortWithinRecordsParseCLI(
@@ -55,21 +70,6 @@ func transformerSortWithinRecordsParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerSortWithinRecordsUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSortWithinRecords)
-	fmt.Fprintln(o, "Outputs records sorted lexically ascending by keys.")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

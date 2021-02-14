@@ -17,9 +17,28 @@ const verbNameLabel = "label"
 
 var LabelSetup = transforming.TransformerSetup{
 	Verb:         verbNameLabel,
-	ParseCLIFunc: transformerLabelParseCLI,
 	UsageFunc:    transformerLabelUsage,
+	ParseCLIFunc: transformerLabelParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerLabelUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", lib.MlrExeName(), verbNameLabel)
+	fmt.Fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n")
+	fmt.Fprintf(o, "have the respective name. (Fields past the nth are left with their original\n")
+	fmt.Fprintf(o, "names.) Particularly useful with --inidx or --implicit-csv-header, to give\n")
+	fmt.Fprintf(o, "useful names to otherwise integer-indexed fields.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerLabelParseCLI(
@@ -66,25 +85,6 @@ func transformerLabelParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerLabelUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", lib.MlrExeName(), verbNameLabel)
-	fmt.Fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n")
-	fmt.Fprintf(o, "have the respective name. (Fields past the nth are left with their original\n")
-	fmt.Fprintf(o, "names.) Particularly useful with --inidx or --implicit-csv-header, to give\n")
-	fmt.Fprintf(o, "useful names to otherwise integer-indexed fields.\n")
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

@@ -17,9 +17,24 @@ const verbNameTac = "tac"
 
 var TacSetup = transforming.TransformerSetup{
 	Verb:         verbNameTac,
-	ParseCLIFunc: transformerTacParseCLI,
 	UsageFunc:    transformerTacUsage,
+	ParseCLIFunc: transformerTacParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerTacUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameTac)
+	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerTacParseCLI(
@@ -53,21 +68,6 @@ func transformerTacParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerTacUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameTac)
-	fmt.Fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

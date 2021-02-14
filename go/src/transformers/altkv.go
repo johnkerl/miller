@@ -17,9 +17,23 @@ const verbNameAltkv = "altkv"
 
 var AltkvSetup = transforming.TransformerSetup{
 	Verb:         verbNameAltkv,
-	ParseCLIFunc: transformerAltkvParseCLI,
 	UsageFunc:    transformerAltkvUsage,
+	ParseCLIFunc: transformerAltkvParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerAltkvUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameAltkv)
+	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerAltkvParseCLI(
@@ -53,20 +67,6 @@ func transformerAltkvParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerAltkvUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameAltkv)
-	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

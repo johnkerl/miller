@@ -15,9 +15,30 @@ const verbNameSec2GMT = "sec2gmt"
 
 var Sec2GMTSetup = transforming.TransformerSetup{
 	Verb:         verbNameSec2GMT,
-	ParseCLIFunc: transformerSec2GMTParseCLI,
 	UsageFunc:    transformerSec2GMTUsage,
+	ParseCLIFunc: transformerSec2GMTParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerSec2GMTUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", lib.MlrExeName(), verbNameSec2GMT)
+	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
+	fmt.Fprintf(o, "corresponding GMT timestamp; leaves non-numbers as-is. This is nothing\n")
+	fmt.Fprintf(o, "more than a keystroke-saver for the sec2gmt function:\n")
+	fmt.Fprintf(o, "  %s %s time1,time2\n", lib.MlrExeName(), verbNameSec2GMT)
+	fmt.Fprintf(o, "is the same as\n")
+	fmt.Fprintf(o, "  %s put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'\n", lib.MlrExeName())
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-1 through -9: format the seconds using 1..9 decimal places, respectively.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerSec2GMTParseCLI(
@@ -81,27 +102,6 @@ func transformerSec2GMTParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerSec2GMTUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", lib.MlrExeName(), verbNameSec2GMT)
-	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
-	fmt.Fprintf(o, "corresponding GMT timestamp; leaves non-numbers as-is. This is nothing\n")
-	fmt.Fprintf(o, "more than a keystroke-saver for the sec2gmt function:\n")
-	fmt.Fprintf(o, "  %s %s time1,time2\n", lib.MlrExeName(), verbNameSec2GMT)
-	fmt.Fprintf(o, "is the same as\n")
-	fmt.Fprintf(o, "  %s put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'\n", lib.MlrExeName())
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-1 through -9: format the seconds using 1..9 decimal places, respectively.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

@@ -16,9 +16,29 @@ const verbNameJSONStringify = "json-stringify"
 
 var JSONStringifySetup = transforming.TransformerSetup{
 	Verb:         verbNameJSONStringify,
-	ParseCLIFunc: transformerJSONStringifyParseCLI,
 	UsageFunc:    transformerJSONStringifyUsage,
+	ParseCLIFunc: transformerJSONStringifyParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerJSONStringifyUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONStringify)
+	fmt.Fprint(o,
+		`Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
+`)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
+	fmt.Fprintf(o, "--jvstack Produce multi-line JSON output.\n")
+	fmt.Fprintf(o, "--no-jvstack Produce single-line JSON output per record (default).\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerJSONStringifyParseCLI(
@@ -75,26 +95,6 @@ func transformerJSONStringifyParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerJSONStringifyUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONStringify)
-	fmt.Fprint(o,
-		`Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
-`)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
-	fmt.Fprintf(o, "--jvstack Produce multi-line JSON output.\n")
-	fmt.Fprintf(o, "--no-jvstack Produce single-line JSON output per record (default).\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

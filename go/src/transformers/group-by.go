@@ -17,9 +17,24 @@ const verbNameGroupBy = "group-by"
 
 var GroupBySetup = transforming.TransformerSetup{
 	Verb:         verbNameGroupBy,
-	ParseCLIFunc: transformerGroupByParseCLI,
 	UsageFunc:    transformerGroupByUsage,
+	ParseCLIFunc: transformerGroupByParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerGroupByUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", lib.MlrExeName(), verbNameGroupBy)
+	fmt.Fprint(o, "Outputs records in batches having identical values at specified field names.")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerGroupByParseCLI(
@@ -62,21 +77,6 @@ func transformerGroupByParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerGroupByUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", lib.MlrExeName(), verbNameGroupBy)
-	fmt.Fprint(o, "Outputs records in batches having identical values at specified field names.")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

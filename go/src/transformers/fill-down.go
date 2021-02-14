@@ -16,9 +16,33 @@ const verbNameFillDown = "fill-down"
 
 var FillDownSetup = transforming.TransformerSetup{
 	Verb:         verbNameFillDown,
-	ParseCLIFunc: transformerFillDownParseCLI,
 	UsageFunc:    transformerFillDownUsage,
+	ParseCLIFunc: transformerFillDownParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerFillDownUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFillDown)
+	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from\n")
+	fmt.Fprintln(o, "the corresponding value from a previous record, if any.")
+	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")
+	fmt.Fprintln(o, "With -a, a field is 'missing' only if it is absent.")
+	fmt.Fprintln(o, "")
+	fmt.Fprintln(o, "Options:")
+	fmt.Fprintln(o, " -a|--only-if-absent If a given record has a missing value for a given field,")
+	fmt.Fprintln(o, "     fill that from the corresponding value from a previous record, if any.")
+	fmt.Fprintln(o, "     By default, a 'missing' field either is absent, or has the empty-string value.")
+	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
+	fmt.Fprintln(o, " -f  Field names for fill-down.")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerFillDownParseCLI(
@@ -68,30 +92,6 @@ func transformerFillDownParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerFillDownUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFillDown)
-	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from\n")
-	fmt.Fprintln(o, "the corresponding value from a previous record, if any.")
-	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")
-	fmt.Fprintln(o, "With -a, a field is 'missing' only if it is absent.")
-	fmt.Fprintln(o, "")
-	fmt.Fprintln(o, "Options:")
-	fmt.Fprintln(o, " -a|--only-if-absent If a given record has a missing value for a given field,")
-	fmt.Fprintln(o, "     fill that from the corresponding value from a previous record, if any.")
-	fmt.Fprintln(o, "     By default, a 'missing' field either is absent, or has the empty-string value.")
-	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
-	fmt.Fprintln(o, " -f  Field names for fill-down.")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

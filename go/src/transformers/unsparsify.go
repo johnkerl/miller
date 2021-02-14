@@ -17,9 +17,39 @@ const verbNameUnsparsify = "unsparsify"
 
 var UnsparsifySetup = transforming.TransformerSetup{
 	Verb:         verbNameUnsparsify,
-	ParseCLIFunc: transformerUnsparsifyParseCLI,
 	UsageFunc:    transformerUnsparsifyUsage,
+	ParseCLIFunc: transformerUnsparsifyParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerUnsparsifyUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnsparsify)
+	fmt.Fprint(o,
+		`Prints records with the union of field names over all input records.
+For field names absent in a given record but present in others, fills in
+a value. This verb retains all input before producing any output.
+`)
+
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to\n")
+	fmt.Fprintf(o, "                             the empty string.\n")
+	fmt.Fprintf(o, "-f {a,b,c} Specify field names to be operated on. Any other fields won't be\n")
+	fmt.Fprintf(o, "           modified, and operation will be streaming.\n")
+	fmt.Fprintf(o, "-h|--help  Show this message.\n")
+
+	fmt.Fprint(o,
+		`Example: if the input is two records, one being 'a=1,b=2' and the other
+being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
+'a=,b=3,c=4'.
+`)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerUnsparsifyParseCLI(
@@ -66,36 +96,6 @@ func transformerUnsparsifyParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerUnsparsifyUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnsparsify)
-	fmt.Fprint(o,
-		`Prints records with the union of field names over all input records.
-For field names absent in a given record but present in others, fills in
-a value. This verb retains all input before producing any output.
-`)
-
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to\n")
-	fmt.Fprintf(o, "                             the empty string.\n")
-	fmt.Fprintf(o, "-f {a,b,c} Specify field names to be operated on. Any other fields won't be\n")
-	fmt.Fprintf(o, "           modified, and operation will be streaming.\n")
-	fmt.Fprintf(o, "-h|--help  Show this message.\n")
-
-	fmt.Fprint(o,
-		`Example: if the input is two records, one being 'a=1,b=2' and the other
-being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
-'a=,b=3,c=4'.
-`)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

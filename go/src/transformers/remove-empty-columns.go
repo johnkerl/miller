@@ -17,9 +17,24 @@ const verbNameRemoveEmptyColumns = "remove-empty-columns"
 
 var RemoveEmptyColumnsSetup = transforming.TransformerSetup{
 	Verb:         verbNameRemoveEmptyColumns,
-	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
 	UsageFunc:    transformerRemoveEmptyColumnsUsage,
+	ParseCLIFunc: transformerRemoveEmptyColumnsParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerRemoveEmptyColumnsUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRemoveEmptyColumns)
+	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerRemoveEmptyColumnsParseCLI(
@@ -53,21 +68,6 @@ func transformerRemoveEmptyColumnsParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerRemoveEmptyColumnsUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRemoveEmptyColumns)
-	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

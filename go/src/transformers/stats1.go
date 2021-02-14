@@ -17,9 +17,68 @@ const verbNameStats1 = "stats1"
 
 var Stats1Setup = transforming.TransformerSetup{
 	Verb:         verbNameStats1,
-	ParseCLIFunc: transformerStats1ParseCLI,
 	UsageFunc:    transformerStats1Usage,
+	ParseCLIFunc: transformerStats1ParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerStats1Usage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStats1)
+	fmt.Fprint(o,
+		`Computes univariate statistics for one or more given fields, accumulated across
+the input record stream.
+Options:
+-a {sum,count,...} Names of accumulators: one or more of:
+  median   This is the same as p50
+  p10 p25.2 p50 p98 p100 etc.
+  TODO: flags for interpolated percentiles
+`)
+	listStats1Accumulators(o)
+	fmt.Fprint(o, `
+-f {a,b,c}   Value-field names on which to compute statistics
+-g {d,e,f}   Optional group-by-field names
+
+-i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
+             Not sensical for string-valued fields.\n");
+-s           Print iterative stats. Useful in tail -f contexts (in which
+             case please avoid pprint-format output since end of input
+             stream will never be seen).
+-h|--help    Show this message.
+[TODO: more]
+`)
+
+	fmt.Fprintln(o,
+		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", lib.MlrExeName(), verbNameStats1)
+	fmt.Fprintln(o,
+		"Example: mlr stats1 -a count,mode -f size\n", lib.MlrExeName(), verbNameStats1)
+	fmt.Fprintln(o,
+		"Example: mlr stats1 -a count,mode -f size -g shape\n", lib.MlrExeName(), verbNameStats1)
+	fmt.Fprintln(o,
+		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", lib.MlrExeName(), verbNameStats1)
+	fmt.Fprintln(o,
+		`        This computes count and mode statistics on all field names beginning
+         with a through h, grouped by all field names starting with k.
+`)
+	fmt.Fprint(o,
+		`Notes:
+* p50 and median are synonymous.
+* min and max output the same results as p0 and p100, respectively, but use
+  less memory.
+* String-valued data make sense unless arithmetic on them is required,
+  e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
+  numbers are less than strings.
+* count and mode allow text input; the rest require numeric input.
+  In particular, 1 and 1.0 are distinct text for count and mode.
+* When there are mode ties, the first-encountered datum wins.
+`)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerStats1ParseCLI(
@@ -99,65 +158,6 @@ func transformerStats1ParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerStats1Usage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStats1)
-	fmt.Fprint(o,
-		`Computes univariate statistics for one or more given fields, accumulated across
-the input record stream.
-Options:
--a {sum,count,...} Names of accumulators: one or more of:
-  median   This is the same as p50
-  p10 p25.2 p50 p98 p100 etc.
-  TODO: flags for interpolated percentiles
-`)
-	listStats1Accumulators(o)
-	fmt.Fprint(o, `
--f {a,b,c}   Value-field names on which to compute statistics
--g {d,e,f}   Optional group-by-field names
-
--i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
-             Not sensical for string-valued fields.\n");
--s           Print iterative stats. Useful in tail -f contexts (in which
-             case please avoid pprint-format output since end of input
-             stream will never be seen).
--h|--help    Show this message.
-[TODO: more]
-`)
-
-	fmt.Fprintln(o,
-		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", lib.MlrExeName(), verbNameStats1)
-	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size\n", lib.MlrExeName(), verbNameStats1)
-	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size -g shape\n", lib.MlrExeName(), verbNameStats1)
-	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", lib.MlrExeName(), verbNameStats1)
-	fmt.Fprintln(o,
-		`        This computes count and mode statistics on all field names beginning
-         with a through h, grouped by all field names starting with k.
-`)
-	fmt.Fprint(o,
-		`Notes:
-* p50 and median are synonymous.
-* min and max output the same results as p0 and p100, respectively, but use
-  less memory.
-* String-valued data make sense unless arithmetic on them is required,
-  e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
-  numbers are less than strings.
-* count and mode allow text input; the rest require numeric input.
-  In particular, 1 and 1.0 are distinct text for count and mode.
-* When there are mode ties, the first-encountered datum wins.
-`)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

@@ -16,9 +16,25 @@ const verbNameSkipTrivialRecords = "skip-trivial-records"
 
 var SkipTrivialRecordsSetup = transforming.TransformerSetup{
 	Verb:         verbNameSkipTrivialRecords,
-	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
 	UsageFunc:    transformerSkipTrivialRecordsUsage,
+	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerSkipTrivialRecordsUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSkipTrivialRecords)
+	fmt.Fprintf(o, "Passes through all records except those with zero fields,\n")
+	fmt.Fprintf(o, "or those for which all fields have empty value.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerSkipTrivialRecordsParseCLI(
@@ -52,22 +68,6 @@ func transformerSkipTrivialRecordsParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerSkipTrivialRecordsUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSkipTrivialRecords)
-	fmt.Fprintf(o, "Passes through all records except those with zero fields,\n")
-	fmt.Fprintf(o, "or those for which all fields have empty value.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

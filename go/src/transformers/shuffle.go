@@ -17,9 +17,27 @@ const verbNameShuffle = "shuffle"
 
 var ShuffleSetup = transforming.TransformerSetup{
 	Verb:         verbNameShuffle,
-	ParseCLIFunc: transformerShuffleParseCLI,
 	UsageFunc:    transformerShuffleUsage,
+	ParseCLIFunc: transformerShuffleParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerShuffleUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameShuffle)
+	fmt.Fprintf(o, "Outputs records randomly permuted. No output records are produced until\n")
+	fmt.Fprintf(o, "all input records are read. See also %s bootstrap and %s sample.\n",
+		lib.MlrExeName(), lib.MlrExeName(),
+	)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerShuffleParseCLI(
@@ -53,24 +71,6 @@ func transformerShuffleParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerShuffleUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameShuffle)
-	fmt.Fprintf(o, "Outputs records randomly permuted. No output records are produced until\n")
-	fmt.Fprintf(o, "all input records are read. See also %s bootstrap and %s sample.\n",
-		lib.MlrExeName(), lib.MlrExeName(),
-	)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

@@ -16,9 +16,25 @@ const verbNameCheck = "check"
 
 var CheckSetup = transforming.TransformerSetup{
 	Verb:         verbNameCheck,
-	ParseCLIFunc: transformerCheckParseCLI,
 	UsageFunc:    transformerCheckUsage,
+	ParseCLIFunc: transformerCheckParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerCheckUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCheck)
+	fmt.Fprintf(o, "Consumes records without printing any output.\n")
+	fmt.Fprintf(o, "Useful for doing a well-formatted check on input data.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerCheckParseCLI(
@@ -52,22 +68,6 @@ func transformerCheckParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerCheckUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCheck)
-	fmt.Fprintf(o, "Consumes records without printing any output.\n")
-	fmt.Fprintf(o, "Useful for doing a well-formatted check on input data.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

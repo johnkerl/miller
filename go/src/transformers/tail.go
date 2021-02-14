@@ -17,9 +17,27 @@ const verbNameTail = "tail"
 
 var TailSetup = transforming.TransformerSetup{
 	Verb:         verbNameTail,
-	ParseCLIFunc: transformerTailParseCLI,
 	UsageFunc:    transformerTailUsage,
+	ParseCLIFunc: transformerTailParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerTailUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameTail)
+	fmt.Fprintln(o, "Passes through the last n records, optionally by category.")
+
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerTailParseCLI(
@@ -66,24 +84,6 @@ func transformerTailParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerTailUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameTail)
-	fmt.Fprintln(o, "Passes through the last n records, optionally by category.")
-
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
-	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------
