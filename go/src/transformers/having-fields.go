@@ -34,19 +34,71 @@ const verbNameHavingFields = "having-fields"
 
 var HavingFieldsSetup = transforming.TransformerSetup{
 	Verb:         verbNameHavingFields,
-	ParseCLIFunc: transformerHavingFieldsParseCLI,
 	UsageFunc:    transformerHavingFieldsUsage,
+	ParseCLIFunc: transformerHavingFieldsParseCLI,
 
 	IgnoresInput: false,
 }
 
-//// ----------------------------------------------------------------
 //mapper_setup_t mapper_having_fields_setup = {
 //	.verb = "having-fields",
 //	.pusage_func = mapper_having_fields_usage,
 //	.pparse_func = mapper_having_fields_parse_cli,
 //	.ignores_input = FALSE,
 //};
+
+func transformerHavingFieldsUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHavingFields)
+	fmt.Fprintf(o, "Copies input records to output records multiple times.\n")
+	fmt.Fprintf(o, "Options must be exactly one of the following:\n")
+	fmt.Fprintf(o, "-n {havingFields count}  HavingFields each input record this many times.\n")
+	fmt.Fprintf(o, "-f {field name}    Same, but take the havingFields count from the specified\n")
+	fmt.Fprintf(o, "                   field name of each input record.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "Example:\n")
+	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", lib.MlrExeName(), verbNameHavingFields)
+	fmt.Fprintf(o, "produces:\n")
+	fmt.Fprintf(o, " x=0.488189\n")
+	fmt.Fprintf(o, " x=0.484973\n")
+	fmt.Fprintf(o, " x=0.704983\n")
+	fmt.Fprintf(o, " x=0.147311\n")
+	fmt.Fprintf(o, "Example:\n")
+	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", lib.MlrExeName(), verbNameHavingFields)
+	fmt.Fprintf(o, "produces:\n")
+	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
+	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
+	fmt.Fprintf(o, "Example:\n")
+	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", lib.MlrExeName(), verbNameHavingFields)
+	fmt.Fprintf(o, "produces:\n")
+	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
+	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
+	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
+	if doExit {
+		os.Exit(exitCode)
+	}
+}
+
+//// ----------------------------------------------------------------
+//static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
+//	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+//	fprintf(o, "Conditionally passes through records depending on each record's field names.\n");
+//	fprintf(o, "Options:\n");
+//	fprintf(o, "  --at-least      {comma-separated names}\n");
+//	fprintf(o, "  --which-are     {comma-separated names}\n");
+//	fprintf(o, "  --at-most       {comma-separated names}\n");
+//	fprintf(o, "  --all-matching  {regular expression}\n");
+//	fprintf(o, "  --any-matching  {regular expression}\n");
+//	fprintf(o, "  --none-matching {regular expression}\n");
+//	fprintf(o, "Examples:\n");
+//	fprintf(o, "  %s %s --which-are amount,status,owner\n", argv0, verb);
+//	fprintf(o, "  %s %s --any-matching 'sda[0-9]'\n", argv0, verb);
+//	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"'\n", argv0, verb);
+//	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"i' (this is case-insensitive)\n", argv0, verb);
+//}
 
 func transformerHavingFieldsParseCLI(
 	pargi *int,
@@ -101,6 +153,95 @@ func transformerHavingFieldsParseCLI(
 	*pargi = argi
 	return transformer
 }
+
+// ----------------------------------------------------------------
+type TransformerHavingFields struct {
+	havingFieldsCount           int
+	havingFieldsCountFieldName  string
+	recordTransformerFunc transforming.RecordTransformerFunc
+}
+
+//typedef struct _mapper_having_fields_state_t {
+//	slls_t* pfield_names;
+//	hss_t*  pfield_name_set;
+//	regex_t regex;
+//} mapper_having_fields_state_t;
+
+// ----------------------------------------------------------------
+func NewTransformerHavingFields(
+	havingFieldsCountSource tHavingFieldsCountSource,
+	havingFieldsCount int,
+	havingFieldsCountFieldName string,
+) (*TransformerHavingFields, error) {
+
+	this := &TransformerHavingFields{
+		havingFieldsCount:          havingFieldsCount,
+		havingFieldsCountFieldName: havingFieldsCountFieldName,
+	}
+
+	if havingFieldsCountSource == havingFieldsCountFromInt {
+		this.recordTransformerFunc = this.havingFieldsByCount
+	} else {
+		this.recordTransformerFunc = this.havingFieldsByFieldName
+	}
+
+	return this, nil
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerHavingFields) Transform(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	this.recordTransformerFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerHavingFields) havingFieldsByCount(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		for i := 0; i < this.havingFieldsCount; i++ {
+			outputChannel <- types.NewRecordAndContext(
+				inrecAndContext.Record.Copy(),
+				&inrecAndContext.Context,
+			)
+		}
+	} else {
+		outputChannel <- inrecAndContext
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerHavingFields) havingFieldsByFieldName(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		fieldValue := inrecAndContext.Record.Get(this.havingFieldsCountFieldName)
+		if fieldValue == nil {
+			return
+		}
+		havingFieldsCount, ok := fieldValue.GetIntValue()
+		if !ok {
+			return
+		}
+		for i := 0; i < int(havingFieldsCount); i++ {
+			outputChannel <- types.NewRecordAndContext(
+				inrecAndContext.Record.Copy(),
+				&inrecAndContext.Context,
+			)
+		}
+
+	} else {
+		outputChannel <- inrecAndContext
+	}
+}
+
+
+
+
 
 //// ----------------------------------------------------------------
 //static mapper_t* mapper_having_fields_parse_cli(int* pargi, int argc, char** argv,
@@ -180,41 +321,6 @@ func transformerHavingFieldsParseCLI(
 //	return mapper_having_fields_alloc(pfield_names, regex_string, criterion);
 //}
 
-func transformerHavingFieldsUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHavingFields)
-	fmt.Fprintf(o, "Copies input records to output records multiple times.\n")
-	fmt.Fprintf(o, "Options must be exactly one of the following:\n")
-	fmt.Fprintf(o, "-n {havingFields count}  HavingFields each input record this many times.\n")
-	fmt.Fprintf(o, "-f {field name}    Same, but take the havingFields count from the specified\n")
-	fmt.Fprintf(o, "                   field name of each input record.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", lib.MlrExeName(), verbNameHavingFields)
-	fmt.Fprintf(o, "produces:\n")
-	fmt.Fprintf(o, " x=0.488189\n")
-	fmt.Fprintf(o, " x=0.484973\n")
-	fmt.Fprintf(o, " x=0.704983\n")
-	fmt.Fprintf(o, " x=0.147311\n")
-	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", lib.MlrExeName(), verbNameHavingFields)
-	fmt.Fprintf(o, "produces:\n")
-	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
-	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
-	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", lib.MlrExeName(), verbNameHavingFields)
-	fmt.Fprintf(o, "produces:\n")
-	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
-	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
-	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
-	if doExit {
-		os.Exit(exitCode)
-	}
-}
-
 //// ----------------------------------------------------------------
 //static void mapper_having_fields_usage(FILE* o, char* argv0, char* verb) {
 //	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
@@ -232,40 +338,6 @@ func transformerHavingFieldsUsage(
 //	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"'\n", argv0, verb);
 //	fprintf(o, "  %s %s --any-matching '\"sda[0-9]\"i' (this is case-insensitive)\n", argv0, verb);
 //}
-
-// ----------------------------------------------------------------
-type TransformerHavingFields struct {
-	havingFieldsCount           int
-	havingFieldsCountFieldName  string
-	recordTransformerFunc transforming.RecordTransformerFunc
-}
-
-//typedef struct _mapper_having_fields_state_t {
-//	slls_t* pfield_names;
-//	hss_t*  pfield_name_set;
-//	regex_t regex;
-//} mapper_having_fields_state_t;
-
-// ----------------------------------------------------------------
-func NewTransformerHavingFields(
-	havingFieldsCountSource tHavingFieldsCountSource,
-	havingFieldsCount int,
-	havingFieldsCountFieldName string,
-) (*TransformerHavingFields, error) {
-
-	this := &TransformerHavingFields{
-		havingFieldsCount:          havingFieldsCount,
-		havingFieldsCountFieldName: havingFieldsCountFieldName,
-	}
-
-	if havingFieldsCountSource == havingFieldsCountFromInt {
-		this.recordTransformerFunc = this.havingFieldsByCount
-	} else {
-		this.recordTransformerFunc = this.havingFieldsByFieldName
-	}
-
-	return this, nil
-}
 
 //// ----------------------------------------------------------------
 //static mapper_t* mapper_having_fields_alloc(slls_t* pfield_names, char* regex_string, criterion_t criterion) {
@@ -309,57 +381,6 @@ func NewTransformerHavingFields(
 //
 //	return pmapper;
 //}
-
-// ----------------------------------------------------------------
-func (this *TransformerHavingFields) Transform(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
-}
-
-// ----------------------------------------------------------------
-func (this *TransformerHavingFields) havingFieldsByCount(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	if !inrecAndContext.EndOfStream {
-		for i := 0; i < this.havingFieldsCount; i++ {
-			outputChannel <- types.NewRecordAndContext(
-				inrecAndContext.Record.Copy(),
-				&inrecAndContext.Context,
-			)
-		}
-	} else {
-		outputChannel <- inrecAndContext
-	}
-}
-
-// ----------------------------------------------------------------
-func (this *TransformerHavingFields) havingFieldsByFieldName(
-	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
-) {
-	if !inrecAndContext.EndOfStream {
-		fieldValue := inrecAndContext.Record.Get(this.havingFieldsCountFieldName)
-		if fieldValue == nil {
-			return
-		}
-		havingFieldsCount, ok := fieldValue.GetIntValue()
-		if !ok {
-			return
-		}
-		for i := 0; i < int(havingFieldsCount); i++ {
-			outputChannel <- types.NewRecordAndContext(
-				inrecAndContext.Record.Copy(),
-				&inrecAndContext.Context,
-			)
-		}
-
-	} else {
-		outputChannel <- inrecAndContext
-	}
-}
 
 //// ----------------------------------------------------------------
 //static sllv_t* mapper_having_fields_at_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
