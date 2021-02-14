@@ -73,13 +73,11 @@ emitp/emitf:
 
 * sg/mktags more explicit comment.
 
-! verb skeletons
 ? doc shift/unshift as using [2:] and append
 
 ! se-q reads
 
 small:
-* array-slice: x[2:] for x=[1] should be [] ?
 * justWroteEmptyLine -> pprint too ...
 * nidx @ 10-min
 * text-put @ 10-min

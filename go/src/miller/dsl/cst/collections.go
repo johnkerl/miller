@@ -147,6 +147,7 @@ func (this *ArraySliceAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 	if array == nil {
 		return types.MlrvalFromError()
 	}
+	n := len(array)
 
 	if lowerIndexMlrval.IsAbsent() {
 		return types.MlrvalFromAbsent()
@@ -166,28 +167,34 @@ func (this *ArraySliceAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
 	if !ok {
 		if upperIndexMlrval.IsEmpty() {
-			upperIndex = int(len(array))
+			upperIndex = n
 		} else {
 			return types.MlrvalFromError()
 		}
 	}
 
-	lowerZindex, ok := types.UnaliasArrayIndex(&array, lowerIndex)
-	if !ok { // TODO: absent? error? what is best?
-		return types.MlrvalFromError()
+	// UnaliasArrayIndex returns a boolean second return value to indicate
+	// whether the index is in range. But here, for the slicing operation, we
+	// inspect the in-range-ness ourselves so we discard that 2nd return value.
+	lowerZindex, _ := types.UnaliasArrayIndex(&array, lowerIndex)
+	upperZindex, _ := types.UnaliasArrayIndex(&array, upperIndex)
+
+	if lowerZindex > upperZindex {
+		return types.MlrvalFromArrayLiteralReference(make([]types.Mlrval, 0))
 	}
-	upperZindex, ok := types.UnaliasArrayIndex(&array, upperIndex)
-	if !ok { // TODO: absent? error? what is best?
-		return types.MlrvalFromError()
+
+	// Say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
+	if lowerZindex < 0 {
+		lowerZindex = 0
+	}
+	if upperZindex > n-1 {
+		upperZindex = n - 1
 	}
 
 	// Go     slices have inclusive lower bound, exclusive upper bound.
 	// Miller slices have inclusive lower bound, inclusive upper bound.
-	var n int = 0
-	if lowerZindex <= upperZindex {
-		n = upperZindex - lowerZindex + 1
-	}
-	retval := make([]types.Mlrval, n)
+	var m = upperZindex - lowerZindex + 1
+	retval := make([]types.Mlrval, m)
 	di := 0
 	for si := lowerZindex; si <= upperZindex; si++ {
 		retval[di] = *array[si].Copy()

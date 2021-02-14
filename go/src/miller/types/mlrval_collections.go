@@ -151,15 +151,56 @@ func UnaliasArrayIndex(array *[]Mlrval, mindex int) (int, bool) {
 	return UnaliasArrayLengthIndex(n, mindex)
 }
 
+// Input "mindex" is a Miller DSL array index. These are 1-up, so 1..n where n
+// is the length of the array. Also, -n..-1 are aliases to 1..n. 0 is never a
+// valid index.
+//
+// Output "zindex" is a Golang array index. These are 0-up, so 0..(n-1).
+//
+// The second return value indicates whether the Miller index is in-bounds.
+// Even if it's out of bounds, while the second return value is false, the
+// first return is correctly de-aliased. E.g. if the array has length 5 and the
+// mindex is 8, zindex is 7 and valid=false. This is so in array-slice
+// operations like 'v = myarray[2:8]' the callsite can hand back slots 2-5 of
+// the array (which is the same way Python handles beyond-the-end indexing).
+
+// Examples with n = 5:
+//
+// mindex zindex ok
+// -7    -2      false
+// -6    -1      false
+// -5     0      true
+// -4     1      true
+// -3     2      true
+// -2     3      true
+// -1     4      true
+//  0    -1      false
+//  1     0      true
+//  2     1      true
+//  3     2      true
+//  4     3      true
+//  5     4      true
+//  6     5      false
+//  7     6      false
+
 func UnaliasArrayLengthIndex(n int, mindex int) (int, bool) {
-	if 1 <= mindex && mindex <= n {
+	if 1 <= mindex {
 		zindex := mindex - 1
-		return zindex, true
-	} else if -n <= mindex && mindex <= -1 {
+		if mindex <= n { // in bounds
+			return zindex, true
+		} else { // out of bounds
+			return zindex, false
+		}
+	} else if mindex <= -1 {
 		zindex := mindex + n
-		return zindex, true
+		if -n <= mindex { // in bounds
+			return zindex, true
+		} else { // out of bounds
+			return zindex, false
+		}
 	} else {
-		return -999, false
+		// mindex is 0
+		return -1, false
 	}
 }
 
