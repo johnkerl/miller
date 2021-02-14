@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"miller/dsl"
+	"miller/src/dsl"
 
 	"experimental/lexer"
 	"experimental/parser"
