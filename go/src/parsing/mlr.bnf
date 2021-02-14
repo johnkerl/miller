@@ -37,7 +37,7 @@
 //   interface{}/error since they are meant for nesting as arguments here
 //   within this file.
 //
-// * Please see src/miller/dsl/ast*.go for more about what the <<...>>
+// * Please see src/dsl/ast*.go for more about what the <<...>>
 //   code here is calling.
 // ================================================================
 

@@ -97,5 +97,5 @@ tree is executed once on every data record.
 
 # Source directories/files
 
-* The AST logic is in `./ast*.go`.  I didn't use a `src/miller/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
+* The AST logic is in `./ast*.go`.  I didn't use a `src/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * The CST logic is in [`./cst`](./cst). Please see [cst/README.md](./cst/README.md) for more information.

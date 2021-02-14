@@ -2,13 +2,13 @@
 
 wc -l \
   $(find src -name \*.go | grep -v src/parsing) \
-  src/miller/parsing/mlr.bnf \
+  src/parsing/mlr.bnf \
 | sort -n
 
 echo
 wc -c \
   $(find src -name \*.go | grep -v src/parsing) \
-  src/miller/parsing/mlr.bnf \
+  src/parsing/mlr.bnf \
 | sort -n \
 | tail -n 5
 

@@ -11,5 +11,5 @@ set -euo pipefail
 #
 # See also https://stackoverflow.com/questions/8204367/ctag-database-for-go
 
-ctags -f gosource.tags -R `pwd`/src/miller
+ctags -f gosource.tags -R `pwd`/src
 mv gosource.tags tags

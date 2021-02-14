@@ -3,8 +3,8 @@
 // over the top of GOCC codegen so that we can customize handling of error
 // messages.
 //
-// Source:       src/miller/parsing/errors.go.template Destionation:
-// src/miller/parsing/errors/errors.go
+// Source:       src/parsing/errors.go.template Destionation:
+// src/parsing/errors/errors.go
 // ================================================================
 
 package errors
