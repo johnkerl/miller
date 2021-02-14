@@ -2,7 +2,13 @@
 TOP OF LIST:
 
 ! rmd ex1 even simpler -- commarect
-* do go.mod correctly w/ regard to gocc and golang.org/x/term/
+
+! do go.mod correctly w/ regard to gocc and golang.org/x/term/
+
+* having-fields, and regexes
+! fix all typemasks; 'int x = 1; x = "abc"'
+! strptime/strftime experiments ...
+! --nojvstack; default --jvstack; code it up ...
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
@@ -17,11 +23,6 @@ TOP OF LIST:
 * port verb stats2
 * note hexfmt for non-ints -- especially floats -- ?!?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-! fix all typemasks; 'int x = 1; x = "abc"'
-! strptime/strftime experiments ...
-! regex ...
-! --nojvstack; default --jvstack; code it up ...
 
 * in-place processing
 * prepipe
