@@ -6,9 +6,9 @@ import (
 	"runtime"
 	"runtime/pprof"
 
-	"miller/auxents"
-	"miller/cli"
-	"miller/stream"
+	"miller/src/auxents"
+	"miller/src/cli"
+	"miller/src/stream"
 )
 
 // ----------------------------------------------------------------

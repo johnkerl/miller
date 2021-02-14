@@ -3,7 +3,13 @@ TOP OF LIST:
 
 ! rmd ex1 even simpler -- commarect
 
+!! new gh-style checks ...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! do go.mod correctly w/ regard to gocc and golang.org/x/term/
+  o parser-experiments neaten
+  i go get github.com/johnkerl/gocc@gocc2x.3
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * having-fields, and regexes
 ! fix all typemasks; 'int x = 1; x = "abc"'

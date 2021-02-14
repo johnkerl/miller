@@ -2,10 +2,8 @@
 
 set -euo pipefail
 
-export GOPATH=$(pwd)
-
 # Override GOCC codegen with customized error handling
-cp src/miller/parsing/errors.go.template src/miller/parsing/errors/errors.go
+cp src/parsing/errors.go.template src/parsing/errors/errors.go
 
 go build mlr.go
 cp mlr mlrgo

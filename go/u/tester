@@ -5,9 +5,7 @@
 # Note reg-test/run has FAR more test cases
 # ================================================================
 
-# go test -v ./... doesn't work since it triggers unready things in
-# src/github.com/goccmack
+# go test -v ./... doesn't work since it triggers unready things in ./parser-experiments/.
 
-export GOPATH=$(pwd)
-go test miller/types
-go test src/miller/dsl/ast_test.go
+go test miller/src/types
+go test src/dsl/ast_test.go

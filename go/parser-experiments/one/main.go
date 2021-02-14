@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"experimental/lexer"
-	"experimental/parser"
+	"miller/src/parsing/lexer"
+	"miller/src/parsing/parser"
 )
 
 func parseOne(input string) {

@@ -1,14 +1,14 @@
 #!/bin/bash
 
 wc -l \
-  $(find src/miller -name \*.go | grep -v src/miller/parsing) \
-  src/miller/parsing/mlr.bnf \
+  $(find src -name \*.go | grep -v src/parsing) \
+  src/parsing/mlr.bnf \
 | sort -n
 
 echo
 wc -c \
-  $(find src/miller -name \*.go | grep -v src/miller/parsing) \
-  src/miller/parsing/mlr.bnf \
+  $(find src -name \*.go | grep -v src/parsing) \
+  src/parsing/mlr.bnf \
 | sort -n \
 | tail -n 5
 

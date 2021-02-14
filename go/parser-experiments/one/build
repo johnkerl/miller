@@ -27,18 +27,22 @@ mkdir -p $dir
 
 # ----------------------------------------------------------------
 # Run the parser-generator
-export GOPATH=$(pwd)
 
 # Build the bin/gocc executable:
-go get github.com/goccmack/gocc
+#go get github.com/goccmack/gocc
+go get github.com/johnkerl/gocc
+bingocc="$GOPATH/bin/gocc"
+if [ ! -x "$bingocc" ]; then
+  exit 1
+fi
 
 rm -f $dir/*.txt
 if [ "$verbose" = "true" ]; then
   lr1="$dir/LR1_conflicts.txt"
   # The -o specifies the package name within the autogen
-  bin/gocc -v -o $dir $bnf || expand -2 $lr1
+  $bingocc -v -o $dir $bnf || expand -2 $lr1
 else
-  bin/gocc -o $dir $bnf
+  $bingocc -o $dir $bnf
 fi
 
 echo "Parser-autogen OK"
