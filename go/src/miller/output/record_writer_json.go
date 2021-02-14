@@ -1,6 +1,7 @@
 package output
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -49,9 +50,11 @@ func (this *RecordWriterJSON) writeWithListWrap(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
+	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+
 	if outrec != nil { // Not end of record stream
 		if this.onFirst {
-			ostream.Write([]byte("[\n"))
+			buffer.WriteString("[\n")
 		}
 
 		// The Mlrmap MarshalJSON doesn't include the final newline, so that we
@@ -63,19 +66,20 @@ func (this *RecordWriterJSON) writeWithListWrap(
 		}
 
 		if !this.onFirst {
-			ostream.Write([]byte(",\n"))
+			buffer.WriteString(",\n")
 		}
 
-		ostream.Write(bytes)
+		buffer.Write(bytes)
 
 		this.onFirst = false
 
 	} else { // End of record stream
 		if this.onFirst { // zero records in the entire output stream
-			ostream.Write([]byte("["))
+			buffer.Write([]byte("["))
 		}
-		ostream.Write([]byte("\n]\n"))
+		buffer.Write([]byte("\n]\n"))
 	}
+	ostream.Write(buffer.Bytes())
 }
 
 // ----------------------------------------------------------------

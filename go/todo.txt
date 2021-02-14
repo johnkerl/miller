@@ -1,10 +1,8 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! issues !
 ! rmd ex1 even simpler -- commarect
 * do go.mod correctly w/ regard to gocc and golang.org/x/term/
-* mgrepr/mrpl -> gh
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
@@ -69,8 +67,6 @@ emitp/emitf:
 * double-check all examples at
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-* more buffering in record-writers
 
 ! fix var/any type-mask
   o C/Go UT
