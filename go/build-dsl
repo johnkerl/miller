@@ -16,7 +16,8 @@ fi
 # Build the bin/gocc executable:
 ###### go get github.com/goccmack/gocc
 mkdir -p ./bin
-go build github.com/goccmack/gocc
+#go build github.com/goccmack/gocc
+go build github.com/johnkerl/gocc
 mv gocc ./bin/
 
 rm -f src/parsing/*.txt

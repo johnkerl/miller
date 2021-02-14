@@ -1,6 +1,8 @@
-github.com/goccmack/gocc v0.0.0-20210201103733-1bd198f09019 h1:frVuW4LszXD/AjX9dC1y4I+GwTjZMl6153O2mk/lmHo=
-github.com/goccmack/gocc v0.0.0-20210201103733-1bd198f09019/go.mod h1:ZjwYs2UwOh6NiluQ1XCoKNLVECdeFf33rrGEZ+IpNq4=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
+github.com/johnkerl/gocc v0.0.0-20210214145651-3650cede3074 h1:8+mZMwac/qKah1hHAuw1U5I7mqN+uRF+oVZ4ismxcJU=
+github.com/johnkerl/gocc v0.0.0-20210214145651-3650cede3074/go.mod h1:6oAcMpl/qp57NgiufLc2bISrDa4q12XciKeOCUqdeoU=
+github.com/johnkerl/gocc v0.0.0-20210214145925-018e125fd1ee h1:UCSd1mw2XP4Hv2iVlLjU6Om+DZfBc2XMJ1GqHorQUSc=
+github.com/johnkerl/gocc v0.0.0-20210214145925-018e125fd1ee/go.mod h1:6oAcMpl/qp57NgiufLc2bISrDa4q12XciKeOCUqdeoU=
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
