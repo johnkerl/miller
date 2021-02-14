@@ -16,9 +16,26 @@ const verbNameCat = "cat"
 
 var CatSetup = transforming.TransformerSetup{
 	Verb:         verbNameCat,
-	ParseCLIFunc: transformerCatParseCLI,
 	UsageFunc:    transformerCatUsage,
+	ParseCLIFunc: transformerCatParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerCatUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCat)
+	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
+	fmt.Fprintf(o, "-n         Prepend field \"n\" to each record with record-counter starting at 1.\n")
+	fmt.Fprintf(o, "-N {name}  Prepend field {name} to each record with record-counter starting at 1.\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerCatParseCLI(
@@ -70,23 +87,6 @@ func transformerCatParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerCatUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCat)
-	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
-	fmt.Fprintf(o, "-n         Prepend field \"n\" to each record with record-counter starting at 1.\n")
-	fmt.Fprintf(o, "-N {name}  Prepend field {name} to each record with record-counter starting at 1.\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

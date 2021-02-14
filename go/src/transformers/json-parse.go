@@ -16,9 +16,28 @@ const verbNameJSONParse = "json-parse"
 
 var JSONParseSetup = transforming.TransformerSetup{
 	Verb:         verbNameJSONParse,
-	ParseCLIFunc: transformerJSONParseParseCLI,
 	UsageFunc:    transformerJSONParseUsage,
+	ParseCLIFunc: transformerJSONParseParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerJSONParseUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONParse)
+	fmt.Fprintln(
+		o,
+		`Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].`,
+	)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerJSONParseParseCLI(
@@ -60,25 +79,6 @@ func transformerJSONParseParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerJSONParseUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONParse)
-	fmt.Fprintln(
-		o,
-		`Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].`,
-	)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {...} Comma-separated list of field names to json-parse (default all).\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

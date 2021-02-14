@@ -17,9 +17,31 @@ const verbNameBootstrap = "bootstrap"
 
 var BootstrapSetup = transforming.TransformerSetup{
 	Verb:         verbNameBootstrap,
-	ParseCLIFunc: transformerBootstrapParseCLI,
 	UsageFunc:    transformerBootstrapUsage,
+	ParseCLIFunc: transformerBootstrapParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerBootstrapUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameBootstrap)
+	fmt.Fprintf(o,
+		`Emits an n-sample, with replacement, of the input records.
+See also %s sample and %s shuffle.
+`, lib.MlrExeName(), lib.MlrExeName())
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o,
+		` -n Number of samples to output. Defaults to number of input records.
+    Must be non-negative.
+`)
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerBootstrapParseCLI(
@@ -59,28 +81,6 @@ func transformerBootstrapParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerBootstrapUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameBootstrap)
-	fmt.Fprintf(o,
-		`Emits an n-sample, with replacement, of the input records.
-See also %s sample and %s shuffle.
-`, lib.MlrExeName(), lib.MlrExeName())
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o,
-		` -n Number of samples to output. Defaults to number of input records.
-    Must be non-negative.
-`)
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

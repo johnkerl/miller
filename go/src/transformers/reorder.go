@@ -16,9 +16,40 @@ const verbNameReorder = "reorder"
 
 var ReorderSetup = transforming.TransformerSetup{
 	Verb:         verbNameReorder,
-	ParseCLIFunc: transformerReorderParseCLI,
 	UsageFunc:    transformerReorderUsage,
+	ParseCLIFunc: transformerReorderParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerReorderUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameReorder)
+	fmt.Fprint(o,
+		`Moves specified names to start of record, or end of record.
+`)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-e Put specified field names at record end: default is to put them at record start.\n")
+	fmt.Fprintf(o, "-f {a,b,c} Field names to reorder.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Examples:\n")
+	fmt.Fprintf(
+		o,
+		"%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
+		lib.MlrExeName(), verbNameReorder,
+	)
+	fmt.Fprintf(
+		o,
+		"%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
+		lib.MlrExeName(), verbNameReorder,
+	)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerReorderParseCLI(
@@ -69,37 +100,6 @@ func transformerReorderParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerReorderUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameReorder)
-	fmt.Fprint(o,
-		`Moves specified names to start of record, or end of record.
-`)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-e Put specified field names at record end: default is to put them at record start.\n")
-	fmt.Fprintf(o, "-f {a,b,c} Field names to reorder.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(
-		o,
-		"%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
-		lib.MlrExeName(), verbNameReorder,
-	)
-	fmt.Fprintf(
-		o,
-		"%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
-		lib.MlrExeName(), verbNameReorder,
-	)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

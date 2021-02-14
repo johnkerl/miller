@@ -16,9 +16,30 @@ const verbNameGap = "gap"
 
 var GapSetup = transforming.TransformerSetup{
 	Verb:         verbNameGap,
-	ParseCLIFunc: transformerGapParseCLI,
 	UsageFunc:    transformerGapUsage,
+	ParseCLIFunc: transformerGapParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerGapUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGap)
+	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
+	fmt.Fprintf(o, "Options:\n")
+
+	fmt.Fprintf(o, "Emits an empty record every n records, or when certain values change.\n")
+	fmt.Fprintf(o, "-g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.\n")
+	fmt.Fprintf(o, "-n {n} Print a gap every n records.\n")
+	fmt.Fprintf(o, "One of -f or -g is required.\n")
+	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerGapParseCLI(
@@ -69,27 +90,6 @@ func transformerGapParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerGapUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGap)
-	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
-	fmt.Fprintf(o, "Options:\n")
-
-	fmt.Fprintf(o, "Emits an empty record every n records, or when certain values change.\n")
-	fmt.Fprintf(o, "-g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.\n")
-	fmt.Fprintf(o, "-n {n} Print a gap every n records.\n")
-	fmt.Fprintf(o, "One of -f or -g is required.\n")
-	fmt.Fprintf(o, "-n is ignored if -g is present.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

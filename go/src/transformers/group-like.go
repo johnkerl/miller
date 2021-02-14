@@ -17,9 +17,24 @@ const verbNameGroupLike = "group-like"
 
 var GroupLikeSetup = transforming.TransformerSetup{
 	Verb:         verbNameGroupLike,
-	ParseCLIFunc: transformerGroupLikeParseCLI,
 	UsageFunc:    transformerGroupLikeUsage,
+	ParseCLIFunc: transformerGroupLikeParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerGroupLikeUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGroupLike)
+	fmt.Fprint(o, "Outputs records in batches having identical field names.")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerGroupLikeParseCLI(
@@ -53,21 +68,6 @@ func transformerGroupLikeParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerGroupLikeUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGroupLike)
-	fmt.Fprint(o, "Outputs records in batches having identical field names.")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

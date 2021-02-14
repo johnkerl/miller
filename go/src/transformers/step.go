@@ -19,9 +19,60 @@ const verbNameStep = "step"
 
 var StepSetup = transforming.TransformerSetup{
 	Verb:         verbNameStep,
-	ParseCLIFunc: transformerStepParseCLI,
 	UsageFunc:    transformerStepUsage,
+	ParseCLIFunc: transformerStepParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerStepUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
+
+	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
+	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
+		fmt.Fprintf(o, "  %-8s %s\n", stepperLookup.name, stepperLookup.desc)
+	}
+	fmt.Fprintf(o, "\n")
+
+	fmt.Fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n")
+
+	fmt.Fprintf(o, "-g {d,e,f} Optional group-by-field names\n")
+
+	fmt.Fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n")
+	fmt.Fprintf(o, "           As of Miller 6 this happens automatically, but the flag is accepted\n")
+	fmt.Fprintf(o, "           as a no-op for backward compatibility with Miller 5 and below.\n")
+
+	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
+	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
+	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
+	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
+
+	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
+	fmt.Fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n")
+	fmt.Fprintf(o, "           as the number of -d values.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Examples:\n")
+	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", lib.MlrExeName(), verbNameStep)
+
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
+	fmt.Fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n")
+	fmt.Fprintf(o, "for more information on EWMA.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerStepParseCLI(
@@ -92,57 +143,6 @@ func transformerStepParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerStepUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
-
-	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
-	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {
-		fmt.Fprintf(o, "  %-8s %s\n", stepperLookup.name, stepperLookup.desc)
-	}
-	fmt.Fprintf(o, "\n")
-
-	fmt.Fprintf(o, "-f {a,b,c} Value-field names on which to compute statistics\n")
-
-	fmt.Fprintf(o, "-g {d,e,f} Optional group-by-field names\n")
-
-	fmt.Fprintf(o, "-F         Computes integerable things (e.g. counter) in floating point.\n")
-	fmt.Fprintf(o, "           As of Miller 6 this happens automatically, but the flag is accepted\n")
-	fmt.Fprintf(o, "           as a no-op for backward compatibility with Miller 5 and below.\n")
-
-	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
-	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
-	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
-	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
-
-	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
-	fmt.Fprintf(o, "           the -d values. If supplied, the number of -o values must be the same\n")
-	fmt.Fprintf(o, "           as the number of -d values.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", lib.MlrExeName(), verbNameStep)
-
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")
-	fmt.Fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n")
-	fmt.Fprintf(o, "for more information on EWMA.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

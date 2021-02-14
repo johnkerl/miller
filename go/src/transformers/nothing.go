@@ -21,6 +21,22 @@ var NothingSetup = transforming.TransformerSetup{
 	IgnoresInput: false,
 }
 
+func transformerNothingUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameNothing)
+	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
+	fmt.Fprintf(o, "produced other output.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
+}
+
 func transformerNothingParseCLI(
 	pargi *int,
 	argc int,
@@ -52,22 +68,6 @@ func transformerNothingParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerNothingUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameNothing)
-	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
-	fmt.Fprintf(o, "produced other output.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

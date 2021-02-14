@@ -16,9 +16,29 @@ const verbNameCount = "count"
 
 var CountSetup = transforming.TransformerSetup{
 	Verb:         verbNameCount,
-	ParseCLIFunc: transformerCountParseCLI,
 	UsageFunc:    transformerCountUsage,
+	ParseCLIFunc: transformerCountParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerCountUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCount)
+	fmt.Fprint(o,
+		`Prints number of records, optionally grouped by distinct values for specified field names.
+`)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c\n")
+	fmt.Fprintf(o, "-n {n} Show only the number of distinct values. Not interesting without -g.\n")
+	fmt.Fprintf(o, "-o {name} Field name for output-count. Default \"count\".\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerCountParseCLI(
@@ -70,26 +90,6 @@ func transformerCountParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerCountUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCount)
-	fmt.Fprint(o,
-		`Prints number of records, optionally grouped by distinct values for specified field names.
-`)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c\n")
-	fmt.Fprintf(o, "-n {n} Show only the number of distinct values. Not interesting without -g.\n")
-	fmt.Fprintf(o, "-o {name} Field name for output-count. Default \"count\".\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

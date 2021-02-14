@@ -16,9 +16,29 @@ const verbNameSample = "sample"
 
 var SampleSetup = transforming.TransformerSetup{
 	Verb:         verbNameSample,
-	ParseCLIFunc: transformerSampleParseCLI,
 	UsageFunc:    transformerSampleUsage,
+	ParseCLIFunc: transformerSampleParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerSampleUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSample)
+	fmt.Fprintf(o,
+		`Reservoir sampling (subsampling without replacement), optionally by category.
+See also %s bootstrap and %s shuffle.
+`, lib.MlrExeName(), lib.MlrExeName())
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-k {k} Required: number of records to output in total, or by group if using -g.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerSampleParseCLI(
@@ -69,26 +89,6 @@ func transformerSampleParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerSampleUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSample)
-	fmt.Fprintf(o,
-		`Reservoir sampling (subsampling without replacement), optionally by category.
-See also %s bootstrap and %s shuffle.
-`, lib.MlrExeName(), lib.MlrExeName())
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.\n")
-	fmt.Fprintf(o, "-k {k} Required: number of records to output in total, or by group if using -g.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

@@ -17,9 +17,24 @@ const verbNameRename = "rename"
 
 var RenameSetup = transforming.TransformerSetup{
 	Verb:         verbNameRename,
-	ParseCLIFunc: transformerRenameParseCLI,
 	UsageFunc:    transformerRenameUsage,
+	ParseCLIFunc: transformerRenameParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerRenameUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", lib.MlrExeName(), verbNameRename)
+	fmt.Fprintf(o, "Renames specified fields.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerRenameParseCLI(
@@ -65,21 +80,6 @@ func transformerRenameParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerRenameUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", lib.MlrExeName(), verbNameRename)
-	fmt.Fprintf(o, "Renames specified fields.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

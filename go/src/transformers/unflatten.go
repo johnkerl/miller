@@ -16,9 +16,29 @@ const verbNameUnflatten = "unflatten"
 
 var UnflattenSetup = transforming.TransformerSetup{
 	Verb:         verbNameUnflatten,
-	ParseCLIFunc: transformerUnflattenParseCLI,
 	UsageFunc:    transformerUnflattenUsage,
+	ParseCLIFunc: transformerUnflattenParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerUnflattenUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnflatten)
+	fmt.Fprint(o,
+		`Reverses flatten. Example: field with name 'a:b:c' and value 4
+becomes name 'a' and value '{"b": { "c": 4 }}'.
+`)
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
+	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --oflatsep value.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerUnflattenParseCLI(
@@ -65,26 +85,6 @@ func transformerUnflattenParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerUnflattenUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnflatten)
-	fmt.Fprint(o,
-		`Reverses flatten. Example: field with name 'a:b:c' and value 4
-becomes name 'a' and value '{"b": { "c": 4 }}'.
-`)
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
-	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --oflatsep value.\n", lib.MlrExeName())
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

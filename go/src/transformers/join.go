@@ -19,8 +19,8 @@ const verbNameJoin = "join"
 
 var JoinSetup = transforming.TransformerSetup{
 	Verb:         verbNameJoin,
-	ParseCLIFunc: transformerJoinParseCLI,
 	UsageFunc:    transformerJoinUsage,
+	ParseCLIFunc: transformerJoinParseCLI,
 	IgnoresInput: false,
 }
 
@@ -69,6 +69,62 @@ func newJoinOptions() *tJoinOptions {
 
 		// TODO
 		// readerOptions: readerOptions,
+	}
+}
+
+// ----------------------------------------------------------------
+func transformerJoinUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJoin)
+	fmt.Fprintf(o, "Joins records from specified left file name with records from all file names\n")
+	fmt.Fprintf(o, "at the end of the Miller argument list.\n")
+	fmt.Fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n")
+	fmt.Fprintf(o, "record streams.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "  -f {left file name}\n")
+	fmt.Fprintf(o, "  -j {a,b,c}   Comma-separated join-field names for output\n")
+	fmt.Fprintf(o, "  -l {a,b,c}   Comma-separated join-field names for left input file;\n")
+	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
+	fmt.Fprintf(o, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n")
+	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
+	fmt.Fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n")
+	fmt.Fprintf(o, "               the left file\n")
+	fmt.Fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n")
+	fmt.Fprintf(o, "               the right file(s)\n")
+	fmt.Fprintf(o, "  --np         Do not emit paired records\n")
+	fmt.Fprintf(o, "  --ul         Emit unpaired records from the left file\n")
+	fmt.Fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n")
+	fmt.Fprintf(o, "  -s|--sorted-input  Require sorted input: records must be sorted\n")
+	fmt.Fprintf(o, "               lexically by their join-field names, else not all records will\n")
+	fmt.Fprintf(o, "               be paired. The only likely use case for this is with a left\n")
+	fmt.Fprintf(o, "               file which is too big to fit into system memory otherwise.\n")
+	fmt.Fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n")
+	fmt.Fprintf(o, "               In this case, the entire left file will be loaded into memory.\n")
+	fmt.Fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
+		lib.MlrExeName())
+	fmt.Fprintf(o, "               If you wish to use a prepipe command for the main input as well\n")
+	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")
+	fmt.Fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n")
+	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n")
+	fmt.Fprintf(o, "  --irs {record-separator character}\n")
+	fmt.Fprintf(o, "  --ifs {field-separator character}\n")
+	fmt.Fprintf(o, "  --ips {pair-separator character}\n")
+	fmt.Fprintf(o, "  --repifs\n")
+	fmt.Fprintf(o, "  --repips\n")
+	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
+		lib.MlrExeName())
+	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
+	fmt.Fprintf(o, "including examples.\n")
+
+	if doExit {
+		os.Exit(exitCode)
 	}
 }
 
@@ -195,61 +251,6 @@ func transformerJoinParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerJoinUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJoin)
-	fmt.Fprintf(o, "Joins records from specified left file name with records from all file names\n")
-	fmt.Fprintf(o, "at the end of the Miller argument list.\n")
-	fmt.Fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n")
-	fmt.Fprintf(o, "record streams.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "  -f {left file name}\n")
-	fmt.Fprintf(o, "  -j {a,b,c}   Comma-separated join-field names for output\n")
-	fmt.Fprintf(o, "  -l {a,b,c}   Comma-separated join-field names for left input file;\n")
-	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
-	fmt.Fprintf(o, "  -r {a,b,c}   Comma-separated join-field names for right input file(s);\n")
-	fmt.Fprintf(o, "               defaults to -j values if omitted.\n")
-	fmt.Fprintf(o, "  --lp {text}  Additional prefix for non-join output field names from\n")
-	fmt.Fprintf(o, "               the left file\n")
-	fmt.Fprintf(o, "  --rp {text}  Additional prefix for non-join output field names from\n")
-	fmt.Fprintf(o, "               the right file(s)\n")
-	fmt.Fprintf(o, "  --np         Do not emit paired records\n")
-	fmt.Fprintf(o, "  --ul         Emit unpaired records from the left file\n")
-	fmt.Fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n")
-	fmt.Fprintf(o, "  -s|--sorted-input  Require sorted input: records must be sorted\n")
-	fmt.Fprintf(o, "               lexically by their join-field names, else not all records will\n")
-	fmt.Fprintf(o, "               be paired. The only likely use case for this is with a left\n")
-	fmt.Fprintf(o, "               file which is too big to fit into system memory otherwise.\n")
-	fmt.Fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n")
-	fmt.Fprintf(o, "               In this case, the entire left file will be loaded into memory.\n")
-	fmt.Fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
-		lib.MlrExeName())
-	fmt.Fprintf(o, "               If you wish to use a prepipe command for the main input as well\n")
-	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")
-	fmt.Fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n")
-	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", lib.MlrExeName())
-	fmt.Fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n")
-	fmt.Fprintf(o, "  --irs {record-separator character}\n")
-	fmt.Fprintf(o, "  --ifs {field-separator character}\n")
-	fmt.Fprintf(o, "  --ips {pair-separator character}\n")
-	fmt.Fprintf(o, "  --repifs\n")
-	fmt.Fprintf(o, "  --repips\n")
-	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
-		lib.MlrExeName())
-	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
-	fmt.Fprintf(o, "including examples.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

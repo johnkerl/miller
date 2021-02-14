@@ -17,9 +17,27 @@ const verbNameCountSimilar = "count-similar"
 
 var CountSimilarSetup = transforming.TransformerSetup{
 	Verb:         verbNameCountSimilar,
-	ParseCLIFunc: transformerCountSimilarParseCLI,
 	UsageFunc:    transformerCountSimilarUsage,
+	ParseCLIFunc: transformerCountSimilarParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerCountSimilarUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCountSimilar)
+	fmt.Fprintf(o, "Ingests all records, then emits each record augmented by a count of\n")
+	fmt.Fprintf(o, "the number of other records having the same group-by field values.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Group-by-field names for counts, e.g. a,b,c\n")
+	fmt.Fprintf(o, "-o {name} Field name for output-counts. Defaults to \"count\".\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerCountSimilarParseCLI(
@@ -70,24 +88,6 @@ func transformerCountSimilarParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerCountSimilarUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCountSimilar)
-	fmt.Fprintf(o, "Ingests all records, then emits each record augmented by a count of\n")
-	fmt.Fprintf(o, "the number of other records having the same group-by field values.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Group-by-field names for counts, e.g. a,b,c\n")
-	fmt.Fprintf(o, "-o {name} Field name for output-counts. Defaults to \"count\".\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

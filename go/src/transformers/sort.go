@@ -59,9 +59,39 @@ const verbNameSort = "sort"
 
 var SortSetup = transforming.TransformerSetup{
 	Verb:         verbNameSort,
-	ParseCLIFunc: transformerSortParseCLI,
 	UsageFunc:    transformerSortUsage,
+	ParseCLIFunc: transformerSortParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerSortUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s {flags}\n", lib.MlrExeName(), verbNameSort)
+	fmt.Fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n")
+	fmt.Fprintf(o, "field, and so on.  (Any records not having all specified sort keys will appear\n")
+	fmt.Fprintf(o, "at the end of the output, in the order they were encountered, regardless of the\n")
+	fmt.Fprintf(o, "specified sort order.) The sort is stable: records that compare equal will sort\n")
+	fmt.Fprintf(o, "in the order they were encountered in the input record stream.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Flags:\n")
+	fmt.Fprintf(o, "-f  {comma-separated field names}  Lexical ascending\n")
+	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
+	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
+	fmt.Fprintf(o, "-r  {comma-separated field names}  Lexical descending\n")
+	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Example:\n")
+	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", lib.MlrExeName(), verbNameSort)
+	fmt.Fprintf(o, "which is the same as:\n")
+	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", lib.MlrExeName(), verbNameSort)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerSortParseCLI(
@@ -141,36 +171,6 @@ func transformerSortParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerSortUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s {flags}\n", lib.MlrExeName(), verbNameSort)
-	fmt.Fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n")
-	fmt.Fprintf(o, "field, and so on.  (Any records not having all specified sort keys will appear\n")
-	fmt.Fprintf(o, "at the end of the output, in the order they were encountered, regardless of the\n")
-	fmt.Fprintf(o, "specified sort order.) The sort is stable: records that compare equal will sort\n")
-	fmt.Fprintf(o, "in the order they were encountered in the input record stream.\n")
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Flags:\n")
-	fmt.Fprintf(o, "-f  {comma-separated field names}  Lexical ascending\n")
-	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
-	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
-	fmt.Fprintf(o, "-r  {comma-separated field names}  Lexical descending\n")
-	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", lib.MlrExeName(), verbNameSort)
-	fmt.Fprintf(o, "which is the same as:\n")
-	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", lib.MlrExeName(), verbNameSort)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

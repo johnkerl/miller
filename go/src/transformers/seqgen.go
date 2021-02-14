@@ -17,9 +17,35 @@ const verbNameSeqgen = "seqgen"
 
 var SeqgenSetup = transforming.TransformerSetup{
 	Verb:         verbNameSeqgen,
-	ParseCLIFunc: transformerSeqgenParseCLI,
 	UsageFunc:    transformerSeqgenUsage,
+	ParseCLIFunc: transformerSeqgenParseCLI,
 	IgnoresInput: true,
+}
+
+func transformerSeqgenUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSeqgen)
+	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
+	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
+	fmt.Fprintf(o, "output as specified by the options\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-f {name} (default \"i\") Field name for counters.\n")
+	fmt.Fprintf(o, "-start {value} (default 1) Inclusive start value.\n")
+	fmt.Fprintf(o, "-step {value} (default 1) Step value.\n")
+	fmt.Fprintf(o, "-stop {value} (default 100) Inclusive stop value.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")
+	fmt.Fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n")
+	fmt.Fprintf(o, "unless start == stop.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerSeqgenParseCLI(
@@ -81,32 +107,6 @@ func transformerSeqgenParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerSeqgenUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSeqgen)
-	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
-	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
-	fmt.Fprintf(o, "output as specified by the options\n")
-	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-f {name} (default \"i\") Field name for counters.\n")
-	fmt.Fprintf(o, "-start {value} (default 1) Inclusive start value.\n")
-	fmt.Fprintf(o, "-step {value} (default 1) Step value.\n")
-	fmt.Fprintf(o, "-stop {value} (default 100) Inclusive stop value.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")
-	fmt.Fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n")
-	fmt.Fprintf(o, "unless start == stop.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

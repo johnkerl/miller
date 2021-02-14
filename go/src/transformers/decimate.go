@@ -16,9 +16,28 @@ const verbNameDecimate = "decimate"
 
 var DecimateSetup = transforming.TransformerSetup{
 	Verb:         verbNameDecimate,
-	ParseCLIFunc: transformerDecimateParseCLI,
 	UsageFunc:    transformerDecimateUsage,
+	ParseCLIFunc: transformerDecimateParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerDecimateUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameDecimate)
+	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, " -b Decimate by printing first of every n.\n")
+	fmt.Fprintf(o, " -e Decimate by printing last of every n (default).\n")
+	fmt.Fprintf(o, " -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, " -n {n} Decimation factor (default 10).\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerDecimateParseCLI(
@@ -78,25 +97,6 @@ func transformerDecimateParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerDecimateUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameDecimate)
-	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, " -b Decimate by printing first of every n.\n")
-	fmt.Fprintf(o, " -e Decimate by printing last of every n (default).\n")
-	fmt.Fprintf(o, " -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.\n")
-	fmt.Fprintf(o, " -n {n} Decimation factor (default 10).\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

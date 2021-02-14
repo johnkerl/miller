@@ -16,9 +16,33 @@ const verbNameHead = "head"
 
 var HeadSetup = transforming.TransformerSetup{
 	Verb:         verbNameHead,
-	ParseCLIFunc: transformerHeadParseCLI,
 	UsageFunc:    transformerHeadUsage,
+	ParseCLIFunc: transformerHeadParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerHeadUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHead)
+	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
+
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
+	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
+	//	fmt.Fprint(o,
+	//		`Without -g, ceases consuming more input (i.e. is fast) when n records
+	//have been read.
+	//`)
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerHeadParseCLI(
@@ -65,30 +89,6 @@ func transformerHeadParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerHeadUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHead)
-	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
-
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
-	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
-	//	fmt.Fprint(o,
-	//		`Without -g, ceases consuming more input (i.e. is fast) when n records
-	//have been read.
-	//`)
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

@@ -17,9 +17,30 @@ const verbNameTee = "tee"
 
 var TeeSetup = transforming.TransformerSetup{
 	Verb:         verbNameTee,
-	ParseCLIFunc: transformerTeeParseCLI,
 	UsageFunc:    transformerTeeUsage,
+	ParseCLIFunc: transformerTeeParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerTeeUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", lib.MlrExeName(), verbNameTee)
+	fmt.Fprintf(o,
+		`-a    Append to existing file, if any, rather than overwriting.
+-p    Treat filename as a pipe-to command.
+Any of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
+
+-h|--help Show this message.
+`)
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerTeeParseCLI(
@@ -99,27 +120,6 @@ func transformerTeeParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerTeeUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", lib.MlrExeName(), verbNameTee)
-	fmt.Fprintf(o,
-		`-a    Append to existing file, if any, rather than overwriting.
--p    Treat filename as a pipe-to command.
-Any of the output-format command-line flags (see mlr -h). Example: using
-  mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
-the input is CSV, the output is pretty-print tabular, but the tee-file output
-is written in JSON format.
-
--h|--help Show this message.
-`)
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------

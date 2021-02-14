@@ -19,6 +19,12 @@ type RecordTransformerFunc func(
 	outputChannel chan<- *types.RecordAndContext,
 )
 
+type TransformerUsageFunc func(
+	ostream *os.File,
+	doExit bool,
+	exitCode int,
+)
+
 type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
@@ -27,15 +33,9 @@ type TransformerParseCLIFunc func(
 	writerOptions *cliutil.TWriterOptions,
 ) IRecordTransformer
 
-type TransformerUsageFunc func(
-	ostream *os.File,
-	doExit bool,
-	exitCode int,
-)
-
 type TransformerSetup struct {
 	Verb         string
-	ParseCLIFunc TransformerParseCLIFunc
 	UsageFunc    TransformerUsageFunc
+	ParseCLIFunc TransformerParseCLIFunc
 	IgnoresInput bool
 }

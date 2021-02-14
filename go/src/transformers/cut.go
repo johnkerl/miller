@@ -16,9 +16,36 @@ const verbNameCut = "cut"
 
 var CutSetup = transforming.TransformerSetup{
 	Verb:         verbNameCut,
-	ParseCLIFunc: transformerCutParseCLI,
 	UsageFunc:    transformerCutUsage,
+	ParseCLIFunc: transformerCutParseCLI,
 	IgnoresInput: false,
+}
+
+func transformerCutUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.\n")
+	fmt.Fprintf(o, " -o Retain fields in the order specified here in the argument list.\n")
+	fmt.Fprintf(o, "    Default is to retain them in the order found in the input data.\n")
+	fmt.Fprintf(o, " -x|--complement  Exclude, rather than include, field names specified by -f.\n")
+	fmt.Fprintf(o, "\n")
+
+	fmt.Fprintf(o, "Examples:\n")
+	fmt.Fprintf(o, "  %s %s -f hostname,status\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", lib.MlrExeName(), verbNameCut)
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", lib.MlrExeName(), verbNameCut);
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", lib.MlrExeName(), verbNameCut);
+	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", lib.MlrExeName(), verbNameCut);
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
 }
 
 func transformerCutParseCLI(
@@ -83,33 +110,6 @@ func transformerCutParseCLI(
 
 	*pargi = argi
 	return transformer
-}
-
-func transformerCutUsage(
-	o *os.File,
-	doExit bool,
-	exitCode int,
-) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCut)
-	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
-	fmt.Fprintf(o, "Options:\n")
-	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.\n")
-	fmt.Fprintf(o, " -o Retain fields in the order specified here in the argument list.\n")
-	fmt.Fprintf(o, "    Default is to retain them in the order found in the input data.\n")
-	fmt.Fprintf(o, " -x|--complement  Exclude, rather than include, field names specified by -f.\n")
-	fmt.Fprintf(o, "\n")
-
-	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -f hostname,status\n", lib.MlrExeName(), verbNameCut)
-	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", lib.MlrExeName(), verbNameCut)
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", lib.MlrExeName(), verbNameCut);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", lib.MlrExeName(), verbNameCut);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", lib.MlrExeName(), verbNameCut);
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	if doExit {
-		os.Exit(exitCode)
-	}
 }
 
 // ----------------------------------------------------------------
