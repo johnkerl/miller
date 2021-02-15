@@ -4,10 +4,9 @@ TOP OF LIST:
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
 * regexes
-  o finish rename -r
-    - still needs regex-captures
   o finish stats1 -r
   o regex captures ...
+    - rename -r
   ! separate DSL/non-DSL string-literal handlers
 
 ! rmd ex1 even simpler -- commarect
