@@ -5,7 +5,6 @@ TOP OF LIST:
 w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
 * top-of-verb-file commewnts
 
-* having-fields, and regexes
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! --nojvstack; default --jvstack; code it up ...
@@ -194,9 +193,6 @@ no need to bootstrap a parser for the parser-generator language
 
 ================================================================
 REMAINING VERBS:
-
-having-fields
--> regex dependency in order to complete it
 
 bar
 count-distinct
