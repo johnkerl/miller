@@ -335,8 +335,6 @@ regex-match operator: try '$y = ~$x'.`,
 	// FUNC_CLASS_STRING
 
 	// TODO:
-	// regextract : help: `Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'`,
-	// regextract_or_else : help: `Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'`,
 	// system : help: `Run command string, yielding its stdout minus final carriage return.
 
 	{
@@ -379,6 +377,20 @@ regex-match operator: try '$y = ~$x'.`,
 		class:     FUNC_CLASS_STRING,
 		help:      "Strip leading whitespace from string.",
 		unaryFunc: types.MlrvalLStrip,
+	},
+
+	{
+		name:       "regextract",
+		class:      FUNC_CLASS_STRING,
+		help:       `Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'`,
+		binaryFunc: types.MlrvalRegextract,
+	},
+
+	{
+		name:        "regextract_or_else",
+		class:       FUNC_CLASS_STRING,
+		help:        `Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'`,
+		ternaryFunc: types.MlrvalRegextractOrElse,
 	},
 
 	{

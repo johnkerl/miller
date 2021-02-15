@@ -85,13 +85,15 @@ _string_literal_element
   | ( '\\' 'n' ) | ( '\\' 'r' )
   | ( '\\' 't' )
   | ( '\\' 'x' )
+  | ( '\\' '.' )
   | ( '\\' '0' ) | ( '\\' '1' ) | ( '\\' '2' ) | ( '\\' '3' ) | ( '\\' '4' )
   | ( '\\' '5' ) | ( '\\' '6' ) | ( '\\' '7' ) | ( '\\' '8' ) | ( '\\' '9' )
   | '\u0100'-'\U0010FFFF'
 ;
 string_literal : '"' {_string_literal_element} '"' ;
 
-// regexi : \"([^\\\"]|\\.)*\"\i ;
+// Miller regexes are of the form "a.*b" for case-sensitive, or "a.*b"i for case-insensitive.
+regex_case_insensitive : '"' {_string_literal_element} '"' 'i';
 
 // Notes on int literals:
 // * Leading minus sign is handled via the unary-minus operator, not here.
@@ -1444,9 +1446,16 @@ MlrvalOrFunction
 // quote-stripper AST method. Also, since string literals can have
 // backslash-escaped double-quotes like "...\"...\"...", we also unbackslash
 // in the same method.
+
+// For Miller-style case-insensitive regexes -- of the form "a.*b"i with the
+// trailing 'i' -- we don't strip the initial '"' or the final '"i'.
+
 MlrvalOrFunction
   : string_literal
     << dsl.NewASTNodeStripDoubleQuotePair($0, dsl.NodeTypeStringLiteral) >>
+
+  | regex_case_insensitive
+    << dsl.NewASTNode($0, dsl.NodeTypeRegexCaseInsensitive) >>
 
   | int_literal
     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>
@@ -1472,18 +1481,6 @@ MlrvalOrFunction
   | panic
     << dsl.NewASTNode($0, dsl.NodeTypePanic) >>
 ;
-
-//MlrvalOrFunction(A) ::= md_regexi(B). {
-//  A = B;
-//}
-
-//md_regexi(A) ::= regexi(B). {
-//  char* input = B->text;
-//  char* stripped = &input[1];
-//  int len = strlen(input);
-//  stripped[len-3] = 0;
-//  A = mlr_dsl_ast_node_alloc(mlr_alloc_unbackslash(stripped), B->type);
-//}
 
 // ================================================================
 // Array literals in Miller are JSON-ish.

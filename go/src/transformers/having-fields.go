@@ -180,7 +180,7 @@ func NewTransformerHavingFields(
 	} else {
 		// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
 		// Strip off the leading " and trailing " or "i.
-		regex, err := lib.CompilerMillerRegex(regexString)
+		regex, err := lib.CompileMillerRegex(regexString)
 		if err != nil {
 			fmt.Fprintf(
 				os.Stderr,

@@ -1,8 +1,9 @@
 package types
 
 import (
-	"regexp"
 	"strings"
+
+	"miller/src/lib"
 )
 
 // ================================================================
@@ -53,7 +54,7 @@ func MlrvalSub(ma, mb, mc *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 	// TODO: better exception-handling
-	re := regexp.MustCompile(mb.printrep)
+	re := lib.CompileMillerRegexOrDie(mb.printrep)
 
 	onFirst := true
 	output := re.ReplaceAllStringFunc(ma.printrep, func(s string) string {
@@ -90,7 +91,7 @@ func MlrvalGsub(ma, mb, mc *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 	// TODO: better exception-handling
-	re := regexp.MustCompile(mb.printrep)
+	re := lib.CompileMillerRegexOrDie(mb.printrep)
 	return MlrvalFromString(
 		re.ReplaceAllString(ma.printrep, mc.printrep),
 	)
@@ -113,7 +114,7 @@ func MlrvalStringMatchesRegexp(ma, mb *Mlrval) Mlrval {
 		return MlrvalFromError()
 	}
 	// TODO: better exception-handling
-	re := regexp.MustCompile(mb.printrep)
+	re := lib.CompileMillerRegexOrDie(mb.printrep)
 	return MlrvalFromBool(
 		re.MatchString(ma.printrep),
 	)
@@ -125,5 +126,40 @@ func MlrvalStringDoesNotMatchRegexp(ma, mb *Mlrval) Mlrval {
 		return MlrvalFromBool(!matches.boolval)
 	} else {
 		return matches // error, absent, etc.
+	}
+}
+
+// TODO: find a way to keep and stash a precompiled regex, somewhere in the CST ...
+func MlrvalRegextract(ma, mb *Mlrval) Mlrval {
+	if !ma.IsString() {
+		return MlrvalFromError()
+	}
+	if !mb.IsString() {
+		return MlrvalFromError()
+	}
+	regex := lib.CompileMillerRegexOrDie(mb.printrep)
+	// TODO: See if we need FindStringIndex or FindStringSubmatch to distinguish from matching "".
+	output := regex.FindString(ma.printrep)
+	if output != "" {
+		return MlrvalFromString(output)
+	} else {
+		return MlrvalFromAbsent()
+	}
+}
+
+func MlrvalRegextractOrElse(ma, mb, mc *Mlrval) Mlrval {
+	if !ma.IsString() {
+		return MlrvalFromError()
+	}
+	if !mb.IsString() {
+		return MlrvalFromError()
+	}
+	regex := lib.CompileMillerRegexOrDie(mb.printrep)
+	// TODO: See if we need FindStringIndex or FindStringSubmatch to distinguish from matching "".
+	output := regex.FindString(ma.printrep)
+	if output != "" {
+		return MlrvalFromString(output)
+	} else {
+		return *mc
 	}
 }

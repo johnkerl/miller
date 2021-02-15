@@ -1,0 +1,183 @@
+
+mlr filter -v $x =~ "bcd" ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "bcd"
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * string literal "bcd"
+
+x=abcd,y=ghi
+x=abcde,y=ghi
+
+mlr filter -v $x =~ "^bcd" ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^bcd"
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * string literal "^bcd"
+
+
+mlr filter -v $x =~ "^abc" ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^abc"
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * string literal "^abc"
+
+x=abc,y=def
+x=abcd,y=ghi
+x=abcde,y=ghi
+
+mlr filter -v $x =~ "^abc$" ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^abc$"
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * string literal "^abc$"
+
+x=abc,y=def
+
+mlr filter -v $x =~ "^a.*d$" ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^a.*d$"
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * string literal "^a.*d$"
+
+x=abcd,y=ghi
+
+mlr filter -v $x =~ "^a.*"."d$" ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^a.*"."d$"
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * operator "."
+                * string literal "^a.*"
+                * string literal "d$"
+
+x=abcd,y=ghi
+
+mlr filter -v $y =~ "\".." ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$y =~ "\".."
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "y"
+            * string literal "".."
+
+x=ABCDE,y="GHI"
+
+mlr filter -v $x =~ "bcd"i ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "bcd"i
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * case-insensitive regular expression ""bcd"i"
+
+x=abcd,y=ghi
+x=ABCD,y=GHI
+x=abcde,y=ghi
+x=ABCDE,y=GHI
+x=ABCDE,y="GHI"
+
+mlr filter -v $x =~ "^bcd"i ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^bcd"i
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * case-insensitive regular expression ""^bcd"i"
+
+
+mlr filter -v $x =~ "^abc"i ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^abc"i
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * case-insensitive regular expression ""^abc"i"
+
+x=abc,y=def
+x=ABC,y=DEF
+x=abcd,y=ghi
+x=ABCD,y=GHI
+x=abcde,y=ghi
+x=ABCDE,y=GHI
+x=ABCDE,y="GHI"
+
+mlr filter -v $x =~ "^abc$"i ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^abc$"i
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * case-insensitive regular expression ""^abc$"i"
+
+x=abc,y=def
+x=ABC,y=DEF
+
+mlr filter -v $x =~ "^a.*d$"i ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^a.*d$"i
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * case-insensitive regular expression ""^a.*d$"i"
+
+x=abcd,y=ghi
+x=ABCD,y=GHI
+
+mlr filter -v $x =~ "^a.*"."d$"i ./reg-test/input/regex.dkvp
+DSL EXPRESSION:
+$x =~ "^a.*"."d$"i
+RAW AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * operator "."
+                * string literal "^a.*"
+                * case-insensitive regular expression ""d$"i"
+
+
+mlr --csv filter $text =~ "." ./reg-test/input/dot-match.csv
+text
+hi
+a.b
+bye
+
+mlr --csv filter $text =~ "\." ./reg-test/input/dot-match.csv
+text
+a.b
+
