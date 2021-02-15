@@ -44,6 +44,15 @@ func (this *RootNode) BuildLeafNode(
 	case dsl.NodeTypeStringLiteral:
 		return this.BuildStringLiteralNode(sval), nil
 		break
+	case dsl.NodeTypeRegexCaseInsensitive:
+		// StringLiteral nodes like '"abc"' entered by the user come in from
+		// the AST as 'abc', with double quotes removed. Case-insensitive
+		// regexes like '"a.*b"i' come in with initial '"' and final '"i'
+		// intact. We let the sub/regextract/etc functions deal with this.
+		// (The alternative would be to make a separate Mlrval type separate
+		// from string.)
+		return this.BuildStringLiteralNode(sval), nil
+		break
 	case dsl.NodeTypeIntLiteral:
 		return this.BuildIntLiteralNode(sval), nil
 		break

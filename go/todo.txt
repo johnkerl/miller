@@ -1,9 +1,11 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+* regextract
+* finish cut -r
+
 ! rmd ex1 even simpler -- commarect
 w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
-* top-of-verb-file commewnts
 
 ! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...

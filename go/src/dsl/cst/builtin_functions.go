@@ -288,7 +288,13 @@ func (this *RootNode) BuildTernaryFunctionCallsiteNode(
 	}
 
 	evaluable1, err := this.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
 	evaluable2, err := this.BuildEvaluableNode(astNode.Children[1])
+	if err != nil {
+		return nil, err
+	}
 	evaluable3, err := this.BuildEvaluableNode(astNode.Children[2])
 	if err != nil {
 		return nil, err

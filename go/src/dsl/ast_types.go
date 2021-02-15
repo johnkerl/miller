@@ -25,6 +25,7 @@ type TNodeType string
 
 const (
 	NodeTypeStringLiteral             TNodeType = "string literal"
+	NodeTypeRegexCaseInsensitive                = "case-insensitive regular expression" // E.g. "a.*b"i -- note the trailing 'i'
 	NodeTypeIntLiteral                          = "int literal"
 	NodeTypeFloatLiteral                        = "float literal"
 	NodeTypeBoolLiteral                         = "bool literal"

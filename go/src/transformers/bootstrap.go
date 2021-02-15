@@ -54,7 +54,7 @@ func transformerBootstrapParseCLI(
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
-	verb := args[argi] // xxx port more
+	verb := args[argi]
 	argi++
 
 	nout := -1
