@@ -6,6 +6,7 @@ TOP OF LIST:
   o finish rename -r
   o finish stats1 -r
   o regex captures ...
+  ! separate DSL/non-DSL string-literal handlers
 
 ! rmd ex1 even simpler -- commarect
 w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
