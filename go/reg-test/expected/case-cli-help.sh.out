@@ -177,6 +177,21 @@ Usage: mlr group-like [options]
 Outputs records in batches having identical field names.Options:
 -h|--help Show this message.
 ================================================================
+Usage: mlr having-fields [options]
+Conditionally passes through records depending on each record's field names.
+Options:
+  --at-least      {comma-separated names}
+  --which-are     {comma-separated names}
+  --at-most       {comma-separated names}
+  --all-matching  {regular expression}
+  --any-matching  {regular expression}
+  --none-matching {regular expression}
+Examples:
+  mlr having-fields --which-are amount,status,owner
+  mlr having-fields --any-matching 'sda[0-9]'
+  mlr having-fields --any-matching '"sda[0-9]"'
+  mlr having-fields --any-matching '"sda[0-9]"i' (this is case-insensitive)
+================================================================
 Usage: mlr head [options]
 Passes through the first n records, optionally by category.
 Options:

@@ -38,6 +38,10 @@ func SplitString(input string, separator string) []string {
 }
 
 func StringListToSet(stringList []string) map[string]bool {
+	if stringList == nil {
+		return nil
+	}
+
 	stringSet := make(map[string]bool)
 	for _, s := range stringList {
 		stringSet[s] = true
