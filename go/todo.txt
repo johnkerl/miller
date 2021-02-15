@@ -118,7 +118,6 @@ no need to bootstrap a parser for the parser-generator language
 * stats1:
   o actualize -S and -F -- ?
   o regexed
-    - needs implementation of "a.*b"i
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??

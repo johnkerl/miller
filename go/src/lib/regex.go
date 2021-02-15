@@ -3,6 +3,7 @@ package lib
 import (
 	"errors"
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -14,7 +15,7 @@ import (
 // * If the regex_string is of the form a.*b, compiles it using cflags without REG_ICASE.
 // * If the regex_string is of the form "a.*b", compiles a.*b using cflags without REG_ICASE.
 // * If the regex_string is of the form "a.*b"i, compiles a.*b using cflags with REG_ICASE.
-func CompilerMillerRegex(regexString string) (*regexp.Regexp, error) {
+func CompileMillerRegex(regexString string) (*regexp.Regexp, error) {
 	if !strings.HasPrefix(regexString, "\"") {
 		return regexp.Compile(regexString)
 	} else {
@@ -40,4 +41,13 @@ func CompilerMillerRegex(regexString string) (*regexp.Regexp, error) {
 			)
 		}
 	}
+}
+
+func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
+	regex, err := CompileMillerRegex(regexString)
+	if err != nil {
+		fmt.Fprint(os.Stderr, err)
+		os.Exit(1)
+	}
+	return regex
 }
