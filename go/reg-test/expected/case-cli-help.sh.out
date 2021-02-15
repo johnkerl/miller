@@ -64,11 +64,17 @@ Options:
  -o Retain fields in the order specified here in the argument list.
     Default is to retain them in the order found in the input data.
  -x|--complement  Exclude, rather than include, field names specified by -f.
-
+ -r Treat field names as regular expressions. "ab", "a.*b" will
+   match any field name containing the substring "ab" or matching
+   "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
+   be used. The -o flag is ignored when -r is present.
+-h|--help Show this message.
 Examples:
   mlr cut -f hostname,status
   mlr cut -x -f hostname,status
--h|--help Show this message.
+  mlr cut -r -f '^status$,sda[0-9]'
+  mlr cut -r -f '^status$,"sda[0-9]"'
+  mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
 ================================================================
 Usage: mlr decimate [options]
 Passes through one of every n records, optionally by category.

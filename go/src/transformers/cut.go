@@ -3,6 +3,7 @@ package transformers
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"miller/src/cliutil"
@@ -33,15 +34,17 @@ func transformerCutUsage(
 	fmt.Fprintf(o, " -o Retain fields in the order specified here in the argument list.\n")
 	fmt.Fprintf(o, "    Default is to retain them in the order found in the input data.\n")
 	fmt.Fprintf(o, " -x|--complement  Exclude, rather than include, field names specified by -f.\n")
-	fmt.Fprintf(o, "\n")
-
+	fmt.Fprintf(o, " -r Treat field names as regular expressions. \"ab\", \"a.*b\" will\n")
+	fmt.Fprintf(o, "   match any field name containing the substring \"ab\" or matching\n")
+	fmt.Fprintf(o, "   \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n")
+	fmt.Fprintf(o, "   be used. The -o flag is ignored when -r is present.\n")
+	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "Examples:\n")
 	fmt.Fprintf(o, "  %s %s -f hostname,status\n", lib.MlrExeName(), verbNameCut)
 	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", lib.MlrExeName(), verbNameCut)
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", lib.MlrExeName(), verbNameCut);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", lib.MlrExeName(), verbNameCut);
-	//	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", lib.MlrExeName(), verbNameCut);
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", lib.MlrExeName(), verbNameCut)
 
 	if doExit {
 		os.Exit(exitCode)
@@ -64,6 +67,7 @@ func transformerCutParseCLI(
 	var fieldNames []string = nil
 	doArgOrder := false
 	doComplement := false
+	doRegexes := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -87,16 +91,13 @@ func transformerCutParseCLI(
 		} else if opt == "--complement" {
 			doComplement = true
 
+		} else if opt == "-r" {
+			doRegexes = true
+
 		} else {
 			transformerCutUsage(os.Stderr, true, 1)
 		}
 	}
-
-	//	ap_define_true_flag(pstate, "-r",           &do_regexes);
-	//	fmt.Fprintf(o, "-r Treat field names as regular expressions. \"ab\", \"a.*b\" will\n");
-	//	fmt.Fprintf(o, "   match any field name containing the substring \"ab\" or matching\n");
-	//	fmt.Fprintf(o, "   \"a.*b\", respectively; anchors of the form \"^ab$\", \"^a.*b$\" may\n");
-	//	fmt.Fprintf(o, "   be used. The -o flag is ignored when -r is present.\n");
 
 	if fieldNames == nil {
 		transformerCutUsage(os.Stderr, true, 1)
@@ -106,6 +107,7 @@ func transformerCutParseCLI(
 		fieldNames,
 		doArgOrder,
 		doComplement,
+		doRegexes,
 	)
 
 	*pargi = argi
@@ -117,6 +119,9 @@ type TransformerCut struct {
 	fieldNameList []string
 	fieldNameSet  map[string]bool
 
+	doComplement bool
+	regexes      []*regexp.Regexp
+
 	recordTransformerFunc transforming.RecordTransformerFunc
 }
 
@@ -124,50 +129,44 @@ func NewTransformerCut(
 	fieldNames []string,
 	doArgOrder bool,
 	doComplement bool,
+	doRegexes bool,
 ) (*TransformerCut, error) {
 
-	fieldNameSet := lib.StringListToSet(fieldNames)
+	this := &TransformerCut{}
 
-	this := &TransformerCut{
-		fieldNameList: fieldNames,
-		fieldNameSet:  fieldNameSet,
-	}
-
-	if !doComplement {
-		if !doArgOrder {
-			this.recordTransformerFunc = this.includeWithInputOrder
+	if !doRegexes {
+		this.fieldNameList = fieldNames
+		this.fieldNameSet = lib.StringListToSet(fieldNames)
+		if !doComplement {
+			if !doArgOrder {
+				this.recordTransformerFunc = this.includeWithInputOrder
+			} else {
+				this.recordTransformerFunc = this.includeWithArgOrder
+			}
 		} else {
-			this.recordTransformerFunc = this.includeWithArgOrder
+			this.recordTransformerFunc = this.exclude
 		}
 	} else {
-		this.recordTransformerFunc = this.exclude
+		this.doComplement = doComplement
+		this.regexes = make([]*regexp.Regexp, len(fieldNames))
+		for i, regexString := range fieldNames {
+			// Handles "a.*b"i Miller case-insensitive-regex specification
+			regex, err := lib.CompileMillerRegex(regexString)
+			if err != nil {
+				fmt.Fprintf(
+					os.Stderr,
+					"%s %s: cannot compile regex [%s]\n",
+					lib.MlrExeName(), verbNameCut, regexString,
+				)
+				os.Exit(1)
+			}
+			this.regexes[i] = regex
+		}
+		this.recordTransformerFunc = this.processWithRegexes
 	}
 
 	return this, nil
 }
-
-// xxx to port:
-//	if (!do_regexes) {
-//		pstate->pfield_name_list   = pfield_name_list;
-//		slls_reverse(pstate->pfield_name_list);
-//		pstate->pfield_name_set    = hss_from_slls(pfield_name_list);
-//		pstate->nregex             = 0;
-//		pstate->regexes            = NULL;
-//		ptransformer->pprocess_func     = transformer_cut_process_no_regexes;
-//	} else {
-//		pstate->pfield_name_list   = NULL;
-//		pstate->pfield_name_set    = NULL;
-//		pstate->nregex = pfield_name_list->length;
-//		pstate->regexes = mlr_malloc_or_die(pstate->nregex * sizeof(regex_t));
-//		int i = 0;
-//		for (sllse_t* pe = pfield_name_list->phead; pe != NULL; pe = pe->pnext, i++) {
-//			// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
-//			// Strip off the leading " and trailing " or "i.
-//			regcomp_or_die_quoted(&pstate->regexes[i], pe->value, REG_NOSUB);
-//		}
-//		slls_free(pfield_name_list);
-//		ptransformer->pprocess_func = transformer_cut_process_with_regexes;
-//	}
 
 // ----------------------------------------------------------------
 func (this *TransformerCut) Transform(
@@ -239,32 +238,31 @@ func (this *TransformerCut) exclude(
 	outputChannel <- inrecAndContext
 }
 
-// xxx to port:
-//// ----------------------------------------------------------------
-//static sllv_t* transformer_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-//	if (pinrec != NULL) {
-//		transformer_cut_state_t* pstate = (transformer_cut_state_t*)pvstate;
-//		// Loop over the record and free the fields to be discarded, being
-//		// careful about the fact that we're modifying what we're looping over.
-//		for (lrece_t* pe = pinrec->phead; pe != NULL; /* next in loop */) {
-//			int matches_any = FALSE;
-//			for (int i = 0; i < pstate->nregex; i++) {
-//				if (regmatch_or_die(&pstate->regexes[i], pe->key, 0, NULL)) {
-//					matches_any = TRUE;
-//					break;
-//				}
-//			}
-//			if (matches_any ^ pstate->do_complement) {
-//				pe = pe->pnext;
-//			} else {
-//				lrece_t* pf = pe->pnext;
-//				lrec_remove(pinrec, pe->key);
-//				pe = pf;
-//			}
-//		}
-//		return sllv_single(pinrec);
-//	}
-//	else {
-//		return sllv_single(NULL);
-//	}
-//}
+// ----------------------------------------------------------------
+func (this *TransformerCut) processWithRegexes(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+		newrec := types.NewMlrmapAsRecord()
+		for pe := inrec.Head; pe != nil; pe = pe.Next {
+			matchesAny := false
+			for _, regex := range this.regexes {
+				if regex.MatchString(pe.Key) {
+					matchesAny = true
+					break
+				}
+			}
+			// Boolean XOR is spelt '!=' in Go
+			if matchesAny != this.doComplement {
+				// Pointer-motion is OK since the inrec is being hereby discarded.
+				// We're simply transferring ownership to the newrec.
+				newrec.PutReference(pe.Key, pe.Value)
+			}
+		}
+		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
+	} else {
+		outputChannel <- inrecAndContext
+	}
+}
