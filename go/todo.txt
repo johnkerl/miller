@@ -18,23 +18,36 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
 * smart fmtnum
 ! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-* help-refactor:
-  o audit for DEFAULT_FOOs @ 
-  o audit for '-z {zzz}'
-  o audit for consistent usage style
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * port verb merge-fields
 * port verb stats2
 * note hexfmt for non-ints -- especially floats -- ?!?
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * in-place processing
 * prepipe
   - gzin; bz2in ...
 
+* sg/mktags more explicit comment.
+* justWroteEmptyLine -> pprint too ...
+* nidx @ 10-min
+* text-put @ 10-min
+* xls note (issue #396) @ file-format docs
+* fixed-width pprint input-scanner
+* 'string or int' -> 'string, int, or array thereof' throughout
+
+* commenting passes ...
+
+* help-refactor:
+  o audit for DEFAULT_FOOs @ 
+  o audit for '-z {zzz}'
+  o audit for consistent usage style
+  o Check for "Options:" in all mappers
+
+! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
+* new columns-to-arrays and arrays-to-columns for stan format
+* reg-test: diff the *.err files?
+* single-line JSON for DKVP/CSV/etc ...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
   o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
@@ -76,52 +89,9 @@ emitp/emitf:
   https://miller.readthedocs.io/en/latest/reference-dsl.html#emit-statements
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-! fix var/any type-mask
-  o C/Go UT
-
-* sg/mktags more explicit comment.
-
-? doc shift/unshift as using [2:] and append
-
 ! se-q reads
 
-small:
-* justWroteEmptyLine -> pprint too ...
-* nidx @ 10-min
-* text-put @ 10-min
-* xls note (issue #396) @ file-format docs
-* ctx invars -> ptr w/ cmt
-* fixed-width pprint input-scanner
-* 'string or int' -> 'string, int, or array thereof' throughout
-
-medium:
-* commenting passes ...
-
-big:
-* json-null as type; & all dispo matrices/vectors ...
-* smart fmtnum
-* stats2 verb
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-* parser-fu:
-  o iterative LALR grok
-- jackson notes
-- gocc .txt/.go for simple grammars
-o find/bookmark/grok rob's lexer slides
-o iterate on a parser-generator with JSON config file
-no need to bootstrap a parser for the parser-generator language
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
-
-* new columns-to-arrays and arrays-to-columns for stan format
-
-? reg-test: diff the *.err files?
-? single-line JSON for DKVP/CSV/etc ...
-
-* stats1:
-  o actualize -S and -F -- ?
-  o regexed
+* stats1: actualize -S and -F -- ?
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
@@ -168,8 +138,6 @@ no need to bootstrap a parser for the parser-generator language
 
 * bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
   https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
-
-* Check for "Options:" in all mappers
 
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
@@ -234,20 +202,13 @@ https://github.com/pbnjay/strptime
 CATEGORIES:
 
 ! sort functions for online help
+! port all I/O formats:
+  o TSV/ASV reader
+  o XTAB reader
+  o TSV/ASV writer
+  o markdown writer
 
-* widen verb coverage
-
-* widen CLI coverage
-  o --c2x et al. -- fold in markdown
-  o implement mlrrc
-
-* I/O
-  o widen reader coverage
-    - TSV/ASV
-    - XTAB
-  o widen writer coverage
-    - TSV/ASV
-    - markdown
+* more I/O:
   !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
     detection -- needs an input-stream delegator -- ?
   o --allow-ragged-csv-input|--ragged
@@ -263,17 +224,15 @@ CATEGORIES:
   o multiple-valued return/assign -- ?
     - array destructure at LHS for multi-retval assign (maps too?)
 
-* beyond:
-  o support 'x[1]["a"]' etc notation in various verbs?
-  o sort within nested data structures?
-  o array-sort, map-key sort, map-value sort in the DSL?
-  o closures for sorting and more -- ?!?
-  o or maybe just use UDFs ...
-
 ----------------------------------------------------------------
-MAYBE:
-
-* string/array slices on assignment LHS -- ?
+DEFER:
+* parser-fu:
+  o iterative LALR grok
+- jackson notes
+- gocc .txt/.go for simple grammars
+o find/bookmark/grok rob's lexer slides
+o iterate on a parser-generator with JSON config file
+no need to bootstrap a parser for the parser-generator language
 
 ----------------------------------------------------------------
 GOCC UPSTREAMS:
@@ -503,3 +462,12 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * https://blog.golang.org/go1.13-errors
 * split REPL lines on ';' -- ?
 * tilde-expand for REPL load/open: if '~' is at the start of the string, run it though 'sh -c echo'
+* doc shift/unshift as using [2:] and append
+? ctx invars -> ptr w/ cmt
+? string/array slices on assignment LHS -- ?
+* beyond:
+  o support 'x[1]["a"]' etc notation in various verbs?
+  o sort within nested data structures?
+  o array-sort, map-key sort, map-value sort in the DSL?
+  o closures for sorting and more -- ?!?
+  o or maybe just use UDFs ...
