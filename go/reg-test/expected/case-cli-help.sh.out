@@ -354,7 +354,24 @@ Options:
 Usage: mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 Options:
+-r         Treat old field  names as regular expressions. "ab", "a.*b"
+           will match any field name containing the substring "ab" or
+           matching "a.*b", respectively; anchors of the form "^ab$",
+           "^a.*b$" may be used. New field names may be plain strings,
+           or may contain capture groups of the form "\1" through
+           "\9". Wrapping the regex in double quotes is optional, but
+           is required if you wish to follow it with 'i' to indicate
+           case-insensitivity.
+-g         Do global replacement within each field name rather than
+           first-match replacement.
 -h|--help Show this message.
+Examples:
+mlr rename old_name,new_name'
+mlr rename old_name_1,new_name_1,old_name_2,new_name_2'
+mlr rename -r 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
+mlr rename -r '"Date_[0-9]+",Date' Same
+mlr rename -r 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 20151015
+mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 ================================================================
 Usage: mlr reorder [options]
 Moves specified names to start of record, or end of record.

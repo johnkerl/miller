@@ -1,9 +1,11 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
+
 * regexes
-  o finish cut -r
   o finish rename -r
+    - still needs regex-captures
   o finish stats1 -r
   o regex captures ...
   ! separate DSL/non-DSL string-literal handlers
