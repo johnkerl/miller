@@ -56,14 +56,7 @@ func MlrvalSub(ma, mb, mc *Mlrval) Mlrval {
 	// TODO: better exception-handling
 	re := lib.CompileMillerRegexOrDie(mb.printrep)
 
-	onFirst := true
-	output := re.ReplaceAllStringFunc(ma.printrep, func(s string) string {
-		if !onFirst {
-			return s
-		}
-		onFirst = false
-		return re.ReplaceAllString(s, mc.printrep)
-	})
+	output := lib.RegexReplaceOnce(re, ma.printrep, mc.printrep)
 
 	return MlrvalFromString(output)
 }

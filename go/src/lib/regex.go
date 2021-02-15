@@ -50,3 +50,19 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	}
 	return regex
 }
+
+func RegexReplaceOnce(
+	regex *regexp.Regexp,
+	input string,
+	replacement string,
+) string {
+	onFirst := true
+	output := regex.ReplaceAllStringFunc(input, func(s string) string {
+		if !onFirst {
+			return s
+		}
+		onFirst = false
+		return regex.ReplaceAllString(s, replacement)
+	})
+	return output
+}
