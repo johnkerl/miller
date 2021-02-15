@@ -361,10 +361,10 @@ func ParseWriterOptions(
 		writerOptions.OutputFileFormat = "pprint"
 		argi += 1
 
-		//	} else if args[argi] == "--right" {
-		//		writerOptions.right_align_pprint = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--right" {
+		writerOptions.RightAlignedPprintOutput = true
+		argi += 1
+
 	} else if args[argi] == "--barred" {
 		writerOptions.BarredPprintOutput = true
 		argi += 1

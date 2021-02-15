@@ -38,11 +38,6 @@ rrv ./reg-test/cases/case-c-io-space-padding.sh
 rrv ./reg-test/cases/case-c-utf8-alignment.sh
 
 ================================================================
-PPRINT --BARRED --RIGHT
-
-rrv ./reg-test/cases/case-c-barred-pprint.sh
-
-================================================================
 BACKWARD INCOMPATIBILITIES:
 
 rrv ./reg-test/cases/case-c-label.sh

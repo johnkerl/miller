@@ -49,8 +49,9 @@ type TWriterOptions struct {
 	OPS              string
 	OFLATSEP         string
 
-	HeaderlessCSVOutput bool
-	BarredPprintOutput  bool
+	HeaderlessCSVOutput      bool
+	BarredPprintOutput       bool
+	RightAlignedPprintOutput bool
 
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;
