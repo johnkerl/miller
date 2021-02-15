@@ -170,7 +170,6 @@ no need to bootstrap a parser for the parser-generator language
   https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
 
 * Check for "Options:" in all mappers
-* check for `f.Value` reassigned in all mappers -- reflects true default?
 
 * more copy-on-retain for concurrent pointer-mods !
   o make a thorough audit, and warn everywhere
