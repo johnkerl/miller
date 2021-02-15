@@ -34,7 +34,7 @@ rrv ./reg-test/cases/case-c-cut.sh
 rrv ./reg-test/cases/case-c-dsl-scientific-notation.sh
 rrv ./reg-test/cases/case-c-implicit-header-csv-input.sh
 rrv ./reg-test/cases/case-c-rfc-csv.sh
-rrv ./reg-test/cases/case-c-space-padding.sh
+rrv ./reg-test/cases/case-c-io-space-padding.sh
 rrv ./reg-test/cases/case-c-utf8-alignment.sh
 
 ================================================================
@@ -74,7 +74,7 @@ rrv ./reg-test/cases/case-c-het-pprint-input.sh
 * needs --ipprint
 
 rrv ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
-* regex
+* regex captures
 
 rrv -C1 ./reg-test/cases/case-c-dsl-filter-pattern-action.sh
 * regexi
@@ -102,7 +102,6 @@ rrv ./reg-test/cases/case-c-histogram.sh
 rrv ./reg-test/cases/case-c-in-place-processing.sh
 rrv ./reg-test/cases/case-c-int-float-stats1-step1.sh
 rrv ./reg-test/cases/case-c-join-prepipe.sh
-rrv ./reg-test/cases/case-c-json-io.sh
 rrv ./reg-test/cases/case-c-lf-crlf-and-autodetect.sh
 rrv ./reg-test/cases/case-c-markdown-output.sh
 rrv ./reg-test/cases/case-c-merge-fields.sh

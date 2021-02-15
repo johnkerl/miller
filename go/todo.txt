@@ -1,8 +1,11 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-* regextract
-* finish cut -r
+* regexes
+  o finish cut -r
+  o finish rename -r
+  o finish stats1 -r
+  o regex captures ...
 
 ! rmd ex1 even simpler -- commarect
 w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
@@ -17,7 +20,6 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * help-refactor:
-  o usages above CLI-parsers -- also @ intf def
   o audit for DEFAULT_FOOs @ 
   o audit for '-z {zzz}'
   o audit for consistent usage style
