@@ -1,6 +1,54 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
+! fix all typemasks; 'int x = 1; x = "abc"'
+  o $cst/lvalues.go
+  o typeGatedMlrvalName, err := types.NewTypeGatedMlrvalName(variableName, typeName0
+  o NewLocalVariableLvalueNode(...)
+  o grep -il typegate $cst/*go
+    src/dsl/cst/block-exit.go
+    src/dsl/cst/lvalues.go
+    src/dsl/cst/signature.go
+    src/dsl/cst/types.go
+    src/dsl/cst/udf.go
+    src/dsl/cst/uds.go
+  o first deconfuse names:
+    - Assign/Unassign
+      > etymology from assignment statements
+      > dsl.NodeTypeAssignment
+      > IAssignable.Assign
+        IAssignable.AssignIndexed
+        IAssignable.Unset
+        IAssignable.UnsetIndexed
+    - Set
+      > etymology from hashmaps?
+    - Get
+      > etymology from hashmaps
+    - Put
+      > etymology from hashmaps
+      > used more for srecs i think ...
+    - Clear
+      > ?
+    - Remove
+      > ?
+    - Unset
+      > ?
+    - Bind
+      > etymology unclear
+      > but what is should say, is set at current frame even if scoped
+      > -> SetInCurrentScope?
+    - ReadVariable
+      > etymology unclear
+    - IAssignable
+      > Assign/Indexed
+      > Unset/Indexed
+    - Mlrmap
+      > Has
+      > Get
+      > Put
+      > Remove
+      > UnsetIndexed?
+
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
 * regexes
@@ -12,7 +60,6 @@ TOP OF LIST:
 ! rmd ex1 even simpler -- commarect
 w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
 
-! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! --nojvstack; default --jvstack; code it up ...
 
@@ -162,6 +209,9 @@ emitp/emitf:
 
 * mlr -f / -F flags
   o others in mlrcli_parse.go
+
+* more mlrtut
+  https://onepointzero.app/posts/miller-command-line-csv-file-processing/
 
 ================================================================
 REMAINING VERBS:
