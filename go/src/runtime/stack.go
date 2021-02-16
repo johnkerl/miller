@@ -363,5 +363,5 @@ func (this *StackFrame) UnsetIndexed(
 	if value == nil {
 		return
 	}
-	value.UnsetIndexed(indices)
+	value.RemoveIndexed(indices)
 }

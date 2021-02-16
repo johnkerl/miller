@@ -161,7 +161,7 @@ func (this *DirectFieldValueLvalueNode) UnsetIndexed(
 		name := this.lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{this.lhsFieldName}, indices...),
 		)
 	}
@@ -259,7 +259,7 @@ func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
 		name := lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{&lhsFieldName}, indices...),
 		)
 	}
@@ -371,7 +371,7 @@ func (this *PositionalFieldNameLvalueNode) UnsetIndexed(
 		}
 	} else {
 		// xxx positional
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
 		)
 	}
@@ -493,7 +493,7 @@ func (this *PositionalFieldValueLvalueNode) UnsetIndexed(
 		}
 	} else {
 		// xxx positional
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
 		)
 	}
@@ -569,7 +569,7 @@ func (this *FullSrecLvalueNode) UnsetIndexed(
 	if indices == nil {
 		state.Inrec.Clear()
 	} else {
-		state.Inrec.UnsetIndexed(indices)
+		state.Inrec.RemoveIndexed(indices)
 	}
 }
 
@@ -633,7 +633,7 @@ func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
 		name := this.lhsOosvarName.String()
 		state.Oosvars.Remove(name)
 	} else {
-		state.Oosvars.UnsetIndexed(
+		state.Oosvars.RemoveIndexed(
 			append([]*types.Mlrval{this.lhsOosvarName}, indices...),
 		)
 	}
@@ -715,7 +715,7 @@ func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
 		sname := name.String()
 		state.Oosvars.Remove(sname)
 	} else {
-		state.Oosvars.UnsetIndexed(
+		state.Oosvars.RemoveIndexed(
 			append([]*types.Mlrval{&name}, indices...),
 		)
 	}
@@ -773,7 +773,7 @@ func (this *FullOosvarLvalueNode) UnsetIndexed(
 	if indices == nil {
 		state.Oosvars.Clear()
 	} else {
-		state.Oosvars.UnsetIndexed(indices)
+		state.Oosvars.RemoveIndexed(indices)
 	}
 }
 
