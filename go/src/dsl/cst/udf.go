@@ -104,7 +104,7 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	//
 	// That's why we have two loops here: the first evaluates the arguments
 	// using the caller's frameset, stashing them in the arguments array.  Then
-	// we push a new frameset and BindVariable using the callee's frameset.
+	// we push a new frameset and SetAtScope using the callee's frameset.
 
 	// Evaluate the arguments
 	numArguments := len(this.udf.signature.typeGatedParameterNames)
@@ -131,7 +131,7 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.Stack.BindVariable(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
+		state.Stack.SetAtScope(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
 	}
 
 	// Execute the function body.

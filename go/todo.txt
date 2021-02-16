@@ -12,44 +12,6 @@ TOP OF LIST:
     src/dsl/cst/types.go
     src/dsl/cst/udf.go
     src/dsl/cst/uds.go
-  o first, deconfuse names:
-    - Assign/Unassign
-      > etymology from assignment statements
-      > dsl.NodeTypeAssignment
-      > IAssignable.Assign
-        IAssignable.AssignIndexed
-        IAssignable.Unset
-        IAssignable.UnsetIndexed
-    - Set
-      > etymology from hashmaps?
-    - Get
-      > etymology from hashmaps
-    - Put
-      > etymology from hashmaps
-      > used more for srecs i think ...
-    - Clear
-      > ?
-    - Remove
-      > ?
-    - Unset
-      > ?
-    - Bind
-      > etymology unclear
-      > but what is should say, is set at current frame even if scoped
-      > -> SetInCurrentScope?
-    - ReadVariable
-      > etymology unclear
-    - IAssignable
-      > Assign/Indexed
-      > Unset/Indexed
-
-  o deconfused names:
-    - IAssignable
-    - Mlrmap
-      > Has
-      > Get/Indexed
-      > Put/Indexed
-      > Remove/Indexed
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 

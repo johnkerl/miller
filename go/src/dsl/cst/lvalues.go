@@ -847,17 +847,17 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 		}
 
 		if this.frameBind {
-			state.Stack.BindVariable(this.typeGatedMlrvalName.Name, rvalue)
+			state.Stack.SetAtScope(this.typeGatedMlrvalName.Name, rvalue)
 		} else {
-			state.Stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
+			state.Stack.Set(this.typeGatedMlrvalName.Name, rvalue)
 		}
 		return nil
 	} else {
 		// TODO: propagate error return
 		if this.frameBind {
-			state.Stack.BindVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+			state.Stack.SetAtScopeIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
 		} else {
-			state.Stack.SetVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+			state.Stack.SetIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
 		}
 		return nil
 	}
@@ -874,9 +874,9 @@ func (this *LocalVariableLvalueNode) UnassignIndexed(
 	state *runtime.State,
 ) {
 	if indices == nil {
-		state.Stack.UnsetVariable(this.typeGatedMlrvalName.Name)
+		state.Stack.Unset(this.typeGatedMlrvalName.Name)
 	} else {
-		state.Stack.UnsetVariableIndexed(this.typeGatedMlrvalName.Name, indices)
+		state.Stack.UnsetIndexed(this.typeGatedMlrvalName.Name, indices)
 	}
 }
 

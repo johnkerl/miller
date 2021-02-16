@@ -74,55 +74,55 @@ func (this *Stack) PopStackFrame() {
 }
 
 // For 'var a = 2', setting a variable at the current frame regardless of outer scope.
-func (this *Stack) BindVariable(
+func (this *Stack) SetAtScope(
 	name string,
 	mlrval *types.Mlrval,
 ) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.BindVariable(name, mlrval)
+	head.SetAtScope(name, mlrval)
 }
 
-func (this *Stack) BindVariableIndexed(
+func (this *Stack) SetAtScopeIndexed(
 	name string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.BindVariableIndexed(name, indices, mlrval)
+	head.SetAtScopeIndexed(name, indices, mlrval)
 }
 
 // For 'a = 2', checking for outer-scoped to maybe reuse, else insert new in current frame.
-func (this *Stack) SetVariable(name string, mlrval *types.Mlrval) {
+func (this *Stack) Set(name string, mlrval *types.Mlrval) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.SetVariable(name, mlrval)
+	head.Set(name, mlrval)
 }
 
-func (this *Stack) SetVariableIndexed(
+func (this *Stack) SetIndexed(
 	name string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.SetVariableIndexed(name, indices, mlrval)
+	head.SetIndexed(name, indices, mlrval)
 }
 
-func (this *Stack) UnsetVariable(name string) {
+func (this *Stack) Unset(name string) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.UnsetVariable(name)
+	head.Unset(name)
 }
 
-func (this *Stack) UnsetVariableIndexed(
+func (this *Stack) UnsetIndexed(
 	name string,
 	indices []*types.Mlrval,
 ) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.UnsetVariableIndexed(name, indices)
+	head.UnsetIndexed(name, indices)
 }
 
 // Returns nil on no-such
-func (this *Stack) ReadVariable(name string) *types.Mlrval {
+func (this *Stack) Get(name string) *types.Mlrval {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.ReadVariable(name)
+	return head.Get(name)
 }
 
 // ----------------------------------------------------------------
@@ -173,13 +173,13 @@ func (this *StackFrameSet) Dump() {
 // Sets the variable at the current frame whether it's defined outer from there
 // or not.
 //
-// OK to use BindVariable:
+// OK to use SetAtScope:
 //
 //   k = 1                 <-- top-level -frame, k=1
 //   for (k in $*) { ... } <-- another k is bound in the loop
 //   $k = k                <-- k is still 1
 //
-// Not OK to use BindVariable:
+// Not OK to use SetAtScope:
 //
 //   z = 1         <-- top-level frame, z=1
 //   if (NR < 2) {
@@ -189,14 +189,14 @@ func (this *StackFrameSet) Dump() {
 //   }
 //   $z = z        <-- z should be 2 or 3, not 1
 
-func (this *StackFrameSet) BindVariable(
+func (this *StackFrameSet) SetAtScope(
 	name string,
 	mlrval *types.Mlrval,
 ) {
 	this.stackFrames.Front().Value.(*StackFrame).Set(name, mlrval)
 }
 
-func (this *StackFrameSet) BindVariableIndexed(
+func (this *StackFrameSet) SetAtScopeIndexed(
 	name string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
@@ -204,9 +204,9 @@ func (this *StackFrameSet) BindVariableIndexed(
 	this.stackFrames.Front().Value.(*StackFrame).SetIndexed(name, indices, mlrval)
 }
 
-// Used for the above BindVariable example where we look for outer-scope names,
+// Used for the above SetAtScope example where we look for outer-scope names,
 // then set a new one only if not found in an outer scope.
-func (this *StackFrameSet) SetVariable(name string, mlrval *types.Mlrval) {
+func (this *StackFrameSet) Set(name string, mlrval *types.Mlrval) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
 		if stackFrame.Has(name) {
@@ -214,10 +214,10 @@ func (this *StackFrameSet) SetVariable(name string, mlrval *types.Mlrval) {
 			return
 		}
 	}
-	this.BindVariable(name, mlrval)
+	this.SetAtScope(name, mlrval)
 }
 
-func (this *StackFrameSet) SetVariableIndexed(
+func (this *StackFrameSet) SetIndexed(
 	name string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
@@ -229,11 +229,11 @@ func (this *StackFrameSet) SetVariableIndexed(
 			return
 		}
 	}
-	this.BindVariableIndexed(name, indices, mlrval)
+	this.SetAtScopeIndexed(name, indices, mlrval)
 }
 
 // ----------------------------------------------------------------
-func (this *StackFrameSet) UnsetVariable(name string) {
+func (this *StackFrameSet) Unset(name string) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
 		if stackFrame.Has(name) {
@@ -243,7 +243,7 @@ func (this *StackFrameSet) UnsetVariable(name string) {
 	}
 }
 
-func (this *StackFrameSet) UnsetVariableIndexed(
+func (this *StackFrameSet) UnsetIndexed(
 	name string,
 	indices []*types.Mlrval,
 ) {
@@ -258,7 +258,7 @@ func (this *StackFrameSet) UnsetVariableIndexed(
 
 // ----------------------------------------------------------------
 // Returns nil on no-such
-func (this *StackFrameSet) ReadVariable(name string) *types.Mlrval {
+func (this *StackFrameSet) Get(name string) *types.Mlrval {
 	// Scope-walk
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
