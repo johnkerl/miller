@@ -94,3 +94,7 @@ func (this *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
 	this.value = value.Copy()
 	return nil
 }
+
+func (this *TypeGatedMlrvalVariable) Unassign() {
+	this.value = MlrvalPointerFromAbsent()
+}
