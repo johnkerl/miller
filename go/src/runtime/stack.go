@@ -163,7 +163,8 @@ func (this *StackFrameSet) Dump() {
 		stackFrame := entry.Value.(*StackFrame)
 		fmt.Printf("    VARIABLES (count %d):\n", len(stackFrame.vars))
 		for k, v := range stackFrame.vars {
-			fmt.Printf("      %-16s %s\n", k, v.ValueString())
+			fmt.Printf("      %-16s %s\n", k, v.String())
+			//// PEND fmt.Printf("      %-16s %s\n", k, v.ValueString())
 		}
 	}
 }
@@ -276,23 +277,27 @@ type StackFrame struct {
 	// TODO: just a map for now. In the C impl, pre-computation of
 	// name-to-array-slot indices was an important optimization, especially for
 	// compute-intensive scenarios.
-	vars map[string]*types.TypeGatedMlrvalVariable
+	vars map[string]*types.Mlrval
+	//// PEND vars map[string]*types.TypeGatedMlrvalVariable
 }
 
 func NewStackFrame() *StackFrame {
 	return &StackFrame{
-		vars: make(map[string]*types.TypeGatedMlrvalVariable),
+		vars: make(map[string]*types.Mlrval),
+		//// PEND vars: make(map[string]*types.TypeGatedMlrvalVariable),
 	}
 }
 
 // Returns nil on no such
 func (this *StackFrame) Get(name string) *types.Mlrval {
-	slot := this.vars[name]
-	if slot == nil {
-		return nil
-	} else {
-		return slot.GetValue()
-	}
+	return this.vars[name]
+	//// PEND
+	//	slot := this.vars[name]
+	//	if slot == nil {
+	//		return nil
+	//	} else {
+	//		return slot.GetValue()
+	//	}
 }
 
 // Returns nil on no such
@@ -301,33 +306,38 @@ func (this *StackFrame) Has(name string) bool {
 }
 
 func (this *StackFrame) Clear() {
-	this.vars = make(map[string]*types.TypeGatedMlrvalVariable)
+	this.vars = make(map[string]*types.Mlrval)
+	//// PEND this.vars = make(map[string]*types.TypeGatedMlrvalVariable)
 }
 
 // TODO: make a typemasked ...
-func (this *StackFrame) Set(name string, mlrval *types.Mlrval) error {
-	slot := this.vars[name]
-	if slot == nil {
-		slot, err := types.NewTypeGatedMlrvalVariable(name, "var", mlrval)
-		if err != nil {
-			return err
-		} else {
-			this.vars[name] = slot
-			return nil
-		}
+func (this *StackFrame) Set(name string, mlrval *types.Mlrval) /* PEND error*/ {
+	this.vars[name] = mlrval.Copy()
+	//// PEND
+	//	slot := this.vars[name]
+	//	if slot == nil {
+	//		slot, err := types.NewTypeGatedMlrvalVariable(name, "var", mlrval)
+	//		if err != nil {
+	//			return err
+	//		} else {
+	//			this.vars[name] = slot
+	//			return nil
+	//		}
+	//	} else {
+	//		return slot.Assign(mlrval.Copy())
+	//	}
 
-	} else {
-		return slot.Assign(mlrval.Copy())
-	}
 }
 
-func (this *StackFrame) Unset(name string) error {
-	slot := this.vars[name]
-	if slot != nil {
-		return slot.Assign(types.MlrvalPointerFromAbsent())
-	} else {
-		return nil
-	}
+func (this *StackFrame) Unset(name string) /* PEND error */ {
+	this.vars[name] = types.MlrvalPointerFromAbsent()
+	//// PEND
+	//	slot := this.vars[name]
+	//	if slot != nil {
+	//		return slot.Assign(types.MlrvalPointerFromAbsent())
+	//	} else {
+	//		return nil
+	//	}
 }
 
 func (this *StackFrame) SetIndexed(

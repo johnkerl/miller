@@ -12,7 +12,7 @@ TOP OF LIST:
     src/dsl/cst/types.go
     src/dsl/cst/udf.go
     src/dsl/cst/uds.go
-  o first deconfuse names:
+  o first, deconfuse names:
     - Assign/Unassign
       > etymology from assignment statements
       > dsl.NodeTypeAssignment
@@ -42,12 +42,14 @@ TOP OF LIST:
     - IAssignable
       > Assign/Indexed
       > Unset/Indexed
+
+  o deconfused names:
+    - IAssignable
     - Mlrmap
       > Has
-      > Get
-      > Put
-      > Remove
-      > UnsetIndexed?
+      > Get/Indexed
+      > Put/Indexed
+      > Remove/Indexed
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
