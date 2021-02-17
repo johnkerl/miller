@@ -104,6 +104,6 @@ func NewUnsetNode(
 }
 
 func (this *UnsetNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	this.lvalueNode.Unset(state)
+	this.lvalueNode.Unassign(state)
 	return nil, nil
 }

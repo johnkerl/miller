@@ -52,9 +52,9 @@ type IAssignable interface {
 	// zero-length or nil.
 	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *runtime.State) error
 
-	Unset(state *runtime.State)
+	Unassign(state *runtime.State)
 
-	UnsetIndexed(indices []*types.Mlrval, state *runtime.State)
+	UnassignIndexed(indices []*types.Mlrval, state *runtime.State)
 }
 
 // ================================================================

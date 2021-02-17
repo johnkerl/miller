@@ -362,8 +362,8 @@ func (this *Mlrmap) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	return putIndexedOnMap(this, indices, rvalue)
 }
 
-func (this *Mlrmap) UnsetIndexed(indices []*Mlrval) error {
-	return unsetIndexedOnMap(this, indices)
+func (this *Mlrmap) RemoveIndexed(indices []*Mlrval) error {
+	return removeIndexedOnMap(this, indices)
 }
 
 // ----------------------------------------------------------------

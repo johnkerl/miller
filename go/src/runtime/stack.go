@@ -27,6 +27,7 @@ package runtime
 
 import (
 	"container/list"
+	"errors"
 	"fmt"
 
 	"miller/src/lib"
@@ -74,55 +75,62 @@ func (this *Stack) PopStackFrame() {
 }
 
 // For 'var a = 2', setting a variable at the current frame regardless of outer scope.
-func (this *Stack) BindVariable(
-	name string,
+func (this *Stack) SetAtScope(
+	variableName string,
+	typeName string,
 	mlrval *types.Mlrval,
-) {
+) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.BindVariable(name, mlrval)
+	return head.SetAtScope(variableName, typeName, mlrval)
 }
 
-func (this *Stack) BindVariableIndexed(
-	name string,
+func (this *Stack) SetAtScopeIndexed(
+	variableName string,
+	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
-) {
+) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.BindVariableIndexed(name, indices, mlrval)
+	return head.SetAtScopeIndexed(variableName, typeName, indices, mlrval)
 }
 
 // For 'a = 2', checking for outer-scoped to maybe reuse, else insert new in current frame.
-func (this *Stack) SetVariable(name string, mlrval *types.Mlrval) {
+func (this *Stack) Set(
+	variableName string,
+	typeName string,
+	mlrval *types.Mlrval,
+) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.SetVariable(name, mlrval)
+	return head.Set(variableName, typeName, mlrval)
 }
 
-func (this *Stack) SetVariableIndexed(
-	name string,
+func (this *Stack) SetIndexed(
+	variableName string,
+	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
-) {
+) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.SetVariableIndexed(name, indices, mlrval)
+	return head.SetIndexed(variableName, typeName, indices, mlrval)
 }
 
-func (this *Stack) UnsetVariable(name string) {
+func (this *Stack) Unset(variableName string) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.UnsetVariable(name)
+	head.Unset(variableName)
 }
 
-func (this *Stack) UnsetVariableIndexed(
-	name string,
+func (this *Stack) UnsetIndexed(
+	variableName string,
 	indices []*types.Mlrval,
 ) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.UnsetVariableIndexed(name, indices)
+	head.UnsetIndexed(variableName, indices)
 }
 
 // Returns nil on no-such
-func (this *Stack) ReadVariable(name string) *types.Mlrval {
+func (this *Stack) Get(variableName string) *types.Mlrval {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.ReadVariable(name)
+	return head.Get(variableName)
 }
 
 // ----------------------------------------------------------------
@@ -163,7 +171,7 @@ func (this *StackFrameSet) Dump() {
 		stackFrame := entry.Value.(*StackFrame)
 		fmt.Printf("    VARIABLES (count %d):\n", len(stackFrame.vars))
 		for k, v := range stackFrame.vars {
-			fmt.Printf("      %-16s %s\n", k, v.String())
+			fmt.Printf("      %-16s %s\n", k, v.ValueString())
 		}
 	}
 }
@@ -172,13 +180,13 @@ func (this *StackFrameSet) Dump() {
 // Sets the variable at the current frame whether it's defined outer from there
 // or not.
 //
-// OK to use BindVariable:
+// OK to use SetAtScope:
 //
 //   k = 1                 <-- top-level -frame, k=1
 //   for (k in $*) { ... } <-- another k is bound in the loop
 //   $k = k                <-- k is still 1
 //
-// Not OK to use BindVariable:
+// Not OK to use SetAtScope:
 //
 //   z = 1         <-- top-level frame, z=1
 //   if (NR < 2) {
@@ -188,68 +196,73 @@ func (this *StackFrameSet) Dump() {
 //   }
 //   $z = z        <-- z should be 2 or 3, not 1
 
-func (this *StackFrameSet) BindVariable(
-	name string,
+func (this *StackFrameSet) SetAtScope(
+	variableName string,
+	typeName string,
 	mlrval *types.Mlrval,
-) {
-	this.stackFrames.Front().Value.(*StackFrame).Set(name, mlrval)
+) error {
+	return this.stackFrames.Front().Value.(*StackFrame).Set(variableName, typeName, mlrval)
 }
 
-func (this *StackFrameSet) BindVariableIndexed(
-	name string,
+func (this *StackFrameSet) SetAtScopeIndexed(
+	variableName string,
+	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
-) {
-	this.stackFrames.Front().Value.(*StackFrame).SetIndexed(name, indices, mlrval)
+) error {
+	return this.stackFrames.Front().Value.(*StackFrame).SetIndexed(variableName, typeName, indices, mlrval)
 }
 
-// Used for the above BindVariable example where we look for outer-scope names,
+// Used for the above SetAtScope example where we look for outer-scope names,
 // then set a new one only if not found in an outer scope.
-func (this *StackFrameSet) SetVariable(name string, mlrval *types.Mlrval) {
+func (this *StackFrameSet) Set(
+	variableName string,
+	typeName string,
+	mlrval *types.Mlrval,
+) error {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(name) {
-			stackFrame.Set(name, mlrval)
-			return
+		if stackFrame.Has(variableName) {
+			return stackFrame.Set(variableName, typeName, mlrval)
 		}
 	}
-	this.BindVariable(name, mlrval)
+	return this.SetAtScope(variableName, typeName, mlrval)
 }
 
-func (this *StackFrameSet) SetVariableIndexed(
-	name string,
+func (this *StackFrameSet) SetIndexed(
+	variableName string,
+	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
-) {
+) error {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(name) {
-			stackFrame.SetIndexed(name, indices, mlrval)
-			return
+		if stackFrame.Has(variableName) {
+			return stackFrame.SetIndexed(variableName, typeName, indices, mlrval)
 		}
 	}
-	this.BindVariableIndexed(name, indices, mlrval)
+	return this.SetAtScopeIndexed(variableName, typeName, indices, mlrval)
 }
 
 // ----------------------------------------------------------------
-func (this *StackFrameSet) UnsetVariable(name string) {
+func (this *StackFrameSet) Unset(variableName string) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(name) {
-			stackFrame.Unset(name)
+		if stackFrame.Has(variableName) {
+			stackFrame.Unset(variableName)
 			return
 		}
 	}
 }
 
-func (this *StackFrameSet) UnsetVariableIndexed(
-	name string,
+func (this *StackFrameSet) UnsetIndexed(
+	variableName string,
 	indices []*types.Mlrval,
 ) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(name) {
-			stackFrame.UnsetIndexed(name, indices)
+		if stackFrame.Has(variableName) {
+			stackFrame.UnsetIndexed(variableName, indices)
 			return
 		}
 	}
@@ -257,11 +270,11 @@ func (this *StackFrameSet) UnsetVariableIndexed(
 
 // ----------------------------------------------------------------
 // Returns nil on no-such
-func (this *StackFrameSet) ReadVariable(name string) *types.Mlrval {
+func (this *StackFrameSet) Get(variableName string) *types.Mlrval {
 	// Scope-walk
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		mlrval := stackFrame.Get(name)
+		mlrval := stackFrame.Get(variableName)
 		if mlrval != nil {
 			return mlrval
 		}
@@ -276,70 +289,101 @@ type StackFrame struct {
 	// TODO: just a map for now. In the C impl, pre-computation of
 	// name-to-array-slot indices was an important optimization, especially for
 	// compute-intensive scenarios.
-	vars map[string]*types.Mlrval
+	vars map[string]*types.TypeGatedMlrvalVariable
 }
 
 func NewStackFrame() *StackFrame {
 	return &StackFrame{
-		vars: make(map[string]*types.Mlrval),
+		vars: make(map[string]*types.TypeGatedMlrvalVariable),
 	}
 }
 
 // Returns nil on no such
-func (this *StackFrame) Get(name string) *types.Mlrval {
-	return this.vars[name]
+func (this *StackFrame) Get(variableName string) *types.Mlrval {
+	slot := this.vars[variableName]
+	if slot == nil {
+		return nil
+	} else {
+		return slot.GetValue()
+	}
 }
 
 // Returns nil on no such
-func (this *StackFrame) Has(name string) bool {
-	return this.vars[name] != nil
+func (this *StackFrame) Has(variableName string) bool {
+	return this.vars[variableName] != nil
 }
 
 func (this *StackFrame) Clear() {
-	this.vars = make(map[string]*types.Mlrval)
+	this.vars = make(map[string]*types.TypeGatedMlrvalVariable)
 }
 
-func (this *StackFrame) Set(name string, mlrval *types.Mlrval) {
-	this.vars[name] = mlrval.Copy()
+// TODO: audit for honor of error-return at callsites
+func (this *StackFrame) Set(
+	variableName string,
+	typeName string,
+	mlrval *types.Mlrval,
+) error {
+	slot := this.vars[variableName]
+	if slot == nil {
+		slot, err := types.NewTypeGatedMlrvalVariable(variableName, typeName, mlrval)
+		if err != nil {
+			return err
+		} else {
+			this.vars[variableName] = slot
+			return nil
+		}
+		this.vars[variableName] = slot
+		return nil
+	} else {
+		return slot.Assign(mlrval.Copy())
+	}
 }
 
-func (this *StackFrame) Unset(name string) {
-	value := types.MlrvalFromAbsent()
-	this.vars[name] = &value
+func (this *StackFrame) Unset(variableName string) {
+	slot := this.vars[variableName]
+	if slot != nil {
+		slot.Unassign()
+	}
 }
 
+// TODO: audit for honor of error-return at callsites
 func (this *StackFrame) SetIndexed(
-	name string,
+	variableName string,
+	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
-) {
-	value := this.Get(name)
+) error {
+	value := this.Get(variableName)
 	if value == nil {
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
 		if leadingIndex.IsString() || leadingIndex.IsInt() {
 			newval := types.MlrvalEmptyMap()
 			newval.PutIndexed(indices, mlrval)
-			this.Set(name, &newval)
+			return this.Set(variableName, typeName, &newval)
 		} else {
-			// TODO:
-			// return errors.New("...");
+			return errors.New(
+				fmt.Sprintf(
+					"%s: map indices must be int or string; got %s.\n",
+					lib.MlrExeName(), leadingIndex.GetTypeName(),
+				),
+			)
 		}
 	} else {
 		// TODO: propagate error return.
 		// For example maybe the variable exists and is an array but
 		// the leading index is a string.
-		_ = value.PutIndexed(indices, mlrval)
+		return value.PutIndexed(indices, mlrval)
 	}
 }
 
 func (this *StackFrame) UnsetIndexed(
-	name string,
+	variableName string,
 	indices []*types.Mlrval,
 ) {
-	value := this.Get(name)
+	value := this.Get(variableName)
 	if value == nil {
 		return
 	}
-	value.UnsetIndexed(indices)
+	value.RemoveIndexed(indices)
 }

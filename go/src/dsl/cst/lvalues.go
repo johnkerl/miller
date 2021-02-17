@@ -136,13 +136,13 @@ func (this *DirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *DirectFieldValueLvalueNode) Unset(
+func (this *DirectFieldValueLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *DirectFieldValueLvalueNode) UnsetIndexed(
+func (this *DirectFieldValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -161,7 +161,7 @@ func (this *DirectFieldValueLvalueNode) UnsetIndexed(
 		name := this.lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{this.lhsFieldName}, indices...),
 		)
 	}
@@ -235,13 +235,13 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *IndirectFieldValueLvalueNode) Unset(
+func (this *IndirectFieldValueLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
+func (this *IndirectFieldValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -259,7 +259,7 @@ func (this *IndirectFieldValueLvalueNode) UnsetIndexed(
 		name := lhsFieldName.String()
 		state.Inrec.Remove(name)
 	} else {
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{&lhsFieldName}, indices...),
 		)
 	}
@@ -341,13 +341,13 @@ func (this *PositionalFieldNameLvalueNode) AssignIndexed(
 	)
 }
 
-func (this *PositionalFieldNameLvalueNode) Unset(
+func (this *PositionalFieldNameLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *PositionalFieldNameLvalueNode) UnsetIndexed(
+func (this *PositionalFieldNameLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -371,7 +371,7 @@ func (this *PositionalFieldNameLvalueNode) UnsetIndexed(
 		}
 	} else {
 		// xxx positional
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
 		)
 	}
@@ -464,13 +464,13 @@ func (this *PositionalFieldValueLvalueNode) AssignIndexed(
 
 // Same code as PositionalFieldNameLvalueNode.
 // May as well let them do 'unset $[[[7]]]' as well as $[[7]]'.
-func (this *PositionalFieldValueLvalueNode) Unset(
+func (this *PositionalFieldValueLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *PositionalFieldValueLvalueNode) UnsetIndexed(
+func (this *PositionalFieldValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -493,7 +493,7 @@ func (this *PositionalFieldValueLvalueNode) UnsetIndexed(
 		}
 	} else {
 		// xxx positional
-		state.Inrec.UnsetIndexed(
+		state.Inrec.RemoveIndexed(
 			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
 		)
 	}
@@ -547,13 +547,13 @@ func (this *FullSrecLvalueNode) AssignIndexed(
 	return nil
 }
 
-func (this *FullSrecLvalueNode) Unset(
+func (this *FullSrecLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *FullSrecLvalueNode) UnsetIndexed(
+func (this *FullSrecLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -569,7 +569,7 @@ func (this *FullSrecLvalueNode) UnsetIndexed(
 	if indices == nil {
 		state.Inrec.Clear()
 	} else {
-		state.Inrec.UnsetIndexed(indices)
+		state.Inrec.RemoveIndexed(indices)
 	}
 }
 
@@ -619,13 +619,13 @@ func (this *DirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *DirectOosvarValueLvalueNode) Unset(
+func (this *DirectOosvarValueLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
+func (this *DirectOosvarValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -633,7 +633,7 @@ func (this *DirectOosvarValueLvalueNode) UnsetIndexed(
 		name := this.lhsOosvarName.String()
 		state.Oosvars.Remove(name)
 	} else {
-		state.Oosvars.UnsetIndexed(
+		state.Oosvars.RemoveIndexed(
 			append([]*types.Mlrval{this.lhsOosvarName}, indices...),
 		)
 	}
@@ -699,13 +699,13 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 	}
 }
 
-func (this *IndirectOosvarValueLvalueNode) Unset(
+func (this *IndirectOosvarValueLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
+func (this *IndirectOosvarValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -715,7 +715,7 @@ func (this *IndirectOosvarValueLvalueNode) UnsetIndexed(
 		sname := name.String()
 		state.Oosvars.Remove(sname)
 	} else {
-		state.Oosvars.UnsetIndexed(
+		state.Oosvars.RemoveIndexed(
 			append([]*types.Mlrval{&name}, indices...),
 		)
 	}
@@ -760,34 +760,35 @@ func (this *FullOosvarLvalueNode) AssignIndexed(
 	return nil
 }
 
-func (this *FullOosvarLvalueNode) Unset(
+func (this *FullOosvarLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *FullOosvarLvalueNode) UnsetIndexed(
+func (this *FullOosvarLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
 	if indices == nil {
 		state.Oosvars.Clear()
 	} else {
-		state.Oosvars.UnsetIndexed(indices)
+		state.Oosvars.RemoveIndexed(indices)
 	}
 }
 
 // ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
-	typeGatedMlrvalName *types.TypeGatedMlrvalName
+	variableName string
+	typeName     string
 
 	// a = 1;
 	// b = 1;
 	// if (true) {
-	//   a = 3;     <-- frameBind is false; updates outer a
-	//   var b = 4; <-- frameBind is true;  creates new inner b
+	//   a = 3;     <-- setAtScope is false; updates outer a
+	//   var b = 4; <-- setAtScope is true;  creates new inner b
 	// }
-	frameBind bool
+	setAtScope bool
 }
 
 func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
@@ -795,34 +796,29 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 
 	variableName := string(astNode.Token.Lit)
 	typeName := "any"
-	frameBind := false
+	setAtScope := false
 	if astNode.Children != nil { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
 		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
 		typeName = string(typeNode.Token.Lit)
-		frameBind = true
+		setAtScope = true
 	}
-	typeGatedMlrvalName, err := types.NewTypeGatedMlrvalName(
+	return NewLocalVariableLvalueNode(
 		variableName,
 		typeName,
-	)
-	if err != nil {
-		return nil, err
-	}
-	// TODO: type-gated mlrval
-	return NewLocalVariableLvalueNode(
-		typeGatedMlrvalName,
-		frameBind,
+		setAtScope,
 	), nil
 }
 
 func NewLocalVariableLvalueNode(
-	typeGatedMlrvalName *types.TypeGatedMlrvalName,
-	frameBind bool,
+	variableName string,
+	typeName string,
+	setAtScope bool,
 ) *LocalVariableLvalueNode {
 	return &LocalVariableLvalueNode{
-		typeGatedMlrvalName: typeGatedMlrvalName,
-		frameBind:           frameBind,
+		variableName: variableName,
+		typeName:     typeName,
+		setAtScope:   setAtScope,
 	}
 }
 
@@ -840,43 +836,37 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+	var err error = nil
 	if indices == nil {
-		err := this.typeGatedMlrvalName.Check(rvalue)
-		if err != nil {
-			return err
-		}
-
-		if this.frameBind {
-			state.Stack.BindVariable(this.typeGatedMlrvalName.Name, rvalue)
+		if this.setAtScope {
+			err = state.Stack.SetAtScope(this.variableName, this.typeName, rvalue)
 		} else {
-			state.Stack.SetVariable(this.typeGatedMlrvalName.Name, rvalue)
+			err = state.Stack.Set(this.variableName, this.typeName, rvalue)
 		}
-		return nil
 	} else {
-		// TODO: propagate error return
-		if this.frameBind {
-			state.Stack.BindVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+		if this.setAtScope {
+			err = state.Stack.SetAtScopeIndexed(this.variableName, this.typeName, indices, rvalue)
 		} else {
-			state.Stack.SetVariableIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+			err = state.Stack.SetIndexed(this.variableName, this.typeName, indices, rvalue)
 		}
-		return nil
 	}
+	return err
 }
 
-func (this *LocalVariableLvalueNode) Unset(
+func (this *LocalVariableLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	this.UnsetIndexed(nil, state)
+	this.UnassignIndexed(nil, state)
 }
 
-func (this *LocalVariableLvalueNode) UnsetIndexed(
+func (this *LocalVariableLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
 	if indices == nil {
-		state.Stack.UnsetVariable(this.typeGatedMlrvalName.Name)
+		state.Stack.Unset(this.variableName)
 	} else {
-		state.Stack.UnsetVariableIndexed(this.typeGatedMlrvalName.Name, indices)
+		state.Stack.UnsetIndexed(this.variableName, indices)
 	}
 }
 
@@ -987,7 +977,7 @@ func (this *IndexedLvalueNode) AssignIndexed(
 	return nil // not reached
 }
 
-func (this *IndexedLvalueNode) Unset(
+func (this *IndexedLvalueNode) Unassign(
 	state *runtime.State,
 ) {
 	indices := make([]*types.Mlrval, len(this.indexEvaluables))
@@ -997,10 +987,10 @@ func (this *IndexedLvalueNode) Unset(
 		indices[i] = &index
 	}
 
-	this.baseLvalue.UnsetIndexed(indices, state)
+	this.baseLvalue.UnassignIndexed(indices, state)
 }
 
-func (this *IndexedLvalueNode) UnsetIndexed(
+func (this *IndexedLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
@@ -1068,7 +1058,7 @@ func (this *EnvironmentVariableLvalueNode) AssignIndexed(
 	return errors.New("Miller: ENV[...] cannot be indexed.")
 }
 
-func (this *EnvironmentVariableLvalueNode) Unset(
+func (this *EnvironmentVariableLvalueNode) Unassign(
 	state *runtime.State,
 ) {
 	name := this.nameExpression.Evaluate(state)
@@ -1084,7 +1074,7 @@ func (this *EnvironmentVariableLvalueNode) Unset(
 	os.Unsetenv(name.String())
 }
 
-func (this *EnvironmentVariableLvalueNode) UnsetIndexed(
+func (this *EnvironmentVariableLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {

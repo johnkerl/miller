@@ -12,7 +12,6 @@ TOP OF LIST:
 ! rmd ex1 even simpler -- commarect
 w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
 
-! fix all typemasks; 'int x = 1; x = "abc"'
 ! strptime/strftime experiments ...
 ! --nojvstack; default --jvstack; code it up ...
 
@@ -162,6 +161,9 @@ emitp/emitf:
 
 * mlr -f / -F flags
   o others in mlrcli_parse.go
+
+* more mlrtut
+  https://onepointzero.app/posts/miller-command-line-csv-file-processing/
 
 ================================================================
 REMAINING VERBS:

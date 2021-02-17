@@ -10,6 +10,7 @@ import (
 	"fmt"
 )
 
+// ----------------------------------------------------------------
 type TypeGatedMlrvalName struct {
 	Name     string
 	TypeName string
@@ -47,4 +48,53 @@ func (this *TypeGatedMlrvalName) Check(value *Mlrval) error {
 			),
 		)
 	}
+}
+
+// ----------------------------------------------------------------
+type TypeGatedMlrvalVariable struct {
+	typeGatedMlrvalName *TypeGatedMlrvalName
+	value               *Mlrval
+}
+
+func NewTypeGatedMlrvalVariable(
+	name string, // e.g. "x"
+	typeName string, // e.g. "num"
+	value *Mlrval,
+) (*TypeGatedMlrvalVariable, error) {
+	typeGatedMlrvalName, err := NewTypeGatedMlrvalName(name, typeName)
+	if err != nil {
+		return nil, err
+	}
+
+	err = typeGatedMlrvalName.Check(value)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TypeGatedMlrvalVariable{
+		typeGatedMlrvalName,
+		value.Copy(),
+	}, nil
+}
+
+func (this *TypeGatedMlrvalVariable) GetValue() *Mlrval {
+	return this.value
+}
+
+func (this *TypeGatedMlrvalVariable) ValueString() string {
+	return this.value.String()
+}
+
+func (this *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
+	err := this.typeGatedMlrvalName.Check(value)
+	if err != nil {
+		return err
+	}
+
+	this.value = value.Copy()
+	return nil
+}
+
+func (this *TypeGatedMlrvalVariable) Unassign() {
+	this.value = MlrvalPointerFromAbsent()
 }

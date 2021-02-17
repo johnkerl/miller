@@ -438,14 +438,14 @@ func putIndexedOnArray(
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) UnsetIndexed(indices []*Mlrval) error {
+func (this *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
 	if this.mvtype == MT_MAP {
-		return unsetIndexedOnMap(this.mapval, indices)
+		return removeIndexedOnMap(this.mapval, indices)
 
 	} else if this.mvtype == MT_ARRAY {
-		return unsetIndexedOnArray(&this.arrayval, indices)
+		return removeIndexedOnArray(&this.arrayval, indices)
 
 	} else {
 		return errors.New(
@@ -455,8 +455,8 @@ func (this *Mlrval) UnsetIndexed(indices []*Mlrval) error {
 }
 
 // ----------------------------------------------------------------
-// Helper function for Mlrval.UnsetIndexed, for mlrvals of map type.
-func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
+// Helper function for Mlrval.RemoveIndexed, for mlrvals of map type.
+func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	numIndices := len(indices)
 	lib.InternalCodingErrorIf(numIndices < 1)
 	baseIndex := indices[0]
@@ -479,7 +479,7 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 		// Base is map, index is string
 		baseValue := baseMap.Get(baseIndex.String())
 		if baseValue != nil {
-			return baseValue.UnsetIndexed(indices[1:])
+			return baseValue.RemoveIndexed(indices[1:])
 		}
 
 	} else {
@@ -494,7 +494,7 @@ func unsetIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 
 // ----------------------------------------------------------------
 // Helper function for Mlrval.PutIndexed, for mlrvals of array type.
-func unsetIndexedOnArray(
+func removeIndexedOnArray(
 	baseArray *[]Mlrval,
 	indices []*Mlrval,
 ) error {
@@ -526,7 +526,7 @@ func unsetIndexedOnArray(
 	} else {
 		// More indices remain; recurse
 		if inBounds {
-			return (*baseArray)[zindex].UnsetIndexed(indices[1:])
+			return (*baseArray)[zindex].RemoveIndexed(indices[1:])
 		} else if mindex.intval == 0 {
 			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
 		} else {
