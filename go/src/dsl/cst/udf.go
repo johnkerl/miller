@@ -131,7 +131,11 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.Stack.SetAtScope(this.udf.signature.typeGatedParameterNames[i].Name, &argument)
+		state.Stack.SetAtScope(
+			this.udf.signature.typeGatedParameterNames[i].Name,
+			this.udf.signature.typeGatedParameterNames[i].TypeName,
+			&argument,
+		)
 	}
 
 	// Execute the function body.

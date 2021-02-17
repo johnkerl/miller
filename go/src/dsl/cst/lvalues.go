@@ -779,7 +779,8 @@ func (this *FullOosvarLvalueNode) UnassignIndexed(
 
 // ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
-	typeGatedMlrvalName *types.TypeGatedMlrvalName
+	variableName string
+	typeName     string
 
 	// a = 1;
 	// b = 1;
@@ -802,27 +803,22 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 		typeName = string(typeNode.Token.Lit)
 		setAtScope = true
 	}
-	typeGatedMlrvalName, err := types.NewTypeGatedMlrvalName(
+	return NewLocalVariableLvalueNode(
 		variableName,
 		typeName,
-	)
-	if err != nil {
-		return nil, err
-	}
-	// TODO: type-gated mlrval
-	return NewLocalVariableLvalueNode(
-		typeGatedMlrvalName,
 		setAtScope,
 	), nil
 }
 
 func NewLocalVariableLvalueNode(
-	typeGatedMlrvalName *types.TypeGatedMlrvalName,
+	variableName string,
+	typeName string,
 	setAtScope bool,
 ) *LocalVariableLvalueNode {
 	return &LocalVariableLvalueNode{
-		typeGatedMlrvalName: typeGatedMlrvalName,
-		setAtScope:           setAtScope,
+		variableName: variableName,
+		typeName:     typeName,
+		setAtScope:   setAtScope,
 	}
 }
 
@@ -840,27 +836,21 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
+	var err error = nil
 	if indices == nil {
-		err := this.typeGatedMlrvalName.Check(rvalue)
-		if err != nil {
-			return err
-		}
-
 		if this.setAtScope {
-			state.Stack.SetAtScope(this.typeGatedMlrvalName.Name, rvalue)
+			err = state.Stack.SetAtScope(this.variableName, this.typeName, rvalue)
 		} else {
-			state.Stack.Set(this.typeGatedMlrvalName.Name, rvalue)
+			err = state.Stack.Set(this.variableName, this.typeName, rvalue)
 		}
-		return nil
 	} else {
-		// TODO: propagate error return
 		if this.setAtScope {
-			state.Stack.SetAtScopeIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+			err = state.Stack.SetAtScopeIndexed(this.variableName, this.typeName, indices, rvalue)
 		} else {
-			state.Stack.SetIndexed(this.typeGatedMlrvalName.Name, indices, rvalue)
+			err = state.Stack.SetIndexed(this.variableName, this.typeName, indices, rvalue)
 		}
-		return nil
 	}
+	return err
 }
 
 func (this *LocalVariableLvalueNode) Unassign(
@@ -874,9 +864,9 @@ func (this *LocalVariableLvalueNode) UnassignIndexed(
 	state *runtime.State,
 ) {
 	if indices == nil {
-		state.Stack.Unset(this.typeGatedMlrvalName.Name)
+		state.Stack.Unset(this.variableName)
 	} else {
-		state.Stack.UnsetIndexed(this.typeGatedMlrvalName.Name, indices)
+		state.Stack.UnsetIndexed(this.variableName, indices)
 	}
 }
 

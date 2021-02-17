@@ -1,18 +1,6 @@
 ----------------------------------------------------------------
 TOP OF LIST:
 
-! fix all typemasks; 'int x = 1; x = "abc"'
-  o $cst/lvalues.go
-  o typeGatedMlrvalName, err := types.NewTypeGatedMlrvalName(variableName, typeName0
-  o NewLocalVariableLvalueNode(...)
-  o grep -il typegate $cst/*go
-    src/dsl/cst/block-exit.go
-    src/dsl/cst/lvalues.go
-    src/dsl/cst/signature.go
-    src/dsl/cst/types.go
-    src/dsl/cst/udf.go
-    src/dsl/cst/uds.go
-
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
 * regexes
