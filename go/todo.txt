@@ -3,6 +3,22 @@ TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
+* mrpl --prompt x
+* mrpl colorized help -- ?
+* mrpl some <<...>> ... or something ... for immediate multiline ...
+* is mrpl -d broken?
+* stack optimization:
+  o AST pre-pass as in the C impl
+  o Maybe SetAtScope -> passback of int?
+    - caller
+      > name="a" idx=-1
+      > idx,err := Stack.Set(name, idx, value)
+    - callee
+      > if idx != -1 {
+          idxvars[idx].Set
+        }
+    - maybe opaque idx type -- pair of frameset/frame indices
+
 * regexes
   o finish stats1 -r
   o regex captures ...
@@ -17,6 +33,9 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
 
 * json null
 * smart fmtnum
+  - fmtnum
+  - ofmt
+  - no other callsites?!?!?!
 ! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
 
 * port verb merge-fields

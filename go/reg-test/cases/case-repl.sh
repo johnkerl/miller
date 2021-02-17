@@ -96,3 +96,14 @@ run_mlr repl --json $indir/flatten-input-2.json <<EOF
 :rw
 :rw
 EOF
+
+# ----------------------------------------------------------------
+run_mlr repl -d <<EOF
+y=x+1
+EOF
+run_mlr repl -D <<EOF
+y=x+1
+EOF
+run_mlr repl -v <<EOF
+y=x+1
+EOF

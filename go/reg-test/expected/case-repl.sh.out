@@ -232,3 +232,22 @@ End of record stream
 }
 End of record stream
 
+mlr repl -d
+(statement-block
+    (=
+        y
+        (+ x 1)
+    )
+)
+
+mlr repl -D
+(statement-block (= y (+ x 1)))
+
+mlr repl -v
+* statement block
+    * assignment "="
+        * local variable "y"
+        * operator "+"
+            * local variable "x"
+            * int literal "1"
+

@@ -80,7 +80,7 @@ func NewRepl(
 		prompt1:         getPrompt1(),
 		prompt2:         getPrompt2(),
 
-		astPrintMode: ASTPrintNone,
+		astPrintMode: astPrintMode,
 		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFUDS(),
 
 		options:      options,
