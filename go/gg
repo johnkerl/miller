@@ -52,16 +52,8 @@ mention() {
 
 # ================================================================
 
-run_mlr put '$foo=sub($name, "abc.*"i, "XXX")' <<EOF
-name=ABC12
-name=abc12
-name=AxC12
-EOF
+run_mlr --from r put -q 'for (k in $*) { print k }; print'
 
-run_mlr put '$foo=sub($name, "abc.*", "XXX")' <<EOF
-name=ABC12
-name=abc12
-name=AxC12
-EOF
+run_mlr --from r put -q 'for (k,v in $*) { print k; print v }; print'
 
 # ================================================================

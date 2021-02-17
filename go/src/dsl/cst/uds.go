@@ -103,7 +103,7 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	//
 	// That's why we have two loops here: the first evaluates the arguments
 	// using the caller's frameset, stashing them in the arguments array.  Then
-	// we push a new frameset and SetAtScope using the callee's frameset.
+	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
 	numArguments := len(this.uds.signature.typeGatedParameterNames)
@@ -125,7 +125,7 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.Stack.SetAtScope(
+		state.Stack.DefineTypedAtScope(
 			this.uds.signature.typeGatedParameterNames[i].Name,
 			this.uds.signature.typeGatedParameterNames[i].TypeName,
 			&argument,

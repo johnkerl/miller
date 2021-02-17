@@ -3,6 +3,13 @@ TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
+* typemask:
+  o clearly separate set-typed and re-set
+    - int x = 3
+      str x = 4 <-- should say 'has already been defined in the same scope'
+    - SetAtScope -> DefineTypedAtScope
+    - what does DefinedTypedAtScopeIndexed really mean?!?
+
 * regexes
   o finish stats1 -r
   o regex captures ...
