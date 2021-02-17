@@ -785,10 +785,10 @@ type LocalVariableLvalueNode struct {
 	// a = 1;
 	// b = 1;
 	// if (true) {
-	//   a = 3;     <-- setAtScope is false; updates outer a
-	//   var b = 4; <-- setAtScope is true;  creates new inner b
+	//   a = 3;     <-- defineTypedAtScope is false; updates outer a
+	//   var b = 4; <-- defineTypedAtScope is true;  creates new inner b
 	// }
-	setAtScope bool
+	defineTypedAtScope bool
 }
 
 func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
@@ -796,29 +796,29 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 
 	variableName := string(astNode.Token.Lit)
 	typeName := "any"
-	setAtScope := false
+	defineTypedAtScope := false
 	if astNode.Children != nil { // typed, like 'num x = 3'
 		typeNode := astNode.Children[0]
 		lib.InternalCodingErrorIf(typeNode.Type != dsl.NodeTypeTypedecl)
 		typeName = string(typeNode.Token.Lit)
-		setAtScope = true
+		defineTypedAtScope = true
 	}
 	return NewLocalVariableLvalueNode(
 		variableName,
 		typeName,
-		setAtScope,
+		defineTypedAtScope,
 	), nil
 }
 
 func NewLocalVariableLvalueNode(
 	variableName string,
 	typeName string,
-	setAtScope bool,
+	defineTypedAtScope bool,
 ) *LocalVariableLvalueNode {
 	return &LocalVariableLvalueNode{
-		variableName: variableName,
-		typeName:     typeName,
-		setAtScope:   setAtScope,
+		variableName:       variableName,
+		typeName:           typeName,
+		defineTypedAtScope: defineTypedAtScope,
 	}
 }
 
@@ -838,16 +838,16 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 	var err error = nil
 	if indices == nil {
-		if this.setAtScope {
-			err = state.Stack.SetAtScope(this.variableName, this.typeName, rvalue)
+		if this.defineTypedAtScope {
+			err = state.Stack.DefineTypedAtScope(this.variableName, this.typeName, rvalue)
 		} else {
-			err = state.Stack.Set(this.variableName, this.typeName, rvalue)
+			err = state.Stack.Set(this.variableName, rvalue)
 		}
 	} else {
-		if this.setAtScope {
-			err = state.Stack.SetAtScopeIndexed(this.variableName, this.typeName, indices, rvalue)
+		if this.defineTypedAtScope {
+			err = state.Stack.DefineTypedAtScopeIndexed(this.variableName, this.typeName, indices, rvalue)
 		} else {
-			err = state.Stack.SetIndexed(this.variableName, this.typeName, indices, rvalue)
+			err = state.Stack.SetIndexed(this.variableName, indices, rvalue)
 		}
 	}
 	return err

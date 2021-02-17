@@ -43,7 +43,7 @@ type Stack struct {
 
 func NewStack() *Stack {
 	stackFrameSets := list.New()
-	stackFrameSets.PushFront(NewStackFrameSet())
+	stackFrameSets.PushFront(newStackFrameSet())
 	return &Stack{
 		stackFrameSets: stackFrameSets,
 	}
@@ -51,7 +51,7 @@ func NewStack() *Stack {
 
 // For when a user-defined function/subroutine is being entered
 func (this *Stack) PushStackFrameSet() {
-	this.stackFrameSets.PushFront(NewStackFrameSet())
+	this.stackFrameSets.PushFront(newStackFrameSet())
 }
 
 // For when a user-defined function/subroutine is being exited
@@ -65,58 +65,68 @@ func (this *Stack) PopStackFrameSet() {
 // For when an if/for/etc block is being entered
 func (this *Stack) PushStackFrame() {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.PushStackFrame()
+	head.pushStackFrame()
 }
 
 // For when an if/for/etc block is being exited
 func (this *Stack) PopStackFrame() {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.PopStackFrame()
+	head.popStackFrame()
 }
 
-// For 'var a = 2', setting a variable at the current frame regardless of outer scope.
-func (this *Stack) SetAtScope(
+// For 'var a = 2', setting a variable at the current frame regardless of outer
+// scope.  It's an error to define it again in the same scope, whether the type
+// is the same or not.
+func (this *Stack) DefineTypedAtScope(
 	variableName string,
 	typeName string,
 	mlrval *types.Mlrval,
 ) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.SetAtScope(variableName, typeName, mlrval)
+	return head.defineTypedAtScope(variableName, typeName, mlrval)
 }
 
-func (this *Stack) SetAtScopeIndexed(
+// TODO: comment -- for-loops (but not triple-fors) ...
+func (this *Stack) SetAtScope(
+	variableName string,
+	mlrval *types.Mlrval,
+) error {
+	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
+	return head.setAtScope(variableName, mlrval)
+}
+
+func (this *Stack) DefineTypedAtScopeIndexed(
 	variableName string,
 	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.SetAtScopeIndexed(variableName, typeName, indices, mlrval)
+	return head.defineTypedAtScopeIndexed(variableName, typeName, indices, mlrval)
 }
 
-// For 'a = 2', checking for outer-scoped to maybe reuse, else insert new in current frame.
+// For 'a = 2', checking for outer-scoped to maybe reuse, else insert new in
+// current frame.
 func (this *Stack) Set(
 	variableName string,
-	typeName string,
 	mlrval *types.Mlrval,
 ) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.Set(variableName, typeName, mlrval)
+	return head.set(variableName, mlrval)
 }
 
 func (this *Stack) SetIndexed(
 	variableName string,
-	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.SetIndexed(variableName, typeName, indices, mlrval)
+	return head.setIndexed(variableName, indices, mlrval)
 }
 
 func (this *Stack) Unset(variableName string) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.Unset(variableName)
+	head.unset(variableName)
 }
 
 func (this *Stack) UnsetIndexed(
@@ -124,13 +134,13 @@ func (this *Stack) UnsetIndexed(
 	indices []*types.Mlrval,
 ) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	head.UnsetIndexed(variableName, indices)
+	head.unsetIndexed(variableName, indices)
 }
 
 // Returns nil on no-such
 func (this *Stack) Get(variableName string) *types.Mlrval {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.Get(variableName)
+	return head.get(variableName)
 }
 
 // ----------------------------------------------------------------
@@ -138,7 +148,7 @@ func (this *Stack) Dump() {
 	fmt.Printf("STACK FRAMESETS (count %d):\n", this.stackFrameSets.Len())
 	for entry := this.stackFrameSets.Front(); entry != nil; entry = entry.Next() {
 		stackFrameSet := entry.Value.(*StackFrameSet)
-		stackFrameSet.Dump()
+		stackFrameSet.dump()
 	}
 }
 
@@ -149,23 +159,23 @@ type StackFrameSet struct {
 	stackFrames *list.List // list of *StackFrame
 }
 
-func NewStackFrameSet() *StackFrameSet {
+func newStackFrameSet() *StackFrameSet {
 	stackFrames := list.New()
-	stackFrames.PushFront(NewStackFrame())
+	stackFrames.PushFront(newStackFrame())
 	return &StackFrameSet{
 		stackFrames: stackFrames,
 	}
 }
 
-func (this *StackFrameSet) PushStackFrame() {
-	this.stackFrames.PushFront(NewStackFrame())
+func (this *StackFrameSet) pushStackFrame() {
+	this.stackFrames.PushFront(newStackFrame())
 }
 
-func (this *StackFrameSet) PopStackFrame() {
+func (this *StackFrameSet) popStackFrame() {
 	this.stackFrames.Remove(this.stackFrames.Front())
 }
 
-func (this *StackFrameSet) Dump() {
+func (this *StackFrameSet) dump() {
 	fmt.Printf("  STACK FRAMES (count %d):\n", this.stackFrames.Len())
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
@@ -180,13 +190,13 @@ func (this *StackFrameSet) Dump() {
 // Sets the variable at the current frame whether it's defined outer from there
 // or not.
 //
-// OK to use SetAtScope:
+// OK to use DefineTypedAtScope:
 //
 //   k = 1                 <-- top-level -frame, k=1
 //   for (k in $*) { ... } <-- another k is bound in the loop
 //   $k = k                <-- k is still 1
 //
-// Not OK to use SetAtScope:
+// Not OK to use DefineTypedAtScope:
 //
 //   z = 1         <-- top-level frame, z=1
 //   if (NR < 2) {
@@ -196,73 +206,89 @@ func (this *StackFrameSet) Dump() {
 //   }
 //   $z = z        <-- z should be 2 or 3, not 1
 
-func (this *StackFrameSet) SetAtScope(
+func (this *StackFrameSet) defineTypedAtScope(
 	variableName string,
 	typeName string,
 	mlrval *types.Mlrval,
 ) error {
-	return this.stackFrames.Front().Value.(*StackFrame).Set(variableName, typeName, mlrval)
+	return this.stackFrames.Front().Value.(*StackFrame).defineTyped(variableName, typeName, mlrval)
 }
 
-func (this *StackFrameSet) SetAtScopeIndexed(
+func (this *StackFrameSet) defineTypedAtScopeIndexed(
 	variableName string,
 	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
-	return this.stackFrames.Front().Value.(*StackFrame).SetIndexed(variableName, typeName, indices, mlrval)
+	// TODO WTF DOES THIS DO
+	return this.stackFrames.Front().Value.(*StackFrame).setIndexed(variableName, indices, mlrval)
 }
 
-// Used for the above SetAtScope example where we look for outer-scope names,
+func (this *StackFrameSet) setAtScopeIndexed(
+	variableName string,
+	indices []*types.Mlrval,
+	mlrval *types.Mlrval,
+) error {
+	// TODO WTF DOES THIS DO
+	return this.stackFrames.Front().Value.(*StackFrame).setIndexed(variableName, indices, mlrval)
+}
+
+// TODO: comment
+func (this *StackFrameSet) setAtScope(
+	variableName string,
+	mlrval *types.Mlrval,
+) error {
+	return this.stackFrames.Front().Value.(*StackFrame).set(variableName, mlrval)
+}
+
+// Used for the above DefineTypedAtScope example where we look for outer-scope names,
 // then set a new one only if not found in an outer scope.
-func (this *StackFrameSet) Set(
+func (this *StackFrameSet) set(
 	variableName string,
-	typeName string,
 	mlrval *types.Mlrval,
 ) error {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(variableName) {
-			return stackFrame.Set(variableName, typeName, mlrval)
+		if stackFrame.has(variableName) {
+			return stackFrame.set(variableName, mlrval)
 		}
 	}
-	return this.SetAtScope(variableName, typeName, mlrval)
+	return this.setAtScope(variableName, mlrval)
 }
 
-func (this *StackFrameSet) SetIndexed(
+func (this *StackFrameSet) setIndexed(
 	variableName string,
-	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(variableName) {
-			return stackFrame.SetIndexed(variableName, typeName, indices, mlrval)
+		if stackFrame.has(variableName) {
+			return stackFrame.setIndexed(variableName, indices, mlrval)
 		}
 	}
-	return this.SetAtScopeIndexed(variableName, typeName, indices, mlrval)
+	return this.setAtScopeIndexed(variableName, indices, mlrval)
 }
 
 // ----------------------------------------------------------------
-func (this *StackFrameSet) Unset(variableName string) {
+func (this *StackFrameSet) unset(variableName string) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(variableName) {
-			stackFrame.Unset(variableName)
+		if stackFrame.has(variableName) {
+			stackFrame.unset(variableName)
 			return
 		}
 	}
 }
 
-func (this *StackFrameSet) UnsetIndexed(
+func (this *StackFrameSet) unsetIndexed(
 	variableName string,
 	indices []*types.Mlrval,
 ) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		if stackFrame.Has(variableName) {
-			stackFrame.UnsetIndexed(variableName, indices)
+		if stackFrame.has(variableName) {
+			stackFrame.unsetIndexed(variableName, indices)
 			return
 		}
 	}
@@ -270,11 +296,11 @@ func (this *StackFrameSet) UnsetIndexed(
 
 // ----------------------------------------------------------------
 // Returns nil on no-such
-func (this *StackFrameSet) Get(variableName string) *types.Mlrval {
+func (this *StackFrameSet) get(variableName string) *types.Mlrval {
 	// Scope-walk
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
-		mlrval := stackFrame.Get(variableName)
+		mlrval := stackFrame.get(variableName)
 		if mlrval != nil {
 			return mlrval
 		}
@@ -292,14 +318,14 @@ type StackFrame struct {
 	vars map[string]*types.TypeGatedMlrvalVariable
 }
 
-func NewStackFrame() *StackFrame {
+func newStackFrame() *StackFrame {
 	return &StackFrame{
 		vars: make(map[string]*types.TypeGatedMlrvalVariable),
 	}
 }
 
 // Returns nil on no such
-func (this *StackFrame) Get(variableName string) *types.Mlrval {
+func (this *StackFrame) get(variableName string) *types.Mlrval {
 	slot := this.vars[variableName]
 	if slot == nil {
 		return nil
@@ -309,16 +335,37 @@ func (this *StackFrame) Get(variableName string) *types.Mlrval {
 }
 
 // Returns nil on no such
-func (this *StackFrame) Has(variableName string) bool {
+func (this *StackFrame) has(variableName string) bool {
 	return this.vars[variableName] != nil
 }
 
-func (this *StackFrame) Clear() {
+func (this *StackFrame) clear() {
 	this.vars = make(map[string]*types.TypeGatedMlrvalVariable)
 }
 
 // TODO: audit for honor of error-return at callsites
-func (this *StackFrame) Set(
+func (this *StackFrame) set(
+	variableName string,
+	mlrval *types.Mlrval,
+) error {
+	slot := this.vars[variableName]
+	if slot == nil {
+		slot, err := types.NewTypeGatedMlrvalVariable(variableName, "any", mlrval)
+		if err != nil {
+			return err
+		} else {
+			this.vars[variableName] = slot
+			return nil
+		}
+		this.vars[variableName] = slot
+		return nil
+	} else {
+		return slot.Assign(mlrval.Copy())
+	}
+}
+
+// TODO: audit for honor of error-return at callsites
+func (this *StackFrame) defineTyped(
 	variableName string,
 	typeName string,
 	mlrval *types.Mlrval,
@@ -335,11 +382,16 @@ func (this *StackFrame) Set(
 		this.vars[variableName] = slot
 		return nil
 	} else {
-		return slot.Assign(mlrval.Copy())
+		return errors.New(
+			fmt.Sprintf(
+				"%s: variable %s has already been defined in the same scope.",
+				lib.MlrExeName(), variableName,
+			),
+		)
 	}
 }
 
-func (this *StackFrame) Unset(variableName string) {
+func (this *StackFrame) unset(variableName string) {
 	slot := this.vars[variableName]
 	if slot != nil {
 		slot.Unassign()
@@ -347,20 +399,19 @@ func (this *StackFrame) Unset(variableName string) {
 }
 
 // TODO: audit for honor of error-return at callsites
-func (this *StackFrame) SetIndexed(
+func (this *StackFrame) setIndexed(
 	variableName string,
-	typeName string,
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
-	value := this.Get(variableName)
+	value := this.get(variableName)
 	if value == nil {
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
 		if leadingIndex.IsString() || leadingIndex.IsInt() {
 			newval := types.MlrvalEmptyMap()
 			newval.PutIndexed(indices, mlrval)
-			return this.Set(variableName, typeName, &newval)
+			return this.set(variableName, &newval)
 		} else {
 			return errors.New(
 				fmt.Sprintf(
@@ -377,11 +428,11 @@ func (this *StackFrame) SetIndexed(
 	}
 }
 
-func (this *StackFrame) UnsetIndexed(
+func (this *StackFrame) unsetIndexed(
 	variableName string,
 	indices []*types.Mlrval,
 ) {
-	value := this.Get(variableName)
+	value := this.get(variableName)
 	if value == nil {
 		return
 	}

@@ -128,7 +128,7 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(this.variableName, "any", &mapkey)
+			state.Stack.SetAtScope(this.variableName, &mapkey)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -160,7 +160,7 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for _, element := range arrayval {
-			state.Stack.SetAtScope(this.variableName, "any", &element)
+			state.Stack.SetAtScope(this.variableName, &element)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -305,8 +305,8 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(this.keyVariableName, "any", &mapkey)
-			state.Stack.SetAtScope(this.valueVariableName, "any", pe.Value)
+			state.Stack.SetAtScope(this.keyVariableName, &mapkey)
+			state.Stack.SetAtScope(this.valueVariableName, pe.Value)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -340,8 +340,8 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.Stack.SetAtScope(this.keyVariableName, "any", &mindex)
-			state.Stack.SetAtScope(this.valueVariableName, "any", &element)
+			state.Stack.SetAtScope(this.keyVariableName, &mindex)
+			state.Stack.SetAtScope(this.valueVariableName, &element)
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -517,7 +517,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(keyVariableNames[0], "any", &mapkey)
+			state.Stack.SetAtScope(keyVariableNames[0], &mapkey)
 
 			blockExitPayload, err := this.executeOuter(pe.Value, keyVariableNames[1:], state)
 			if err != nil {
@@ -547,7 +547,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.Stack.SetAtScope(keyVariableNames[0], "any", &mindex)
+			state.Stack.SetAtScope(keyVariableNames[0], &mindex)
 
 			blockExitPayload, err := this.executeOuter(&element, keyVariableNames[1:], state)
 			if err != nil {
@@ -599,8 +599,8 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(keyVariableName, "any", &mapkey)
-			state.Stack.SetAtScope(this.valueVariableName, "any", pe.Value)
+			state.Stack.SetAtScope(keyVariableName, &mapkey)
+			state.Stack.SetAtScope(this.valueVariableName, pe.Value)
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
@@ -631,8 +631,8 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.Stack.SetAtScope(keyVariableName, "any", &mindex)
-			state.Stack.SetAtScope(this.valueVariableName, "any", &element)
+			state.Stack.SetAtScope(keyVariableName, &mindex)
+			state.Stack.SetAtScope(this.valueVariableName, &element)
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
