@@ -3,7 +3,6 @@ TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
-* repl highlighting one-per for fucction names -- requires a callback
 * stack optimization:
   o AST pre-pass as in the C impl
   o Maybe SetAtScope -> passback of int?
