@@ -779,8 +779,8 @@ func (this *FullOosvarLvalueNode) UnassignIndexed(
 
 // ----------------------------------------------------------------
 type LocalVariableLvalueNode struct {
-	variableName string
-	typeName     string
+	stackVariable *runtime.StackVariable
+	typeName      string
 
 	// a = 1;
 	// b = 1;
@@ -804,19 +804,19 @@ func (this *RootNode) BuildLocalVariableLvalueNode(astNode *dsl.ASTNode) (IAssig
 		defineTypedAtScope = true
 	}
 	return NewLocalVariableLvalueNode(
-		variableName,
+		runtime.NewStackVariable(variableName),
 		typeName,
 		defineTypedAtScope,
 	), nil
 }
 
 func NewLocalVariableLvalueNode(
-	variableName string,
+	stackVariable *runtime.StackVariable,
 	typeName string,
 	defineTypedAtScope bool,
 ) *LocalVariableLvalueNode {
 	return &LocalVariableLvalueNode{
-		variableName:       variableName,
+		stackVariable:      stackVariable,
 		typeName:           typeName,
 		defineTypedAtScope: defineTypedAtScope,
 	}
@@ -839,15 +839,15 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 	var err error = nil
 	if indices == nil {
 		if this.defineTypedAtScope {
-			err = state.Stack.DefineTypedAtScope(this.variableName, this.typeName, rvalue)
+			err = state.Stack.DefineTypedAtScope(this.stackVariable, this.typeName, rvalue)
 		} else {
-			err = state.Stack.Set(this.variableName, rvalue)
+			err = state.Stack.Set(this.stackVariable, rvalue)
 		}
 	} else {
 		// There is no 'map x[1] = {}' in the DSL grammar.
 		lib.InternalCodingErrorIf(this.defineTypedAtScope)
 
-		err = state.Stack.SetIndexed(this.variableName, indices, rvalue)
+		err = state.Stack.SetIndexed(this.stackVariable, indices, rvalue)
 	}
 	return err
 }
@@ -863,9 +863,9 @@ func (this *LocalVariableLvalueNode) UnassignIndexed(
 	state *runtime.State,
 ) {
 	if indices == nil {
-		state.Stack.Unset(this.variableName)
+		state.Stack.Unset(this.stackVariable)
 	} else {
-		state.Stack.UnsetIndexed(this.variableName, indices)
+		state.Stack.UnsetIndexed(this.stackVariable, indices)
 	}
 }
 

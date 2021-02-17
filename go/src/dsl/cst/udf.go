@@ -129,7 +129,7 @@ func (this *UDFCallsite) Evaluate(
 
 	for i, _ := range arguments {
 		err := state.Stack.DefineTypedAtScope(
-			this.udf.signature.typeGatedParameterNames[i].Name,
+			runtime.NewStackVariable(this.udf.signature.typeGatedParameterNames[i].Name),
 			this.udf.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)

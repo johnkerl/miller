@@ -173,12 +173,12 @@ func (this *FullOosvarRvalueNode) Evaluate(
 
 // ----------------------------------------------------------------
 type LocalVariableNode struct {
-	variableName string
+	stackVariable *runtime.StackVariable
 }
 
 func (this *RootNode) BuildLocalVariableNode(variableName string) *LocalVariableNode {
 	return &LocalVariableNode{
-		variableName: variableName,
+		stackVariable: runtime.NewStackVariable(variableName),
 	}
 }
 func (this *LocalVariableNode) Evaluate(

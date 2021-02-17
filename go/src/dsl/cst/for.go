@@ -33,7 +33,7 @@ import (
 
 // ================================================================
 type ForLoopOneVariableNode struct {
-	variableName       string
+	indexVariable      *runtime.StackVariable
 	indexableNode      IEvaluable
 	statementBlockNode *StatementBlockNode
 }
@@ -44,7 +44,7 @@ func NewForLoopOneVariableNode(
 	statementBlockNode *StatementBlockNode,
 ) *ForLoopOneVariableNode {
 	return &ForLoopOneVariableNode{
-		variableName,
+		runtime.NewStackVariable(variableName),
 		indexableNode,
 		statementBlockNode,
 	}
@@ -128,7 +128,7 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(this.variableName, &mapkey)
+			err := state.Stack.SetAtScope(this.indexVariable, &mapkey)
 			if err != nil {
 				return nil, err
 			}
@@ -163,7 +163,7 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for _, element := range arrayval {
-			err := state.Stack.SetAtScope(this.variableName, &element)
+			err := state.Stack.SetAtScope(this.indexVariable, &element)
 			if err != nil {
 				return nil, err
 			}
@@ -207,21 +207,21 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 
 // ================================================================
 type ForLoopTwoVariableNode struct {
-	keyVariableName    string
-	valueVariableName  string
+	keyIndexVariable   *runtime.StackVariable
+	valueIndexVariable *runtime.StackVariable
 	indexableNode      IEvaluable
 	statementBlockNode *StatementBlockNode
 }
 
 func NewForLoopTwoVariableNode(
-	keyVariableName string,
-	valueVariableName string,
+	keyIndexVariable *runtime.StackVariable,
+	valueIndexVariable *runtime.StackVariable,
 	indexableNode IEvaluable,
 	statementBlockNode *StatementBlockNode,
 ) *ForLoopTwoVariableNode {
 	return &ForLoopTwoVariableNode{
-		keyVariableName,
-		valueVariableName,
+		keyIndexVariable,
+		valueIndexVariable,
 		indexableNode,
 		statementBlockNode,
 	}
@@ -258,10 +258,12 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	lib.InternalCodingErrorIf(keyVariableASTNode.Type != dsl.NodeTypeLocalVariable)
 	lib.InternalCodingErrorIf(keyVariableASTNode.Token == nil)
 	keyVariableName := string(keyVariableASTNode.Token.Lit)
+	keyIndexVariable := runtime.NewStackVariable(keyVariableName)
 
 	lib.InternalCodingErrorIf(valueVariableASTNode.Type != dsl.NodeTypeLocalVariable)
 	lib.InternalCodingErrorIf(valueVariableASTNode.Token == nil)
 	valueVariableName := string(valueVariableASTNode.Token.Lit)
+	valueIndexVariable := runtime.NewStackVariable(valueVariableName)
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
@@ -276,8 +278,8 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 	}
 
 	return NewForLoopTwoVariableNode(
-		keyVariableName,
-		valueVariableName,
+		keyIndexVariable,
+		valueIndexVariable,
 		indexableNode,
 		statementBlockNode,
 	), nil
@@ -311,11 +313,11 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(this.keyVariableName, &mapkey)
+			err := state.Stack.SetAtScope(this.keyIndexVariable, &mapkey)
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueVariableName, pe.Value)
+			err = state.Stack.SetAtScope(this.valueIndexVariable, pe.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -352,11 +354,11 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(this.keyVariableName, &mindex)
+			err := state.Stack.SetAtScope(this.keyIndexVariable, &mindex)
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueVariableName, &element)
+			err = state.Stack.SetAtScope(this.valueIndexVariable, &element)
 			if err != nil {
 				return nil, err
 			}
@@ -400,21 +402,21 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 
 // ================================================================
 type ForLoopMultivariableNode struct {
-	keyVariableNames   []string
-	valueVariableName  string
+	keyIndexVariables  []*runtime.StackVariable
+	valueIndexVariable *runtime.StackVariable
 	indexableNode      IEvaluable
 	statementBlockNode *StatementBlockNode
 }
 
 func NewForLoopMultivariableNode(
-	keyVariableNames []string,
-	valueVariableName string,
+	keyIndexVariables []*runtime.StackVariable,
+	valueIndexVariable *runtime.StackVariable,
 	indexableNode IEvaluable,
 	statementBlockNode *StatementBlockNode,
 ) *ForLoopMultivariableNode {
 	return &ForLoopMultivariableNode{
-		keyVariableNames,
-		valueVariableName,
+		keyIndexVariables,
+		valueIndexVariable,
 		indexableNode,
 		statementBlockNode,
 	}
@@ -449,15 +451,17 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 
 	lib.InternalCodingErrorIf(keyVariablesASTNode.Type != dsl.NodeTypeParameterList)
 	lib.InternalCodingErrorIf(keyVariablesASTNode.Children == nil)
-	keyVariableNames := make([]string, len(keyVariablesASTNode.Children))
+	keyIndexVariables := make([]*runtime.StackVariable, len(keyVariablesASTNode.Children))
 	for i, keyVariableASTNode := range keyVariablesASTNode.Children {
 		lib.InternalCodingErrorIf(keyVariableASTNode.Token == nil)
-		keyVariableNames[i] = string(keyVariableASTNode.Token.Lit)
+		keyIndexVariableName := string(keyVariableASTNode.Token.Lit)
+		keyIndexVariables[i] = runtime.NewStackVariable(keyIndexVariableName)
 	}
 
 	lib.InternalCodingErrorIf(valueVariableASTNode.Type != dsl.NodeTypeLocalVariable)
 	lib.InternalCodingErrorIf(valueVariableASTNode.Token == nil)
 	valueVariableName := string(valueVariableASTNode.Token.Lit)
+	valueIndexVariable := runtime.NewStackVariable(valueVariableName)
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
@@ -472,8 +476,8 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 	}
 
 	return NewForLoopMultivariableNode(
-		keyVariableNames,
-		valueVariableName,
+		keyIndexVariables,
+		valueIndexVariable,
 		indexableNode,
 		statementBlockNode,
 	), nil
@@ -521,11 +525,11 @@ func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 // ----------------------------------------------------------------
 func (this *ForLoopMultivariableNode) executeOuter(
 	mlrval *types.Mlrval,
-	keyVariableNames []string,
+	keyIndexVariables []*runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	if len(keyVariableNames) == 1 {
-		return this.executeInner(mlrval, keyVariableNames[0], state)
+	if len(keyIndexVariables) == 1 {
+		return this.executeInner(mlrval, keyIndexVariables[0], state)
 	}
 	// else, recurse
 
@@ -535,12 +539,12 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(keyVariableNames[0], &mapkey)
+			err := state.Stack.SetAtScope(keyIndexVariables[0], &mapkey)
 			if err != nil {
 				return nil, err
 			}
 
-			blockExitPayload, err := this.executeOuter(pe.Value, keyVariableNames[1:], state)
+			blockExitPayload, err := this.executeOuter(pe.Value, keyIndexVariables[1:], state)
 			if err != nil {
 				return nil, err
 			}
@@ -568,12 +572,12 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(keyVariableNames[0], &mindex)
+			err := state.Stack.SetAtScope(keyIndexVariables[0], &mindex)
 			if err != nil {
 				return nil, err
 			}
 
-			blockExitPayload, err := this.executeOuter(&element, keyVariableNames[1:], state)
+			blockExitPayload, err := this.executeOuter(&element, keyIndexVariables[1:], state)
 			if err != nil {
 				return nil, err
 			}
@@ -614,7 +618,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 // ----------------------------------------------------------------
 func (this *ForLoopMultivariableNode) executeInner(
 	mlrval *types.Mlrval,
-	keyVariableName string,
+	keyIndexVariable *runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	if mlrval.IsMap() {
@@ -623,11 +627,11 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(keyVariableName, &mapkey)
+			err := state.Stack.SetAtScope(keyIndexVariable, &mapkey)
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueVariableName, pe.Value)
+			err = state.Stack.SetAtScope(this.valueIndexVariable, pe.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -661,11 +665,11 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(keyVariableName, &mindex)
+			err := state.Stack.SetAtScope(keyIndexVariable, &mindex)
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueVariableName, &element)
+			err = state.Stack.SetAtScope(this.valueIndexVariable, &element)
 			if err != nil {
 				return nil, err
 			}
