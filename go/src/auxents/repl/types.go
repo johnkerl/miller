@@ -31,12 +31,11 @@ type Repl struct {
 	exeName  string
 	replName string
 
-	// Prompt1 is the main prompt, like $PS1. Prompt2 is for "<" ... ">"
-	// multi-line-input mode.
-	inputIsTerminal     bool
-	prompt1             string
-	prompt2             string
-	doingMultilineInput bool
+	// Prompt1 is the main prompt, like $PS1. Prompt2 is for
+	// multi-line-input mode with "<" ... ">" or "<<" ... ">>".
+	inputIsTerminal bool
+	prompt1         string
+	prompt2         string
 
 	astPrintMode ASTPrintMode
 	cstRootNode  *cst.RootNode

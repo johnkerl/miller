@@ -141,7 +141,7 @@ func usageOpen(this *Repl) {
 	fmt.Print(
 		`Then you can type :read to load the next record. Then any interactive
 DSL commands will use that record. Also you can type ':main' to invoke any
-main-block statements from multiline input or :load.
+main-block statements from multi-line input or :load.
 
 If zero data-file names are supplied (i.e. ':open' with no file names), then
 each record will be taken from standard input when you type :read.
@@ -747,8 +747,8 @@ func handleASTPrint(this *Repl, args []string) bool {
 func usageBlocks(this *Repl) {
 	fmt.Println(":blocks with no arguments.")
 	fmt.Println("Shows the number of begin{...} blocks that have been loaded, the number")
-	fmt.Println("of main-block statements that have been loaded with :load or multi-line input,")
-	fmt.Println("and the number of end{...} blocks that have been loaded.")
+	fmt.Println("of main-block statements that have been loaded with :load or non-immediate")
+	fmt.Println("multi-line input, and the number of end{...} blocks that have been loaded.")
 
 }
 func handleBlocks(this *Repl, args []string) bool {
@@ -773,6 +773,7 @@ func usageQuit(this *Repl) {
 func usageHelp(this *Repl) {
 	fmt.Println("Options:")
 	fmt.Println(":help intro")
+	fmt.Println(":help examples")
 	fmt.Println(":help repl-list")
 	fmt.Println(":help repl-details")
 	fmt.Println(":help prompt")
@@ -802,6 +803,11 @@ func handleHelpSingle(this *Repl, arg string) {
 		return
 	}
 
+	if arg == "examples" {
+		showREPLExamples(this)
+		return
+	}
+
 	if arg == "repl-list" {
 		for _, entry := range handlerLookupTable {
 			names := strings.Join(entry.verbNames, " or ")
@@ -815,7 +821,7 @@ func handleHelpSingle(this *Repl, arg string) {
 			if i > 0 {
 				fmt.Println()
 			}
-			fmt.Printf("%s: \n", strings.Join(entry.verbNames, " or "))
+			fmt.Printf("%s: \n", HighlightString(strings.Join(entry.verbNames, " or ")))
 			entry.usageFunc(this)
 		}
 		return
@@ -824,19 +830,19 @@ func handleHelpSingle(this *Repl, arg string) {
 	if arg == "prompt" {
 		fmt.Printf(
 			"You can export the environment variable %s to customize the Miller REPL prompt.\n",
-			ENV_PRIMARY_PROMPT,
+			HighlightString(ENV_PRIMARY_PROMPT),
 		)
 		fmt.Printf(
 			"Otherwise, it defaults to \"%s\".\n",
-			DEFAULT_PRIMARY_PROMPT,
+			HighlightString(DEFAULT_PRIMARY_PROMPT),
 		)
 		fmt.Printf(
 			"Likewise you can export the environment variable %s to customize the secondary prompt,\n",
-			ENV_SECONDARY_PROMPT,
+			HighlightString(ENV_SECONDARY_PROMPT),
 		)
 		fmt.Printf(
-			"which defaults to \"%s\". This is used for multiline input.\n",
-			DEFAULT_SECONDARY_PROMPT,
+			"which defaults to \"%s\". This is used for multi-line input.\n",
+			HighlightString(DEFAULT_SECONDARY_PROMPT),
 		)
 		return
 	}
@@ -847,6 +853,7 @@ func handleHelpSingle(this *Repl, arg string) {
 	}
 
 	if arg == "function-details" {
+		// xxx callback
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 		return
 	}
@@ -865,11 +872,15 @@ func handleHelpSingle(this *Repl, arg string) {
 }
 
 func showREPLIntro(this *Repl) {
-	fmt.Printf(
-		`The Miller REPL is an interactive counterpart to record-processing using the
-put/filter DSL.
+	fmt.Printf("%s\n", HighlightString("What the Miller REPL is:"))
+	fmt.Println(
+		`The Miller REPL (read-evaluate-print loop) is an interactive counterpart
+to record-processing using the put/filter DSL (domain-specific language).
+`)
 
-Using put and filter, you can do the following:
+	fmt.Printf("%s\n", HighlightString("Using Miller without the REPL:"))
+	fmt.Printf(
+		`Using put and filter, you can do the following:
 * Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
   command-line flags.
 * Specify filenames on the command line.
@@ -880,68 +891,91 @@ Using put and filter, you can do the following:
 * Example:
   %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}
 
-Using the REPL, by contrast, you get interactive control over those same steps:
+`,
+		this.exeName)
+
+	fmt.Printf("%s\n", HighlightString("Using Miller with the REPL:"))
+	fmt.Println(
+		`Using the REPL, by contrast, you get interactive control over those same steps:
 * Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
   command-line flags.
-* Specify filenames either on the command line or via ':open' at the Miller
-  REPL.
+* REPL-only statements (non-DSL statements) start with ':', such as ':help' or ':quit'
+  or ':open'.
+* Specify filenames either on the command line or via ':open' at the Miller REPL.
 * Read records one at a time using ':read'.
 * Write the current record (maybe after you've modified it with things like '$z = $x + $y')
   using ':write'. This goes to the terminal; you can use ':> {filename}' to make writes
   go to a file, or ':>> {filename}' to append.
-* Skip ahead using statements ':skip 10' or ':skip until NR == 100' or ':skip
-  until $status_code != 200'.
+* You can type ':reopen' to go back to the start of the same file(s) you specified
+  with ':open'.
+* Skip ahead using statements ':skip 10' or ':skip until NR == 100' or
+  ':skip until $status_code != 200'.
 * Similarly, but processing records rather than skipping past them, using
   ':process' rather than ':skip'. Like ':write', these go to the screen;
   use ':> {filename}' or ':>> {filename}' to log to a file instead.
 * Define begin {...} blocks; invoke them at will using ':begin'.
 * Define end {...} blocks; invoke them at will using ':end'.
 * Define user-defined functions/subroutines using func/subr; call them from other statements.
-* Interactively specify statements to be executed on the current record.
+* Interactively specify statements to be executed immediately on the current record.
 * Load any of the above from Miller-script files using ':load'.
-* Furthermore, any DSL statements other than begin/end/func/subr loaded using
-  ':load' -- or from "multiline input mode" which is where you type '<' on a
-  line by itself, enter the code, then type '>' on a line by itself -- will be
-  remembered and can be invoked on a given record using ':main'.  In multi-line
-  mode and load-from-file, semicolons are required between statements;
-  otherwise they are not needed.
+`)
 
-At this REPL prompt you can enter any Miller DSL expression.  REPL-only
-statements (non-DSL statements) start with ':', such as ':help' or ':quit'.
-Type ':help' to see more about your options.
-
-No command-line-history-editing feature is built in but 'rlwrap mlr repl' is a
-delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
-etc. depending on your platform.
-
-The input "record" by default is the empty map but you can do things like
+	fmt.Println(
+		`The input "record" by default is the empty map but you can do things like
 '$x=3', or 'unset $y', or '$* = {"x": 3, "y": 4}' to populate it. Or, ':open
-foo.dat' followed by ':read' to populat it from a data file.
+foo.dat' followed by ':read' to populate it from a data file.
 
 Non-assignment expressions, such as '7' or 'true', operate as filter conditions
 in the put DSL: they can be used to specify whether a record will or won't be
 included in the output-record stream.  But here in the REPL, they are simply
 printed to the terminal, e.g. if you type '1+2', you will see '3'.
+`)
 
-Examples:
+	fmt.Printf("%s\n", HighlightString("Entering multi-line statements:"))
+	fmt.Println(
+		`* To enter multi-line statements, enter '<' on a line by itself, then the code (taking care
+  for semicolons), then ">" on a line by itself. These will be executed immediately.
+* If you enter '<<' on a line by itself, then the code, then '>>' on a line by
+  itself, the statements will be remembered for executing on records with
+  ':main', as if you had done ':load' to load statements from a file.
+`)
 
-[mlr] 1+2
+	fmt.Printf("%s\n", HighlightString("History-editing:"))
+	fmt.Println(
+		`No command-line-history-editing feature is built in but 'rlwrap mlr repl' is a
+delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
+etc. depending on your platform.
+`)
+
+	fmt.Printf("%s\n", HighlightString("On-line help:"))
+	fmt.Println("Type ':help' to see more about your options. In particular, ':help examples'.")
+}
+
+// ----------------------------------------------------------------
+func showREPLExamples(this *Repl) {
+	fmt.Printf("%s\n", HighlightString("Immediately executed statements:"))
+	fmt.Println(
+		`[mlr] 1+2
 3
 
 [mlr] x=3  # These are local variables
 [mlr] y=4
 [mlr] x+y
 7
-
-[mlr] <
+`)
+	fmt.Printf("%s\n", HighlightString("Defining functions:"))
+	fmt.Println(
+		`[mlr] <
 func f(a,b) {
   return a**b
 }
 >
 [mlr] f(7,5)
 16807
-
-[mlr] :open foo.dat
+`)
+	fmt.Printf("%s\n", HighlightString("Reading and processing records:"))
+	fmt.Println(
+		`[mlr] :open foo.dat
 [mlr] :read
 [mlr] :context
 FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
@@ -956,14 +990,7 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
 [mlr] f($x,$i)
 0.021160211005187134
 [mlr] $z = f($x, $i)
-[mlr] $*
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463,
-  "z": 0.021160211005187134
-}
-`, this.exeName)
+[mlr] :write
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=0.021160211005187134
+`)
 }

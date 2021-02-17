@@ -146,7 +146,9 @@ func (this *Repl) handleSession(istream *os.File) {
 		trimmedLine := strings.TrimSpace(line)
 
 		if trimmedLine == "<" {
-			this.handleMultiline(lineReader)
+			this.handleMultiLine(lineReader, ">", true) // multi-line immediate
+		} else if trimmedLine == "<<" {
+			this.handleMultiLine(lineReader, ">>", false) // multi-line non-immediate
 		} else if trimmedLine == ":quit" || trimmedLine == ":q" {
 			break
 		} else if this.handleNonDSLLine(trimmedLine) {
@@ -162,9 +164,13 @@ func (this *Repl) handleSession(istream *os.File) {
 }
 
 // ----------------------------------------------------------------
-// Context: the "<" has already been seen. we read until ">".
+// Context: the "<" or "<<" has already been seen. we read until ">" or ">>".
 
-func (this *Repl) handleMultiline(lineReader *bufio.Reader) {
+func (this *Repl) handleMultiLine(
+	lineReader *bufio.Reader,
+	terminator string,
+	doImmediate bool,
+) {
 	var buffer bytes.Buffer
 	for {
 		this.printPrompt2()
@@ -179,14 +185,19 @@ func (this *Repl) handleMultiline(lineReader *bufio.Reader) {
 			os.Exit(1)
 		}
 
-		if strings.TrimSpace(line) == ">" {
+		if strings.TrimSpace(line) == terminator {
 			break
 		}
 		buffer.WriteString(line)
 	}
 	dslString := buffer.String()
 
-	err := this.handleDSLStringBulk(dslString)
+	var err error = nil
+	if doImmediate {
+		err = this.handleDSLStringImmediate(dslString)
+	} else {
+		err = this.handleDSLStringBulk(dslString)
+	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}

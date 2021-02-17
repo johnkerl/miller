@@ -3,10 +3,6 @@ TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
-* mrpl --prompt x
-* mrpl colorized help -- ?
-* mrpl some <<...>> ... or something ... for immediate multiline ...
-* is mrpl -d broken?
 * stack optimization:
   o AST pre-pass as in the C impl
   o Maybe SetAtScope -> passback of int?
