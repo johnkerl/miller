@@ -3,9 +3,6 @@ TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
-* mrpl colorized help -- ?
-* mrpl some <<...>> ... or something ... for immediate multiline ...
-  - help refactor (after colorization) to split this out separately
 * stack optimization:
   o AST pre-pass as in the C impl
   o Maybe SetAtScope -> passback of int?
