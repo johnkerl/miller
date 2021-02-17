@@ -52,8 +52,39 @@ mention() {
 
 # ================================================================
 
-run_mlr --from r put -q 'for (k in $*) { print k }; print'
+run_mlr --from r put -q '
+  a = 1;
+  b = 2;
+  print;
+  print "OUT1a ". a;
+  print "OUT1b ". b;
+  if (NR == 1) {
+    a = 3;
+    c = 4;
+    print "IN1a  ". a;
+    print "IN1c  ". c;
+  } else {
+    b = 5;
+    d = 6;
+    print "IN2a  ". b;
+    print "IN2c  ". d;
+  }
+  print "OUT2a ". a;
+  print "OUT2a ". b;
+'
 
-run_mlr --from r put -q 'for (k,v in $*) { print k; print v }; print'
+# OUT1a 1
+# OUT1b 2
+# IN1a  3
+# IN1c  4
+# OUT2a 3
+# OUT2a 2
+#
+# OUT1a 1
+# OUT1b 2
+# IN2a  5
+# IN2c  6
+# OUT2a 1
+# OUT2a 5
 
 # ================================================================
