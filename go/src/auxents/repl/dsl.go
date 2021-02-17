@@ -1,8 +1,8 @@
 // ================================================================
 // This is the handler for taking DSL statements typed in interactively by the
 // user, parsing them to an AST, building a CST from the AST, and executing the
-// CST. It also handles DSL statements invoked using ':load' or multiline '<'
-// ... '>' wherein statements are built into the AST without being executed
+// CST. It also handles DSL statements invoked using ':load' or multi-line '<<'
+// ... '>>' wherein statements are built into the AST without being executed
 // right away.
 //
 // Specifically:
@@ -14,7 +14,7 @@
 // * For anything else in an interactive command besides begin/end/func/subr
 //   blocks, the statement(s) is/are executed immediately for interactive mode,
 //   else populated into the CST's main-statements block for load-from-file
-//   multiline mode.
+//   multi-line mode.
 // ================================================================
 
 package repl
@@ -36,7 +36,7 @@ func (this *Repl) handleDSLStringBulk(dslString string) error {
 
 func (this *Repl) handleDSLStringAux(
 	dslString string,
-	isReplImmediate bool, // False for load-from-file or multiline; true otherwise
+	isReplImmediate bool, // False for load-from-file or non-immediate multi-line; true otherwise
 ) error {
 	if strings.TrimSpace(dslString) == "" {
 		return nil
@@ -50,9 +50,9 @@ func (this *Repl) handleDSLStringAux(
 
 	this.cstRootNode.ResetForREPL()
 
-	// For load-from-file / multi-line, each statement not in begin/end, and
-	// not a user-defined function/subroutine, is recorded in the "main block"
-	// to be executed later when the user asks to do so. For
+	// For load-from-file / non-immediate multi-line, each statement not in
+	// begin/end, and not a user-defined function/subroutine, is recorded in
+	// the "main block" to be executed later when the user asks to do so. For
 	// single-line/interactive mode, begin/end statements and UDF/UDS are
 	// recorded, but any other statements are executed immediately.
 	err = this.cstRootNode.IngestAST(

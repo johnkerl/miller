@@ -141,7 +141,7 @@ func usageOpen(this *Repl) {
 	fmt.Print(
 		`Then you can type :read to load the next record. Then any interactive
 DSL commands will use that record. Also you can type ':main' to invoke any
-main-block statements from multiline input or :load.
+main-block statements from multi-line input or :load.
 
 If zero data-file names are supplied (i.e. ':open' with no file names), then
 each record will be taken from standard input when you type :read.
@@ -747,8 +747,8 @@ func handleASTPrint(this *Repl, args []string) bool {
 func usageBlocks(this *Repl) {
 	fmt.Println(":blocks with no arguments.")
 	fmt.Println("Shows the number of begin{...} blocks that have been loaded, the number")
-	fmt.Println("of main-block statements that have been loaded with :load or multi-line input,")
-	fmt.Println("and the number of end{...} blocks that have been loaded.")
+	fmt.Println("of main-block statements that have been loaded with :load or non-immediate")
+	fmt.Println("multi-line input, and the number of end{...} blocks that have been loaded.")
 
 }
 func handleBlocks(this *Repl, args []string) bool {
@@ -835,7 +835,7 @@ func handleHelpSingle(this *Repl, arg string) {
 			ENV_SECONDARY_PROMPT,
 		)
 		fmt.Printf(
-			"which defaults to \"%s\". This is used for multiline input.\n",
+			"which defaults to \"%s\". This is used for multi-line input.\n",
 			DEFAULT_SECONDARY_PROMPT,
 		)
 		return
@@ -897,14 +897,16 @@ Using the REPL, by contrast, you get interactive control over those same steps:
 * Define begin {...} blocks; invoke them at will using ':begin'.
 * Define end {...} blocks; invoke them at will using ':end'.
 * Define user-defined functions/subroutines using func/subr; call them from other statements.
-* Interactively specify statements to be executed on the current record.
+* Interactively specify statements to be executed immediately on the current record.
 * Load any of the above from Miller-script files using ':load'.
+* To enter multi-line statements, enter '<' on a line by itself, then the code (taking care
+  for semicolons), then ">" on a line by itself.
 * Furthermore, any DSL statements other than begin/end/func/subr loaded using
-  ':load' -- or from "multiline input mode" which is where you type '<' on a
-  line by itself, enter the code, then type '>' on a line by itself -- will be
-  remembered and can be invoked on a given record using ':main'.  In multi-line
-  mode and load-from-file, semicolons are required between statements;
-  otherwise they are not needed.
+  ':load' -- or from "non-immediate multi-line input mode" which is where you
+  type '<<' on a line by itself, enter the code, then type '>>' on a line by
+  itself -- will be remembered and can be invoked on a given record using
+  ':main'.  In non-immediate multi-line mode and load-from-file, semicolons are
+  required between statements; otherwise they are not needed.
 
 At this REPL prompt you can enter any Miller DSL expression.  REPL-only
 statements (non-DSL statements) start with ':', such as ':help' or ':quit'.

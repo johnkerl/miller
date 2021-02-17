@@ -17,7 +17,7 @@ EOF
 
 # ----------------------------------------------------------------
 run_mlr repl <<EOF
-<
+<<
 begin {
   print "In the beginning:"
 }
@@ -27,7 +27,7 @@ end {
 # Populates the main block
 print "In ...";
 print "... the middle!"
->
+>>
 
 begin { print "HELLO" }
 begin { print "WORLD" }
@@ -36,6 +36,12 @@ end   { print "WORLD" }
 
 # Immediately executed
 print "HOW ARE THINGS?"
+# Also immediately executed
+<
+x=1;
+y=2;
+print x+y;
+>
 
 :blocks
 
