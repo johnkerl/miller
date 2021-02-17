@@ -186,6 +186,7 @@ type StackFrameSet struct {
 }
 
 func newStackFrameSet() *StackFrameSet {
+	// TODO: to array
 	stackFrames := list.New()
 	stackFrames.PushFront(newStackFrame())
 	return &StackFrameSet{
@@ -194,10 +195,12 @@ func newStackFrameSet() *StackFrameSet {
 }
 
 func (this *StackFrameSet) pushStackFrame() {
+	// TODO: to array
 	this.stackFrames.PushFront(newStackFrame())
 }
 
 func (this *StackFrameSet) popStackFrame() {
+	// TODO: to array
 	this.stackFrames.Remove(this.stackFrames.Front())
 }
 
@@ -218,6 +221,7 @@ func (this *StackFrameSet) defineTypedAtScope(
 	typeName string,
 	mlrval *types.Mlrval,
 ) error {
+	// TODO: to array
 	return this.stackFrames.Front().Value.(*StackFrame).defineTyped(
 		stackVariable, typeName, mlrval,
 	)
@@ -228,6 +232,7 @@ func (this *StackFrameSet) setAtScope(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
+	// TODO: to array
 	return this.stackFrames.Front().Value.(*StackFrame).set(stackVariable, mlrval)
 }
 
@@ -236,6 +241,7 @@ func (this *StackFrameSet) set(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
+	// TODO: to array
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
 		if stackFrame.has(stackVariable) {
@@ -251,6 +257,7 @@ func (this *StackFrameSet) setIndexed(
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
+	// TODO: to array
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
 		if stackFrame.has(stackVariable) {
