@@ -125,11 +125,14 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.Stack.DefineTypedAtScope(
+		err := state.Stack.DefineTypedAtScope(
 			this.uds.signature.typeGatedParameterNames[i].Name,
 			this.uds.signature.typeGatedParameterNames[i].TypeName,
 			&argument,
 		)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Execute the subroutine body.

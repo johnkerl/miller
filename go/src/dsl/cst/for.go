@@ -128,7 +128,10 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(this.variableName, &mapkey)
+			err := state.Stack.SetAtScope(this.variableName, &mapkey)
+			if err != nil {
+				return nil, err
+			}
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -160,7 +163,10 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for _, element := range arrayval {
-			state.Stack.SetAtScope(this.variableName, &element)
+			err := state.Stack.SetAtScope(this.variableName, &element)
+			if err != nil {
+				return nil, err
+			}
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -305,8 +311,14 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(this.keyVariableName, &mapkey)
-			state.Stack.SetAtScope(this.valueVariableName, pe.Value)
+			err := state.Stack.SetAtScope(this.keyVariableName, &mapkey)
+			if err != nil {
+				return nil, err
+			}
+			err = state.Stack.SetAtScope(this.valueVariableName, pe.Value)
+			if err != nil {
+				return nil, err
+			}
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -340,8 +352,14 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.Stack.SetAtScope(this.keyVariableName, &mindex)
-			state.Stack.SetAtScope(this.valueVariableName, &element)
+			err := state.Stack.SetAtScope(this.keyVariableName, &mindex)
+			if err != nil {
+				return nil, err
+			}
+			err = state.Stack.SetAtScope(this.valueVariableName, &element)
+			if err != nil {
+				return nil, err
+			}
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
 			if err != nil {
@@ -517,7 +535,10 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(keyVariableNames[0], &mapkey)
+			err := state.Stack.SetAtScope(keyVariableNames[0], &mapkey)
+			if err != nil {
+				return nil, err
+			}
 
 			blockExitPayload, err := this.executeOuter(pe.Value, keyVariableNames[1:], state)
 			if err != nil {
@@ -547,7 +568,10 @@ func (this *ForLoopMultivariableNode) executeOuter(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.Stack.SetAtScope(keyVariableNames[0], &mindex)
+			err := state.Stack.SetAtScope(keyVariableNames[0], &mindex)
+			if err != nil {
+				return nil, err
+			}
 
 			blockExitPayload, err := this.executeOuter(&element, keyVariableNames[1:], state)
 			if err != nil {
@@ -599,8 +623,14 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			state.Stack.SetAtScope(keyVariableName, &mapkey)
-			state.Stack.SetAtScope(this.valueVariableName, pe.Value)
+			err := state.Stack.SetAtScope(keyVariableName, &mapkey)
+			if err != nil {
+				return nil, err
+			}
+			err = state.Stack.SetAtScope(this.valueVariableName, pe.Value)
+			if err != nil {
+				return nil, err
+			}
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)
@@ -631,8 +661,14 @@ func (this *ForLoopMultivariableNode) executeInner(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			state.Stack.SetAtScope(keyVariableName, &mindex)
-			state.Stack.SetAtScope(this.valueVariableName, &element)
+			err := state.Stack.SetAtScope(keyVariableName, &mindex)
+			if err != nil {
+				return nil, err
+			}
+			err = state.Stack.SetAtScope(this.valueVariableName, &element)
+			if err != nil {
+				return nil, err
+			}
 
 			// The loop body will push its own frame
 			blockExitPayload, err := this.statementBlockNode.Execute(state)

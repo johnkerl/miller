@@ -74,7 +74,7 @@ func (this *Stack) PopStackFrame() {
 	head.popStackFrame()
 }
 
-// For 'var a = 2', setting a variable at the current frame regardless of outer
+// For 'num a = 2', setting a variable at the current frame regardless of outer
 // scope.  It's an error to define it again in the same scope, whether the type
 // is the same or not.
 func (this *Stack) DefineTypedAtScope(
@@ -86,7 +86,11 @@ func (this *Stack) DefineTypedAtScope(
 	return head.defineTypedAtScope(variableName, typeName, mlrval)
 }
 
-// TODO: comment -- for-loops (but not triple-fors) ...
+// For untyped declarations at the current scope -- these are in binds of
+// for-loop variables, except for triple-for.
+// E.g. 'for (k, v in $*)' uses SetAtScope.
+// E.g. 'for (int i = 0; i < 10; i += 1)' uses DefineTypedAtScope
+// E.g. 'for (i = 0; i < 10; i += 1)' uses Set.
 func (this *Stack) SetAtScope(
 	variableName string,
 	mlrval *types.Mlrval,
@@ -95,18 +99,13 @@ func (this *Stack) SetAtScope(
 	return head.setAtScope(variableName, mlrval)
 }
 
-func (this *Stack) DefineTypedAtScopeIndexed(
-	variableName string,
-	typeName string,
-	indices []*types.Mlrval,
-	mlrval *types.Mlrval,
-) error {
-	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
-	return head.defineTypedAtScopeIndexed(variableName, typeName, indices, mlrval)
-}
-
 // For 'a = 2', checking for outer-scoped to maybe reuse, else insert new in
-// current frame.
+// current frame. If the variable is entirely new it's set in the current frame
+// with no type-checking. If it's not new the assignment is subject to
+// type-checking for wherever the variable was defined. E.g. if it was
+// previously defined with 'str a = "hello"' then this Set returns an error.
+// However if it waa previously assigned untyped with 'a = "hello"' then the
+// assignment is OK.
 func (this *Stack) Set(
 	variableName string,
 	mlrval *types.Mlrval,
@@ -115,6 +114,7 @@ func (this *Stack) Set(
 	return head.set(variableName, mlrval)
 }
 
+// E.g. 'x[1] = 2' where the variable x may or may not have been already set.
 func (this *Stack) SetIndexed(
 	variableName string,
 	indices []*types.Mlrval,
@@ -124,11 +124,13 @@ func (this *Stack) SetIndexed(
 	return head.setIndexed(variableName, indices, mlrval)
 }
 
+// E.g. 'unset x'
 func (this *Stack) Unset(variableName string) {
 	head := this.stackFrameSets.Front().Value.(*StackFrameSet)
 	head.unset(variableName)
 }
 
+// E.g. 'unset x[1]'
 func (this *Stack) UnsetIndexed(
 	variableName string,
 	indices []*types.Mlrval,
@@ -143,7 +145,6 @@ func (this *Stack) Get(variableName string) *types.Mlrval {
 	return head.get(variableName)
 }
 
-// ----------------------------------------------------------------
 func (this *Stack) Dump() {
 	fmt.Printf("STACK FRAMESETS (count %d):\n", this.stackFrameSets.Len())
 	for entry := this.stackFrameSets.Front(); entry != nil; entry = entry.Next() {
@@ -186,26 +187,7 @@ func (this *StackFrameSet) dump() {
 	}
 }
 
-// ----------------------------------------------------------------
-// Sets the variable at the current frame whether it's defined outer from there
-// or not.
-//
-// OK to use DefineTypedAtScope:
-//
-//   k = 1                 <-- top-level -frame, k=1
-//   for (k in $*) { ... } <-- another k is bound in the loop
-//   $k = k                <-- k is still 1
-//
-// Not OK to use DefineTypedAtScope:
-//
-//   z = 1         <-- top-level frame, z=1
-//   if (NR < 2) {
-//     z = 2       <-- this should adjust top-level z, not bind within if-block
-//   } else {
-//     z = 3       <-- this should adjust top-level z, not bind within else-block
-//   }
-//   $z = z        <-- z should be 2 or 3, not 1
-
+// See Stack.DefineTypedAtScope comments above
 func (this *StackFrameSet) defineTypedAtScope(
 	variableName string,
 	typeName string,
@@ -214,26 +196,7 @@ func (this *StackFrameSet) defineTypedAtScope(
 	return this.stackFrames.Front().Value.(*StackFrame).defineTyped(variableName, typeName, mlrval)
 }
 
-func (this *StackFrameSet) defineTypedAtScopeIndexed(
-	variableName string,
-	typeName string,
-	indices []*types.Mlrval,
-	mlrval *types.Mlrval,
-) error {
-	// TODO WTF DOES THIS DO
-	return this.stackFrames.Front().Value.(*StackFrame).setIndexed(variableName, indices, mlrval)
-}
-
-func (this *StackFrameSet) setAtScopeIndexed(
-	variableName string,
-	indices []*types.Mlrval,
-	mlrval *types.Mlrval,
-) error {
-	// TODO WTF DOES THIS DO
-	return this.stackFrames.Front().Value.(*StackFrame).setIndexed(variableName, indices, mlrval)
-}
-
-// TODO: comment
+// See Stack.SetAtScope comments above
 func (this *StackFrameSet) setAtScope(
 	variableName string,
 	mlrval *types.Mlrval,
@@ -241,8 +204,7 @@ func (this *StackFrameSet) setAtScope(
 	return this.stackFrames.Front().Value.(*StackFrame).set(variableName, mlrval)
 }
 
-// Used for the above DefineTypedAtScope example where we look for outer-scope names,
-// then set a new one only if not found in an outer scope.
+// See Stack.Set comments above
 func (this *StackFrameSet) set(
 	variableName string,
 	mlrval *types.Mlrval,
@@ -256,6 +218,7 @@ func (this *StackFrameSet) set(
 	return this.setAtScope(variableName, mlrval)
 }
 
+// See Stack.SetIndexed comments above
 func (this *StackFrameSet) setIndexed(
 	variableName string,
 	indices []*types.Mlrval,
@@ -267,10 +230,10 @@ func (this *StackFrameSet) setIndexed(
 			return stackFrame.setIndexed(variableName, indices, mlrval)
 		}
 	}
-	return this.setAtScopeIndexed(variableName, indices, mlrval)
+	return this.stackFrames.Front().Value.(*StackFrame).setIndexed(variableName, indices, mlrval)
 }
 
-// ----------------------------------------------------------------
+// See Stack.Unset comments above
 func (this *StackFrameSet) unset(variableName string) {
 	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
 		stackFrame := entry.Value.(*StackFrame)
@@ -281,6 +244,7 @@ func (this *StackFrameSet) unset(variableName string) {
 	}
 }
 
+// See Stack.UnsetIndexed comments above
 func (this *StackFrameSet) unsetIndexed(
 	variableName string,
 	indices []*types.Mlrval,
@@ -294,7 +258,6 @@ func (this *StackFrameSet) unsetIndexed(
 	}
 }
 
-// ----------------------------------------------------------------
 // Returns nil on no-such
 func (this *StackFrameSet) get(variableName string) *types.Mlrval {
 	// Scope-walk
@@ -334,7 +297,6 @@ func (this *StackFrame) get(variableName string) *types.Mlrval {
 	}
 }
 
-// Returns nil on no such
 func (this *StackFrame) has(variableName string) bool {
 	return this.vars[variableName] != nil
 }
@@ -421,9 +383,8 @@ func (this *StackFrame) setIndexed(
 			)
 		}
 	} else {
-		// TODO: propagate error return.
-		// For example maybe the variable exists and is an array but
-		// the leading index is a string.
+		// For example maybe the variable exists and is an array but the
+		// leading index is a string.
 		return value.PutIndexed(indices, mlrval)
 	}
 }

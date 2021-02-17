@@ -116,10 +116,7 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 		err := typeGatedParameterName.Check(&argument)
 		if err != nil {
 			// TODO: put error-return in the Evaluate API
-			fmt.Fprint(
-				os.Stderr,
-				err,
-			)
+			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
 
@@ -131,11 +128,16 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	defer state.Stack.PopStackFrameSet()
 
 	for i, argument := range arguments {
-		state.Stack.DefineTypedAtScope(
+		err := state.Stack.DefineTypedAtScope(
 			this.udf.signature.typeGatedParameterNames[i].Name,
 			this.udf.signature.typeGatedParameterNames[i].TypeName,
 			&argument,
 		)
+		// TODO: put error-return in the Evaluate API
+		if err != nil {
+			fmt.Fprint(os.Stderr, err)
+			os.Exit(1)
+		}
 	}
 
 	// Execute the function body.

@@ -844,11 +844,10 @@ func (this *LocalVariableLvalueNode) AssignIndexed(
 			err = state.Stack.Set(this.variableName, rvalue)
 		}
 	} else {
-		if this.defineTypedAtScope {
-			err = state.Stack.DefineTypedAtScopeIndexed(this.variableName, this.typeName, indices, rvalue)
-		} else {
-			err = state.Stack.SetIndexed(this.variableName, indices, rvalue)
-		}
+		// There is no 'map x[1] = {}' in the DSL grammar.
+		lib.InternalCodingErrorIf(this.defineTypedAtScope)
+
+		err = state.Stack.SetIndexed(this.variableName, indices, rvalue)
 	}
 	return err
 }
