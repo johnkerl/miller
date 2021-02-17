@@ -61,6 +61,7 @@ func transformerPutOrFilterUsage(
 	verb string,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", lib.MlrExeName(), verb)
+	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		`-f {file name} File containing a DSL expression.
 

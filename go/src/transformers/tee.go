@@ -28,6 +28,7 @@ func transformerTeeUsage(
 	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", lib.MlrExeName(), verbNameTee)
+	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		`-a    Append to existing file, if any, rather than overwriting.
 -p    Treat filename as a pipe-to command.

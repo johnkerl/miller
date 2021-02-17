@@ -16,6 +16,7 @@ Options:
 ================================================================
 Usage: mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
+Options:
 -n         Prepend field "n" to each record with record-counter starting at 1.
 -N {name}  Prepend field {name} to each record with record-counter starting at 1.
 -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
@@ -101,6 +102,7 @@ Options:
 -h|--help Show this message.
 ================================================================
 Usage: mlr filter [options] {DSL expression}
+Options:
 -f {file name} File containing a DSL expression.
 
 -e {expression} You can use this after -f to add an expression. Example use
@@ -278,6 +280,7 @@ Options:
 -h|--help Show this message.
 ================================================================
 Usage: mlr put [options] {DSL expression}
+Options:
 -f {file name} File containing a DSL expression.
 
 -e {expression} You can use this after -f to add an expression. Example use
@@ -437,7 +440,7 @@ at the end of the output, in the order they were encountered, regardless of the
 specified sort order.) The sort is stable: records that compare equal will sort
 in the order they were encountered in the input record stream.
 
-Flags:
+Options:
 -f  {comma-separated field names}  Lexical ascending
 -n  {comma-separated field names}  Numerical ascending; nulls sort last
 -nf {comma-separated field names}  Same as -n
@@ -510,6 +513,7 @@ Notes:
 ================================================================
 Usage: mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
+Options:
 -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
   delta    Compute differences in field(s) between successive records
   shift    Include value(s) in field(s) from previous record, if any
@@ -551,6 +555,7 @@ Options:
 -h|--help Show this message.
 ================================================================
 Usage: mlr tee [options] {filename}
+Options:
 -a    Append to existing file, if any, rather than overwriting.
 -p    Treat filename as a pipe-to command.
 Any of the output-format command-line flags (see mlr -h). Example: using

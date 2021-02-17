@@ -31,6 +31,7 @@ func transformerStepUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStep)
 	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
+	fmt.Fprintf(o, "Options:\n")
 
 	fmt.Fprintf(o, "-a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:\n")
 	for _, stepperLookup := range STEPPER_LOOKUP_TABLE {

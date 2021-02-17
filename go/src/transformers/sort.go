@@ -76,7 +76,7 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "specified sort order.) The sort is stable: records that compare equal will sort\n")
 	fmt.Fprintf(o, "in the order they were encountered in the input record stream.\n")
 	fmt.Fprintf(o, "\n")
-	fmt.Fprintf(o, "Flags:\n")
+	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f  {comma-separated field names}  Lexical ascending\n")
 	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
 	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")

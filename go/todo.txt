@@ -41,7 +41,6 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
   o audit for DEFAULT_FOOs @ 
   o audit for '-z {zzz}'
   o audit for consistent usage style
-  o Check for "Options:" in all mappers
 
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 * new columns-to-arrays and arrays-to-columns for stan format
