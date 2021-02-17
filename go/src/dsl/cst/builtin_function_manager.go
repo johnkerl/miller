@@ -1474,13 +1474,26 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
 
 // ----------------------------------------------------------------
 func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
+	this.ListBuiltinFunctionUsagesDecorated(
+		o,
+		func(functionName string) string { return functionName }, // no decoration
+	)
+}
+
+// ListBuiltinFunctionUsagesDecorated is like ListBuiltinFunctionUsages but
+// allows the caller to specify a wrapping function around the function names
+// -- capitalization, ANSI color, etc.
+func (this *BuiltinFunctionManager) ListBuiltinFunctionUsagesDecorated(
+	o *os.File,
+	nameDecorator func(string) string,
+) {
 	for i, builtinFunctionInfo := range *this.lookupTable {
 		if i > 0 {
 			fmt.Fprintln(o)
 		}
 		lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
 		fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
-			builtinFunctionInfo.name,
+			nameDecorator(builtinFunctionInfo.name),
 			builtinFunctionInfo.class,
 			describeNargs(&builtinFunctionInfo),
 			builtinFunctionInfo.help,

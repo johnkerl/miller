@@ -853,8 +853,10 @@ func handleHelpSingle(this *Repl, arg string) {
 	}
 
 	if arg == "function-details" {
-		// xxx callback
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesDecorated(
+			os.Stdout,
+			func(functionName string) string { return HighlightString(functionName) },
+		)
 		return
 	}
 
