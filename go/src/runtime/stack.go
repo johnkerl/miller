@@ -189,36 +189,34 @@ func (this *Stack) Dump() {
 // ================================================================
 // STACKFRAMESET METHODS
 
+const stackFrameSetInitCap = 6
+
 type StackFrameSet struct {
-	stackFrames *list.List // list of *StackFrame
+	stackFrames []*StackFrame
 }
 
 func newStackFrameSet() *StackFrameSet {
-	// TODO: to array
-	stackFrames := list.New()
-	stackFrames.PushFront(newStackFrame())
+	stackFrames := make([]*StackFrame, 1, stackFrameSetInitCap)
+	stackFrames[0] = newStackFrame()
 	return &StackFrameSet{
 		stackFrames: stackFrames,
 	}
 }
 
 func (this *StackFrameSet) pushStackFrame() {
-	// TODO: to array
-	this.stackFrames.PushFront(newStackFrame())
+	this.stackFrames = append(this.stackFrames, newStackFrame())
 }
 
 func (this *StackFrameSet) popStackFrame() {
-	// TODO: to array
-	this.stackFrames.Remove(this.stackFrames.Front())
+	this.stackFrames = this.stackFrames[0 : len(this.stackFrames)-1]
 }
 
 func (this *StackFrameSet) dump() {
-	fmt.Printf("  STACK FRAMES (count %d):\n", this.stackFrames.Len())
-	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
-		stackFrame := entry.Value.(*StackFrame)
+	fmt.Printf("  STACK FRAMES (count %d):\n", len(this.stackFrames))
+	for _, stackFrame := range this.stackFrames {
 		fmt.Printf("    VARIABLES (count %d):\n", len(stackFrame.vars))
-		for k, v := range stackFrame.vars {
-			fmt.Printf("      %-16s %s\n", k, v.ValueString())
+		for _, v := range stackFrame.vars {
+			fmt.Printf("      %-16s %s\n", v.GetName(), v.ValueString())
 		}
 	}
 }
@@ -229,8 +227,8 @@ func (this *StackFrameSet) defineTypedAtScope(
 	typeName string,
 	mlrval *types.Mlrval,
 ) error {
-	// TODO: to array
-	return this.stackFrames.Front().Value.(*StackFrame).defineTyped(
+	offset := len(this.stackFrames) - 1
+	return this.stackFrames[offset].defineTyped(
 		stackVariable, typeName, mlrval,
 	)
 }
@@ -240,8 +238,8 @@ func (this *StackFrameSet) setAtScope(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
-	// TODO: to array
-	return this.stackFrames.Front().Value.(*StackFrame).set(stackVariable, mlrval)
+	offset := len(this.stackFrames) - 1
+	return this.stackFrames[offset].set(stackVariable, mlrval)
 }
 
 // See Stack.Set comments above
@@ -249,9 +247,10 @@ func (this *StackFrameSet) set(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
-	// TODO: to array
-	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
-		stackFrame := entry.Value.(*StackFrame)
+	// Scope-walk
+	numStackFrames := len(this.stackFrames)
+	for offset := numStackFrames - 1; offset >= 0; offset-- {
+		stackFrame := this.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
 			return stackFrame.set(stackVariable, mlrval)
 		}
@@ -265,22 +264,25 @@ func (this *StackFrameSet) setIndexed(
 	indices []*types.Mlrval,
 	mlrval *types.Mlrval,
 ) error {
-	// TODO: to array
-	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
-		stackFrame := entry.Value.(*StackFrame)
+	// Scope-walk
+	numStackFrames := len(this.stackFrames)
+	for offset := numStackFrames - 1; offset >= 0; offset-- {
+		stackFrame := this.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
 			return stackFrame.setIndexed(stackVariable, indices, mlrval)
 		}
 	}
-	return this.stackFrames.Front().Value.(*StackFrame).setIndexed(stackVariable, indices, mlrval)
+	return this.stackFrames[numStackFrames-1].setIndexed(stackVariable, indices, mlrval)
 }
 
 // See Stack.Unset comments above
 func (this *StackFrameSet) unset(
 	stackVariable *StackVariable,
 ) {
-	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
-		stackFrame := entry.Value.(*StackFrame)
+	// Scope-walk
+	numStackFrames := len(this.stackFrames)
+	for offset := numStackFrames - 1; offset >= 0; offset-- {
+		stackFrame := this.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
 			stackFrame.unset(stackVariable)
 			return
@@ -293,8 +295,10 @@ func (this *StackFrameSet) unsetIndexed(
 	stackVariable *StackVariable,
 	indices []*types.Mlrval,
 ) {
-	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
-		stackFrame := entry.Value.(*StackFrame)
+	// Scope-walk
+	numStackFrames := len(this.stackFrames)
+	for offset := numStackFrames - 1; offset >= 0; offset-- {
+		stackFrame := this.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
 			stackFrame.unsetIndexed(stackVariable, indices)
 			return
@@ -307,8 +311,9 @@ func (this *StackFrameSet) get(
 	stackVariable *StackVariable,
 ) *types.Mlrval {
 	// Scope-walk
-	for entry := this.stackFrames.Front(); entry != nil; entry = entry.Next() {
-		stackFrame := entry.Value.(*StackFrame)
+	numStackFrames := len(this.stackFrames)
+	for offset := numStackFrames - 1; offset >= 0; offset-- {
+		stackFrame := this.stackFrames[offset]
 		mlrval := stackFrame.get(stackVariable)
 		if mlrval != nil {
 			return mlrval

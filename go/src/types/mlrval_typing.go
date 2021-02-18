@@ -77,6 +77,10 @@ func NewTypeGatedMlrvalVariable(
 	}, nil
 }
 
+func (this *TypeGatedMlrvalVariable) GetName() string {
+	return this.typeGatedMlrvalName.Name
+}
+
 func (this *TypeGatedMlrvalVariable) GetValue() *Mlrval {
 	return this.value
 }
