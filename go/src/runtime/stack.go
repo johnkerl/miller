@@ -49,16 +49,16 @@ type StackVariable struct {
 	// stack.
 
 	// TODO: comment
-	frameSetIndex int
-	indexInFrame  int
+	frameSetOffset int
+	offsetInFrame  int
 }
 
 // TODO: be sure to invalidate slot 0 for struct uninit
 func NewStackVariable(name string) *StackVariable {
 	return &StackVariable{
-		name:          name,
-		frameSetIndex: 0,
-		indexInFrame:  0,
+		name:           name,
+		frameSetOffset: -1,
+		offsetInFrame:  -1,
 	}
 }
 
@@ -98,7 +98,7 @@ func (this *Stack) PopStackFrameSet() {
 }
 
 // ----------------------------------------------------------------
-// Delegations to topmost frameset
+// All of these are simply delegations to the head frameset
 
 // For when an if/for/etc block is being entered
 func (this *Stack) PushStackFrame() {
@@ -320,16 +320,25 @@ func (this *StackFrameSet) get(
 // ================================================================
 // STACKFRAME METHODS
 
+const stackFrameInitCap = 10
+
 type StackFrame struct {
 	// TODO: just a map for now. In the C impl, pre-computation of
 	// name-to-array-slot indices was an important optimization, especially for
 	// compute-intensive scenarios.
-	vars map[string]*types.TypeGatedMlrvalVariable
+	//vars map[string]*types.TypeGatedMlrvalVariable
+
+	// TODO: comment
+	vars           []*types.TypeGatedMlrvalVariable
+	namesToOffsets map[string]int
 }
 
 func newStackFrame() *StackFrame {
+	vars := make([]*types.TypeGatedMlrvalVariable, 0, stackFrameInitCap)
+	namesToOffsets := make(map[string]int)
 	return &StackFrame{
-		vars: make(map[string]*types.TypeGatedMlrvalVariable),
+		vars:           vars,
+		namesToOffsets: namesToOffsets,
 	}
 }
 
@@ -337,22 +346,19 @@ func newStackFrame() *StackFrame {
 func (this *StackFrame) get(
 	stackVariable *StackVariable,
 ) *types.Mlrval {
-	slot := this.vars[stackVariable.name]
-	if slot == nil {
+	offset, ok := this.namesToOffsets[stackVariable.name]
+	if !ok {
 		return nil
 	} else {
-		return slot.GetValue()
+		return this.vars[offset].GetValue()
 	}
 }
 
 func (this *StackFrame) has(
 	stackVariable *StackVariable,
 ) bool {
-	return this.vars[stackVariable.name] != nil
-}
-
-func (this *StackFrame) clear() {
-	this.vars = make(map[string]*types.TypeGatedMlrvalVariable)
+	_, ok := this.namesToOffsets[stackVariable.name]
+	return ok
 }
 
 // TODO: audit for honor of error-return at callsites
@@ -360,19 +366,18 @@ func (this *StackFrame) set(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
-	slot := this.vars[stackVariable.name]
-	if slot == nil {
+	offset, ok := this.namesToOffsets[stackVariable.name]
+	if !ok {
 		slot, err := types.NewTypeGatedMlrvalVariable(stackVariable.name, "any", mlrval)
 		if err != nil {
 			return err
-		} else {
-			this.vars[stackVariable.name] = slot
-			return nil
 		}
-		this.vars[stackVariable.name] = slot
+		this.vars = append(this.vars, slot)
+		this.namesToOffsets[stackVariable.name] = len(this.vars) - 1
 		return nil
 	} else {
 		return slot.Assign(mlrval)
+		return this.vars[offset].Assign(mlrval)
 	}
 }
 
@@ -382,16 +387,14 @@ func (this *StackFrame) defineTyped(
 	typeName string,
 	mlrval *types.Mlrval,
 ) error {
-	slot := this.vars[stackVariable.name]
-	if slot == nil {
+	_, ok := this.namesToOffsets[stackVariable.name]
+	if !ok {
 		slot, err := types.NewTypeGatedMlrvalVariable(stackVariable.name, typeName, mlrval)
 		if err != nil {
 			return err
-		} else {
-			this.vars[stackVariable.name] = slot
-			return nil
 		}
-		this.vars[stackVariable.name] = slot
+		this.vars = append(this.vars, slot)
+		this.namesToOffsets[stackVariable.name] = len(this.vars) - 1
 		return nil
 	} else {
 		return errors.New(
@@ -406,9 +409,9 @@ func (this *StackFrame) defineTyped(
 func (this *StackFrame) unset(
 	stackVariable *StackVariable,
 ) {
-	slot := this.vars[stackVariable.name]
-	if slot != nil {
-		slot.Unassign()
+	offset, ok := this.namesToOffsets[stackVariable.name]
+	if ok {
+		this.vars[offset].Unassign()
 	}
 }
 
