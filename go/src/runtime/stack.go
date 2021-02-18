@@ -110,6 +110,13 @@ func (this *Stack) PopStackFrame() {
 	this.head.popStackFrame()
 }
 
+// Returns nil on no-such
+func (this *Stack) Get(
+	stackVariable *StackVariable,
+) *types.Mlrval {
+	return this.head.get(stackVariable)
+}
+
 // For 'num a = 2', setting a variable at the current frame regardless of outer
 // scope.  It's an error to define it again in the same scope, whether the type
 // is the same or not.
@@ -171,13 +178,6 @@ func (this *Stack) UnsetIndexed(
 	this.head.unsetIndexed(stackVariable, indices)
 }
 
-// Returns nil on no-such
-func (this *Stack) Get(
-	stackVariable *StackVariable,
-) *types.Mlrval {
-	return this.head.get(stackVariable)
-}
-
 func (this *Stack) Dump() {
 	fmt.Printf("STACK FRAMESETS (count %d):\n", this.stackFrameSets.Len())
 	for entry := this.stackFrameSets.Front(); entry != nil; entry = entry.Next() {
@@ -219,6 +219,22 @@ func (this *StackFrameSet) dump() {
 			fmt.Printf("      %-16s %s\n", v.GetName(), v.ValueString())
 		}
 	}
+}
+
+// Returns nil on no-such
+func (this *StackFrameSet) get(
+	stackVariable *StackVariable,
+) *types.Mlrval {
+	// Scope-walk
+	numStackFrames := len(this.stackFrames)
+	for offset := numStackFrames - 1; offset >= 0; offset-- {
+		stackFrame := this.stackFrames[offset]
+		mlrval := stackFrame.get(stackVariable)
+		if mlrval != nil {
+			return mlrval
+		}
+	}
+	return nil
 }
 
 // See Stack.DefineTypedAtScope comments above
@@ -304,22 +320,6 @@ func (this *StackFrameSet) unsetIndexed(
 			return
 		}
 	}
-}
-
-// Returns nil on no-such
-func (this *StackFrameSet) get(
-	stackVariable *StackVariable,
-) *types.Mlrval {
-	// Scope-walk
-	numStackFrames := len(this.stackFrames)
-	for offset := numStackFrames - 1; offset >= 0; offset-- {
-		stackFrame := this.stackFrames[offset]
-		mlrval := stackFrame.get(stackVariable)
-		if mlrval != nil {
-			return mlrval
-		}
-	}
-	return nil
 }
 
 // ================================================================
@@ -411,15 +411,6 @@ func (this *StackFrame) defineTyped(
 	}
 }
 
-func (this *StackFrame) unset(
-	stackVariable *StackVariable,
-) {
-	offset, ok := this.namesToOffsets[stackVariable.name]
-	if ok {
-		this.vars[offset].Unassign()
-	}
-}
-
 // TODO: audit for honor of error-return at callsites
 func (this *StackFrame) setIndexed(
 	stackVariable *StackVariable,
@@ -446,6 +437,15 @@ func (this *StackFrame) setIndexed(
 		// For example maybe the variable exists and is an array but the
 		// leading index is a string.
 		return value.PutIndexed(indices, mlrval)
+	}
+}
+
+func (this *StackFrame) unset(
+	stackVariable *StackVariable,
+) {
+	offset, ok := this.namesToOffsets[stackVariable.name]
+	if ok {
+		this.vars[offset].Unassign()
 	}
 }
 
