@@ -225,12 +225,28 @@ func (this *StackFrameSet) dump() {
 func (this *StackFrameSet) get(
 	stackVariable *StackVariable,
 ) *types.Mlrval {
+	// TODO: comment
+	fso := stackVariable.frameSetOffset
+	oif := stackVariable.offsetInFrame
+	if fso >= 0 && oif > 0 {
+		return this.stackFrames[fso].vars[oif].GetValue()
+	} else {
+		return this.getUncached(stackVariable)
+	}
+}
+
+// Returns nil on no-such
+func (this *StackFrameSet) getUncached(
+	stackVariable *StackVariable,
+) *types.Mlrval {
 	// Scope-walk
 	numStackFrames := len(this.stackFrames)
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
 		stackFrame := this.stackFrames[offset]
 		mlrval := stackFrame.get(stackVariable)
 		if mlrval != nil {
+			// TODO: comment
+			stackVariable.frameSetOffset = offset
 			return mlrval
 		}
 	}
@@ -244,6 +260,8 @@ func (this *StackFrameSet) defineTypedAtScope(
 	mlrval *types.Mlrval,
 ) error {
 	offset := len(this.stackFrames) - 1
+	// TODO: comment
+	stackVariable.frameSetOffset = offset
 	return this.stackFrames[offset].defineTyped(
 		stackVariable, typeName, mlrval,
 	)
@@ -255,6 +273,8 @@ func (this *StackFrameSet) setAtScope(
 	mlrval *types.Mlrval,
 ) error {
 	offset := len(this.stackFrames) - 1
+	// TODO: comment
+	stackVariable.frameSetOffset = offset
 	return this.stackFrames[offset].set(stackVariable, mlrval)
 }
 
@@ -263,11 +283,27 @@ func (this *StackFrameSet) set(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
+	fso := stackVariable.frameSetOffset
+	oif := stackVariable.offsetInFrame
+	if fso >= 0 && oif > 0 {
+		return this.stackFrames[fso].vars[oif].Assign(mlrval.Copy())
+	} else {
+		return this.setUncached(stackVariable, mlrval)
+	}
+}
+
+// See Stack.Set comments above
+func (this *StackFrameSet) setUncached(
+	stackVariable *StackVariable,
+	mlrval *types.Mlrval,
+) error {
 	// Scope-walk
 	numStackFrames := len(this.stackFrames)
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
 		stackFrame := this.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
+			// TODO: comment
+			stackVariable.frameSetOffset = offset
 			return stackFrame.set(stackVariable, mlrval)
 		}
 	}
@@ -285,10 +321,15 @@ func (this *StackFrameSet) setIndexed(
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
 		stackFrame := this.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
+			// TODO: comment
+			stackVariable.frameSetOffset = offset
 			return stackFrame.setIndexed(stackVariable, indices, mlrval)
 		}
 	}
-	return this.stackFrames[numStackFrames-1].setIndexed(stackVariable, indices, mlrval)
+	// TODO: comment
+	offset := numStackFrames - 1
+	stackVariable.frameSetOffset = offset
+	return this.stackFrames[offset].setIndexed(stackVariable, indices, mlrval)
 }
 
 // See Stack.Unset comments above
@@ -352,10 +393,12 @@ func (this *StackFrame) get(
 	stackVariable *StackVariable,
 ) *types.Mlrval {
 	offset, ok := this.namesToOffsets[stackVariable.name]
-	if !ok {
-		return nil
-	} else {
+	if ok {
+		// TODO: comment
+		stackVariable.offsetInFrame = offset
 		return this.vars[offset].GetValue()
+	} else {
+		return nil
 	}
 }
 
@@ -378,7 +421,10 @@ func (this *StackFrame) set(
 			return err
 		}
 		this.vars = append(this.vars, slot)
-		this.namesToOffsets[stackVariable.name] = len(this.vars) - 1
+		offsetInFrame := len(this.vars) - 1
+		this.namesToOffsets[stackVariable.name] = offsetInFrame
+		// TODO: comment
+		stackVariable.offsetInFrame = offsetInFrame
 		return nil
 	} else {
 		return slot.Assign(mlrval)
@@ -399,7 +445,10 @@ func (this *StackFrame) defineTyped(
 			return err
 		}
 		this.vars = append(this.vars, slot)
-		this.namesToOffsets[stackVariable.name] = len(this.vars) - 1
+		offsetInFrame := len(this.vars) - 1
+		this.namesToOffsets[stackVariable.name] = offsetInFrame
+		// TODO: comment
+		stackVariable.offsetInFrame = offsetInFrame
 		return nil
 	} else {
 		return errors.New(
