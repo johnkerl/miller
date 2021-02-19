@@ -1,20 +1,26 @@
-----------------------------------------------------------------
+================================================================
 TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
-* stack optimization:
-  o AST pre-pass as in the C impl
-  o Maybe SetAtScope -> passback of int?
-    - caller
-      > name="a" idx=-1
-      > idx,err := Stack.Set(name, idx, value)
-    - callee
-      > if idx != -1 {
-          idxvars[idx].Set
-        }
-    - maybe opaque idx type -- pair of frameset/frame indices
+----------------------------------------------------------------
+* make a profiling.md
+  o https://github.com/johnkerl/miller/compare/stack-allocator
 
+* mand no-print option
+
+* for i, e in range c optimization -- always *copies* e
+  o try and benchmark/compare ...
+  o lots of array-of-pointer stuff, this is totally fine
+  o take care w/ copying (non-pointer) mlrvals though
+
+* cst-no-alloc refactor ...
+  - nice narrartive write-up w/ the C stack-allocator problem, Go non-solutionk,
+    profilng methods, GC readings/findings, before-and-after CST data structures,
+    final perf results.
+  - defer the stack-allocation PR until after
+
+----------------------------------------------------------------
 * regexes
   o finish stats1 -r
   o regex captures ...
@@ -178,6 +184,10 @@ emitp/emitf:
 
 * more mlrtut
   https://onepointzero.app/posts/miller-command-line-csv-file-processing/
+
+* go 1.16
+  o https://golang.org/doc/go1.16
+  o io/ioutil deprecation: ioutil.ReadFile -> os.ReadFile
 
 ================================================================
 REMAINING VERBS:
