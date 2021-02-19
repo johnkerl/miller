@@ -228,7 +228,7 @@ func (this *StackFrameSet) get(
 	// TODO: comment
 	fso := stackVariable.frameSetOffset
 	oif := stackVariable.offsetInFrame
-	if fso >= 0 && oif > 0 {
+	if fso >= 0 && fso < len(this.stackFrames) && oif >= 0 && oif < len(this.stackFrames[fso].vars) {
 		return this.stackFrames[fso].vars[oif].GetValue()
 	} else {
 		return this.getUncached(stackVariable)
@@ -285,7 +285,7 @@ func (this *StackFrameSet) set(
 ) error {
 	fso := stackVariable.frameSetOffset
 	oif := stackVariable.offsetInFrame
-	if fso >= 0 && oif > 0 {
+	if fso >= 0 && fso < len(this.stackFrames) && oif >= 0 && oif < len(this.stackFrames[fso].vars) {
 		return this.stackFrames[fso].vars[oif].Assign(mlrval.Copy())
 	} else {
 		return this.setUncached(stackVariable, mlrval)
@@ -427,7 +427,6 @@ func (this *StackFrame) set(
 		stackVariable.offsetInFrame = offsetInFrame
 		return nil
 	} else {
-		return slot.Assign(mlrval)
 		return this.vars[offset].Assign(mlrval)
 	}
 }

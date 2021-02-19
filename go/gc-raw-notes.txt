@@ -17,6 +17,10 @@
     - c  3.2s
     - go pre-alloccate 45s
 
+Why 5MB goal with GOGC=100????
+
+GOGC=100000 GODEBUG=gctrace=1 mlr -n put -q -f u/mand.mlr 1> /dev/null
+
 * u/mand.mlr silent option
 
 https://blog.twitch.tv/en/2019/04/10/go-memory-ballast-how-i-learnt-to-stop-worrying-and-love-the-heap-26c2462549a2/
@@ -46,3 +50,50 @@ https://github.com/golang/go/issues/23044
 i https://hub.packtpub.com/implementing-memory-management-with-golang-garbage-collector/
 
 i mlr --cpuprofile cpu.pprof -n put -q  -s iheight=100 -s iwidth=100 -f u/mand.mlr > /dev/null
+
+? SetGCPercent
+? SetMaxHeap
+
+mlr --cpuprofile cpu.pprof -n put -q  -s iheight=500 -s iwidth=500 -f u/mand.mlr > /dev/null
+go tool pprof mlr cpu.pprof
+top10
+
+go tool pprof --pdf mlr cpu.pprof > mlr-call-graph.pdf
+mv mlr-call-graph.pdf ~/Desktop
+
+runtime.duffcopy
+  https://stackoverflow.com/questions/45786687/runtime-duffcopy-is-called-a-lot
+runtime.madvise
+
+GOGC=off
+GODEBUG=gctrace=1
+
+export PATH=${PATH}:~/git/brendangregg/FlameGraph/
+go-torch cpu.pprof
+mv torch.svg ~/Desktop/
+
+i mlr --cpuprofile cpu.pprof -n put -q  -s iheight=500 -s iwidth=500 -f u/mand.mlr > /dev/null
+
+i https://hub.packtpub.com/implementing-memory-management-with-golang-garbage-collector/
+
+i https://golang.org/pkg/runtime/
+
+! flame-graph readme; & profile-readme out of mlr.go & into separate .md file
+i mlr --cpuprofile cpu.pprof -n put -q  -s iheight=100 -s iwidth=100 -f u/mand.mlr > /dev/null
+i GODEBUG=gctrace=1 mlr -n put -q  -s iheight=500 -s iwidth=500 -f u/mand.mlr > /dev/null| head -n 100
+  gc 1 @0.129s 1%: 0.012+3.9+0.002 ms clock, 0.048+3.7/3.7/7.5+0.010 ms cpu, 10240->10240->0 MB, 10241 MB goal, 4 P
+  gc 2 @0.140s 2%: 0.009+2.1+0.002 ms clock, 0.038+2.0/2.0/4.0+0.011 ms cpu, 4->4->0         MB, 5     MB goal, 4 P
+  gc 3 @0.149s 2%: 0.032+2.1+0.021 ms clock, 0.12+2.0/2.0/4.0+0.087  ms cpu, 4->4->0         MB, 5     MB goal, 4 P
+  gc 4 @0.157s 3%: 0.035+2.1+0.014 ms clock, 0.14+2.0/1.9/4.1+0.059  ms cpu, 4->4->0         MB, 5     MB goal, 4 P
+  gc 5 @0.166s 3%: 0.034+2.2+0.024 ms clock, 0.13+2.0/1.9/4.0+0.098  ms cpu, 4->4->0         MB, 5     MB goal, 4 P
+
+mem.Alloc: 176104
+mem.TotalAlloc: 176104
+mem.HeapAlloc: 176104
+mem.NumGC: 0
+
+mem.Alloc: 1179440
+mem.TotalAlloc: 16,529,643,664
+mem.HeapAlloc: 1179440
+mem.NumGC: 4254
+

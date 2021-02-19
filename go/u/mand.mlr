@@ -12,17 +12,6 @@ begin {
   @silent    ??= false;
 }
 
-# Override defaults
-@rcorn     = $rcorn;
-@icorn     = $icorn;
-@side      = $side;
-@iheight   = $iheight;
-@iwidth    = $iwidth;
-@maxits    = $maxits;
-@levelstep = $levelstep;
-@chars     = $chars;
-@silent    = $silent;
-
 end {
   if (!@silent) {
   	print "RCORN     = ".@rcorn;
