@@ -24,11 +24,7 @@ func main() {
 	// and properly stopping the profile only when main ends via chan-sync,
 	// results in a zero-length pprof file.
 	//
-	// Usage:
-	// * mlr --cpuprofile cpu.pprof put -f u/example.mlr then nothing ~/tmp/huge > /dev/null
-	// * go tool pprof mlr cpu.pprof
-	//   top10
-	// * go tool pprof --pdf mlr cpu.pprof > mlr-call-graph.pdf
+	// Please see README-profiling.md for more information.
 
 	if len(os.Args) >= 3 && os.Args[1] == "--cpuprofile" {
 		profFilename := os.Args[2]
@@ -50,9 +46,9 @@ func main() {
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// 'mlr lecat' or any other non-miller-per-se toolery which is delivered
-	// (for convenience) within the mlr executable. If argv[1] is found then
-	// this function will not return.
+	// 'mlr repl' or 'mlr lecat' or any other non-miller-per-se toolery which
+	// is delivered (for convenience) within the mlr executable. If argv[1] is
+	// found then this function will not return.
 	auxents.Dispatch(os.Args)
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
