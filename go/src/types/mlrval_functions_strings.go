@@ -38,8 +38,8 @@ func MlrvalToString(output, input1 *Mlrval) {
 // should be: always the string concatenation of the string representations of
 // the two arguments. So, we do the string-cast for the user.
 
-func dot_s_xx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromString(input1.String() + input2.String())
+func dot_s_xx(output, input1, input2 *Mlrval) {
+	output.SetFromString(input1.String() + input2.String())
 }
 
 var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -55,8 +55,8 @@ var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
 }
 
-func MlrvalDot(input1, input2 *Mlrval) Mlrval {
-	return dot_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalDot(output, input1, input2 *Mlrval) {
+	dot_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
 
 // ================================================================
@@ -113,29 +113,34 @@ func MlrvalSubstr(output, input1, input2, input3 *Mlrval) {
 }
 
 // ================================================================
-func MlrvalTruncate(input1, input2 *Mlrval) Mlrval {
+func MlrvalTruncate(output, input1, input2 *Mlrval) {
 	if input1.IsErrorOrAbsent() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if input2.IsErrorOrAbsent() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if !input1.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if input2.intval < 0 {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 
 	oldLength := int(len(input1.printrep))
 	maxLength := input2.intval
 	if oldLength <= maxLength {
-		return *input1
+		output.CopyFrom(input1)
 	} else {
-		return MlrvalFromString(input1.printrep[0:maxLength])
+		output.SetFromString(input1.printrep[0:maxLength])
 	}
 }
 
@@ -235,8 +240,8 @@ func MlrvalHexfmt(output, input1 *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func fmtnum_is(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromString(
+func fmtnum_is(output, input1, input2 *Mlrval) {
+	output.SetFromString(
 		fmt.Sprintf(
 			input2.printrep,
 			input1.intval,
@@ -244,8 +249,8 @@ func fmtnum_is(input1, input2 *Mlrval) Mlrval {
 	)
 }
 
-func fmtnum_fs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromString(
+func fmtnum_fs(output, input1, input2 *Mlrval) {
+	output.SetFromString(
 		fmt.Sprintf(
 			input2.printrep,
 			input1.floatval,
@@ -253,8 +258,8 @@ func fmtnum_fs(input1, input2 *Mlrval) Mlrval {
 	)
 }
 
-func fmtnum_bs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromString(
+func fmtnum_bs(output, input1, input2 *Mlrval) {
+	output.SetFromString(
 		fmt.Sprintf(
 			input2.printrep,
 			lib.BoolToInt(input1.boolval),
@@ -275,6 +280,6 @@ var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalFmtNum(input1, input2 *Mlrval) Mlrval {
-	return fmtnum_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalFmtNum(output, input1, input2 *Mlrval) {
+	fmtnum_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }

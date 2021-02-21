@@ -21,18 +21,22 @@ func MlrvalUrand32(output *Mlrval) {
 }
 
 // TODO: use a disposition matrix
-func MlrvalUrandInt(input1, input2 *Mlrval) Mlrval {
+func MlrvalUrandInt(output, input1, input2 *Mlrval) {
 	if !input1.IsLegit() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if !input2.IsLegit() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if !input1.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 
 	a := input1.intval
@@ -48,25 +52,29 @@ func MlrvalUrandInt(input1, input2 *Mlrval) Mlrval {
 		hi = a + 1
 	}
 	u := int(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
-	return MlrvalFromInt(u)
+	output.SetFromInt(u)
 }
 
-func MlrvalUrandRange(input1, input2 *Mlrval) Mlrval {
+func MlrvalUrandRange(output, input1, input2 *Mlrval) {
 	if !input1.IsLegit() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if !input2.IsLegit() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	a, aok := input1.GetNumericToFloatValue()
 	b, bok := input2.GetNumericToFloatValue()
 	if !aok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !bok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
-	return MlrvalFromFloat64(
+	output.SetFromFloat64(
 		a + (b-a)*lib.RandFloat64(),
 	)
 }

@@ -63,13 +63,13 @@ type mathLibUnaryFunc func(float64) float64
 type mathLibUnaryFuncWrapper func(output, input1 *Mlrval, f mathLibUnaryFunc)
 
 // Function-pointer type for binary-operator disposition matrices.
-type BinaryFunc func(*Mlrval, *Mlrval) Mlrval
+type BinaryFunc func(output, input1, input2 *Mlrval)
 
 // Function-pointer type for ternary functions
 type TernaryFunc func(output, input1, input2, input3 *Mlrval)
 
 // Function-pointer type for variadic functions.
-type VariadicFunc func([]*Mlrval) Mlrval
+type VariadicFunc func(output *Mlrval, inputs []*Mlrval)
 
 // Function-pointer type for sorting. Returns < 0 if a < b, 0 if a == b, > 0 if a > b.
 type ComparatorFunc func(*Mlrval, *Mlrval) int
@@ -103,56 +103,56 @@ func _1u___(output, input1 *Mlrval) {
 
 // ----------------------------------------------------------------
 // Return error (binary)
-func _erro(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromError()
+func _erro(output, input1, input2 *Mlrval) {
+	output.SetFromError()
 }
 
 // Return absent (binary)
-func _absn(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromAbsent()
+func _absn(output, input1, input2 *Mlrval) {
+	output.SetFromAbsent()
 }
 
 // Return void (binary)
-func _void(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromVoid()
+func _void(output, input1, input2 *Mlrval) {
+	output.SetFromVoid()
 }
 
 // Return first argument (binary)
-func _1___(input1, input2 *Mlrval) Mlrval {
-	return *input1
+func _1___(output, input1, input2 *Mlrval) {
+	output.CopyFrom(input1)
 }
 
 // Return second argument (binary)
-func _2___(input1, input2 *Mlrval) Mlrval {
-	return *input2
+func _2___(output, input1, input2 *Mlrval) {
+	output.CopyFrom(input2)
 }
 
 // Return first argument, as string (binary)
-func _s1__(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromString(input1.String())
+func _s1__(output, input1, input2 *Mlrval) {
+	output.SetFromString(input1.String())
 }
 
 // Return second argument, as string (binary)
-func _s2__(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromString(input2.String())
+func _s2__(output, input1, input2 *Mlrval) {
+	output.SetFromString(input2.String())
 }
 
 // Return integer zero (binary)
-func _i0__(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromInt(0)
+func _i0__(output, input1, input2 *Mlrval) {
+	output.SetFromInt(0)
 }
 
 // Return float zero (binary)
-func _f0__(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromFloat64(0.0)
+func _f0__(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(0.0)
 }
 
 // Return boolean true (binary)
-func _true(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(true)
+func _true(output, input1, input2 *Mlrval) {
+	output.SetFromBool(true)
 }
 
 // Return boolean false (binary)
-func _fals(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(false)
+func _fals(output, input1, input2 *Mlrval) {
+	output.SetFromBool(false)
 }

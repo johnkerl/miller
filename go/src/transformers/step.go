@@ -370,9 +370,9 @@ func (this *tStepperDelta) process(
 ) {
 	var delta types.Mlrval
 	if this.previous == nil {
-		delta = types.MlrvalFromInt(0)
+		delta.SetFromInt(0)
 	} else {
-		delta = types.MlrvalBinaryMinus(valueFieldValue, this.previous)
+		types.MlrvalBinaryMinus(&delta, valueFieldValue, this.previous)
 	}
 	inrec.PutCopy(this.outputFieldName, &delta)
 
@@ -434,14 +434,14 @@ func (this *tStepperFromFirst) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	var from_first types.Mlrval
+	var fromFirst types.Mlrval
 	if this.first == nil {
-		from_first = types.MlrvalFromInt(0)
+		fromFirst.SetFromInt(0)
 		this.first = valueFieldValue.Copy()
 	} else {
-		from_first = types.MlrvalBinaryMinus(valueFieldValue, this.first)
+		types.MlrvalBinaryMinus(&fromFirst, valueFieldValue, this.first)
 	}
-	inrec.PutCopy(this.outputFieldName, &from_first)
+	inrec.PutCopy(this.outputFieldName, &fromFirst)
 }
 
 // ================================================================
@@ -467,9 +467,9 @@ func (this *tStepperRatio) process(
 ) {
 	var ratio types.Mlrval
 	if this.previous == nil {
-		ratio = types.MlrvalFromInt(1)
+		ratio.SetFromInt(1)
 	} else {
-		ratio = types.MlrvalDivide(valueFieldValue, this.previous)
+		types.MlrvalDivide(&ratio, valueFieldValue, this.previous)
 	}
 	inrec.PutCopy(this.outputFieldName, &ratio)
 
@@ -497,7 +497,7 @@ func (this *tStepperRsum) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	this.rsum = types.MlrvalBinaryPlus(valueFieldValue, &this.rsum)
+	types.MlrvalBinaryPlus(&this.rsum, valueFieldValue, &this.rsum)
 	inrec.PutCopy(this.outputFieldName, &this.rsum)
 }
 
@@ -524,7 +524,7 @@ func (this *tStepperCounter) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	this.counter = types.MlrvalBinaryPlus(&this.counter, &this.one)
+	types.MlrvalBinaryPlus(&this.counter, &this.counter, &this.one)
 	inrec.PutCopy(this.outputFieldName, &this.counter)
 }
 
@@ -600,9 +600,13 @@ func (this *tStepperEWMA) process(
 	} else {
 		for i, _ := range this.alphas {
 			curr := valueFieldValue.Copy()
-			product1 := types.MlrvalTimes(curr, &this.alphas[i])
-			product2 := types.MlrvalTimes(&this.prevs[i], &this.oneMinusAlphas[i])
-			next := types.MlrvalBinaryPlus(&product1, &product2)
+			// xxx pending pointer-output refactor
+			var product1 types.Mlrval
+			var product2 types.Mlrval
+			var next types.Mlrval
+			types.MlrvalTimes(&product1, curr, &this.alphas[i])
+			types.MlrvalTimes(&product2, &this.prevs[i], &this.oneMinusAlphas[i])
+			types.MlrvalBinaryPlus(&next, &product1, &product2)
 			inrec.PutCopy(this.outputFieldNames[i], &next)
 			this.prevs[i] = next
 		}

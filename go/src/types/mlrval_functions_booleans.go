@@ -9,200 +9,204 @@ import (
 )
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ss(input1 *Mlrval, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep == input2.printrep)
+func eq_b_ss(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep == input2.printrep)
 }
-func ne_b_ss(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep != input2.printrep)
+func ne_b_ss(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep != input2.printrep)
 }
-func gt_b_ss(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep > input2.printrep)
+func gt_b_ss(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep > input2.printrep)
 }
-func ge_b_ss(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep >= input2.printrep)
+func ge_b_ss(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep >= input2.printrep)
 }
-func lt_b_ss(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep < input2.printrep)
+func lt_b_ss(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep < input2.printrep)
 }
-func le_b_ss(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep <= input2.printrep)
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_xs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.String() == input2.printrep)
-}
-func ne_b_xs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.String() != input2.printrep)
-}
-func gt_b_xs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.String() > input2.printrep)
-}
-func ge_b_xs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.String() >= input2.printrep)
-}
-func lt_b_xs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.String() < input2.printrep)
-}
-func le_b_xs(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.String() <= input2.printrep)
+func le_b_ss(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep <= input2.printrep)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_sx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep == input2.String())
+func eq_b_xs(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.String() == input2.printrep)
 }
-func ne_b_sx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep != input2.String())
+func ne_b_xs(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.String() != input2.printrep)
 }
-func gt_b_sx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep > input2.String())
+func gt_b_xs(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.String() > input2.printrep)
 }
-func ge_b_sx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep >= input2.String())
+func ge_b_xs(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.String() >= input2.printrep)
 }
-func lt_b_sx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep < input2.String())
+func lt_b_xs(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.String() < input2.printrep)
 }
-func le_b_sx(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.printrep <= input2.String())
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ii(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.intval == input2.intval)
-}
-func ne_b_ii(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.intval != input2.intval)
-}
-func gt_b_ii(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.intval > input2.intval)
-}
-func ge_b_ii(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.intval >= input2.intval)
-}
-func lt_b_ii(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.intval < input2.intval)
-}
-func le_b_ii(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.intval <= input2.intval)
+func le_b_xs(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.String() <= input2.printrep)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_if(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(input1.intval) == input2.floatval)
+func eq_b_sx(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep == input2.String())
 }
-func ne_b_if(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(input1.intval) != input2.floatval)
+func ne_b_sx(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep != input2.String())
 }
-func gt_b_if(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(input1.intval) > input2.floatval)
+func gt_b_sx(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep > input2.String())
 }
-func ge_b_if(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(input1.intval) >= input2.floatval)
+func ge_b_sx(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep >= input2.String())
 }
-func lt_b_if(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(input1.intval) < input2.floatval)
+func lt_b_sx(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep < input2.String())
 }
-func le_b_if(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(float64(input1.intval) <= input2.floatval)
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_fi(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval == float64(input2.intval))
-}
-func ne_b_fi(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval != float64(input2.intval))
-}
-func gt_b_fi(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval > float64(input2.intval))
-}
-func ge_b_fi(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval >= float64(input2.intval))
-}
-func lt_b_fi(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval < float64(input2.intval))
-}
-func le_b_fi(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval <= float64(input2.intval))
+func le_b_sx(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.printrep <= input2.String())
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ff(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval == input2.floatval)
+func eq_b_ii(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.intval == input2.intval)
 }
-func ne_b_ff(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval != input2.floatval)
+func ne_b_ii(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.intval != input2.intval)
 }
-func gt_b_ff(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval > input2.floatval)
+func gt_b_ii(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.intval > input2.intval)
 }
-func ge_b_ff(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval >= input2.floatval)
+func ge_b_ii(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.intval >= input2.intval)
 }
-func lt_b_ff(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval < input2.floatval)
+func lt_b_ii(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.intval < input2.intval)
 }
-func le_b_ff(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.floatval <= input2.floatval)
+func le_b_ii(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.intval <= input2.intval)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_bb(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.boolval == input2.boolval)
+func eq_b_if(output, input1, input2 *Mlrval) {
+	output.SetFromBool(float64(input1.intval) == input2.floatval)
 }
-func ne_b_bb(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.boolval != input2.boolval)
+func ne_b_if(output, input1, input2 *Mlrval) {
+	output.SetFromBool(float64(input1.intval) != input2.floatval)
+}
+func gt_b_if(output, input1, input2 *Mlrval) {
+	output.SetFromBool(float64(input1.intval) > input2.floatval)
+}
+func ge_b_if(output, input1, input2 *Mlrval) {
+	output.SetFromBool(float64(input1.intval) >= input2.floatval)
+}
+func lt_b_if(output, input1, input2 *Mlrval) {
+	output.SetFromBool(float64(input1.intval) < input2.floatval)
+}
+func le_b_if(output, input1, input2 *Mlrval) {
+	output.SetFromBool(float64(input1.intval) <= input2.floatval)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_fi(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval == float64(input2.intval))
+}
+func ne_b_fi(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval != float64(input2.intval))
+}
+func gt_b_fi(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval > float64(input2.intval))
+}
+func ge_b_fi(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval >= float64(input2.intval))
+}
+func lt_b_fi(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval < float64(input2.intval))
+}
+func le_b_fi(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval <= float64(input2.intval))
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_ff(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval == input2.floatval)
+}
+func ne_b_ff(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval != input2.floatval)
+}
+func gt_b_ff(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval > input2.floatval)
+}
+func ge_b_ff(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval >= input2.floatval)
+}
+func lt_b_ff(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval < input2.floatval)
+}
+func le_b_ff(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.floatval <= input2.floatval)
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_bb(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.boolval == input2.boolval)
+}
+func ne_b_bb(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.boolval != input2.boolval)
 }
 
 // We could say ordering on bool is error, but, Miller allows
 // sorting on bool so it should allow ordering on bool.
 
-func gt_b_bb(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) > lib.BoolToInt(input2.boolval))
+func gt_b_bb(output, input1, input2 *Mlrval) {
+	output.SetFromBool(lib.BoolToInt(input1.boolval) > lib.BoolToInt(input2.boolval))
 }
-func ge_b_bb(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) >= lib.BoolToInt(input2.boolval))
+func ge_b_bb(output, input1, input2 *Mlrval) {
+	output.SetFromBool(lib.BoolToInt(input1.boolval) >= lib.BoolToInt(input2.boolval))
 }
-func lt_b_bb(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) < lib.BoolToInt(input2.boolval))
+func lt_b_bb(output, input1, input2 *Mlrval) {
+	output.SetFromBool(lib.BoolToInt(input1.boolval) < lib.BoolToInt(input2.boolval))
 }
-func le_b_bb(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval))
+func le_b_bb(output, input1, input2 *Mlrval) {
+	output.SetFromBool(lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_aa(input1, input2 *Mlrval) Mlrval {
+func eq_b_aa(output, input1, input2 *Mlrval) {
 	a := input1.arrayval
 	b := input2.arrayval
 
 	// Different-length arrays are not equal
 	if len(a) != len(b) {
-		return MlrvalFromBool(false) // stub
+		output.SetFromBool(false) // stub
+		return
 	}
 
 	// Same-length arrays: return false if any slot is not equal, else true.
 	for i := range a {
-		eq := MlrvalEquals(&a[i], &b[i])
+		eq := MlrvalFromError()
+		MlrvalEquals(&eq, &a[i], &b[i])
+		lib.InternalCodingErrorIf(eq.mvtype != MT_BOOL)
 		if eq.boolval == false {
-			return MlrvalFromBool(false)
+			output.SetFromBool(false)
+			return
 		}
 	}
 
-	return MlrvalFromBool(true)
+	output.SetFromBool(true)
 }
-func ne_b_aa(input1, input2 *Mlrval) Mlrval {
-	eq := eq_b_aa(input1, input2)
-	return MlrvalFromBool(!eq.boolval)
+func ne_b_aa(output, input1, input2 *Mlrval) {
+	eq_b_aa(output, input1, input2)
+	output.SetFromBool(!output.boolval)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_mm(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(input1.mapval.Equals(input2.mapval))
+func eq_b_mm(output, input1, input2 *Mlrval) {
+	output.SetFromBool(input1.mapval.Equals(input2.mapval))
 }
-func ne_b_mm(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFromBool(!input1.mapval.Equals(input2.mapval))
+func ne_b_mm(output, input1, input2 *Mlrval) {
+	output.SetFromBool(!input1.mapval.Equals(input2.mapval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -303,54 +307,56 @@ var le_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_erro, _absn, _fals, _fals, _fals, _fals, _fals, _fals, _erro},
 }
 
-func MlrvalEquals(input1, input2 *Mlrval) Mlrval {
-	return eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalEquals(output, input1, input2 *Mlrval) {
+	eq_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
-func MlrvalNotEquals(input1, input2 *Mlrval) Mlrval {
-	return ne_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalNotEquals(output, input1, input2 *Mlrval) {
+	ne_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
-func MlrvalGreaterThan(input1, input2 *Mlrval) Mlrval {
-	return gt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalGreaterThan(output, input1, input2 *Mlrval) {
+	gt_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
-func MlrvalGreaterThanOrEquals(input1, input2 *Mlrval) Mlrval {
-	return ge_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalGreaterThanOrEquals(output, input1, input2 *Mlrval) {
+	ge_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
-func MlrvalLessThan(input1, input2 *Mlrval) Mlrval {
-	return lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalLessThan(output, input1, input2 *Mlrval) {
+	lt_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
-func MlrvalLessThanOrEquals(input1, input2 *Mlrval) Mlrval {
-	return le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalLessThanOrEquals(output, input1, input2 *Mlrval) {
+	le_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
 
 // For Go's sort.Slice
 func MlrvalLessThanForSort(input1, input2 *Mlrval) bool {
-	mretval := lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	// xxx refactor to avoid copy
+	mretval := MlrvalFromFalse()
+	lt_dispositions[input1.mvtype][input2.mvtype](&mretval, input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
 }
 
 // ----------------------------------------------------------------
-func MlrvalLogicalAND(input1, input2 *Mlrval) Mlrval {
+func MlrvalLogicalAND(output, input1, input2 *Mlrval) {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
-		return MlrvalFromBool(input1.boolval && input2.boolval)
+		output.SetFromBool(input1.boolval && input2.boolval)
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }
 
-func MlrvalLogicalOR(input1, input2 *Mlrval) Mlrval {
+func MlrvalLogicalOR(output, input1, input2 *Mlrval) {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
-		return MlrvalFromBool(input1.boolval || input2.boolval)
+		output.SetFromBool(input1.boolval || input2.boolval)
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }
 
-func MlrvalLogicalXOR(input1, input2 *Mlrval) Mlrval {
+func MlrvalLogicalXOR(output, input1, input2 *Mlrval) {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
-		return MlrvalFromBool(input1.boolval != input2.boolval)
+		output.SetFromBool(input1.boolval != input2.boolval)
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }

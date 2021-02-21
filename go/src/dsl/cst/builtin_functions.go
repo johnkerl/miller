@@ -265,9 +265,12 @@ func (this *RootNode) BuildBinaryFunctionCallsiteNode(
 }
 
 func (this *BinaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
+	// xxx temp
+	output := types.MlrvalFromError()
 	arg1 := this.evaluable1.Evaluate(state)
 	arg2 := this.evaluable2.Evaluate(state)
-	return this.binaryFunc(&arg1, &arg2)
+	this.binaryFunc(&output, &arg1, &arg2)
+	return output
 }
 
 // ----------------------------------------------------------------
@@ -379,7 +382,10 @@ func (this *VariadicFunctionCallsiteNode) Evaluate(state *runtime.State) types.M
 		arg := evaluable.Evaluate(state)
 		args[i] = &arg
 	}
-	return this.variadicFunc(args)
+	// xxx temp
+	output := types.MlrvalFromError()
+	this.variadicFunc(&output, args)
+	return output
 }
 
 // ================================================================
@@ -450,7 +456,10 @@ func (this *LogicalANDOperatorNode) Evaluate(state *runtime.State) types.Mlrval 
 	if btype == types.MT_ABSENT {
 		return bout
 	}
-	return types.MlrvalLogicalAND(&aout, &bout)
+	// xxx temp
+	output := types.MlrvalFromError()
+	types.MlrvalLogicalAND(&output, &aout, &bout)
+	return output
 }
 
 // ================================================================
@@ -490,7 +499,10 @@ func (this *LogicalOROperatorNode) Evaluate(state *runtime.State) types.Mlrval {
 	if btype == types.MT_ABSENT {
 		return bout
 	}
-	return types.MlrvalLogicalOR(&aout, &bout)
+	// xxx temp
+	output := types.MlrvalFromError()
+	types.MlrvalLogicalOR(&output, &aout, &bout)
+	return output
 }
 
 // ================================================================
@@ -572,9 +584,9 @@ func (this *StandardTernaryOperatorNode) Evaluate(state *runtime.State) types.Ml
 // for the function-manager lookup table to indicate the arity of the function,
 // even though at runtime these functions should not get invoked.
 
-func BinaryShortCircuitPlaceholder(a, b *types.Mlrval) types.Mlrval {
+func BinaryShortCircuitPlaceholder(output, input1, input2 *types.Mlrval) {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return types.MlrvalFromError() // not reached
+	output.SetFromError() // not reached
 }
 
 func TernaryShortCircuitPlaceholder(output, input1, input2, input3 *types.Mlrval) {

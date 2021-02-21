@@ -16,6 +16,9 @@ TOP OF LIST:
 
 * cst-no-alloc refactor ...
   - dispo-vec the CopyFrom method
+  - MlrvalLessThanForSort
+  - MlrvalGetMeanEB et al.
+  - var delta types.Mlrval for uninits
   - nice narrative write-up w/ the C stack-allocator problem, Go non-solutionk,
     profilng methods, GC readings/findings, before-and-after CST data structures,
     final perf results.

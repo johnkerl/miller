@@ -116,6 +116,7 @@ type TransformerSeqgen struct {
 	stop           types.Mlrval
 	step           types.Mlrval
 	doneComparator types.BinaryFunc
+	mdone          types.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -180,6 +181,7 @@ func NewTransformerSeqgen(
 		stop:           stop,
 		step:           step,
 		doneComparator: doneComparator,
+		mdone:          types.MlrvalFromBool(false),
 	}, nil
 }
 
@@ -193,8 +195,8 @@ func (this *TransformerSeqgen) Transform(
 	context.UpdateForStartOfFile("seqgen")
 
 	for {
-		mdone := this.doneComparator(&counter, &this.stop)
-		done, _ := mdone.GetBoolValue()
+		this.doneComparator(&this.mdone, &counter, &this.stop)
+		done, _ := this.mdone.GetBoolValue()
 		if done {
 			break
 		}
@@ -207,7 +209,7 @@ func (this *TransformerSeqgen) Transform(
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
 		outputChannel <- outrecAndContext
 
-		counter = types.MlrvalBinaryPlus(&counter, &this.step)
+		types.MlrvalBinaryPlus(&counter, &counter, &this.step)
 	}
 
 	outputChannel <- types.NewEndOfStreamMarker(context)

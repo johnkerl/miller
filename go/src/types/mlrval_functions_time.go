@@ -39,9 +39,7 @@ func MlrvalSec2GMTUnary(output, input1 *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func MlrvalSec2GMTBinary(input1, input2 *Mlrval) Mlrval {
-	// xxx temp
-	output := MlrvalFromAbsent()
+func MlrvalSec2GMTBinary(output, input1, input2 *Mlrval) {
 	if input2.mvtype != MT_INT {
 		output.SetFromError()
 	} else if input1.mvtype == MT_FLOAT {
@@ -51,5 +49,4 @@ func MlrvalSec2GMTBinary(input1, input2 *Mlrval) Mlrval {
 	} else {
 		output.CopyFrom(input1)
 	}
-	return output
 }

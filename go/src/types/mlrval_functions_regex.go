@@ -101,50 +101,55 @@ func MlrvalGsub(output, input1, input2, input3 *Mlrval) {
 // ================================================================
 // TODO: make a variant which allows compiling the regexp once and reusing it
 // on each record
-func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) Mlrval {
+func MlrvalStringMatchesRegexp(output, input1, input2 *Mlrval) {
 	if !input1.IsLegit() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if !input2.IsLegit() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if !input1.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	// TODO: better exception-handling
 	re := lib.CompileMillerRegexOrDie(input2.printrep)
-	return MlrvalFromBool(
+	output.SetFromBool(
 		re.MatchString(input1.printrep),
 	)
 }
 
-func MlrvalStringDoesNotMatchRegexp(input1, input2 *Mlrval) Mlrval {
-	matches := MlrvalStringMatchesRegexp(input1, input2)
-	if matches.mvtype == MT_BOOL {
-		return MlrvalFromBool(!matches.boolval)
-	} else {
-		return matches // error, absent, etc.
+func MlrvalStringDoesNotMatchRegexp(output, input1, input2 *Mlrval) {
+	MlrvalStringMatchesRegexp(output, input1, input2)
+	if output.mvtype == MT_BOOL {
+		output.SetFromBool(!output.boolval)
 	}
+	// else leave it as error, absent, etc.
 }
 
 // TODO: find a way to keep and stash a precompiled regex, somewhere in the CST ...
-func MlrvalRegextract(input1, input2 *Mlrval) Mlrval {
+func MlrvalRegextract(output, input1, input2 *Mlrval) {
 	if !input1.IsString() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsString() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	regex := lib.CompileMillerRegexOrDie(input2.printrep)
 	// TODO: See if we need FindStringIndex or FindStringSubmatch to distinguish from matching "".
-	output := regex.FindString(input1.printrep)
-	if output != "" {
-		return MlrvalFromString(output)
+	match := regex.FindString(input1.printrep)
+	if match != "" {
+		output.SetFromString(match)
 	} else {
-		return MlrvalFromAbsent()
+		output.SetFromAbsent()
 	}
 }
 
