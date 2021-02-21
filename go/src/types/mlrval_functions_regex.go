@@ -7,85 +7,93 @@ import (
 )
 
 // ================================================================
-func MlrvalSsub(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalSsub(output, input1, input2, input3 *Mlrval) {
 	if input1.IsErrorOrAbsent() {
-		return *input1
+		output.CopyFrom(input1)
+	} else if input2.IsErrorOrAbsent() {
+		output.CopyFrom(input2)
+	} else if input3.IsErrorOrAbsent() {
+		output.CopyFrom(input3)
+	} else if !input1.IsStringOrVoid() {
+		output.SetFromError()
+	} else if !input2.IsStringOrVoid() {
+		output.SetFromError()
+	} else if !input3.IsStringOrVoid() {
+		output.SetFromError()
+	} else {
+		output.SetFromString(
+			strings.Replace(input1.printrep, input2.printrep, input3.printrep, 1),
+		)
 	}
-	if input2.IsErrorOrAbsent() {
-		return *input2
-	}
-	if input3.IsErrorOrAbsent() {
-		return *input3
-	}
-	if !input1.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	if !input2.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	if !input3.IsStringOrVoid() {
-		return MlrvalFromError()
-	}
-	return MlrvalFromString(
-		strings.Replace(input1.printrep, input2.printrep, input3.printrep, 1),
-	)
 }
 
 // ================================================================
 // TODO: make a variant which allows compiling the regexp once and reusing it
 // on each record
-func MlrvalSub(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalSub(output, input1, input2, input3 *Mlrval) {
 	if input1.IsErrorOrAbsent() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if input2.IsErrorOrAbsent() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if input3.IsErrorOrAbsent() {
-		return *input3
+		output.CopyFrom(input3)
+		return
 	}
 	if !input1.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input3.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	// TODO: better exception-handling
 	re := lib.CompileMillerRegexOrDie(input2.printrep)
 
-	output := lib.RegexReplaceOnce(re, input1.printrep, input3.printrep)
+	replacement := lib.RegexReplaceOnce(re, input1.printrep, input3.printrep)
 
-	return MlrvalFromString(output)
+	output.SetFromString(replacement)
 }
 
 // ================================================================
 // TODO: make a variant which allows compiling the regexp once and reusing it
 // on each record
-func MlrvalGsub(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalGsub(output, input1, input2, input3 *Mlrval) {
 	if input1.IsErrorOrAbsent() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if input2.IsErrorOrAbsent() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if input3.IsErrorOrAbsent() {
-		return *input3
+		output.CopyFrom(input3)
+		return
 	}
 	if !input1.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input3.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	// TODO: better exception-handling
 	re := lib.CompileMillerRegexOrDie(input2.printrep)
-	return MlrvalFromString(
+	output.SetFromString(
 		re.ReplaceAllString(input1.printrep, input3.printrep),
 	)
 }
@@ -140,19 +148,21 @@ func MlrvalRegextract(input1, input2 *Mlrval) Mlrval {
 	}
 }
 
-func MlrvalRegextractOrElse(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalRegextractOrElse(output, input1, input2, input3 *Mlrval) {
 	if !input1.IsString() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsString() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	regex := lib.CompileMillerRegexOrDie(input2.printrep)
 	// TODO: See if we need FindStringIndex or FindStringSubmatch to distinguish from matching "".
-	output := regex.FindString(input1.printrep)
-	if output != "" {
-		return MlrvalFromString(output)
+	found := regex.FindString(input1.printrep)
+	if found != "" {
+		output.SetFromString(found)
 	} else {
-		return *input3
+		output.CopyFrom(input3)
 	}
 }

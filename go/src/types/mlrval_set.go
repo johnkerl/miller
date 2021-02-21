@@ -9,6 +9,16 @@ import (
 )
 
 // ----------------------------------------------------------------
+func (this *Mlrval) CopyFrom(that *Mlrval) {
+	*this = *that
+	if this.mvtype == MT_MAP {
+		this.mapval = that.mapval.Copy()
+	} else if this.mvtype == MT_ARRAY {
+		this.arrayval = CopyMlrvalArray(that.arrayval)
+	}
+}
+
+// ----------------------------------------------------------------
 func (this *Mlrval) SetFromPending() {
 	this.mvtype = MT_PENDING
 	this.printrep = "(bug-if-you-see-this-pending-type)"

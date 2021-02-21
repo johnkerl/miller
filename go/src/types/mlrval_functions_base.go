@@ -66,7 +66,7 @@ type mathLibUnaryFuncWrapper func(*Mlrval, mathLibUnaryFunc) Mlrval
 type BinaryFunc func(*Mlrval, *Mlrval) Mlrval
 
 // Function-pointer type for ternary functions
-type TernaryFunc func(*Mlrval, *Mlrval, *Mlrval) Mlrval
+type TernaryFunc func(output, input1, input2, input3 *Mlrval)
 
 // Function-pointer type for variadic functions.
 type VariadicFunc func([]*Mlrval) Mlrval

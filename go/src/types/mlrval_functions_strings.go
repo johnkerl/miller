@@ -62,14 +62,15 @@ func MlrvalDot(input1, input2 *Mlrval) Mlrval {
 // substr(s,m,n) gives substring of s from 1-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
-func MlrvalSubstr(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalSubstr(output, input1, input2, input3 *Mlrval) {
 	if !input1.IsStringOrVoid() {
 		if input1.IsNumeric() {
 			// JIT-stringify, if not already (e.g. intval scanned from string
 			// in input-file data)
 			input1.setPrintRep()
 		} else {
-			return MlrvalFromError()
+			output.SetFromError()
+			return
 		}
 	}
 	// TODO: fix this with regard to UTF-8 and runes.
@@ -79,7 +80,8 @@ func MlrvalSubstr(input1, input2, input3 *Mlrval) Mlrval {
 	// empty in the DSL expression it comes in here as a 1. But when the upper
 	// index is empty in the DSL expression it comes in here as "".
 	if !input2.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	lowerMindex := input2.intval
 
@@ -87,7 +89,8 @@ func MlrvalSubstr(input1, input2, input3 *Mlrval) Mlrval {
 	if input3.IsEmpty() {
 		// Keep strlen
 	} else if !input3.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	} else {
 		upperMindex = input3.intval
 	}
@@ -97,14 +100,14 @@ func MlrvalSubstr(input1, input2, input3 *Mlrval) Mlrval {
 	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
-		return MlrvalFromString("")
+		output.SetFromString("")
 	} else if m > n {
-		return MlrvalFromError()
+		output.SetFromError()
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
 		// are inclusive.
-		return MlrvalFromString(input1.printrep[m : n+1])
+		output.SetFromString(input1.printrep[m : n+1])
 	}
 }
 

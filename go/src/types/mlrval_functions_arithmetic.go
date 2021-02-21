@@ -675,47 +675,54 @@ func imodexp(a, e, m int) int {
 	return c
 }
 
-func imodop(input1, input2, input3 *Mlrval, iop i_iii_func) Mlrval {
+func imodop(output, input1, input2, input3 *Mlrval, iop i_iii_func) {
 	if !input1.IsLegit() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if !input2.IsLegit() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if !input3.IsLegit() {
-		return *input3
+		output.CopyFrom(input3)
+		return
 	}
 	if !input1.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input2.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !input3.IsInt() {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 
-	return MlrvalFromInt(iop(input1.intval, input2.intval, input3.intval))
+	output.SetFromInt(iop(input1.intval, input2.intval, input3.intval))
 }
 
-func MlrvalModAdd(input1, input2, input3 *Mlrval) Mlrval {
-	return imodop(input1, input2, input3, imodadd)
+func MlrvalModAdd(output, input1, input2, input3 *Mlrval) {
+	imodop(output, input1, input2, input3, imodadd)
 }
 
-func MlrvalModSub(input1, input2, input3 *Mlrval) Mlrval {
-	return imodop(input1, input2, input3, imodsub)
+func MlrvalModSub(output, input1, input2, input3 *Mlrval) {
+	imodop(output, input1, input2, input3, imodsub)
 }
 
-func MlrvalModMul(input1, input2, input3 *Mlrval) Mlrval {
-	return imodop(input1, input2, input3, imodmul)
+func MlrvalModMul(output, input1, input2, input3 *Mlrval) {
+	imodop(output, input1, input2, input3, imodmul)
 }
 
-func MlrvalModExp(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalModExp(output, input1, input2, input3 *Mlrval) {
 	// Pre-check for negative exponent
 	if input2.mvtype == MT_INT && input2.intval < 0 {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
-	return imodop(input1, input2, input3, imodexp)
+	imodop(output, input1, input2, input3, imodexp)
 }
 
 // ================================================================

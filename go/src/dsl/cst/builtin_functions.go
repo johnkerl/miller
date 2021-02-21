@@ -321,7 +321,10 @@ func (this *TernaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Ml
 	arg1 := this.evaluable1.Evaluate(state)
 	arg2 := this.evaluable2.Evaluate(state)
 	arg3 := this.evaluable3.Evaluate(state)
-	return this.ternaryFunc(&arg1, &arg2, &arg3)
+	// xxx temp
+	output := types.MlrvalFromAbsent()
+	this.ternaryFunc(&output, &arg1, &arg2, &arg3)
+	return output
 }
 
 // ----------------------------------------------------------------
@@ -565,7 +568,7 @@ func BinaryShortCircuitPlaceholder(a, b *types.Mlrval) types.Mlrval {
 	return types.MlrvalFromError() // not reached
 }
 
-func TernaryShortCircuitPlaceholder(a, b, c *types.Mlrval) types.Mlrval {
+func TernaryShortCircuitPlaceholder(output, input1, input2, input3 *types.Mlrval) {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return types.MlrvalFromError() // not reached
+	output.SetFromError() // not reached
 }

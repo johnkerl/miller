@@ -240,30 +240,36 @@ func MlrvalRoundm(input1, input2 *Mlrval) Mlrval {
 }
 
 // ================================================================
-func MlrvalLogifit(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalLogifit(output, input1, input2, input3 *Mlrval) {
 	if !input1.IsLegit() {
-		return *input1
+		output.CopyFrom(input1)
+		return
 	}
 	if !input2.IsLegit() {
-		return *input2
+		output.CopyFrom(input2)
+		return
 	}
 	if !input3.IsLegit() {
-		return *input3
+		output.CopyFrom(input3)
+		return
 	}
 
 	// int/float OK; rest not
 	x, xok := input1.GetNumericToFloatValue()
 	if !xok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	m, mok := input2.GetNumericToFloatValue()
 	if !mok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	b, bok := input3.GetNumericToFloatValue()
 	if !bok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 
-	return MlrvalFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
+	output.SetFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
 }

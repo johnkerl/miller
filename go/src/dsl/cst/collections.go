@@ -141,7 +141,10 @@ func (this *ArraySliceAccessNode) Evaluate(state *runtime.State) types.Mlrval {
 		return types.MlrvalFromAbsent()
 	}
 	if baseMlrval.IsString() {
-		return types.MlrvalSubstr(&baseMlrval, &lowerIndexMlrval, &upperIndexMlrval)
+		// xxx temp
+		output := types.MlrvalFromAbsent()
+		types.MlrvalSubstr(&output, &baseMlrval, &lowerIndexMlrval, &upperIndexMlrval)
+		return output
 	}
 	array := baseMlrval.GetArray()
 	if array == nil {

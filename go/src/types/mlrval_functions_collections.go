@@ -366,13 +366,15 @@ func MlrvalJoinV(input1, input2 *Mlrval) Mlrval {
 // ----------------------------------------------------------------
 // joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
 // joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
-func MlrvalJoinKV(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalJoinKV(output, input1, input2, input3 *Mlrval) {
 	if input2.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	pairSeparator := input2.printrep
 	if input3.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	fieldSeparator := input3.printrep
 
@@ -388,7 +390,7 @@ func MlrvalJoinKV(input1, input2, input3 *Mlrval) Mlrval {
 			}
 		}
 
-		return MlrvalFromString(buffer.String())
+		output.SetFromString(buffer.String())
 	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
@@ -402,28 +404,31 @@ func MlrvalJoinKV(input1, input2, input3 *Mlrval) Mlrval {
 			buffer.WriteString(element.String())
 		}
 
-		return MlrvalFromString(buffer.String())
+		output.SetFromString(buffer.String())
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }
 
 // ================================================================
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
-func MlrvalSplitKV(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalSplitKV(output, input1, input2, input3 *Mlrval) {
 	if input1.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if input2.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	pairSeparator := input2.printrep
 	if input3.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	fieldSeparator := input3.printrep
 
-	retval := MlrvalEmptyMap()
+	*output = MlrvalEmptyMap()
 
 	fields := lib.SplitString(input1.printrep, fieldSeparator)
 	for i, field := range fields {
@@ -431,35 +436,36 @@ func MlrvalSplitKV(input1, input2, input3 *Mlrval) Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := MlrvalFromInferredType(pair[0])
-			retval.mapval.PutReference(key, &value)
+			output.mapval.PutReference(key, &value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := MlrvalFromInferredType(pair[1])
-			retval.mapval.PutReference(key, &value)
+			output.mapval.PutReference(key, &value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
 	}
-
-	return retval
 }
 
 // ----------------------------------------------------------------
 // splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
-func MlrvalSplitKVX(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalSplitKVX(output, input1, input2, input3 *Mlrval) {
 	if input1.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if input2.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	pairSeparator := input2.printrep
 	if input3.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	fieldSeparator := input3.printrep
 
-	retval := MlrvalEmptyMap()
+	*output = MlrvalEmptyMap()
 
 	fields := lib.SplitString(input1.printrep, fieldSeparator)
 	for i, field := range fields {
@@ -467,17 +473,15 @@ func MlrvalSplitKVX(input1, input2, input3 *Mlrval) Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := MlrvalFromString(pair[0])
-			retval.mapval.PutReference(key, &value)
+			output.mapval.PutReference(key, &value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := MlrvalFromString(pair[1])
-			retval.mapval.PutReference(key, &value)
+			output.mapval.PutReference(key, &value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
 	}
-
-	return retval
 }
 
 // ----------------------------------------------------------------
@@ -641,26 +645,32 @@ func MlrvalAppend(input1, input2 *Mlrval) Mlrval {
 // Third argument is map or array.
 // flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
 // flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-func MlrvalFlatten(input1, input2, input3 *Mlrval) Mlrval {
+func MlrvalFlatten(output, input1, input2, input3 *Mlrval) {
 	if input3.mvtype == MT_MAP || input3.mvtype == MT_ARRAY {
 		if input1.mvtype != MT_STRING && input1.mvtype != MT_VOID {
-			return MlrvalFromError()
+			output.SetFromError()
+			return
 		}
 		prefix := input1.printrep
 		if input2.mvtype != MT_STRING {
-			return MlrvalFromError()
+			output.SetFromError()
+			return
 		}
 		delimiter := input2.printrep
 
-		return input3.FlattenToMap(prefix, delimiter)
+		temp := input3.FlattenToMap(prefix, delimiter)
+		output.CopyFrom(&temp)
 	} else {
-		return *input3
+		output.CopyFrom(input3)
 	}
 }
 
 // flatten($*, ".") is the same as flatten("", ".", $*)
 func MlrvalFlattenBinary(input1, input2 *Mlrval) Mlrval {
-	return MlrvalFlatten(MlrvalPointerFromVoid(), input2, input1)
+	// xxx temp
+	output := MlrvalFromAbsent()
+	MlrvalFlatten(&output, MlrvalPointerFromVoid(), input2, input1)
+	return output
 }
 
 // ----------------------------------------------------------------
