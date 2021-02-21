@@ -48,7 +48,7 @@
 package types
 
 // Function-pointer type for zary functions.
-type ZaryFunc func() Mlrval
+type ZaryFunc func(output *Mlrval)
 
 // Function-pointer type for unary-operator disposition vectors.
 type UnaryFunc func(*Mlrval) Mlrval

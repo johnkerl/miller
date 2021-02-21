@@ -105,7 +105,10 @@ func (this *RootNode) BuildZaryFunctionCallsiteNode(
 }
 
 func (this *ZaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
-	return this.zaryFunc()
+	// xxx temp
+	output := types.MlrvalFromAbsent()
+	this.zaryFunc(&output)
+	return output
 }
 
 // ----------------------------------------------------------------

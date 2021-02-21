@@ -6,14 +6,14 @@ import (
 	"miller/src/lib"
 )
 
-func MlrvalUrand() Mlrval {
-	return MlrvalFromFloat64(
+func MlrvalUrand(output *Mlrval) {
+	output.SetFromFloat64(
 		lib.RandFloat64(),
 	)
 }
 
-func MlrvalUrand32() Mlrval {
-	return MlrvalFromInt(
+func MlrvalUrand32(output *Mlrval) {
+	output.SetFromInt(
 		int(
 			lib.RandUint32(),
 		),

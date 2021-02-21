@@ -7,13 +7,13 @@ import (
 )
 
 // ================================================================
-func MlrvalSystime() Mlrval {
-	return MlrvalFromFloat64(
+func MlrvalSystime(output *Mlrval) {
+	output.SetFromFloat64(
 		float64(time.Now().UnixNano()) / 1.0e9,
 	)
 }
-func MlrvalSystimeInt() Mlrval {
-	return MlrvalFromInt(int(time.Now().Unix()))
+func MlrvalSystimeInt(output *Mlrval) {
+	output.SetFromInt(int(time.Now().Unix()))
 }
 
 var startTime float64
@@ -21,8 +21,8 @@ var startTime float64
 func init() {
 	startTime = float64(time.Now().UnixNano()) / 1.0e9
 }
-func MlrvalUptime() Mlrval {
-	return MlrvalFromFloat64(
+func MlrvalUptime(output *Mlrval) {
+	output.SetFromFloat64(
 		float64(time.Now().UnixNano())/1.0e9 - startTime,
 	)
 }
