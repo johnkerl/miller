@@ -11,16 +11,17 @@ import (
 )
 
 // ================================================================
-func MlrvalStrlen(input1 *Mlrval) Mlrval {
+func MlrvalStrlen(output, input1 *Mlrval) {
 	if !input1.IsStringOrVoid() {
-		return MlrvalFromError()
+		output.SetFromError()
+	} else {
+		output.SetFromInt(int(utf8.RuneCountInString(input1.printrep)))
 	}
-	return MlrvalFromInt(int(utf8.RuneCountInString(input1.printrep)))
 }
 
 // ================================================================
-func MlrvalToString(input1 *Mlrval) Mlrval {
-	return MlrvalFromString(input1.String())
+func MlrvalToString(output, input1 *Mlrval) {
+	output.SetFromString(input1.String())
 }
 
 // ================================================================
@@ -139,40 +140,40 @@ func MlrvalTruncate(input1, input2 *Mlrval) Mlrval {
 }
 
 // ================================================================
-func MlrvalLStrip(input1 *Mlrval) Mlrval {
+func MlrvalLStrip(output, input1 *Mlrval) {
 	if input1.mvtype == MT_STRING {
-		return MlrvalFromString(strings.TrimLeft(input1.printrep, " \t"))
+		output.SetFromString(strings.TrimLeft(input1.printrep, " \t"))
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
-func MlrvalRStrip(input1 *Mlrval) Mlrval {
+func MlrvalRStrip(output, input1 *Mlrval) {
 	if input1.mvtype == MT_STRING {
-		return MlrvalFromString(strings.TrimRight(input1.printrep, " \t"))
+		output.SetFromString(strings.TrimRight(input1.printrep, " \t"))
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
-func MlrvalStrip(input1 *Mlrval) Mlrval {
+func MlrvalStrip(output, input1 *Mlrval) {
 	if input1.mvtype == MT_STRING {
-		return MlrvalFromString(strings.Trim(input1.printrep, " \t"))
+		output.SetFromString(strings.Trim(input1.printrep, " \t"))
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalCollapseWhitespace(input1 *Mlrval) Mlrval {
-	return MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
+func MlrvalCollapseWhitespace(output, input1 *Mlrval) {
+	MlrvalCollapseWhitespaceRegexp(output, input1, WhitespaceRegexp())
 }
 
-func MlrvalCollapseWhitespaceRegexp(input1 *Mlrval, whitespaceRegexp *regexp.Regexp) Mlrval {
+func MlrvalCollapseWhitespaceRegexp(output, input1 *Mlrval, whitespaceRegexp *regexp.Regexp) {
 	if input1.mvtype == MT_STRING {
-		return MlrvalFromString(whitespaceRegexp.ReplaceAllString(input1.printrep, " "))
+		output.SetFromString(whitespaceRegexp.ReplaceAllString(input1.printrep, " "))
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
@@ -181,55 +182,55 @@ func WhitespaceRegexp() *regexp.Regexp {
 }
 
 // ================================================================
-func MlrvalToUpper(input1 *Mlrval) Mlrval {
+func MlrvalToUpper(output, input1 *Mlrval) {
 	if input1.mvtype == MT_STRING {
-		return MlrvalFromString(strings.ToUpper(input1.printrep))
+		output.SetFromString(strings.ToUpper(input1.printrep))
 	} else if input1.mvtype == MT_VOID {
-		return *input1
+		output.CopyFrom(input1)
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
-func MlrvalToLower(input1 *Mlrval) Mlrval {
+func MlrvalToLower(output, input1 *Mlrval) {
 	if input1.mvtype == MT_STRING {
-		return MlrvalFromString(strings.ToLower(input1.printrep))
+		output.SetFromString(strings.ToLower(input1.printrep))
 	} else if input1.mvtype == MT_VOID {
-		return *input1
+		output.CopyFrom(input1)
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
-func MlrvalCapitalize(input1 *Mlrval) Mlrval {
+func MlrvalCapitalize(output, input1 *Mlrval) {
 	if input1.mvtype == MT_STRING {
 		if input1.printrep == "" {
-			return *input1
+			output.CopyFrom(input1)
 		} else {
 			runes := []rune(input1.printrep)
 			rfirst := runes[0]
 			rrest := runes[1:]
 			sfirst := strings.ToUpper(string(rfirst))
 			srest := string(rrest)
-			return MlrvalFromString(sfirst + srest)
+			output.SetFromString(sfirst + srest)
 		}
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalCleanWhitespace(input1 *Mlrval) Mlrval {
-	temp := MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
-	return MlrvalStrip(&temp)
+func MlrvalCleanWhitespace(output, input1 *Mlrval) {
+	MlrvalCollapseWhitespaceRegexp(output, input1, WhitespaceRegexp())
+	MlrvalStrip(output, output)
 }
 
 // ================================================================
-func MlrvalHexfmt(input1 *Mlrval) Mlrval {
+func MlrvalHexfmt(output, input1 *Mlrval) {
 	if input1.mvtype == MT_INT {
-		return MlrvalFromString("0x" + strconv.FormatUint(uint64(input1.intval), 16))
+		output.SetFromString("0x" + strconv.FormatUint(uint64(input1.intval), 16))
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 

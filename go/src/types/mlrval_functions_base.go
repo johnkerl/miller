@@ -51,7 +51,7 @@ package types
 type ZaryFunc func(output *Mlrval)
 
 // Function-pointer type for unary-operator disposition vectors.
-type UnaryFunc func(*Mlrval) Mlrval
+type UnaryFunc func(output, input1 *Mlrval)
 
 // The asserting_{type} need access to the context to say things like 'Assertion ... failed
 // at filename {FILENAME} record number {NR}'.
@@ -60,7 +60,7 @@ type ContextualUnaryFunc func(*Mlrval, *Context) Mlrval
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64
-type mathLibUnaryFuncWrapper func(*Mlrval, mathLibUnaryFunc) Mlrval
+type mathLibUnaryFuncWrapper func(output, input1 *Mlrval, f mathLibUnaryFunc)
 
 // Function-pointer type for binary-operator disposition matrices.
 type BinaryFunc func(*Mlrval, *Mlrval) Mlrval
@@ -82,23 +82,23 @@ type ComparatorFunc func(*Mlrval, *Mlrval) int
 
 // ----------------------------------------------------------------
 // Return error (unary)
-func _erro1(input1 *Mlrval) Mlrval {
-	return MlrvalFromError()
+func _erro1(output, input1 *Mlrval) {
+	output.SetFromError()
 }
 
 // Return absent (unary)
-func _absn1(input1 *Mlrval) Mlrval {
-	return MlrvalFromAbsent()
+func _absn1(output, input1 *Mlrval) {
+	output.SetFromAbsent()
 }
 
 // Return void (unary)
-func _void1(input1 *Mlrval) Mlrval {
-	return MlrvalFromAbsent()
+func _void1(output, input1 *Mlrval) {
+	output.SetFromVoid()
 }
 
 // Return argument (unary)
-func _1u___(input1 *Mlrval) Mlrval {
-	return *input1
+func _1u___(output, input1 *Mlrval) {
+	output.CopyFrom(input1)
 }
 
 // ----------------------------------------------------------------

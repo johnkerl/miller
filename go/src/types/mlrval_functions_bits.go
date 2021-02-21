@@ -3,8 +3,8 @@ package types
 // ================================================================
 // Bitwise NOT
 
-func bitwise_not_i_i(input1 *Mlrval) Mlrval {
-	return MlrvalFromInt(^input1.intval)
+func bitwise_not_i_i(output, input1 *Mlrval) {
+	output.SetFromInt(^input1.intval)
 }
 
 var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
@@ -19,8 +19,8 @@ var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _absn1,
 }
 
-func MlrvalBitwiseNOT(input1 *Mlrval) Mlrval {
-	return bitwise_not_dispositions[input1.mvtype](input1)
+func MlrvalBitwiseNOT(output, input1 *Mlrval) {
+	bitwise_not_dispositions[input1.mvtype](output, input1)
 }
 
 // ================================================================
@@ -34,7 +34,7 @@ const _m08 uint64 = 0x00ff00ff00ff00ff
 const _m16 uint64 = 0x0000ffff0000ffff
 const _m32 uint64 = 0x00000000ffffffff
 
-func bitcount_i_i(input1 *Mlrval) Mlrval {
+func bitcount_i_i(output, input1 *Mlrval) {
 	a := uint64(input1.intval)
 	a = (a & _m01) + ((a >> 1) & _m01)
 	a = (a & _m02) + ((a >> 2) & _m02)
@@ -42,7 +42,7 @@ func bitcount_i_i(input1 *Mlrval) Mlrval {
 	a = (a & _m08) + ((a >> 8) & _m08)
 	a = (a & _m16) + ((a >> 16) & _m16)
 	a = (a & _m32) + ((a >> 32) & _m32)
-	return MlrvalFromInt(int(a))
+	output.SetFromInt(int(a))
 }
 
 var bitcount_dispositions = [MT_DIM]UnaryFunc{
@@ -57,8 +57,8 @@ var bitcount_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _absn1,
 }
 
-func MlrvalBitCount(input1 *Mlrval) Mlrval {
-	return bitcount_dispositions[input1.mvtype](input1)
+func MlrvalBitCount(output, input1 *Mlrval) {
+	bitcount_dispositions[input1.mvtype](output, input1)
 }
 
 // ================================================================

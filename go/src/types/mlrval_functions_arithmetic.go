@@ -19,19 +19,19 @@ var upos_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _absn1,
 }
 
-func MlrvalUnaryPlus(input1 *Mlrval) Mlrval {
-	return upos_dispositions[input1.mvtype](input1)
+func MlrvalUnaryPlus(output, input1 *Mlrval) {
+	upos_dispositions[input1.mvtype](output, input1)
 }
 
 // ================================================================
 // Unary minus operator
 
-func uneg_i_i(input1 *Mlrval) Mlrval {
-	return MlrvalFromInt(-input1.intval)
+func uneg_i_i(output, input1 *Mlrval) {
+	output.SetFromInt(-input1.intval)
 }
 
-func uneg_f_f(input1 *Mlrval) Mlrval {
-	return MlrvalFromFloat64(-input1.floatval)
+func uneg_f_f(output, input1 *Mlrval) {
+	output.SetFromFloat64(-input1.floatval)
 }
 
 var uneg_dispositions = [MT_DIM]UnaryFunc{
@@ -46,18 +46,18 @@ var uneg_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _absn1,
 }
 
-func MlrvalUnaryMinus(input1 *Mlrval) Mlrval {
-	return uneg_dispositions[input1.mvtype](input1)
+func MlrvalUnaryMinus(output, input1 *Mlrval) {
+	uneg_dispositions[input1.mvtype](output, input1)
 }
 
 // ================================================================
 // Logical NOT operator
 
-func MlrvalLogicalNOT(input1 *Mlrval) Mlrval {
+func MlrvalLogicalNOT(output, input1 *Mlrval) {
 	if input1.mvtype == MT_BOOL {
-		return MlrvalFromBool(!input1.boolval)
+		output.SetFromBool(!input1.boolval)
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }
 

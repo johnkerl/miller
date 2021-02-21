@@ -148,7 +148,10 @@ func (this *RootNode) BuildUnaryFunctionCallsiteNode(
 
 func (this *UnaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
-	return this.unaryFunc(&arg1)
+	// xxx temp
+	output := types.MlrvalFromAbsent()
+	this.unaryFunc(&output, &arg1)
+	return output
 }
 
 // ----------------------------------------------------------------

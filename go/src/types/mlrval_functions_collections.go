@@ -10,52 +10,58 @@ import (
 
 // ================================================================
 // Map/array count. Scalars (including strings) have length 1.
-func MlrvalLength(input1 *Mlrval) Mlrval {
+func MlrvalLength(output, input1 *Mlrval) {
 	switch input1.mvtype {
 	case MT_ERROR:
-		return MlrvalFromInt(0)
+		output.SetFromInt(0)
 		break
 	case MT_ABSENT:
-		return MlrvalFromInt(0)
+		output.SetFromInt(0)
 		break
 	case MT_ARRAY:
-		return MlrvalFromInt(int(len(input1.arrayval)))
+		output.SetFromInt(int(len(input1.arrayval)))
 		break
 	case MT_MAP:
-		return MlrvalFromInt(int(input1.mapval.FieldCount))
+		output.SetFromInt(int(input1.mapval.FieldCount))
+		break
+	default:
+		output.SetFromInt(1)
 		break
 	}
-	return MlrvalFromInt(1)
 }
 
 // ================================================================
-func depth_from_array(input1 *Mlrval) Mlrval {
+func depth_from_array(output, input1 *Mlrval) {
 	maxChildDepth := 0
 	for _, child := range input1.arrayval {
-		childDepth := MlrvalDepth(&child)
+		childDepth := MlrvalFromAbsent()
+		MlrvalDepth(&childDepth, &child)
+		lib.InternalCodingErrorIf(childDepth.mvtype != MT_INT)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return MlrvalFromInt(int(1 + maxChildDepth))
+	output.SetFromInt(int(1 + maxChildDepth))
 }
 
-func depth_from_map(input1 *Mlrval) Mlrval {
+func depth_from_map(output, input1 *Mlrval) {
 	maxChildDepth := 0
 	for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
-		childDepth := MlrvalDepth(child)
+		childDepth := MlrvalFromAbsent()
+		MlrvalDepth(&childDepth, child)
+		lib.InternalCodingErrorIf(childDepth.mvtype != MT_INT)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return MlrvalFromInt(int(1 + maxChildDepth))
+	output.SetFromInt(int(1 + maxChildDepth))
 }
 
-func depth_from_scalar(input1 *Mlrval) Mlrval {
-	return MlrvalFromInt(0)
+func depth_from_scalar(output, input1 *Mlrval) {
+	output.SetFromInt(0)
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
@@ -76,12 +82,12 @@ func init() {
 	}
 }
 
-func MlrvalDepth(input1 *Mlrval) Mlrval {
-	return depth_dispositions[input1.mvtype](input1)
+func MlrvalDepth(output, input1 *Mlrval) {
+	depth_dispositions[input1.mvtype](output, input1)
 }
 
 // ================================================================
-func leafcount_from_array(input1 *Mlrval) Mlrval {
+func leafcount_from_array(output, input1 *Mlrval) {
 	sumChildLeafCount := 0
 	for _, child := range input1.arrayval {
 		// Golang initialization loop if we do this :(
@@ -89,18 +95,19 @@ func leafcount_from_array(input1 *Mlrval) Mlrval {
 
 		childLeafCount := MlrvalFromInt(1)
 		if child.mvtype == MT_ARRAY {
-			childLeafCount = leafcount_from_array(&child)
+			leafcount_from_array(&childLeafCount, &child)
 		} else if child.mvtype == MT_MAP {
-			childLeafCount = leafcount_from_map(&child)
+			leafcount_from_map(&childLeafCount, &child)
 		}
 
+		lib.InternalCodingErrorIf(childLeafCount.mvtype != MT_INT)
 		iChildLeafCount := int(childLeafCount.intval)
 		sumChildLeafCount += iChildLeafCount
 	}
-	return MlrvalFromInt(int(sumChildLeafCount))
+	output.SetFromInt(int(sumChildLeafCount))
 }
 
-func leafcount_from_map(input1 *Mlrval) Mlrval {
+func leafcount_from_map(output, input1 *Mlrval) {
 	sumChildLeafCount := 0
 	for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
@@ -110,19 +117,20 @@ func leafcount_from_map(input1 *Mlrval) Mlrval {
 
 		childLeafCount := MlrvalFromInt(1)
 		if child.mvtype == MT_ARRAY {
-			childLeafCount = leafcount_from_array(child)
+			leafcount_from_array(&childLeafCount, child)
 		} else if child.mvtype == MT_MAP {
-			childLeafCount = leafcount_from_map(child)
+			leafcount_from_map(&childLeafCount, child)
 		}
 
+		lib.InternalCodingErrorIf(childLeafCount.mvtype != MT_INT)
 		iChildLeafCount := int(childLeafCount.intval)
 		sumChildLeafCount += iChildLeafCount
 	}
-	return MlrvalFromInt(int(sumChildLeafCount))
+	output.SetFromInt(int(sumChildLeafCount))
 }
 
-func leafcount_from_scalar(input1 *Mlrval) Mlrval {
-	return MlrvalFromInt(1)
+func leafcount_from_scalar(output, input1 *Mlrval) {
+	output.SetFromInt(1)
 }
 
 var leafcount_dispositions = [MT_DIM]UnaryFunc{
@@ -137,8 +145,8 @@ var leafcount_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ leafcount_from_map,
 }
 
-func MlrvalLeafCount(input1 *Mlrval) Mlrval {
-	return leafcount_dispositions[input1.mvtype](input1)
+func MlrvalLeafCount(output, input1 *Mlrval) {
+	leafcount_dispositions[input1.mvtype](output, input1)
 }
 
 // ----------------------------------------------------------------
@@ -582,48 +590,46 @@ func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetKeys(input1 *Mlrval) Mlrval {
+func MlrvalGetKeys(output, input1 *Mlrval) {
 	if input1.mvtype == MT_MAP {
-		retval := NewSizedMlrvalArray(input1.mapval.FieldCount)
+		// TODO: make a ReferenceFrom with commenbs
+		*output = *NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
-			retval.arrayval[i] = MlrvalFromString(pe.Key)
+			output.arrayval[i] = MlrvalFromString(pe.Key)
 			i++
 		}
-		return *retval
 
 	} else if input1.mvtype == MT_ARRAY {
-		retval := NewSizedMlrvalArray(int(len(input1.arrayval)))
+		*output = *NewSizedMlrvalArray(int(len(input1.arrayval)))
 		for i, _ := range input1.arrayval {
-			retval.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
+			output.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
-		return *retval
 
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetValues(input1 *Mlrval) Mlrval {
+func MlrvalGetValues(output, input1 *Mlrval) {
 	if input1.mvtype == MT_MAP {
-		retval := NewSizedMlrvalArray(input1.mapval.FieldCount)
+		// TODO: make a ReferenceFrom with commenbs
+		*output = *NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
-			retval.arrayval[i] = *pe.Value.Copy()
+			output.arrayval[i] = *pe.Value.Copy()
 			i++
 		}
-		return *retval
 
 	} else if input1.mvtype == MT_ARRAY {
-		retval := NewSizedMlrvalArray(int(len(input1.arrayval)))
+		*output = *NewSizedMlrvalArray(int(len(input1.arrayval)))
 		for i, value := range input1.arrayval {
-			retval.arrayval[i] = *value.Copy()
+			output.arrayval[i] = *value.Copy()
 		}
-		return *retval
 
 	} else {
-		return MlrvalFromError()
+		output.SetFromError()
 	}
 }
 
@@ -698,7 +704,7 @@ func MlrvalUnflatten(input1, input2 *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
-func MlrvalArrayify(input1 *Mlrval) Mlrval {
+func MlrvalArrayify(output, input1 *Mlrval) {
 	if input1.mvtype == MT_MAP {
 		convertible := true
 		i := 0
@@ -708,8 +714,7 @@ func MlrvalArrayify(input1 *Mlrval) Mlrval {
 			if pe.Key != sval {
 				convertible = false
 			}
-			temp := MlrvalArrayify(pe.Value)
-			pe.Value = &temp
+			MlrvalArrayify(pe.Value, pe.Value)
 		}
 
 		if convertible {
@@ -719,46 +724,45 @@ func MlrvalArrayify(input1 *Mlrval) Mlrval {
 				arrayval[i] = *pe.Value.Copy()
 				i++
 			}
-			return MlrvalFromArrayLiteralReference(arrayval)
+			output.SetFromArrayLiteralReference(arrayval)
 
 		} else {
-			return *input1
+			output.CopyFrom(input1)
 		}
 
 	} else if input1.mvtype == MT_ARRAY {
+		// TODO: comment (or rethink) that this modifies its inputs!!
 		for i, _ := range input1.arrayval {
-			input1.arrayval[i] = MlrvalArrayify(&input1.arrayval[i])
+			MlrvalArrayify(&input1.arrayval[i], &input1.arrayval[i])
 		}
-		return *input1
+		output.CopyFrom(input1)
 
 	} else {
-		return *input1
+		output.CopyFrom(input1)
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalJSONParse(input1 *Mlrval) Mlrval {
+func MlrvalJSONParse(output, input1 *Mlrval) {
 	if input1.mvtype == MT_VOID {
-		return *input1
+		output.CopyFrom(input1)
 	} else if input1.mvtype != MT_STRING {
-		return MlrvalFromError()
+		output.SetFromError()
 	} else {
-		output := MlrvalFromPending()
+		*output = MlrvalFromPending()
 		err := output.UnmarshalJSON([]byte(input1.printrep))
-		if err == nil {
-			return output
-		} else {
-			return MlrvalFromError()
+		if err != nil {
+			output.SetFromError()
 		}
 	}
 }
 
-func MlrvalJSONStringifyUnary(input1 *Mlrval) Mlrval {
+func MlrvalJSONStringifyUnary(output, input1 *Mlrval) {
 	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE)
 	if err != nil {
-		return MlrvalFromError()
+		output.SetFromError()
 	} else {
-		return MlrvalFromString(string(outputBytes))
+		output.SetFromString(string(outputBytes))
 	}
 }
 
