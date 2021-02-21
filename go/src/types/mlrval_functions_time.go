@@ -28,26 +28,26 @@ func MlrvalUptime() Mlrval {
 }
 
 // ================================================================
-func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_FLOAT {
-		return MlrvalFromString(lib.Sec2GMT(ma.floatval, 0))
-	} else if ma.mvtype == MT_INT {
-		return MlrvalFromString(lib.Sec2GMT(float64(ma.intval), 0))
+func MlrvalSec2GMTUnary(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_FLOAT {
+		return MlrvalFromString(lib.Sec2GMT(input1.floatval, 0))
+	} else if input1.mvtype == MT_INT {
+		return MlrvalFromString(lib.Sec2GMT(float64(input1.intval), 0))
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalSec2GMTBinary(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype != MT_INT {
+func MlrvalSec2GMTBinary(input1, input2 *Mlrval) Mlrval {
+	if input2.mvtype != MT_INT {
 		return MlrvalFromError()
 	}
-	if ma.mvtype == MT_FLOAT {
-		return MlrvalFromString(lib.Sec2GMT(ma.floatval, int(mb.intval)))
-	} else if ma.mvtype == MT_INT {
-		return MlrvalFromString(lib.Sec2GMT(float64(ma.intval), int(mb.intval)))
+	if input1.mvtype == MT_FLOAT {
+		return MlrvalFromString(lib.Sec2GMT(input1.floatval, int(input2.intval)))
+	} else if input1.mvtype == MT_INT {
+		return MlrvalFromString(lib.Sec2GMT(float64(input1.intval), int(input2.intval)))
 	} else {
-		return *ma
+		return *input1
 	}
 }

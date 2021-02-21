@@ -21,22 +21,22 @@ func MlrvalUrand32() Mlrval {
 }
 
 // TODO: use a disposition matrix
-func MlrvalUrandInt(ma, mb *Mlrval) Mlrval {
-	if !ma.IsLegit() {
-		return *ma
+func MlrvalUrandInt(input1, input2 *Mlrval) Mlrval {
+	if !input1.IsLegit() {
+		return *input1
 	}
-	if !mb.IsLegit() {
-		return *mb
+	if !input2.IsLegit() {
+		return *input2
 	}
-	if !ma.IsInt() {
+	if !input1.IsInt() {
 		return MlrvalFromError()
 	}
-	if !mb.IsInt() {
+	if !input2.IsInt() {
 		return MlrvalFromError()
 	}
 
-	a := ma.intval
-	b := mb.intval
+	a := input1.intval
+	b := input2.intval
 
 	var lo int = 0
 	var hi int = 0
@@ -51,15 +51,15 @@ func MlrvalUrandInt(ma, mb *Mlrval) Mlrval {
 	return MlrvalFromInt(u)
 }
 
-func MlrvalUrandRange(ma, mb *Mlrval) Mlrval {
-	if !ma.IsLegit() {
-		return *ma
+func MlrvalUrandRange(input1, input2 *Mlrval) Mlrval {
+	if !input1.IsLegit() {
+		return *input1
 	}
-	if !mb.IsLegit() {
-		return *mb
+	if !input2.IsLegit() {
+		return *input2
 	}
-	a, aok := ma.GetNumericToFloatValue()
-	b, bok := mb.GetNumericToFloatValue()
+	a, aok := input1.GetNumericToFloatValue()
+	b, bok := input2.GetNumericToFloatValue()
 	if !aok {
 		return MlrvalFromError()
 	}

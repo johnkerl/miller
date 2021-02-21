@@ -82,77 +82,77 @@ type ComparatorFunc func(*Mlrval, *Mlrval) int
 
 // ----------------------------------------------------------------
 // Return error (unary)
-func _erro1(ma *Mlrval) Mlrval {
+func _erro1(input1 *Mlrval) Mlrval {
 	return MlrvalFromError()
 }
 
 // Return absent (unary)
-func _absn1(ma *Mlrval) Mlrval {
+func _absn1(input1 *Mlrval) Mlrval {
 	return MlrvalFromAbsent()
 }
 
 // Return void (unary)
-func _void1(ma *Mlrval) Mlrval {
+func _void1(input1 *Mlrval) Mlrval {
 	return MlrvalFromAbsent()
 }
 
 // Return argument (unary)
-func _1u___(ma *Mlrval) Mlrval {
-	return *ma
+func _1u___(input1 *Mlrval) Mlrval {
+	return *input1
 }
 
 // ----------------------------------------------------------------
 // Return error (binary)
-func _erro(ma, mb *Mlrval) Mlrval {
+func _erro(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromError()
 }
 
 // Return absent (binary)
-func _absn(ma, mb *Mlrval) Mlrval {
+func _absn(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromAbsent()
 }
 
 // Return void (binary)
-func _void(ma, mb *Mlrval) Mlrval {
+func _void(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromVoid()
 }
 
 // Return first argument (binary)
-func _1___(ma, mb *Mlrval) Mlrval {
-	return *ma
+func _1___(input1, input2 *Mlrval) Mlrval {
+	return *input1
 }
 
 // Return second argument (binary)
-func _2___(ma, mb *Mlrval) Mlrval {
-	return *mb
+func _2___(input1, input2 *Mlrval) Mlrval {
+	return *input2
 }
 
 // Return first argument, as string (binary)
-func _s1__(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromString(ma.String())
+func _s1__(input1, input2 *Mlrval) Mlrval {
+	return MlrvalFromString(input1.String())
 }
 
 // Return second argument, as string (binary)
-func _s2__(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromString(mb.String())
+func _s2__(input1, input2 *Mlrval) Mlrval {
+	return MlrvalFromString(input2.String())
 }
 
 // Return integer zero (binary)
-func _i0__(ma, mb *Mlrval) Mlrval {
+func _i0__(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromInt(0)
 }
 
 // Return float zero (binary)
-func _f0__(ma, mb *Mlrval) Mlrval {
+func _f0__(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromFloat64(0.0)
 }
 
 // Return boolean true (binary)
-func _true(ma, mb *Mlrval) Mlrval {
+func _true(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromBool(true)
 }
 
 // Return boolean false (binary)
-func _fals(ma, mb *Mlrval) Mlrval {
+func _fals(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromBool(false)
 }

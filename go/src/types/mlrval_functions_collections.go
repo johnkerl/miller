@@ -10,8 +10,8 @@ import (
 
 // ================================================================
 // Map/array count. Scalars (including strings) have length 1.
-func MlrvalLength(ma *Mlrval) Mlrval {
-	switch ma.mvtype {
+func MlrvalLength(input1 *Mlrval) Mlrval {
+	switch input1.mvtype {
 	case MT_ERROR:
 		return MlrvalFromInt(0)
 		break
@@ -19,19 +19,19 @@ func MlrvalLength(ma *Mlrval) Mlrval {
 		return MlrvalFromInt(0)
 		break
 	case MT_ARRAY:
-		return MlrvalFromInt(int(len(ma.arrayval)))
+		return MlrvalFromInt(int(len(input1.arrayval)))
 		break
 	case MT_MAP:
-		return MlrvalFromInt(int(ma.mapval.FieldCount))
+		return MlrvalFromInt(int(input1.mapval.FieldCount))
 		break
 	}
 	return MlrvalFromInt(1)
 }
 
 // ================================================================
-func depth_from_array(ma *Mlrval) Mlrval {
+func depth_from_array(input1 *Mlrval) Mlrval {
 	maxChildDepth := 0
-	for _, child := range ma.arrayval {
+	for _, child := range input1.arrayval {
 		childDepth := MlrvalDepth(&child)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
@@ -41,9 +41,9 @@ func depth_from_array(ma *Mlrval) Mlrval {
 	return MlrvalFromInt(int(1 + maxChildDepth))
 }
 
-func depth_from_map(ma *Mlrval) Mlrval {
+func depth_from_map(input1 *Mlrval) Mlrval {
 	maxChildDepth := 0
-	for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+	for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
 		childDepth := MlrvalDepth(child)
 		iChildDepth := int(childDepth.intval)
@@ -54,7 +54,7 @@ func depth_from_map(ma *Mlrval) Mlrval {
 	return MlrvalFromInt(int(1 + maxChildDepth))
 }
 
-func depth_from_scalar(ma *Mlrval) Mlrval {
+func depth_from_scalar(input1 *Mlrval) Mlrval {
 	return MlrvalFromInt(0)
 }
 
@@ -76,14 +76,14 @@ func init() {
 	}
 }
 
-func MlrvalDepth(ma *Mlrval) Mlrval {
-	return depth_dispositions[ma.mvtype](ma)
+func MlrvalDepth(input1 *Mlrval) Mlrval {
+	return depth_dispositions[input1.mvtype](input1)
 }
 
 // ================================================================
-func leafcount_from_array(ma *Mlrval) Mlrval {
+func leafcount_from_array(input1 *Mlrval) Mlrval {
 	sumChildLeafCount := 0
-	for _, child := range ma.arrayval {
+	for _, child := range input1.arrayval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := MlrvalLeafCount(&child)
 
@@ -100,9 +100,9 @@ func leafcount_from_array(ma *Mlrval) Mlrval {
 	return MlrvalFromInt(int(sumChildLeafCount))
 }
 
-func leafcount_from_map(ma *Mlrval) Mlrval {
+func leafcount_from_map(input1 *Mlrval) Mlrval {
 	sumChildLeafCount := 0
-	for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+	for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
 
 		// Golang initialization loop if we do this :(
@@ -121,7 +121,7 @@ func leafcount_from_map(ma *Mlrval) Mlrval {
 	return MlrvalFromInt(int(sumChildLeafCount))
 }
 
-func leafcount_from_scalar(ma *Mlrval) Mlrval {
+func leafcount_from_scalar(input1 *Mlrval) Mlrval {
 	return MlrvalFromInt(1)
 }
 
@@ -137,35 +137,35 @@ var leafcount_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ leafcount_from_map,
 }
 
-func MlrvalLeafCount(ma *Mlrval) Mlrval {
-	return leafcount_dispositions[ma.mvtype](ma)
+func MlrvalLeafCount(input1 *Mlrval) Mlrval {
+	return leafcount_dispositions[input1.mvtype](input1)
 }
 
 // ----------------------------------------------------------------
-func has_key_in_array(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype == MT_STRING {
+func has_key_in_array(input1, input2 *Mlrval) Mlrval {
+	if input2.mvtype == MT_STRING {
 		return MlrvalFromFalse()
 	}
-	if mb.mvtype != MT_INT {
+	if input2.mvtype != MT_INT {
 		return MlrvalFromError()
 	}
-	_, ok := UnaliasArrayIndex(&ma.arrayval, mb.intval)
+	_, ok := UnaliasArrayIndex(&input1.arrayval, input2.intval)
 	return MlrvalFromBool(ok)
 }
 
-func has_key_in_map(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype == MT_STRING || mb.mvtype == MT_INT {
-		return MlrvalFromBool(ma.mapval.Has(mb.String()))
+func has_key_in_map(input1, input2 *Mlrval) Mlrval {
+	if input2.mvtype == MT_STRING || input2.mvtype == MT_INT {
+		return MlrvalFromBool(input1.mapval.Has(input2.String()))
 	} else {
 		return MlrvalFromError()
 	}
 }
 
-func MlrvalHasKey(ma, mb *Mlrval) Mlrval {
-	if ma.mvtype == MT_ARRAY {
-		return has_key_in_array(ma, mb)
-	} else if ma.mvtype == MT_MAP {
-		return has_key_in_map(ma, mb)
+func MlrvalHasKey(input1, input2 *Mlrval) Mlrval {
+	if input1.mvtype == MT_ARRAY {
+		return has_key_in_array(input1, input2)
+	} else if input1.mvtype == MT_MAP {
+		return has_key_in_map(input1, input2)
 	} else {
 		return MlrvalFromError()
 	}
@@ -294,15 +294,15 @@ func MlrvalMapDiff(mlrvals []*Mlrval) Mlrval {
 // ================================================================
 // joink([1,2,3], ",") -> "1,2,3"
 // joink({"a":3,"b":4,"c":5}, ",") -> "a,b,c"
-func MlrvalJoinK(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype != MT_STRING {
+func MlrvalJoinK(input1, input2 *Mlrval) Mlrval {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	fieldSeparator := mb.printrep
-	if ma.mvtype == MT_MAP {
+	fieldSeparator := input2.printrep
+	if input1.mvtype == MT_MAP {
 		var buffer bytes.Buffer
 
-		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Key)
 			if pe.Next != nil {
 				buffer.WriteString(fieldSeparator)
@@ -310,10 +310,10 @@ func MlrvalJoinK(ma, mb *Mlrval) Mlrval {
 		}
 
 		return MlrvalFromString(buffer.String())
-	} else if ma.mvtype == MT_ARRAY {
+	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
-		for i, _ := range ma.arrayval {
+		for i, _ := range input1.arrayval {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -330,16 +330,16 @@ func MlrvalJoinK(ma, mb *Mlrval) Mlrval {
 // ----------------------------------------------------------------
 // joinv([3,4,5], ",") -> "3,4,5"
 // joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
-func MlrvalJoinV(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype != MT_STRING {
+func MlrvalJoinV(input1, input2 *Mlrval) Mlrval {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	fieldSeparator := mb.printrep
+	fieldSeparator := input2.printrep
 
-	if ma.mvtype == MT_MAP {
+	if input1.mvtype == MT_MAP {
 		var buffer bytes.Buffer
 
-		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Value.String())
 			if pe.Next != nil {
 				buffer.WriteString(fieldSeparator)
@@ -347,10 +347,10 @@ func MlrvalJoinV(ma, mb *Mlrval) Mlrval {
 		}
 
 		return MlrvalFromString(buffer.String())
-	} else if ma.mvtype == MT_ARRAY {
+	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
-		for i, element := range ma.arrayval {
+		for i, element := range input1.arrayval {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -366,20 +366,20 @@ func MlrvalJoinV(ma, mb *Mlrval) Mlrval {
 // ----------------------------------------------------------------
 // joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
 // joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
-func MlrvalJoinKV(ma, mb, mc *Mlrval) Mlrval {
-	if mb.mvtype != MT_STRING {
+func MlrvalJoinKV(input1, input2, input3 *Mlrval) Mlrval {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
+	pairSeparator := input2.printrep
+	if input3.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	fieldSeparator := mc.printrep
+	fieldSeparator := input3.printrep
 
-	if ma.mvtype == MT_MAP {
+	if input1.mvtype == MT_MAP {
 		var buffer bytes.Buffer
 
-		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Key)
 			buffer.WriteString(pairSeparator)
 			buffer.WriteString(pe.Value.String())
@@ -389,10 +389,10 @@ func MlrvalJoinKV(ma, mb, mc *Mlrval) Mlrval {
 		}
 
 		return MlrvalFromString(buffer.String())
-	} else if ma.mvtype == MT_ARRAY {
+	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
-		for i, element := range ma.arrayval {
+		for i, element := range input1.arrayval {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -410,22 +410,22 @@ func MlrvalJoinKV(ma, mb, mc *Mlrval) Mlrval {
 
 // ================================================================
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
-func MlrvalSplitKV(ma, mb, mc *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
+func MlrvalSplitKV(input1, input2, input3 *Mlrval) Mlrval {
+	if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if mb.mvtype != MT_STRING {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
+	pairSeparator := input2.printrep
+	if input3.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	fieldSeparator := mc.printrep
+	fieldSeparator := input3.printrep
 
 	retval := MlrvalEmptyMap()
 
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
+	fields := lib.SplitString(input1.printrep, fieldSeparator)
 	for i, field := range fields {
 		pair := strings.SplitN(field, pairSeparator, 2)
 		if len(pair) == 1 {
@@ -446,22 +446,22 @@ func MlrvalSplitKV(ma, mb, mc *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
-func MlrvalSplitKVX(ma, mb, mc *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
+func MlrvalSplitKVX(input1, input2, input3 *Mlrval) Mlrval {
+	if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if mb.mvtype != MT_STRING {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	pairSeparator := mb.printrep
-	if mc.mvtype != MT_STRING {
+	pairSeparator := input2.printrep
+	if input3.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	fieldSeparator := mc.printrep
+	fieldSeparator := input3.printrep
 
 	retval := MlrvalEmptyMap()
 
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
+	fields := lib.SplitString(input1.printrep, fieldSeparator)
 	for i, field := range fields {
 		pair := strings.SplitN(field, pairSeparator, 2)
 		if len(pair) == 1 {
@@ -482,17 +482,17 @@ func MlrvalSplitKVX(ma, mb, mc *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // splitnv("a,b,c", ",") -> {"1":"a","2":"b","3":"c"}
-func MlrvalSplitNV(ma, mb *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
+func MlrvalSplitNV(input1, input2 *Mlrval) Mlrval {
+	if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if mb.mvtype != MT_STRING {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
 
 	retval := MlrvalEmptyMap()
 
-	fields := lib.SplitString(ma.printrep, mb.printrep)
+	fields := lib.SplitString(input1.printrep, input2.printrep)
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := MlrvalFromInferredType(field)
@@ -504,17 +504,17 @@ func MlrvalSplitNV(ma, mb *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // splitnvx("3,4,5", ",") -> {"1":"3","2":"4","3":"5"}
-func MlrvalSplitNVX(ma, mb *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
+func MlrvalSplitNVX(input1, input2 *Mlrval) Mlrval {
+	if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if mb.mvtype != MT_STRING {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
 
 	retval := MlrvalEmptyMap()
 
-	fields := lib.SplitString(ma.printrep, mb.printrep)
+	fields := lib.SplitString(input1.printrep, input2.printrep)
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := MlrvalFromString(field)
@@ -526,16 +526,16 @@ func MlrvalSplitNVX(ma, mb *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // splita("3,4,5", ",") -> [3,4,5]
-func MlrvalSplitA(ma, mb *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
+func MlrvalSplitA(input1, input2 *Mlrval) Mlrval {
+	if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if mb.mvtype != MT_STRING {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	fieldSeparator := mb.printrep
+	fieldSeparator := input2.printrep
 
-	fields := lib.SplitString(ma.printrep, fieldSeparator)
+	fields := lib.SplitString(input1.printrep, fieldSeparator)
 
 	retval := NewSizedMlrvalArray(int(len(fields)))
 
@@ -550,15 +550,15 @@ func MlrvalSplitA(ma, mb *Mlrval) Mlrval {
 // ----------------------------------------------------------------
 // splitax("3,4,5", ",") -> ["3","4","5"]
 
-func MlrvalSplitAX(ma, mb *Mlrval) Mlrval {
-	if ma.mvtype != MT_STRING {
+func MlrvalSplitAX(input1, input2 *Mlrval) Mlrval {
+	if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if mb.mvtype != MT_STRING {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	input := ma.printrep
-	fieldSeparator := mb.printrep
+	input := input1.printrep
+	fieldSeparator := input2.printrep
 
 	return *mlrvalSplitAXHelper(input, fieldSeparator)
 }
@@ -578,19 +578,19 @@ func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetKeys(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_MAP {
-		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
+func MlrvalGetKeys(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_MAP {
+		retval := NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
-		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 			retval.arrayval[i] = MlrvalFromString(pe.Key)
 			i++
 		}
 		return *retval
 
-	} else if ma.mvtype == MT_ARRAY {
-		retval := NewSizedMlrvalArray(int(len(ma.arrayval)))
-		for i, _ := range ma.arrayval {
+	} else if input1.mvtype == MT_ARRAY {
+		retval := NewSizedMlrvalArray(int(len(input1.arrayval)))
+		for i, _ := range input1.arrayval {
 			retval.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
 		return *retval
@@ -601,19 +601,19 @@ func MlrvalGetKeys(ma *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetValues(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_MAP {
-		retval := NewSizedMlrvalArray(ma.mapval.FieldCount)
+func MlrvalGetValues(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_MAP {
+		retval := NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
-		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 			retval.arrayval[i] = *pe.Value.Copy()
 			i++
 		}
 		return *retval
 
-	} else if ma.mvtype == MT_ARRAY {
-		retval := NewSizedMlrvalArray(int(len(ma.arrayval)))
-		for i, value := range ma.arrayval {
+	} else if input1.mvtype == MT_ARRAY {
+		retval := NewSizedMlrvalArray(int(len(input1.arrayval)))
+		for i, value := range input1.arrayval {
 			retval.arrayval[i] = *value.Copy()
 		}
 		return *retval
@@ -624,13 +624,13 @@ func MlrvalGetValues(ma *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalAppend(ma, mb *Mlrval) Mlrval {
-	if ma.mvtype != MT_ARRAY {
+func MlrvalAppend(input1, input2 *Mlrval) Mlrval {
+	if input1.mvtype != MT_ARRAY {
 		return MlrvalFromError()
 	}
 
-	macopy := ma.Copy()
-	mbcopy := mb.Copy()
+	macopy := input1.Copy()
+	mbcopy := input2.Copy()
 	macopy.ArrayAppend(mbcopy)
 	return *macopy
 }
@@ -641,41 +641,41 @@ func MlrvalAppend(ma, mb *Mlrval) Mlrval {
 // Third argument is map or array.
 // flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
 // flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-func MlrvalFlatten(ma, mb, mc *Mlrval) Mlrval {
-	if mc.mvtype == MT_MAP || mc.mvtype == MT_ARRAY {
-		if ma.mvtype != MT_STRING && ma.mvtype != MT_VOID {
+func MlrvalFlatten(input1, input2, input3 *Mlrval) Mlrval {
+	if input3.mvtype == MT_MAP || input3.mvtype == MT_ARRAY {
+		if input1.mvtype != MT_STRING && input1.mvtype != MT_VOID {
 			return MlrvalFromError()
 		}
-		prefix := ma.printrep
-		if mb.mvtype != MT_STRING {
+		prefix := input1.printrep
+		if input2.mvtype != MT_STRING {
 			return MlrvalFromError()
 		}
-		delimiter := mb.printrep
+		delimiter := input2.printrep
 
-		return mc.FlattenToMap(prefix, delimiter)
+		return input3.FlattenToMap(prefix, delimiter)
 	} else {
-		return *mc
+		return *input3
 	}
 }
 
 // flatten($*, ".") is the same as flatten("", ".", $*)
-func MlrvalFlattenBinary(ma, mb *Mlrval) Mlrval {
-	return MlrvalFlatten(MlrvalPointerFromVoid(), mb, ma)
+func MlrvalFlattenBinary(input1, input2 *Mlrval) Mlrval {
+	return MlrvalFlatten(MlrvalPointerFromVoid(), input2, input1)
 }
 
 // ----------------------------------------------------------------
 // First argument is a map.
 // Second argument is a delimiter string.
 // unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
-func MlrvalUnflatten(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype != MT_STRING {
+func MlrvalUnflatten(input1, input2 *Mlrval) Mlrval {
+	if input2.mvtype != MT_STRING {
 		return MlrvalFromError()
 	}
-	if ma.mvtype != MT_MAP {
-		return *ma
+	if input1.mvtype != MT_MAP {
+		return *input1
 	}
-	oldmap := ma.mapval
-	separator := mb.printrep
+	oldmap := input1.mapval
+	separator := input2.printrep
 	newmap := NewMlrmap()
 
 	for pe := oldmap.Head; pe != nil; pe = pe.Next {
@@ -688,11 +688,11 @@ func MlrvalUnflatten(ma, mb *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
-func MlrvalArrayify(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_MAP {
+func MlrvalArrayify(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_MAP {
 		convertible := true
 		i := 0
-		for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			i++
 			if pe.Key != sval {
@@ -703,38 +703,38 @@ func MlrvalArrayify(ma *Mlrval) Mlrval {
 		}
 
 		if convertible {
-			arrayval := make([]Mlrval, ma.mapval.FieldCount)
+			arrayval := make([]Mlrval, input1.mapval.FieldCount)
 			i := 0
-			for pe := ma.mapval.Head; pe != nil; pe = pe.Next {
+			for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 				arrayval[i] = *pe.Value.Copy()
 				i++
 			}
 			return MlrvalFromArrayLiteralReference(arrayval)
 
 		} else {
-			return *ma
+			return *input1
 		}
 
-	} else if ma.mvtype == MT_ARRAY {
-		for i, _ := range ma.arrayval {
-			ma.arrayval[i] = MlrvalArrayify(&ma.arrayval[i])
+	} else if input1.mvtype == MT_ARRAY {
+		for i, _ := range input1.arrayval {
+			input1.arrayval[i] = MlrvalArrayify(&input1.arrayval[i])
 		}
-		return *ma
+		return *input1
 
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalJSONParse(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_VOID {
-		return *ma
-	} else if ma.mvtype != MT_STRING {
+func MlrvalJSONParse(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_VOID {
+		return *input1
+	} else if input1.mvtype != MT_STRING {
 		return MlrvalFromError()
 	} else {
 		output := MlrvalFromPending()
-		err := output.UnmarshalJSON([]byte(ma.printrep))
+		err := output.UnmarshalJSON([]byte(input1.printrep))
 		if err == nil {
 			return output
 		} else {
@@ -743,8 +743,8 @@ func MlrvalJSONParse(ma *Mlrval) Mlrval {
 	}
 }
 
-func MlrvalJSONStringifyUnary(ma *Mlrval) Mlrval {
-	outputBytes, err := ma.MarshalJSON(JSON_SINGLE_LINE)
+func MlrvalJSONStringifyUnary(input1 *Mlrval) Mlrval {
+	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE)
 	if err != nil {
 		return MlrvalFromError()
 	} else {
@@ -752,9 +752,9 @@ func MlrvalJSONStringifyUnary(ma *Mlrval) Mlrval {
 	}
 }
 
-func MlrvalJSONStringifyBinary(ma, mb *Mlrval) Mlrval {
+func MlrvalJSONStringifyBinary(input1, input2 *Mlrval) Mlrval {
 	var jsonFormatting TJSONFormatting = JSON_SINGLE_LINE
-	useMultiline, ok := mb.GetBoolValue()
+	useMultiline, ok := input2.GetBoolValue()
 	if !ok {
 		return MlrvalFromError()
 	}
@@ -762,7 +762,7 @@ func MlrvalJSONStringifyBinary(ma, mb *Mlrval) Mlrval {
 		jsonFormatting = JSON_MULTILINE
 	}
 
-	outputBytes, err := ma.MarshalJSON(jsonFormatting)
+	outputBytes, err := input1.MarshalJSON(jsonFormatting)
 	if err != nil {
 		return MlrvalFromError()
 	} else {

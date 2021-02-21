@@ -11,16 +11,16 @@ import (
 )
 
 // ================================================================
-func MlrvalStrlen(ma *Mlrval) Mlrval {
-	if !ma.IsStringOrVoid() {
+func MlrvalStrlen(input1 *Mlrval) Mlrval {
+	if !input1.IsStringOrVoid() {
 		return MlrvalFromError()
 	}
-	return MlrvalFromInt(int(utf8.RuneCountInString(ma.printrep)))
+	return MlrvalFromInt(int(utf8.RuneCountInString(input1.printrep)))
 }
 
 // ================================================================
-func MlrvalToString(ma *Mlrval) Mlrval {
-	return MlrvalFromString(ma.String())
+func MlrvalToString(input1 *Mlrval) Mlrval {
+	return MlrvalFromString(input1.String())
 }
 
 // ================================================================
@@ -37,8 +37,8 @@ func MlrvalToString(ma *Mlrval) Mlrval {
 // should be: always the string concatenation of the string representations of
 // the two arguments. So, we do the string-cast for the user.
 
-func dot_s_xx(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromString(ma.String() + mb.String())
+func dot_s_xx(input1, input2 *Mlrval) Mlrval {
+	return MlrvalFromString(input1.String() + input2.String())
 }
 
 var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -54,42 +54,42 @@ var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
 }
 
-func MlrvalDot(ma, mb *Mlrval) Mlrval {
-	return dot_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+func MlrvalDot(input1, input2 *Mlrval) Mlrval {
+	return dot_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // ================================================================
 // substr(s,m,n) gives substring of s from 1-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
-func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
-	if !ma.IsStringOrVoid() {
-		if ma.IsNumeric() {
+func MlrvalSubstr(input1, input2, input3 *Mlrval) Mlrval {
+	if !input1.IsStringOrVoid() {
+		if input1.IsNumeric() {
 			// JIT-stringify, if not already (e.g. intval scanned from string
 			// in input-file data)
-			ma.setPrintRep()
+			input1.setPrintRep()
 		} else {
 			return MlrvalFromError()
 		}
 	}
 	// TODO: fix this with regard to UTF-8 and runes.
-	strlen := int(len(ma.printrep))
+	strlen := int(len(input1.printrep))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
 	// empty in the DSL expression it comes in here as a 1. But when the upper
 	// index is empty in the DSL expression it comes in here as "".
-	if !mb.IsInt() {
+	if !input2.IsInt() {
 		return MlrvalFromError()
 	}
-	lowerMindex := mb.intval
+	lowerMindex := input2.intval
 
 	upperMindex := strlen
-	if mc.IsEmpty() {
+	if input3.IsEmpty() {
 		// Keep strlen
-	} else if !mc.IsInt() {
+	} else if !input3.IsInt() {
 		return MlrvalFromError()
 	} else {
-		upperMindex = mc.intval
+		upperMindex = input3.intval
 	}
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
@@ -104,72 +104,72 @@ func MlrvalSubstr(ma, mb, mc *Mlrval) Mlrval {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
 		// are inclusive.
-		return MlrvalFromString(ma.printrep[m : n+1])
+		return MlrvalFromString(input1.printrep[m : n+1])
 	}
 }
 
 // ================================================================
-func MlrvalTruncate(ma, mb *Mlrval) Mlrval {
-	if ma.IsErrorOrAbsent() {
-		return *ma
+func MlrvalTruncate(input1, input2 *Mlrval) Mlrval {
+	if input1.IsErrorOrAbsent() {
+		return *input1
 	}
-	if mb.IsErrorOrAbsent() {
-		return *mb
+	if input2.IsErrorOrAbsent() {
+		return *input2
 	}
-	if !ma.IsStringOrVoid() {
+	if !input1.IsStringOrVoid() {
 		return MlrvalFromError()
 	}
-	if !mb.IsInt() {
+	if !input2.IsInt() {
 		return MlrvalFromError()
 	}
-	if mb.intval < 0 {
+	if input2.intval < 0 {
 		return MlrvalFromError()
 	}
 
-	oldLength := int(len(ma.printrep))
-	maxLength := mb.intval
+	oldLength := int(len(input1.printrep))
+	maxLength := input2.intval
 	if oldLength <= maxLength {
-		return *ma
+		return *input1
 	} else {
-		return MlrvalFromString(ma.printrep[0:maxLength])
+		return MlrvalFromString(input1.printrep[0:maxLength])
 	}
 }
 
 // ================================================================
-func MlrvalLStrip(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_STRING {
-		return MlrvalFromString(strings.TrimLeft(ma.printrep, " \t"))
+func MlrvalLStrip(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_STRING {
+		return MlrvalFromString(strings.TrimLeft(input1.printrep, " \t"))
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
-func MlrvalRStrip(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_STRING {
-		return MlrvalFromString(strings.TrimRight(ma.printrep, " \t"))
+func MlrvalRStrip(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_STRING {
+		return MlrvalFromString(strings.TrimRight(input1.printrep, " \t"))
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
-func MlrvalStrip(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_STRING {
-		return MlrvalFromString(strings.Trim(ma.printrep, " \t"))
+func MlrvalStrip(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_STRING {
+		return MlrvalFromString(strings.Trim(input1.printrep, " \t"))
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalCollapseWhitespace(ma *Mlrval) Mlrval {
-	return MlrvalCollapseWhitespaceRegexp(ma, WhitespaceRegexp())
+func MlrvalCollapseWhitespace(input1 *Mlrval) Mlrval {
+	return MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
 }
 
-func MlrvalCollapseWhitespaceRegexp(ma *Mlrval, whitespaceRegexp *regexp.Regexp) Mlrval {
-	if ma.mvtype == MT_STRING {
-		return MlrvalFromString(whitespaceRegexp.ReplaceAllString(ma.printrep, " "))
+func MlrvalCollapseWhitespaceRegexp(input1 *Mlrval, whitespaceRegexp *regexp.Regexp) Mlrval {
+	if input1.mvtype == MT_STRING {
+		return MlrvalFromString(whitespaceRegexp.ReplaceAllString(input1.printrep, " "))
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
@@ -178,32 +178,32 @@ func WhitespaceRegexp() *regexp.Regexp {
 }
 
 // ================================================================
-func MlrvalToUpper(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_STRING {
-		return MlrvalFromString(strings.ToUpper(ma.printrep))
-	} else if ma.mvtype == MT_VOID {
-		return *ma
+func MlrvalToUpper(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_STRING {
+		return MlrvalFromString(strings.ToUpper(input1.printrep))
+	} else if input1.mvtype == MT_VOID {
+		return *input1
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
-func MlrvalToLower(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_STRING {
-		return MlrvalFromString(strings.ToLower(ma.printrep))
-	} else if ma.mvtype == MT_VOID {
-		return *ma
+func MlrvalToLower(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_STRING {
+		return MlrvalFromString(strings.ToLower(input1.printrep))
+	} else if input1.mvtype == MT_VOID {
+		return *input1
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
-func MlrvalCapitalize(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_STRING {
-		if ma.printrep == "" {
-			return *ma
+func MlrvalCapitalize(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_STRING {
+		if input1.printrep == "" {
+			return *input1
 		} else {
-			runes := []rune(ma.printrep)
+			runes := []rune(input1.printrep)
 			rfirst := runes[0]
 			rrest := runes[1:]
 			sfirst := strings.ToUpper(string(rfirst))
@@ -211,49 +211,49 @@ func MlrvalCapitalize(ma *Mlrval) Mlrval {
 			return MlrvalFromString(sfirst + srest)
 		}
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalCleanWhitespace(ma *Mlrval) Mlrval {
-	temp := MlrvalCollapseWhitespaceRegexp(ma, WhitespaceRegexp())
+func MlrvalCleanWhitespace(input1 *Mlrval) Mlrval {
+	temp := MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
 	return MlrvalStrip(&temp)
 }
 
 // ================================================================
-func MlrvalHexfmt(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_INT {
-		return MlrvalFromString("0x" + strconv.FormatUint(uint64(ma.intval), 16))
+func MlrvalHexfmt(input1 *Mlrval) Mlrval {
+	if input1.mvtype == MT_INT {
+		return MlrvalFromString("0x" + strconv.FormatUint(uint64(input1.intval), 16))
 	} else {
-		return *ma
+		return *input1
 	}
 }
 
 // ----------------------------------------------------------------
-func fmtnum_is(ma, mb *Mlrval) Mlrval {
+func fmtnum_is(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromString(
 		fmt.Sprintf(
-			mb.printrep,
-			ma.intval,
+			input2.printrep,
+			input1.intval,
 		),
 	)
 }
 
-func fmtnum_fs(ma, mb *Mlrval) Mlrval {
+func fmtnum_fs(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromString(
 		fmt.Sprintf(
-			mb.printrep,
-			ma.floatval,
+			input2.printrep,
+			input1.floatval,
 		),
 	)
 }
 
-func fmtnum_bs(ma, mb *Mlrval) Mlrval {
+func fmtnum_bs(input1, input2 *Mlrval) Mlrval {
 	return MlrvalFromString(
 		fmt.Sprintf(
-			mb.printrep,
-			lib.BoolToInt(ma.boolval),
+			input2.printrep,
+			lib.BoolToInt(input1.boolval),
 		),
 	)
 }
@@ -271,6 +271,6 @@ var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalFmtNum(ma, mb *Mlrval) Mlrval {
-	return fmtnum_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+func MlrvalFmtNum(input1, input2 *Mlrval) Mlrval {
+	return fmtnum_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
