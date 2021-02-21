@@ -191,7 +191,10 @@ func (this *RootNode) BuildContextualUnaryFunctionCallsiteNode(
 
 func (this *ContextualUnaryFunctionCallsiteNode) Evaluate(state *runtime.State) types.Mlrval {
 	arg1 := this.evaluable1.Evaluate(state)
-	return this.contextualUnaryFunc(&arg1, state.Context)
+	// xxx temp
+	output := types.MlrvalFromAbsent()
+	this.contextualUnaryFunc(&output, &arg1, state.Context)
+	return output
 }
 
 // ----------------------------------------------------------------

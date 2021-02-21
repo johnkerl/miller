@@ -55,7 +55,7 @@ type UnaryFunc func(output, input1 *Mlrval)
 
 // The asserting_{type} need access to the context to say things like 'Assertion ... failed
 // at filename {FILENAME} record number {NR}'.
-type ContextualUnaryFunc func(*Mlrval, *Context) Mlrval
+type ContextualUnaryFunc func(output, input1 *Mlrval, context *Context)
 
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.

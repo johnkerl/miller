@@ -202,7 +202,7 @@ func MlrvalIsString(output, input1 *Mlrval) {
 }
 
 // ----------------------------------------------------------------
-func assertingCommon(input1, check *Mlrval, description string, context *Context) Mlrval {
+func assertingCommon(output, input1, check *Mlrval, description string, context *Context) {
 	if check.IsFalse() {
 		// TODO: get context as in the C impl
 		//fprintf(stderr, "%s: %s type-assertion failed at NR=%lld FNR=%lld FILENAME=%s\n",
@@ -218,101 +218,101 @@ func assertingCommon(input1, check *Mlrval, description string, context *Context
 		)
 		os.Exit(1)
 	}
-	return *input1
+	output.CopyFrom(input1)
 }
 
-func MlrvalAssertingAbsent(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingAbsent(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsAbsent(&check, input1)
-	return assertingCommon(input1, &check, "is_absent", context)
+	assertingCommon(output, input1, &check, "is_absent", context)
 }
-func MlrvalAssertingError(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingError(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsError(&check, input1)
-	return assertingCommon(input1, &check, "is_error", context)
+	assertingCommon(output, input1, &check, "is_error", context)
 }
-func MlrvalAssertingBool(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingBool(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsBool(&check, input1)
-	return assertingCommon(input1, &check, "is_bool", context)
+	assertingCommon(output, input1, &check, "is_bool", context)
 }
-func MlrvalAssertingBoolean(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingBoolean(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsBoolean(&check, input1)
-	return assertingCommon(input1, &check, "is_boolean", context)
+	assertingCommon(output, input1, &check, "is_boolean", context)
 }
-func MlrvalAssertingEmpty(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingEmpty(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsEmpty(&check, input1)
-	return assertingCommon(input1, &check, "is_empty", context)
+	assertingCommon(output, input1, &check, "is_empty", context)
 }
-func MlrvalAssertingEmptyMap(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingEmptyMap(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsEmptyMap(&check, input1)
-	return assertingCommon(input1, &check, "is_empty_map", context)
+	assertingCommon(output, input1, &check, "is_empty_map", context)
 }
-func MlrvalAssertingFloat(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingFloat(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsFloat(&check, input1)
-	return assertingCommon(input1, &check, "is_float", context)
+	assertingCommon(output, input1, &check, "is_float", context)
 }
-func MlrvalAssertingInt(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingInt(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsInt(&check, input1)
-	return assertingCommon(input1, &check, "is_int", context)
+	assertingCommon(output, input1, &check, "is_int", context)
 }
-func MlrvalAssertingMap(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingMap(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsMap(&check, input1)
-	return assertingCommon(input1, &check, "is_map", context)
+	assertingCommon(output, input1, &check, "is_map", context)
 }
-func MlrvalAssertingArray(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingArray(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsArray(&check, input1)
-	return assertingCommon(input1, &check, "is_array", context)
+	assertingCommon(output, input1, &check, "is_array", context)
 }
-func MlrvalAssertingNonEmptyMap(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNonEmptyMap(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNonEmptyMap(&check, input1)
-	return assertingCommon(input1, &check, "is_non_empty_map", context)
+	assertingCommon(output, input1, &check, "is_non_empty_map", context)
 }
-func MlrvalAssertingNotEmpty(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNotEmpty(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNotEmpty(&check, input1)
-	return assertingCommon(input1, &check, "is_not_empty", context)
+	assertingCommon(output, input1, &check, "is_not_empty", context)
 }
-func MlrvalAssertingNotMap(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNotMap(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNotMap(&check, input1)
-	return assertingCommon(input1, &check, "is_not_map", context)
+	assertingCommon(output, input1, &check, "is_not_map", context)
 }
-func MlrvalAssertingNotArray(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNotArray(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNotArray(&check, input1)
-	return assertingCommon(input1, &check, "is_not_array", context)
+	assertingCommon(output, input1, &check, "is_not_array", context)
 }
-func MlrvalAssertingNotNull(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNotNull(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNotNull(&check, input1)
-	return assertingCommon(input1, &check, "is_not_null", context)
+	assertingCommon(output, input1, &check, "is_not_null", context)
 }
-func MlrvalAssertingNull(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNull(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNull(&check, input1)
-	return assertingCommon(input1, &check, "is_null", context)
+	assertingCommon(output, input1, &check, "is_null", context)
 }
-func MlrvalAssertingNumeric(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingNumeric(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsNumeric(&check, input1)
-	return assertingCommon(input1, &check, "is_numeric", context)
+	assertingCommon(output, input1, &check, "is_numeric", context)
 }
-func MlrvalAssertingPresent(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingPresent(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsPresent(&check, input1)
-	return assertingCommon(input1, &check, "is_present", context)
+	assertingCommon(output, input1, &check, "is_present", context)
 }
-func MlrvalAssertingString(input1 *Mlrval, context *Context) Mlrval {
+func MlrvalAssertingString(output, input1 *Mlrval, context *Context) {
 	check := MlrvalFromAbsent()
 	MlrvalIsString(&check, input1)
-	return assertingCommon(input1, &check, "is_string", context)
+	assertingCommon(output, input1, &check, "is_string", context)
 }
