@@ -38,7 +38,7 @@
 //   'i' for int
 //   'f' for float64
 //   'n' for number return types -- e.g. the auto-overflow from
-//       int to float plus_n_ii returns MT_INT if integer-additio overflow
+//       int to float plus_n_ii returns MT_INT if integer-addition overflow
 //       didn't happen, or MT_FLOAT if it did.
 //   'b' for boolean
 //   'x' for don't-care slots, e.g. eq_b_sx for comparing MT_STRING

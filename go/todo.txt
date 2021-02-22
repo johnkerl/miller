@@ -23,6 +23,17 @@ TOP OF LIST:
     final perf results.
   w defer the stack-allocation PR until after
 
+* next round of data-copy reduction:
+  o $z = min($x, $y) -- needs to return pointer to x or y
+  o $z = $x + $y -- needs to have space for sum, and return pointer to it
+  o therefore type BinaryFunc func(input1, input2 *Mlrval) *types.Mlrval
+    - have the function z-allocate outputs when needed
+    - the outputs must be on the stack, not statically allocated, to make them re-entrant
+      and OK for recursive functions
+  o then IEvaluable: Evaluate(state *runtime.State) *types.Mlrval
+  o invalidate CopyFrom
+  o check for under/over copy at Assign
+
 ----------------------------------------------------------------
 * regexes
   o finish stats1 -r
