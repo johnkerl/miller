@@ -372,8 +372,10 @@ func NewStats1SumAccumulator() IStats1Accumulator {
 	}
 }
 func (this *Stats1SumAccumulator) Ingest(value *types.Mlrval) {
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
 }
+
+// xxx pending output-pointer refactor
 func (this *Stats1SumAccumulator) Emit() types.Mlrval {
 	return *this.sum.Copy()
 }
@@ -391,15 +393,19 @@ func NewStats1MeanAccumulator() IStats1Accumulator {
 	}
 }
 func (this *Stats1MeanAccumulator) Ingest(value *types.Mlrval) {
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
 	this.count++
 }
+
+// xxx pending output-pointer refactor
 func (this *Stats1MeanAccumulator) Emit() types.Mlrval {
 	if this.count == 0 {
 		return types.MlrvalFromVoid()
 	} else {
 		mcount := types.MlrvalFromInt(this.count)
-		return types.MlrvalDivide(&this.sum, &mcount)
+		output := types.MlrvalFromError()
+		types.MlrvalDivide(&output, &this.sum, &mcount)
+		return output
 	}
 }
 
@@ -414,7 +420,7 @@ func NewStats1MinAccumulator() IStats1Accumulator {
 	}
 }
 func (this *Stats1MinAccumulator) Ingest(value *types.Mlrval) {
-	this.min = types.MlrvalBinaryMin(&this.min, value)
+	types.MlrvalBinaryMin(&this.min, &this.min, value)
 }
 func (this *Stats1MinAccumulator) Emit() types.Mlrval {
 	return *this.min.Copy()
@@ -431,7 +437,7 @@ func NewStats1MaxAccumulator() IStats1Accumulator {
 	}
 }
 func (this *Stats1MaxAccumulator) Ingest(value *types.Mlrval) {
-	this.max = types.MlrvalBinaryMax(&this.max, value)
+	types.MlrvalBinaryMax(&this.max, &this.max, value)
 }
 func (this *Stats1MaxAccumulator) Emit() types.Mlrval {
 	return *this.max.Copy()
@@ -439,23 +445,25 @@ func (this *Stats1MaxAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1VarAccumulator struct {
-	count int
-	sum   types.Mlrval
-	sum2  types.Mlrval
+	count  int
+	sum    types.Mlrval
+	sum2   types.Mlrval
+	value2 types.Mlrval // malloc-avoidance
 }
 
 func NewStats1VarAccumulator() IStats1Accumulator {
 	return &Stats1VarAccumulator{
-		count: 0,
-		sum:   types.MlrvalFromInt(0),
-		sum2:  types.MlrvalFromInt(0),
+		count:  0,
+		sum:    types.MlrvalFromInt(0),
+		sum2:   types.MlrvalFromInt(0),
+		value2: types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1VarAccumulator) Ingest(value *types.Mlrval) {
-	value2 := types.MlrvalTimes(value, value)
+	types.MlrvalTimes(&this.value2, value, value)
 	this.count++
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
-	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum2, &this.sum2, &this.value2)
 }
 func (this *Stats1VarAccumulator) Emit() types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)
@@ -464,23 +472,25 @@ func (this *Stats1VarAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1StddevAccumulator struct {
-	count int
-	sum   types.Mlrval
-	sum2  types.Mlrval
+	count  int
+	sum    types.Mlrval
+	sum2   types.Mlrval
+	value2 types.Mlrval // malloc-avoidance
 }
 
 func NewStats1StddevAccumulator() IStats1Accumulator {
 	return &Stats1StddevAccumulator{
-		count: 0,
-		sum:   types.MlrvalFromInt(0),
-		sum2:  types.MlrvalFromInt(0),
+		count:  0,
+		sum:    types.MlrvalFromInt(0),
+		sum2:   types.MlrvalFromInt(0),
+		value2: types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1StddevAccumulator) Ingest(value *types.Mlrval) {
-	value2 := types.MlrvalTimes(value, value)
+	types.MlrvalTimes(&this.value2, value, value)
 	this.count++
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
-	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum2, &this.sum2, &this.value2)
 }
 func (this *Stats1StddevAccumulator) Emit() types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)
@@ -489,23 +499,25 @@ func (this *Stats1StddevAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1MeanEBAccumulator struct {
-	count int
-	sum   types.Mlrval
-	sum2  types.Mlrval
+	count  int
+	sum    types.Mlrval
+	sum2   types.Mlrval
+	value2 types.Mlrval // malloc-avoidance
 }
 
 func NewStats1MeanEBAccumulator() IStats1Accumulator {
 	return &Stats1MeanEBAccumulator{
-		count: 0,
-		sum:   types.MlrvalFromInt(0),
-		sum2:  types.MlrvalFromInt(0),
+		count:  0,
+		sum:    types.MlrvalFromInt(0),
+		sum2:   types.MlrvalFromInt(0),
+		value2: types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1MeanEBAccumulator) Ingest(value *types.Mlrval) {
-	value2 := types.MlrvalTimes(value, value)
+	types.MlrvalTimes(&this.value2, value, value)
 	this.count++
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
-	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum2, &this.sum2, &this.value2)
 }
 func (this *Stats1MeanEBAccumulator) Emit() types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)
@@ -514,10 +526,12 @@ func (this *Stats1MeanEBAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1SkewnessAccumulator struct {
-	count int
-	sum   types.Mlrval
-	sum2  types.Mlrval
-	sum3  types.Mlrval
+	count  int
+	sum    types.Mlrval
+	sum2   types.Mlrval
+	sum3   types.Mlrval
+	value2 types.Mlrval // malloc-avoidance
+	value3 types.Mlrval // malloc-avoidance
 }
 
 func NewStats1SkewnessAccumulator() IStats1Accumulator {
@@ -529,12 +543,12 @@ func NewStats1SkewnessAccumulator() IStats1Accumulator {
 	}
 }
 func (this *Stats1SkewnessAccumulator) Ingest(value *types.Mlrval) {
-	value2 := types.MlrvalTimes(value, value)
-	value3 := types.MlrvalTimes(value, &value2)
+	types.MlrvalTimes(&this.value2, value, value)
+	types.MlrvalTimes(&this.value3, value, &this.value2)
 	this.count++
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
-	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
-	this.sum3 = types.MlrvalBinaryPlus(&this.sum3, &value3)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum2, &this.sum2, &this.value2)
+	types.MlrvalBinaryPlus(&this.sum3, &this.sum3, &this.value3)
 }
 func (this *Stats1SkewnessAccumulator) Emit() types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)
@@ -543,31 +557,37 @@ func (this *Stats1SkewnessAccumulator) Emit() types.Mlrval {
 
 // ----------------------------------------------------------------
 type Stats1KurtosisAccumulator struct {
-	count int
-	sum   types.Mlrval
-	sum2  types.Mlrval
-	sum3  types.Mlrval
-	sum4  types.Mlrval
+	count  int
+	sum    types.Mlrval
+	sum2   types.Mlrval
+	sum3   types.Mlrval
+	sum4   types.Mlrval
+	value2 types.Mlrval // malloc-avoidancce
+	value3 types.Mlrval // malloc-avoidancce
+	value4 types.Mlrval // malloc-avoidancce
 }
 
 func NewStats1KurtosisAccumulator() IStats1Accumulator {
 	return &Stats1KurtosisAccumulator{
-		count: 0,
-		sum:   types.MlrvalFromInt(0),
-		sum2:  types.MlrvalFromInt(0),
-		sum3:  types.MlrvalFromInt(0),
-		sum4:  types.MlrvalFromInt(0),
+		count:  0,
+		sum:    types.MlrvalFromInt(0),
+		sum2:   types.MlrvalFromInt(0),
+		sum3:   types.MlrvalFromInt(0),
+		sum4:   types.MlrvalFromInt(0),
+		value2: types.MlrvalFromInt(0),
+		value3: types.MlrvalFromInt(0),
+		value4: types.MlrvalFromInt(0),
 	}
 }
 func (this *Stats1KurtosisAccumulator) Ingest(value *types.Mlrval) {
-	value2 := types.MlrvalTimes(value, value)
-	value3 := types.MlrvalTimes(value, &value2)
-	value4 := types.MlrvalTimes(value, &value3)
+	types.MlrvalTimes(&this.value2, value, value)
+	types.MlrvalTimes(&this.value3, value, &this.value2)
+	types.MlrvalTimes(&this.value4, value, &this.value3)
 	this.count++
-	this.sum = types.MlrvalBinaryPlus(&this.sum, value)
-	this.sum2 = types.MlrvalBinaryPlus(&this.sum2, &value2)
-	this.sum3 = types.MlrvalBinaryPlus(&this.sum3, &value3)
-	this.sum4 = types.MlrvalBinaryPlus(&this.sum4, &value4)
+	types.MlrvalBinaryPlus(&this.sum, &this.sum, value)
+	types.MlrvalBinaryPlus(&this.sum2, &this.sum2, &this.value2)
+	types.MlrvalBinaryPlus(&this.sum3, &this.sum3, &this.value3)
+	types.MlrvalBinaryPlus(&this.sum4, &this.sum4, &this.value4)
 }
 func (this *Stats1KurtosisAccumulator) Emit() types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)

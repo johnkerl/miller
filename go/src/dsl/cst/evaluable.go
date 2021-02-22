@@ -93,10 +93,15 @@ func (this *RootNode) BuildIndirectFieldValueNode(
 		fieldNameEvaluable: fieldNameEvaluable,
 	}, nil
 }
-func (this *IndirectFieldValueNode) Evaluate(state *runtime.State) types.Mlrval { // xxx err
-	fieldName := this.fieldNameEvaluable.Evaluate(state)
+func (this *IndirectFieldValueNode) Evaluate(
+	output *types.Mlrval,
+	state *runtime.State,
+) { // TODO: err
+	var fieldName types.Mlrval
+	this.fieldNameEvaluable.Evaluate(&fieldName, state)
 	if fieldName.IsAbsent() {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
 
 	// For normal DSL use the CST validator will prohibit this from being
@@ -105,7 +110,8 @@ func (this *IndirectFieldValueNode) Evaluate(state *runtime.State) types.Mlrval 
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
 
 	value, err := state.Inrec.GetWithMlrvalIndex(&fieldName)
@@ -116,9 +122,10 @@ func (this *IndirectFieldValueNode) Evaluate(state *runtime.State) types.Mlrval 
 		os.Exit(1)
 	}
 	if value == nil {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
-	return *value
+	output.CopyFrom(value)
 }
 
 // ----------------------------------------------------------------
@@ -141,15 +148,21 @@ func (this *RootNode) BuildIndirectOosvarValueNode(
 	}, nil
 }
 
-func (this *IndirectOosvarValueNode) Evaluate(state *runtime.State) types.Mlrval { // xxx err
-	oosvarName := this.oosvarNameEvaluable.Evaluate(state)
+func (this *IndirectOosvarValueNode) Evaluate(
+	output *types.Mlrval,
+	state *runtime.State,
+) { // TODO: err
+	var oosvarName types.Mlrval
+	this.oosvarNameEvaluable.Evaluate(&oosvarName, state)
 	if oosvarName.IsAbsent() {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
 
 	value := state.Oosvars.Get(oosvarName.String())
 	if value == nil {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
-	return *value
+	output.CopyFrom(value)
 }

@@ -322,7 +322,7 @@ func (this *StackFrame) set(
 		this.vars[variableName] = slot
 		return nil
 	} else {
-		return slot.Assign(mlrval.Copy())
+		return slot.Assign(mlrval)
 	}
 }
 

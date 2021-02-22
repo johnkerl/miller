@@ -102,7 +102,8 @@ func (this *Mlrmap) Unflatten(separator string) {
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
+			arrayOfIndices := MlrvalFromError()
+			mlrvalSplitAXHelper(&arrayOfIndices, pe.Key, separator)
 			that.PutIndexed(
 				MakePointerArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
@@ -125,7 +126,8 @@ func (this *Mlrmap) UnflattenFields(
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
+			arrayOfIndices := MlrvalFromError()
+			mlrvalSplitAXHelper(&arrayOfIndices, pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			baseIndex := arrayOfIndices.arrayval[0].String()
 			if fieldNameSet[baseIndex] {

@@ -6,14 +6,14 @@ import (
 	"miller/src/lib"
 )
 
-func MlrvalUrand() Mlrval {
-	return MlrvalFromFloat64(
+func MlrvalUrand(output *Mlrval) {
+	output.SetFromFloat64(
 		lib.RandFloat64(),
 	)
 }
 
-func MlrvalUrand32() Mlrval {
-	return MlrvalFromInt(
+func MlrvalUrand32(output *Mlrval) {
+	output.SetFromInt(
 		int(
 			lib.RandUint32(),
 		),
@@ -21,22 +21,26 @@ func MlrvalUrand32() Mlrval {
 }
 
 // TODO: use a disposition matrix
-func MlrvalUrandInt(ma, mb *Mlrval) Mlrval {
-	if !ma.IsLegit() {
-		return *ma
+func MlrvalUrandInt(output, input1, input2 *Mlrval) {
+	if !input1.IsLegit() {
+		output.CopyFrom(input1)
+		return
 	}
-	if !mb.IsLegit() {
-		return *mb
+	if !input2.IsLegit() {
+		output.CopyFrom(input2)
+		return
 	}
-	if !ma.IsInt() {
-		return MlrvalFromError()
+	if !input1.IsInt() {
+		output.SetFromError()
+		return
 	}
-	if !mb.IsInt() {
-		return MlrvalFromError()
+	if !input2.IsInt() {
+		output.SetFromError()
+		return
 	}
 
-	a := ma.intval
-	b := mb.intval
+	a := input1.intval
+	b := input2.intval
 
 	var lo int = 0
 	var hi int = 0
@@ -48,25 +52,29 @@ func MlrvalUrandInt(ma, mb *Mlrval) Mlrval {
 		hi = a + 1
 	}
 	u := int(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
-	return MlrvalFromInt(u)
+	output.SetFromInt(u)
 }
 
-func MlrvalUrandRange(ma, mb *Mlrval) Mlrval {
-	if !ma.IsLegit() {
-		return *ma
+func MlrvalUrandRange(output, input1, input2 *Mlrval) {
+	if !input1.IsLegit() {
+		output.CopyFrom(input1)
+		return
 	}
-	if !mb.IsLegit() {
-		return *mb
+	if !input2.IsLegit() {
+		output.CopyFrom(input2)
+		return
 	}
-	a, aok := ma.GetNumericToFloatValue()
-	b, bok := mb.GetNumericToFloatValue()
+	a, aok := input1.GetNumericToFloatValue()
+	b, bok := input2.GetNumericToFloatValue()
 	if !aok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 	if !bok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
-	return MlrvalFromFloat64(
+	output.SetFromFloat64(
 		a + (b-a)*lib.RandFloat64(),
 	)
 }

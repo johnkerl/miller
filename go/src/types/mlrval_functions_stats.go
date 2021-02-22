@@ -50,17 +50,23 @@ func MlrvalGetStddev(mn, msum, msum2 *Mlrval) Mlrval {
 	if mvar.IsVoid() {
 		return mvar
 	}
-	return MlrvalSqrt(&mvar)
+	// xxx temp
+	output := MlrvalFromAbsent()
+	MlrvalSqrt(&output, &mvar)
+	return output
 }
 
 // ----------------------------------------------------------------
+// xxx refactor
 func MlrvalGetMeanEB(mn, msum, msum2 *Mlrval) Mlrval {
 	mvar := MlrvalGetVar(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
-	mquot := MlrvalDivide(&mvar, mn)
-	return MlrvalSqrt(&mquot)
+	output := MlrvalFromError()
+	MlrvalDivide(&output, &mvar, mn)
+	MlrvalSqrt(&output, &output)
+	return output
 }
 
 // ----------------------------------------------------------------

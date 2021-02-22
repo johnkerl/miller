@@ -5,9 +5,9 @@
 package types
 
 // Lexical sort: just stringify everything.
-func LexicalAscendingComparator(ma *Mlrval, mb *Mlrval) int {
-	sa := ma.String()
-	sb := mb.String()
+func LexicalAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
+	sa := input1.String()
+	sb := input2.String()
 	if sa < sb {
 		return -1
 	} else if sa > sb {
@@ -16,8 +16,8 @@ func LexicalAscendingComparator(ma *Mlrval, mb *Mlrval) int {
 		return 0
 	}
 }
-func LexicalDescendingComparator(ma *Mlrval, mb *Mlrval) int {
-	return LexicalAscendingComparator(mb, ma)
+func LexicalDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
+	return LexicalAscendingComparator(input2, input1)
 }
 
 // ----------------------------------------------------------------
@@ -29,29 +29,29 @@ func LexicalDescendingComparator(ma *Mlrval, mb *Mlrval) int {
 // * numeric compares on numbers
 // * false < true
 
-func _neg1(ma, mb *Mlrval) int {
+func _neg1(input1, input2 *Mlrval) int {
 	return -1
 }
-func _zero(ma, mb *Mlrval) int {
+func _zero(input1, input2 *Mlrval) int {
 	return 0
 }
-func _pos1(ma, mb *Mlrval) int {
+func _pos1(input1, input2 *Mlrval) int {
 	return 1
 }
 
-func _scmp(ma, mb *Mlrval) int {
-	if ma.printrep < mb.printrep {
+func _scmp(input1, input2 *Mlrval) int {
+	if input1.printrep < input2.printrep {
 		return -1
-	} else if ma.printrep > mb.printrep {
+	} else if input1.printrep > input2.printrep {
 		return 1
 	} else {
 		return 0
 	}
 }
 
-func iicmp(ma, mb *Mlrval) int {
-	ca := ma.intval
-	cb := mb.intval
+func iicmp(input1, input2 *Mlrval) int {
+	ca := input1.intval
+	cb := input2.intval
 	if ca < cb {
 		return -1
 	} else if ca > cb {
@@ -60,9 +60,9 @@ func iicmp(ma, mb *Mlrval) int {
 		return 0
 	}
 }
-func ifcmp(ma, mb *Mlrval) int {
-	ca := float64(ma.intval)
-	cb := mb.floatval
+func ifcmp(input1, input2 *Mlrval) int {
+	ca := float64(input1.intval)
+	cb := input2.floatval
 	if ca < cb {
 		return -1
 	} else if ca > cb {
@@ -71,9 +71,9 @@ func ifcmp(ma, mb *Mlrval) int {
 		return 0
 	}
 }
-func ficmp(ma, mb *Mlrval) int {
-	ca := ma.floatval
-	cb := float64(mb.intval)
+func ficmp(input1, input2 *Mlrval) int {
+	ca := input1.floatval
+	cb := float64(input2.intval)
 	if ca < cb {
 		return -1
 	} else if ca > cb {
@@ -82,9 +82,9 @@ func ficmp(ma, mb *Mlrval) int {
 		return 0
 	}
 }
-func ffcmp(ma, mb *Mlrval) int {
-	ca := ma.floatval
-	cb := mb.floatval
+func ffcmp(input1, input2 *Mlrval) int {
+	ca := input1.floatval
+	cb := input2.floatval
 	if ca < cb {
 		return -1
 	} else if ca > cb {
@@ -94,9 +94,9 @@ func ffcmp(ma, mb *Mlrval) int {
 	}
 }
 
-func bbcmp(ma, mb *Mlrval) int {
-	a := ma.boolval
-	b := mb.boolval
+func bbcmp(input1, input2 *Mlrval) int {
+	a := input1.boolval
+	b := input2.boolval
 	if a == false {
 		if b == false {
 			return 0
@@ -134,9 +134,9 @@ var num_cmp_dispositions = [MT_DIM][MT_DIM]ComparatorFunc{
 	/*MAP    */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
 }
 
-func NumericAscendingComparator(ma *Mlrval, mb *Mlrval) int {
-	return num_cmp_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+func NumericAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
+	return num_cmp_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func NumericDescendingComparator(ma *Mlrval, mb *Mlrval) int {
-	return NumericAscendingComparator(mb, ma)
+func NumericDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
+	return NumericAscendingComparator(input2, input1)
 }

@@ -90,11 +90,11 @@ func mlrInvqnorm(x float64) float64 {
 }
 
 // ----------------------------------------------------------------
-func math_unary_f_i(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
-	return MlrvalFromFloat64(f(float64(ma.intval)))
+func math_unary_f_i(output, input1 *Mlrval, f mathLibUnaryFunc) {
+	output.SetFromFloat64(f(float64(input1.intval)))
 }
-func math_unary_f_f(ma *Mlrval, f mathLibUnaryFunc) Mlrval {
-	return MlrvalFromFloat64(f(ma.floatval))
+func math_unary_f_f(output, input1 *Mlrval, f mathLibUnaryFunc) {
+	output.SetFromFloat64(f(input1.floatval))
 }
 
 // Disposition vector for unary mathlib functions
@@ -110,50 +110,52 @@ var mudispo = [MT_DIM]mathLibUnaryFuncWrapper{
 	/*MAP    */ _math_unary_absn1,
 }
 
-func MlrvalAbs(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Abs) }
-func MlrvalAcos(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Acos) }
-func MlrvalAcosh(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Acosh) }
-func MlrvalAsin(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Asin) }
-func MlrvalAsinh(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Asinh) }
-func MlrvalAtan(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Atan) }
-func MlrvalAtanh(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Atanh) }
-func MlrvalCbrt(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Cbrt) }
-func MlrvalCeil(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Ceil) }
-func MlrvalCos(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Cos) }
-func MlrvalCosh(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Cosh) }
-func MlrvalErf(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Erf) }
-func MlrvalErfc(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Erfc) }
-func MlrvalExp(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Exp) }
-func MlrvalExpm1(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Expm1) }
-func MlrvalFloor(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Floor) }
-func MlrvalInvqnorm(ma *Mlrval) Mlrval { return mudispo[ma.mvtype](ma, mlrInvqnorm) }
-func MlrvalLog(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Log) }
-func MlrvalLog10(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Log10) }
-func MlrvalLog1p(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Log1p) }
-func MlrvalQnorm(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, mlrQnorm) }
-func MlrvalRound(ma *Mlrval) Mlrval    { return mudispo[ma.mvtype](ma, math.Round) }
-func MlrvalSgn(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, mlrSgn) }
-func MlrvalSin(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Sin) }
-func MlrvalSinh(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Sinh) }
-func MlrvalSqrt(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Sqrt) }
-func MlrvalTan(ma *Mlrval) Mlrval      { return mudispo[ma.mvtype](ma, math.Tan) }
-func MlrvalTanh(ma *Mlrval) Mlrval     { return mudispo[ma.mvtype](ma, math.Tanh) }
+func MlrvalAbs(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Abs) }
+func MlrvalAcos(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Acos) }
+func MlrvalAcosh(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Acosh) }
+func MlrvalAsin(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Asin) }
+func MlrvalAsinh(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Asinh) }
+func MlrvalAtan(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Atan) }
+func MlrvalAtanh(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Atanh) }
+func MlrvalCbrt(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Cbrt) }
+func MlrvalCeil(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Ceil) }
+func MlrvalCos(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Cos) }
+func MlrvalCosh(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Cosh) }
+func MlrvalErf(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Erf) }
+func MlrvalErfc(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Erfc) }
+func MlrvalExp(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Exp) }
+func MlrvalExpm1(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Expm1) }
+func MlrvalFloor(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Floor) }
+func MlrvalInvqnorm(output, input1 *Mlrval) {
+	mudispo[input1.mvtype](output, input1, mlrInvqnorm)
+}
+func MlrvalLog(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Log) }
+func MlrvalLog10(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Log10) }
+func MlrvalLog1p(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Log1p) }
+func MlrvalQnorm(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, mlrQnorm) }
+func MlrvalRound(output, input1 *Mlrval) { mudispo[input1.mvtype](output, input1, math.Round) }
+func MlrvalSgn(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, mlrSgn) }
+func MlrvalSin(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Sin) }
+func MlrvalSinh(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Sinh) }
+func MlrvalSqrt(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Sqrt) }
+func MlrvalTan(output, input1 *Mlrval)   { mudispo[input1.mvtype](output, input1, math.Tan) }
+func MlrvalTanh(output, input1 *Mlrval)  { mudispo[input1.mvtype](output, input1, math.Tanh) }
 
 // ================================================================
 // Exponentiation: DSL operator '**'.  See also
 // http://johnkerl.org/miller/doc/reference.html#Arithmetic.
 
-func pow_f_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Pow(float64(ma.intval), float64(mb.intval)))
+func pow_f_ii(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Pow(float64(input1.intval), float64(input2.intval)))
 }
-func pow_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Pow(float64(ma.intval), mb.floatval))
+func pow_f_if(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Pow(float64(input1.intval), input2.floatval))
 }
-func pow_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Pow(ma.floatval, float64(mb.intval)))
+func pow_f_fi(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Pow(input1.floatval, float64(input2.intval)))
 }
-func pow_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Pow(ma.floatval, mb.floatval))
+func pow_f_ff(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Pow(input1.floatval, input2.floatval))
 }
 
 var pow_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -169,22 +171,22 @@ var pow_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalPow(ma, mb *Mlrval) Mlrval {
-	return pow_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+func MlrvalPow(output, input1, input2 *Mlrval) {
+	pow_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
 
 // ================================================================
-func atan2_f_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Atan2(float64(ma.intval), float64(mb.intval)))
+func atan2_f_ii(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Atan2(float64(input1.intval), float64(input2.intval)))
 }
-func atan2_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Atan2(float64(ma.intval), mb.floatval))
+func atan2_f_if(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Atan2(float64(input1.intval), input2.floatval))
 }
-func atan2_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Atan2(ma.floatval, float64(mb.intval)))
+func atan2_f_fi(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Atan2(input1.floatval, float64(input2.intval)))
 }
-func atan2_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(math.Atan2(ma.floatval, mb.floatval))
+func atan2_f_ff(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(math.Atan2(input1.floatval, input2.floatval))
 }
 
 var atan2_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -200,8 +202,8 @@ var atan2_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalAtan2(ma, mb *Mlrval) Mlrval {
-	return atan2_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+func MlrvalAtan2(output, input1, input2 *Mlrval) {
+	atan2_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
 
 // ================================================================
@@ -209,17 +211,17 @@ func mlr_roundm(x, m float64) float64 {
 	return math.Round(x/m) * m
 }
 
-func roundm_f_ii(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(mlr_roundm(float64(ma.intval), float64(mb.intval)))
+func roundm_f_ii(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(mlr_roundm(float64(input1.intval), float64(input2.intval)))
 }
-func roundm_f_if(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(mlr_roundm(float64(ma.intval), mb.floatval))
+func roundm_f_if(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(mlr_roundm(float64(input1.intval), input2.floatval))
 }
-func roundm_f_fi(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(mlr_roundm(ma.floatval, float64(mb.intval)))
+func roundm_f_fi(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(mlr_roundm(input1.floatval, float64(input2.intval)))
 }
-func roundm_f_ff(ma, mb *Mlrval) Mlrval {
-	return MlrvalFromFloat64(mlr_roundm(ma.floatval, mb.floatval))
+func roundm_f_ff(output, input1, input2 *Mlrval) {
+	output.SetFromFloat64(mlr_roundm(input1.floatval, input2.floatval))
 }
 
 var roundm_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -235,35 +237,41 @@ var roundm_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalRoundm(ma, mb *Mlrval) Mlrval {
-	return roundm_dispositions[ma.mvtype][mb.mvtype](ma, mb)
+func MlrvalRoundm(output, input1, input2 *Mlrval) {
+	roundm_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
 }
 
 // ================================================================
-func MlrvalLogifit(ma, mb, mc *Mlrval) Mlrval {
-	if !ma.IsLegit() {
-		return *ma
+func MlrvalLogifit(output, input1, input2, input3 *Mlrval) {
+	if !input1.IsLegit() {
+		output.CopyFrom(input1)
+		return
 	}
-	if !mb.IsLegit() {
-		return *mb
+	if !input2.IsLegit() {
+		output.CopyFrom(input2)
+		return
 	}
-	if !mc.IsLegit() {
-		return *mc
+	if !input3.IsLegit() {
+		output.CopyFrom(input3)
+		return
 	}
 
 	// int/float OK; rest not
-	x, xok := ma.GetNumericToFloatValue()
+	x, xok := input1.GetNumericToFloatValue()
 	if !xok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
-	m, mok := mb.GetNumericToFloatValue()
+	m, mok := input2.GetNumericToFloatValue()
 	if !mok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
-	b, bok := mc.GetNumericToFloatValue()
+	b, bok := input3.GetNumericToFloatValue()
 	if !bok {
-		return MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 
-	return MlrvalFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
+	output.SetFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
 }

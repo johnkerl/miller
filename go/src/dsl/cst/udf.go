@@ -58,7 +58,10 @@ func NewUDFCallsite(
 	}
 }
 
-func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
+func (this *UDFCallsite) Evaluate(
+	output *types.Mlrval,
+	state *runtime.State,
+) {
 	lib.InternalCodingErrorIf(this.argumentNodes == nil)
 	lib.InternalCodingErrorIf(this.udf == nil)
 	lib.InternalCodingErrorIf(this.udf.functionBody == nil)
@@ -111,27 +114,25 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	arguments := make([]types.Mlrval, numArguments)
 
 	for i, typeGatedParameterName := range this.udf.signature.typeGatedParameterNames {
-		argument := this.argumentNodes[i].Evaluate(state)
+		this.argumentNodes[i].Evaluate(&arguments[i], state)
 
-		err := typeGatedParameterName.Check(&argument)
+		err := typeGatedParameterName.Check(&arguments[i])
 		if err != nil {
 			// TODO: put error-return in the Evaluate API
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-
-		arguments[i] = argument
 	}
 
 	// Bind the arguments to the parameters
 	state.Stack.PushStackFrameSet()
 	defer state.Stack.PopStackFrameSet()
 
-	for i, argument := range arguments {
+	for i, _ := range arguments {
 		err := state.Stack.DefineTypedAtScope(
 			this.udf.signature.typeGatedParameterNames[i].Name,
 			this.udf.signature.typeGatedParameterNames[i].TypeName,
-			&argument,
+			&arguments[i],
 		)
 		// TODO: put error-return in the Evaluate API
 		if err != nil {
@@ -147,19 +148,22 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		return types.MlrvalFromError()
+		output.SetFromError()
+		return
 	}
 
 	// Fell off end of function with no return
 	if blockExitPayload == nil {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
 
 	// TODO: should be an internal coding error. This would be break or
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		return types.MlrvalFromAbsent()
+		output.SetFromAbsent()
+		return
 	}
 
 	// Definitely a Miller internal coding error if the user put 'return x' in
@@ -176,7 +180,7 @@ func (this *UDFCallsite) Evaluate(state *runtime.State) types.Mlrval {
 		os.Exit(1)
 	}
 
-	return *blockExitPayload.blockReturnValue
+	output.CopyFrom(blockExitPayload.blockReturnValue)
 }
 
 // ----------------------------------------------------------------

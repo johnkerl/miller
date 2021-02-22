@@ -7,13 +7,13 @@ import (
 )
 
 // ================================================================
-func MlrvalSystime() Mlrval {
-	return MlrvalFromFloat64(
+func MlrvalSystime(output *Mlrval) {
+	output.SetFromFloat64(
 		float64(time.Now().UnixNano()) / 1.0e9,
 	)
 }
-func MlrvalSystimeInt() Mlrval {
-	return MlrvalFromInt(int(time.Now().Unix()))
+func MlrvalSystimeInt(output *Mlrval) {
+	output.SetFromInt(int(time.Now().Unix()))
 }
 
 var startTime float64
@@ -21,33 +21,32 @@ var startTime float64
 func init() {
 	startTime = float64(time.Now().UnixNano()) / 1.0e9
 }
-func MlrvalUptime() Mlrval {
-	return MlrvalFromFloat64(
+func MlrvalUptime(output *Mlrval) {
+	output.SetFromFloat64(
 		float64(time.Now().UnixNano())/1.0e9 - startTime,
 	)
 }
 
 // ================================================================
-func MlrvalSec2GMTUnary(ma *Mlrval) Mlrval {
-	if ma.mvtype == MT_FLOAT {
-		return MlrvalFromString(lib.Sec2GMT(ma.floatval, 0))
-	} else if ma.mvtype == MT_INT {
-		return MlrvalFromString(lib.Sec2GMT(float64(ma.intval), 0))
+func MlrvalSec2GMTUnary(output, input1 *Mlrval) {
+	if input1.mvtype == MT_FLOAT {
+		output.SetFromString(lib.Sec2GMT(input1.floatval, 0))
+	} else if input1.mvtype == MT_INT {
+		output.SetFromString(lib.Sec2GMT(float64(input1.intval), 0))
 	} else {
-		return *ma
+		output.CopyFrom(input1)
 	}
 }
 
 // ----------------------------------------------------------------
-func MlrvalSec2GMTBinary(ma, mb *Mlrval) Mlrval {
-	if mb.mvtype != MT_INT {
-		return MlrvalFromError()
-	}
-	if ma.mvtype == MT_FLOAT {
-		return MlrvalFromString(lib.Sec2GMT(ma.floatval, int(mb.intval)))
-	} else if ma.mvtype == MT_INT {
-		return MlrvalFromString(lib.Sec2GMT(float64(ma.intval), int(mb.intval)))
+func MlrvalSec2GMTBinary(output, input1, input2 *Mlrval) {
+	if input2.mvtype != MT_INT {
+		output.SetFromError()
+	} else if input1.mvtype == MT_FLOAT {
+		output.SetFromString(lib.Sec2GMT(input1.floatval, int(input2.intval)))
+	} else if input1.mvtype == MT_INT {
+		output.SetFromString(lib.Sec2GMT(float64(input1.intval), int(input2.intval)))
 	} else {
-		return *ma
+		output.CopyFrom(input1)
 	}
 }

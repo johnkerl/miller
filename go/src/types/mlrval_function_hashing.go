@@ -8,50 +8,54 @@ import (
 	"fmt"
 )
 
-func MlrvalMD5(ma *Mlrval) Mlrval {
-	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
+func MlrvalMD5(output, input1 *Mlrval) {
+	if !input1.IsStringOrVoid() {
+		output.SetFromError()
+	} else {
+		output.SetFromString(
+			fmt.Sprintf(
+				"%x",
+				md5.Sum([]byte(input1.printrep)),
+			),
+		)
 	}
-	return MlrvalFromString(
-		fmt.Sprintf(
-			"%x",
-			md5.Sum([]byte(ma.printrep)),
-		),
-	)
 }
 
-func MlrvalSHA1(ma *Mlrval) Mlrval {
-	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
+func MlrvalSHA1(output, input1 *Mlrval) {
+	if !input1.IsStringOrVoid() {
+		output.SetFromError()
+	} else {
+		output.SetFromString(
+			fmt.Sprintf(
+				"%x",
+				sha1.Sum([]byte(input1.printrep)),
+			),
+		)
 	}
-	return MlrvalFromString(
-		fmt.Sprintf(
-			"%x",
-			sha1.Sum([]byte(ma.printrep)),
-		),
-	)
 }
 
-func MlrvalSHA256(ma *Mlrval) Mlrval {
-	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
+func MlrvalSHA256(output, input1 *Mlrval) {
+	if !input1.IsStringOrVoid() {
+		output.SetFromError()
+	} else {
+		output.SetFromString(
+			fmt.Sprintf(
+				"%x",
+				sha256.Sum256([]byte(input1.printrep)),
+			),
+		)
 	}
-	return MlrvalFromString(
-		fmt.Sprintf(
-			"%x",
-			sha256.Sum256([]byte(ma.printrep)),
-		),
-	)
 }
 
-func MlrvalSHA512(ma *Mlrval) Mlrval {
-	if !ma.IsStringOrVoid() {
-		return MlrvalFromError()
+func MlrvalSHA512(output, input1 *Mlrval) {
+	if !input1.IsStringOrVoid() {
+		output.SetFromError()
+	} else {
+		output.SetFromString(
+			fmt.Sprintf(
+				"%x",
+				sha512.Sum512([]byte(input1.printrep)),
+			),
+		)
 	}
-	return MlrvalFromString(
-		fmt.Sprintf(
-			"%x",
-			sha512.Sum512([]byte(ma.printrep)),
-		),
-	)
 }

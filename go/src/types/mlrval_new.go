@@ -50,6 +50,11 @@ func MlrvalFromAbsent() Mlrval {
 	}
 }
 
+func MlrvalPointerFromError() *Mlrval {
+	retval := MlrvalFromError()
+	return &retval
+}
+
 func MlrvalPointerFromAbsent() *Mlrval {
 	retval := MlrvalFromAbsent()
 	return &retval

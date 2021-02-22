@@ -116,11 +116,12 @@ func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //
 
 func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	mlrval := this.indexableNode.Evaluate(state)
+	var indexMlrval types.Mlrval
+	this.indexableNode.Evaluate(&indexMlrval, state)
 
-	if mlrval.IsMap() {
+	if indexMlrval.IsMap() {
 
-		mapval := mlrval.GetMap()
+		mapval := indexMlrval.GetMap()
 
 		// Make a frame for the loop variable(s)
 		state.Stack.PushStackFrame()
@@ -152,9 +153,9 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			}
 		}
 
-	} else if mlrval.IsArray() {
+	} else if indexMlrval.IsArray() {
 
-		arrayval := mlrval.GetArray()
+		arrayval := indexMlrval.GetArray()
 
 		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
 		// Go storage ("zindex") is 0-up.
@@ -187,7 +188,7 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			}
 		}
 
-	} else if mlrval.IsAbsent() {
+	} else if indexMlrval.IsAbsent() {
 		// Data-heterogeneity no-op
 	}
 
@@ -198,7 +199,7 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
 	//				"Miller: looped-over item is not a map or array; got %s",
-	//				mlrval.GetTypeName(),
+	//				indexMlrval.GetTypeName(),
 	//			),
 	//		)
 
@@ -299,11 +300,12 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //
 
 func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	mlrval := this.indexableNode.Evaluate(state)
+	var indexMlrval types.Mlrval
+	this.indexableNode.Evaluate(&indexMlrval, state)
 
-	if mlrval.IsMap() {
+	if indexMlrval.IsMap() {
 
-		mapval := mlrval.GetMap()
+		mapval := indexMlrval.GetMap()
 
 		// Make a frame for the loop variable(s)
 		state.Stack.PushStackFrame()
@@ -339,9 +341,9 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			}
 		}
 
-	} else if mlrval.IsArray() {
+	} else if indexMlrval.IsArray() {
 
-		arrayval := mlrval.GetArray()
+		arrayval := indexMlrval.GetArray()
 
 		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
 		// Go storage ("zindex") is 0-up.
@@ -380,7 +382,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 			}
 		}
 
-	} else if mlrval.IsAbsent() {
+	} else if indexMlrval.IsAbsent() {
 		// Data-heterogeneity no-op
 	}
 
@@ -391,7 +393,7 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
 	//				"Miller: looped-over item is not a map or array; got %s",
-	//				mlrval.GetTypeName(),
+	//				indexMlrval.GetTypeName(),
 	//			),
 	//		)
 
@@ -495,7 +497,8 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 //
 
 func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	mlrval := this.indexableNode.Evaluate(state)
+	var indexMlrval types.Mlrval
+	this.indexableNode.Evaluate(&indexMlrval, state)
 
 	// Make a frame for the loop variables
 	state.Stack.PushStackFrame()
@@ -506,7 +509,7 @@ func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	// from any of the latter is a break from all.  However, at this point, the
 	// break has been "broken" and should not be returned to the caller.
 	// Return-statements should, though.
-	blockExitPayload, err := this.executeOuter(&mlrval, this.keyVariableNames, state)
+	blockExitPayload, err := this.executeOuter(&indexMlrval, this.keyVariableNames, state)
 	if blockExitPayload == nil {
 		return nil, err
 	} else {
@@ -854,11 +857,13 @@ func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 		return nil, err
 	}
 
+	var continuationValue types.Mlrval
+
 	for {
 		// state.Stack.Dump()
 		// empty is true
 		if this.continuationExpressionNode != nil {
-			continuationValue := this.continuationExpressionNode.Evaluate(state)
+			this.continuationExpressionNode.Evaluate(&continuationValue, state)
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
 				// TODO: propagate line-number context

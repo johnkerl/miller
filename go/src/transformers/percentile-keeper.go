@@ -229,6 +229,7 @@ func computeIndexNoninterpolated(n int, p float64) int {
 	return index
 }
 
+// xxx pending pointer-output refactor
 func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) types.Mlrval {
 	findex := (p / 100.0) * (float64(n) - 1)
 	if findex < 0.0 {
@@ -240,10 +241,16 @@ func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) 
 	} else {
 		// array[iindex] + frac * (array[iindex+1] - array[iindex])
 		// TODO: just do this in float64.
-		frac := types.MlrvalFromFloat64(findex - float64(iindex))
-		diff := types.MlrvalBinaryMinus(array[iindex+1], array[iindex])
-		prod := types.MlrvalTimes(&frac, &diff)
-		return types.MlrvalBinaryPlus(array[iindex], &prod)
+		frac := types.MlrvalFromError()
+		diff := types.MlrvalFromError()
+		prod := types.MlrvalFromError()
+		output := types.MlrvalFromError()
+
+		frac.SetFromFloat64(findex - float64(iindex))
+		types.MlrvalBinaryMinus(&diff, array[iindex+1], array[iindex])
+		types.MlrvalTimes(&prod, &frac, &diff)
+		types.MlrvalBinaryPlus(&output, array[iindex], &prod)
+		return output
 	}
 }
 
