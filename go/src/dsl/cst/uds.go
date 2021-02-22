@@ -44,21 +44,25 @@ func NewUnresolvedUDS(
 // ----------------------------------------------------------------
 type UDSCallsite struct {
 	argumentNodes []IEvaluable
+	arguments     []types.Mlrval // malloc-avoidance
 	uds           *UDS
 }
 
 func NewUDSCallsite(
 	argumentNodes []IEvaluable,
+	arguments []types.Mlrval,
 	uds *UDS,
 ) *UDSCallsite {
 	return &UDSCallsite{
 		argumentNodes: argumentNodes,
+		arguments:     arguments,
 		uds:           uds,
 	}
 }
 
 func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	lib.InternalCodingErrorIf(this.argumentNodes == nil)
+	lib.InternalCodingErrorIf(this.arguments == nil)
 	lib.InternalCodingErrorIf(this.uds == nil)
 	lib.InternalCodingErrorIf(this.uds.subroutineBody == nil)
 
@@ -106,29 +110,25 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
-	numArguments := len(this.uds.signature.typeGatedParameterNames)
-	arguments := make([]types.Mlrval, numArguments)
 
 	for i, typeGatedParameterName := range this.uds.signature.typeGatedParameterNames {
-		argument := this.argumentNodes[i].Evaluate(state)
+		this.argumentNodes[i].Evaluate(&this.arguments[i], state)
 
-		err := typeGatedParameterName.Check(&argument)
+		err := typeGatedParameterName.Check(&this.arguments[i])
 		if err != nil {
 			return nil, err
 		}
-
-		arguments[i] = argument
 	}
 
 	// Bind the arguments to the parameters
 	state.Stack.PushStackFrameSet()
 	defer state.Stack.PopStackFrameSet()
 
-	for i, argument := range arguments {
+	for i, _ := range this.arguments {
 		err := state.Stack.DefineTypedAtScope(
 			this.uds.signature.typeGatedParameterNames[i].Name,
 			this.uds.signature.typeGatedParameterNames[i].TypeName,
-			&argument,
+			&this.arguments[i],
 		)
 		if err != nil {
 			return nil, err

@@ -119,10 +119,11 @@ func (this *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 
 // ----------------------------------------------------------------
 func (this *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	var condition types.Mlrval
 	for _, ifItem := range this.ifItems {
-		condition := types.MlrvalFromTrue()
+		condition.SetFromTrue()
 		if ifItem.conditionNode != nil {
-			condition = ifItem.conditionNode.Evaluate(state)
+			ifItem.conditionNode.Evaluate(&condition, state)
 		}
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {

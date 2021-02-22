@@ -1,6 +1,6 @@
-func f(x) {
-  if (x > 1) {
-    return x*f(x-1)
+func f(n) {
+  if (n > 1) {
+    return n*f(n-1)
   } else {
     return 1
   }

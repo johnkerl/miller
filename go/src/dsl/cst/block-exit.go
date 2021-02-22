@@ -11,6 +11,7 @@ import (
 	"miller/src/dsl"
 	"miller/src/lib"
 	"miller/src/runtime"
+	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
@@ -60,13 +61,13 @@ func (this *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error)
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeReturn)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	if len(astNode.Children) == 0 {
-		return &ReturnNode{nil}, nil
+		return &ReturnNode{returnValueExpression: nil}, nil
 	} else if len(astNode.Children) == 1 {
 		returnValueExpression, err := this.BuildEvaluableNode(astNode.Children[0])
 		if err != nil {
 			return nil, err
 		}
-		return &ReturnNode{returnValueExpression}, nil
+		return &ReturnNode{returnValueExpression: returnValueExpression}, nil
 	} else {
 		lib.InternalCodingErrorIf(true)
 	}
@@ -80,8 +81,10 @@ func (this *ReturnNode) Execute(state *runtime.State) (*BlockExitPayload, error)
 			nil,
 		}, nil
 	} else {
-		// This can be of type MT_ERROR but we do not use Go-level error return here
-		returnValue := this.returnValueExpression.Evaluate(state) // TODO: TypeGatedMlrval
+		// The return value can be of type MT_ERROR but we do not use Go-level error return here.
+		var returnValue types.Mlrval
+		this.returnValueExpression.Evaluate(&returnValue, state)
+		// TODO: pending pointer-output refactor
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VALUE,
 			&returnValue,

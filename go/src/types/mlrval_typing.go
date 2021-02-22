@@ -91,7 +91,7 @@ func (this *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
 		return err
 	}
 
-	this.value = value.Copy()
+	this.value.CopyFrom(value)
 	return nil
 }
 

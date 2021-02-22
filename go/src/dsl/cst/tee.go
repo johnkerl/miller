@@ -141,16 +141,17 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 
 // ----------------------------------------------------------------
 func (this *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	evaluation := this.expressionEvaluable.Evaluate(state)
-	if !evaluation.IsMap() {
+	var expression types.Mlrval
+	this.expressionEvaluable.Evaluate(&expression, state)
+	if !expression.IsMap() {
 		return nil, errors.New(
 			fmt.Sprintf(
 				"%s: tee-evaluaiton yielded %s, not map.",
-				lib.MlrExeName(), evaluation.GetTypeName(),
+				lib.MlrExeName(), expression.GetTypeName(),
 			),
 		)
 	}
-	err := this.teeToRedirectFunc(evaluation.GetMap(), state)
+	err := this.teeToRedirectFunc(expression.GetMap(), state)
 	return nil, err
 }
 
@@ -159,7 +160,8 @@ func (this *TeeStatementNode) teeToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	var redirectorTarget types.Mlrval // malloc-avoidance
+	this.redirectorTargetEvaluable.Evaluate(&redirectorTarget, state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(

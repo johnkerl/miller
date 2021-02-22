@@ -166,9 +166,10 @@ func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 	//
 	// Plus: we never have to worry about forgetting to do fflush(). :)
 	var buffer bytes.Buffer
+	var evaluation types.Mlrval
 
 	for _, expressionEvaluable := range this.expressionEvaluables {
-		evaluation := expressionEvaluable.Evaluate(state)
+		expressionEvaluable.Evaluate(&evaluation, state)
 		if !evaluation.IsAbsent() {
 			s := evaluation.String()
 			buffer.WriteString(s)
@@ -214,7 +215,8 @@ func (this *DumpStatementNode) dumpToFileOrPipe(
 	outputString string,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	var redirectorTarget types.Mlrval
+	this.redirectorTargetEvaluable.Evaluate(&redirectorTarget, state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(

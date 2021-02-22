@@ -38,11 +38,12 @@ mkdir -p $HOME/go
 ```
 go get -u github.com/google/pprof
 ll ~/go/bin/pprof
-go get github.com/uber/go-torch
+go get -u github.com/uber/go-torch
 ```
 
 ```
-cd ~/git
+mkdir -p ~/git/brendangregg
+cd ~/git/brendangregg
 git clone https://github.com/brendangregg/FlameGraph
 ```
 
@@ -50,7 +51,7 @@ Per run:
 
 ```
 cd /path/to/mlr/go
-export PATH=${PATH}:~/git/FlameGraph/
+export PATH=${PATH}:~/git/brendangregg/FlameGraph/
 go-torch cpu.pprof
 mv torch.svg ~/Desktop/
 ```
