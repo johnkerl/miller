@@ -1,0 +1,48 @@
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* stack optimization:
+  k StackVariable opaque struct
+    - name string
+    - frameSetIndex int
+    - frameIndex int
+  k convert StackFrame from map of name to *TypeGatedMlrvalVariable to array of *TypeGatedMlrvalVariable
+  k convert StackFrameSet from list of StackFrame to array of StackFrame
+    - comments about S/SF indef large b/c recursion; SF/SFS known statically
+  o Define/Set/Get need to modify the indices:
+    ? add comments for retain in CST node?
+    - within Stack: map from name to idxpair
+    - within Set/Get (re-use): fastcall to indexer if non-trivial
+  o mods to use the indices when set
+
+  o profile mand.mlr
+    - c  3.2s
+    - go pre-alloccate 45s
+
+* u/mand.mlr silent option
+
+https://blog.twitch.tv/en/2019/04/10/go-memory-ballast-how-i-learnt-to-stop-worrying-and-love-the-heap-26c2462549a2/
+  	ballast := make([]byte, 10<<30)
+
+https://dave.cheney.net/2014/07/11/visualising-the-go-garbage-collector
+  go get -u -v github.com/davecheney/gcvis
+  gcvis mlr -n put -q  -s iheight=500 -s iwidth=500 -f u/mand.mlr > /dev/null
+
+* duffcopy/madvise (w/ GOGC=off), & heavy GC (w/ GOGC != off), are both indicators of the same thing: lots of allocation and lots of copying
+
+https://github.com/golang/go/issues/23044
+  "It has often been noted that programs which make a lot of allocations while
+  maintaining a small live heap end up doing excessive garbage collections."
+  yyyuuuuuuuuup
+--> maybe plan out the CST w/ mlrvals for all slots pre-allocated, and point to them -- ?
+--> and/or: Evaluate return *types.Mlrval ?
+  o or instead of Evaluate(state*State) -> Mlrval, do Evaluate(state *State, poutput *Mlrval)
+  o and not type BinaryFunc func(*Mlrval, *Mlrval) Mlrval but type BinaryFunc func(out *Mlrval, in1 *Mlrval, in2 *Mlrval)
+  o idea: don't generate ANY garbage w/ this:
+    zt = zr*zr - zi*zi + cr;
+    zi = 2*zr*zi + ci;
+    zr = zt;
+  o leaf evaluables:
+    - literals & local vars etc just point to storage
+
+i https://hub.packtpub.com/implementing-memory-management-with-golang-garbage-collector/
+
+i mlr --cpuprofile cpu.pprof -n put -q  -s iheight=100 -s iwidth=100 -f u/mand.mlr > /dev/null
