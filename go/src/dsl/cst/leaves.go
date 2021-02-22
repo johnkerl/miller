@@ -184,7 +184,7 @@ func (this *RootNode) BuildLocalVariableNode(variableName string) *LocalVariable
 func (this *LocalVariableNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	value := state.Stack.Get(this.variableName)
+	value := state.Stack.Get(this.stackVariable)
 	if value == nil {
 		return types.MLRVAL_ABSENT
 	} else {
