@@ -9,8 +9,12 @@ TOP OF LIST:
   o take care w/ copying (non-pointer) mlrvals though
 
 * data-copy reduction:
+  - literal-type nodes -- why is there even a copy? these should simply be pointing at the literal.
+    > modify Evaluate to return pointer? 1st arg becomes optional buffer?
+  - type-gated mv -- should use passed-in storage slot -- ?
   - prof:
-    mlr --cpuprofile cpu.pprof -n put -q -s 'iwidth=200' -s iheight=200 -s silent=true -f u/mand.mlr
+    mlr --cpuprofile cpu.pprof -n put -q -s iwidth=500 -s iheight=500 -s silent=true -f u/mand.mlr
+    GOGC=off mlr --cpuprofile cpu.pprof -n put -q -s iwidth=500 -s iheight=500 -s silent=true -f u/mand.mlr
   - MlrvalLessThanForSort
   - MlrvalGetMeanEB et al.
   - var delta types.Mlrval for uninits
