@@ -18,6 +18,67 @@ func (this *Mlrval) CopyFrom(that *Mlrval) {
 	}
 }
 
+// TODO: experimental -- no performance improvement was found.
+// Idea: profiling shows that data-copies of mlrvals consumes much of the time
+// for the u/mand.mlr benchmark. Instead of copying all mlrval attributes, copy
+// only those appropriate for the mvtype.
+
+//type mlrvalCopyFunc func(output, input *Mlrval)
+//
+//func mlrvalCopyError(output, input *Mlrval) {
+//	output.printrep = input.printrep
+//	output.printrepValid = input.printrepValid
+//}
+//func mlrvalCopyAbsent(output, input *Mlrval) {
+//	output.printrep = input.printrep
+//	output.printrepValid = input.printrepValid
+//}
+//func mlrvalCopyVoid(output, input *Mlrval) {
+//	output.printrep = input.printrep
+//	output.printrepValid = input.printrepValid
+//}
+//func mlrvalCopyString(output, input *Mlrval) {
+//	output.printrep = input.printrep
+//	output.printrepValid = input.printrepValid
+//}
+//func mlrvalCopyInt(output, input *Mlrval) {
+//	output.intval = input.intval
+//	output.printrepValid = false
+//}
+//func mlrvalCopyFloat(output, input *Mlrval) {
+//	output.floatval = input.floatval
+//	output.printrepValid = false
+//}
+//func mlrvalCopyBool(output, input *Mlrval) {
+//	output.boolval = input.boolval
+//	output.printrepValid = false
+//}
+//func mlrvalCopyArray(output, input *Mlrval) {
+//	output.arrayval = CopyMlrvalArray(input.arrayval)
+//	output.printrepValid = false
+//}
+//func mlrvalCopyMap(output, input *Mlrval) {
+//	output.mapval = input.mapval.Copy()
+//	output.printrepValid = false
+//}
+//
+//var mlrvalCopyDispositions = [MT_DIM]UnaryFunc{
+//	/*ERROR  */ mlrvalCopyError,
+//	/*ABSENT */ mlrvalCopyAbsent,
+//	/*VOID   */ mlrvalCopyVoid,
+//	/*STRING */ mlrvalCopyString,
+//	/*INT    */ mlrvalCopyInt,
+//	/*FLOAT  */ mlrvalCopyFloat,
+//	/*BOOL   */ mlrvalCopyBool,
+//	/*ARRAY  */ mlrvalCopyArray,
+//	/*MAP    */ mlrvalCopyMap,
+//}
+//
+//func (this *Mlrval) CopyFrom(that *Mlrval) {
+//	this.mvtype = that.mvtype
+//    mlrvalCopyDispositions[that.mvtype](this, that)
+//}
+
 // ----------------------------------------------------------------
 func (this *Mlrval) SetFromPending() {
 	this.mvtype = MT_PENDING

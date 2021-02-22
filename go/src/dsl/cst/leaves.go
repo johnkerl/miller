@@ -191,7 +191,6 @@ func (this *LocalVariableNode) Evaluate(
 	state *runtime.State,
 ) {
 	value := state.Stack.Get(this.variableName)
-	//state.Stack.Dump()
 	if value == nil {
 		output.SetFromAbsent()
 	} else {

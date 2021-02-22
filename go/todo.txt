@@ -15,15 +15,11 @@ TOP OF LIST:
   o take care w/ copying (non-pointer) mlrvals though
 
 * cst-no-alloc refactor ...
-  - udf args back
-  ! binary on-stack imitate elsewheres
-  ! no 'malloc-avoidance'
   - prof:
     mlr --cpuprofile cpu.pprof -n put -q -s 'iwidth=200' -s iheight=200 -s silent=true -f u/mand.mlr
   - dispo-vec the CopyFrom method
   - MlrvalLessThanForSort
   - MlrvalGetMeanEB et al.
-  - double-check trims of go.mod
   - var delta types.Mlrval for uninits
   - nice narrative write-up w/ the C stack-allocator problem, Go non-solutionk,
     profilng methods, GC readings/findings, before-and-after CST data structures,
