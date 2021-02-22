@@ -3,28 +3,21 @@ TOP OF LIST:
 
 ! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
 
-----------------------------------------------------------------
-* make a profiling.md
-  o https://github.com/johnkerl/miller/compare/stack-allocator
-
-* mand no-print option
-
 * for i, e in range c optimization -- always *copies* e
   o try and benchmark/compare ...
   o lots of array-of-pointer stuff, this is totally fine
   o take care w/ copying (non-pointer) mlrvals though
 
-* cst-no-alloc refactor ...
+* data-copy reduction:
   - prof:
     mlr --cpuprofile cpu.pprof -n put -q -s 'iwidth=200' -s iheight=200 -s silent=true -f u/mand.mlr
-  - dispo-vec the CopyFrom method
   - MlrvalLessThanForSort
   - MlrvalGetMeanEB et al.
   - var delta types.Mlrval for uninits
   - nice narrative write-up w/ the C stack-allocator problem, Go non-solutionk,
     profilng methods, GC readings/findings, before-and-after CST data structures,
     final perf results.
-  - defer the stack-allocation PR until after
+  w defer the stack-allocation PR until after
 
 ----------------------------------------------------------------
 * regexes
