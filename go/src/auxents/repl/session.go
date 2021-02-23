@@ -64,7 +64,7 @@ func NewRepl(
 	// interactive expressions to be printed to the terminal. For the main DSL,
 	// the default is types.MlrvalFromTrue(); for the REPL, the default is
 	// types.MlrvalFromVoid().
-	runtimeState.FilterExpression = types.MlrvalFromVoid()
+	runtimeState.FilterExpression = types.MLRVAL_VOID
 
 	// For control-C handling
 	sysToSignalHandlerChannel := make(chan os.Signal, 1) // Our signal handler reads system notification here

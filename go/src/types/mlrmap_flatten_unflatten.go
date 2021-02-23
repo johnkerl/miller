@@ -102,8 +102,7 @@ func (this *Mlrmap) Unflatten(separator string) {
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := MlrvalFromError()
-			mlrvalSplitAXHelper(&arrayOfIndices, pe.Key, separator)
+			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 			that.PutIndexed(
 				MakePointerArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
@@ -126,8 +125,7 @@ func (this *Mlrmap) UnflattenFields(
 
 	for pe := this.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := MlrvalFromError()
-			mlrvalSplitAXHelper(&arrayOfIndices, pe.Key, separator)
+			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			baseIndex := arrayOfIndices.arrayval[0].String()
 			if fieldNameSet[baseIndex] {
@@ -159,12 +157,10 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return input
 	}
 	if input.printrep == "{}" {
-		retval := MlrvalFromMapReferenced(NewMlrmap())
-		return &retval
+		return MlrvalPointerFromMapReferenced(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		retval := MlrvalFromArrayLiteralReference(make([]Mlrval, 0))
-		return &retval
+		return MlrvalPointerFromArrayLiteralReference(make([]Mlrval, 0))
 	}
 	return input
 }

@@ -12,9 +12,12 @@ TOP OF LIST:
   - literal-type nodes -- why is there even a copy? these should simply be pointing at the literal.
     > modify Evaluate to return pointer? 1st arg becomes optional buffer?
   - type-gated mv -- should use passed-in storage slot -- ?
+  - MLRVAL_INT_0 et al. are dangerous & should be rid of. (too easy to mutate?).
+    > and/or all MLRVAL_X -> MLRVAL_X()
   - prof:
     mlr --cpuprofile cpu.pprof -n put -q -s iwidth=500 -s iheight=500 -s silent=true -f u/mand.mlr
     GOGC=off mlr --cpuprofile cpu.pprof -n put -q -s iwidth=500 -s iheight=500 -s silent=true -f u/mand.mlr
+  - check 'malloc-avoidance' comment
   - MlrvalLessThanForSort
   - MlrvalGetMeanEB et al.
   - var delta types.Mlrval for uninits
@@ -22,6 +25,8 @@ TOP OF LIST:
     profilng methods, GC readings/findings, before-and-after CST data structures,
     final perf results.
   w defer the stack-allocation PR until after
+  - bonus: return MlrvalSqrt(MlrvalDivide(input1, input2))
+  - maybe MT_PENDING_MUTABLE -- ?
 
 * next round of data-copy reduction:
   o $z = min($x, $y) -- needs to return pointer to x or y
@@ -30,9 +35,17 @@ TOP OF LIST:
     - have the function z-allocate outputs when needed
     - the outputs must be on the stack, not statically allocated, to make them re-entrant
       and OK for recursive functions
+    - var output types.Mlrval w/ field-setters, rather than return &Mlrval{... all of them ...}
   o then IEvaluable: Evaluate(state *runtime.State) *types.Mlrval
   o invalidate CopyFrom
   o check for under/over copy at Assign
+  o global *ERROR / *ABSENT / etc
+
+  ! GAH!! rethink MlrvalFromX(...)
+
+g/(output, input.*{$/s/{$/ *Mlrval {/
+
+g/(output, input.*{$/s/(output, input/(input/
 
 ----------------------------------------------------------------
 * regexes

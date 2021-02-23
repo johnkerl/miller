@@ -48,28 +48,28 @@
 package types
 
 // Function-pointer type for zary functions.
-type ZaryFunc func(output *Mlrval)
+type ZaryFunc func() *Mlrval
 
 // Function-pointer type for unary-operator disposition vectors.
-type UnaryFunc func(output, input1 *Mlrval)
+type UnaryFunc func(input1 *Mlrval) *Mlrval
 
 // The asserting_{type} need access to the context to say things like 'Assertion ... failed
 // at filename {FILENAME} record number {NR}'.
-type ContextualUnaryFunc func(output, input1 *Mlrval, context *Context)
+type ContextualUnaryFunc func(input1 *Mlrval, context *Context) *Mlrval
 
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64
-type mathLibUnaryFuncWrapper func(output, input1 *Mlrval, f mathLibUnaryFunc)
+type mathLibUnaryFuncWrapper func(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval
 
 // Function-pointer type for binary-operator disposition matrices.
-type BinaryFunc func(output, input1, input2 *Mlrval)
+type BinaryFunc func(input1, input2 *Mlrval) *Mlrval
 
 // Function-pointer type for ternary functions
-type TernaryFunc func(output, input1, input2, input3 *Mlrval)
+type TernaryFunc func(input1, input2, input3 *Mlrval) *Mlrval
 
 // Function-pointer type for variadic functions.
-type VariadicFunc func(output *Mlrval, inputs []*Mlrval)
+type VariadicFunc func(inputs []*Mlrval) *Mlrval
 
 // Function-pointer type for sorting. Returns < 0 if a < b, 0 if a == b, > 0 if a > b.
 type ComparatorFunc func(*Mlrval, *Mlrval) int
@@ -82,77 +82,77 @@ type ComparatorFunc func(*Mlrval, *Mlrval) int
 
 // ----------------------------------------------------------------
 // Return error (unary)
-func _erro1(output, input1 *Mlrval) {
-	output.SetFromError()
+func _erro1(input1 *Mlrval) *Mlrval {
+	return MLRVAL_ERROR
 }
 
 // Return absent (unary)
-func _absn1(output, input1 *Mlrval) {
-	output.SetFromAbsent()
+func _absn1(input1 *Mlrval) *Mlrval {
+	return MLRVAL_ABSENT
 }
 
 // Return void (unary)
-func _void1(output, input1 *Mlrval) {
-	output.SetFromVoid()
+func _void1(input1 *Mlrval) *Mlrval {
+	return MLRVAL_VOID
 }
 
 // Return argument (unary)
-func _1u___(output, input1 *Mlrval) {
-	output.CopyFrom(input1)
+func _1u___(input1 *Mlrval) *Mlrval {
+	return input1
 }
 
 // ----------------------------------------------------------------
 // Return error (binary)
-func _erro(output, input1, input2 *Mlrval) {
-	output.SetFromError()
+func _erro(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_ERROR
 }
 
 // Return absent (binary)
-func _absn(output, input1, input2 *Mlrval) {
-	output.SetFromAbsent()
+func _absn(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_ABSENT
 }
 
 // Return void (binary)
-func _void(output, input1, input2 *Mlrval) {
-	output.SetFromVoid()
+func _void(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_VOID
 }
 
 // Return first argument (binary)
-func _1___(output, input1, input2 *Mlrval) {
-	output.CopyFrom(input1)
+func _1___(input1, input2 *Mlrval) *Mlrval {
+	return input1
 }
 
 // Return second argument (binary)
-func _2___(output, input1, input2 *Mlrval) {
-	output.CopyFrom(input2)
+func _2___(input1, input2 *Mlrval) *Mlrval {
+	return input2
 }
 
 // Return first argument, as string (binary)
-func _s1__(output, input1, input2 *Mlrval) {
-	output.SetFromString(input1.String())
+func _s1__(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromString(input1.String())
 }
 
 // Return second argument, as string (binary)
-func _s2__(output, input1, input2 *Mlrval) {
-	output.SetFromString(input2.String())
+func _s2__(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromString(input2.String())
 }
 
 // Return integer zero (binary)
-func _i0__(output, input1, input2 *Mlrval) {
-	output.SetFromInt(0)
+func _i0__(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_INT_0
 }
 
 // Return float zero (binary)
-func _f0__(output, input1, input2 *Mlrval) {
-	output.SetFromFloat64(0.0)
+func _f0__(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_FLOAT_0
 }
 
 // Return boolean true (binary)
-func _true(output, input1, input2 *Mlrval) {
-	output.SetFromBool(true)
+func _true(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_TRUE
 }
 
 // Return boolean false (binary)
-func _fals(output, input1, input2 *Mlrval) {
-	output.SetFromBool(false)
+func _fals(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_FALSE
 }

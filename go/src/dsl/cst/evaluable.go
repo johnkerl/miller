@@ -94,14 +94,11 @@ func (this *RootNode) BuildIndirectFieldValueNode(
 	}, nil
 }
 func (this *IndirectFieldValueNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) { // TODO: err
-	var fieldName types.Mlrval
-	this.fieldNameEvaluable.Evaluate(&fieldName, state)
+) *types.Mlrval { // TODO: err
+	fieldName := this.fieldNameEvaluable.Evaluate(state)
 	if fieldName.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	// For normal DSL use the CST validator will prohibit this from being
@@ -110,11 +107,10 @@ func (this *IndirectFieldValueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
-	value, err := state.Inrec.GetWithMlrvalIndex(&fieldName)
+	value, err := state.Inrec.GetWithMlrvalIndex(fieldName)
 	if err != nil {
 		// Key isn't int or string.
 		// TODO: needs error-return in the API
@@ -122,10 +118,9 @@ func (this *IndirectFieldValueNode) Evaluate(
 		os.Exit(1)
 	}
 	if value == nil {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
-	output.CopyFrom(value)
+	return value
 }
 
 // ----------------------------------------------------------------
@@ -149,20 +144,17 @@ func (this *RootNode) BuildIndirectOosvarValueNode(
 }
 
 func (this *IndirectOosvarValueNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) { // TODO: err
-	var oosvarName types.Mlrval
-	this.oosvarNameEvaluable.Evaluate(&oosvarName, state)
+) *types.Mlrval { // TODO: err
+	oosvarName := this.oosvarNameEvaluable.Evaluate(state)
 	if oosvarName.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	value := state.Oosvars.Get(oosvarName.String())
 	if value == nil {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
-	output.CopyFrom(value)
+
+	return value
 }

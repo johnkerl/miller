@@ -15,7 +15,6 @@ import (
 // ----------------------------------------------------------------
 type ArrayLiteralNode struct {
 	evaluables []IEvaluable
-	mlrvals    []types.Mlrval
 }
 
 func (this *RootNode) BuildArrayLiteralNode(
@@ -27,7 +26,6 @@ func (this *RootNode) BuildArrayLiteralNode(
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 
 	evaluables := make([]IEvaluable, len(astNode.Children))
-	mlrvals := make([]types.Mlrval, len(astNode.Children))
 
 	for i, astChild := range astNode.Children {
 		element, err := this.BuildEvaluableNode(astChild)
@@ -35,23 +33,21 @@ func (this *RootNode) BuildArrayLiteralNode(
 			return nil, err
 		}
 		evaluables[i] = element
-		mlrvals[i] = types.MlrvalFromError()
 	}
 
 	return &ArrayLiteralNode{
 		evaluables: evaluables,
-		mlrvals:    mlrvals,
 	}, nil
 }
 
 func (this *ArrayLiteralNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
+) *types.Mlrval {
+	mlrvals := make([]types.Mlrval, len(this.evaluables))
 	for i, _ := range this.evaluables {
-		this.evaluables[i].Evaluate(&this.mlrvals[i], state)
+		mlrvals[i] = *this.evaluables[i].Evaluate(state)
 	}
-	output.SetFromArrayLiteralReference(this.mlrvals)
+	return types.MlrvalPointerFromArrayLiteralReference(mlrvals)
 }
 
 // ----------------------------------------------------------------
@@ -85,22 +81,22 @@ func (this *RootNode) BuildArrayOrMapIndexAccessNode(
 }
 
 func (this *ArrayOrMapIndexAccessNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var baseMlrval, indexMlrval types.Mlrval
-	this.baseEvaluable.Evaluate(&baseMlrval, state)
-	this.indexEvaluable.Evaluate(&indexMlrval, state)
+) *types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	indexMlrval := this.indexEvaluable.Evaluate(state)
 
 	// Base-is-array and index-is-int will be checked there
 	if baseMlrval.IsArray() {
-		*output = baseMlrval.ArrayGet(&indexMlrval)
+		output := baseMlrval.ArrayGet(indexMlrval)
+		return &output
 	} else if baseMlrval.IsMap() {
-		*output = baseMlrval.MapGet(&indexMlrval)
+		output := baseMlrval.MapGet(indexMlrval)
+		return &output
 	} else if baseMlrval.IsAbsent() {
-		output.SetFromAbsent()
+		return types.MLRVAL_ABSENT
 	} else {
-		output.SetFromError()
+		return types.MLRVAL_ERROR
 	}
 }
 
@@ -144,35 +140,29 @@ func (this *RootNode) BuildArraySliceAccessNode(
 }
 
 func (this *ArraySliceAccessNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var baseMlrval, lowerIndexMlrval, upperIndexMlrval types.Mlrval
-	this.baseEvaluable.Evaluate(&baseMlrval, state)
-	this.lowerIndexEvaluable.Evaluate(&lowerIndexMlrval, state)
-	this.upperIndexEvaluable.Evaluate(&upperIndexMlrval, state)
+) *types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	lowerIndexMlrval := this.lowerIndexEvaluable.Evaluate(state)
+	upperIndexMlrval := this.upperIndexEvaluable.Evaluate(state)
 
 	if baseMlrval.IsAbsent() {
-		output.SetFromAbsent()
+		return types.MLRVAL_ABSENT
 	}
 	if baseMlrval.IsString() {
-		types.MlrvalSubstr(output, &baseMlrval, &lowerIndexMlrval, &upperIndexMlrval)
-		return
+		return types.MlrvalSubstr(baseMlrval, lowerIndexMlrval, upperIndexMlrval)
 	}
 	array := baseMlrval.GetArray()
 	if array == nil {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 	n := len(array)
 
 	if lowerIndexMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 	if upperIndexMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	lowerIndex, ok := lowerIndexMlrval.GetIntValue()
@@ -180,8 +170,7 @@ func (this *ArraySliceAccessNode) Evaluate(
 		if lowerIndexMlrval.IsEmpty() {
 			lowerIndex = 1
 		} else {
-			output.SetFromError()
-			return
+			return types.MLRVAL_ERROR
 		}
 	}
 	upperIndex, ok := upperIndexMlrval.GetIntValue()
@@ -189,8 +178,7 @@ func (this *ArraySliceAccessNode) Evaluate(
 		if upperIndexMlrval.IsEmpty() {
 			upperIndex = n
 		} else {
-			output.SetFromError()
-			return
+			return types.MLRVAL_ERROR
 		}
 	}
 
@@ -201,8 +189,7 @@ func (this *ArraySliceAccessNode) Evaluate(
 	upperZindex, _ := types.UnaliasArrayIndex(&array, upperIndex)
 
 	if lowerZindex > upperZindex {
-		output.SetFromArrayLiteralReference(make([]types.Mlrval, 0))
-		return
+		return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
 	}
 
 	// Say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
@@ -223,7 +210,7 @@ func (this *ArraySliceAccessNode) Evaluate(
 		di++
 	}
 
-	output.SetFromArrayLiteralReference(retval)
+	return types.MlrvalPointerFromArrayLiteralReference(retval)
 }
 
 // ================================================================
@@ -253,29 +240,24 @@ func (this *RootNode) BuildPositionalFieldNameNode(
 
 // TODO: code-dedupe these next four Evaluate methods
 func (this *PositionalFieldNameNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var indexMlrval types.Mlrval
-	this.indexEvaluable.Evaluate(&indexMlrval, state)
+) *types.Mlrval {
+	indexMlrval := this.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 
 	name, ok := state.Inrec.GetNameAtPositionalIndex(index)
 	if !ok {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
-	output.SetFromString(name)
+	return types.MlrvalPointerFromString(name)
 }
 
 // ================================================================
@@ -304,29 +286,24 @@ func (this *RootNode) BuildPositionalFieldValueNode(
 }
 
 func (this *PositionalFieldValueNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var indexMlrval types.Mlrval
-	this.indexEvaluable.Evaluate(&indexMlrval, state)
+) *types.Mlrval {
+	indexMlrval := this.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 
 	retval := state.Inrec.GetWithPositionalIndex(index)
 	if retval == nil {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
-	output.CopyFrom(retval)
+	return retval
 }
 
 // ================================================================
@@ -362,52 +339,42 @@ func (this *RootNode) BuildArrayOrMapPositionalNameAccessNode(
 }
 
 func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var baseMlrval, indexMlrval types.Mlrval
-	this.baseEvaluable.Evaluate(&baseMlrval, state)
-	this.indexEvaluable.Evaluate(&indexMlrval, state)
+) *types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	indexMlrval := this.indexEvaluable.Evaluate(state)
 
 	if indexMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 
 	if baseMlrval.IsArray() {
 		n, _ := baseMlrval.GetArrayLength()
 		zindex, ok := types.UnaliasArrayLengthIndex(int(n), index)
 		if ok {
-			output.SetFromInt(zindex + 1) // Miller user-space indices are 1-up
-			return
+			return types.MlrvalPointerFromInt(zindex + 1) // Miller user-space indices are 1-up
 		} else {
-			output.SetFromAbsent()
-			return
+			return types.MLRVAL_ABSENT
 		}
 
 	} else if baseMlrval.IsMap() {
 		name, ok := baseMlrval.GetMap().GetNameAtPositionalIndex(index)
 		if !ok {
-			output.SetFromAbsent()
-			return
+			return types.MLRVAL_ABSENT
 		} else {
-			output.SetFromString(name)
-			return
+			return types.MlrvalPointerFromString(name)
 		}
 
 	} else if baseMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 
 	} else {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 }
 
@@ -444,46 +411,38 @@ func (this *RootNode) BuildArrayOrMapPositionalValueAccessNode(
 }
 
 func (this *ArrayOrMapPositionalValueAccessNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var baseMlrval, indexMlrval types.Mlrval
-	this.baseEvaluable.Evaluate(&baseMlrval, state)
-	this.indexEvaluable.Evaluate(&indexMlrval, state)
+) *types.Mlrval {
+	baseMlrval := this.baseEvaluable.Evaluate(state)
+	indexMlrval := this.indexEvaluable.Evaluate(state)
 
 	if indexMlrval.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 
 	index, ok := indexMlrval.GetIntValue()
 	if !ok {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 
 	if baseMlrval.IsArray() {
 		// xxx pending pointer-output refactor
-		element := baseMlrval.ArrayGet(&indexMlrval)
-		output.CopyFrom(&element)
+		retval := baseMlrval.ArrayGet(indexMlrval)
+		return &retval
 
 	} else if baseMlrval.IsMap() {
 		value := baseMlrval.GetMap().GetWithPositionalIndex(index)
 		if value == nil {
-			output.SetFromAbsent()
-			return
+			return types.MLRVAL_ABSENT
 		}
 
-		output.CopyFrom(value)
-		return
+		return value
 
 	} else if baseMlrval.IsAbsent() {
-		output.CopyFrom(&baseMlrval)
-		return
+		return types.MLRVAL_ABSENT
 
 	} else {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 }
 
@@ -544,18 +503,18 @@ func (this *RootNode) BuildMapLiteralNode(
 }
 
 func (this *MapLiteralNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	output.SetFromEmptyMap()
+) *types.Mlrval {
+	output := types.MlrvalPointerFromEmptyMap()
 
 	for i, _ := range this.evaluablePairs {
-		var key, value types.Mlrval
-		this.evaluablePairs[i].Key.Evaluate(&key, state)
-		this.evaluablePairs[i].Value.Evaluate(&value, state)
+		key := this.evaluablePairs[i].Key.Evaluate(state)
+		value := this.evaluablePairs[i].Value.Evaluate(state)
 
 		if !value.IsAbsent() {
-			output.MapPut(&key, &value)
+			output.MapPut(key, value)
 		}
 	}
+
+	return output
 }

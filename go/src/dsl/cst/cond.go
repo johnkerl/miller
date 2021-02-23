@@ -46,10 +46,9 @@ func (this *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, 
 func (this *CondBlockNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	var condition types.Mlrval
-	condition.SetFromTrue()
+	condition := types.MLRVAL_TRUE
 	if this.conditionNode != nil {
-		this.conditionNode.Evaluate(&condition, state)
+		condition = this.conditionNode.Evaluate(state)
 	}
 	boolValue, isBool := condition.GetBoolValue()
 

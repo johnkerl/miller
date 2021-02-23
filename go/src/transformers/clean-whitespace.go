@@ -138,12 +138,10 @@ func (this *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
 			oldKey := types.MlrvalFromString(pe.Key)
 			// xxx temp
-			newKey := types.MlrvalFromAbsent()
-			newValue := types.MlrvalFromAbsent()
-			types.MlrvalCleanWhitespace(&newKey, &oldKey)
-			types.MlrvalCleanWhitespace(&newValue, pe.Value)
+			newKey := types.MlrvalCleanWhitespace(&oldKey)
+			newValue := types.MlrvalCleanWhitespace(pe.Value)
 			// Transferring ownership from old record to new record; no copy needed
-			newrec.PutReference(newKey.String(), &newValue)
+			newrec.PutReference(newKey.String(), newValue)
 		}
 
 		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
@@ -163,8 +161,7 @@ func (this *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
 			oldKey := types.MlrvalFromString(pe.Key)
 			// xxx temp
-			newKey := types.MlrvalFromAbsent()
-			types.MlrvalCleanWhitespace(&newKey, &oldKey)
+			newKey := types.MlrvalCleanWhitespace(&oldKey)
 			// Transferring ownership from old record to new record; no copy needed
 			newrec.PutReference(newKey.String(), pe.Value)
 		}
@@ -182,7 +179,7 @@ func (this *TransformerCleanWhitespace) cleanWhitespaceInValues(
 ) {
 	if !inrecAndContext.EndOfStream {
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
-			types.MlrvalCleanWhitespace(pe.Value, pe.Value)
+			pe.Value = types.MlrvalCleanWhitespace(pe.Value)
 		}
 		outputChannel <- inrecAndContext
 	} else {

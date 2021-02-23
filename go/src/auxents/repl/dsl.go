@@ -87,7 +87,7 @@ func (this *Repl) handleDSLStringAux(
 		} else {
 			fmt.Println(filterExpression.String())
 		}
-		this.runtimeState.FilterExpression = types.MlrvalFromVoid()
+		this.runtimeState.FilterExpression = types.MLRVAL_VOID
 	}
 
 	return nil

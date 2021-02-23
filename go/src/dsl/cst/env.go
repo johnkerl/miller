@@ -34,19 +34,15 @@ func (this *RootNode) BuildEnvironmentVariableNode(astNode *dsl.ASTNode) (*Envir
 }
 
 func (this *EnvironmentVariableNode) Evaluate(
-	output *types.Mlrval,
 	state *runtime.State,
-) {
-	var name types.Mlrval
-	this.nameEvaluable.Evaluate(&name, state)
+) *types.Mlrval {
+	name := this.nameEvaluable.Evaluate(state)
 	if name.IsAbsent() {
-		output.SetFromAbsent()
-		return
+		return types.MLRVAL_ABSENT
 	}
 	if !name.IsString() {
-		output.SetFromError()
-		return
+		return types.MLRVAL_ERROR
 	}
 
-	output.SetFromString(os.Getenv(name.String()))
+	return types.MlrvalPointerFromString(os.Getenv(name.String()))
 }

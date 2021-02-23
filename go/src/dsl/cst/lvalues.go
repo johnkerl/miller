@@ -206,7 +206,6 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
-	var lhsFieldName types.Mlrval
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
@@ -220,10 +219,10 @@ func (this *IndirectFieldValueLvalueNode) AssignIndexed(
 		return errors.New("There is no current record to assign to.")
 	}
 
-	this.lhsFieldNameExpression.Evaluate(&lhsFieldName, state)
+	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 
 	if indices == nil {
-		err := state.Inrec.PutCopyWithMlrvalIndex(&lhsFieldName, rvalue)
+		err := state.Inrec.PutCopyWithMlrvalIndex(lhsFieldName, rvalue)
 		if err != nil {
 			return err
 		}
@@ -246,7 +245,6 @@ func (this *IndirectFieldValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
-	var lhsFieldName types.Mlrval
 	// For normal DSL use the CST validator will prohibit this from being
 	// called in places the current record is undefined (begin and end blocks).
 	// However in the REPL people can read past end of stream and still try to
@@ -256,7 +254,7 @@ func (this *IndirectFieldValueLvalueNode) UnassignIndexed(
 		return
 	}
 
-	this.lhsFieldNameExpression.Evaluate(&lhsFieldName, state)
+	lhsFieldName := this.lhsFieldNameExpression.Evaluate(state)
 	if indices == nil {
 		name := lhsFieldName.String()
 		state.Inrec.Remove(name)
@@ -301,7 +299,6 @@ func (this *PositionalFieldNameLvalueNode) Assign(
 	rvalue *types.Mlrval,
 	state *runtime.State,
 ) error {
-	var lhsFieldIndex types.Mlrval
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
@@ -315,7 +312,7 @@ func (this *PositionalFieldNameLvalueNode) Assign(
 		return errors.New("There is no current record to assign to.")
 	}
 
-	this.lhsFieldIndexExpression.Evaluate(&lhsFieldIndex, state)
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 
 	index, ok := lhsFieldIndex.GetIntValue()
 	if ok {
@@ -354,8 +351,7 @@ func (this *PositionalFieldNameLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
-	var lhsFieldIndex types.Mlrval
-	this.lhsFieldIndexExpression.Evaluate(&lhsFieldIndex, state)
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 
 	// For normal DSL use the CST validator will prohibit this from being
 	// called in places the current record is undefined (begin and end blocks).
@@ -376,7 +372,7 @@ func (this *PositionalFieldNameLvalueNode) UnassignIndexed(
 	} else {
 		// xxx positional
 		state.Inrec.RemoveIndexed(
-			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
+			append([]*types.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
 }
@@ -423,7 +419,6 @@ func (this *PositionalFieldValueLvalueNode) AssignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
-	var lhsFieldIndex types.Mlrval
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
@@ -437,7 +432,7 @@ func (this *PositionalFieldValueLvalueNode) AssignIndexed(
 		return errors.New("There is no current record to assign to.")
 	}
 
-	this.lhsFieldIndexExpression.Evaluate(&lhsFieldIndex, state)
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 
 	if indices == nil {
 		index, ok := lhsFieldIndex.GetIntValue()
@@ -461,7 +456,7 @@ func (this *PositionalFieldValueLvalueNode) AssignIndexed(
 	} else {
 		// xxx positional
 		return state.Inrec.PutIndexed(
-			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
+			append([]*types.Mlrval{lhsFieldIndex}, indices...),
 			rvalue,
 		)
 	}
@@ -487,9 +482,8 @@ func (this *PositionalFieldValueLvalueNode) UnassignIndexed(
 	if state.Inrec == nil {
 		return
 	}
-	var lhsFieldIndex types.Mlrval
 
-	this.lhsFieldIndexExpression.Evaluate(&lhsFieldIndex, state)
+	lhsFieldIndex := this.lhsFieldIndexExpression.Evaluate(state)
 	if indices == nil {
 		index, ok := lhsFieldIndex.GetIntValue()
 		if ok {
@@ -500,7 +494,7 @@ func (this *PositionalFieldValueLvalueNode) UnassignIndexed(
 	} else {
 		// xxx positional
 		state.Inrec.RemoveIndexed(
-			append([]*types.Mlrval{&lhsFieldIndex}, indices...),
+			append([]*types.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
 }
@@ -685,15 +679,14 @@ func (this *IndirectOosvarValueLvalueNode) AssignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
-	var lhsOosvarName types.Mlrval
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
-	this.lhsOosvarNameExpression.Evaluate(&lhsOosvarName, state)
+	lhsOosvarName := this.lhsOosvarNameExpression.Evaluate(state)
 
 	if indices == nil {
-		err := state.Oosvars.PutCopyWithMlrvalIndex(&lhsOosvarName, rvalue)
+		err := state.Oosvars.PutCopyWithMlrvalIndex(lhsOosvarName, rvalue)
 		if err != nil {
 			return err
 		}
@@ -716,15 +709,14 @@ func (this *IndirectOosvarValueLvalueNode) UnassignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) {
-	var lhsOosvarName types.Mlrval
-	this.lhsOosvarNameExpression.Evaluate(&lhsOosvarName, state)
+	lhsOosvarName := this.lhsOosvarNameExpression.Evaluate(state)
 
 	if indices == nil {
 		sname := lhsOosvarName.String()
 		state.Oosvars.Remove(sname)
 	} else {
 		state.Oosvars.RemoveIndexed(
-			append([]*types.Mlrval{&lhsOosvarName}, indices...),
+			append([]*types.Mlrval{lhsOosvarName}, indices...),
 		)
 	}
 }
@@ -891,7 +883,6 @@ func (this *LocalVariableLvalueNode) UnassignIndexed(
 type IndexedLvalueNode struct {
 	baseLvalue      IAssignable
 	indexEvaluables []IEvaluable
-	indices         []*types.Mlrval // malloc-avoidance
 }
 
 func (this *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
@@ -900,7 +891,6 @@ func (this *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 
 	var baseLvalue IAssignable = nil
 	indexEvaluables := make([]IEvaluable, 0)
-	indices := make([]*types.Mlrval, 0)
 	var err error = nil
 
 	// $ mlr -n put -v '$x[1][2]=3'
@@ -927,9 +917,7 @@ func (this *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 			if err != nil {
 				return nil, err
 			}
-			index := types.MlrvalFromError()
 			indexEvaluables = append([]IEvaluable{indexEvaluable}, indexEvaluables...)
-			indices = append([]*types.Mlrval{&index}, indices...)
 			walkerNode = walkerNode.Children[0]
 		} else {
 			baseLvalue, err = this.BuildAssignableNode(walkerNode)
@@ -939,18 +927,16 @@ func (this *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 			break
 		}
 	}
-	return NewIndexedLvalueNode(baseLvalue, indexEvaluables, indices), nil
+	return NewIndexedLvalueNode(baseLvalue, indexEvaluables), nil
 }
 
 func NewIndexedLvalueNode(
 	baseLvalue IAssignable,
 	indexEvaluables []IEvaluable,
-	indices []*types.Mlrval,
 ) *IndexedLvalueNode {
 	return &IndexedLvalueNode{
 		baseLvalue:      baseLvalue,
 		indexEvaluables: indexEvaluables,
-		indices:         indices,
 	}
 }
 
@@ -961,21 +947,22 @@ func (this *IndexedLvalueNode) Assign(
 	rvalue *types.Mlrval,
 	state *runtime.State,
 ) error {
+	indices := make([]*types.Mlrval, len(this.indexEvaluables))
 
-	for i, indexEvaluable := range this.indexEvaluables {
-		indexEvaluable.Evaluate(this.indices[i], state)
-		if this.indices[i].IsAbsent() {
+	for i, _ := range this.indexEvaluables {
+		indices[i] = this.indexEvaluables[i].Evaluate(state)
+		if indices[i].IsAbsent() {
 			return nil
 		}
 	}
 
 	// This lets the user do '$y[ ["a", "b", "c"] ] = $x' in lieu of
 	// '$y["a"]["b"]["c"] = $x'.
-	if len(this.indices) == 1 && this.indices[0].IsArray() {
-		this.indices = types.MakePointerArray(this.indices[0].GetArray())
+	if len(indices) == 1 && indices[0].IsArray() {
+		indices = types.MakePointerArray(indices[0].GetArray())
 	}
 
-	return this.baseLvalue.AssignIndexed(rvalue, this.indices, state)
+	return this.baseLvalue.AssignIndexed(rvalue, indices, state)
 }
 
 func (this *IndexedLvalueNode) AssignIndexed(
@@ -991,11 +978,12 @@ func (this *IndexedLvalueNode) AssignIndexed(
 func (this *IndexedLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	for i, indexEvaluable := range this.indexEvaluables {
-		indexEvaluable.Evaluate(this.indices[i], state)
+	indices := make([]*types.Mlrval, len(this.indexEvaluables))
+	for i, _ := range this.indexEvaluables {
+		indices[i] = this.indexEvaluables[i].Evaluate(state)
 	}
 
-	this.baseLvalue.UnassignIndexed(this.indices, state)
+	this.baseLvalue.UnassignIndexed(indices, state)
 }
 
 func (this *IndexedLvalueNode) UnassignIndexed(
@@ -1035,12 +1023,11 @@ func (this *EnvironmentVariableLvalueNode) Assign(
 	rvalue *types.Mlrval,
 	state *runtime.State,
 ) error {
-	var name types.Mlrval
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
 	// whatever we get
 	lib.InternalCodingErrorIf(rvalue.IsAbsent())
 
-	this.nameExpression.Evaluate(&name, state)
+	name := this.nameExpression.Evaluate(state)
 	if name.IsAbsent() {
 		return nil
 	}
@@ -1070,8 +1057,7 @@ func (this *EnvironmentVariableLvalueNode) AssignIndexed(
 func (this *EnvironmentVariableLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	var name types.Mlrval
-	this.nameExpression.Evaluate(&name, state)
+	name := this.nameExpression.Evaluate(state)
 	if name.IsAbsent() {
 		return
 	}

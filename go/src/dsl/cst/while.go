@@ -10,7 +10,6 @@ import (
 	"miller/src/dsl"
 	"miller/src/lib"
 	"miller/src/runtime"
-	"miller/src/types"
 )
 
 // ================================================================
@@ -50,9 +49,8 @@ func (this *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, 
 
 // ----------------------------------------------------------------
 func (this *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	var condition types.Mlrval
 	for {
-		this.conditionNode.Evaluate(&condition, state)
+		condition := this.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
@@ -121,7 +119,6 @@ func (this *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNo
 
 // ----------------------------------------------------------------
 func (this *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	var condition types.Mlrval
 	for {
 		blockExitPayload, err := this.statementBlockNode.Execute(state)
 		if err != nil {
@@ -143,7 +140,7 @@ func (this *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, e
 		// TODO: handle return statements
 		// TODO: runtime errors for any other types
 
-		this.conditionNode.Evaluate(&condition, state)
+		condition := this.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.

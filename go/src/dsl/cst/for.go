@@ -116,8 +116,7 @@ func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //
 
 func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	var indexMlrval types.Mlrval
-	this.indexableNode.Evaluate(&indexMlrval, state)
+	indexMlrval := this.indexableNode.Evaluate(state)
 
 	if indexMlrval.IsMap() {
 
@@ -300,8 +299,7 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //
 
 func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	var indexMlrval types.Mlrval
-	this.indexableNode.Evaluate(&indexMlrval, state)
+	indexMlrval := this.indexableNode.Evaluate(state)
 
 	if indexMlrval.IsMap() {
 
@@ -497,8 +495,7 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 //
 
 func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	var indexMlrval types.Mlrval
-	this.indexableNode.Evaluate(&indexMlrval, state)
+	indexMlrval := this.indexableNode.Evaluate(state)
 
 	// Make a frame for the loop variables
 	state.Stack.PushStackFrame()
@@ -509,7 +506,7 @@ func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	// from any of the latter is a break from all.  However, at this point, the
 	// break has been "broken" and should not be returned to the caller.
 	// Return-statements should, though.
-	blockExitPayload, err := this.executeOuter(&indexMlrval, this.keyVariableNames, state)
+	blockExitPayload, err := this.executeOuter(indexMlrval, this.keyVariableNames, state)
 	if blockExitPayload == nil {
 		return nil, err
 	} else {
@@ -857,13 +854,11 @@ func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 		return nil, err
 	}
 
-	var continuationValue types.Mlrval
-
 	for {
 		// state.Stack.Dump()
 		// empty is true
 		if this.continuationExpressionNode != nil {
-			this.continuationExpressionNode.Evaluate(&continuationValue, state)
+			continuationValue := this.continuationExpressionNode.Evaluate(state)
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
 				// TODO: propagate line-number context

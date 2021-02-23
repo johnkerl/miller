@@ -59,7 +59,6 @@ type EmitXStatementNode struct {
 
 	// The "x","y" parts.
 	indexEvaluables []IEvaluable
-	indices         []types.Mlrval
 
 	// Appropriate function to evaluate statements, depending on indexed or not.
 	executorFunc Executor
@@ -111,7 +110,6 @@ func (this *RootNode) buildEmitXStatementNode(
 	var names []string = nil
 	var emitEvaluables []IEvaluable = nil
 	var indexEvaluables []IEvaluable = nil
-	var indices []types.Mlrval = nil
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Things to be emitted, e.g. $a and $b in 'emit > "foo.dat", $a, $b'.
@@ -139,14 +137,12 @@ func (this *RootNode) buildEmitXStatementNode(
 		isIndexed = true
 		numKeys := len(keysNode.Children)
 		indexEvaluables = make([]IEvaluable, numKeys)
-		indices = make([]types.Mlrval, numKeys)
 		for i, keyNode := range keysNode.Children {
 			indexEvaluable, err := this.BuildEvaluableNode(keyNode)
 			if err != nil {
 				return nil, err
 			}
 			indexEvaluables[i] = indexEvaluable
-			indices[i] = types.MlrvalFromError()
 		}
 	}
 
@@ -154,7 +150,6 @@ func (this *RootNode) buildEmitXStatementNode(
 		names:           names,
 		emitEvaluables:  emitEvaluables,
 		indexEvaluables: indexEvaluables,
-		indices:         indices,
 		isEmitP:         isEmitP,
 	}
 
@@ -273,19 +268,18 @@ func (this *EmitXStatementNode) executeNonIndexed(
 	newrec := types.NewMlrmapAsRecord()
 
 	for i, emitEvaluable := range this.emitEvaluables {
-		var emittable types.Mlrval
-		emitEvaluable.Evaluate(&emittable, state)
+		emittable := emitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			continue
 		}
 
 		if this.isEmitP {
-			newrec.PutCopy(this.names[i], &emittable)
+			newrec.PutCopy(this.names[i], emittable)
 		} else {
 			if emittable.IsMap() {
 				newrec.Merge(emittable.GetMap())
 			} else {
-				newrec.PutCopy(this.names[i], &emittable)
+				newrec.PutCopy(this.names[i], emittable)
 			}
 		}
 	}
@@ -301,9 +295,7 @@ func (this *EmitXStatementNode) executeIndexed(
 ) (*BlockExitPayload, error) {
 	emittableMaps := make([]*types.Mlrmap, len(this.emitEvaluables))
 	for i, emitEvaluable := range this.emitEvaluables {
-		var emittable types.Mlrval
-
-		emitEvaluable.Evaluate(&emittable, state)
+		emittable := emitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			return nil, nil
 		}
@@ -312,14 +304,15 @@ func (this *EmitXStatementNode) executeIndexed(
 		}
 		emittableMaps[i] = emittable.GetMap()
 	}
+	indices := make([]*types.Mlrval, len(this.indexEvaluables))
 
 	// TODO: libify this
 	for i, _ := range this.indexEvaluables {
-		this.indexEvaluables[i].Evaluate(&this.indices[i], state)
-		if this.indices[i].IsAbsent() {
+		indices[i] = this.indexEvaluables[i].Evaluate(state)
+		if indices[i].IsAbsent() {
 			return nil, nil
 		}
-		if this.indices[i].IsError() {
+		if indices[i].IsError() {
 			// TODO: surface this more highly
 			return nil, nil
 		}
@@ -329,7 +322,7 @@ func (this *EmitXStatementNode) executeIndexed(
 		this.names,
 		types.NewMlrmapAsRecord(),
 		emittableMaps,
-		this.indices,
+		indices,
 		state,
 	)
 }
@@ -339,7 +332,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 	mapNames []string,
 	templateRecord *types.Mlrmap,
 	emittableMaps []*types.Mlrmap,
-	indices []types.Mlrval,
+	indices []*types.Mlrval,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	lib.InternalCodingErrorIf(len(indices) < 1)
@@ -429,8 +422,7 @@ func (this *EmitXStatementNode) emitToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	var redirectorTarget types.Mlrval
-	this.redirectorTargetEvaluable.Evaluate(&redirectorTarget, state)
+	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
