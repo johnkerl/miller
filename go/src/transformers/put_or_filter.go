@@ -338,8 +338,8 @@ func NewTransformerPut(
 			}
 			key := pair[0]
 			svalue := pair[1]
-			mvalue := types.MlrvalFromInferredType(svalue)
-			runtimeState.Oosvars.PutCopy(key, &mvalue)
+			mvalue := types.MlrvalPointerFromInferredType(svalue)
+			runtimeState.Oosvars.PutCopy(key, mvalue)
 		}
 	}
 

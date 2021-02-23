@@ -139,12 +139,12 @@ func _s2__(input1, input2 *Mlrval) *Mlrval {
 
 // Return integer zero (binary)
 func _i0__(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_INT_0
+	return MlrvalPointerFromInt(0)
 }
 
 // Return float zero (binary)
 func _f0__(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_FLOAT_0
+	return MlrvalPointerFromFloat64(0)
 }
 
 // Return boolean true (binary)

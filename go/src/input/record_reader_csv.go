@@ -120,8 +120,8 @@ func (this *RecordReaderCSV) processHandle(
 		if nh == nd {
 			for i := 0; i < nh; i++ {
 				key := header[i]
-				value := types.MlrvalFromInferredType(csvRecord[i])
-				record.PutReference(key, &value)
+				value := types.MlrvalPointerFromInferredType(csvRecord[i])
+				record.PutReference(key, value)
 			}
 
 		} else {
@@ -140,14 +140,14 @@ func (this *RecordReaderCSV) processHandle(
 				n := lib.IntMin2(nh, nd)
 				for i = 0; i < n; i++ {
 					key := header[i]
-					value := types.MlrvalFromInferredType(csvRecord[i])
-					record.PutReference(key, &value)
+					value := types.MlrvalPointerFromInferredType(csvRecord[i])
+					record.PutReference(key, value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
-					value := types.MlrvalFromInferredType(csvRecord[i])
-					record.PutCopy(key, &value)
+					value := types.MlrvalPointerFromInferredType(csvRecord[i])
+					record.PutCopy(key, value)
 				}
 				if nh > nd {
 					// if header longer than data: use "" values

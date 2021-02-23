@@ -89,7 +89,7 @@ func leafcount_from_array(input1 *Mlrval) *Mlrval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := MlrvalLeafCount(&child)
 
-		childLeafCount := MLRVAL_INT_1
+		childLeafCount := MlrvalPointerFromInt(1)
 		if child.mvtype == MT_ARRAY {
 			childLeafCount = leafcount_from_array(&child)
 		} else if child.mvtype == MT_MAP {
@@ -111,7 +111,7 @@ func leafcount_from_map(input1 *Mlrval) *Mlrval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := MlrvalLeafCount(child)
 
-		childLeafCount := MLRVAL_INT_1
+		childLeafCount := MlrvalPointerFromInt(1)
 		if child.mvtype == MT_ARRAY {
 			childLeafCount = leafcount_from_array(child)
 		} else if child.mvtype == MT_MAP {
@@ -434,12 +434,12 @@ func MlrvalSplitKV(input1, input2, input3 *Mlrval) *Mlrval {
 		pair := strings.SplitN(field, pairSeparator, 2)
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-			value := MlrvalFromInferredType(pair[0])
-			output.mapval.PutReference(key, &value)
+			value := MlrvalPointerFromInferredType(pair[0])
+			output.mapval.PutReference(key, value)
 		} else if len(pair) == 2 {
 			key := pair[0]
-			value := MlrvalFromInferredType(pair[1])
-			output.mapval.PutReference(key, &value)
+			value := MlrvalPointerFromInferredType(pair[1])
+			output.mapval.PutReference(key, value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -498,8 +498,8 @@ func MlrvalSplitNV(input1, input2 *Mlrval) *Mlrval {
 	fields := lib.SplitString(input1.printrep, input2.printrep)
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-		value := MlrvalFromInferredType(field)
-		output.mapval.PutReference(key, &value)
+		value := MlrvalPointerFromInferredType(field)
+		output.mapval.PutReference(key, value)
 	}
 
 	return output
@@ -543,8 +543,8 @@ func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
 	output := NewSizedMlrvalArray(int(len(fields)))
 
 	for i, field := range fields {
-		value := MlrvalFromInferredType(field)
-		output.arrayval[i] = value
+		value := MlrvalPointerFromInferredType(field)
+		output.arrayval[i] = *value
 	}
 
 	return output

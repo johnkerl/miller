@@ -402,8 +402,8 @@ func (this *tStepperShift) process(
 	inrec *types.Mlrmap,
 ) {
 	if this.previous == nil {
-		shift := types.MlrvalFromVoid()
-		inrec.PutCopy(this.outputFieldName, &shift)
+		shift := types.MLRVAL_VOID
+		inrec.PutCopy(this.outputFieldName, shift)
 	} else {
 		inrec.PutCopy(this.outputFieldName, this.previous)
 		this.previous = valueFieldValue.Copy()

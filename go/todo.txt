@@ -28,6 +28,26 @@ TOP OF LIST:
   - bonus: return MlrvalSqrt(MlrvalDivide(input1, input2))
   - maybe MT_PENDING_MUTABLE -- ?
 
+  info:
+  for i in 100 200 500 1000 2000 5000 10000 20000; do echo $i; justtime GOGC=$i mlr -n put -q
+  100   TIME IN SECONDS 21.046 -- GOGC=100 mlr -n put -q -s silent=true -f u/mand.mlr
+  200   TIME IN SECONDS 17.233 -- GOGC=200 mlr -n put -q -s silent=true -f u/mand.mlr
+  500   TIME IN SECONDS 15.535 -- GOGC=500 mlr -n put -q -s silent=true -f u/mand.mlr
+  1000  TIME IN SECONDS 15.125 -- GOGC=1000 mlr -n put -q -s silent=true -f u/mand.mlr
+  2000  TIME IN SECONDS 15.428 -- GOGC=2000 mlr -n put -q -s silent=true -f u/mand.mlr
+  5000  TIME IN SECONDS 15.083 -- GOGC=5000 mlr -n put -q -s silent=true -f u/mand.mlr
+  10000 TIME IN SECONDS 15.175 -- GOGC=10000 mlr -n put -q -s silent=true -f u/mand.mlr
+  20000 TIME IN SECONDS 15.419 -- GOGC=20000 mlr -n put -q -s silent=true -f u/mand.mlr
+
+  mlr --cpuprofile cpu.pprof --from ~tmp/big sort -f a -nr x then nothing
+  GOGC=1000 mlr --cpuprofile cpu.pprof --from /Users/kerl/tmp/huge sort -f a -nr x then nothing
+
+  wc -l ~/tmp/big
+  1000000 /Users/kerl/tmp/big
+
+  wc -l ~/tmp/huge
+  10000000 /Users/kerl/tmp/huge
+
 * next round of data-copy reduction:
   o $z = min($x, $y) -- needs to return pointer to x or y
   o $z = $x + $y -- needs to have space for sum, and return pointer to it
@@ -40,12 +60,6 @@ TOP OF LIST:
   o invalidate CopyFrom
   o check for under/over copy at Assign
   o global *ERROR / *ABSENT / etc
-
-  ! GAH!! rethink MlrvalFromX(...)
-
-g/(output, input.*{$/s/{$/ *Mlrval {/
-
-g/(output, input.*{$/s/(output, input/(input/
 
 ----------------------------------------------------------------
 * regexes

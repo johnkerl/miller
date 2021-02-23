@@ -144,11 +144,9 @@ func (this *mlrmapEntry) JSONStringifyInPlace(
 ) {
 	outputBytes, err := this.Value.MarshalJSON(jsonFormatting)
 	if err != nil {
-		newValue := MlrvalFromError()
-		this.Value = &newValue
+		this.Value = MLRVAL_ERROR
 	} else {
-		newValue := MlrvalFromString(string(outputBytes))
-		this.Value = &newValue
+		this.Value = MlrvalPointerFromString(string(outputBytes))
 	}
 }
 
@@ -158,8 +156,6 @@ func (this *mlrmapEntry) JSONParseInPlace() {
 	input := this.Value.String()
 	err := this.Value.UnmarshalJSON([]byte(input))
 	if err != nil {
-		// TODO: make a pointer-return method and simplify callsites
-		newValue := MlrvalFromError()
-		this.Value = &newValue
+		this.Value = MLRVAL_ERROR
 	}
 }

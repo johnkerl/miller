@@ -308,7 +308,7 @@ func (this *Stats1ModeAccumulator) Ingest(value *types.Mlrval) {
 }
 func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
 	if this.countsByValue.FieldCount == 0 {
-		return types.MlrvalFromError()
+		return *types.MLRVAL_ERROR
 	}
 	maxValue := ""
 	var maxCount = int(0)
@@ -346,7 +346,7 @@ func (this *Stats1AntimodeAccumulator) Ingest(value *types.Mlrval) {
 }
 func (this *Stats1AntimodeAccumulator) Emit() types.Mlrval {
 	if this.countsByValue.FieldCount == 0 {
-		return types.MlrvalFromError()
+		return *types.MLRVAL_ERROR
 	}
 	minValue := ""
 	var minCount = int(0)

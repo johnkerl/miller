@@ -269,7 +269,7 @@ func (this *PercentileKeeper) Emit(percentile float64) types.Mlrval {
 
 func (this *PercentileKeeper) EmitNonInterpolated(percentile float64) types.Mlrval {
 	if len(this.data) == 0 {
-		return types.MlrvalFromAbsent()
+		return *types.MLRVAL_ABSENT
 	}
 	this.sortIfNecessary()
 	return *this.data[computeIndexNoninterpolated(int(len(this.data)), percentile)].Copy()
@@ -277,7 +277,7 @@ func (this *PercentileKeeper) EmitNonInterpolated(percentile float64) types.Mlrv
 
 func (this *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) types.Mlrval {
 	if len(this.data) == 0 {
-		return types.MlrvalFromAbsent()
+		return *types.MLRVAL_ABSENT
 	}
 	this.sortIfNecessary()
 	output := getPercentileLinearlyInterpolated(this.data, int(len(this.data)), percentile)

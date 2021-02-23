@@ -77,16 +77,17 @@ import (
 )
 
 // ================================================================
+// TODO: copy-reduction refactor
 func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if this.mvtype != MT_ARRAY {
-		return MlrvalFromError()
+		return *MLRVAL_ERROR
 	}
 	if mindex.mvtype != MT_INT {
-		return MlrvalFromError()
+		return *MLRVAL_ERROR
 	}
 	value := arrayGetAliased(&this.arrayval, mindex.intval)
 	if value == nil {
-		return MlrvalFromAbsent()
+		return *MLRVAL_ABSENT
 	} else {
 		return *value
 	}
@@ -218,15 +219,15 @@ func (this *Mlrval) ArrayAppend(value *Mlrval) {
 // ================================================================
 func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if this.mvtype != MT_MAP {
-		return MlrvalFromError()
+		return *MLRVAL_ERROR
 	}
 
 	mval, err := this.mapval.GetWithMlrvalIndex(key)
 	if err != nil { // xxx maybe error-return in the API
-		return MlrvalFromError()
+		return *MLRVAL_ERROR
 	}
 	if mval == nil {
-		return MlrvalFromAbsent()
+		return *MLRVAL_ABSENT
 	}
 	// This returns a reference, not a (deep) copy. In general in Miller, we
 	// copy only on write/put.

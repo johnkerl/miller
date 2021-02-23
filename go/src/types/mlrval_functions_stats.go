@@ -90,7 +90,7 @@ func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
-		return MlrvalFromVoid()
+		return *MLRVAL_VOID
 	}
 	fn := float64(n)
 	sum, isNumber := msum.GetNumericToFloatValue()
@@ -127,7 +127,7 @@ func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *Mlrval) Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
-		return MlrvalFromVoid()
+		return *MLRVAL_VOID
 	}
 	fn := float64(n)
 	sum, isNumber := msum.GetNumericToFloatValue()

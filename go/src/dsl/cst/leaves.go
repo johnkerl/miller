@@ -210,34 +210,34 @@ func (this *StringLiteralNode) Evaluate(
 
 // ----------------------------------------------------------------
 type IntLiteralNode struct {
-	literal types.Mlrval
+	literal *types.Mlrval
 }
 
 func (this *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 	return &IntLiteralNode{
-		literal: types.MlrvalFromIntString(literal),
+		literal: types.MlrvalPointerFromIntString(literal),
 	}
 }
 func (this *IntLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &this.literal
+	return this.literal
 }
 
 // ----------------------------------------------------------------
 type FloatLiteralNode struct {
-	literal types.Mlrval
+	literal *types.Mlrval
 }
 
 func (this *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
 	return &FloatLiteralNode{
-		literal: types.MlrvalFromFloat64String(literal),
+		literal: types.MlrvalPointerFromFloat64String(literal),
 	}
 }
 func (this *FloatLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &this.literal
+	return this.literal
 }
 
 // ----------------------------------------------------------------

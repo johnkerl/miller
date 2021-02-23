@@ -11,6 +11,178 @@ import (
 )
 
 // ----------------------------------------------------------------
+// TODO: comment how these are part of the copy-reduction project.
+
+var value_MLRVAL_ERROR = mlrvalFromError()
+var value_MLRVAL_ABSENT = mlrvalFromAbsent()
+var value_MLRVAL_VOID = mlrvalFromVoid()
+var value_MLRVAL_TRUE = mlrvalFromTrue()
+var value_MLRVAL_FALSE = mlrvalFromFalse()
+
+var MLRVAL_ERROR = &value_MLRVAL_ERROR
+var MLRVAL_ABSENT = &value_MLRVAL_ABSENT
+var MLRVAL_VOID = &value_MLRVAL_VOID
+var MLRVAL_TRUE = &value_MLRVAL_TRUE
+var MLRVAL_FALSE = &value_MLRVAL_FALSE
+
+// ----------------------------------------------------------------
+func MlrvalPointerFromString(input string) *Mlrval {
+	if input == "" {
+		return MLRVAL_VOID
+	}
+	var this Mlrval
+	this.mvtype = MT_STRING
+	this.printrep = input
+	this.printrepValid = true
+	return &this
+}
+
+// xxx comment why two -- one for from parsed user data; other for from math ops
+func MlrvalPointerFromIntString(input string) *Mlrval {
+	ival, ok := lib.TryIntFromString(input)
+	// xxx comment assummption is input-string already deemed parseable so no error return
+	lib.InternalCodingErrorIf(!ok)
+	var this Mlrval
+	this.mvtype = MT_INT
+	this.printrep = input
+	this.printrepValid = true
+	this.intval = ival
+	return &this
+}
+
+func MlrvalPointerFromInt(input int) *Mlrval {
+	var this Mlrval
+	this.mvtype = MT_INT
+	this.printrepValid = false
+	this.intval = input
+	return &this
+}
+
+// xxx comment why two -- one for from parsed user data; other for from math ops
+// xxx comment assummption is input-string already deemed parseable so no error return
+func MlrvalPointerFromFloat64String(input string) *Mlrval {
+	fval, ok := lib.TryFloat64FromString(input)
+	// xxx comment assummption is input-string already deemed parseable so no error return
+	lib.InternalCodingErrorIf(!ok)
+	var this Mlrval
+	this.mvtype = MT_FLOAT
+	this.printrep = input
+	this.printrepValid = true
+	this.floatval = fval
+	return &this
+}
+
+func MlrvalPointerFromFloat64(input float64) *Mlrval {
+	var this Mlrval
+	this.mvtype = MT_FLOAT
+	this.printrepValid = false
+	this.floatval = input
+	return &this
+}
+
+func MlrvalPointerFromBool(input bool) *Mlrval {
+	if input == true {
+		return MLRVAL_TRUE
+	} else {
+		return MLRVAL_FALSE
+	}
+}
+
+func MlrvalPointerFromBoolString(input string) *Mlrval {
+	if input == "true" {
+		return MLRVAL_TRUE
+	} else if input == "false" {
+		return MLRVAL_FALSE
+	} else {
+		lib.InternalCodingErrorIf(true)
+		return MLRVAL_ERROR // not reached
+	}
+}
+
+func MlrvalPointerFromInferredType(input string) *Mlrval {
+	// xxx the parsing has happened so stash it ...
+	// xxx emphasize the invariant that a non-invalid printrep always
+	// matches the nval ...
+	if input == "" {
+		return MLRVAL_VOID
+	}
+
+	_, iok := lib.TryIntFromString(input)
+	if iok {
+		return MlrvalPointerFromIntString(input)
+	}
+
+	_, fok := lib.TryFloat64FromString(input)
+	if fok {
+		return MlrvalPointerFromFloat64String(input)
+	}
+
+	_, bok := lib.TryBoolFromBoolString(input)
+	if bok {
+		return MlrvalPointerFromBoolString(input)
+	}
+
+	return MlrvalPointerFromString(input)
+}
+
+func MlrvalPointerFromEmptyMap() *Mlrval {
+	var this Mlrval
+	this.mvtype = MT_MAP
+	this.printrepValid = false
+	this.mapval = NewMlrmap()
+	return &this
+}
+
+// ----------------------------------------------------------------
+// Does not copy the data. We can make a SetFromArrayLiteralCopy if needed
+// using values.CopyMlrvalArray().
+func MlrvalPointerFromArrayLiteralReference(input []Mlrval) *Mlrval {
+	var this Mlrval
+	this.mvtype = MT_ARRAY
+	this.printrepValid = false
+	this.arrayval = input
+	return &this
+}
+
+func MlrvalPointerFromMap(that *Mlrmap) *Mlrval {
+	this := MlrvalPointerFromEmptyMap()
+	if that == nil {
+		// TODO maybe return 2nd-arg error in the API
+		return MLRVAL_ERROR
+	}
+
+	for pe := that.Head; pe != nil; pe = pe.Next {
+		this.mapval.PutCopy(pe.Key, pe.Value)
+	}
+	return this
+}
+
+// Like previous but doesn't copy. Only safe when the argument's sole purpose
+// is to be passed into here.
+func MlrvalPointerFromMapReferenced(that *Mlrmap) *Mlrval {
+	this := MlrvalPointerFromEmptyMap()
+	if that == nil {
+		// xxx maybe return 2nd-arg error in the API
+		return MLRVAL_ERROR
+	}
+
+	for pe := that.Head; pe != nil; pe = pe.Next {
+		this.mapval.PutReference(pe.Key, pe.Value)
+	}
+	return this
+}
+
+// TODO: comment not MLRVAL_PENDING constants since this intended to be mutated
+// by the JSON parser.
+func MlrvalPointerFromPending() *Mlrval {
+	var this Mlrval
+	this.mvtype = MT_PENDING
+	this.printrepValid = false
+	return &this
+}
+
+// ----------------------------------------------------------------
+// TODO: comment about being designed to be mutated for JSON API.
 func MlrvalFromPending() Mlrval {
 	return Mlrval{
 		mvtype:        MT_PENDING,
@@ -24,7 +196,7 @@ func MlrvalFromPending() Mlrval {
 	}
 }
 
-func MlrvalFromError() Mlrval {
+func mlrvalFromError() Mlrval {
 	return Mlrval{
 		mvtype:        MT_ERROR,
 		printrep:      "(error)", // xxx const somewhere
@@ -37,7 +209,7 @@ func MlrvalFromError() Mlrval {
 	}
 }
 
-func MlrvalFromAbsent() Mlrval {
+func mlrvalFromAbsent() Mlrval {
 	return Mlrval{
 		mvtype:        MT_ABSENT,
 		printrep:      "(absent)",
@@ -50,7 +222,7 @@ func MlrvalFromAbsent() Mlrval {
 	}
 }
 
-func MlrvalFromVoid() Mlrval {
+func mlrvalFromVoid() Mlrval {
 	return Mlrval{
 		mvtype:        MT_VOID,
 		printrep:      "",
@@ -65,7 +237,7 @@ func MlrvalFromVoid() Mlrval {
 
 func MlrvalFromString(input string) Mlrval {
 	if input == "" {
-		return MlrvalFromVoid()
+		return mlrvalFromVoid()
 	} else {
 		return Mlrval{
 			mvtype:        MT_STRING,
@@ -80,23 +252,6 @@ func MlrvalFromString(input string) Mlrval {
 	}
 }
 
-// xxx comment why two -- one for from parsed user data; other for from math ops
-func MlrvalFromIntString(input string) Mlrval {
-	ival, ok := lib.TryIntFromString(input)
-	// xxx comment assummption is input-string already deemed parseable so no error return
-	lib.InternalCodingErrorIf(!ok)
-	return Mlrval{
-		mvtype:        MT_INT,
-		printrep:      input,
-		printrepValid: true,
-		intval:        ival,
-		floatval:      0.0,
-		boolval:       false,
-		arrayval:      nil,
-		mapval:        nil,
-	}
-}
-
 func MlrvalFromInt(input int) Mlrval {
 	return Mlrval{
 		mvtype:        MT_INT,
@@ -104,24 +259,6 @@ func MlrvalFromInt(input int) Mlrval {
 		printrepValid: false,
 		intval:        input,
 		floatval:      0.0,
-		boolval:       false,
-		arrayval:      nil,
-		mapval:        nil,
-	}
-}
-
-// xxx comment why two -- one for from parsed user data; other for from math ops
-// xxx comment assummption is input-string already deemed parseable so no error return
-func MlrvalFromFloat64String(input string) Mlrval {
-	fval, ok := lib.TryFloat64FromString(input)
-	// xxx comment assummption is input-string already deemed parseable so no error return
-	lib.InternalCodingErrorIf(!ok)
-	return Mlrval{
-		mvtype:        MT_FLOAT,
-		printrep:      input,
-		printrepValid: true,
-		intval:        0,
-		floatval:      fval,
 		boolval:       false,
 		arrayval:      nil,
 		mapval:        nil,
@@ -141,7 +278,7 @@ func MlrvalFromFloat64(input float64) Mlrval {
 	}
 }
 
-func MlrvalFromTrue() Mlrval {
+func mlrvalFromTrue() Mlrval {
 	return Mlrval{
 		mvtype:        MT_BOOL,
 		printrep:      "true",
@@ -154,7 +291,7 @@ func MlrvalFromTrue() Mlrval {
 	}
 }
 
-func MlrvalFromFalse() Mlrval {
+func mlrvalFromFalse() Mlrval {
 	return Mlrval{
 		mvtype:        MT_BOOL,
 		printrep:      "false",
@@ -169,62 +306,24 @@ func MlrvalFromFalse() Mlrval {
 
 func MlrvalFromBool(input bool) Mlrval {
 	if input == true {
-		return MlrvalFromTrue()
+		return mlrvalFromTrue()
 	} else {
-		return MlrvalFromFalse()
+		return mlrvalFromFalse()
 	}
 }
 
 func MlrvalFromBoolString(input string) Mlrval {
 	if input == "true" {
-		return MlrvalFromTrue()
+		return mlrvalFromTrue()
 	} else {
-		return MlrvalFromFalse()
+		return mlrvalFromFalse()
 	}
 	// else panic
-}
-
-func MlrvalFromInferredType(input string) Mlrval {
-	// xxx the parsing has happened so stash it ...
-	// xxx emphasize the invariant that a non-invalid printrep always
-	// matches the nval ...
-	if input == "" {
-		return MlrvalFromVoid()
-	}
-
-	_, iok := lib.TryIntFromString(input)
-	if iok {
-		return MlrvalFromIntString(input)
-	}
-
-	_, fok := lib.TryFloat64FromString(input)
-	if fok {
-		return MlrvalFromFloat64String(input)
-	}
-
-	_, bok := lib.TryBoolFromBoolString(input)
-	if bok {
-		return MlrvalFromBoolString(input)
-	}
-
-	return MlrvalFromString(input)
 }
 
 // ----------------------------------------------------------------
 // Does not copy the data. We can make a MlrvalFromArrayLiteralCopy if needed,
 // using values.CopyMlrvalArray().
-func MlrvalFromArrayLiteralReference(input []Mlrval) Mlrval {
-	return Mlrval{
-		mvtype:        MT_ARRAY,
-		printrep:      "(bug-if-you-see-this-array-type)",
-		printrepValid: false,
-		intval:        0,
-		floatval:      0.0,
-		boolval:       false,
-		arrayval:      input,
-		mapval:        nil,
-	}
-}
 
 func MlrvalEmptyArray() Mlrval {
 	return Mlrval{
@@ -297,27 +396,13 @@ func MlrvalEmptyMap() Mlrval {
 	}
 }
 
-func MlrvalFromMap(that *Mlrmap) Mlrval {
-	this := MlrvalEmptyMap()
-	if that == nil {
-		// xxx maybe return 2nd-arg error in the API
-		return MlrvalFromError()
-	}
-
-	for pe := that.Head; pe != nil; pe = pe.Next {
-		this.mapval.PutCopy(pe.Key, pe.Value)
-	}
-
-	return this
-}
-
 // Like previous but doesn't copy. Only safe when the argument's sole purpose
 // is to be passed into here.
 func MlrvalFromMapReferenced(that *Mlrmap) Mlrval {
 	this := MlrvalEmptyMap()
 	if that == nil {
 		// xxx maybe return 2nd-arg error in the API
-		return MlrvalFromError()
+		return *MLRVAL_ERROR
 	}
 
 	for pe := that.Head; pe != nil; pe = pe.Next {

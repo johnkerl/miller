@@ -80,7 +80,7 @@ func (this *Repl) handleDSLStringAux(
 		// statment like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
 		// interactive expressions to be printed to the terminal. For the main DSL,
 		// the default is types.MlrvalFromTrue(); for the REPL, the default is
-		// types.MlrvalFromVoid().
+		// types.MLRVAL_VOID.
 		filterExpression := this.runtimeState.FilterExpression
 		if filterExpression.IsVoid() {
 			// nothing to print

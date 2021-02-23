@@ -34,9 +34,9 @@ func TestComparctors(t *testing.T) {
 	sabc := MlrvalFromString("abc")
 	sdef := MlrvalFromString("def")
 
-	e := MlrvalFromError()
+	e := *MLRVAL_ERROR
 
-	a := MlrvalFromAbsent()
+	a := *MLRVAL_ABSENT
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Within-type lexical comparisons
