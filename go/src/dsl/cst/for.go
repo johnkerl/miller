@@ -510,7 +510,7 @@ func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	// from any of the latter is a break from all.  However, at this point, the
 	// break has been "broken" and should not be returned to the caller.
 	// Return-statements should, though.
-	blockExitPayload, err := this.executeOuter(indexMlrval, this.keyVariableNames, state)
+	blockExitPayload, err := this.executeOuter(indexMlrval, this.keyIndexVariables, state)
 	if blockExitPayload == nil {
 		return nil, err
 	} else {
