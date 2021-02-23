@@ -51,9 +51,6 @@ func main() {
 	// found then this function will not return.
 	auxents.Dispatch(os.Args)
 
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Start of Miller main per se
-
 	options, recordTransformers, err := cli.ParseCommandLine(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)

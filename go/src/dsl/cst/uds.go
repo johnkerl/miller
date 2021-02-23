@@ -123,7 +123,7 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 
 	for i, _ := range arguments {
 		err := state.Stack.DefineTypedAtScope(
-			this.uds.signature.typeGatedParameterNames[i].Name,
+			runtime.NewStackVariable(this.uds.signature.typeGatedParameterNames[i].Name),
 			this.uds.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)

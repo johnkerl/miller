@@ -173,18 +173,18 @@ func (this *FullOosvarRvalueNode) Evaluate(
 
 // ----------------------------------------------------------------
 type LocalVariableNode struct {
-	variableName string
+	stackVariable *runtime.StackVariable
 }
 
 func (this *RootNode) BuildLocalVariableNode(variableName string) *LocalVariableNode {
 	return &LocalVariableNode{
-		variableName: variableName,
+		stackVariable: runtime.NewStackVariable(variableName),
 	}
 }
 func (this *LocalVariableNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	value := state.Stack.Get(this.variableName)
+	value := state.Stack.Get(this.stackVariable)
 	if value == nil {
 		return types.MLRVAL_ABSENT
 	} else {
